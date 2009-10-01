@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+/* main body ------------------------------------------------------------------------------------------------ */
+
+body {
+	background: #dddddd;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	color: #303030;
+}
+
+a { text-decoration: none; color: #365a10 }
+
+a h1 {
+	color: #303030;
+}
+
+a h2 {
+	color: #303030;
+}
+
+/* top menu ----------------------------------------------------------------------------------------- */
+
+img.menu1 {
+	padding-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+/* navigation boxes ----------------------------------------------------------------------------------------- */
+
+div.navbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+}
+
+div.navbox a {
+	color: #444444;
+}
+
+
+/* wireframe tables ----------------------------------------------------------------------------------------- */
+
+table.wireframe {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	-moz-border-radius: 0px 0px 0px
+}
+
+td.wireframe {
+	border-width: 1px 1px 1px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+td.title {
+	border-width: 1px 1px 0px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	background: #aaaaaa;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+span .mychat {
+	color: #365a10;
+	font-size: 12px;	
+}

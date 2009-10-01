@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<head>
+<title>:: kapenta :: window manager test ::</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<script type="text/javascript" src="http://mothsorchid.com/gui/js/windowmanager.js"></script>
+<script type="text/javascript" src="http://mothsorchid.com/gui/js/desktop.js"></script>
+<script type="text/javascript" src="http://mothsorchid.com/gui/js/utils.js"></script>
+<link href='http://mothsorchid.com/gui/css/default.css' rel='stylesheet' type='text/css' />
+
+<style type='text/css'>
+  .style1 {font-size: 9px}
+</style>
+
+<script language='javascript'>
+
+	var hasParentFrame = false;
+	var jsServerPath = 'http://mothsorchid.com/';
+
+	//----------------------------------------------------------------------------------------------
+	//	member variables
+	//----------------------------------------------------------------------------------------------
+
+
+	//----------------------------------------------------------------------------------------------
+	//	initialise page
+	//----------------------------------------------------------------------------------------------
+
+	function guiInit() {
+		desktopInit();
+	}
+
+	function testWindowCreate() {
+		var url = '/gui/apps/txtedit/txtedit.if.html';
+		var icon = '/gui/icons/text.png';
+		var thisWindowUid = windowCreate(url, 'txtedit - something', icon, '150', '150', '300', '200', 'fixedmenu');
+
+
+	}
+
+	
+</script>
+</head>
+
+<body onLoad="guiInit();" onResize="desktopResize();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+<div id='windowlist' class='windowlist'>
+</div>
+<div id='menulist' class='menulist'>
+</div>
+<div id='desktop' class='desktop'></div>
+</body>
+</html>

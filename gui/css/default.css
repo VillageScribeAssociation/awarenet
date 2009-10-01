@@ -1,0 +1,219 @@
+@charset "UTF-8";
+
+/* main body ------------------------------------------------------------------------------------------------ */
+
+body {
+	padding: 0;
+	margin: 0;
+	background: #dddddd;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	color: #303030;
+}
+
+a { text-decoration: none; color: #365a10 }
+
+a h1 {
+	color: #303030;
+}
+
+a h2 {
+	color: #303030;
+}
+
+/* top menu ----------------------------------------------------------------------------------------- */
+
+img.menu1 {
+	padding-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+/* navigation boxes ----------------------------------------------------------------------------------------- */
+
+div.navbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+}
+
+div.navbox a {
+	color: #444444;
+}
+
+/* desktop ----------------------------------------------------------------------------------------- */
+
+div.desktop {
+	padding: 0;
+	margin: 0;
+}
+
+/* windows ----------------------------------------------------------------------------------------- */
+
+
+div.window {
+	position: absolute;
+}
+
+img.titlebaricon {
+	margin-bottom: 1px;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+span.titlebar {
+	-moz-user-select: none;
+	cursor: default;
+}
+
+div.statusbar {
+	border: 1px solid #444;
+	background-color: #d9d4cc;
+	height: 18px;
+}
+
+img.statusbarsize {
+	float: right;
+	cursor: se-resize;
+}
+
+
+/* menus ----------------------------------------------------------------------------------------- */
+
+div.menubar {
+	background-color: #b3ada3;
+	height: 18px;
+	border: 1px solid #444;
+}
+
+div.menu {
+	position: absolute;
+	border: 1px solid #444;
+	//width: 100px;
+	background-color: #b3ada3;
+}
+
+ul.menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+li.menuitem {
+	float: left;
+	margin: 0 0.15em;
+	background: #b3ada3;
+	height: 16px;
+	line-height: 15px;
+	float: left;
+	display: block;
+	color: #444;
+	text-decoration: none;
+	text-align: left;
+	cursor: default;
+} 
+
+td.menu:hover {
+	background-color: #999;
+}
+
+/* taskbar ----------------------------------------------------------------------------------------- */
+
+div.taskbar {
+	background-color: #444;
+	width: 100%;
+	position: absolute;
+	z-index: 0;
+}
+
+table.taskbar {
+	padding: 0;
+	margin: 0;
+}
+
+td.taskbar {
+	padding: 0px;
+	background-color: #444;
+}
+
+ul.tasks {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+li.task {
+	float: left;
+	margin: 0 0.15em;
+	background: #666;
+	height: 23px;
+	line-height: 20px;
+	float: left;
+	width: 160px;
+	display: block;
+	border: 1px solid #222;
+	color: #ddd;
+	text-decoration: none;
+	text-align: left;
+} 
+
+li.taskmin {
+	float: left;
+	margin: 0 0.15em;
+	background: #444;
+	height: 23px;
+	line-height: 20px;
+	float: left;
+	width: 160px;
+	display: block;
+	border: 1px solid #222;
+	color: #888;
+	text-decoration: none;
+	text-align: left;
+} 
+
+img.taskbaricon {
+	margin-bottom: 2px;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+/* desktop wallpaper ----------------------------------------------------------------------------------------- */
+
+img.wallpaper {
+	padding: 0;
+	margin: 0;
+}
+
+/* wireframe tables ----------------------------------------------------------------------------------------- */
+
+table.wireframe {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	-moz-border-radius: 0px 0px 0px
+}
+
+td.wireframe {
+	border-width: 1px 1px 1px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+td.title {
+	border-width: 1px 1px 0px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	background: #aaaaaa;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+span .mychat {
+	color: #365a10;
+	font-size: 12px;	
+}

@@ -1,0 +1,37 @@
+==Kapenta Bots==
+
+Kapenta bots are a method to add arbirary functionality to the chat.  Messages addressed to
+a bot begin with a forwardslash
+
+/translate en-de this is a cat
+
+Bots should also allow a [q]uiet mode, where the result is sent only to the sender.
+
+/translate q en-de this is a cat
+
+Aliases can be created by wrapper
+
+/tl en-de this is a cat
+chat_bot_tl_submit($msg) { return chat_bot_translate_submit($msg); }
+
+Bots may use session variables for continuity, for example
+
+/translate en-de this is a cat		<-- bot stores language pair in session
+/translate this is a chicken		<-- bot assumes last language pair
+
+==API==
+
+Kapenta chat bots expose a very simple API:
+
+chat_bot_botname_submit($msg, $recipient) {}
+----------------------------
+Processes a request and returns array of XHTML on success or FALSE on failure.  Result is:
+
+retVal['sender'] = "This text is added to the chat queue of the person who sent the request."
+retVal['recipient'] = "This text is added to the chat queue of the person to whom the request was sent."
+
+
+
+chat_bot_botname_help($msg) {}
+--------------------------
+Provides instructions on how to use the bot.

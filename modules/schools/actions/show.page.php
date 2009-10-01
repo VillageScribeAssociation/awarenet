@@ -1,0 +1,38 @@
+<? /*
+<page>
+<template>twocol-rightnav.template.php</template>
+<content>[[:theme::navtitlebox::width=570::label=About:]]
+[[:schools::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+[[:theme::navtitlebox::width=570::label=Announcements:]]
+[`|lt]br/[`|gt]
+[[:announcements::list::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
+[[:announcements::newlink::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]</content>
+<title>:: awareNet :: schools ::</title>
+<script></script>
+<nav1>[[:theme::navtitlebox::label=All Schools:]]
+[[:schools::listallnav:]]
+[`|lt]br/[`|gt]
+[[:theme::navtitlebox::label=Students And Teachers:]]
+[[:schools::allgrades::schoolUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+[[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
+[[:groups::listallnav::school=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+[[:theme::navtitlebox::label=Moblog:]]
+[[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+[[:theme::navtitlebox::label=Online Now:]]
+[[:users::onlineschoolnav::school=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]</nav1>
+<nav2></nav2>
+<banner></banner>
+<head></head>
+<menu1>[[:home::menu:]]</menu1>
+<menu2>[[:schools::menu:]]</menu2>
+<section></section>
+<subsection></subsection>
+<breadcrumb>[[:theme::breadcrumb::label=Schools - ::link=/schools/:]]
+[[:theme::breadcrumb::label=[`|pc][`|pc]schoolName[`|pc][`|pc]::link=/schools/[`|pc][`|pc]schoolRa[`|pc][`|pc]:]]</breadcrumb>
+</page>\n*/ ?>

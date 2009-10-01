@@ -1,0 +1,66 @@
+The synchronisation module allows awarenet servers to relay database changes to upstream servers, 
+and to pass recieved database changes back to downstream servers.  There is always a central - hub -
+server, and closed circuits must be avoided, or messages will be passed endlessly upstream.
+
+A server may have multiple downstream servers but only ever one upstream.  The Hub server has no
+upstream.
+
+/sync/delete/ --------------------------------------------------------------------------------------
+
+Deletes a record from the database, UID and table are passed in POST and server credentials in 
+header.  A delete is relayed to the upstream and downstream servers except the one which sent the
+delete.  It is the responsibility of the server which issued the delete to ensure that the user 
+requesting this action has the credentials.
+
+/sync/change/ --------------------------------------------------------------------------------------
+
+Updates a record in the database.  Updates are passed to the upstream server and all downstream 
+servers except the one from which the request originated.  Server credentials are passed in header,
+sql in POST.
+
+/sync/current/ -------------------------------------------------------------------------------------
+
+Requests the most recent modifications to all tables.  Compared by client to local copy.  Server
+credentials passed in HTTP headers.
+
+/sync/current/TABLENAME ----------------------------------------------------------------------------
+
+Requests UID, timestamp and hash of a set of records in a table, ordered by UID between START
+and STOP POST variables.
+
+Client may also request hash of a list of records, and thus discover which records to request by
+comparing hashes to own sync table.
+
+/sync/request/ -------------------------------------------------------------------------------------
+
+Requests a record, used to replace current version on client.  Server credentials passed in headers.
+If not found, request is passed to all upstream/downstream servers till record is found or the 
+network has been traversed.
+
+/sync/trust/ ----------------------------------------------------------------------------------------
+
+Some lorem ipsum is sent along with server credentials, used to discover whether a server
+reciprocates trust.
+
+SYNC table:
+
+UID: 		everything has a UID
+table: 		which table is this record in?
+refUID:		what is the UID of this record in this table
+timestamp: 	when the last change was made (on the originating server)
+hash:		cryptographic hash of most fields in that record (some fields are not synced)
+
+SERVERS table:
+UID:		everything has a UID
+servername:	user friendly name for the server
+serverurl:	URL of awarenet installation
+password:	plaintext, max 50 chars
+direction:	(upstream|downstream|self) -- there's a maximum of one upstream, exactly one self.
+active:		yes or no.
+
+mysql.inc.php:
+
+on dbSave and dbDelete /sync/change/ and /sync/delete/ are called on upstream and downstream
+servers.
+
+

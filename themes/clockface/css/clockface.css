@@ -1,0 +1,200 @@
+@charset "UTF-8";
+
+/* main body ------------------------------------------------------------------------------------ */
+
+body {
+	background: #aaaaaa;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	color: #303030;
+	padding: 0px;
+	margin: 0px;
+}
+
+a { text-decoration: none; color: #365a10; }
+a:hover { text-decoration: underline; color: #365a10; }
+
+a h1 {
+	color: #303030;
+}
+
+a h2 {
+	color: #303030;
+}
+
+table { 
+	background: #ffffff;
+}
+
+hr {
+	border-top: 1px dashed #527d26;
+	color: #fff;
+	background-color: #fff;
+	height: 1px;
+}
+
+/* top menu ------------------------------------------------------------------------------------- */
+
+img.menu1 {
+	padding-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+a.menu {
+	color: #ffffff;	
+	background-color: #000000;
+}
+
+/* images --------------------------------------------------------------------------------------- */
+
+div.caption {
+	float: left;
+	background-color: #eeeeee;
+}
+
+div.captionpad {
+	float: left;
+	background-color: #eeeeee;
+	margin-right: 10px;
+}
+
+/* submenu items -------------------------------------------------------------------------------- */
+
+span.submenu { 
+	font-size: 90%; 
+	padding-left: 18px;
+	color: #ffffff;
+	font-size: 19px;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #aaaaaa;
+	vertical-align: top;
+}
+
+span.submenu:hover { 
+	background-color: #bbbbbb;
+}
+
+span.submenu a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+/* navigation boxes ----------------------------------------------------------------------------- */
+
+div.navbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+	color: #ffffff;
+	font-size: 20px;
+	padding: 2px;
+	padding-left: 12px;
+	background-color: #4e4e4e;
+}
+
+div.navbox a {
+	color: #444444;
+}
+
+/* indented div --------------------------------------------------------------------------------- */
+
+div.indent {
+	padding: 0px 0px 0px 14px;
+}
+
+/* wireframe tables ----------------------------------------------------------------------------- */
+
+table.wireframe {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+	border-style: solid solid solid solid;
+	border-color: #dddddd #dddddd #dddddd #dddddd;
+	-moz-border-radius: 0px 0px 0px
+}
+
+td.wireframe {
+	border-width: 1px 1px 1px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #dddddd #dddddd #dddddd #dddddd;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+td.title {
+	border-width: 1px 1px 0px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: #dddddd #dddddd #dddddd #dddddd;
+	background: #dddddd;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+/* inline quote boxes --------------------------------------------------------------------------- */
+
+div.inlinequote {
+	margin: 4px 4px 4px 4px;
+	display: block;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #ddd;
+	border-right-color: #ddd;
+	border-bottom-color: #ddd;
+	border-left-color: #ddd;
+	background-color: #EEEEEE;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	color: #333333;
+	font-size: 12px;
+	text-decoration: none;
+	font-weight: 200;
+ }
+
+/* chat windows --------------------------------------------------------------------------------- */
+
+div .drag {
+	background-image: url(/themes/clockface/images/chat.png);
+	position: relative;
+	width: 200px;
+	margin: 4px 4px 4px 4px;
+	display: block;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #ddd;
+	border-right-color: #ddd;
+	border-bottom-color: #ddd;
+	border-left-color: #ddd;
+	background-color: #EEEEEE;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	color: #333333;
+	font-size: 12px;
+	text-decoration: none;
+	font-weight: 200;
+ }
+
+div .cwtext {
+	height: 250px;
+	width: 200px;
+	overflow: auto;
+	text-align: left;
+}
+
+span .mychat {
+	color: #365a10;
+	font-size: 12px;	
+}

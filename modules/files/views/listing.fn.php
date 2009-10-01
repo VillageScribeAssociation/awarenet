@@ -1,0 +1,35 @@
+<?
+
+	require_once($installPath . 'modules/files/models/files.mod.php');
+
+//--------------------------------------------------------------------------------------------------
+//	add a list of files on a modules
+//--------------------------------------------------------------------------------------------------
+// * $args['refModule'] = module to list on
+// * $args['refUID'] = number of files per page
+
+function files_listing($args) {
+	global $serverPath;
+
+	//----------------------------------------------------------------------------------------------
+	//	check args and authorisation
+	//----------------------------------------------------------------------------------------------
+	if (array_key_exists('refModule', $args) == false) { return false; }
+	if (array_key_exists('refUID', $args) == false) { return false; }
+	$authArgs = array('UID' => $args['refUID']);
+
+	//----------------------------------------------------------------------------------------------
+	//	add the form
+	//----------------------------------------------------------------------------------------------
+	$src = $serverPath . 'files/listing/refModule_' . $args['refModule'] 
+	     . '/refUID_' . $args['refUID'] . '/';
+	     
+	$html = "<iframe name='listFiles" . $args['refUID'] . "' src='" . $src 
+		. "' width='570' height='200' frameborder='no' ></iframe>\n";	
+		
+	return $html;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+?>

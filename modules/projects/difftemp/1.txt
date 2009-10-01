@@ -1,0 +1,43 @@
+
+<h1>Moose</h1>
+The moose (North America) or elk (Europe), Alces alces, is the largest extant species in the deer family. Moose are distinguished by the palmate antlers of the males; other members of the family have antlers with a "twig-like" configuration.
+<br>
+<br>[[:images::width570::imageUID=168791398756892804:]]
+<br>
+<h2>Natural Predators</h2>
+A full-grown moose has few enemies, but a pack of wolves can still pose a threat, especially to females with calves. Siberian Tigers and Brown Bear are also known to prey on moose, although bears are more likely to take over a wolf kill than to hunt moose on their own. American Black Bears and Cougars can be significant predators of moose calves in May and June.
+<br/>
+<br/>In some areas, moose are the primary source of food for wolves. Moose usually flee upon detecting wolves. Wolves usually follow moose at a distance of 100–400 meters, occasionally at a distance of 2–3 km. Attacks from wolves against young moose may last seconds, though sometimes it can be drawn out for days with adults. Sometimes, wolves will chase moose into shallow streams or onto frozen rivers, where their mobility is greatly impeded. Moose will sometimes stand their ground and defend themselves by charging at the wolves or lashing out at them with their powerful hooves. Wolves typically kill moose by tearing at their haunches and perineum, causing massive blood loss. Occasionally, a wolf may immobilise a moose by biting its sensitive nose, the pain of which can paralyze a moose. Wolf packs primarily target calves and elderly animals, but can and will take healthy, adult moose. Moose between the ages of two and eight are rarely killed by wolves. Though moose are usually hunted by packs, there are cases in which single wolves have successfully killed moose.
+<p><small>weight: 1 uid: 186401749365070455 title: Natural Predators</small></p>
+
+<h2>Social structure and reproduction</h2>
+Moose are mostly diurnal. They are generally solitary with the strongest bonds between mother and calf. Two individuals can sometimes be found feeding along the same stream. The males are polygamous and will seek several females to breed with.
+<br/>
+<br/>Mating occurs in September and October. During this times both sexes will call to each other. Males produce heavy grunting sounds that can be heard from up to 500 meters away while females produce a wail-like sound.&nbsp; Males will fight for access to females. They will either assess which is larger, and the smaller bull will retreat, or they may engage in battles, usually only involving the antlers. Female moose have an eight month gestation period. Most litters consist of a single calf; however, twins are not uncommon and triplets are known to occur. Newborn moose <a href="http://www.google.com">have fur with a reddish</a> hue in contrast to the brown appearance of an adult. The young will stay with the mother until just before the next young are born.
+<p><small>weight: 2 uid: 162623480342167550 title: Social structure and reproduction</small></p>
+
+<h2>History</h2>
+European rock drawings and cave paintings reveal that moose have been hunted since the Stone Age. Excavations in Alby, Sweden adjacent to the Stora Alvaret have yielded elk antlers in wooden hut remains from 6,000 BC, indicating some of the earliest elk hunting in northern Europe. In northern Scandinavia one can still find remains of trapping pits used for hunting elk. These pits, which can be up to 4 × 7 m wide and 2 m deep, would have been camouflaged with branches and leaves. They would have had steep sides lined with planks, making it impossible for the elk to escape once it fell in. The pits are normally found in large groups, crossing the elk's regular paths and stretching over several kilometres. Remains of wooden fences designed to guide the animals toward the pits have been found in bogs and peat. In Norway, an early example of these trapping devices has been dated to around 3,700 BC. Trapping elk in pits is an extremely effective hunting method, and as early as the 16th century the Norwegian government tried to restrict their use. Nevertheless, the method was in use until the 19th century.
+<br>
+<br>The first written description of the elk is in Julius Cæsar's Commentarii de Bello Gallico, where it is described thus:
+<br>
+<br>"There are also animals which are called alces. The shape of these, and the varied colour of their skins, is much like roes, but in size they surpass them a little and are without horns, and have legs without joints and ligatures; nor do they lie down for the purpose of rest, nor, if they have been thrown down by any accident, can they raise or lift themselves up. Trees serve as beds to them; they lean themselves against them, and thus reclining only slightly, they take their rest; when the huntsmen have discovered from the footsteps of these animals whither they are accustomed to betake themselves, they either undermine all the trees at the roots, or cut into them so far that the upper part of the trees may appear to be left standing. When they have leant upon them, according to their habit, they knock down by their weight the unsupported trees, and fall down themselves along with them."
+<br>
+<br>In chapter 16 of Pliny the Elder's Natural History from 77 AD the elk and an animal called achlis, which is presumably the same animal, are described thus:
+<br>
+<br>
+<blockquote>"...there is, also, the elk, which strongly resembles our steers, except that it is distinguished by the length of the ears and of the neck. There is also the achlis, which is produced in the land of Scandinavia; it has never been seen in this city, although we have had descriptions of it from many persons; it is not unlike the elk, but has no joints in the hind leg. Hence, it never lies down, but reclines against a tree while it sleeps; it can only be taken by previously cutting into the tree, and thus laying a trap for it, as otherwise, it would escape through its swiftness. Its upper lip is so extremely large, for which reason it is obliged to go backwards when grazing; otherwise, by moving onwards, the lip would get doubled up."
+<br></blockquote>
+
+<br>Dr. Valerius Geist, who emigrated to Canada from the Soviet Union wrote in his 1999 book Moose: Behaviour, Ecology, Conservation:
+<br>
+<br>
+<blockquote>"Those who care most passionately about moose are—paradoxically—hunters, in particular people who live in wilderness and rural communities and those who depend on moose for food. In Sweden, no fall menu is without a mouthwatering moose dish. The Swedes fence their highways to reduce moose fatalities and design moose-proof cars. Sweden is less than half as large as the Canadian province of British Columbia, but the annual take of moose in Sweden—upward of 150,000—is twice that of the total moose harvest in North America. That is how much Swedes cherish their moose."</blockquote>
+
+<p><small>weight: 3 uid: 394998824163246548 title: History</small></p>
+
+<h2>Moose as Food</h2>
+Moose are hunted as a game species in many of the countries where they are found. Moose meat tastes, wrote Henry David Thoreau in “The Maine Woods”, “like tender beef, with perhaps more flavour; sometimes like veal”. While the flesh has similar protein levels to other comparable red meats (e.g. beef, deer and elk) it has a low fat content and the fat that is found is made up of a higher proportion of polyunsaturated fats (rather than saturated fats).
+<br/>
+<br/>Cadmium levels are high in Finnish elk liver and kidneys, with the result that consumption of these organs from elk more than one year old is prohibited in Finland. Cadmium intake has been found to be elevated amongst all consumers of elk meat, though the elk meat was found to contribute only slightly to the daily cadmium intake. However the consumption of moose liver or kidneys significantly increased cadmium intake, with the study revealing that heavy consumers of moose organs have a relatively narrow safety margin below the levels which would probably cause adverse health effects.
+<p><small>weight: 4 uid: 199128093910799973 title: Moose as Food</small></p>

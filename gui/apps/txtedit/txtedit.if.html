@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<head>
+<title>:: kapenta :: editor ::</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<script type="text/javascript" src="http://mothsorchid.com/gui/js/utils.js"></script>
+<link href='http://mothsorchid.com/gui/css/default.css' rel='stylesheet' type='text/css' />
+
+<style type='text/css'>
+  .style1 {font-size: 9px}
+</style>
+
+<script language='javascript'>
+
+	var thisWindowUid = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	set up the window
+	//----------------------------------------------------------------------------------------------
+
+	function frameInit() {
+		frameResize();
+		thisWindowUid = window.name.replace(/ifc/, '');
+
+		//-----------------------------------------------------------------------------------------
+		//	(re)create the menu
+		//-----------------------------------------------------------------------------------------
+		parent.windowClearMenu(thisWindowUid);
+		parent.windowAddMenuItem(thisWindowUid, '<u>F</u>ile', 'menu::File', 'file');
+		parent.windowAddMenuItem(thisWindowUid, '<u>E</u>dit', 'menu::Edit', 'edit');
+		parent.windowAddMenuItem(thisWindowUid, 'S<u>e</u>arch', 'menu::Search', 'search');
+		parent.windowAddMenuItem(thisWindowUid, '<u>H</u>elp', 'menu::Help', 'help');
+
+		//-----------------------------------------------------------------------------------------
+		//	
+		//-----------------------------------------------------------------------------------------
+
+	}
+
+	function frameResize() {
+		taMain = document.getElementById('theTa');
+		taMain.style.width = (window.innerWidth - 8) + 'px';
+		taMain.style.height = (window.innerHeight - 8) + 'px';
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	handle messages sent to this window
+	//----------------------------------------------------------------------------------------------
+	
+	function procMsg(msg) {
+		var parts = msg.split('::');
+		switch (parts[0]) {
+			case "menu":	
+				proc_MenuClicked(msg);	
+				break;
+
+			default: 		
+				alert ('unhandled message: ' + msg);
+				break;
+		}
+
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	show menus
+	//----------------------------------------------------------------------------------------------
+
+	function proc_MenuClicked(msg) {
+		switch (msg) {
+			case 'menu::File':
+				var menuItems = "/gui/icons/document-new.png	<u>N</u>ew	menu::File::New	new\n"
+							  + "/gui/icons/document-open.png	<u>O</u>pen	menu::File::Open	open\n"
+							  + "/gui/icons/document-save.png	<u>S</u>ave	menu::File::Save	save";
+
+				parent.windowShowMenu(thisWindowUid, 'file', menuItems);
+				break;
+
+			case 'menu::Edit':
+				var menuItems = "/gui/icons/edit-cut.png	Cu<u>t</u>	menu::Edit::Cut	cut\n"
+							  + "/gui/icons/edit-copy.png	<u>C</u>opy	menu::Edit::Copy	copy\n"
+							  + "/gui/icons/edit-paste.png	<u>P</u>aste	menu::Edit::Paste	paste\n"
+							  + "/gui/icons/blank.png	Select <u>A</u>ll	menu::Edit::SelectAll	selectall\n"
+							  + "/gui/icons/edit-prefs.png	<u>P</u>references	menu::Edit::Preferences	preferences";
+
+				parent.windowShowMenu(thisWindowUid, 'edit', menuItems);
+				break;
+
+			case 'menu::Search':
+				var menuItems = "/gui/icons/edit-find.png	<u>F</u>ind	menu::Search::Find	find\n"
+							  + "/gui/icons/edit-replace.png	<u>R</u>eplace	menu::Search::Replace	replace";
+
+				parent.windowShowMenu(thisWindowUid, 'search', menuItems);
+				break;
+
+			case 'menu::Help':
+				var menuItems = "/gui/icons/help-about.png	<u>A</u>bout	menu::Help::About	about";
+
+				parent.windowShowMenu(thisWindowUid, 'help', menuItems);
+				break;
+
+			default:
+				alert('unknown menu item: ' + msg);
+				break;
+		}
+	}
+
+</script>
+</head>
+
+<body onLoad="frameInit();" onResize="frameResize();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+<textarea id='theTa' style="width:90px;height:90px;left:0px;top:0px;position:absolute;">Before CSS, you could only add background colours to the whole page or to a table. Now, as you would expect, you have full control over what gets a background, even down to a single word. The CSS property for all this is background-color. Look here:
+
+div.summary {background-color: green; }
+
+At the risk of sounding repetitive, you can specify your colours using HEX or a name, as always. But hark! There is a further way of defining colours in CSS — RGB. This method should be familiar to those among you familiar with graphics programs like PhotoShop. You can specify the exact amount of Red, Green and Blue (the three colour components of light) in your colour. A typical line would look like this:
+
+b {background-color: rgb(0,108,64); }
+
+The range for each value of RGB is from 0–255. Older browsers won't understand this notation, but anything that supports stylesheets supports this too. And it's not just background-color that you can use this for; anyplace that once took HEX can now take this.</textarea>
+</body>
+</html>

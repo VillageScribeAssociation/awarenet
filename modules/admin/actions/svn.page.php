@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Subversion::width=570:]]
-Subversion should track the following files:
+[`|lt]h2[`|gt]File Lists[`|lt]/h2[`|gt]
 [[:admin::svnadd:]]
 </content>
 <title>:: awareNet :: admin :: svn ::</title>
@@ -16,5 +16,5 @@ Subversion should track the following files:
 <section></section>
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
-[[:theme::breadcrumb::label=Console::link=/admin/:]]</breadcrumb>
+[[:theme::breadcrumb::label=Subversion Helper Scripts::link=/admin/svn/:]]</breadcrumb>
 </page>\n*/ ?>

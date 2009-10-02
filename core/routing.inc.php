@@ -28,7 +28,7 @@ function listModules() {
 
 	$d = dir($installPath . 'modules/');
 	while (false !== ($entry = $d->read())) {
-	  if (($entry != '.') AND ($entry != '..')) {
+	  if (($entry != '.') AND ($entry != '..') AND ($entry != '.svn')) {
 		$entry = strtolower($entry);
 		$modList[] = $entry;
 	  }

@@ -21,16 +21,21 @@ function admin_svnadd($args) {
 						'data/log/',
 						'.log.php',
 						'svnadd.sh',
+						'svndelete.sh',
 						'/drawcache/',
 						'~',
 						'.svn',
-						'install/'
+						'install/',
+						'tmp.xml'
 						);
 
 	//---------------------------------------------------------------------------------------------
 	//	find all files in this project
 	//---------------------------------------------------------------------------------------------
 	$html = '';
+	$svnfiles = '';
+	$skipfiles = '';
+
 	$raw = shell_exec("find $installPath");
 	$lines = explode("\n", $raw);
 	foreach($lines as $line) {		
@@ -38,22 +43,44 @@ function admin_svnadd($args) {
 		$relLine = str_replace($installPath, '', $line);
 		foreach($exemptions as $ex) { if (strpos(' ' . $line, $ex) != false) { $skip = true; } }
 		if (trim($relLine) == '') { $skip = true; }
-		if (false == $skip) { $html .= 'svn add ' . $relLine . "\n"; }
+		if (false == $skip) { 
+			$svnfiles .= 'svn add ' . $relLine . "\n"; 
+		} else {
+			if ((trim($relLine) != '') && (strpos($line, '.svn') == false)) { 
+				$skipfiles .= 'svn delete ' . $relLine . "\n"; 
+			}
+		}
 	}
 
 	//---------------------------------------------------------------------------------------------
-	//	save to installPath
+	//	save to svnadd installPath
 	//---------------------------------------------------------------------------------------------
 	$scriptFile = $installPath . 'svnadd.sh';
 	$fh = fopen($scriptFile, 'w+');
 	fwrite($fh, $html);
 	fclose($fh);
 
+	$html .= "The following files should be managed by subversion:<br/>";
+	$html .= "<small>This list has been saved to $scriptFile</small><br/>";
+	$html .= "<textarea rows='17' cols='80'>" . $svnfiles . "</textarea>";
+	$html .= "<br/><br/>";
+
+	//---------------------------------------------------------------------------------------------
+	//	make explicit list of files which should not be tacked by svn
+	//---------------------------------------------------------------------------------------------
+	$scriptFile = $installPath . 'svndelete.sh';
+	$fh = fopen($scriptFile, 'w+');
+	fwrite($fh, $html);
+	fclose($fh);
+
+	$html .= "The following files should not be managed by SVN:<br/>";
+	$html .= "<small>This list has been saved to $scriptFile</small><br/>";
+	$html .= "<textarea rows='17' cols='80'>" . $skipfiles . "</textarea>";
+	$html .= "<br/><br/>";
+
 	//---------------------------------------------------------------------------------------------
 	//	done
 	//---------------------------------------------------------------------------------------------
-	$html = "<textarea rows='10' cols='80'>" . $html . "</textarea>";
-	$html .= "This list has been saved to $scriptFile.<br/>";
 	return $html;
 
 }

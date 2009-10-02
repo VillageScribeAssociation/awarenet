@@ -9,7 +9,7 @@
 //  This is how the project knows where it is on the system, for constructing absolute local 
 //	filesystem paths.
 
-    $installPath = '/var/www/awarenet2/';
+    $installPath = '/var/www/an2google/trunk/';
 
 //  (2) SERVER PATH
 //  Tells the project where it is on the net, set to '/' if there is any doubt, or if more than 

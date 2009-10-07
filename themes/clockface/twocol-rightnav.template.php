@@ -8,7 +8,10 @@
 .style1 {font-size: 9px}
 </style>
 
+<script src='%%serverPath%%core/utils.js'></script>
 <script src='%%serverPath%%modules/chat/chat.js'></script>
+
+%%head%%
 
 <script language='javascript'>
 

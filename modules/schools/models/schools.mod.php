@@ -136,15 +136,6 @@ class School {
 		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['contentHtml']);
 	
 		$ary['summary'] = substr(strip_tags(strip_blocks($ary['description'])), 0, 400) . '...';
-
-		//------------------------------------------------------------------------------------------
-		//	marked up for wyswyg editor
-		//------------------------------------------------------------------------------------------
-		
-		$ary['descriptionJs'] = $ary['description'];
-		$ary['descriptionJs'] = str_replace("'", '--squote--', $ary['descriptionJs']);
-		$ary['descriptionJs'] = str_replace("\"", '--dquote--', $ary['descriptionJs']);
-		$ary['descriptionJs'] = str_replace("[[:", '[[%%delme%%:', $ary['descriptionJs']);	
 	
 		return $ary;
 	}

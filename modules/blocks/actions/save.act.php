@@ -1,23 +1,33 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	save submitted block, redirect to /pages/list
+//	save submitted block, return user to to /pages/list
 //--------------------------------------------------------------------------------------------------
-// TODO: check directory traversal, etc
 
-if ($user->data['ofGroup'] != 'admin') { do403(); } // admins only
+	//----------------------------------------------------------------------------------------------
+	//	check permissions
+	//----------------------------------------------------------------------------------------------
+	if ($user->data['ofGroup'] != 'admin') { do403(); } // admins only
 
-if ((array_key_exists('action', $_POST) AND ($_POST['action'] == 'saveBlock'))) {
+	if ( (array_key_exists('action', $_POST) == true)
+		 AND ($_POST['action'] == 'saveBlock') 
+		 AND (array_key_exists('module', $_POST) == true)
+		 AND (array_key_exists('block', $_POST) == true) ) {
 
-	$fileName = $installPath . 'modules/' . $_POST['module'] . '/' . $_POST['block'];
-	if (file_exists($fileName)) {
+		//-----------------------------------------------------------------------------------------
+		//	save the block
+		//-----------------------------------------------------------------------------------------
+		$fileName = 'modules/'. $_POST['module'] .'/views/'. $_POST['block'] .'.block.php';
+		$fileName = str_replace('..', '', $fileName);
 
-		saveBlock($fileName, stripslashes($_POST['blockContent']));
+		if (file_exists($installPath . $fileName)) {
 
-	} else { $_SESSION['sMessage'] .= "no such block :-(<br/>\n"; }
+			saveBlock($fileName, stripslashes($_POST['blockContent']));
 
-	do302('pages/list/');
+		} else { $_SESSION['sMessage'] .= "no such block :-(<br/>\n"; }
 
-}
-// drasticdata.nl
+		do302('pages/list/');
+
+	} else { do404(); }
+
 ?>

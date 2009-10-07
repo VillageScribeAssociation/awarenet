@@ -28,7 +28,7 @@ function images_listall($args) {
 	foreach($list as $UID => $row) {
 		$model = new Image();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/blog/summary.block.php'));
+		$html .= replaceLabels($model->extArray(), loadBlock('modules/images/summary.block.php'));
 	}  
 	return $html;	
 	

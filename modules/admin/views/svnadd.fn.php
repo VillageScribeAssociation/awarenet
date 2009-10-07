@@ -57,7 +57,7 @@ function admin_svnadd($args) {
 	//---------------------------------------------------------------------------------------------
 	$scriptFile = $installPath . 'svnadd.sh';
 	$fh = fopen($scriptFile, 'w+');
-	fwrite($fh, $html);
+	fwrite($fh, $svnfiles);
 	fclose($fh);
 
 	$html .= "The following files should be managed by subversion:<br/>";
@@ -70,7 +70,7 @@ function admin_svnadd($args) {
 	//---------------------------------------------------------------------------------------------
 	$scriptFile = $installPath . 'svndelete.sh';
 	$fh = fopen($scriptFile, 'w+');
-	fwrite($fh, $html);
+	fwrite($fh, $skipfiles);
 	fclose($fh);
 
 	$html .= "The following files should not be managed by SVN:<br/>";

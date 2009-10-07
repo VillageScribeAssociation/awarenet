@@ -1,22 +1,39 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	edit a block
+//	edit a block template
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do404(); } // admins only
+	//----------------------------------------------------------------------------------------------
+	// check permissions
+	//----------------------------------------------------------------------------------------------
+	if ($user->data['ofGroup'] != 'admin') { do403(); } 
 
 	if ((array_key_exists('module', $request['args'])) AND ($request['ref'] != '')) {
 		//------------------------------------------------------------------------------------------
-		// TODO: more error checking here (directory traversal, etc)
+		// check the the block exists
 		//------------------------------------------------------------------------------------------
-		$fileName = $installPath . 'modules/' . $request['args']['module'] . '/' . $request['ref'];
+		$module = $request['args']['module'];
+		$block = $request['ref'];
+		$fileName = $installPath . 'modules/' . $module . '/views/' .  $block . '.block.php';
+
 		if (file_exists($fileName)) {
+			//--------------------------------------------------------------------------------------
+			//	render the page
+			//--------------------------------------------------------------------------------------
 			$page->load($installPath . 'modules/blocks/actions/edit.page.php');
-			$page->blockArgs['xmodule'] = $request['args']['module'];
-			$page->blockArgs['xblock'] = $request['ref'];
+			$page->blockArgs['refmodule'] = $request['args']['module'];
+			$page->blockArgs['refblock'] = $request['ref'];
 			$page->render();
-		}
+
+		} else { do404(); }	// block template file not found		
+
+	} else {
+		//------------------------------------------------------------------------------------------
+		// module/block not provided
+		//------------------------------------------------------------------------------------------
+		do404();
+
 	}
 
 ?>

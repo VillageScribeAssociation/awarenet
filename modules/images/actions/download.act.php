@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($installPath . 'modules/images/inc/images__weight.inc.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	control variables
@@ -63,10 +64,12 @@
 		$i->storeFile($img);
 		$i->data['licence'] = 'unknown';
 		$i->data['attribURL'] = $URL;
-		$i->data['weight'] = '0';
+		$i->data['weight'] = (images__getHeaviest($refModule, $refUID) + 1); // last in list
 		$ext = $i->extArray();
 		$i->save();
 		$msg = "Downloaded image: $URL <br/>\n";
+
+		images__checkWeight($refModule, $refUID);	// ensure weights are consecutive
 
 		//------------------------------------------------------------------------------------------
 		//	check if a images_add callback can be sent to this refModule
@@ -90,7 +93,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back 
 	//----------------------------------------------------------------------------------------------
-		
+	
 	$_SESSION['sMessage'] .= $msg;
 	if ($return = 'uploadmultiple') {
 		do302('images/uploadmultiple/refModule_' . $refModule . '/refUID_' . $refUID . '/');

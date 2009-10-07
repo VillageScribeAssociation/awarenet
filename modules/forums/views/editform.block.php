@@ -1,5 +1,4 @@
 <? /*
-<div class='indent'>
 <form name='editforums' method='POST' action='/forums/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
@@ -12,18 +11,9 @@
 </table>
 <br/>
 <b>Description:</b> <small>what is this forum about?</small><br/>
-<input type='hidden' id='content-edit-hidden' name='content-loader' value='%%descriptionJs%%' />
-<script language='JavaScript' type='text/javascript' src='/modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-// strip temporary markup
-var refFieldName = '';
-contentJSEHR = document.getElementById('content-edit-hidden');
-contentJSEHR.value = contentJSEHR.value.replace(/--squote--/g, String.fromCharCode(39));
-contentJSEHR.value = contentJSEHR.value.replace(/--dquote--/g, String.fromCharCode(34));
-area = new HyperTextArea('description', contentJSEHR.value, 530, 300,'/modules/editor/');
-//-->
-</script><br/>
+%%descriptionJs64%%
+[[:editor::base64::jsvar=descriptionJs64::name=description:]]
+<br/>
 
 <table noborder>
   <tr>
@@ -38,5 +28,4 @@ area = new HyperTextArea('description', contentJSEHR.value, 530, 300,'/modules/e
    </td>
  </tr>
 </table>
-</div>
 */ ?>

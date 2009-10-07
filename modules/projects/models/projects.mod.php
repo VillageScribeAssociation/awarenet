@@ -252,10 +252,6 @@ class Project {
 		
 		if ($ary['abstract'] == '') { $ary['abstract'] = ' '; }
 		$ary['projectTitle'] = $ary['title'];
-		$ary['abstractJs'] = $ary['abstract'];
-		$ary['abstractJs'] = str_replace("'", '--squote--', $ary['abstractJs']);
-		$ary['abstractJs'] = str_replace("'", '--dquote--', $ary['abstractJs']);
-		$ary['abstractJs'] = str_replace("[[:", '[[%%delme%%:', $ary['abstractJs']);
 	
 		return $ary;
 	}
@@ -269,13 +265,7 @@ class Project {
 		$ary = $this->sections[$sectionUID];
 		$ary['projectUID'] = $this->data['UID'];
 		$ary['projectTitle'] = $this->data['title'];
-		$ary['sectionTitle'] = $ary['title'];
-
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("[[:", '[[%%delme%%:', $ary['contentJs']);
-
+		$ary['sectionTitle'] = $ary['title'];	
 		return $ary;
 	}
 
@@ -381,10 +371,10 @@ class Project {
 
 		$this->data['content'] = $xe->toString();	
 
-		$tmpFile = $installPath . 'modules/projects/tmp.xml';
-		$fh = fopen($tmpFile, 'w+');
-		fwrite($fh, $this->data['content']);
-		fclose($fh);
+		//$tmpFile = $installPath . 'modules/projects/tmp.xml';
+		//$fh = fopen($tmpFile, 'w+');
+		//fwrite($fh, $this->data['content']);
+		//fclose($fh);
 
 	}
 

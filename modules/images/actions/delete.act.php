@@ -4,13 +4,17 @@
 //	delete an image and associated record, derivative files, etc
 //--------------------------------------------------------------------------------------------------
 
+	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($installPath . 'modules/images/inc/images__weight.inc.php');
+
 	if ( (array_key_exists('UID', $_POST))
 	   AND (dbRecordExists('images', $_POST['UID'])) ) {
 	
-		require_once($installPath . 'modules/images/models/image.mod.php');
 		$i = new Image($_POST['UID']);
 		if ($i->data['fileName'] == '') { do404(); }
 		if (authHas($i->data['refModule'], 'images', '') == false) { do403(); }
+
+		$refModule = ''; //*************
 	
 		$i->delete();
 	

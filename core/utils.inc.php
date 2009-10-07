@@ -208,4 +208,19 @@ function jsMarkup($txt) {
 	$txt = str_replace("[[:", '[[%%delme%%:', $txt);
 	return $txt;
 }
+
+//--------------------------------------------------------------------------------------------------
+// 	convert to base64 (TODO: make this more efficient)
+//--------------------------------------------------------------------------------------------------
+
+function base64EncodeJs($varName, $text, $scriptTags = true) {
+	$b64 = base64_encode($text);										// encode
+	$b64 = wordwrap($b64, 80, "\n", true);								// break into 80 car lines
+	$break = "\"\n" . str_repeat(' ', strlen($varName) + 5) . "+ \"";	// newline/indent pattern
+	$b64 = str_replace("\n", $break, $b64);								// apply pattern to lines
+	$b64 = "var $varName = \"" . $b64 . "\";\n";						// add js varname
+	if (true == $scriptTags) { $b64 = "<script language='Javascript'>\n" . $b64 . "</script>\n"; }
+	return $b64;														// done
+}
+
 ?>

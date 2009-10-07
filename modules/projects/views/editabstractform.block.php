@@ -23,18 +23,9 @@
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
-<input type='hidden' id='abstract-edit-hidden' name='content-loader' value='%%abstractJs%%' />
-<script language='JavaScript' type='text/javascript' src='/modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-// strip temporary markup
-var $refFieldName = '';
-contentJSEHR = document.getElementById('abstract-edit-hidden');
-contentJSEHR.value = contentJSEHR.value.replace(/--squote--/g, String.fromCharCode(39));
-contentJSEHR.value = contentJSEHR.value.replace(/--dquote--/g, String.fromCharCode(34));
-area = new HyperTextArea('abstract', contentJSEHR.value, 570, 400,'/modules/editor/');
-//-->
-</script><br/>
+%%abstractJs64%%
+[[:editor::base64::jsvar=abstractJs64::name=abstract:]]
+<br/>
 
 <table noborder>
   <tr>

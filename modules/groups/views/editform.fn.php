@@ -12,7 +12,9 @@ function groups_editform($args) {
 	if (authHas('groups', 'edit', '') == false) { return false; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new Group($args['raUID']);
-	return replaceLabels($model->extArray(), loadBlock('modules/groups/views/editform.block.php'));
+	$ext = $model->extArray();
+	$ext['descriptionJs64'] = base64EncodeJs('descriptionJs64', $ext['description']);
+	return replaceLabels($ext, loadBlock('modules/groups/views/editform.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------

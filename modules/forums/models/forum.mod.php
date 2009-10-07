@@ -214,17 +214,8 @@ class Forum {
 		//	summary
 		//------------------------------------------------------------------------------------------
 
-		$ary['summary'] = strip_tags($ary['description']);
-		$ary['summary'] = substr($ary['summary'], 0, 1000) . '...';
-	
-		//------------------------------------------------------------------------------------------
-		//	format for WYSWYG editor
-		//------------------------------------------------------------------------------------------
-
-		$ary['descriptionJs'] = $ary['description'];
-		$ary['descriptionJs'] = str_replace("'", '--squote--', $ary['descriptionJs']);
-		$ary['descriptionJs'] = str_replace("'", '--dquote--', $ary['descriptionJs']);
-	
+		$ary['summary'] = strip_tags(strip_blocks($ary['description']));
+		$ary['summary'] = substr($ary['summary'], 0, 1000) . '...';	
 		$ary['summary'] = substr(strip_tags($ary['description']), 0, 400) . '...';
 
 		//------------------------------------------------------------------------------------------

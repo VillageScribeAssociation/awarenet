@@ -8,6 +8,7 @@
 [[:forums::showthreads::forumUID=[`|pc][`|pc]UID[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]
 
 [[:theme::navtitlebox::width=570::label=Start a New Discussion:]]
+[`|lt]br/[`|gt]
 [[:forums::newthreadform::forumUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 <title>:: awareNet :: forum ::</title>
 <script></script>

@@ -16,18 +16,10 @@
 <br/>
 <b>Description of this school:</b><br/>
 
-<input type='hidden' id='description-edit-hidden' name='description-loader' value='%%descriptionJs%%' />
-<script language='JavaScript' type='text/javascript' src='/modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-// strip temporary markup
-var $refFieldName = '';
-descriptionJSEHR = document.getElementById('description-edit-hidden');
-descriptionJSEHR.value = descriptionJSEHR.value.replace(/--squote--/g, String.fromCharCode(39));
-descriptionJSEHR.value = descriptionJSEHR.value.replace(/--dquote--/g, String.fromCharCode(34));
-area = new HyperTextArea('description', descriptionJSEHR.value, 500, 400,'/modules/editor/');
-//-->
-</script><br/>
+%%descriptionJs64%%
+[[:editor::base64::jsvar=descriptionJs64::name=description:]]
+<br/>
+
 <table noborder>
   <tr>
    <td valign='top'>

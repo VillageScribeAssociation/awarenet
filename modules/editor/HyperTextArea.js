@@ -232,8 +232,11 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 		var frameHtml = "<html>\n";
 		frameHtml += "<head>\n";
 		if (this.styleSheetUrl){
-			frameHtml += "<link media=\"all\" type=\"text/css\" href=\"" + this.styleSheetUrl + "\" rel=\"stylesheet\">\n";
+			//frameHtml += "<link media=\"all\" type=\"text/css\" href=\"" + this.styleSheetUrl + "\" rel=\"stylesheet\">\n";
+		} else {
+			frameHtml += "<link media=\"all\" type=\"text/css\" href=\"/themes/clockface/css/iframe.css\" rel=\"stylesheet\">\n";
 		}
+
 		frameHtml += "</head>\n";
 		frameHtml += "<body>\n";
 		frameHtml += html;
@@ -245,17 +248,25 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 			oRTE.open();
 			oRTE.write(frameHtml);
 			oRTE.close();
+			//attach a mouse handler
+			oRTE.onmouseup = listen_onMouseUp; 
+			oRTE.onmousedown = listen_onMouseDown; 
+
 		} else {
 			var oRTE = document.getElementById(this.name).contentWindow.document;
 			oRTE.open();
 			oRTE.write(frameHtml);
 			oRTE.close();
+			//attach mouse handlers
+			oRTE.onmouseup = listen_onMouseUp; 
+			oRTE.onmousedown = listen_onMouseDown; 
 			//attach a keyboard handler for Mozilla to make keyboard shortcuts for formatting text
 			oRTE.addEventListener("keypress", kb_handler, true);
 		}
 	}
 
 	this.setContent = function(html){
+		//alert('setContent()');
 		HyperTextArea.activeArea = this;
 		var oRTE;
 		if (document.all) {
@@ -268,6 +279,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 
 	this.update = function(){
+		//alert('update()');
 		this.setViewMode(false);
 
 		//set message value
@@ -295,6 +307,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 
 	this.setViewMode = function(isSrcView){
+		//alert('setViewMode()');
 		HyperTextArea.activeArea = this;
 		//contributed by Bob Hutzel (thanks Bob!)
 		var oRTE;
@@ -340,6 +353,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	//TODO would really like to be able to plug functionality in here.  This would include the 
 	//ability to launch a wizard, and then insert arbitrary text at the insertion point
 	this.formatText = function (command,option){
+		alert('formatText()');
 		HyperTextArea.activeArea = this;
 		var oRTE;
 		if (document.all) {
@@ -409,6 +423,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 	
 	this.addImage = function(imagePath){
+		alert('addImage()');
 		HyperTextArea.activeArea = this;
 		if(!imagePath){
 			imagePath = prompt('Enter Image URL:', 'http://');				
@@ -445,6 +460,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 	
 	this.select = function(menu,cmd){
+		alert('select()');
 		HyperTextArea.activeArea = this;
 		var oRTE;
 		if (document.all) {
@@ -510,6 +526,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 	
 	this.insertElement = function(el){
+		alert('insertelement()');
 		if (document.all) {
 			oRTE = frames[this.name];
 		} else {
@@ -693,6 +710,7 @@ function getOffsetLeft(elm) {
 
 function kb_handler(evt, rte) {
 	//contributed by Anti Veeranna (thanks Anti!)
+
 	if (evt.ctrlKey) {
 		var key = String.fromCharCode(evt.charCode).toLowerCase();
 		var cmd = '';
@@ -838,6 +856,10 @@ function enableDesignMode(areaName){
 		}
 	}
 }
+
+
+function listen_onMouseDown(e) { alert('mouseDown'); }
+function listen_onMouseUp(e) { alert('mouseUp'); }
 
 function onHyperTextAreaLoad(areaName) {
 	self.status = "attempting to set designMode property";

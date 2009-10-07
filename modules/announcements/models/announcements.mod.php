@@ -168,14 +168,6 @@ class Announcement {
 		$ary['summary'] = substr(strip_tags(strip_blocks($ary['content'])), 0, 800) . '...';
 		$ary['summarynav'] = substr(strip_tags(strip_blocks($ary['content'])), 0, 200) . '...';
 
-		//------------------------------------------------------------------------------------------
-		//	marked up for wyswyg editor
-		//------------------------------------------------------------------------------------------
-		
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
-	
 		return $ary;
 	}
 

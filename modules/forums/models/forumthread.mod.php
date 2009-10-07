@@ -165,16 +165,9 @@ class ForumThread {
 		//	summary
 		//------------------------------------------------------------------------------------------
 
-		$ary['summary'] = strip_tags($ary['content']);
+		$ary['summary'] = strip_blocks(strip_tags($ary['content']));
 		$ary['summary'] = substr($ary['summary'], 0, 300) . '...';
 	
-		//------------------------------------------------------------------------------------------
-		//	format for WYSWYG editor
-		//------------------------------------------------------------------------------------------
-
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
 	
 		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['content']);
 

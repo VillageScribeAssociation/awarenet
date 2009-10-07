@@ -157,10 +157,6 @@ class Group {
 		//	marked up for wyswyg editor
 		//------------------------------------------------------------------------------------------
 		
-		$ary['descriptionJs'] = $ary['description'];
-		$ary['descriptionJs'] = str_replace("'", '--squote--', $ary['descriptionJs']);
-		$ary['descriptionJs'] = str_replace("'", '--dquote--', $ary['descriptionJs']);
-	
 		return $ary;
 	}
 

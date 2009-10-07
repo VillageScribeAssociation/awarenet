@@ -50,18 +50,9 @@
 </table>
 <br/>
 <b>Description of event:</b><br/>
-<input type='hidden' id='content-edit-hidden' name='content-loader' value='%%contentJs%%' />
-<script language='JavaScript' type='text/javascript' src='/modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-// strip temporary markup
-var $refFieldName = '';
-contentJSEHR = document.getElementById('content-edit-hidden');
-contentJSEHR.value = contentJSEHR.value.replace(/--squote--/g, String.fromCharCode(39));
-contentJSEHR.value = contentJSEHR.value.replace(/--dquote--/g, String.fromCharCode(34));
-area = new HyperTextArea('content', contentJSEHR.value, 500, 400,'/modules/editor/');
-//-->
-</script><br/>
+%%contentJs64%%
+[[:editor::base64::jsvar=contentJs64::name=content:]]
+<br/>
 
 <table noborder>
   <tr>

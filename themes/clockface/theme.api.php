@@ -99,6 +99,74 @@ function theme__mkMenuItem($s, $fileName, $label, $selected) {
 	imagepng($img, $fileName);
 }
 
+//--------------------------------------------------------------------------------------------------------------
+//	make a button graphic
+//--------------------------------------------------------------------------------------------------------------
+//	arguments: [label][alt][selected]
+
+function theme_button($args) {
+	global $installPath;
+	global $serverPath;
+	global $defaultTheme;
+	global $page;
+	$s = $page->style;
+
+	//------------------------------------------------------------------------------------------------------
+	//	arguments
+	//------------------------------------------------------------------------------------------------------
+	$label = 'item'; $alt='';
+	if (array_key_exists('label', $args)) { $label = $args['label']; }
+	if (array_key_exists('alt', $args)) { $alt = $args['alt']; }
+	if (array_key_exists('selected', $args)) { $selected = $args['selected']; }
+
+	//------------------------------------------------------------------------------------------------------
+	//	choose a filename
+	//------------------------------------------------------------------------------------------------------
+	$fileName = 'button_' . mkAlphaNumeric($label) . '_' . $selected .  '.png';
+	$fileName = $installPath . 'themes/' . $defaultTheme . '/drawcache/' . $fileName;
+
+	//------------------------------------------------------------------------------------------------------
+	//	create the graphic if it does not exist
+	//------------------------------------------------------------------------------------------------------
+	if (file_exists($fileName) == false) { theme__mkButtonImg($s, $fileName, $label, $selected); }
+
+	//------------------------------------------------------------------------------------------------------
+	//	return html
+	//------------------------------------------------------------------------------------------------------
+	$imgUrl = str_replace($installPath, $serverPath, $fileName);
+	$html = "<img class='menu1' src='" . $imgUrl . "' border='0' alt='" . $alt . "' />";
+	return $html;
+}
+
+function theme__mkButtonImg($s, $fileName, $label, $selected) {
+	global $installPath;
+
+	//------------------------------------------------------------------------------------------------------
+	//	measure the text
+	//------------------------------------------------------------------------------------------------------
+	$fontFile = $installPath . 'data/fonts/' . $s['fonMenu1'];
+	$bbox = imageftbbox($s['fnsMenu1'], 0, $fontFile, $label);
+	$width = $bbox[4] - $bbox[6];
+
+	//------------------------------------------------------------------------------------------------------
+	//	make the graphic
+	//------------------------------------------------------------------------------------------------------
+	
+	$width = $width + ($s['pxxButtonpad'] * 2);
+	$height = $s['pxxButtonheight'];
+	$bgRgb = imgHexToRgb($s['clrButtonbg']);
+	$fgRgb = imgHexToRgb($s['clrButtonfg']);
+
+	$img = imagecreatetruecolor($width, $height);
+	$clrFg = imagecolorallocate($img, $fgRgb['r'], $fgRgb['g'], $fgRgb['b']);	
+	$clrBg = imagecolorallocate($img, $bgRgb['r'], $bgRgb['g'], $bgRgb['b']);
+
+	imagefilledrectangle($img, 0, 0, $width, $height, $clrBg);
+	imagefttext($img, $s['fnsButton'], 0, $s['pxxButtonpad'], $s['pxxButtontop'], $clrFg, $fontFile, $label);
+
+	imagepng($img, $fileName);
+}
+
 //--------------------------------------------------------------------------------------------------
 //	make a submenu item
 //--------------------------------------------------------------------------------------------------

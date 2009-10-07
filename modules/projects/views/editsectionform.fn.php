@@ -19,6 +19,7 @@ function projects_editsectionform($args) {
 	if ($model->isMember($user->data['UID']) == false) { return false; }
 	if (array_key_exists($args['sectionUID'], $model->sections) == false) { return false; }
 	$labels = $model->sectionArray($args['sectionUID']);
+	$labels['contentJs64'] = base64EncodeJs('contentJs64', $labels['content']);
 	return replaceLabels($labels, loadBlock('modules/projects/views/editsectionform.block.php'));
 }
 

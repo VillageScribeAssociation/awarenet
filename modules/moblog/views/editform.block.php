@@ -1,6 +1,6 @@
 <? /*
 <br/>
-<form name='editPost' method='POST' action='/moblog/save/'>
+<form name='editPost' method='POST' action='%%serverPath%%/moblog/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -21,18 +21,9 @@
 </table>
 <br/>
 <b>Post Body: </b><small>(use special {fold} marker at end of introduction)
-<input type='hidden' id='content-edit-hidden' name='content-loader' value='%%contentJs%%' />
-<script language='JavaScript' type='text/javascript' src='/modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-// strip temporary markup
-var $refFieldName = '';
-contentJSEHR = document.getElementById('content-edit-hidden');
-contentJSEHR.value = contentJSEHR.value.replace(/--squote--/g, String.fromCharCode(39));
-contentJSEHR.value = contentJSEHR.value.replace(/--dquote--/g, String.fromCharCode(34));
-area = new HyperTextArea('content', contentJSEHR.value, 500, 400,'/modules/editor/');
-//-->
-</script><br/>
+%%contentJs64%%
+[[:editor::base64::jsvar=contentJs64::name=content:]]
+<br/>
 <table noborder>
   <tr>
    <td valign='top'>

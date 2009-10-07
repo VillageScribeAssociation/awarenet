@@ -30,6 +30,14 @@
 	<pxxNavBoxFonX>14</pxxNavBoxFonX>
 	<pxxNavBoxFonY>22</pxxNavBoxFonY>
 
+	<clrButtonbg>#365a10</clrButtonbg>
+	<clrButtonfg>#ffffff</clrButtonfg>
+	<fonButton>trebuchet.ttf</fonButton>
+	<fnsButton>14</fnsButton>
+	<pxxButtonpad>14</pxxButtonpad>
+	<pxxButtonheight>22</pxxButtonheight>
+	<pxxButtontop>19</pxxButtontop>
+
 	<clrBreadcrumbBg>#ffffff</clrBreadcrumbBg>
 	<clrBreadcrumbFg>#4e4e4e</clrBreadcrumbFg>
 	<pxxBreadcrumbHeight>32</pxxBreadcrumbHeight>

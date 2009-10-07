@@ -23,7 +23,7 @@ function images_imagesetdetail($args) {
 	//	load the image records and make html
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from images where refModule='" . sqlMarkup($args['refModule']) 
-	     . "' and refUID='" . sqlMarkup($args['refUID']) . "'";
+	     . "' and refUID='" . sqlMarkup($args['refUID']) . "' order by floor(weight)";
 	
 	$result = dbQuery($sql);	
 
@@ -43,6 +43,8 @@ function images_imagesetdetail($args) {
 		  $labels['editUrl'] = $serverPath . 'images/viewset/return_uploadmultiple/' . $recordAlias;
 		}
 		
+		if (trim($labels['caption']) == '') { $labels['caption'] = 'none.'; }
+
 		$returnUrl = '/images/uploadmultiple/refModule_' . $i->data['refModule'] 
 			   . '/refUID_' . $i->data['refUID'] . '/';
 		
@@ -51,7 +53,7 @@ function images_imagesetdetail($args) {
 		<input type='hidden' name='action' value='deleteImage' />
 		<input type='hidden' name='UID' value='" . $i->data['UID'] . "' />
 		<input type='hidden' name='return' value='" . $returnUrl . "' />
-		<input type='submit' value='delete' />
+		<input type='image' src='%%serverPath%%themes/clockface/images/btn-del.png' alt='delete' />
 		</form>
 		";
 		

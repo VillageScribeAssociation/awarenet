@@ -13,7 +13,9 @@ function forums_editform($args) {
 	if (authHas('forums', 'edit', '') == false) { return false; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new Forum($args['raUID']);
-	return replaceLabels($model->extArray(), loadBlock('modules/forums/views/editform.block.php'));
+	$ext = $model->extArray();
+	$ext['descriptionJs64'] = base64EncodeJs('descriptionJs64', $ext['description']);
+	return replaceLabels($ext, loadBlock('modules/forums/views/editform.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------

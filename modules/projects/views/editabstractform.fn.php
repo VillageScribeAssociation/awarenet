@@ -15,7 +15,9 @@ function projects_editabstractform($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new Project($args['raUID']);
 	if ($model->isMember($user->data['UID']) == false) { return false; }
-	return replaceLabels($model->extArray(), loadBlock('modules/projects/views/editabstractform.block.php'));
+	$ext = $model->extArray();
+	$ext['abstractJs64'] = base64EncodeJs('abstractJs64', $ext['abstract']);
+	return replaceLabels($ext, loadBlock('modules/projects/views/editabstractform.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------

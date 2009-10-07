@@ -212,11 +212,6 @@ class Moblog {
 		//------------------------------------------------------------------------------------------
 		//	marked up for wyswyg editor
 		//------------------------------------------------------------------------------------------
-		
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("[[:", '[[%%delme%%:', $ary['contentJs']);
 	
 		$ary['content'] = str_replace('{fold}', '', $ary['content']);
 

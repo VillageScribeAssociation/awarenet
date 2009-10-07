@@ -21,13 +21,8 @@
   </tr>
 </table>
 
-<input type='hidden' id='content-edit-hidden' name='content-loader' value='' />
-<script language='JavaScript' type='text/javascript' src='%%serverPath%%modules/editor/HyperTextArea.js'></script>
-<script language='JavaScript' type='text/javascript'>
-<!--
-area = new HyperTextArea('content', '', 560, 400,'/modules/editor/');
-//-->
-</script><br/>
+[[:editor::add::name=content:]]
+<br/>
 
 <table noborder>
   <tr>

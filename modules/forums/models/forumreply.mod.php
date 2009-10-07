@@ -156,20 +156,11 @@ class ForumReply {
 		//	summary
 		//------------------------------------------------------------------------------------------
 
-		$ary['summary'] = strip_tags($ary['description']);
+		$ary['summary'] = strip_tags(strip_blocks($ary['description']));
 		$ary['summary'] = substr($ary['summary'], 0, 1000) . '...';
-	
-		//------------------------------------------------------------------------------------------
-		//	format for WYSWYG editor
-		//------------------------------------------------------------------------------------------
-
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
-	
-		$ary['contentHtml'] = $ary['content'];
-
 		$ary['summary'] = substr(strip_tags($ary['content']), 0, 400) . '...';
+
+		$ary['contentHtml'] = $ary['content'];
 
 		//------------------------------------------------------------------------------------------
 		//	look up user

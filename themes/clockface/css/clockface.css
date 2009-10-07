@@ -94,10 +94,18 @@ div.navbox {
 	padding: 2px;
 	padding-left: 12px;
 	background-color: #4e4e4e;
+	-moz-user-select: none;
 }
 
 div.navbox a {
 	color: #444444;
+}
+
+img.navboxbtn {
+	float: right; 
+	position: relative; 
+	top: -21px; 
+	left: -5px;
 }
 
 /* indented div --------------------------------------------------------------------------------- */

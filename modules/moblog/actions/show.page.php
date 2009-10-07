@@ -5,15 +5,32 @@
 
 [[:moblog::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Comments::width=570:]]
+
+[[:theme::navtitlebox::label=Comments::width=570::toggle=divBlogComments:]]
+[`|lt]div id='divBlogComments'[`|gt]
 [[:comments::list::refModule=moblog::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddBlogComment::hidden=yes:]]
+[`|lt]div id='divAddBlogComment' style='visibility: hidden; display: none;'[`|gt]
 [[:comments::addcommentform::refModule=moblog::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=moblog/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 <title>:: awareNet :: moblog ::</title>
 <script></script>
-<nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
+<nav1>
+[[:theme::navtitlebox::label=Add New Post::width=570::toggle=divNewBlogForm::hidden=yes:]]
+[`|lt]div id='divNewBlogForm' style='visibility: hidden; display: none;'[`|gt]
+[`|pc][`|pc]newPostForm[`|pc][`|pc]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Author:]]
 [[:moblog::showauthornav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+
+
 [[:theme::navtitlebox::label=In This Blog:]]
 [[:moblog::listrecentsamenav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
 [`|lt]br/[`|gt]

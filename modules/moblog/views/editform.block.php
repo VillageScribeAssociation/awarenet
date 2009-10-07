@@ -20,7 +20,7 @@
   </tr>
 </table>
 <br/>
-<b>Post Body: </b><small>(use special {fold} marker at end of introduction)
+<b>Post Body: </b><small>(use special {fold} marker at end of introduction)</small>
 %%contentJs64%%
 [[:editor::base64::jsvar=contentJs64::name=content:]]
 <br/>
@@ -37,7 +37,9 @@
    </td>
  </tr>
 </table>
-
-<h2>Images</h2>
+<br/>
+[[:theme::navtitlebox::label=Images::toggle=divBlogImages:]]
+<div id='divBlogImages'>
 [[:images::uploadmultiple::refModule=moblog::refUID=%%UID%%:]]
+</div>
 */ ?>

@@ -4,14 +4,23 @@
 <content>[[:theme::navtitlebox::width=570::label=Discussion:]]
 [[:forums::showthread::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 [[:forums::showreplies::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::width=570::label=Reply:]]
-[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]</content>
+[[:theme::navtitlebox::width=570::label=Reply::toggle=divAddReply::hidden=yes:]]
+[`|lt]div id='divAddReply' style='visibility: hidden; display: none;'[`|gt]
+[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+</content>
 <title>:: awareNet :: forums ::</title>
 <script></script>
-<nav1>[[:theme::navtitlebox::label=Forum:]]
+<nav1>
+[[:theme::navtitlebox::label=Forum::toggle=divForumStats::hidden=yes:]]
+[`|lt]div id='divForumStats' style='visibility: hidden; display: none;'[`|gt]
 [[:forums::summarynav::forumUID=[`|pc][`|pc]forumUID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Busiest Discussions:]]
 [[:forums::busiestthreads:]]
 [`|lt]br/[`|gt]</nav1>

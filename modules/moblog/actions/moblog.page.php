@@ -8,9 +8,12 @@
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Tags:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Blogs By School:]]
+[[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
+[`|lt]div id='divSchoolStats'[`|gt]
 [[:moblog::schoolstatsnav:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Most Popular Posts:]]
 [`|lt]br/[`|gt]</nav1>
 <nav2></nav2>

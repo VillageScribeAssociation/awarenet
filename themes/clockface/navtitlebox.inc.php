@@ -3,12 +3,10 @@
 //--------------------------------------------------------------------------------------------------
 //	returns a navbox title graphic
 //--------------------------------------------------------------------------------------------------
-//	arguments:
-//		link:	URL - what happens when you click on this - default=none
-//		rss:	rss feed for this section - default=none
-//		style:	box|arrowleft|arrowright|rounded|blunt
-//		width:	width of the box - default=20
-//		label:	text displayed on the box
+//opt: label - text displayed on the box
+//opt: width - width of the box - default=20
+//opt: toggle - id of a div to toggle visibility
+//opt: hidden - set to yes if div id hidden by default
 
 function theme_navtitlebox($args) {
 	global $installPath;
@@ -23,11 +21,27 @@ function theme_navtitlebox($args) {
 	$s['label'] = 'label'; $s['rss'] = ''; $s['link'] = '';
 
 	if (array_key_exists('label', $args)) 	{ $s['label'] = $args['label']; }   
-	if (array_key_exists('rss', $args)) 	{ $s['rss'] = $args['rss']; }   // unused in awareNet
-	if (array_key_exists('link', $args)) 	{ $s['link'] = $args['link']; } // unused in awareNet
 	if (array_key_exists('width', $args)) 	{ $s['pxxNavBoxWidth'] = $args['width']; } // ditto
 
-	$html = "<div class='navbox'>" . $s['label'] . "</div>\n";
+	//----------------------------------------------------------------------------------------------
+	//	add toggle button 
+	//----------------------------------------------------------------------------------------------	
+	$toggle = ''; $onClick = '';
+	if (array_key_exists('toggle', $args) == true) {
+		$icoFile = '%%serverPath%%themes/clockface/icons/btn-minus.png';
+		if ((array_key_exists('hidden', $args) == true) AND ($args['hidden'] == 'yes')) 
+			{ $icoFile = '%%serverPath%%themes/clockface/icons/btn-plus.png'; }
+
+		$UID = createUID();
+		$id = "id='ti" . $UID . "'";
+		$onClick = "onClick=\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "')\"";
+		$toggle = "<img $id class='navboxbtn' src='" . $icoFile . "' width='16px' $onClick>";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	make html
+	//----------------------------------------------------------------------------------------------	
+	$html = "<div class='navbox' $onClick>" . $s['label'] . $toggle . "</div>\n";
 
 	return $html;
 }

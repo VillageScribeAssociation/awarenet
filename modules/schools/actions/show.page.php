@@ -4,19 +4,27 @@
 <content>[[:theme::navtitlebox::width=570::label=About:]]
 [[:schools::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::width=570::label=Announcements:]]
+[[:theme::navtitlebox::width=570::label=Announcements::toggle=divAnnouncements:]]
+[`|lt]div id='divAnnouncements'[`|gt]
 [`|lt]br/[`|gt]
 [[:announcements::list::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
 [[:announcements::newlink::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]</content>
 <title>:: awareNet :: schools ::</title>
 <script></script>
-<nav1>[[:theme::navtitlebox::label=All Schools:]]
+<nav1>[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools:]]
+[`|lt]div id='divAllSchools'[`|gt]
 [[:schools::listallnav:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Students And Teachers:]]
+
+[[:theme::navtitlebox::label=Students And Teachers::toggle=divStudentsAndTeachers::hidden=yes:]]
+[`|lt]div id='divStudentsAndTeachers' style='visibility: hidden; display: none;'[`|gt]
 [[:schools::allgrades::schoolUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
 [[:groups::listallnav::school=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]

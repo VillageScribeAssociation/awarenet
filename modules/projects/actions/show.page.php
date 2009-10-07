@@ -12,10 +12,18 @@
 [[:projects::askjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
-[[:theme::navtitlebox::label=Recent Comments:]]
+[[:theme::navtitlebox::label=Recent Comments::toggle=divCommentsNav:]]
+[`|lt]div id='divCommentsNav'[`|gt]
 [[:comments::listnav::refModule=projects::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:comments::addcommentformnav::refModule=projects::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Add A Comment::toggle=divAddCommentNav::hidden=yes:]]
+[`|lt]div id='divAddCommentNav' style='visibility: hidden; display: none;'[`|gt]
+[[:comments::addcommentformnav::refModule=projects::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Their Other Projects:]]
 [[:projects::listsamembersanav::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</nav1>

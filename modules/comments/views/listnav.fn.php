@@ -39,7 +39,7 @@ function comments_listnav($args) {
 			$html .= replaceLabels($model->extArray(), loadBlock($blockFile));
 		}  
 	} else {
-		$html .= "(no comments at present)";
+		$html .= "(no comments at present)<br/>";
 	}
 	return $html;
 }

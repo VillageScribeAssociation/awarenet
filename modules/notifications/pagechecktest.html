@@ -1,0 +1,37 @@
+<html>
+<title>Notifications Test</title>
+<script language='javascript' src='http://awarenet.co.za/core/utils.js'></script>
+<script language='javascript' src='http://awarenet.co.za/modules/notifications/js/pagecheck.js'></script>
+<script language='Javascript'>
+
+	var jsServerPath = 'http://awarenet.co.za/';
+	var jsPageUID = '213123986412';
+
+	function pageInit() {
+		msgSubscribe('syspagelogsimple', 'msgh_sysPageLog');
+		msgPump();
+	}
+
+</script>
+<body onLoad='pageInit();'>
+<h2></h2>
+
+<script language='Javascript'>
+	function msgh_sysPageLog(channel, event, msg) {
+		logDebug('msgh_sysPageLog: ' + channel + ' -- ' + event + ' -- ' + msg);
+		var theDiv = document.getElementById('logContent');
+		theDiv.innerHTML = theDiv.innerHTML + msg + "<br>\n";
+	}
+</script>
+
+<div id='logContent'>
+</div>
+<br/><br/><br/><br/><br/>
+<div id='debugger'>
+</div>
+
+<!--  -->
+<input type='button' value='checkMessages' onClick="b64test();" />
+
+</body>
+</html>

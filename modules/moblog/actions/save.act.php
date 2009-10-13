@@ -50,10 +50,10 @@
 		//------------------------------------------------------------------------------------------
 		
 		if (array_key_exists('title', $_POST))
-			{ $model->data['title'] = $_POST['title']; }
+			{ $model->data['title'] = trim($_POST['title']); }
 
 		if (array_key_exists('content', $_POST))
-			{ $model->data['content'] = $_POST['content']; }
+			{ $model->data['content'] = trim($_POST['content']); }
 
 		if (array_key_exists('published', $_POST))
 			{ $model->data['published'] = $_POST['published']; }

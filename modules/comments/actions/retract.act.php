@@ -22,12 +22,29 @@
 	if ($authorised == false) { do403(); }
 
 	//----------------------------------------------------------------------------------------------
-	//	delete the comment
+	//	blank the comment body
 	//----------------------------------------------------------------------------------------------
 
-	$model->delete();
-	$_SESSION['sMessage'] .= "Your comment have been retracted.<br/>\n";
+	$model->data['comment'] = '<small>This comment has been retracted by the poster. '
+							. mysql_datetime() . '</small>';
+	$model->save();
 
-	do302('users/profile/')
+	$_SESSION['sMessage'] .= "Your comment has been retracted.<br/>\n";
+
+	//----------------------------------------------------------------------------------------------
+	//	return to page comment was retected from, or user profile if none supplied
+	//----------------------------------------------------------------------------------------------
+
+	if (array_key_exists('HTTP_REFERER', $_SERVER) == true) {
+		// TODO, conside the security implications of this
+		$referer = $_SERVER['HTTP_REFERER'];
+		$referer = str_replace($serverPath, '', $referer);
+		$referer = str_replace('//', '/', $referer);
+		if (substr($referer, 0, 1) == '/') { $referer = substr($referer, 1); }
+		do302($referer);
+
+	} else {
+		do302('users/profile/');
+	}
 
 ?>

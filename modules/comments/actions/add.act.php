@@ -46,28 +46,30 @@
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------
-	//	check if a comment_add callback can be sent to this refModule
+	//	raise 'comment_add' event on refModule
 	//----------------------------------------------------------------------------------------------
 
-	$callBackFile = $installPath . 'modules/' . $refModule . '/callbacks.inc.php';
-	$callBackFn = $refModule . '__cb_comments_add';
-	if (file_exists($callBackFile) == true) {
-		require_once($callBackFile);
-		if (function_exists($callBackFn) == true) {
-			
-			//--------------------------------------------------------------------------------------
-			//	send the callback
-			//--------------------------------------------------------------------------------------
+	$args = array(	'refModule' => $refModule, 
+					'refUID' => $refUID, 
+					'commentUID' => $commentUID, 
+					'comment' => $ext['comment']    );
 
-			$callBackFn($refUID, $ext['UID'], $ext['comment']);
+	eventSendSingle($refModule, 'comments_add', $args);
 
-		}
-	}
+	//----------------------------------------------------------------------------------------------
+	//	send out page notifications
+	//----------------------------------------------------------------------------------------------
+
+	$channelID = 'comments-' . $refModule . '-' . $refUID;
+	$blockHtml = expandBlocks('[[:comments::summary::UID=' . $ext['UID'] . ':]]', '');
+	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
+	notifyChannel($channelID, 'add', $data);
 
 	//----------------------------------------------------------------------------------------------
 	//	return to whence the comment came
 	//----------------------------------------------------------------------------------------------
-
-	do302($return);
+	
+	if ($return == 'none') { echo '#COMMENT ADDED\n'; }
+	else { do302($return); }
 
 ?>

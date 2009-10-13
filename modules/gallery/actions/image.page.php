@@ -3,10 +3,17 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:images::showfull::raUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddCommentForm::hidden=yes:]]
+[`|lt]div id='divAddCommentForm' style='visibility: hidden; display: none;'[`|gt]
+[[:comments::addcommentformjs::refModule=gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]::return=/gallery/image/[`|pc][`|pc]imageRa[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Comments::width=570:]]
-[[:comments::list::refModule=images::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
-[[:comments::addcommentform::refModule=images::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]::return=/gallery/image/[`|pc][`|pc]imageRa[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</content>
+[[:comments::listjs::refModule=gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+</content>
 <title>:: awareNet :: gallery :: image ::</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Uploaded By:]]

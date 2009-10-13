@@ -11,13 +11,15 @@
 function eventSendSingle($module, $event, $args) {
 	global $installPath;
 
-	$cbFile = $installPath . 'modules/' . $module . '/callbacks.inc.php'; // has a callbacks API?
+	//---------------------------------------------------------------------------------------------
+	//	check if there si an event handler for the module 
+	//---------------------------------------------------------------------------------------------
+	$cbFile = $installPath . 'modules/' . $module . '/events/' . $event . '.on.php'; 
 	if (file_exists($cbFile) == false) { return false; }	
 	include($cbFile);
 	
 	$cbFn = $module . "__cb_" . $event;
 	if (function_exists($cbFn) == false) { return false; }				  // handles this event?
-	
 	return $cbFn($args);												  // do it
 }
 

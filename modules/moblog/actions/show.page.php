@@ -21,10 +21,7 @@
 <title>:: awareNet :: moblog ::</title>
 <script></script>
 <nav1>
-[[:theme::navtitlebox::label=Add New Post::width=570::toggle=divNewBlogForm::hidden=yes:]]
-[`|lt]div id='divNewBlogForm' style='visibility: hidden; display: none;'[`|gt]
 [`|pc][`|pc]newPostForm[`|pc][`|pc]
-[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Author:]]

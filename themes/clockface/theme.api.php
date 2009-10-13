@@ -134,7 +134,7 @@ function theme_button($args) {
 	//	return html
 	//------------------------------------------------------------------------------------------------------
 	$imgUrl = str_replace($installPath, $serverPath, $fileName);
-	$html = "<img class='menu1' src='" . $imgUrl . "' border='0' alt='" . $alt . "' />";
+	$html = "<img id='btn" . createUID() . "' class='menu1' src='" . $imgUrl . "' border='0' alt='" . $alt . "' />";
 	return $html;
 }
 

@@ -40,6 +40,21 @@ div.navbox a {
 }
 
 
+/* images --------------------------------------------------------------------------------------- */
+
+img.imthumb {
+	float: left;
+}
+
+img.imwidth300 {
+	float: left;
+	padding-right: 10px;
+}
+
+img.imwidtheditor {
+	
+}
+
 /* wireframe tables ----------------------------------------------------------------------------------------- */
 
 table.wireframe {

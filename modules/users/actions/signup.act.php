@@ -105,7 +105,8 @@
 			//	not enough info yet
 			//--------------------------------------------------------------------------------------
 			$report = "<b>Before you continue:</b><br/>\n" . $report . "<br/><br/>\n";
-			$_SESSION['sMessage'] .= $report;
+			$_SESSION['sMessage'] .= "[[:theme::navtitlebox::label=Notice:]]"
+								  . "<font color='red'>" . $report . "</font>";
 		}
 
 	}

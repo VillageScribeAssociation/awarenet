@@ -43,6 +43,7 @@
 function logPageView() {
 	global $installPath;
 	global $page;
+	global $user;
 
 	$fileName = $installPath . 'data/log/' . date("y-m-d") . "-pageview.php";
 	if (file_exists($fileName) == false) { makeEmptyLog($fileName);	}
@@ -50,6 +51,7 @@ function logPageView() {
 	$entry = "<entry>\n"
 		. "\t<timstamp>" . time() . "</timestamp>\n"
 		. "\t<mysqltime>" . mysql_datetime() . "</mysqltime>\n"
+		. "\t<user>" . $user->data['username'] . "</user>\n"
 		. "\t<remotehost>" . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</remotehost>\n"
 		. "\t<remoteip>" . $_SERVER['REMOTE_ADDR'] . "</remoteip>\n"
 		. "\t<request>" . $_SERVER['REQUEST_URI'] . "</request>\n"
@@ -58,7 +60,13 @@ function logPageView() {
 		. "\t<uid>" . $page->UID . "</uid>\n"
 		. "</entry>\n";
 
-	return filePutContents($fileName, $entry, 'a+');
+	$result = filePutContents($fileName, $entry, 'a+');
+
+	notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
+	$entry = mysql_datetime() . " - " . $user->data['username'] . ' - ' . $_SERVER['REQUEST_URI'];
+	notifyChannel('admin-syspagelogsimple', 'add', base64_encode($entry));
+
+	return $result;
 }
 
 //--------------------------------------------------------------------------------------------------

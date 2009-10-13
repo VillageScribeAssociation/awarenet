@@ -12,11 +12,11 @@
 //	image associates with a record on a module, returns image record
 //--------------------------------------------------------------------------------------------------
 
-function imgGetHeaviest($refModule, $refUID) {	
+function imgGetDefault($refModule, $refUID) {	
 	$sql = "select * from images "
 		 . "where refModule='" . sqlMarkup($refModule) . "'"
 		 . " and refUID='" . sqlMarkup($refUID) . "' "
-		 . "order by weight DESC limit 1";
+		 . "order by weight ASC limit 1";
 
 	$result = dbQuery($sql);
 	if (dbNumRows($result) == false) { return false; }
@@ -24,20 +24,20 @@ function imgGetHeaviest($refModule, $refUID) {
 	return sqlRMArray($row);
 }
 
-function imgGetHeaviestUrl($refModule, $refUID, $size) {
+function imgGetDefaultUrl($refModule, $refUID, $size) {
 	$row = imgGetHeaviest($refModule, $refUID);
 	if ($row == false) { return '%%serverPath%%/themes/%%%defaultTheme%%/unavailable/' . $size; }
 	return '%%serverPath%%/images/' . $size . '/' . $row['recordAlias'];
 }
 
-function imgGetHeaviestUID($refModule, $refUID) {
+function imgGetDefaultUID($refModule, $refUID) {
 	$row = imgGetHeaviest($refModule, $refUID);
 	if ($row == false) { return false; }
 	return $row['UID'];
 }
 
 function imgDeleteAll($refModule, $refUID) {
-
+	// TODO?
 }
 
 //==================================================================================================

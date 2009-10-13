@@ -9,7 +9,7 @@
 </style>
 
 <script src='%%serverPath%%core/utils.js'></script>
-<script src='%%serverPath%%modules/chat/chat.js'></script>
+<script src='%%serverPath%%modules/notifications/js/pagecheck.js'></script>
 
 %%head%%
 
@@ -18,16 +18,18 @@
 	var hasParentFrame = false;
 	var awareNetChat = true;
 	var jsServerPath = '%%serverPath%%';
-
-	%%script%%
+	var jsPageUID = '%%pageInstanceUID%%';
 
 	//----------------------------------------------------------------------------------------------
 	//	initialise page
 	//----------------------------------------------------------------------------------------------
 
 	function kPageInit() {
-		chatInit();
+		%%jsinit%%
+		msgPump();
 	}
+
+	%%script%%
 
 </script>
 </head>
@@ -114,6 +116,7 @@
 <br/>
 <br/><br/>
 </center>
+<div id='debugger'></div>
 </body>
 </html>
 */ ?>

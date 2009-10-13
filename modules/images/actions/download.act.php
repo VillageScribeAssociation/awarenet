@@ -87,6 +87,13 @@
 
 			}
 		}
+	
+		$args = array(	'refModule' => $refModule, 
+						'refUID' => $refUID, 
+						'imageUID' => $ext['UID'], 
+						'imageTitle' => $ext['title']    );
+
+		eventSendSingle($refModule, 'images_add', $args)
 
 	}
 

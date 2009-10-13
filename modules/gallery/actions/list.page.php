@@ -10,8 +10,10 @@
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Create New Gallery:]]
+[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden='yes':]]
+[`|lt]div id='divNewGalleryForm' style='visibility: hidden; display: none;'[`|gt]
 [[:gallery::newgalleryform:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Galleries:]]

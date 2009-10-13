@@ -5,15 +5,15 @@
 [[:users::profile:]]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Wall::width=570::toggle=divWall:]]
-[`|lt]div id='divWall'[`|gt]
-[[:comments::list::refModule=users::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:theme::navtitlebox::label=Add Wall Post::width=570::toggle=divWallAddComment::hidden=yes:]]
+[`|lt]div id='divWallAddComment' style='visibility: hidden; display: none;'[`|gt]
+[[:comments::addcommentformjs::refModule=users::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divWallAddComment::hidden=yes:]]
-[`|lt]div id='divWallAddComment' style='visibility: hidden; display: none;'[`|gt]
-[[:comments::addcommentform::refModule=users::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
+[[:theme::navtitlebox::label=Wall::width=570::toggle=divWall:]]
+[`|lt]div id='divWall'[`|gt]
+[[:comments::listjs::refModule=users::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

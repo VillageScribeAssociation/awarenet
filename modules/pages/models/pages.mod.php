@@ -30,7 +30,7 @@ class Page {
 			'template' => '', 'content' => '', 'title' => '', 
 			'script' => '', 'nav1' => '','nav2' => '', 'banner' => '', 
 			'head' => '', 'menu1' => '', 'menu2' => '', 'section' => '', 
-			'subsection' => '', 'breadcrumb' => '');					// the parts of a page
+			'subsection' => '', 'breadcrumb' => '', 'jsinit' => '');	// the parts of a page
 
 		if ($fileName != '') { $this->load($fileName); }
 	}
@@ -87,6 +87,7 @@ class Page {
 		$d['moduleName'] = $request['module'];
 		$d['defaultTheme'] = $defaultTheme;
 		$d['sMessage'] = $_SESSION['sMessage'];
+		$d['pageInstanceUID'] = $this->UID;
 
 		$_SESSION['sMessage'] = ''; // send messag to user once only
 
@@ -168,8 +169,9 @@ class Page {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	send the page
+		//	log the page view and send the page
 		//------------------------------------------------------------------------------------------
+		logPageView();
 		echo $template;
 
 	}

@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing notifications
+//	object for managing user notifications
 //--------------------------------------------------------------------------------------------------
 //	All users have a notification queue. Notifications are equivalent to events on a facebook, when
 //	something happens a notification is generated and added to the queue of all relevant parties, 

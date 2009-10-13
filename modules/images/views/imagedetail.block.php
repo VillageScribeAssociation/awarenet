@@ -7,18 +7,17 @@
     <td valign='top'>
         <b>%%title%%</b><br/>
 		<a href='%%editUrl%%'>[edit caption, licence, etc]</a><br/>
-		<small>
 		<small>To use this image, drag one of the buttons below into your text:</small><br/>
-		[[:theme::button::label=thumbnail::alt={[{:images::thumb::imageUID=%%UID%%:}]}:]]
-		[[:theme::button::label=width300::alt={[{:images::width300::imageUID=%%UID%%:}]}:]]
-		[[:theme::button::label=width570::alt={[{:images::width570::imageUID=%%UID%%:}]}:]]
+		[[:theme::button::label=thumbnail::alt=images|raUID=%%UID%%|size=thumb|:]]
+		[[:theme::button::label=width300::alt=images|raUID=%%UID%%|size=width300|:]]
+		[[:theme::button::label=width570::alt=images|raUID=%%UID%%|size=widtheditor|:]]
 		<br/>
 		<!-- 
         <b>Tag:</b> &#91;&#91;:images::thumb::imageUID=%%UID%%:&#93;&#93;<br/>
         <b>Tag:</b> &#91;&#91;:images::width300::imageUID=%%UID%%:&#93;&#93;<br/>
         <b>Tag:</b> &#91;&#91;:images::width570::imageUID=%%UID%%:&#93;&#93;<br/>
 		-->
-		<!-- weight: %%weight%% -->
+		weight: %%weight%%
         <small><b>caption:</b> %%caption%%</small><br/>
 		</small>
     </td>

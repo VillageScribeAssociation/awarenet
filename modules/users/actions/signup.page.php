@@ -5,7 +5,7 @@
 
 [`|lt]h1[`|gt]Sign up[`|lt]/h1[`|gt]
 
-[`|lt]p[`|gt]Hi!  Welcome to the awareNet demo.  This site is to allow anyone interested to explore the features which the awareNet educational network offers school children.  Enjoy :-)[`|lt]/p[`|gt]
+[`|lt]p[`|gt]Hi!  Welcome to awareNet!.  This site is to allow anyone interested to explore the features which the awareNet educational network offers school children.  Enjoy :-)[`|lt]/p[`|gt]
 
 [[:users::signupform:]]</content>
 <title>:: awareNet :: users :: sign up ::</title>

@@ -228,40 +228,39 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 
 	this.initializeContent = function(html){
+		//alert('this.initializeContent(html)');
 		HyperTextArea.activeArea = this;
-		var frameHtml = "<html>\n";
-		frameHtml += "<head>\n";
+		var frameHtml = "<html>\n<head>\n";
+
 		if (this.styleSheetUrl){
 			//frameHtml += "<link media=\"all\" type=\"text/css\" href=\"" + this.styleSheetUrl + "\" rel=\"stylesheet\">\n";
 		} else {
 			frameHtml += "<link media=\"all\" type=\"text/css\" href=\"/themes/clockface/css/iframe.css\" rel=\"stylesheet\">\n";
 		}
 
+		html = editorProcessBlocks(html);	// kapenta only
+
 		frameHtml += "</head>\n";
 		frameHtml += "<body>\n";
 		frameHtml += html;
 		frameHtml += "</body>\n";
 		frameHtml += "</html>";
-		
+
 		if (document.all) {
 			var oRTE = frames[this.name].document;
 			oRTE.open();
 			oRTE.write(frameHtml);
 			oRTE.close();
-			//attach a mouse handler
-			oRTE.onmouseup = listen_onMouseUp; 
-			oRTE.onmousedown = listen_onMouseDown; 
+			oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
 
 		} else {
 			var oRTE = document.getElementById(this.name).contentWindow.document;
 			oRTE.open();
 			oRTE.write(frameHtml);
 			oRTE.close();
-			//attach mouse handlers
-			oRTE.onmouseup = listen_onMouseUp; 
-			oRTE.onmousedown = listen_onMouseDown; 
 			//attach a keyboard handler for Mozilla to make keyboard shortcuts for formatting text
 			oRTE.addEventListener("keypress", kb_handler, true);
+			oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
 		}
 	}
 
@@ -279,13 +278,15 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	}
 
 	this.update = function(){
-		//alert('update()');
 		this.setViewMode(false);
 
 		//set message value
 		var oHdnMessage = document.getElementById('hdn' + this.name);
 		var oRTE = document.getElementById(this.name);
-		
+	
+		replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only
+		replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only
+	
 		if (this.isRichText) {
 			if (oHdnMessage.value == null) oHdnMessage.value = "";
 			if (document.all) {
@@ -608,7 +609,7 @@ function Button(name,icon,title,methodName){
 	this.name=name;
 	this.getRenderedText = function(){
 		text = '<td><div id="'+name+'">'
-		text = text + '<img class="btnImage" src="'+this.resourcePath+icon+'" width="25" height="24" alt="'+title+'" title="'+title+'" onClick="HyperTextArea.getArea(\''+ this.area.name +'\').'+methodName+'()">';
+		text = text + '<img class="btnImage" src="'+this.resourcePath+icon+'" width="25" height="24" alt="'+title+'" title="'+title+'" onClick="HyperTextArea.getArea(\''+ this.area.name +'\').'+methodName+'()" />';
 		text = text + '</div></td>';		
 		return text;
 	}
@@ -708,7 +709,7 @@ function getOffsetLeft(elm) {
 	return mOffsetLeft;
 }
 
-function kb_handler(evt, rte) {
+function kb_handler(evt) {
 	//contributed by Anti Veeranna (thanks Anti!)
 
 	if (evt.ctrlKey) {
@@ -729,7 +730,25 @@ function kb_handler(evt, rte) {
  	}
 }
 
+//-------------------------------------------------------------------------------------------------
+//	on node insert check to see that images have been added correctly
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function nodeinsert_handler(evt) {
+	var oRTE = getEditorDocument(evt.target);
+
+	if ('IMG' == evt.target.tagName) {		
+		replaceImageButtons(oRTE);
+
+	} else {
+		// remove any images which were not added by dragging a button
+		removeSimpleImages(oRTE);
+	}
+}
+
 function stripHTML(oldString) {
+	//alert('stripHTML');
 	var newString = oldString.replace(/(<([^>]+)>)/ig,"");
 	
 	//replace carriage returns and line feeds
@@ -857,10 +876,6 @@ function enableDesignMode(areaName){
 	}
 }
 
-
-function listen_onMouseDown(e) { alert('mouseDown'); }
-function listen_onMouseUp(e) { alert('mouseUp'); }
-
 function onHyperTextAreaLoad(areaName) {
 	self.status = "attempting to set designMode property";
 	area = HyperTextArea.getArea(areaName);
@@ -901,4 +916,238 @@ function onHyperTextAreaLoad(areaName) {
 	enableDesignMode(areaName);
 	area.setContent(area.html)
 }
+
+
+//-------------------------------------------------------------------------------------------------
+//	get editor source, given a node from the editor
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function getEditorDocument(someNode) {
+	if (9 == someNode.nodeType) {
+		return someNode;
+	} else {
+		return getEditorDocument(someNode.parentNode);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------
+//	replace buttons with the images they represent
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function replaceImageButtons(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
+
+	for (i = 0; i < imgs.length; i++) {				// look for instructions in button alt
+		img = imgs[i];
+		if ((img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
+			// get plugin details from alt
+			var args = img.alt.split('|');
+			var plugin = args[0];
+
+			//-------------------------------------------------------------------------------------
+			//	replace button with image
+			//-------------------------------------------------------------------------------------
+			if (plugin == 'images') {
+				var size = '';
+				var raUID = '';
+
+				// get image details
+				for (j = 1; j < args.length; j++) {
+					if (args[j].indexOf('=') > 0) {
+						parts = args[j].split('=');
+						switch(parts[0]) {
+							case 'raUID': 	raUID = parts[1];	break;
+							case 'size': 	size = parts[1];	break;
+						}
+					}
+				}
+
+				// set image src and alt
+				var newSrc = jsServerPath + 'images/' + size + '/' + raUID;
+				img.src = newSrc;
+				img.alt = 'imageexpanded|raUID=' + raUID + '|size=' + size + '|';
+
+			}
+		}
+	}	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	remove images added incorrectly (they won't have an alt beginning with 'imageexpanded')
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function removeSimpleImages(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');
+	var srcStr = '';
+	for (var i in imgs) {
+		var img = imgs[i];
+		if (img != undefined) {
+			if ((img.alt == undefined) || (img.alt == null) || (img.alt == '')) {
+				// no alt
+				if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
+			} else {
+				// alt must begin imageexpanded or some other plugin name
+				var rmThis = true;
+				if ((img.alt.length > 13) && (img.alt.substring(0, 14) == 'imageexpanded|')) { rmThis = false; }
+				if (true == rmThis) {
+					if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
+				}
+			}
+		} // end if img undefined
+	} // end for
+}
+
+//-------------------------------------------------------------------------------------------------
+//	replace images with blocks before saving
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function replaceImagesWithBlocks(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
+	for (var i in imgs) {							// look for instructions in button alt
+		img = imgs[i];
+		if ((img != undefined) && (img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
+			// get plugin details from alt
+			var args = img.alt.split('|');
+			var plugin = args[0];
+
+			//-------------------------------------------------------------------------------------
+			//	replace image with block tag
+			//-------------------------------------------------------------------------------------
+			if (plugin == 'imageexpanded') {
+				var size = '';
+				var raUID = '';
+
+				// get image details
+				for (j = 1; j < args.length; j++) {
+					if (args[j].indexOf('=') > 0) {
+						parts = args[j].split('=');
+						switch(parts[0]) {
+							case 'raUID': 	raUID = parts[1];	break;
+							case 'size': 	size = parts[1];	break;
+						}
+					}
+				}
+
+				// replace DOM image node with text node
+				if (size == 'widtheditor') { size = 'width570'; }
+				var block = '[[:images::' + size + '::raUID=' + raUID + ':]]';
+				var txtNode = oRTE.createTextNode(block);
+				img.parentNode.replaceChild(txtNode, img);
+
+			} 
+		}
+	}	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	find all blocks in a piece of text/html
+//-------------------------------------------------------------------------------------------------
+
+function editorProcessBlocks(html) {
+	var blocks = editorFindBlocks(html);
+	for (var i in blocks) {
+		var block = blocks[i];
+		cblock = block.replace(/\[\[:/g, '');	// remove wrapper
+		cblock = cblock.replace(/:\]\]/g, '');
+
+		var args = cblock.split('::');
+
+		switch(args[0]) {
+			case 'images':
+				// replace with actual image tag
+				var imgtag = editorMkImageFromBlock(args);
+				html = editorReplaceAll(html, block, imgtag);
+				break;
+		}
+	}
+
+	return html;
+}
+
+//-------------------------------------------------------------------------------------------------
+//	ugly, but better than screwing with RegEx
+//-------------------------------------------------------------------------------------------------
+
+function editorReplaceAll(html, find, repl) {
+	if (find.length < 3) { return html; }
+	while (html.indexOf(find) >= 0) {
+		var startPos = html.indexOf(find);
+		var strBefore = html.substring(0, startPos);
+		var strAfter = html.substring((startPos + find.length), html.length);
+		html = strBefore + repl + strAfter;
+	}
+	return html;	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	make an html image tage from an image block tag
+//-------------------------------------------------------------------------------------------------
+
+function editorMkImageFromBlock(args) {
+	var imgtag = '';
+	var size = args[1];
+	var raUID = '';
+
+	//---------------------------------------------------------------------------------------------
+	//	get any arguments (at present only UID) TODO: add arguments for caption, etc
+	//---------------------------------------------------------------------------------------------
+	for(var i in args) {
+		var arg = args[i];
+		if (arg.indexOf('=') > 0) {
+			var parts = arg.split('=');
+			switch(parts[0]) {
+				case 'raUID':		raUID = parts[1]; 	break;
+				case 'imageUID':	raUID = parts[1]; 	break;
+			}
+		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	assemble into HTML, alt property allows image to be converted back to block tag
+	//---------------------------------------------------------------------------------------------
+	if ('width570' == size) { size = 'widtheditor'; }
+	var src = jsServerPath + 'images/' + size + '/' + raUID;
+	var alt = 'imageexpanded|size=' + size + '|raUID=' + raUID + '|';
+	imgtag = "<img class='im" + size + "' src='" + src + "' border='0' alt='" + alt + "' blockTag='[[:blocktag:]]' />";
+	return imgtag;
+}
+
+//-------------------------------------------------------------------------------------------------
+//	find all blocks in a piece of text/html
+//-------------------------------------------------------------------------------------------------
+
+function editorFindBlocks(html) {
+	var blocks = new Array();
+
+	html = html.replace(/\r/g, '');				// strip newlines
+	html = html.replace(/\n/g, '');
+	html = html.replace(/\[\[:/g, "\n[[:");		// place blocks on their own line
+	html = html.replace(/:\]\]/g, ":]]\n");
+
+	var lines = html.split("\n");				// for each line which might be a block
+	var idx = 0;
+
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i];						
+		if (line.length > 8) {
+			//--------------------------------------------------------------------------------------
+			//	if this line begins with [[:: and ends with ::]]
+			//--------------------------------------------------------------------------------------
+			if ((line.substring(0, 3) == '[[:') && (line.substring((line.length - 3), line.length) == ':]]')) {
+				blocks[idx] = line;
+				idx++;
+			}
+
+	  }
+	}
+	
+	return blocks;
+}
+
+//-------------------------------------------------------------------------------------------------
+// end of kapenta specific functions
 

@@ -11,12 +11,12 @@
 
 	$installMod = $request['ref'];
 	
-	$incFile = $installPath . 'modules/' . $installMod . '/install.inc.php';
+	$incFile = $installPath . 'modules/' . $installMod . '/inc/install.inc.php';
 	require_once($incFile);
 
 	echo "incFile: $incFile <br/>\n";
 	
 	$fnName = 'install_' . $installMod . '_module';
-	call_user_func($fnName);
+	echo call_user_func($fnName);
 
 ?>

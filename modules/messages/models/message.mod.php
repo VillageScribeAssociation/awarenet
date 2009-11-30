@@ -80,7 +80,9 @@ class Message {
 			'content' => 'TEXT',
 			'status' => 'VARCHAR(10)',
 			'createdBy' => 'VARCHAR(30)',
-			'createdOn' => 'DATETIME' );
+			'createdOn' => 'DATETIME', 
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'fromUID' => 10, 'toUID' => '10' );
 		$dbSchema['nodiff'] = array('UID');

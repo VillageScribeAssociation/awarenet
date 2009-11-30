@@ -10,11 +10,14 @@
 	var msgPullFreqMin = 5000;		// minimum time between checks
 	var msgPullFreqMax = 60000;		// maximum time between checks
 
+	var msgCheckWait = false;
+
 	//---------------------------------------------------------------------------------------------
 	//	subscribe to a channel (callbackFn is string, name of function)
 	//---------------------------------------------------------------------------------------------
 	function msgSubscribe(channelID, callbackFn) {
 		logDebug('subscribing to channel ' + channelID + ' with callback ' + callbackFn.name);
+		//alert('subscribing to channel ' + channelID + ' with callback ' + callbackFn.name);
 		msgOutbox = msgOutbox + channelID + "\n";
 		msgHandler = new Array(channelID, callbackFn);
 		msgHandlers.push(msgHandler);
@@ -24,36 +27,41 @@
 	//	periodically initilize pull of messages from server, if page is subscribed to anything
 	//---------------------------------------------------------------------------------------------
 	function msgPump() {
-		var theDate = new Date();
 		setTimeout('msgPump();', msgPullFreq);
-		if (msgHandlers.length > 0) { 
-			msgCheck(); 
-			logDebug('checking: ' + theDate.getTime());
-		}
+		if (msgHandlers.length > 0) { msgCheck(); }
 	}
 
 	//---------------------------------------------------------------------------------------------
 	//	dev only
 	//---------------------------------------------------------------------------------------------
 	function logDebug(msg) {
-		theDiv = document.getElementById('debugger');
-		theDiv.innerHTML = theDiv.innerHTML + msg + "<br>\n";
+		//theDiv = document.getElementById('debugger');
+		//theDiv.innerHTML = theDiv.innerHTML + msg + "<br>\n";
 	}
 
 	//---------------------------------------------------------------------------------------------
 	//	poll server for messages via XMLHttpRequest
 	//---------------------------------------------------------------------------------------------
 	function msgCheck() {
+		var theDate = new Date();
+		logDebug('checking: ' + theDate.getTime());
+		if (true == msgCheckWait) { 
+			// in process of making a check
+			logDebug('already listening');
+			return false; 
+		}
+
 		var requestPath = jsServerPath + "notifications/pagecheck/" + jsPageUID;
 		var parameters = "action=subscribe&detail=" + encodeURIComponent(msgOutbox);
 		xmlhttp = new XMLHttpRequest();
-
-		logDebug('checking notifications... ' + requestPath);
+		msgCheckWait = true;
 
 		if ('' == msgOutbox) {
 			//-------------------------------------------------------------------------------------
 			//	if outbox is empty, use simple GET request
 			//-------------------------------------------------------------------------------------
+			//requestPath = "http://api.awarenet.co.za/notifications/pagecheckpush/" + jsPageUID;
+			logDebug('checking notifications... ' + requestPath);
 		 	xmlhttp.open('GET', requestPath, true);
 			parameters = null;
 			logDebug('checking: sent HTTP GET');
@@ -62,6 +70,7 @@
 			//-------------------------------------------------------------------------------------
 			//	if outbox is not empty, use simple get request
 			//-------------------------------------------------------------------------------------
+			logDebug('checking notifications... ' + requestPath);
 		 	xmlhttp.open('POST', requestPath, true);
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			msgOutbox = '';	
@@ -73,11 +82,19 @@
 		//	do it
 		//-----------------------------------------------------------------------------------------
 	 	xmlhttp.onreadystatechange = function() {
-	  		if (4 == xmlhttp.readyState) { msgProcessIncoming(xmlhttp.responseText); }
+			logDebug('GET cycle statechange');
+	  		if (4 == xmlhttp.readyState) { 
+				logDebug('GET cycle complete');
+				msgCheckWait = false;
+				msgProcessIncoming(xmlhttp.responseText); 
+			}
 	 	}
 
 		try { xmlhttp.send(parameters); }
-		catch(err) { logDebug("There was an error: " + err.message); }
+		catch(err) { 
+			logDebug("There was an error: " + err.message); 
+			msgCheckWait = false;
+		}
 	}
 
 	//---------------------------------------------------------------------------------------------

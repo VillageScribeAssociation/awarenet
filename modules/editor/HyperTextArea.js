@@ -11,6 +11,9 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 	this.width = width;
 	this.height = height;
 	this.resourcePath = resourcePath||"";
+
+	this.resourcePath = jsServerPath + 'modules/editor/';
+
 	this.styleSheetUrl = styleSheetUrl||null;
 	if(this.resourcePath.length && this.resourcePath.substring(this.resourcePath.length-1) != "/"){
 		this.resourcePath = this.resourcePath + "/";
@@ -235,7 +238,7 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 		if (this.styleSheetUrl){
 			//frameHtml += "<link media=\"all\" type=\"text/css\" href=\"" + this.styleSheetUrl + "\" rel=\"stylesheet\">\n";
 		} else {
-			frameHtml += "<link media=\"all\" type=\"text/css\" href=\"/themes/clockface/css/iframe.css\" rel=\"stylesheet\">\n";
+			frameHtml += "<link media=\"all\" type=\"text/css\" href=\"" + jsServerPath + "themes/clockface/css/iframe.css\" rel=\"stylesheet\">\n";
 		}
 
 		html = editorProcessBlocks(html);	// kapenta only
@@ -251,7 +254,9 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 			oRTE.open();
 			oRTE.write(frameHtml);
 			oRTE.close();
-			oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
+			if (oRTE.addEventListener) {
+				oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
+			}
 
 		} else {
 			var oRTE = document.getElementById(this.name).contentWindow.document;
@@ -259,8 +264,10 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 			oRTE.write(frameHtml);
 			oRTE.close();
 			//attach a keyboard handler for Mozilla to make keyboard shortcuts for formatting text
-			oRTE.addEventListener("keypress", kb_handler, true);
-			oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
+			if (oRTE.addEventListener) {
+				oRTE.addEventListener("keypress", kb_handler, true);
+				oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
+			}
 		}
 	}
 
@@ -1150,4 +1157,4 @@ function editorFindBlocks(html) {
 
 //-------------------------------------------------------------------------------------------------
 // end of kapenta specific functions
-
+//-------------------------------------------------------------------------------------------------

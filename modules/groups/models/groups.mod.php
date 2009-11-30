@@ -47,8 +47,8 @@ class Group {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('groups', $d['UID'], $d['name'], 'groups');
+		$ra = raSetAlias('groups', $this->data['UID'], $this->data['name'], 'groups');
+		$this->data['recordAlias'] = $ra;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -78,6 +78,8 @@ class Group {
 			'name' => 'VARCHAR(255)',
 			'type' => 'VARCHAR(20)',
 			'description' => 'TEXT',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -213,13 +215,12 @@ class Group {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		$sql = "delete from images where refModule='groups' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		$sql = "delete from files where refModule='groups' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		
-		raDeleteAll('groups', $this->data['UID']);
+		// delete the record and any recordAliases
 		dbDelete('groups', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'groups', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	//----------------------------------------------------------------------------------------------

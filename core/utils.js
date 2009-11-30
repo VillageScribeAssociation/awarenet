@@ -306,10 +306,14 @@ function toggleVisible(navImgId, divId) {
 		theDiv.style.visibility = 'visible'; 
 		theDiv.style.display = 'block'; 
 		theImg.src = jsServerPath + 'themes/clockface/icons/btn-minus.png';
+		theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+
 	} else {
 		theDiv.style.visibility = 'hidden'; 
 		theDiv.style.display = 'none'; 
 		theImg.src = jsServerPath + 'themes/clockface/icons/btn-plus.png';
+		theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+
 	}
 }
 
@@ -344,12 +348,12 @@ function urlEncodeForm(theForm) {
 	var allowedTypes = new Array('hidden', 'textarea', 'text', 'select');
 	for (var i in theForm.elements) {
 		var elem = theForm.elements[i];
-		if ( (elem.name != undefined) && (elem.value != undefined) && (elem.type != undefined) ) {
-
-			if (in_array(elem.type, allowedTypes) == true) { 
-				formFields.push(elem.name + '=' + encodeURIComponent(elem.value)); 
+		if (elem) {
+			if (elem.name) {
+				if (in_array(elem.type, allowedTypes) == true) { 
+					formFields.push(elem.name + '=' + encodeURIComponent(elem.value)); 
+				}
 			}
-
 		}
 	}
 	return formFields.join('&');

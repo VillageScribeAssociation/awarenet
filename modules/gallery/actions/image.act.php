@@ -33,9 +33,6 @@
 	$page->blockArgs['galleryUID'] = $model->data['refUID'];
 	$page->blockArgs['galleryTitle'] = $gallery->data['title'];
 	$page->blockArgs['galleryRa'] = $gallery->data['recordAlias'];
-	$page->data['jsinit'] .= "galleryNav_init();\n";
-	$page->data['jsinit'] .= "msgSubscribe('comments-gallery-" . $imageUID . "', msgh_comments);\n";
-	$page->data['jsinit'] .= "msgh_commentsRefresh();\n";
 	$page->render();
 
 ?>

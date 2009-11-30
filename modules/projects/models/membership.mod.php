@@ -55,8 +55,6 @@ class ProjectMembership {
 	function save() {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
-
-		$d = $this->data;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -93,7 +91,9 @@ class ProjectMembership {
 			'projectUID' => 'VARCHAR(30)',	
 			'userUID' => 'VARCHAR(30)',
 			'role' => 'VARCHAR(10)',
-			'joined' => 'DATETIME' );
+			'joined' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'projectUID' => '10', 'userUID' => '10');
 		$dbSchema['nodiff'] = array('UID', 'recordAlias');

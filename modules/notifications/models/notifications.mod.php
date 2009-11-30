@@ -108,7 +108,9 @@ class NotificationQueue {
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',	
 			'user' => 'VARCHAR(30)',	
-			'notices' => 'TEXT' );
+			'notices' => 'TEXT',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'user' => '20');
 		$dbSchema['nodiff'] = array('UID', 'notices');
@@ -155,9 +157,7 @@ class NotificationQueue {
 	//	delete a record
 	//----------------------------------------------------------------------------------------------
 
-	function delete() {		
-		dbDelete('notices', $this->data['UID']);
-	}
+	function delete() {	dbDelete('notices', $this->data['UID']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	expand notifications (from XML into array)

@@ -31,14 +31,16 @@
 					do302(''); // homepage
 
 				} else {
+
 					//------------------------------------------------------------------------------
-					//	user checks out, feedback and redirect
+					//	feedback and redirect
 					//------------------------------------------------------------------------------
+
 					$_SESSION['sUser'] = $row['username'];
 					$_SESSION['sUserUID'] = $row['UID'];
 					$_SESSION['sMessage'] .= "You are now logged in.<br/>\n";
 					$user->load($row['UID']);
-					do302('notifications/'); // homepage
+					do302('notifications/'); // user notifications
 
 				}
 

@@ -44,8 +44,8 @@ class School {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('schools', $d['UID'], $d['name'], 'schools');
+		$ra = raSetAlias('schools', $this->data['UID'], $this->data['name'], 'schools');
+		$this->data['recordAlias'] = $ra;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -75,6 +75,8 @@ class School {
 			'description' => 'TEXT',
 			'geocode' => 'TEXT',
 			'country' => 'VARCHAR(255)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -167,13 +169,11 @@ class School {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		$sql = "delete from images where refModule='schools' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		$sql = "delete from files where refModule='schools' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		
-		raDeleteAll('schools', $this->data['UID']);
 		dbDelete('schools', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'schools', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 }

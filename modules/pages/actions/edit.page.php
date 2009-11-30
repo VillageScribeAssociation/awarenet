@@ -1,8 +1,9 @@
 <? /*
 <page>
-	<template>twocol-leftnav.template.php</template>
-	<content>[`|lt]h1[`|gt]Edit Page[`|lt]/h1[`|gt]
-[[:pages::editform::module=xmodule::page=xpage:]]</content>
+	<template>twocol-rightnav.template.php</template>
+	<content>
+	[[:theme::navtitlebox::label=Edit Page:]]
+	[[:pages::editform::module=xmodule::page=xpage:]]</content>
 	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: pages :: edit edit.page.php (pages)  ::</title>
 	<script></script>
 	<nav1></nav1>

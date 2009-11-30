@@ -20,7 +20,7 @@ function sync_serverlist($args) {
 	$result = dbQuery($sql);
 	if (dbNumRows($result) > 0) {
 
-		$html .= "<table class='wireframe'>\n"
+		$html .= "<table class='wireframe' width='100%'>\n"
 			   . "<tr><td class='title'>Name</td><td class='title'>URL</td>"
 			   . "<td class='title'>Direction</td><td class='title'>Active</td>"
 			   . "<td class='title'>[x]</td><td class='title'>[x]</td></tr>\n";

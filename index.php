@@ -32,6 +32,16 @@
 //--------------------------------------------------------------------------------------------------
 
 	$user = new Users($_SESSION['sUserUID']);
+	$userlogin = new UserLogin();
+	if ($user->data['ofGroup'] != 'public') {
+		$exists = $userlogin->load($_SESSION['sUserUID']);
+		if (false == $exists) {
+			$userlogin->data['userUID'] = $_SESSION['sUserUID'];
+			$userlogin->save();
+		} else {
+			$userlogin->updateLastSeen();
+		}
+	}
 
 //--------------------------------------------------------------------------------------------------
 //	load the action requested by the user

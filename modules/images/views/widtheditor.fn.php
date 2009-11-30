@@ -27,7 +27,7 @@ function images_widtheditor($args) {
 	if ($link == 'yes') { $html = "<a href='" . $linkUrl . "'>$html</a>"; }
 
 	if ($caption == 'yes') {
-		echo "image rauid: " . $args['raUID'] . "<br/>\n";
+		//echo "image rauid: " . $args['raUID'] . "<br/>\n";
 		$model = new Image($args['raUID']);
 		if (strtolower($align) == 'left') { $align = "style='float: left;'"; }
 		if (strtolower($align) == 'right') { $align = "style='float: right;'"; }

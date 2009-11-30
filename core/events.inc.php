@@ -12,7 +12,7 @@ function eventSendSingle($module, $event, $args) {
 	global $installPath;
 
 	//---------------------------------------------------------------------------------------------
-	//	check if there si an event handler for the module 
+	//	check if there is an event handler for the module 
 	//---------------------------------------------------------------------------------------------
 	$cbFile = $installPath . 'modules/' . $module . '/events/' . $event . '.on.php'; 
 	if (file_exists($cbFile) == false) { return false; }	
@@ -29,7 +29,7 @@ function eventSendSingle($module, $event, $args) {
 
 function eventSendAll($event, $args) {
 	$mods = listModules();
-	foreach($mods as $module) { callbackSendSingle($module, $event, $args); }
+	foreach($mods as $module) { eventSendSingle($module, $event, $args); }
 }
 
 ?>

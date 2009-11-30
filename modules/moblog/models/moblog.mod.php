@@ -30,8 +30,6 @@ class Moblog {
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] == 'New Post';
 		$this->data['published'] == 'no';
-		$this->data['createdOn'] = mysql_datetime();
-		$this->data['createdBy'] = $user->data['UID'];
 		$this->data['school'] = $user->data['school'];
 		$this->data['grade'] = $user->data['grade'];
 		$this->data['hitcount'] = '0';
@@ -60,8 +58,8 @@ class Moblog {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('moblog', $d['UID'], $d['title'], 'blog');
+		$ra = raSetAlias('moblog', $this->data['UID'], $this->data['title'], 'moblog');
+		$this->data['recordAlias'] = $ra;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -98,6 +96,8 @@ class Moblog {
 			'hitcount' => 'BIGINT',
 			'createdOn' => 'DATETIME',	
 			'createdBy' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array(
@@ -115,9 +115,7 @@ class Moblog {
 	//	return the data
 	//----------------------------------------------------------------------------------------------
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make and extended array of all data a view will need
@@ -248,16 +246,13 @@ class Moblog {
 	//	delete a blog post
 	//----------------------------------------------------------------------------------------------
 
-	function delete() {
-		// notify other modules
-		$args = array('module' => 'moblog', 'UID' => $this->data['UID']);
-		callbackSendAll('record_delete', $args);
+	function delete() {	
+		// delete this record and any recordAliases
+		dbDelete('moblog', $this->data['UID']);	
 
-		// delete this record
-		dbDelete('moblog', $this->data['UID']);
-		
-		// delete any recordAliases
-		raDeleteAll('moblog', $this->data['UID']);
+		// allow other modules to respond to this event
+		$args = array('module' => 'moblog', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	//----------------------------------------------------------------------------------------------

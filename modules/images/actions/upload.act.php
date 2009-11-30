@@ -95,21 +95,15 @@
 		$msg = "Uploaded image: $srcName <br/>\n";
 
 		//------------------------------------------------------------------------------------------
-		//	check if a images_add callback can be sent to this refModule
+		//	send 'images_added' event to module whose record owns this image
 		//------------------------------------------------------------------------------------------
+	
+		$args = array(	'refModule' => $refModule, 
+						'refUID' => $refUID, 
+						'imageUID' => $ext['UID'], 
+						'imageTitle' => $ext['title']    );
 
-		$callBackFile = $installPath . 'modules/' . $refModule . '/callbacks.inc.php';
-		$callBackFn = $refModule . '__cb_images_add';
-		if (file_exists($callBackFile) == true) {
-			require_once($callBackFile);
-			if (function_exists($callBackFn) == true) {
-				//----------------------------------------------------------------------------------
-				//	send the callback
-				//----------------------------------------------------------------------------------
-				$callBackFn($refUID, $ext['UID'], $ext['title']);
-
-			}
-		}
+		eventSendSingle($refModule, 'images_added', $args);
 
 	}
 

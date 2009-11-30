@@ -1,17 +1,8 @@
 <?
 
 //--------------------------------------------------------------------------------------------------------------
-//	object for managing files
+//	object for managing user files
 //--------------------------------------------------------------------------------------------------------------
-//	
-//	The following types are supported: jpeg, gif, png
-//
-//	Transforms are derivative files that do not need their own record, such as thumbnails.  They are 
-//	automatically created as needed and destroyed if unused for a period of time, to free disk space.
-//	examples: /files/width300/someFile.jpg /files/thumb/someFile.jpg
-//
-//	Transform scripts can be modifed to perform actions such as automatically watermarking files
-//	uploaded to a website.
 
 class File {
 
@@ -19,10 +10,10 @@ class File {
 	//	member variables (as retieved from database)
 	//------------------------------------------------------------------------------------------------------
 
-	var $data;		// currently loaded record
+	var $data;			// currently loaded record
 	var $dbSchema;		// database structure
 	var $transforms;	// array of transforms (derivative files)
-	var $img;		// File handle
+	var $img;			// File handle
 
 	//------------------------------------------------------------------------------------------------------
 	//	constructor
@@ -31,10 +22,6 @@ class File {
 	function File($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
-		$this->data['createdOn'] = mysql_datetime();
-		$this->data['createdBy'] = $_SESSION['sUserUID'];
-		$this->data['createdOn'] = mysql_datetime();
 		$this->data['fileName'] = '';
 		$this->transforms = array();
 		if ($UID != '') { $this->load($UID); }
@@ -65,8 +52,9 @@ class File {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('files', $d['UID'], $d['title'], 'files');
+		$this->data['recordAlias'] = raSetAlias(	'files', $this->data['UID'], 
+													$this->data['title'], 'files'	);
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -108,6 +96,8 @@ class File {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(30)',
 			'hitcount' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array(
@@ -278,15 +268,27 @@ class File {
 		global $installPath;
 		if ($this->data['fileName'] == '') { return false; }
 		
+		//-----------------------------------------------------------------------------------------
+		//	delete file from /data/ and any transforms
+		//-----------------------------------------------------------------------------------------
+		unlink($installPath . $this->data['fileName']);
+
 		$this->expandTransforms();
 		foreach($this->transforms as $transName => $fileName) {
 			$fileName = $installPath . $fileName;
 			unlink($fileName);
 		}
-		
-		unlink($installPath . $this->data['fileName']);
-		raDeleteAll('files', $this->data['UID']);
+
+		//-----------------------------------------------------------------------------------------
+		//	delete the record
+		//-----------------------------------------------------------------------------------------		
 		dbDelete('files', $this->data['UID']);
+
+		//-----------------------------------------------------------------------------------------
+		//	allow other modules to respond to this event
+		//-----------------------------------------------------------------------------------------		
+		$args = array('module' => 'files', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 	
 }

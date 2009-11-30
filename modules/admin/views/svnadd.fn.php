@@ -19,6 +19,7 @@ function admin_svnadd($args) {
 						'data/images/',
 						'data/files/',
 						'data/log/',
+						'data/temp/',
 						'.log.php',
 						'svnadd.sh',
 						'svndelete.sh',

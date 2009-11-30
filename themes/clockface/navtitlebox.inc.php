@@ -34,7 +34,7 @@ function theme_navtitlebox($args) {
 
 		$UID = createUID();
 		$id = "id='ti" . $UID . "'";
-		$onClick = "onClick=\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "')\"";
+		$onClick = "onClick=\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\"";
 		$toggle = "<img $id class='navboxbtn' src='" . $icoFile . "' width='16px' $onClick>";
 	}
 

@@ -64,15 +64,12 @@ function dbCreateTable($dbSchema) {
 //--------------------------------------------------------------------------------------------------
 
 function dbListTables() {
-	global $dbName;
-	$retVal = array();
+	global $dbName;			// database name (from setup.inc.php)
+	$tables = array();
 	$result = dbQuery("show tables from $dbName");
-	while ($row = dbFetchAssoc($result)) {
-		$retVal[] = $row[0];
-	}
-	return $retVal;
+	while ($row = dbFetchAssoc($result)) { foreach ($row as $table) { $tables[] = $table; } }
+	return $tables;
 }
-
 
 //--------------------------------------------------------------------------------------------------
 // execute a query, return handle
@@ -131,8 +128,18 @@ function dbLoadRa($dbTable, $UIDRA) {
 //--------------------------------------------------------------------------------------------------
 
 function dbSave($data, $dbSchema) {
+	global $user;
 	if (array_key_exists('UID', $data) == false) { return false; }	
 	if (strlen(trim($data['UID'])) < 4) { return false; }
+
+	//----------------------------------------------------------------------------------------------
+	//	set editedBy, editedOn if present is schema
+	//----------------------------------------------------------------------------------------------
+	if (array_key_exists('editedBy', $dbSchema['fields']) == true) 
+		{ $data['editedBy'] = $user->data['UID']; }
+
+	if (array_key_exists('editedOn', $dbSchema['fields']) == true) 
+		{ $data['editedOn'] = mysql_datetime(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	if previous version of record exists, save changes to changes record
@@ -196,6 +203,25 @@ function dbSave($data, $dbSchema) {
 	$sql = substr($sql, 0, strlen($sql) - 1);
 	$sql .= ");";	
 	dbQuery($sql);
+
+	//----------------------------------------------------------------------------------------------
+	//	pass on to peers
+	//----------------------------------------------------------------------------------------------
+
+	syncBroadcastDbUpdate('self', $dbSchema['table'], $data);
+
+}
+
+//--------------------------------------------------------------------------------------------------
+// update a record field without causing resync
+//--------------------------------------------------------------------------------------------------
+
+function dbUpdateQuiet($table, $UID, $field, $value) {	
+	$sql = "update " . sqlMarkup($table) . " "
+		 . "set " . sqlMarkup($field) . "='" . sqlMarkup($value) . "' "
+		 . "where UID='" . sqlMarkup($UID) . "'";
+
+	dbQuery($sql);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -210,9 +236,27 @@ function dbNumRows($handle) { return mysql_num_rows($handle); }
 //--------------------------------------------------------------------------------------------------
 
 function dbDelete($dbTable, $UID) {
-	$UID = str_replace('%', '', $UID);
-	$sql = "delete from $dbTable where UID='" . $UID . "'";
-	return dbQuery($sql);
+	//---------------------------------------------------------------------------------------------
+	//	delete the record if it exists
+	//---------------------------------------------------------------------------------------------
+	if (dbRecordExists($dbTable, $UID) == true) {
+		$sql = "delete from " . sqlMarkup($dbTable) . " where UID='" . sqlMarkup($UID) . "'";
+		dbQuery($sql);
+		syncRecordDeletion($dbTable, $UID);
+
+		//-----------------------------------------------------------------------------------------
+		//	delete any recordAliases this item might have
+		//-----------------------------------------------------------------------------------------
+		raDeleteAll($dbTable, $UID);
+
+		//-----------------------------------------------------------------------------------------
+		//	send event to any modules which may need to do something about this
+		//-----------------------------------------------------------------------------------------
+		//$args = array('table' => $dbTable, 'UID' => $UID);
+		//eventSendAll('record_deleted', $args);				// nothing uses this yet
+		return true;
+
+	} else { return false; }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -232,8 +276,8 @@ function dbQueryToArray($sql) {
 // 	check if a record with given UID exists in a table
 //--------------------------------------------------------------------------------------------------
 
-function dbRecordExists($table, $UID) {
-	$sql = "SELECT * FROM $table WHERE UID='" . sqlMarkup($UID) . "'";
+function dbRecordExists($dbTable, $UID) {
+	$sql = "SELECT * FROM " . sqlMarkup($dbTable) . " WHERE UID='" . sqlMarkup($UID) . "'";
 	$result = dbQuery($sql);
 	if (dbNumRows($result) == 0) { return false; }
 	return true;
@@ -270,6 +314,10 @@ function dbBlank($sqlData) {
 
 		if ($fieldName == 'UID') { $blank[$fieldName] = createUID(); }
 		if ($fieldName == 'createdBy') { $blank[$fieldName] = $_SESSION['sUserUID']; }
+		if ($fieldName == 'editedBy') { $blank[$fieldName] = $_SESSION['sUserUID']; }
+		if ($fieldName == 'editedOn') { $blank[$fieldName] = mysql_datetime(); }
+		if ($fieldName == 'createdOn') { $blank[$fieldName] = mysql_datetime(); }
+
 	}
 
 	return $blank;
@@ -329,19 +377,71 @@ function dbLoadRange($table, $fields, $conditions, $by, $limit, $offset) {
 	return $retVal;
 }
 
+
+//--------------------------------------------------------------------------------------------------
+// 	get table schema in Kapenta's dbSchema format (jagged array)
+//--------------------------------------------------------------------------------------------------
+//	note that nodiff is not generated, as this is not known by the DBMS
+
+function dbGetSchema($tableName) {
+	if (dbTableExists($tableName) == false) { return false; }
+
+	//----------------------------------------------------------------------------------------------
+	//	create dbSchema array
+	//----------------------------------------------------------------------------------------------
+	$dbSchema = array(	'table' => $tableName, 'fields' => array(), 
+						'indices' => array(), 'nodiff' => array()	);
+
+	//----------------------------------------------------------------------------------------------
+	//	add fields
+	//----------------------------------------------------------------------------------------------
+	$sql = "describe " . sqlMarkup($tableName);
+	$result = dbQuery($sql);
+	while ($row = dbFetchAssoc($result)) 
+		{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
+
+	//----------------------------------------------------------------------------------------------
+	//	add indices
+	//----------------------------------------------------------------------------------------------
+	$sql = "show indexes from " . sqlMarkup($tableName);
+	$result = dbQuery($sql);
+	while ($row = dbFetchAssoc($result)) 
+		{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
+
+	return $dbSchema;
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	return a dbSchema array as html
+//--------------------------------------------------------------------------------------------------
+
+function dbSchemaToHtml($dbSchema) {
+	$html = "<h2>" . $dbSchema['table'] . " (dbSchema)</h2>\n";
+	$rows = array(array('Field', 'Type', 'Index'));
+	foreach($dbSchema['fields'] as $field => $type) {
+		$idx = '';
+		if (array_key_exists($field, $dbSchema['indices'])) { $idx = $dbSchema['indices'][$field]; }
+		$rows[] = array($field, $type, $idx);
+	}
+
+	$html .= arrayToHtmlTable($rows, true, true);
+	return $html;
+}
+
+
 //--------------------------------------------------------------------------------------------------
 // 	sanitize a value before using it in sql statement, to prevent SQL injection and related attacks
 //--------------------------------------------------------------------------------------------------
 
-function sqlMarkup($text) {					// WHY?
-	$text = str_replace('%', "[`|pc]", $text);		// wildcard characters in SQL
-	$text = str_replace('_', "[`|us]", $text);		// ... 
-	$text = str_replace(';', "[`|sc]", $text);		// used to construct SQL statements
-	$text = str_replace("'", "[`|sq]", $text);		// ...
-	$text = str_replace("\"", "[`|dq]", $text);		// ...
-	$text = str_replace('<', "[`|lt]", $text);		// interference between nested XML schema
-	$text = str_replace('>', "[`|gt]", $text);		// ...
-	$text = str_replace("\t", "[`|tb]", $text);		// mysql errors
+function sqlMarkup($text) {								// WHY?
+	$text = str_replace('%', "[`|pc]", $text);			// wildcard characters in SQL
+	$text = str_replace('_', "[`|us]", $text);			// ... 
+	$text = str_replace(';', "[`|sc]", $text);			// used to construct SQL statements
+	$text = str_replace("'", "[`|sq]", $text);			// ...
+	$text = str_replace("\"", "[`|dq]", $text);			// ...
+	$text = str_replace('<', "[`|lt]", $text);			// interference between nested XML schema
+	$text = str_replace('>', "[`|gt]", $text);			// ...
+	$text = str_replace("\t", "[`|tb]", $text);			// mysql errors
 	$text = str_replace('select', "[`|select]", $text);	// SQL statements  
 	$text = str_replace('delete', "[`|delete]", $text);	// ...
 	$text = str_replace('create', "[`|create]", $text);	// ...

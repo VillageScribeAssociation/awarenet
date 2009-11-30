@@ -42,6 +42,10 @@ class Page {
 	function load($fileName) {
 		$this->fileName = $fileName;
 		$xe = xmlLoad($fileName);
+		if (false == $xe) { 
+			logErr('pages', 'load', 'could not load: ' . $fileName);
+			return false; 
+		}
 
 		foreach($this->data as $key => $val) {
 			$tag = $xe->getFirst($key);
@@ -57,9 +61,9 @@ class Page {
 	function save() {
 		$xml = '';
 		foreach($this->data as $k => $v) 
-			{ $xml .= '<' . $k . '>' . sqlMarkup(stripslashes($v)) . '</' . $k . ">\n"; }
+			{ $xml .= "\t<" . $k . '>' . sqlMarkup(stripslashes($v)) . '</' . $k . ">\n"; }
 
-		$xml = '<? /*' . "\n<page>\n" . $xml . '</page>\n*/ ?>';
+		$xml = "<? /" . "*\n<page>\n" . $xml . "</page>\n*" . "/ ?>";
 		$fH = fopen($this->fileName, 'w+');
 		fwrite($fH, $xml);
 		fclose($fH);
@@ -88,6 +92,7 @@ class Page {
 		$d['defaultTheme'] = $defaultTheme;
 		$d['sMessage'] = $_SESSION['sMessage'];
 		$d['pageInstanceUID'] = $this->UID;
+		$d['jsUserUID'] = $user->data['UID'];
 
 		$_SESSION['sMessage'] = ''; // send messag to user once only
 

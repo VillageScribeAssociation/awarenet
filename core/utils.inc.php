@@ -5,6 +5,16 @@
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
+//	create a unique ID 
+//--------------------------------------------------------------------------------------------------
+
+function createUID() {
+	$tempUID = "";
+	for ($i = 0; $i < 16; $i++) { $tempUID .= "" . mk_rand(); }
+	return substr($tempUID, 0, 18);
+}
+
+//--------------------------------------------------------------------------------------------------
 // 	clean a string of crap (to match searches and try stop SQL included into query)
 //--------------------------------------------------------------------------------------------------
 
@@ -45,28 +55,12 @@ function stripHTML($someText) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	create a unique ID 
-//--------------------------------------------------------------------------------------------------
-
-function createUID() {
-	$tempUID = "";
-	for ($i = 0; $i < 16; $i++) {
-		$tempUID .= "" . mk_rand();
-	}
-	return substr($tempUID, 0, 18);
-}
-
-//--------------------------------------------------------------------------------------------------
 // 	get the current date/time in mySQL format
 //--------------------------------------------------------------------------------------------------
 
-function mysql_dateTime() {
-	return gmdate("Y-m-j H:i:s", time());
-}
+function mysql_dateTime() { return gmdate("Y-m-j H:i:s", time()); }
 
-function mk_mysql_dateTime($date) {
-	return gmdate("Y-m-j H:i:s", $date);
-}
+function mk_mysql_dateTime($date) { return gmdate("Y-m-j H:i:s", $date); }
 
 //--------------------------------------------------------------------------------------------------
 // 	get a field from $_GET, $_POST, or set it to a default value if it down not exist
@@ -160,11 +154,64 @@ function phpUnComment($raw) {
 //	mode: w, w+, a, a+
 
 function filePutContents($fileName, $contents, $mode) {
+	fileMakeSubdirs($fileName);
 	$fH = fopen($fileName, $mode);
 	if ($fH == false) { return false; }
 	fwrite($fH, $contents);
 	fclose($fH);
 	return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	ensire that directory exists
+//--------------------------------------------------------------------------------------------------
+
+function fileMakeSubdirs($fileName) {
+	global $installPath;
+	$fileName = str_replace("//", '/', $fileName);	
+	$dirName = str_replace($installPath, '', $fileName);
+	$dirName = dirname($dirName);
+	$base = $installPath;
+	$subDirs = explode('/', $dirName);
+	foreach($subDirs as $sdir) {
+		$base = $base . $sdir . '/';
+		if (file_exists($base) == false) { mkdir($base); }
+	}
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	download a file using curl
+//--------------------------------------------------------------------------------------------------
+
+function curlGet($url, $password) {
+	if (function_exists('curl_init') == false) { return false; }	// is curl installed?
+
+	//---------------------------------------------------------------------------------------------
+	//	create baisc cURL HTTP GET request
+	//---------------------------------------------------------------------------------------------
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	//---------------------------------------------------------------------------------------------
+	//	use HTTP proxy if enabled
+	//---------------------------------------------------------------------------------------------
+	if ($proxyEnabled == 'yes') {
+		$credentials = $proxyUser . ':' . $proxyPass;
+		curl_setopt($ch, CURLOPT_PROXY, $proxyAddress);
+		curl_setopt($ch, CURLOPT_PROXYPORT, $proxyPort);
+		curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+		if (trim($credentials) != ':') {
+			curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $credentials);
+		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	return result
+	//---------------------------------------------------------------------------------------------
+	$result = curl_exec($ch);
+	return $result;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -221,6 +268,76 @@ function base64EncodeJs($varName, $text, $scriptTags = true) {
 	$b64 = "var $varName = \"" . $b64 . "\";\n";						// add js varname
 	if (true == $scriptTags) { $b64 = "<script language='Javascript'>\n" . $b64 . "</script>\n"; }
 	return $b64;														// done
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	start a process in background (*nix only)
+//--------------------------------------------------------------------------------------------------
+//	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
+//	TODO: find equivalent for windows
+
+function procExecBackground($Command, $Priority = 0) {
+	$PID = false;
+	if ($Priority) { 
+		// consider removing this
+		$PID = exec("$Command > > /dev/null 2>&1 &"); 
+	} else { 
+		$PID = exec("$Command > /dev/null 2>&1 &");
+	}
+	return $PID;
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	discover if a process is running
+//--------------------------------------------------------------------------------------------------
+//	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
+
+function procIsRunning($PID) {
+	exec("ps $PID", $ProcessState);
+	return(count($ProcessState) >= 2);
+}
+
+//--------------------------------------------------------------------------------------------------
+// 	remove javascript from html (prevent XSS worms, etc)
+//--------------------------------------------------------------------------------------------------
+//	source: http://us3.php.net/manual/en/function.strip-tags.php
+
+function stripJavascript(	$sSource, 
+							$aAllowedTags = array(), 
+							$aDisabledAttributes = array(	
+									'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 
+									'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 
+									'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 
+									'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 
+									'onbounce', 'oncellchange', 'onchange', 'onclick', 
+									'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 
+									'ondataavaible', 'ondatasetchanged', 'ondatasetcomplete', 
+									'ondblclick', 'ondeactivate', 'ondrag', 'ondragdrop', 
+									'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 
+									'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 
+									'onfilterupdate', 'onfinish', 'onfocus', 'onfocusin', 
+									'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 
+									'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 
+									'onmouseenter', 'onmouseleave', 'onmousemove', 'onmoveout', 
+									'onmouseover', 'onmouseup', 'onmousewheel', 'onmove',
+									'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange',
+									'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 
+									'onresizestart', 'onrowexit', 'onrowsdelete', 
+									'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 
+									'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload') 
+							) {
+
+	if (empty($aDisabledAttributes)) return strip_tags($sSource, implode('', $aAllowedTags));
+
+	$pattern = '/<(.*?)>/ie';
+
+	$replacement = 	"'<' . preg_replace(array('/javascript:[^\"\']*/i', '/("
+					. implode('|', $aDisabledAttributes)
+					. ")[ \\t\\n]*=[ \\t\\n]*[\"\'][^\"\']*[\"\']/i', '/\s+/'), "
+					. "array('', '', ' '), stripslashes('\\1')) . '>'";
+
+	return preg_replace($pattern, $replacement, $sSource);
+
 }
 
 ?>

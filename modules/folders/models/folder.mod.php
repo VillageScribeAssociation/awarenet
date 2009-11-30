@@ -32,13 +32,10 @@ class Folder {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
 		$this->data['parent'] = 'root';
 		$this->data['title'] = 'New folder ' . $this->data['UID'];
 		$this->data['children'] = '';
 		$this->data['files'] = '';
-		$this->data['createdBy'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime(time());
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -69,8 +66,9 @@ class Folder {
 		$this->data['children'] = serialize($this->children);
 		$this->data['files'] = serialize($this->files);
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('folder', $d['UID'], $d['title'], 'folder');
+		$this->data['recordAlias'] = raSetAlias(	'folder', $this->data['UID'], 
+													$this->data['title'], 'folder'	);
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 

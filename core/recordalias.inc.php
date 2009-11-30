@@ -25,12 +25,10 @@
 //	for that field.  $plainText is a title field or the like from which a recordAlias is derived.
 
 function raSetAlias($refTable, $refUID, $plainText, $module) {
-
 	//----------------------------------------------------------------------------------------------
 	//	get the default recordAlias for this plaintext
 	//----------------------------------------------------------------------------------------------
 	$default = raFromString($plainText);
-
 
 	if (trim($default) == '') { 						// no plainText
 		$default = $refUID;								// no refUID
@@ -41,7 +39,6 @@ function raSetAlias($refTable, $refUID, $plainText, $module) {
 	//	check if record (#refUID) already owns its default recordAlias - if so then we're done
 	//----------------------------------------------------------------------------------------------
 	$defaultOwner = raGetOwner($default, $refTable);
-	
 	//echo "default owner: $defaultOwner refUID: $refUID <br/>\n";
 	
 	if ($defaultOwner == $refUID) { return $default; }
@@ -138,15 +135,41 @@ function raSaveAlias($refTable, $refUID, $recordAlias) {
 		 OR (trim($recordAlias) == '')) { return false; }
 
 	$raUID = createUID();
-	$sql = "INSERT INTO recordalias VALUES (" 
-			. "'" . $raUID . "', " 
-			. "'" . $refTable . "', " 
-			. "'" . $refUID . "', " 
-			. "'" . strtolower($recordAlias) . "', " 
-			. "'" . $recordAlias . "')";
-			
-	dbQuery($sql);
+
+	$data = array(	'UID' => $raUID,
+					'refTable' => $refTable,
+					'refUID' => $refUID,
+					'aliaslc' => strtolower($recordAlias),
+					'alias' => $recordAlias,
+					'editedOn' => mysql_datetime(),
+					'editedBy' => $_SESSION['sUserUID']
+				);
+		
+	dbSave($data, raDbSchema());
 	return $raUID;
+}
+
+//--------------------------------------------------------------------------------------------------
+//	get dbSchema for recordAlias table
+//--------------------------------------------------------------------------------------------------
+
+function raDbSchema() {
+	$dbSchema = array();
+	$dbSchema['table'] = 'recordalias';
+	$dbSchema['fields'] = array(
+		'UID' => 'VARCHAR(30)',		
+		'refTable' => 'VARCHAR(100)',
+		'refUID' => 'VARCHAR(30)',	
+		'aliaslc' => 'VARCHAR(255)',
+		'alias' => 'VARCHAR(255)',
+		'editedOn' => 'DATETIME',
+		'editedBy' => 'VARCHAR(30)'	);
+
+	$dbSchema['indices'] = array('UID' => '10', 'refTable' => '20', 'refUID' => '10', 'aliaslc' => '30');
+	// no need to record changes to this table
+	$dbSchema['nodiff'] = array('UID', 'refTable', 'refUID', 'aliaslc', 'alias');
+
+	return $dbSchema;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -205,105 +228,49 @@ function raAlphaNumeric($txt) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      redirect browser (and search engines) to latest alias for a record
-//--------------------------------------------------------------------------------------------------
-
-function do301($URI) {
-	global $serverPath;
-	$URI = $serverPath . $URI;	
- 	header( "HTTP/1.1 301 Moved Permanently" );
- 	header( "Location: " . $URI ); 
-	echo "The page you requested moved <a href='" . $URI  . "'>here</a>.";
-	die();
-}
-
-//--------------------------------------------------------------------------------------------------
-//      forbidden
-//--------------------------------------------------------------------------------------------------
-
-function do403() {
-	global $installPath;
- 	header( "HTTP/1.1 403 Forbidden" );
-	$errPage = new Page($installPath . 'modules/home/actions/403.page.php');
-	$errPage->render();
-	die();
-}
-
-//--------------------------------------------------------------------------------------------------
-//      temporary redirect, for shuffling browsers around
-//--------------------------------------------------------------------------------------------------
-
-function do302($URI) {
-	global $serverPath;
-	$URI = $serverPath . $URI;
- 	header( "HTTP/1.1 302 Moved Temporarily" );
- 	header( "Location: " . $URI ); 
-	echo "The page you requested moved <a href='" . $URI . "'>here</a>.";
-	die();
-}
-
-//--------------------------------------------------------------------------------------------------
-//      you have died of dysentery
-//--------------------------------------------------------------------------------------------------
-
-function do404($msg = '') {
-	global $serverPath;
- 	header( "HTTP/1.1 404 Not Found" );
-	$errPage = new Page($installPath . 'modules/home/actions/404.page.php');
-	$errPage->render();
-	die();
-}
-
-//--------------------------------------------------------------------------------------------------
-//      xml error
-//--------------------------------------------------------------------------------------------------
-
-function doXmlError($msg = '') {
-	global $serverPath;
- 	header( "HTTP/1.1 404 Not Found" );
-	echo "<?xml version=\"1.0\"?>\n";
-	echo "<error>$msg</error>\n";
-	die();
-}
-
-//--------------------------------------------------------------------------------------------------
-//      delete all aliases for a record
+//	delete all aliases for a record
 //--------------------------------------------------------------------------------------------------
 
 function raDeleteAll($refTable, $refUID) {
-	$sql = "delete from recordalias "
-		 . "where refTable='" . $refTable . "' and refUID='" . $refUID . "'";
+	$sql = "select * from recordalias " 
+		 . "where refTable='" . sqlMarkup($refTable) . "' "
+		 . "and refUID='" . sqlMarkup($refUID) . "'";
 
-	dbQuery($sql);
+	$result = dbQuery($sql);
+	while ($row = dbFetchAssoc($result)) { dbDelete('recordalias', $row['UID']); }
 }
 
 //--------------------------------------------------------------------------------------------------
-//      get the default alias of a record (ie, the one in the record itsef)
+//	get the default alias of a record (ie, the one in the record itsef)
 //--------------------------------------------------------------------------------------------------
 
 function raGetDefault($refTable, $refUID) {
-	$sql = "select * from $refTable where UID='" . $refUID . "'";
+	$sql = "select * from " . sqlMarkup($refTable) . " where UID='" . sqlMarkup($refUID) . "'";
 	$result = dbQuery($sql);
 	if (dbNumRows($result) > 0) { 
 		$row = dbFetchAssoc($result); 
+		$row = sqlRMArray($row);
 		if (array_key_exists('recordAlias', $row)) { return $row['recordAlias']; }
 
 	} else { return false; }
 }
 
 //--------------------------------------------------------------------------------------------------
-//      find out which record an alias belongs to
+//	find out which record an alias belongs to
 //--------------------------------------------------------------------------------------------------
 
 function raGetOwner($recordAlias, $refTable) {
-	$raLC = strtolower($recordAlias);
 	$sql = "select * from recordalias "
-		 . "where refTable='" . $refTable . "' "
-		 . "and aliaslc='" . $raLC . "'";
+		 . "where refTable='" . sqlMarkup($refTable) . "' "
+		 . "and aliaslc='" . sqlMarkup(strtolower($recordAlias)) . "'";
 
 	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) { $row = dbFetchAssoc($result); return $row['refUID']; }
-	else { return false; }
+	if (dbNumRows($result) > 0) { 
+		$row = dbFetchAssoc($result); 
+		$row = sqlRMArray($row);
+		return $row['refUID']; 
+
+	} else { return false; }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -313,12 +280,15 @@ function raGetOwner($recordAlias, $refTable) {
 function raGetAll($refTable, $refUID) {
 	$aliases = array();
 	$sql = "select * from recordalias "
-		 . "where refTable='" . $refTable . "' "
-		 . "and refUID='" . $refUID . "'";	
+		 . "where refTable='" . sqlMarkup($refTable) . "' "
+		 . "and refUID='" . sqlMarkup($refUID) . "'";	
 
 	$result = dbQuery($sql);
 	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) { $aliases[$row['UID']] = $row['alias']; }
+		while ($row = dbFetchAssoc($result)) { 
+			$row = sqlRMArray($row);
+			$aliases[$row['UID']] = $row['alias']; 
+		}
 		return $aliases;
 	} else { return false; }
 }

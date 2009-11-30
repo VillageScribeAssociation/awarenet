@@ -9,13 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	make sure public users cannot send messages (spam)
 	//----------------------------------------------------------------------------------------------
-
-	if ($user->data['ofGroup'] == 'public') { echo "denied."; flush(); die(); } 
+	if ($user->data['ofGroup'] == 'public') { doXmlError('please log in'); } 
 
 	//----------------------------------------------------------------------------------------------
 	//	OK, send the message
 	//----------------------------------------------------------------------------------------------
-
 	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
 	if ( (array_key_exists('toUser', $_POST))
@@ -37,31 +35,38 @@
 		//	recipients copy 
 		//------------------------------------------------------------------------------------------
 
-		$recipient = new Chat($_POST['toUser']);
-		$msgUID = $recipient->createMsgUID();
+		//$recipient = new Chat($_POST['toUser']);
+		//$msgUID = $recipient->createMsgUID();
 
-		$recipient->addMessage ('r' . $msgUID, 
-								$user->data['UID'], 
-							 	sqlMarkup($_POST['toUser']), 
-								chatMarkup($msgPair['recipient']),
-								'no');
+		//$recipient->addMessage ('r' . $msgUID, 
+		//						$user->data['UID'], 
+		//					 	sqlMarkup($_POST['toUser']), 
+		//						chatMarkup($msgPair['recipient']),
+		//						'no');
 
-		$recipient->save();
+		//$recipient->save();
+
+		$msgUID = createUID();
+		$b64Content = base64_encode($cleanContent);
+		$msg = base64_encode($msgUID . '|' . $user->data['UID'] . '|' . mysql_datetime() . '|' . time() . '|' . $b64Content . '|0');
+		notifyChannel('chat-user-' . $_POST['toUser'], 'add', $msg);
 
 		//------------------------------------------------------------------------------------------
 		//	senders copy
  		//------------------------------------------------------------------------------------------
 
-		$sender = new Chat($user->data['UID']);
-		$msgUID = $sender->createMsgUID();
+		//$sender = new Chat($user->data['UID']);
+		//$msgUID = $sender->createMsgUID();
 
-		$sender->addMessage('s' . $msgUID, 
-							sqlMarkup($_POST['toUser']), 
-							$user->data['UID'], 
-							chatMarkup($msgPair['sender']), 
-							'yes');
+		//$sender->addMessage('s' . $msgUID, 
+		//					sqlMarkup($_POST['toUser']), 
+		//					$user->data['UID'], 
+		//					chatMarkup($msgPair['sender']), 
+		//					'yes');
 
-		$sender->save();
+		//$sender->save();
+		$msg = base64_encode($msgUID . '|' . $_POST['toUser'] . '|' . mysql_datetime() . '|' . time() . '|' . $b64Content . '|1');
+		notifyChannel('chat-user-' . $user->data['UID'], 'add', $msg);
 
 
 	}

@@ -5,10 +5,13 @@
 //--------------------------------------------------------------------------------------------------------------
 
 	//if (authHas('static', 'view', '') == false) { do403(); }
+
+	if ($request['ref'] == '') { $request['ref'] == 'frontpage'; }
+
+	raFindRedirect('static', 'show', 'static', $request['ref']);
 	
 	require_once($installPath . 'modules/static/models/static.mod.php');
 	$model = new StaticPage($request['ref']);
-	//if (($model->data['content'] == '')) { do404(); }
 	
 	$page->data['template'] = 'twocol-rightnav.template.php';
 	$page->data['content'] = $model->data['content'];

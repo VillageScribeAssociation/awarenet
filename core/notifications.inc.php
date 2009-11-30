@@ -133,12 +133,20 @@ function notifyThread($threadUID, $noticeUID, $from, $fromurl, $title, $content,
 // broadcast notification on an page channel
 //--------------------------------------------------------------------------------------------------
 
-function notifyChannel($channelID, $event, $data) {
+function notifyChannel($channelID, $event, $data, $rebroadcast = true) {
+	//----------------------------------------------------------------------------------------------
+	//	send to locally subscribed clients
+	//----------------------------------------------------------------------------------------------
 	$model = new PageChannel('');	// don't load it yet
 	if ($model->channelExists($channelID) == true) {
 		$model->load($channelID);
 		$model->broadcast($event, $data);
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	broadcast to peer servers
+	//----------------------------------------------------------------------------------------------
+	if ($rebroadcast == true) { syncBroadcastNotification('self', $channelID, $event, $data); }
 }
 
 ?>

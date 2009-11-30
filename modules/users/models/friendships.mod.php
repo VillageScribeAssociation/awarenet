@@ -25,7 +25,6 @@ class Friendship {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['userUID'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime();
 		$this->data['status'] = 'unconfirmed';
 		if ($UID != '') { $this->load($UID); }
 	}
@@ -81,7 +80,9 @@ class Friendship {
 			'friendUID' => 'VARCHAR(30)',
 			'relationship' => 'VARCHAR(100)',
 			'status' => 'VARCHAR(255)',		
-			'createdOn' => 'DATETIME' );
+			'createdOn' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)' );
 
 		$dbSchema['indices'] = array(
 			'UID' => '10', 

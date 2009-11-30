@@ -21,8 +21,6 @@ class StaticPage {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] == 'New Static Page';
-		$this->data['createdOn'] = mysql_datetime();
-		$this->data['createdBy'] = $_SESSION['sUserUID'];
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -48,8 +46,8 @@ class StaticPage {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('static', $d['UID'], $d['title'], 'static');
+		$ra = raSetAlias('static', $this->data['UID'], $this->data['title'], 'static');
+		$this->data['recordAlias'] = $ra;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -86,6 +84,8 @@ class StaticPage {
 			'head' => 'TEXT',
 			'createdOn' => 'DATETIME',	
 			'createdBy' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -100,7 +100,10 @@ class StaticPage {
 	function delete() {
 		if (authHas('static', 'delete', '') == false) { return false; }
 		dbDelete('static', $this->data['UID']);
-		raDeleteAll('static', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'static', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 	
 	//------------------------------------------------------------------------------------------------------

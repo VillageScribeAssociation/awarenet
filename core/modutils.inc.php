@@ -25,13 +25,13 @@ function imgGetDefault($refModule, $refUID) {
 }
 
 function imgGetDefaultUrl($refModule, $refUID, $size) {
-	$row = imgGetHeaviest($refModule, $refUID);
+	$row = imgGetDefault($refModule, $refUID);
 	if ($row == false) { return '%%serverPath%%/themes/%%%defaultTheme%%/unavailable/' . $size; }
 	return '%%serverPath%%/images/' . $size . '/' . $row['recordAlias'];
 }
 
 function imgGetDefaultUID($refModule, $refUID) {
-	$row = imgGetHeaviest($refModule, $refUID);
+	$row = imgGetDefault($refModule, $refUID);
 	if ($row == false) { return false; }
 	return $row['UID'];
 }

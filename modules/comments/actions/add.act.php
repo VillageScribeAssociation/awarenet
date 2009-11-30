@@ -46,7 +46,7 @@
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------
-	//	raise 'comment_add' event on refModule
+	//	raise 'comment_added' event on refModule
 	//----------------------------------------------------------------------------------------------
 
 	$args = array(	'refModule' => $refModule, 
@@ -54,7 +54,7 @@
 					'commentUID' => $commentUID, 
 					'comment' => $ext['comment']    );
 
-	eventSendSingle($refModule, 'comments_add', $args);
+	eventSendSingle($refModule, 'comments_added', $args);
 
 	//----------------------------------------------------------------------------------------------
 	//	send out page notifications
@@ -62,6 +62,11 @@
 
 	$channelID = 'comments-' . $refModule . '-' . $refUID;
 	$blockHtml = expandBlocks('[[:comments::summary::UID=' . $ext['UID'] . ':]]', '');
+	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
+	notifyChannel($channelID, 'add', $data);
+
+	$channelID = 'comments-' . $refModule . '-' . $refUID . '-nav';
+	$blockHtml = expandBlocks('[[:comments::summarynav::UID=' . $ext['UID'] . ':]]', '');
 	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
 	notifyChannel($channelID, 'add', $data);
 

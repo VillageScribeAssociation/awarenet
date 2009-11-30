@@ -200,6 +200,7 @@ div.inlinequote {
 
 div .drag {
 	background-image: url(/themes/clockface/images/chat.png);
+	background-repeat: repeat-x;
 	position: relative;
 	width: 200px;
 	margin: 4px 4px 4px 4px;

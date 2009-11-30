@@ -24,7 +24,7 @@ function users__cb_comments_add($refUID, $commentUID, $comment) {
 	$title = $user->getNameLink() . " commented on " . $model->getName() . "'s " . $link;
 	$url = $ext['viewUrl'] . '#comment' . $commentUID;
 	$imgUID = '';
-	$imgUID = imgGetHeaviestUID('projects', $refUID);
+	$imgUID = imgGetDefaultUID('projects', $refUID);
 
 	if ($user->data['UID'] == $refUID) 
 		{ $title = $user->getNameLink() . " commented on their own " . $link; }

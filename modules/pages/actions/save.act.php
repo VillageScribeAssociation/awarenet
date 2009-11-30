@@ -7,7 +7,7 @@
 
 if ((array_key_exists('action', $_POST) AND ($_POST['action'] == 'savePage'))) {
 
-	$fileName = $installPath . 'modules/' . $_POST['module'] . '/' . $_POST['page'];
+	$fileName = $installPath . 'modules/' . $_POST['module'] . '/actions/' . $_POST['page'];
 	if (file_exists($fileName)) {
 		$p = new Page();
 		$p->load($fileName);
@@ -18,7 +18,7 @@ if ((array_key_exists('action', $_POST) AND ($_POST['action'] == 'savePage'))) {
 
 		$p->save();
 
-	} else { $_SESSION['sMessage'] .= "no such block :-(<br/>\n"; }
+	} else { $_SESSION['sMessage'] .= "no such page :-(<br/>\n"; }
 
 	do302('pages/list/');
 

@@ -18,12 +18,26 @@ function moblog_summarylist($args) {
 	//	arguments
 	//----------------------------------------------------------------------------------------------
 	$start = 0; $num = 30; $page = 1;
+	$html = '';
 
 	if (array_key_exists('num', $args)) { $num = $args['num']; }
 	if (array_key_exists('page', $args)) { 
 		$page = $args['page']; 
 		$start = ($page - 1) * $num;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	count visible posts
+	//----------------------------------------------------------------------------------------------
+	$sql = "select count(UID) as numRecords from moblog where published='yes'";
+	$result = dbQuery($sql);
+	$row = sqlRMArray(dbFetchAssoc($result));
+	$total = ceil($row['numRecords'] / $num);
+
+
+	$link = '%%serverPath%%moblog/';
+	$pagination .= "[[:theme::pagination::page=" . sqlMarkup($page) 
+				. "::total=" . $total . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
@@ -43,7 +57,7 @@ function moblog_summarylist($args) {
 		$model->loadArray($row);
 		$html .= replaceLabels($model->extArray(), loadBlock('modules/moblog/views/summary.block.php'));
 	}  
-	return $html;
+	return $pagination . $html . $pagination;
 }
 
 //--------------------------------------------------------------------------------------------------

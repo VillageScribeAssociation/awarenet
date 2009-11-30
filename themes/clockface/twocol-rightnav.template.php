@@ -10,6 +10,7 @@
 
 <script src='%%serverPath%%core/utils.js'></script>
 <script src='%%serverPath%%modules/notifications/js/pagecheck.js'></script>
+<script src='%%serverPath%%modules/chat/js/chat.js'></script>
 
 %%head%%
 
@@ -19,6 +20,7 @@
 	var awareNetChat = true;
 	var jsServerPath = '%%serverPath%%';
 	var jsPageUID = '%%pageInstanceUID%%';
+	var jsUserUID = '%%jsUserUID%%';
 
 	//----------------------------------------------------------------------------------------------
 	//	initialise page
@@ -27,6 +29,7 @@
 	function kPageInit() {
 		%%jsinit%%
 		msgPump();
+		if (true == awareNetChat) { chatInit(); }
 	}
 
 	%%script%%
@@ -53,14 +56,13 @@
 
 	  <tr>
 	    <td width='900' height='28' background='%%serverPath%%themes/clockface/images/menuBottom.png'>
-			<small>&nbsp;</small>
-			%%menu2%%
+			<span style='float: left;'><small>&nbsp;</small>%%menu2%%</span>
 		</td>
 	  </tr>	
 	  <tr><td><br/></td></tr>
 
 	  <tr>
-	    <td>%%breadcrumb%%</td>
+	    <td><span style='float: left;'>%%breadcrumb%%</span></td>
 	  </tr>	
 
 	  <tr>

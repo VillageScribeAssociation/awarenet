@@ -29,7 +29,12 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ($msg == '') {
-		$raw = @implode(file($URL));
+		$raw = '';
+		if ($proxyEnabled == 'yes') {
+			$raw = curlGet($URL, '');		// use HTTP proxy
+		} else {
+			$raw = @implode(file($URL));		// use file wrapper
+		}
 		if ($raw == false) { $msg = "Image could not be downloaded, check the URL?"; }
 	}
 
@@ -72,28 +77,15 @@
 		images__checkWeight($refModule, $refUID);	// ensure weights are consecutive
 
 		//------------------------------------------------------------------------------------------
-		//	check if a images_add callback can be sent to this refModule
+		//	send 'images_added' event to module whose record owns this image
 		//------------------------------------------------------------------------------------------
-
-		$callBackFile = $installPath . 'modules/' . $refModule . '/callbacks.inc.php';
-		$callBackFn = $refModule . '__cb_images_add';
-		if (file_exists($callBackFile) == true) {
-			require_once($callBackFile);
-			if (function_exists($callBackFn) == true) {
-				//----------------------------------------------------------------------------------
-				//	send the callback
-				//----------------------------------------------------------------------------------
-				$callBackFn($refUID, $ext['UID'], $ext['title']);
-
-			}
-		}
 	
 		$args = array(	'refModule' => $refModule, 
 						'refUID' => $refUID, 
 						'imageUID' => $ext['UID'], 
 						'imageTitle' => $ext['title']    );
 
-		eventSendSingle($refModule, 'images_add', $args)
+		eventSendSingle($refModule, 'images_added', $args);
 
 	}
 

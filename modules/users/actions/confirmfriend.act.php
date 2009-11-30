@@ -65,7 +65,7 @@
 
 		$url = '/users/friends/';
 		$fromUrl = '/users/profile/' . $user->data['UID'];
-		$imgRow = imgGetHeaviest('users', $user->data['UID']);
+		$imgRow = imgGetDefault('users', $user->data['UID']);
 		$imgUID = '';
 		if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 

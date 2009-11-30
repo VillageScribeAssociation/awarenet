@@ -4,6 +4,7 @@
 //	default libraries and objects available to modules
 //--------------------------------------------------------------------------------------------------
 
+	include 'http.inc.php';
 	include 'routing.inc.php';
 	include 'mysql.inc.php';	
 	include 'recordalias.inc.php';
@@ -18,5 +19,7 @@
 	include 'notifications.inc.php';
 	include 'modutils.inc.php';
 	include 'events.inc.php';
+	include 'sync.inc.php';
+	include 'cron.inc.php';
 
 ?>

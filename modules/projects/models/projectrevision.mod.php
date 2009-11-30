@@ -18,12 +18,8 @@ class ProjectRevision {
 	//----------------------------------------------------------------------------------------------
 
 	function ProjectRevision($UID = '') {
-		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
-		$this->data['editedBy'] = $user->data['UID'];
-		$this->data['editedOn'] = mysql_datetime(time());
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -48,7 +44,6 @@ class ProjectRevision {
 	function save() {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
-		$d = $this->data;
 		dbSave($this->data, $this->dbSchema); 
 	}
 

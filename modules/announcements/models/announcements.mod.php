@@ -23,7 +23,6 @@ class Announcement {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] = 'New Announcement';
-		$this->data['createdOn'] = mysql_datetime();
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -47,12 +46,11 @@ class Announcement {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$this->data['recordAlias'] = raSetAlias('announcements', $this->data['UID'], 
-												$this->data['title'], 'announcements');
+		$this->data['recordAlias'] = raSetAlias(	'announcements', $this->data['UID'], 
+													$this->data['title'], 'announcements'	);
 
-		if (($this->data['title'] != '') AND ($this->data['title'] != 'New Announcement')) {
-			$this->data['notifications'] = 'sent';
-		}
+		if (($this->data['title'] != '') AND ($this->data['title'] != 'New Announcement')) 
+			{ $this->data['notifications'] = 'sent'; }
 
 		dbSave($this->data, $this->dbSchema); 
 	}
@@ -86,6 +84,8 @@ class Announcement {
 			'notifications' => 'VARCHAR(10)',
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
+			'editedOn' => 'VARCHAR(30)',
+			'editedBy' => 'DATETIME',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -197,13 +197,13 @@ class Announcement {
 	//	delete a record
 	//----------------------------------------------------------------------------------------------
 
-	function delete() {
-		// notify other modules
-		$args = array('module' => 'moblog', 'UID' => $this->data['UID']);
-		callbackSendAll('record_delete', $args);
-		
-		raDeleteAll('announcements', $this->data['UID']);
-		dbDelete('announcements', $this->data['UID']);
+	function delete() { 
+		// delete this record
+		dbDelete('announcements', $this->data['UID']); 
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'announcements', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	//----------------------------------------------------------------------------------------------

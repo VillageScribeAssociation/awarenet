@@ -78,11 +78,12 @@ class Server {
 			'serverurl' => 'VARCHAR(100)',			
 			'password' => 'VARCHAR(50)',
 			'direction' => 'VARCHAR(50)',
-			'active' => 'VARCHAR(10)'
+			'active' => 'VARCHAR(10)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			);
 
 		$dbSchema['indices'] = array('UID' => '10');
-
 		$dbSchema['nodiff'] = array('UID', 'password');
 		return $dbSchema;
 	}

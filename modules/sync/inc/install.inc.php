@@ -5,6 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 
 require_once($installPath . 'modules/sync/models/servers.mod.php');
+require_once($installPath . 'modules/sync/models/deleted.mod.php');
+require_once($installPath . 'modules/sync/models/sync.mod.php');
+require_once($installPath . 'modules/sync/models/downloads.mod.php');
 
 function install_sync_module() {
 	global $installPath;
@@ -19,10 +22,22 @@ function install_sync_module() {
 	$report = $model->install();
 
 	//----------------------------------------------------------------------------------------------
-	//	updates table
+	//	deleted items table
 	//----------------------------------------------------------------------------------------------
-	//$model = new ForumReply();
-	//$report .= $model->install();
+	$model = new DeletedItem();
+	$report = $model->install();
+
+	//----------------------------------------------------------------------------------------------
+	//	sync events table
+	//----------------------------------------------------------------------------------------------
+	$model = new Sync();
+	$report .= $model->install();
+
+	//----------------------------------------------------------------------------------------------
+	//	downloads table
+	//----------------------------------------------------------------------------------------------
+	$model = new Download();
+	$report .= $model->install();
 
 	return $report;
 }

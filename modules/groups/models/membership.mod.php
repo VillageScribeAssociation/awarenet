@@ -43,8 +43,6 @@ class GroupMembership {
 	function save() {
 		$verify = $this->verify();
 		if ($verify != '') { echo $verify; return $verify; }
-
-		$d = $this->data;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -79,7 +77,9 @@ class GroupMembership {
 			'userUID' => 'VARCHAR(30)',
 			'position' => 'VARCHAR(20)',
 			'admin' => 'VARCHAR(10)',
-			'joined' => 'DATETIME' );
+			'joined' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'group' => '10', 'user' => '10');
 		$dbSchema['nodiff'] = array('UID', 'recordAlias');

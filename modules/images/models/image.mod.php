@@ -33,10 +33,6 @@ class Image {
 	function Image($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
-		$this->data['createdOn'] = mysql_datetime();
-		$this->data['createdBy'] = $_SESSION['sUserUID'];
-		$this->data['createdOn'] = mysql_datetime();
 		$this->data['fileName'] = '';
 		$this->transforms = array();
 		if ($UID != '') { $this->load($UID); }
@@ -67,8 +63,8 @@ class Image {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('images', $d['UID'], $d['title'] . '.jpg','images');
+		$ra = raSetAlias('images', $this->data['UID'], $this->data['title'] . '.jpg','images');
+		$this->data['recordAlias'] = $ra;
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -110,6 +106,8 @@ class Image {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(30)',
 			'hitcount' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array(
@@ -198,9 +196,11 @@ class Image {
 	function loadImage() {
 		global $installPath;
 		$fileName = $installPath . $this->data['fileName'];
+		if (file_exists($fileName) == false) { return false; }
 		if ($this->data['format'] == 'jpg') { $this->img = imagecreatefromjpeg($fileName); }
 		if ($this->data['format'] == 'png') { $this->img = imagecreatefrompng($fileName); }
 		if ($this->data['format'] == 'gif') { $this->img = imagecreatefromgif($fileName); }
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -324,23 +324,43 @@ class Image {
 		$this->data['format'] = 'jpg';
 	}
 
-	//----------------------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------
 	//	delete current image and all transforms
-	//----------------------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------
 
 	function delete() {
 		global $installPath;
-		if ($this->data['fileName'] == '') { return false; }
-		
+			
+		//-----------------------------------------------------------------------------------------
+		//	delete the file and any transforms
+		//-----------------------------------------------------------------------------------------
 		$this->expandTransforms();
 		foreach($this->transforms as $transName => $fileName) {
 			$fileName = $installPath . $fileName;
-			@unlink($fileName);
+			if (file_exists($fileName) == true) { @unlink($fileName); }
 		}
 		
-		@unlink($installPath . $this->data['fileName']);
-		raDeleteAll('images', $this->data['UID']);
+		if (file_exists($installPath . $this->data['fileName']) == true) 
+			{ @unlink($installPath . $this->data['fileName']); }
+
+		//-----------------------------------------------------------------------------------------
+		//	delete the record
+		//-----------------------------------------------------------------------------------------
 		dbDelete('images', $this->data['UID']);
+
+		//-----------------------------------------------------------------------------------------
+		//	allow other modules to respond to this event
+		//-----------------------------------------------------------------------------------------
+		$args = array('module' => 'images', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	bump up the hitcount by one
+	//----------------------------------------------------------------------------------------------
+
+	function incHitCount() {
+		dbUpdateQuiet('images', $this->data['UID'], 'hitcount', ($this->data['hitcount'] + 1));
 	}
 	
 }

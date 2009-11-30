@@ -107,7 +107,7 @@ function logEvent($log, $subsystem, $fn, $msg) {
 	$entry = "<event>\n";
 	$entry .= "\t<datetime>" . mysql_datetime() . "</datetime>\n";
 	$entry .= "\t<session>" . $_SESSION['sUID'] . "</session>\n";
-	$entry .= "\t<ip>" . $subsystem . "</ip>\n";
+	$entry .= "\t<ip>" . $_SERVER['REMOTE_ADDR'] . "</ip>\n";
 	$entry .= "\t<system>" . $subsystem . "</system>\n";
 	$entry .= "\t<user>" . $_SESSION['sUserUID'] . "</user>\n";
 	$entry .= "\t<function>" . $fn . "</function>\n";
@@ -131,5 +131,16 @@ function logEv($granularity, $subsystem, $fn, $msg) {
 //--------------------------------------------------------------------------------------------------
 
 function logErr($subsystem, $fn, $msg) { logEvent('error', $subsystem, $fn, $msg); }
+
+//--------------------------------------------------------------------------------------------------
+//	log sync activity
+//--------------------------------------------------------------------------------------------------
+
+function logSync($msg) {
+	$fileName = $installPath . 'data/log/' . date("y-m-d") . '-sync.log.php';
+	if (file_exists($fileName) == false) { makeEmptyLog($fileName);	}
+	$msg = mysql_datetime() . " *******************************************************\n" . $msg;
+	return filePutContents($fileName, $msg, 'a+');
+}
 
 ?>

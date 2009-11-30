@@ -21,10 +21,6 @@ class ForumReply {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['createdBy'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime(time());
-		$this->data['editedBy'] = $user->data['UID'];
-		$this->data['editedOn'] = mysql_datetime(time());
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -50,8 +46,9 @@ class ForumReply {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('forumreplies', $d['UID'], $d['title'], 'forumreplies');
+		$this->data['recordAlias'] = raSetAlias(	'forumreplies', $this->data['UID'], 
+													$this->data['title'], 'forumreplies'	);
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -61,9 +58,7 @@ class ForumReply {
 
 	function verify() {
 		$verify = '';
-
 		if (strlen($this->data['UID']) < 5) { $verify .= "UID not present.\n"; }
-
 		return $verify;
 	}
 

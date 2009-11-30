@@ -4,9 +4,11 @@
 //	check to see if a page has any new notices
 //-------------------------------------------------------------------------------------------------
 
+	$t1 = microtime();
+
 	require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
 	if ($request['ref'] == '') { die(); }
-	
+
 	//---------------------------------------------------------------------------------------------
 	//	load the client and check for messages
 	//---------------------------------------------------------------------------------------------
@@ -60,11 +62,11 @@
 		}
 	}
 
-	echo "\n#ENDOFMESSAGES\n";
-
 	//---------------------------------------------------------------------------------------------
 	//	clear out any dead page clients (have become too old/not checked)
 	//---------------------------------------------------------------------------------------------
 	$model->bringOutYourDead();
+	$t2 = microtime();
+	echo "\n#ENDOFMESSAGES (" . ($t2 - $t1) . " microseconds)\n";
 	
 ?>

@@ -1,8 +1,20 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for recording record edits
+//	object for recording sync notices
 //--------------------------------------------------------------------------------------------------
+//	when an event occurs or we are notified on one by a peer it is stored in the sync table until
+//	successfully rebroadcast to all peers which need to know about it.  Retrying periodically.
+//	
+//	Database fields mean the following:
+//	UID 		- a unique ID
+//	source 		- peer we recieved this from, 'self' if the event occured on this server
+//	type		- type of event, eg 'dbupdate', 'dbdelete', etc
+//	data		- serialized, depends on type
+//	peer		- UID of peer to broadcast this to
+//	status		- locked / failed
+//	received	- when this entry was created
+//	timestamp	- of last attempt to pass on to peer
 
 class Sync {
 
@@ -13,8 +25,6 @@ class Sync {
 	var $data;			// currently loaded record
 	var $dbSchema;		// database structure
 
-	var $noSync = 'sync|changes';	// tables which are not synced
-
 	//----------------------------------------------------------------------------------------------
 	//	constructor
 	//----------------------------------------------------------------------------------------------
@@ -23,6 +33,8 @@ class Sync {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['UID'] = createUID();
+		$this->data['received'] = time();
+		$this->data['timestamp'] = time();
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -70,21 +82,24 @@ class Sync {
 	//----------------------------------------------------------------------------------------------
 	//	sql information
 	//----------------------------------------------------------------------------------------------
+	//	note that this also exists in /core/sync.inc.php, copy any changes there
 
 	function initDbSchema() {
 		$dbSchema = array();
 		$dbSchema['table'] = 'sync';
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',
-			'table' => 'VARCHAR(50)',
-			'refUID' => 'VARCHAR(30)',	
-			'timestamp' => 'VARCHAR(20)',
-			'hash' => 'VARCHAR(42)'
+			'source' => 'VARCHAR(30)',
+			'type' => 'VARCHAR(50)',
+			'data' => 'TEXT',	
+			'peer' => 'VARCHAR(30)',
+			'status' => 'VARCHAR(30)',
+			'received' => 'VARCHAR(30)',
+			'timestamp' => 'VARCHAR(20)'
 		);
 
-		$dbSchema['indices'] = array('UID' => '10', 'refUID' => '10', 'table' => '6');
-
-		$dbSchema['nodiff'] = array('UID', 'table', 'refUID', 'timestamp', 'hash');
+		$dbSchema['indices'] = array('UID' => '10');
+		$dbSchema['nodiff'] = array('UID', 'source', 'type', 'data', 'peer', 'status', 'received', 'timestamp');
 		return $dbSchema;
 	}
 
@@ -131,20 +146,6 @@ class Sync {
 
 	function delete() {
 		dbDelete('sync', $this->data['UID']);
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	list sync-able tables
-	//----------------------------------------------------------------------------------------------
-
-	function listTables() {
-		$retVal = array();
-		$tables = dbListTables();
-		$noSync = explode('|', $this->noSync);
-		foreach($tables as $table) {
-			if (in_array($table, $noSync) == false) { $retVal[] = $table; }
-		}
-		return $retVal;
 	}
 	
 }

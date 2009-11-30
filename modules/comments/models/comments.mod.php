@@ -26,7 +26,6 @@ class Comment {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] = 'New comment';
-		$this->data['createdOn'] = mysql_datetime();
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -79,6 +78,8 @@ class Comment {
 			'comment' => 'TEXT',
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -206,8 +207,13 @@ class Comment {
 	//	delete a record
 	//----------------------------------------------------------------------------------------------
 
-	function delete() {
-		dbDelete('comments', $this->data['UID']);
+	function delete() { 
+		// delete this record and any recordAlias
+		dbDelete('comments', $this->data['UID']); 
+		
+		// allow other modules to respond
+		$args = array('module' => 'comments', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 }

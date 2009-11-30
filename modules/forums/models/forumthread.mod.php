@@ -22,9 +22,7 @@ class ForumThread {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] = 'New Thread ' . $this->data['UID'];
-		$this->data['createdBy'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime(time());
-		$this->data['updated'] = mysql_datetime(time());
+		$this->data['updated'] = mysql_datetime();
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -50,8 +48,9 @@ class ForumThread {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('forumthreads', $d['UID'], $d['title'], 'forumthreads');
+		$ra = raSetAlias('forumthreads', $this->data['UID'], $this->data['title'], 'forumthreads');
+		$this->data['recordAlias'] = $ra;
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -84,6 +83,8 @@ class ForumThread {
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
 			'updated' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',			
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 

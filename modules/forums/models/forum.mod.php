@@ -66,8 +66,9 @@ class Forum {
 
 		$this->collapseData();
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('forums', $d['UID'], $d['title'], 'forums');
+		$this->data['recordAlias'] = raSetAlias(	'forums', $this->data['UID'], 
+													$this->data['title'], 'forums'	);
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -77,9 +78,7 @@ class Forum {
 
 	function verify() {
 		$verify = '';
-
 		if (strlen($this->data['UID']) < 5) { $verify .= "UID not present.\n"; }
-
 		return $verify;
 	}
 

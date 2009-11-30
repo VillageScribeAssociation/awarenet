@@ -7,7 +7,7 @@
 //	language.  Admins may change most other fields.
 
 //-------------------------------------------------------------------------------------------------
-//	for changing fields othert than password
+//	for changing fields other than password
 //-------------------------------------------------------------------------------------------------
 
 if ((array_key_exists('action', $_POST) == true)
@@ -177,7 +177,7 @@ if ((array_key_exists('action', $_POST) == true)
 
 		$url = '/users/profile/'  . $user->data['UID'];
 		$fromUrl = '/users/profile/' . $user->data['UID'];
-		$imgRow = imgGetHeaviest('users', $user->data['UID']);
+		$imgRow = imgGetDefault('users', $user->data['UID']);
 		$imgUID = '';
 		if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 

@@ -10,6 +10,7 @@
 
 //	TODO: consider a better way for admins to decide on profile fields
 
+require_once($installPath . 'modules/users/models/userlogin.mod.php');
 require_once($installPath . 'modules/users/models/friendships.mod.php');
 
 class Users {
@@ -116,6 +117,8 @@ class Users {
 			'lastOnline' => 'DATETIME',
 			'createdOn' => 'DATETIME',	
 			'createdBy' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -176,15 +179,10 @@ class Users {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	chatlink - if lastOnline < 20 seconds ago
+		//	chatlink- if logged in to awarenet (not necessarily on this peer)
 		//------------------------------------------------------------------------------------------
 
-		$ary['chatLink'] = "<a href='#' onClick=\"cookieAddWindow('" 
-						. $ary['UID'] . "', '100', '100'); cookieSetChatUpdate();\">[chat]</a>";
-
-		$timeDiff = time() - strtotime($ary['lastOnline']);
-		if ($timeDiff > 7250) { $ary['chatLink'] = '[offline]'; }
-		if ($user->data['UID'] == $ary['UID']) { $ary['chatLink'] = '[online]'; }
+		$ary['chatLink'] = expandBlocks('[[:users::chatlink::userUID=' . $ary['UID'] . ':]]', '');
 
 		//------------------------------------------------------------------------------------------
 		//	add profile fields
@@ -436,33 +434,32 @@ class Users {
 	//	delete this user
 	//----------------------------------------------------------------------------------------------
 	function delete() {
-		$UID = $this->data['UID'];
-
-		dbQuery("delete from announcements where createdBy='" . $UID . "'");	
-		dbQuery("delete from comments where createdBy='" . $UID . "'");
-		dbQuery("delete from calendar where createdBy='" . $UID . "'");
-		dbQuery("delete from calendar where createdBy='" . $UID . "'");
-		dbQuery("delete from chat where user='" . $UID . "'");
+		//dbQuery("delete from announcements where createdBy='" . $UID . "'");	
+		//dbQuery("delete from comments where createdBy='" . $UID . "'");
+		//dbQuery("delete from calendar where createdBy='" . $UID . "'");
+		//dbQuery("delete from calendar where createdBy='" . $UID . "'");
+		//dbQuery("delete from chat where user='" . $UID . "'");
 
 		// TODO: delete files and images
-		
-		dbQuery("delete from forumreplies where createdBy='" . $UID . "'");
-		dbQuery("delete from friendships where userUID='" . $UID . "'");
-		dbQuery("delete from friendships where friendUID='" . $UID . "'");
-		dbQuery("delete from forums where createdBy='" . $UID . "'");
-		dbQuery("delete from forumthreads where createdBy='" . $UID . "'");
-		dbQuery("delete from groupmembers where userUID='" . $UID . "'");
-		dbQuery("delete from messages where toUID='" . $UID . "'");
-		dbQuery("delete from messages where fromUID='" . $UID . "'");
-		dbQuery("delete from moblog where createdBy='" . $UID . "'");
-		dbQuery("delete from notices where user='" . $UID . "'");
-		dbQuery("delete from projectmembers where userUID='" . $UID . "'");
-		dbQuery("delete from projects where createdBy='" . $UID . "'");
+		//dbQuery("delete from forumreplies where createdBy='" . $UID . "'");
+		//dbQuery("delete from friendships where userUID='" . $UID . "'");
+		//dbQuery("delete from friendships where friendUID='" . $UID . "'");
+		//dbQuery("delete from forums where createdBy='" . $UID . "'");
+		//dbQuery("delete from forumthreads where createdBy='" . $UID . "'");
+		//dbQuery("delete from groupmembers where userUID='" . $UID . "'");
+		//dbQuery("delete from messages where toUID='" . $UID . "'");
+		//dbQuery("delete from messages where fromUID='" . $UID . "'");
+		//dbQuery("delete from moblog where createdBy='" . $UID . "'");
+		//dbQuery("delete from notices where user='" . $UID . "'");
+		//dbQuery("delete from projectmembers where userUID='" . $UID . "'");
+		//dbQuery("delete from projects where createdBy='" . $UID . "'");
 
 		// delete this record
+		dbDelete('users', $this->data['UID']);
 
-		dbQuery("delete from users where UID='" . $UID . "'");
-
+		// allow other modules to respond to this event
+		$args = array('module' => 'users', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -472,8 +469,6 @@ class Users {
 	function getName() { return trim($this->data['firstname'] . ' ' . $this->data['surname']);	}
 	function getUrl() { return "%%serverPath%%users/profile/". $this->data['recordAlias']; }
 	function getNameLink() { return "<a href='". $this->getUrl() ."'>". $this->getName() ."</a>"; }
-
-
 
 }
 

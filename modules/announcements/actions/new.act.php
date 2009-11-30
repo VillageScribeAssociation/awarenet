@@ -21,7 +21,7 @@
 	$result = expandBlocks($cb, '');
 	if ('yes' == $result) { $isauth = true; }
 
-	echo "result: $result <br/>\n";
+	//echo "result: $result <br/>\n";
 
 	if ($user->data['ofGroup'] == 'admin') { $isauth = true; }
 	if ($user->data['ofGroup'] == 'teacher') { $isauth = true; }

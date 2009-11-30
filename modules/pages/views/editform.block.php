@@ -25,15 +25,61 @@
 </table><br/>
 
 <b>content (main content panel, not the whole page)</b><br/>
-<textarea name='content' rows='20' cols='80'>%%content%%</textarea><br/><br/>
+<textarea name='content' id='taContent' rows='10' cols='80' onkeyup="resizeTaToContent('taContent');"></textarea>
+<br/><br/>
+<div id='unbug'></div>
+
+
 <b>nav1 (primary or leftmost navigation box/column)</b><br/>
-<textarea name='nav1' rows='5' cols='80'>%%nav1%%</textarea><br/><br/>
+<textarea name='nav1' id='taNav1' rows='5' cols='80' onkeyup="resizeTaToContent('taNav1')";>%%nav1%%</textarea>
+<br/><br/>
+
 <b>nav2 (secondary or rightmost navigation box/column)</b><br/>
-<textarea name='nav2' rows='5' cols='80'>%%nav2%%</textarea><br/><br/>
+<textarea name='nav2' id='taNav2' rows='5' cols='80'>%%nav2%%</textarea>
+<br/><br/>
+
 <b>breadcrumb (list of items showing the user where they are on the page)</b><br/>
-<textarea name='breadcrumb' rows='5' cols='80'>%%breadcrumb%%</textarea><br/><br/>
+<textarea name='breadcrumb' id='taBreadcrumb' rows='5' cols='80'>%%breadcrumb%%</textarea>
+<br/><br/>
+
 <b>script (inside javascript tags in page head)</b><br/>
-<textarea name='script' rows='5' cols='80'>%%script%%</textarea><br/><br/>
+<textarea name='script'  id='taScript' rows='5' cols='80'>%%script%%</textarea>
+<br/><br/>
+
+<b>jsinit (javascript to be run on page load)</b><br/>
+<textarea name='jsinit'  id='taJsInit' rows='5' cols='80'>%%jsinit%%</textarea>
+<br/><br/>
+
+<script language='javascript'>
+
+function resizeTaToContent(taId) {
+	theTa = document.getElementById(taId);
+	if (theTa.scrollHeight > theTa.clientHeight) {
+		while ((theTa.scrollHeight > theTa.clientHeight) && (theTa.rows < 80)) { theTa.rows += 2; }
+	}
+}
+
+%%contentJs64%%
+base64_loadTextArea('taContent', contentJs64);
+%%nav1Js64%%
+base64_loadTextArea('taNav1', nav1Js64);
+%%nav2Js64%%
+base64_loadTextArea('taNav2', nav2Js64);
+%%breadcrumbJs64%%
+base64_loadTextArea('taBreadcrumb', breadcrumbJs64);
+%%scriptJs64%%
+base64_loadTextArea('taScript', scriptJs64);
+%%jsinitJs64%%
+base64_loadTextArea('taJsInit', jsinitJs64);
+
+resizeTaToContent('taContent');
+resizeTaToContent('taNav1');
+resizeTaToContent('taNav2');
+resizeTaToContent('taBreadcrumb');
+resizeTaToContent('taScript');
+resizeTaToContent('taJsInit');
+
+</script>
 
 <table noborder>
   <tr>

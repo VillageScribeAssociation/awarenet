@@ -65,7 +65,7 @@
 		if ($refModule == 'schools') { 
 			$schoolRa = raGetDefault('schools', $refUID);
 			$url = $serverPath . 'schools/' . $schoolRa . '#announce' . $ext['UID'];
-			$imgRow = imgGetHeaviest('schools', $refUID);
+			$imgRow = imgGetDefault('schools', $refUID);
 			$imgUID = '';
 			if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 
@@ -77,7 +77,7 @@
 
 			$groupRa = raGetDefault('groups', $refUID);
 			$url = $serverPath . 'groups/' . $groupRa . '#announce' . $ext['UID'];
-			$imgRow = imgGetHeaviest('groups', $refUID);
+			$imgRow = imgGetDefault('groups', $refUID);
 			$imgUID = '';
 			if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 

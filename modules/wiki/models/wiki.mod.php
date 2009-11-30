@@ -242,30 +242,12 @@ class Wiki {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		if (dbRecordExists('wiki', $this->data['UID']) == false) { return false; }
-
-		// delete all category memberships
-		// TODO
-
-		// delete all revisions
-		// TODO
-
-		// delete all images owned by this article
-		// TODO
-
-		// delete all files owned by this article
-		// TODO		
-
-		// remove nomination for deletion (if exists)
-		// TODO
-
-		// delete all recordAliases
-		raDeleteAll('wiki', $this->data['UID']);
-
 		// delete the record
 		dbDelete('wiki', $this->data['UID']);
-
-		return true;
+		
+		// allow other modules to respond to this event
+		$args = array('module' => 'users', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);		
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -61,7 +61,7 @@ function comments_listjs($args) {
 	$js .= "";
 	$js .= "</script>\n";
 
-	$html = $js . "<div id='divCommentsJs'>Loading comments...</div>\n";
+	$html = $js . "<div id='divCommentsJs'><span class='ajaxmsg'>Loading comments...</span></div>\n";
 
 	return $html;
 }

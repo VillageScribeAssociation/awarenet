@@ -28,8 +28,6 @@ class Calendar {
 		$this->data['eventStart'] = '00:00';
 		$this->data['eventEnd'] = '00:00';
 		$this->data['published'] = 'no';
-		$this->data['createdOn'] = mysql_datetime();
-		$this->data['createdBy'] = $_SESSION['sUserUID'];
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -55,8 +53,9 @@ class Calendar {
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$d = $this->data;
-		$this->data['recordAlias'] = raSetAlias('calendar', $d['UID'], $d['title'], 'calendar');
+		$this->data['recordAlias'] = raSetAlias(	'calendar', $this->data['UID'], 
+													$this->data['title'], 'calendar'	);
+
 		dbSave($this->data, $this->dbSchema); 
 	}
 
@@ -96,6 +95,8 @@ class Calendar {
 			'createdBy' => 'VARCHAR(30)',
 			'published' => 'VARCHAR(30)',
 			'hitcount' => 'VARCHAR(30)',
+			'editedOn' => 'DATETIME',	
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20', 'category' => '20');
@@ -487,14 +488,12 @@ class Calendar {
 	//----------------------------------------------------------------------------------------------
 	
 	function delete() {
-		$thisUID = sqlMarkup($this->data['UID']);
-		$sql = "delete from images where refModule='calendar' and refUID='" . $thisUID . "'";
-		dbQuery($sql);
-		$sql = "delete from files where refModule='calendar' and refUID='" . $thisUID. "'";
-		dbQuery($sql);
-		
-		raDeleteAll('calendar', $this->data['UID']);
+		// delete this record
 		dbDelete('calendar', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'comments', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	

@@ -8,10 +8,9 @@
 
 function pages_editform($args) {
 	global $installPath;
-
 	if ((array_key_exists('xmodule', $args) AND (array_key_exists('xpage', $args)))) {
 
-		$fileName = $installPath . 'modules/' . $args['xmodule'] . '/' . $args['xpage'];
+		$fileName = $installPath . 'modules/' . $args['xmodule'] . '/actions/' . $args['xpage'];
 		if (file_exists($fileName) == false) { return false; }
 
 		$p = new Page();
@@ -23,6 +22,9 @@ function pages_editform($args) {
 
 		// sanitize content (prevent blocks running, </textarea>)
 		foreach($labels as $label => $txt) {
+			// for loading via javascript
+			$labels[$label . 'Js64'] = base64EncodeJs($label . 'Js64', $txt, false);
+
 			$labels[$label] = str_replace('[', '&#91;', $labels[$label]);			
 			$labels[$label] = str_replace(']', '&#93;', $labels[$label]);			
 			$labels[$label] = str_replace('<', '&lt;', $labels[$label]);			

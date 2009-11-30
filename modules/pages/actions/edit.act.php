@@ -8,7 +8,7 @@
 		//----------------------------------------------------------------------------------------------
 		// TODO: more error checking here (directory traversal, etc)
 		//----------------------------------------------------------------------------------------------
-		$fileName = $installPath . 'modules/' . $request['args']['module'] . '/' . $request['ref'];
+		$fileName = $installPath . 'modules/' . $request['args']['module'] . '/actions/' . $request['ref'];
 		if (file_exists($fileName)) {
 			$page->blockArgs['xmodule'] = $request['args']['module'];
 			$page->blockArgs['xpage'] = $request['ref'];

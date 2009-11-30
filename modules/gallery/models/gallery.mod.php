@@ -21,15 +21,11 @@ class Gallery {
 	//----------------------------------------------------------------------------------------------
 
 	function Gallery($UID = '') {
-		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
 		$this->data['parent'] = 'root';
 		$this->data['title'] = 'New Gallery ' . $this->data['UID'];
 		$this->data['comments'] = 'no';
-		$this->data['createdBy'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime(time());
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -86,6 +82,8 @@ class Gallery {
 			'description' => 'TEXT',
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'parent' => 10, 'recordAlias' => '20' );
@@ -209,12 +207,13 @@ class Gallery {
 	//	delete a record
 	//----------------------------------------------------------------------------------------------
 
-	function delete() {
-		$sql = "delete from images where refModule='gallery' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		
-		raDeleteAll('gallery', $this->data['UID']);
+	function delete() {	
+		// delete this record and any recordAliases
 		dbDelete('gallery', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'gallery', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 }

@@ -45,12 +45,9 @@ class Project {
 	//----------------------------------------------------------------------------------------------
 
 	function Project($UID = '') {
-		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['name'] = 'New project';
-		$this->data['createdBy'] = $user->data['UID'];
-		$this->data['createdOn'] = mysql_datetime();
 		$this->data['status'] = 'open';
 		$this->sections = array();
 		if ($UID != '') { $this->load($UID); }
@@ -86,8 +83,8 @@ class Project {
 		$this->collapseSections();
 
 		// update recordAlias
-		$this->data['recordAlias'] = 
-				raSetAlias('projects', $this->data['UID'], $this->data['title'], 'projects');
+		$ra = raSetAlias('projects', $this->data['UID'], $this->data['title'], 'projects');
+		$this->data['recordAlias'] = $ra;
 
 		dbSave($this->data, $this->dbSchema); 
 	}
@@ -121,6 +118,8 @@ class Project {
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
 			'finishedOn' => 'DATETIME',
+			'editedOn' => 'DATETIME',
+			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
 		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
@@ -310,13 +309,12 @@ class Project {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		$sql = "delete from images where refModule='projects' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		$sql = "delete from files where refModule='projects' and refUID='" . $this->data['UID']. "'";
-		dbQuery($sql);
-		
-		raDeleteAll('projects', $this->data['UID']);
+		// delete the record and any recordAliases
 		dbDelete('projects', $this->data['UID']);
+
+		// allow other modules to respond to this event
+		$args = array('module' => 'projects', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
 	}
 
 	//----------------------------------------------------------------------------------------------

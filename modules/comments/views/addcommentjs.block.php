@@ -71,6 +71,7 @@ removed.</small>
 				//---------------------------------------------------------------------------------
 				// perform a pageCheck out of sequence (ie, immediately)
 				//---------------------------------------------------------------------------------
+				msgPullFreq = msgPullFreqMin;
 				msgCheck();
 
 			}

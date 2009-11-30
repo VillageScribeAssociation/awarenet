@@ -19,10 +19,9 @@
 
 [[:theme::navtitlebox::label=Friends::width=570::toggle=divUserFriends:]]
 [`|lt]div id='divUserFriends'[`|gt]
-[[:users::listfriends::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
-
+[[:users::listfriends::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 <title>:: awareNet :: users :: profile ::</title>
 <script></script>
 <nav1>[`|pc][`|pc]profilePicture[`|pc][`|pc]
@@ -34,8 +33,8 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Projects::toggle=divUserProjects::hidden=yes:]]
-[`|lt]div id='divUserProjects' style='visibility: hidden;'[`|gt]
+[[:theme::navtitlebox::label=Projects::toggle=divUserProjects:]]
+[`|lt]div id='divUserProjects'[`|gt]
 [[:projects::listuserprojectsnav::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
@@ -51,4 +50,5 @@
 <breadcrumb>[[:theme::breadcrumb::label=People - ::link=/users/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]userName[`|pc][`|pc] - ::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
 [[:theme::breadcrumb::label=Profile::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

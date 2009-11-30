@@ -15,7 +15,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	return the transform
 	//----------------------------------------------------------------------------------------------
-	header('Content-Type: image/jpeg');
-	readfile($installPath . $i->data['fileName']);
+	if (file_exists($installPath . $i->data['fileName'])) {
+		header('Content-Type: image/jpeg');
+		readfile($installPath . $i->data['fileName']);
+	} else {
+		header('Content-Type: image/jpeg');
+		syncRequestFile($i->data['fileName']);
+		readfile($installPath . 'themes/' . $defaultTheme . '/unavailable/loading.jpg');
+	}
 
 ?>

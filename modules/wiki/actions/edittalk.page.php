@@ -6,7 +6,7 @@
 [[:wiki::edittalkform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]</content>
-<title>:: awareNet :: wiki :: edit talk ::</title>
+<title>awareNet - wiki - edit talk page</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Stats:]]
 [[:wiki::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=All Forums::width=570:]]
 [`|lt]h1[`|gt]All Forums[`|lt]/h1[`|gt]
 [[:forums::summarylistall:]]</content>
-<title>:: awareNet :: forums :: list ::</title>
+<title>awareNet - forums</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Stats:]]
 (stats go here)

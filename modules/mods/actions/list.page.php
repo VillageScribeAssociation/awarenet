@@ -5,7 +5,7 @@
 
 [`|lt]h1[`|gt]All Modules[`|lt]/h1[`|gt]
 [[:mods::list:]]</content>
-	<title>:: awareNet :: modules :: list ::</title>
+	<title>awareNet - all modules (admin)</title>
 	<script></script>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>

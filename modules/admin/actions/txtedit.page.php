@@ -5,7 +5,7 @@
 [`|pc][`|pc]editorForm[`|pc][`|pc]
 [`|lt]br/[`|gt]
 </content>
-	<title>:: awareNet :: admin :: txtedit ::</title>
+	<title>awareNet - txtedit (admin)</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Browse:]]
 [`|lt]iframe id=[`|sq]ifFileBrowser[`|sq] name=[`|sq]fileBrowser[`|sq]

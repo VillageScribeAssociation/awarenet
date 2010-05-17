@@ -19,7 +19,7 @@
 	$page->data['nav2'] = $model->data['nav2'];
 	$page->data['menu1'] = $model->data['menu1'];
 	$page->data['menu2'] = $model->data['menu2'];
-	$page->data['title'] = $model->data['title'];
+	$page->data['title'] = 'awareNet - ' . $model->data['title'];
 	$page->data['script'] = $model->data['script'];
 	
 	if ($user->data['ofGroup'] == 'admin') { 

@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=moblog::width=570:]]
 
 [[:moblog::summarylist::num=30:]]</content>
-<title>:: awareNet :: moblog ::</title>
+<title>awareNet - blog</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Recent Posts:]]
 [`|lt]div class=[`|sq]navbox[`|sq][`|gt]

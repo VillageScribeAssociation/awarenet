@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Aggregated Blogs ([`|pc][`|pc]userName[`|pc][`|pc])::width=570:]]
 [[:moblog::summarylist::num=10::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: uberblog :: [`|pc][`|pc]userName[`|pc][`|pc] ::</title>
+<title>awareNet - blogs - [`|pc][`|pc]userName[`|pc][`|pc] ::</title>
 <script></script>
 <nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
 [[:theme::navtitlebox::label=Author:]]

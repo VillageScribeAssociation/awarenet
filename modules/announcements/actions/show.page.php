@@ -8,7 +8,7 @@
 [[:comments::list::refModule=announcements::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [[:comments::addcommentform::refModule=announcements::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=announcements/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 </content>
-<title>:: awareNet :: announcements ::</title>
+<title>awareNet - [`|pc][`|pc]announcementTitle[`|pc][`|pc] (announcement)</title>
 <script></script>
 <nav1>
 [[:theme::navtitlebox::label=Previously:]]

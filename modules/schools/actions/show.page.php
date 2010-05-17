@@ -11,7 +11,7 @@
 [[:announcements::newlink::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]</content>
-<title>:: awareNet :: schools ::</title>
+<title>awareNet - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools:]]
 [`|lt]div id='divAllSchools'[`|gt]

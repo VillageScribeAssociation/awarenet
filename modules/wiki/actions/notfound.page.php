@@ -7,7 +7,7 @@
 
 [`|lt]p[`|gt]You[`|sq]ve reached a page which doesn[`|sq]t exist yet!  The page may have moved or been [`|delete]d (not very likely), you may have followed a broken link (somewhat likely), or it may simply be awaiting creation (probable).  If you[`|sq]re logged in, you may be able to [`|create] this missing page by [`|select]ing [`|sq]New Article[`|sq] from the menu above.[`|lt]/p[`|gt]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: page does not yet exist ::</title>
+<title>awareNet - wiki - temporal paradox</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Recent Images From Everybody:]]
 [[:gallery::recentthumbsall::num=45:]]</content>
-<title>:: awareNet :: gallery :: supergallery ::</title>
+<title>awareNet - supergallery</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Random Galleries:]]
 [[:gallery::randomgalleriesnav::num=15:]]</nav1>

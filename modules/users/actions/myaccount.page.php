@@ -5,7 +5,7 @@
 [`|lt]div class=[`|sq]indent[`|sq][`|gt]
 [[:users::changepassform::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: users :: my account ::</title>
+<title>awareNet - my user account</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Administration Console::width=570:]]%%tablesdisplay%%</content>
-<title>:: awareNet :: admin :: fix tables ::</title>
+<title>awareNet - fix tables (admin)</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

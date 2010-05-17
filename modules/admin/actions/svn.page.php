@@ -5,7 +5,7 @@
 [`|lt]h2[`|gt]File Lists[`|lt]/h2[`|gt]
 [[:admin::svnadd:]]
 </content>
-<title>:: awareNet :: admin :: svn ::</title>
+<title>awareNet - svn (admin)</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

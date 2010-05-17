@@ -3,7 +3,7 @@
 	<template>twocol-rightnav.template.php</template>
 	<content>[[:theme::navtitlebox::width=570::label=Project:]]
 [[:projects::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: projects ::</title>
+	<title>awareNet - [`|pc][`|pc]projectTitle[`|pc][`|pc] (project)</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Members:]]
 [[:projects::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

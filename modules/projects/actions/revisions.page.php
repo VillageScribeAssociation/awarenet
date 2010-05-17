@@ -5,7 +5,7 @@
 
 [[:projects::revisions::UID=[`|pc][`|pc]projectUID[`|pc][`|pc]:]]
 </content>
-<title>:: awareNet :: projects :: revisions ::</title>
+<title>awareNet - [`|pc][`|pc]projectTitle[`|pc][`|pc] (revisions)</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Members:]]
 [[:projects::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

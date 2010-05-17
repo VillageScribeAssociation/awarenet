@@ -10,7 +10,7 @@
 [[:announcements::newlink::refModule=groups::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 ([`|pc][`|pc]UID[`|pc][`|pc])</content>
-<title>:: awareNet :: groups ::</title>
+<title>awareNet - [`|pc][`|pc]groupName[`|pc][`|pc] (group)</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=At This School:]]
 [[:groups::listallnav::sameschool=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

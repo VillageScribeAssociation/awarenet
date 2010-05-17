@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Calendar:]]
 [[:calendar::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: calendar ::</title>
+<title>awareNet - [`|pc][`|pc]calendarTitle[`|pc][`|pc] (calendar)</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=In This Month:]]
 [[:calendar::samemonthnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

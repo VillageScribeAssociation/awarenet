@@ -46,6 +46,7 @@
 	$page->blockArgs['userUID'] = $model->data['createdBy'];
 	$page->blockArgs['userRa'] = $thisUser->data['recordAlias'];
 	$page->blockArgs['userName'] = $thisUser->getName();
+	$page->blockArgs['postTitle'] = $model->data['title'];
 	$page->blockArgs['newPostForm'] = $newPostForm;
 	$page->render();
 

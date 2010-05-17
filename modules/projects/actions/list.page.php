@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Projects:]]
 [[:projects::listall:]]</content>
-<title>:: awareNet :: projects :: all ::</title>
+<title>awareNet - all projects</title>
 <script></script>
 <nav1>
 [[:theme::navtitlebox::label=Create New Project::toggle=divNewProjectForm::hidden=yes:]]

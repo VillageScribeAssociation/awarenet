@@ -40,7 +40,7 @@
 	$page->blockArgs['userUID'] = $userUID;
 	$page->blockArgs['userRa'] = $request['ref'];
 	$page->blockArgs['userName'] = $userName;
-	$page->data['title'] = ':: awareNet :: people :: ' . $userName . ' :: friends ::';
+	$page->data['title'] = 'awareNet - friends of ' . $userName;
 	$page->render();
 
 ?>

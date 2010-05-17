@@ -14,7 +14,7 @@
 [`|lt]br/[`|gt][`|lt]br/[`|gt]
 [[:theme::navtitlebox::width=570::label=Aliases:]]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]</content>
-<title>:: awareNet :: wiki :: edit ::</title>
+<title>awareNet - edit wiki</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Stats:]]
 [[:wiki::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

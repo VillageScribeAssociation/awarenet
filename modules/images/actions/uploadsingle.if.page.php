@@ -2,7 +2,7 @@
 <page>
 	<template>iframe.template.php</template>
 	<content>[[:images::uploadsingle::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::category=[`|pc][`|pc]category[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: images :: upload a single image ::</title>
+	<title>awareNet - upload an image</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

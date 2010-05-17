@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=All Users::width=570:]]
 [[:users::summarylist:::num=30:]]
 [`|lt]br/[`|gt]</content>
-<title>:: awareNet :: users :: list all users ::</title>
+<title>awareNet - all users</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=New User:]]
 [[:users::newuserform:]]

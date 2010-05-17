@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
 [[:schools::listall:]]</content>
-<title>:: awareNet :: schools :: all</title>
+<title>awareNet - all schools</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=All schools:]]
 [[:schools::allthumbs:]]</nav1>

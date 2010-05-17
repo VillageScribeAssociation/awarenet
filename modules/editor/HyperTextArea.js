@@ -1071,7 +1071,7 @@ function editorProcessBlocks(html) {
 
 		switch(args[0]) {
 			case 'images':
-				if (args[1] == 'slideshow') {
+				if ((args[1] == 'slideshow') || (args[1] == 'swapbutton')) {
 					// leave it be (block as editable text)
 				} else {
 					// replace with actual image tag

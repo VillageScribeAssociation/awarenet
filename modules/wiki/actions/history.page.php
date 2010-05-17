@@ -6,7 +6,7 @@
 [`|lt]h1[`|gt][`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 [[:wiki::history::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: history ::</title>
+<title>awareNet - wiki - article history</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Stats:]]
 [[:wiki::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

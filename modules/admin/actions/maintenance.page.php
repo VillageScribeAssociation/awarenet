@@ -8,7 +8,7 @@
 [`|lt]p[`|gt]In complex software the are great many small things which can go wrong, but which are easily checked for an repaired.  Maintenance scripts go over a module and check the links between data, the existence of files, etc and repair or report on any problems discovered.[`|lt]/p[`|gt]
 
 [[:admin::maintenancelist:]]</content>
-	<title>:: awareNet :: admin :: maintenance ::</title>
+	<title>awareNet - maintenance (admin)</title>
 	<script></script>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>

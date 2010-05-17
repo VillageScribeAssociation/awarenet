@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=All Images:]]</content>
-<title>:: awareNet :: images :: all images</title>
+<title>awareNet - all images</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Images By Source:]]</nav1>
 <nav2></nav2>

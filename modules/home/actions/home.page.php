@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>This is the home page.</content>
-<title>:: awareNet :: welcome ::</title>
+<title>awareNet - welcome</title>
 <script>awareNetChat = false[`|sc]</script>
 <nav1></nav1>
 <nav2></nav2>

@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Edit Announcement::width=570:]]
 [[:announcements::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: announcements :: edit announcement ::</title>
+<title>awareNet - edit announcement</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

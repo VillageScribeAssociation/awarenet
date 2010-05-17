@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:images::showfull::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: images :: single image ::</title>
+<title>awareNet - image</title>
 <script></script>
 <nav1>[[:images::showfullnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</nav1>
 <nav2></nav2>

@@ -6,7 +6,7 @@
 [[:admin::moduleconsole:]]
 
 </content>
-<title>:: kapenta :: admin :: console ::</title>
+<title>awareNet - admin console</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

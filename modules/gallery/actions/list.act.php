@@ -33,7 +33,7 @@
 	$page->blockArgs['userUID'] = $userUID;								
 	$page->blockArgs['userRa'] = $userRa;
 	$page->blockArgs['userName'] = $userName;
-	$page->data['title'] = ':: awareNet :: people :: ' . $userName . ' :: galleries ::';
+	$page->data['title'] = 'awareNet - galleries by ' . $userName;
 	$page->render();													
 
 ?>

@@ -8,7 +8,7 @@
 [`|lt]br/[`|gt]
 [[:pages::listall:]]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: pages :: list all pages ::</title>
+<title>awareNet - all page templates</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Outbox:]]
 [[:messages::folder::folder=outbox::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: messages :: sent items ::</title>
+<title>awareNet - sent items</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Folders:]]
 [[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]UID[`|pc][`|pc]:]]

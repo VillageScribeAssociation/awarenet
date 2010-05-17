@@ -5,7 +5,7 @@
 [`|lt]h1[`|gt][`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 [`|pc][`|pc]contentHtml[`|pc][`|pc]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: article</title>
+<title>awareNet - wiki - article</title>
 <script></script>
 <nav1>[`|pc][`|pc]infobox[`|pc][`|pc]</nav1>
 <nav2></nav2>

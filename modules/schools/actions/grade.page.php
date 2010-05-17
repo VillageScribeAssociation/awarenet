@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
 [`|lt]h1[`|gt][`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc][`|lt]/h1[`|gt]
 [[:schools::showgrade::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::grade=[`|pc][`|pc]grade[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: schools :: year ::</title>
+<title>awareNet - [`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc]</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=This School:]]
 [[:schools::summarynav::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]

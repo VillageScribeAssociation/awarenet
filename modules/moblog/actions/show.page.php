@@ -19,7 +19,7 @@
 [`|lt]br/[`|gt]
 
 </content>
-	<title>:: awareNet :: moblog ::</title>
+	<title>awareNet - blogs - [`|pc][`|pc]postTitle[`|pc][`|pc] ([`|pc][`|pc]userName[`|pc][`|pc])</title>
 	<script></script>
 	<nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
 

@@ -5,7 +5,7 @@
 [`|lt]div id='divLiveLog'[`|gt][`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 </content>
-<title>:: awareNet :: admin :: console ::</title>
+<title>awareNet - live log (admin)</title>
 <script>
 	function msgh_sysPageLog(channel, event, msg) {
 		logDebug('msgh_sysPageLog: ' + channel + ' -- ' + event + ' -- ' + msg);

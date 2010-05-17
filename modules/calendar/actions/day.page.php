@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Calendar:]]
 [[:calendar::listday::year=[`|pc][`|pc]year[`|pc][`|pc]::month=[`|pc][`|pc]month[`|pc][`|pc]::day=[`|pc][`|pc]day[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: calendar ::</title>
+<title>awareNet - calendar</title>
 <script></script>
 <nav1>[[:calendar::daysubnav::year=[`|pc][`|pc]year[`|pc][`|pc]::month=[`|pc][`|pc]month[`|pc][`|pc]::day=[`|pc][`|pc]day[`|pc][`|pc]:]]</nav1>
 <nav2></nav2>

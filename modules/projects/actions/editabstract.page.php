@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Edit Abstract:]]
 [[:projects::editabstractform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: projects :: edit abstract ::</title>
+<title>awareNet - edit project abstract</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Sections:]]
 [[:projects::editindexnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

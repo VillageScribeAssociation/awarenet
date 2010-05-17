@@ -96,7 +96,7 @@ A. [`|lt]a href=[`|sq]http://www.i3g.hs-heilbronn.de/attach/Ver[`|pc]C3[`|pc]B6f
 [`|lt]br/[`|gt]
 
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: wikicode help ::</title>
+<title>awareNet - wikicode help</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

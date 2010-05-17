@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=Module Settings::width=570:]]
 
 [`|lt]h1[`|gt]admin[`|lt]/h1[`|gt]</content>
-<title>:: awareNet :: admin :: module settings ::</title>
+<title>awareNet - module settings (admin)</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

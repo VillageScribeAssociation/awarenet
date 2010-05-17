@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Announcements:]]
 [[:announcements::listall:]]</content>
-<title>:: awareNet :: announcements :: all</title>
+<title>awareNet - all announcements</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Recent:]]
 [[:announcements::listnav:]]</nav1>

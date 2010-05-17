@@ -4,7 +4,7 @@
 	<content>[[:theme::navtitlebox::width=570::label=Calendar:]]
 
 [[:calendar::listmonth::year=[`|pc][`|pc]year[`|pc][`|pc]::month=[`|pc][`|pc]month[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: calendar ::</title>
+	<title>awareNet - calendar</title>
 	<script></script>
 	<nav1>[[:calendar::monthsubnav::year=[`|pc][`|pc]year[`|pc][`|pc]::month=[`|pc][`|pc]month[`|pc][`|pc]:]]</nav1>
 	<nav2></nav2>

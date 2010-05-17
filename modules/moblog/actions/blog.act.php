@@ -20,8 +20,6 @@
 		$model->load($userUID);
 	}
 
-	$userName = $model->data['firstname'] . ' ' . $model->data['surname'];
-
 	//----------------------------------------------------------------------------------------------
 	//	user can create new posts on their own blog
 	//----------------------------------------------------------------------------------------------
@@ -39,7 +37,7 @@
 	$page->blockArgs['userName'] = $userName;
 	$page->blockArgs['newPostForm'] = $newPostForm;
 	$page->allowBlockArgs('page,tag');
-	$page->data['title'] = ':: awareNet :: people :: ' . $userName . ' :: blog ::';
+	$page->data['title'] = 'awareNet - blogs - ' . $model->getName();
 	$page->render();
 
 ?>

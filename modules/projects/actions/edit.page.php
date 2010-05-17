@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Project:]]
 [`|lt]h1[`|gt]Edit project[`|lt]/h1[`|gt]
 [[:projects::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: projects:: edit project ::</title>
+<title>awareNet - edit project</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Members:]]
 [`|lt]iframe src=[`|sq]%%serverPath%%projects/editmembers/[`|pc][`|pc]raUID[`|pc][`|pc][`|sq] name=[`|sq]editMembers[`|sq]

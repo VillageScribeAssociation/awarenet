@@ -11,7 +11,7 @@
 [[:sync::synclist:]]
 
 </content>
-<title>:: awareNet :: peer servers :: list</title>
+<title>awareNet - peer servers</title>
 <script></script>
 <nav1>[[:sync::addserverform:]]
 [[:admin::subnav:]]</nav1>

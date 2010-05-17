@@ -5,7 +5,7 @@
 [[:static::list:]]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]
 [`|lt]a href=[`|sq]http://awarenet.co.za/static/new/[`|sq][`|gt][[`|create] new static page [`|gt][`|gt]][`|lt]/a[`|gt]</content>
-<title>:: awareNet :: static pages :: list</title>
+<title>awareNet - list static pages</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

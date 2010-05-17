@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Image Gallery:]]
 [[:gallery::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: image gallery ::</title>
+<title>awareNet - [`|pc][`|pc]galleryTitle[`|pc][`|pc] (image gallery)</title>
 <script></script>
 <nav1>
 [[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden='yes':]]

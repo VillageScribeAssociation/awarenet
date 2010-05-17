@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Calendar:]]
 [`|lt]h1[`|gt]Edit Calendar Item[`|lt]/h1[`|gt]
 [[:calendar::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: calendar :: edit entry ::</title>
+<title>awareNet - edit calendar entry</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

@@ -6,7 +6,7 @@
 [[:theme::navtitlebox::width=570::label=Send Message:]]
 
 %%html%%</content>
-	<title>:: awareNet :: chat :: test ::</title>
+	<title>awareNet - chat test</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Chat:]]</nav1>
 	<nav2></nav2>

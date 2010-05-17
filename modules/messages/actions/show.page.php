@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=[`|pc][`|pc]folder[`|pc][`|pc]:]]
 [[:messages::show::UID=[`|pc][`|pc]UID[`|pc][`|pc]::replybutton=%%replybutton%%:]]</content>
-<title>:: awareNet :: messages :: view ::</title>
+<title>awareNet - messages</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Folders:]]
 [[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]

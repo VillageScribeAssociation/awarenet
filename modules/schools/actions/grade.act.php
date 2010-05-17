@@ -53,7 +53,7 @@
 		$page->blockArgs['userName'] = $u->getName();
 
 		$page->data['menu2'] = "[[:users::menu::userUID=" . $u->data['UID'] . ":]]";
-		$page->data['title'] = ':: awareNet :: people :: ' . $u->getName() . ' :: classmates ::';
+		$page->data['title'] = 'awareNet - ' . $u->getName() . ' (classmates )';
 
 		$page->render();		
 	}

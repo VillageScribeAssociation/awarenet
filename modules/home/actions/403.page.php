@@ -7,7 +7,7 @@
 
 [`|lt]h2[`|gt]Log in[`|lt]/h2[`|gt]
 [[:users::loginform:]]</content>
-<title>:: awareNet :: not authorised ::</title>
+<title>awareNet - not authorised</title>
 <script>awareNetChat = false[`|sc]</script>
 <nav1></nav1>
 <nav2></nav2>

@@ -23,7 +23,7 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 </content>
-<title>:: awareNet :: users :: profile ::</title>
+<title>awareNet - [`|pc][`|pc]userName[`|pc][`|pc] (profile)</title>
 <script></script>
 <nav1>[`|pc][`|pc]profilePicture[`|pc][`|pc]
 [`|pc][`|pc]chatButton[`|pc][`|pc]

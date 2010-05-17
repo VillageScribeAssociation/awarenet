@@ -17,7 +17,7 @@
 [`|lt]input type=[`|sq]submit[`|sq] value=[`|sq][`|create][`|sq] /[`|gt]
 [`|lt]/form[`|gt]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: edit ::</title>
+<title>awareNet - create new wiki article</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Recently Created:]]</nav1>
 <nav2></nav2>

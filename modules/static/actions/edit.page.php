@@ -9,7 +9,7 @@
 
 [`|lt]h2[`|gt]files[`|lt]/h2[`|gt]
 [[:files::uploadmultiple::refModule=static::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: static pages :: edit ::</title>
+<title>awareNet - edit static page</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

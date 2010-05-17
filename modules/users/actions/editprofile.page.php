@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Profile:]]
 [`|lt]h1[`|gt]Your Profile[`|lt]/h1[`|gt]
 [[:users::editprofileform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: users :: edit profile ::</title>
+<title>awareNet - edit your profile</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=My Picture:]]
 [`|lt]iframe name=[`|sq]myPicture[`|sq] id=[`|sq]ifMyPicture[`|sq]

@@ -6,7 +6,7 @@
 [`|lt]h1[`|gt]Discussion: [`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 [`|pc][`|pc]talkHtml[`|pc][`|pc]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: article ::</title>
+<title>awareNet - wiki - talk page</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Stats:]]
 [[:wiki::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

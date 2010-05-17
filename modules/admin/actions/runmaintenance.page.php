@@ -6,7 +6,7 @@
 [`|lt]h1[`|gt]Maintenance: [`|pc][`|pc]modName[`|pc][`|pc][`|lt]/h1[`|gt]
 
 [[:admin::runmaintenance::modName=[`|pc][`|pc]modName[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: admin :: maintenance ::</title>
+	<title>awareNet - maintenance (admin)</title>
 	<script></script>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>

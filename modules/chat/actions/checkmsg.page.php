@@ -2,7 +2,7 @@
 <page>
 	<template>twocol-leftnav.template.php</template>
 	<content></content>
-	<title>:: awareNet :: chat :: check messages ::</title>
+	<title>awareNet - chat - check messages</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

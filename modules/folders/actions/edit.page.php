@@ -8,7 +8,7 @@
 
 [[:theme::navtitlebox::width=570::label=Images:]]
 [[:files::uploadmultiple::refModule=folder::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: folder :: edit folder ::</title>
+	<title>awareNet - edit folder</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

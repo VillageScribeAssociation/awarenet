@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=About:]]
 [`|lt]h1[`|gt]Edit Group[`|lt]/h1[`|gt]
 [[:groups::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: groups :: edit entry ::</title>
+<title>awareNet - edit group</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Members:]]
 [`|lt]iframe src=[`|sq]/groups/editmembers/[`|pc][`|pc]raUID[`|pc][`|pc][`|sq] name=[`|sq]editMembers[`|sq]

@@ -5,7 +5,7 @@
 [`|lt]br/[`|gt]
 [[:notifications::list::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
-<title>:: awareNet :: notifications ::</title>
+<title>awareNet - my notifications</title>
 <script></script>
 <nav1>[[:users::showfriendrequests::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</nav1>

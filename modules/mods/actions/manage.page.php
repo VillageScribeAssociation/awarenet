@@ -15,7 +15,7 @@
    width=[`|sq]570[`|sq] height=[`|sq]100[`|sq] frameborder=[`|sq]0[`|sq] [`|gt][`|lt]/iframe[`|gt]
 
 [`|lt]h2[`|gt]Blocks[`|lt]/h2[`|gt]</content>
-<title>:: awareNet :: modules :: [`|pc][`|pc]modulename[`|pc][`|pc]</title>
+<title>awareNet - [`|pc][`|pc]modulename[`|pc][`|pc] (module)</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

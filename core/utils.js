@@ -534,6 +534,25 @@ Number.prototype.toHexStr = function() {
 }
 
 //--------------------------------------------------------------------------------------------------
+//  copy the contents of one div into another, replacing whatever was in the original
+//--------------------------------------------------------------------------------------------------
+//arg: fromID - ID of a div [string]
+//arg: toID - ID of a div [string]
+//returns: true on success, false on failure [bool]
+
+function divCopyInnerHtml(fromId, toId) {
+	var fromDiv = document.getElementById(fromId);
+	var toDiv = document.getElementById(toId);
+
+	// TODO: better error checking here
+	if ((undefined == fromDiv) || (null == fromDiv)) { return false; }
+	if ((undefined == toDiv) || (null == toDiv)) { return false; }
+
+	toDiv.innerHTML = fromDiv.innerHTML;
+	return true;
+}
+
+//--------------------------------------------------------------------------------------------------
 //  add a form hash (used to alert users when they navigate away from a page with unsaved changes)
 //--------------------------------------------------------------------------------------------------
 // source: http://kapenta.org.uk

@@ -7,7 +7,7 @@
 [[:forums::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
 [[:theme::navtitlebox::width=570::label=Moderators:]]</content>
-<title>:: awareNet :: gallery :: edit gallery ::</title>
+<title>awareNet - edit forum</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

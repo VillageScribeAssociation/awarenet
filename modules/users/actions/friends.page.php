@@ -5,7 +5,7 @@
 [`|lt]h2[`|gt]Friends of: [[:users::namelink::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]][`|lt]/h2[`|gt]
 [[:users::listfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
-	<title>:: awareNet :: friends ::</title>
+	<title>awareNet - friends or [`|pc][`|pc]userName[`|pc][`|pc]</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Search for friends:]]
 [[:users::friendsearchbox:]]

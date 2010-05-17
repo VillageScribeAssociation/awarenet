@@ -6,7 +6,7 @@
 [`|lt]h1[`|gt]In This Wiki[`|lt]/h1[`|gt]
 [[:wiki::listall::page=list.page.php::num=[`|pc][`|pc]num[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]</content>
-<title>:: awareNet :: wiki :: all articles ::</title>
+<title>awareNet - wiki - all articles</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

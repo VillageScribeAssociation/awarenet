@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Calendar:]]
 [`|lt]h1[`|gt]All Calendar Events For [`|pc][`|pc]year[`|pc][`|pc][`|lt]/h1[`|gt]
 [[:calendar::listyear::year=[`|pc][`|pc]year[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: calendar ::</title>
+<title>awareNet - calendar</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Years:]]
 

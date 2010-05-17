@@ -15,7 +15,7 @@
 [`|lt]br/[`|gt]
 
 </content>
-<title>:: awareNet :: forum ::</title>
+<title>awareNet - [`|pc][`|pc]forumTitle[`|pc][`|pc] (forum)</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Moderators::toggle=divModerators::hidden=yes:]]
 [`|lt]div id='divModerators' style='visibility: hidden; display: none;'[`|gt]

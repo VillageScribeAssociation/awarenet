@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=Image Galleries::width=570:]]
 [`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
 [[:gallery::summarylistuser:]]</content>
-<title>:: awareNet :: image galleries :: list ::</title>
+<title>awareNet - all image galleries</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Made By:]]
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]

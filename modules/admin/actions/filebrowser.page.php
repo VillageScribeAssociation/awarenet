@@ -4,7 +4,7 @@
 	<content>[`|pc][`|pc]parentLink[`|pc][`|pc][`|lt]br/[`|gt]
 [`|pc][`|pc]fileList[`|pc][`|pc]
 [`|lt]b[`|gt][`|pc][`|pc]filePath[`|pc][`|pc][`|lt]/b[`|gt][`|lt]br/[`|gt]</content>
-	<title>:: awareNet :: admin :: file browser ::</title>
+	<title>awareNet - file browser ::</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

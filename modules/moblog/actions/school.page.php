@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Aggregated Blogs ([`|pc][`|pc]schoolName[`|pc][`|pc])::width=570:]]
 [[:moblog::summarylist::num=10::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: blogs :: [`|pc][`|pc]schoolName[`|pc][`|pc] ::</title>
+<title>awareNet - blogs - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=School:]]
 [[:schools::image::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]::size=width300:]]

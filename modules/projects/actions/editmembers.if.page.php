@@ -6,7 +6,7 @@
 
 [`|lt]h2[`|gt]Current Members[`|lt]/h2[`|gt]
 [[:projects::listmembersnav::editmode=yes::projectUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-	<title>:: awareNet :: projects :: edit membership list ::</title>
+	<title>awareNet - edit project membership</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

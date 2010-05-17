@@ -4,7 +4,7 @@
 	<content>[[:theme::navtitlebox::label=User Data::width=570:]]
 [`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
 [[:folders::summarylist:]]</content>
-	<title>:: awareNet :: folders :: list ::</title>
+	<title>awareNet - all folders</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Made By:]]
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]

@@ -8,7 +8,7 @@
 [`|lt]br/[`|gt]
 [`|lt]a href='%%serverPath%%projects/[`|pc][`|pc]raUID[`|pc][`|pc]' target='_parent'[`|gt][ preview >> ][`|lt]/a[`|gt]
 </content>
-<title>:: awareNet :: projects :: edit index ::</title>
+<title>awareNet - edit project index</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

@@ -5,7 +5,7 @@
 [[:users::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [[:theme::navtitlebox::width=570::label=Change Password:]]
 [[:users::changepassform::raUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: user :: edit user</title>
+<title>awareNet - edit user account</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

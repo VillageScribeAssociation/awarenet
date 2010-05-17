@@ -8,7 +8,7 @@
 
 [[:theme::navtitlebox::width=570::label=Images:]]
 [[:images::uploadmultiple::refModule=gallery::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: gallery :: edit gallery ::</title>
+<title>awareNet - edit gallery</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

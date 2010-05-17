@@ -13,7 +13,7 @@
 [[:theme::navtitlebox::label=Comments::width=570:]]
 [[:comments::listjs::refModule=gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
-	<title>:: awareNet :: gallery :: image ::</title>
+	<title>awareNet - [`|pc][`|pc]imageTitle[`|pc][`|pc] (image)</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Uploaded By:]]
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]

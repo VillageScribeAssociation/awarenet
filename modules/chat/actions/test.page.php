@@ -10,7 +10,7 @@
 [`|lt]input type=[`|sq]button[`|sq] value=[`|sq]testAlertWindowArray()[`|sq] onClick=[`|sq]testAlertWindowArray()[`|sc][`|sq] /[`|gt]
 
 [`|lt]input type=[`|sq]button[`|sq] value=[`|sq]clear[`|sq] onClick=[`|dq]cookieCreate([`|sq]chatwindows[`|sq], [`|sq][`|sq], 7)[`|sc][`|dq] /[`|gt]</content>
-	<title>:: awareNet :: chat :: test ::</title>
+	<title>awareNet - chat test</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Chat:]]</nav1>
 	<nav2></nav2>

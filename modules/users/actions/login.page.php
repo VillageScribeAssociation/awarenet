@@ -3,7 +3,7 @@
 	<template>twocol-rightnav.template.php</template>
 	<content>[`|lt]h2[`|gt]Log In[`|lt]/h2[`|gt]
 [[:users::loginform:]]</content>
-	<title>:: awareNet :: users :: log in ::</title>
+	<title>awareNet - log in</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

@@ -12,7 +12,7 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 </content>
-<title>:: awareNet :: forums ::</title>
+<title>awareNet - [`|pc][`|pc]threadTitle[`|pc][`|pc]</title>
 <script></script>
 <nav1>
 [[:theme::navtitlebox::label=Forum::toggle=divForumStats::hidden=yes:]]

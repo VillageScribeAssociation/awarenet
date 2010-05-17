@@ -53,6 +53,7 @@ function imgSend($size) {
 				case 'thumb90':		$thumb = $i->scaleToBox(90, 90);	break;
 				case 'width100':	$thumb = $i->scaleToWidth(100);		break;
 				case 'width145':	$thumb = $i->scaleToWidth(145);		break;
+				case 'width190':	$thumb = $i->scaleToWidth(190);		break;
 				case 'width200':	$thumb = $i->scaleToWidth(200);		break;
 				case 'width290':	$thumb = $i->scaleToWidth(290);		break;
 				case 'width300':	$thumb = $i->scaleToWidth(300);		break;

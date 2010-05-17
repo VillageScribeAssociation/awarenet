@@ -2,7 +2,7 @@
 <page>
 	<template>iframe.template.php</template>
 	<content>[`|lt]small[`|gt][[:users::summarynav::UID=[`|pc][`|pc]raUID[`|pc][`|pc]::target=main:]][`|lt]/small[`|gt]</content>
-	<title>:: awareNet :: chat :: info</title>
+	<title>awareNet - chat info</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

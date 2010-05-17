@@ -10,7 +10,7 @@
 [[:groups::listadmins::groupUID=[`|pc][`|pc]raUID[`|pc][`|pc]::target=_parent:]]
 
 </content>
-	<title>:: awareNet :: groups :: edit membership list ::</title>
+	<title>awareNet - edit group membership</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

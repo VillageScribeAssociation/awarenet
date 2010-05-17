@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::label=Edit Blog Post::width=570:]]
 
 [[:moblog::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: moblog :: edit post :: [`|pc][`|pc]postTitle[`|pc][`|pc] ::</title>
+<title>awareNet - edit blog post - [`|pc][`|pc]postTitle[`|pc][`|pc]</title>
 <script></script>
 <nav1></nav1>
 <nav2></nav2>

@@ -4,7 +4,7 @@
 	<content>[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
 
 [[:moblog::summarylist::page=%%pageno%%::num=10:]]</content>
-	<title>:: awareNet :: blogs :: everyone ::</title>
+	<title>awareNet - blogs - everyone</title>
 	<script></script>
 	<nav1>[[:theme::navtitlebox::label=Tags:]]
 [`|lt]br/[`|gt]

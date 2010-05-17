@@ -7,7 +7,7 @@
 [[:theme::navtitlebox::width=570::label=Compose Reply:]]
 [[:messages::composeform:]]
 </content>
-<title>:: awareNet :: messages :: compose ::</title>
+<title>awareNet - compose message</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Folders:]]
 [[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]

@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Wiki:]]
 [`|lt]h1[`|gt][`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 [`|pc][`|pc]contentHtml[`|pc][`|pc]</content>
-<title>:: awareNet :: wiki :: article ::</title>
+<title>awareNet - wiki - [`|pc][`|pc]articleTitle[`|pc][`|pc]</title>
 <script></script>
 <nav1>[`|pc][`|pc]infobox[`|pc][`|pc]</nav1>
 <nav2></nav2>

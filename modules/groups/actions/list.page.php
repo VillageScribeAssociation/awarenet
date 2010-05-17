@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=groups:]]
 [[:groups::listall:]]</content>
-<title>:: awareNet :: groups :: all</title>
+<title>awareNet - all groups</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=All groups:]]
 [[:groups::allthumbs:]]</nav1>

@@ -4,7 +4,7 @@
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
 [`|lt]h1[`|gt]Edit school Record[`|lt]/h1[`|gt]
 [[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>:: awareNet :: schools:: edit entry ::</title>
+<title>awareNet - edit shool</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Groups:]]
 [[:groups::newgroupform::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</nav1>

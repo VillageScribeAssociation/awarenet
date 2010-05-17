@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a set of files associated with something, along with some metadata
+//|	display a set of files associated with something, along with some metadata
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of files per page
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of item which owns these files [string]
 
 function files_filesetdetail($args) {
 	global $serverPath;
@@ -63,3 +63,4 @@ function files_filesetdetail($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

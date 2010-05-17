@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/comments/models/comments.mod.php');
+require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a record is deleted

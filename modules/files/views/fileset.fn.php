@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a set of files associated with something
+//|	display a set of files associated with something
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of files per page
+//arg: refModule - module to list on [string]
+//arg: refUID - number of files per page [string]
 
 function files_fileset($args) {
 	global $serverPath;
@@ -45,3 +45,4 @@ function files_fileset($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	install button (perm:manage)
+//|	install button (perm:manage)
 //--------------------------------------------------------------------------------------------------
-// * $args['modulename'] = name of a module
+//arg: modulename - name of a module [string]
 
 function mods_btninstall($args) {
 	if (array_key_exists('modulename', $args) == false) { return false; }
@@ -17,3 +17,4 @@ function mods_btninstall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

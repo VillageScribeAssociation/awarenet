@@ -7,7 +7,7 @@
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('projects', 'editmembers', 'projects', $request['ref']);
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 	$model = new Project($request['ref']);
 	$members = $model->getMembers();
 

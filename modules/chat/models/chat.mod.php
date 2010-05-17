@@ -1,21 +1,22 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing chat queues
+//*	object for managing chat queues
 //--------------------------------------------------------------------------------------------------
 
-// every user has a chat queue, a record to collect IMs sent to the user.  When the user is logged
-// in the message pump will periodically check (and thus clear) the users chat queue, displaying
-// messages via AJAX.
-
-//	message structure:
-//	<message>
-//    <UID>UID</UID>							// messages have small UIDs, like TX5Y2
-//    <from>UID</from>
-//	  <timestamp>12351253</timestamp>
-//    <content>this is a message.</content>
-//    <mine>yes|no</mine>						// yes for messages I sent, no for incoming
-//  </message>
+//+ every user has a chat queue, a record to collect IMs sent to the user.  When the user is logged
+//+ in the message pump will periodically check (and thus clear) the users chat queue, displaying
+//+ messages via AJAX.
+//+
+//+	message structure:
+//+
+//+	<message>
+//+    <UID>UID</UID>							// messages have small UIDs, like TX5Y2
+//+    <from>UID</from>
+//+	  <timestamp>12351253</timestamp>
+//+    <content>this is a message.</content>
+//+    <mine>yes|no</mine>						// yes for messages I sent, no for incoming
+//+  </message>
 
 class Chat {
 
@@ -23,16 +24,17 @@ class Chat {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;				// currently loaded record
-	var $dbSchema;			// database table structure
-	var $messages;			// expanded set of messages
-	var $queueSize = 500;	// maximum number of messages held in the queue
+	var $data;				// currently loaded record [array]
+	var $dbSchema;			// database table structure [array]
+	var $messages;			// expanded set of messages [array]
+	var $queueSize = 500;	// maximum number of messages held in the queue [int]
 
-	var $messageFields = 'UID|from|timestamp|content|mine';
+	var $messageFields = 'UID|from|timestamp|content|mine'; // [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: userUID - UID of a user [string]
 
 	function Chat($userUID = '') {
 		global $user;
@@ -43,8 +45,10 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record given user UID, create one if none exists
+	//.	load a record given user UID, create one if none exists
 	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a user record [string]
+	//returns: true on success, false on failure [bool]
 
 	function load($userUID) {
 		$sql = "select * from chat where chat.user='" . sqlMarkup(trim($userUID)) . "'";
@@ -63,13 +67,18 @@ class Chat {
 		return false;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) {
 		$this->data = $ary;
 		$this->expandMessages();
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -80,7 +89,7 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	because its playing up
+	//.	because its playing up
 	//----------------------------------------------------------------------------------------------
 
 	function update() {
@@ -91,21 +100,22 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	nothing to check at this stage
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() { 
+		if (trim($this->data['queue']) == '') 
+			{	$this->data['queue'] = "<chatqueue>\n</chatqueue>";	}
 
-		if (trim($this->data['queue']) == '') {
-			$this->data['queue'] = "<chatqueue>\n</chatqueue>";
-		}
-
+		// nothing to check at this stage
 		return ''; 
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -121,16 +131,16 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance  [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;	
@@ -138,8 +148,10 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
+	//returns: html report lines [string]
 
 	function install() {
 		$report = "<h3>Installing Chat Module</h3>\n";
@@ -160,8 +172,9 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	expand messages (XML -> array)
+	//.	expand messages (XML -> array)
 	//----------------------------------------------------------------------------------------------
+	//returns: nested array of messages [array]
 
 	function expandMessages() {
 		$this->messages = array();
@@ -183,8 +196,9 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	collapse messages (Array -> XML) (returns true when the queue is full)
+	//.	collapse messages (Array -> XML) (returns true when the queue is full)
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	function collapseMessages() {
 		$count = 0;
@@ -215,7 +229,7 @@ class Chat {
 
 
 	//----------------------------------------------------------------------------------------------
-	//	clear message queue
+	//.	clear message queue
 	//----------------------------------------------------------------------------------------------
 
 	function clear() {
@@ -224,8 +238,14 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	add a message
+	//.	add a message
 	//----------------------------------------------------------------------------------------------
+	//arg: msgUID - message UID [string]
+	//arg: fromUID - UID of user who sent this message [string]
+	//arg: toUID - UID of recipient user [string]
+	//arg: message - chat message [string]
+	//arg: mine - whether the message was sent by the current user [string]
+	//returns: true on success, false on failure
 
 	function addMessage($msgUID, $fromUID, $toUID, $message, $mine) {
 		if (trim($message) == '') { return false; }
@@ -242,8 +262,9 @@ class Chat {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make a message UID
+	//.	make a message UID
 	//----------------------------------------------------------------------------------------------
+	//returns: a new message UID [string]
 
 	function createMsgUID() {
 		$tempUID = "";
@@ -259,24 +280,5 @@ class Chat {
 	}
 
 }
-
-//----------------------------------------------------------------------------------------------
-//	ransom utility function
-//----------------------------------------------------------------------------------------------
-//	mark up HTML so that it doesn't form child elements in the chatqueue XML
-
-function chatMarkup($txt) {
-	$txt = str_replace('<', '{*[', $txt);	
-	$txt = str_replace('>', ']*}', $txt);
-	$txt = str_replace("\"", "'", $txt);		// javascript safe
-	return $txt;
-}
-
-function chatRemoveMarkup($txt) {
-	$txt = str_replace('{*[', '<', $txt);	
-	$txt = str_replace(']*}', '>', $txt);	
-	return $txt;
-}
-
 
 ?>

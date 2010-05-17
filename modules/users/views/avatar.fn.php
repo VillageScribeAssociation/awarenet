@@ -1,15 +1,15 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the group's logo/picture (300px) or a blank image
+//|	find the group's logo/picture (300px) or a blank image
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['size'] = 100, 200, 300, 570, thumb, thumbsm or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: userUID - overrides raUID [string]
+//opt: size - width100, width200, width300, width570, thumb, etc (default width300) [string]
+//opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function users_avatar($args) {
 	global $serverPath;
@@ -28,7 +28,7 @@ function users_avatar($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 
-	$model = new Users(sqlMarkup($args['raUID']));	
+	$model = new User(sqlMarkup($args['raUID']));	
 	$sql = "select * from images where refModule='users' and refUID='" . $model->data['UID'] 
 	     . "' order by weight";
 

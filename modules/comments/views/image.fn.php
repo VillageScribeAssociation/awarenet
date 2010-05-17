@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the first picture on the comment (if there is one) or return info icon
+//|	find the first picture on the comment (if there is one) or return info icon
 //--------------------------------------------------------------------------------------------------
-// * $args['commentUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - UID of comment  [string]
+//opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 (default width300) [string]
+//opt: link - link to larger image (yes|no) [string]
+//opt: commentUID - overrides raUID [string]
 
 function comments_image($args) {
 	global $serverPath;
@@ -49,3 +49,4 @@ function comments_image($args) {
 
 
 ?>
+

@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return an HTML select box of all projects
+//|	return an HTML select box of all projects
 //--------------------------------------------------------------------------------------------------
-// * $args['varname'] = name of variable
-// * $args['default'] = current value
+//opt: varname - name of variable (default is 'project') [string]
+//opt: default - default selected item (set to a project UID) [string]
 
 function projects_select($args) {
 	$varname = 'project';
@@ -36,3 +36,4 @@ function projects_select($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

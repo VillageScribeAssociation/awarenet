@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 
 	if ($request['ref'] == '') { doXmlError('item not specified'); }
 	if (dbRecordExists('sync', $request['ref']) == false) { doXmlError('no such item'); }

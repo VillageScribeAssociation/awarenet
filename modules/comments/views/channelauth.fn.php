@@ -1,9 +1,9 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	generate authorization for channel subscriptions
+//|	generate authorization for channel subscriptions
 //-------------------------------------------------------------------------------------------------
-//arg: channel - id of channel
+//arg: channel - id of channel [string]
 
 function comments_channelauth($args) {
 	global $user;
@@ -13,3 +13,4 @@ function comments_channelauth($args) {
 }
 
 ?>
+

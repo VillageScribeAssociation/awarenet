@@ -6,7 +6,7 @@
 
 	if ($request['ref'] == '') { do404(); }
 	if (authHas('announcements', 'edit', '') == false) { do403(); }
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this

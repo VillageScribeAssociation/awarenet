@@ -4,11 +4,11 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list x recent posts from the same blog (ie same user) as the post UID supplied
+//|	list x recent posts from the same blog (ie same user) as the post UID supplied
 //--------------------------------------------------------------------------------------------------
-// * $args['postUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID of moblog post
-// * $args['num'] = max number of posts to show
+//arg: raUID - recordAlias or UID of moblog post [string]
+//opt: postUID - overrides raUID [string]
+//opt: num - max number of posts to show (default 10) [string]
 
 function moblog_listrecentsamenav($args) {
 	global $user;
@@ -38,3 +38,4 @@ function moblog_listrecentsamenav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

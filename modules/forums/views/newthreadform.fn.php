@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to create a new thread
+//|	form to create a new thread
 //--------------------------------------------------------------------------------------------------
-// * $args['forumUID'] = UID of a forum
+//arg: forumUID - UID of a forum [string]
 
 function forums_newthreadform($args) {
 	// TODO: auth
@@ -21,3 +21,4 @@ function forums_newthreadform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

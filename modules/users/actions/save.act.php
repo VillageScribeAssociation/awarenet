@@ -21,7 +21,7 @@ if ((array_key_exists('action', $_POST) == true)
 	//----------------------------------------------------------------------------------------------
 
 	if ($user->data['ofGroup'] == 'admin') {
-		$u = new Users($_POST['UID']);
+		$u = new User($_POST['UID']);
 		if (array_key_exists('ofGroup', $_POST)) 	{ $u->data['ofGroup'] = $_POST['ofGroup']; }
 		if (array_key_exists('school', $_POST))		{ $u->data['school'] = $_POST['school']; }
 		if (array_key_exists('grade', $_POST)) 		{ $u->data['grade'] = $_POST['grade']; }
@@ -41,7 +41,7 @@ if ((array_key_exists('action', $_POST) == true)
 	//----------------------------------------------------------------------------------------------
 
 	if (($user->data['UID'] == $_POST['UID']) AND ($user->data['ofGroup'] != 'admin')) {
-		$u = new Users($_POST['UID']);
+		$u = new User($_POST['UID']);
 		if (array_key_exists('firstname', $_POST)) 	{ $u->data['firstname'] = $_POST['firstname']; }
 		if (array_key_exists('surname', $_POST)) 	{ $u->data['surname'] = $_POST['surname']; }
 		if (array_key_exists('lang', $_POST))	 	{ $u->data['lang'] = $_POST['lang']; }
@@ -68,7 +68,7 @@ if ((array_key_exists('action', $_POST) == true)
 	if (($user->data['ofGroup'] != 'admin') AND ($user->data['UID'] != $_POST['UID'])) { do403(); }
 
 	// load user record (it's already in $user, load it anyway)
-	$u = new Users($_POST['UID']);
+	$u = new User($_POST['UID']);
 
 	$pwdCurrent = trim($_POST['pwdCurrent']);
 	$pwdNew = trim($_POST['pwdNew']);
@@ -158,12 +158,22 @@ if ((array_key_exists('action', $_POST) == true)
 
 		$diff = '';
 
-		$u = new Users($_POST['UID']);
+		$u = new User($_POST['UID']);
 		foreach($u->profile as $field => $value) {
 			if (array_key_exists($field, $_POST) == true) {
 				if ($u->profile[$field] != $_POST[$field]) {
 					$diff .= "<b>$field:</b>" . $_POST[$field] . "<br/>\n";
 				}
+
+				//---------------------------------------------------------------------------------
+				// birthyear is a special case, check it's a 4 digit number
+				//---------------------------------------------------------------------------------
+				if ('birthyear' == $field) {
+					$_POST['birthyear'] = trim($_POST['birthyear']);
+					if ( (strlen($_POST[$field]) != 4) || (false == is_numeric($_POST[$field])) )
+						{ $_POST['birthyear'] = ''; }
+				}
+
 				$u->profile[$field] = $_POST[$field];
 			}
 		}

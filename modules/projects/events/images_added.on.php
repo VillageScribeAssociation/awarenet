@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/projects/models/projects.mod.php');
+require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when an image is added 
@@ -22,7 +22,7 @@ function projects__cb_images_added($args) {
 	$model = new Project($args['refUID']);
 
 	//----------------------------------------------------------------------------------------------
-	//	send notifications to project members
+	//	send notifications to project member and friends of uplaoder
 	//----------------------------------------------------------------------------------------------
 
 	$ext = $model->extArray();
@@ -39,7 +39,7 @@ function projects__cb_images_added($args) {
 
 	$title = $user->getNameLink() . ' added a new image to their project: ' . $link;
 
-	notifyFriends($args['refUID'], $args['commentUID'], 
+	notifyFriends($args['refUID'], $args['imageUID'], 
 				  $user->getName(), $user->getUrl(),
 				  $title, $content, $url, $args['imageUID'] );
 

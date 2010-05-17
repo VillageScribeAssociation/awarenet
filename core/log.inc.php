@@ -1,43 +1,43 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	log events, errors, pageviews and hotlinks
+//*	log events, errors, pageviews and hotlinks
 //--------------------------------------------------------------------------------------------------
-//
+//+
 //--------------------------------------------------------------------------------------------------
-//	System Events
+//+	System Events
 //--------------------------------------------------------------------------------------------------
-//
-//	Logs are stored as .php files to prevent direct access from a web browser.
-//
-//	System events are logged according to granularity:
-//	(0) no logging of system events
-//	(1) user logins, records created and saved
-//	(2) + page views, function and block calls
-//	(3) + return values
-//	
-//	Log format for event and error log:
-//	<event>
-//		<datetime>1258791458</datetime>
-//		<session>1258791458</session>
-//		<ip>127.0.0.1</ip>
-//		<system>users</system>
-//		<user>32462483244</user>
-//		<function>authenticate</function>
-//		<msg>plaintext</msg>
-//	</event>
-//
-//	Log data are escaped with htmlentities()
-//	Further information about remotehost, form variables, etc can be retrieved from page view log.
-//
+//+
+//+	Logs are stored as .php files to prevent direct access from a web browser.
+//+
+//+	System events are logged according to granularity:
+//+	(0) no logging of system events
+//+	(1) user logins, records created and saved
+//+	(2) + page views, function and block calls
+//+	(3) + return values
+//+	
+//+	Log format for event and error log:
+//+	<event>
+//+		<datetime>1258791458</datetime>
+//+		<session>1258791458</session>
+//+		<ip>127.0.0.1</ip>
+//+		<system>users</system>
+//+		<user>32462483244</user>
+//+		<function>authenticate</function>
+//+		<msg>plaintext</msg>
+//+	</event>
+//+
+//+	Log data are escaped with htmlentities()
+//+	Further information about remotehost, form variables, etc can be retrieved from page view log.
+//+
 //--------------------------------------------------------------------------------------------------
-//	Page Views
+//+	Page Views
 //--------------------------------------------------------------------------------------------------
-//
-//	Page view logs are only stored for full (outer) page views, not iframes, AJAX, etc
+//+
+//+	Page view logs are only stored for full (outer) page views, not iframes, AJAX, etc
 
 //--------------------------------------------------------------------------------------------------
-//	record a page view
+//|	record current page view
 //--------------------------------------------------------------------------------------------------
 
 function logPageView() {
@@ -70,8 +70,9 @@ function logPageView() {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	create an empty log file
+//|	create an empty log file TODO: use filePutContents
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - absolute fileName [string]
 
 function makeEmptyLog($fileName) {
 	$defaultLog = "<?\n" .
@@ -87,8 +88,13 @@ function makeEmptyLog($fileName) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	record a system event
+//|	record a system event
 //--------------------------------------------------------------------------------------------------
+//arg: log - log name [string]
+//arg: subsystem - subsystem name/label [string]
+//arg: fn - function name [string]
+//arg: msg - message to log [string]
+//returns: true on success or false on failure [bool]
 
 function logEvent($log, $subsystem, $fn, $msg) {
 	global $installPath;
@@ -118,23 +124,36 @@ function logEvent($log, $subsystem, $fn, $msg) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	record an ordinary system event
+//|	record an ordinary system event
 //--------------------------------------------------------------------------------------------------
+//arg: granularity - level of detail (0-3) [int]
+//arg: subsystem - subsystem name/label [string]
+//arg: fn - function name [string]
+//arg: msg - message to log [string]
+//returns: true on success or false on failure [bool]
 
 function logEv($granularity, $subsystem, $fn, $msg) {
 	global $logLevel;
-	if ($logLevel >= $granularity) { logEvent('event', $subsystem, $fn, $msg); }
+	if ($logLevel >= $granularity) { return logEvent('event', $subsystem, $fn, $msg); }
+	return false;
 }
 
 //--------------------------------------------------------------------------------------------------
-//	record an error
+//|	record an error
 //--------------------------------------------------------------------------------------------------
+//arg: subsystem - subsystem name/label [string]
+//arg: fn - function name [string]
+//arg: msg - message to log [string]
+//returns: true on success or false on failure [bool]
 
-function logErr($subsystem, $fn, $msg) { logEvent('error', $subsystem, $fn, $msg); }
+function logErr($subsystem, $fn, $msg) { return logEvent('error', $subsystem, $fn, $msg); }
 
 //--------------------------------------------------------------------------------------------------
-//	log sync activity
+//|	log sync activity
 //--------------------------------------------------------------------------------------------------
+//arg: msg - message to log [string]
+//: this is a little overused due to development, needs to be trimmed out of a lot of places now
+//: that the sync module is pretty stable.
 
 function logSync($msg) {
 	$fileName = $installPath . 'data/log/' . date("y-m-d") . '-sync.log.php';

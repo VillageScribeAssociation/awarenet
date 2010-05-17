@@ -3,12 +3,13 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a message
+//|	display a message
 //--------------------------------------------------------------------------------------------------
-// * $args['UID'] = UID of a message
-// * $args['noreply'] = kill the reply button
+//arg: UID - UID of a message [string]
+//opt: noreply - kill the reply button (yes|no) [string]
 
 function messages_show($args) {
+	$noreply = 'no';
 	if (array_key_exists('UID', $args) == false) { return false; }
 
 	$model = new Message($args['UID']);
@@ -21,7 +22,8 @@ function messages_show($args) {
 							. "<input type='submit' value='Send Reply' /></form></td>";
 
 	}
-	if (array_key_exists('noreply', $args)) { $ext['replybutton'] = ''; }
+	if ((array_key_exists('noreply', $args)) && ($args['noreply'] == 'yes')) { $noreply = 'yes'; }
+	if ('yes' == $noreply) { $ext['replybutton'] = ''; }
 
 	$html = replaceLabels($ext, loadBlock('modules/messages/views/show.block.php'));
 
@@ -32,3 +34,4 @@ function messages_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

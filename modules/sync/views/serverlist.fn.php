@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary list 
+//|	summary list 
 //--------------------------------------------------------------------------------------------------
 
 function sync_serverlist($args) {

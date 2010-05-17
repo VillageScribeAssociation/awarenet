@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Image Galleries::width=570:]]
 [`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
-[[:gallery::summarylist:]]</content>
+[[:gallery::summarylistuser:]]</content>
 <title>:: awareNet :: image galleries :: list ::</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Made By:]]

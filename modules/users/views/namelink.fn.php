@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a link to a users profile with the users name
+//|	make a link to a users profile with the users name
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of a user record
-// * $args['userUID'] = overrides raUID
-// * $args['target'] = link larget
+//arg: raUID - recordAlias or UID of a user record [string]
+//opt: userUID - overrides raUID [string]
+//opt: target - link larget (for iFrames) [string]
 
 function users_namelink($args) {
 	$target = '';
@@ -18,7 +18,7 @@ function users_namelink($args) {
 
 	if (array_key_exists('target', $args) == true) { $target = "target='". $args['target'] ."'"; }
 
-	$model = new Users($args['raUID']);
+	$model = new User($args['raUID']);
 	$fullName = $model->data['firstname'] . ' ' . $model->data['surname'];
 	$html = "<a href='/users/profile/" . $model->data['recordAlias'] . "' $target>$fullName</a>";
 	return $html;

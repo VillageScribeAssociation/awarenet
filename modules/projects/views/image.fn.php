@@ -2,15 +2,15 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the project's logo/picture (300px) or a blank image
+//|	find the project's logo/picture (300px) or a blank image
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or projects entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or projects entry [string]
+//opt: projectUID - overrides raUID [string]
+//opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 [string]
+//opt: link - link to larger image (yes|no) [string]
 
 function projects_image($args) {
 	global $serverPath;
@@ -29,26 +29,27 @@ function projects_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new project(sqlMarkup($args['raUID']));	
-	$sql = "select * from images where refModule='projects' and refUID='" . $model->data['UID'] 
-	     . "' order by weight";
-	     
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$row = imgGetDefault('projects', $args['raUID']);
+
+	$model = new Project(sqlMarkup($args['raUID']));	
+	    
+	if ($row == false) {
+		// no images found for this project
+		return "<img src='/themes/clockface/unavailable/" . $size . ".jpg' border='0'>"; 
+
+	} else {
 		if ($link == 'yes') {
 			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
+				. "<img src='/images/" . $size . "/" . $imgUID 
 				. "' border='0' alt='" . $model->data['name'] . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='/images/" . $size . "/" . $imgUID 
+				. "' border='0' alt='" . $model->data['name'] . "'>";
 		}
-	}
-	
-	// no images found for this project
-	return "<img src='/themes/clockface/unavailable/" . $size . ".jpg' border='0'>"; 
+	}	
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

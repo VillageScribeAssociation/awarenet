@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	returns whether current user is a teacher
+//|	returns whether current user is a teacher
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = group UID or recordAlias
+//arg: raUID - school UID or recordAlias [string]
 
 function schools_haseditauth($args) {
 	global $user;
@@ -17,3 +17,4 @@ function schools_haseditauth($args) {
 
 
 ?>
+

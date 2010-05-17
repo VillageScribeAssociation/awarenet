@@ -4,23 +4,23 @@
 //	delete a record
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('gallery', 'edit', '') == false) { do403(); }
+	if (authHas('forums', 'edit', '') == false) { do403(); }
 
 	if ( (array_key_exists('action', $_POST)) 
 	  AND ($_POST['action'] == 'deleteRecord') 
 	  AND (array_key_exists('UID', $_POST)) 
-	  AND (dbRecordExists('gallery', $_POST['UID'])) ) {
+	  AND (dbRecordExists('forums', $_POST['UID'])) ) {
 	  
-		require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+		require_once($installPath . 'modules/forums/models/forum.mod.php');
 	  
-		$model = new Gallery();
+		$model = new Forum();
 		$model->load($_POST['UID']);
 		
-		$_SESSION['sMessage'] .= "Deleted gallery: " . $model->data['title'];
+		$_SESSION['sMessage'] .= "Deleted forum: " . $model->data['title'];
 		
 		$model->delete();
 		
-		do302('gallery/');
+		do302('forums/');
 	  
 	} else { do404(); }
 

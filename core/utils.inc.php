@@ -1,12 +1,15 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-// 	common shared functions
+//*	common shared functions
 //--------------------------------------------------------------------------------------------------
+//+ most of these should be grouped and broken into their own files
+//+ TODO: patch up naming of files
 
 //--------------------------------------------------------------------------------------------------
-//	create a unique ID 
+//|	create a unique ID (VERY IMPORTANT FUNCTION) 
 //--------------------------------------------------------------------------------------------------
+//returns: a band new UID [string]
 
 function createUID() {
 	$tempUID = "";
@@ -15,8 +18,11 @@ function createUID() {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	clean a string of crap (to match searches and try stop SQL included into query)
+//|	clean a string of crap (to match searches and try stop SQL included into query)
 //--------------------------------------------------------------------------------------------------
+//arg: toClean - string [string]
+//returns: slightly safer version of string to prevent JavaScript, HTML and SQL injection [string]
+//: this is a very old function, from first version of Kapenta, deprecated
 
 function clean_string($toClean) {
 	$isClean = urldecode($toClean);
@@ -28,18 +34,34 @@ function clean_string($toClean) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	make a random number
+//|	make a seed for the random number generator
 //--------------------------------------------------------------------------------------------------
+//: I don't think this is needed with PHP5
+//returns: seed from current time [float]
 
 function make_seed() {
    list($usec, $sec) = explode(' ', microtime());
    return (float) $sec + ((float) $usec * 100000);
 }
 
+//--------------------------------------------------------------------------------------------------
+//|	make a random number
+//--------------------------------------------------------------------------------------------------
+//: I don't think this is needed with PHP5
+//returns: a random number (0-1) [float]
+
 function mk_rand() {
 	srand(make_seed());
 	return rand();
 }
+
+//--------------------------------------------------------------------------------------------------
+//|	make a random number between two values
+//--------------------------------------------------------------------------------------------------
+//: I don't think this is needed with PHP5
+//arg: min - lower bound [float]
+//arg: max - upper bound [float]
+//returns: a random number [float]
 
 function mk_rand_num($min, $max) {
 	srand(make_seed());
@@ -47,24 +69,35 @@ function mk_rand_num($min, $max) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	Take tags out of HTML
+//|	Take tags out of HTML
 //--------------------------------------------------------------------------------------------------
+//arg: someText - text which may contain HTML tags [string]
+//returns: text without HTML tags [string]
 
-function stripHTML($someText) {
-	return preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $someText);
-}
+function stripHTML($someText) { return preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $someText); }
 
 //--------------------------------------------------------------------------------------------------
-// 	get the current date/time in mySQL format
+//|	get the current date/time in mySQL format
 //--------------------------------------------------------------------------------------------------
+//returns: date in format used by MySQL
 
 function mysql_dateTime() { return gmdate("Y-m-j H:i:s", time()); }
+
+//--------------------------------------------------------------------------------------------------
+//|	convert some arbitrary date/time to mySQL format
+//--------------------------------------------------------------------------------------------------
+//arg: date - UNIX timestamp [string]
+//returns: date in format used by MySQL
 
 function mk_mysql_dateTime($date) { return gmdate("Y-m-j H:i:s", $date); }
 
 //--------------------------------------------------------------------------------------------------
-// 	get a field from $_GET, $_POST, or set it to a default value if it down not exist
+//|	get a field from $_GET, $_POST, or set it to a default value if it down not exist
 //--------------------------------------------------------------------------------------------------
+//arg: fieldName - name of a field [string]
+//arg: default - what to use if it is not defined [string]
+//returns: value of this request field or default [string]
+//: very old, deprecated TODO: remove from Kapenta
 
 function requestField($fieldName, $default) {
 	$retVal = $default;
@@ -74,8 +107,11 @@ function requestField($fieldName, $default) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	strip empty values from an array
+//|	strip empty values from an array
 //--------------------------------------------------------------------------------------------------
+//arg: arr - an array [array]
+//returns: array minus empty values [array]
+//: this is very old, I think there's a native PHP function to do this.
 
 function arrayCleanEmpty($arr) {
 	$retVal = array();
@@ -88,8 +124,10 @@ function arrayCleanEmpty($arr) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	remove all but alphanumeric characters from a string (allow '-', '_', convert space to _ )
+//|	remove all but alphanumeric characters from a string (allow '-', '_', convert space to _ )
 //--------------------------------------------------------------------------------------------------
+//arg: txt - text to clean [string]
+//returns: only characters 0-9, a-z, A-Z, space, minus, underscore and forwardslash [string]
 
 function mkAlphaNumeric($txt) {
 	$txt = trim($txt);
@@ -113,8 +151,11 @@ function mkAlphaNumeric($txt) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	get the last x characters from a string (hopefully multibyte safe)
+//|	get the last x characters from a string (hopefully multibyte safe)
 //--------------------------------------------------------------------------------------------------
+//arg: numChars - number of characters to return [int]
+//arg: txt - string to trim [string]
+//returns: rightmost portion of string, or whole string if length < numChars [string]
 
 function mb_endstr($numChars, $txt) {
 	$txt = trim($txt);
@@ -125,8 +166,11 @@ function mb_endstr($numChars, $txt) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	determines if a file/dir exists and is readable + writeable
+//|	determines if a file/dir exists and is readable + writeable
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - absolute[string]
+//returns: true if exists, else false [bool]
+//: TODO: use centralized directory traversal check
 
 function is_extantrw($fileName) {
 	if (file_exists($fileName)) {
@@ -137,8 +181,10 @@ function is_extantrw($fileName) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	remove comments from beginning and end of php file
+//|	remove comments from beginning and end of php file
 //--------------------------------------------------------------------------------------------------
+//arg: raw - unmodified file contents [string]
+//returns: file contents not wrapped unwrapped from php comments [string]
 
 function phpUnComment($raw) {
 	$raw = trim($raw);
@@ -149,9 +195,13 @@ function phpUnComment($raw) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	some php versions do not support file_put_contents
+//|	some php versions do not support file_put_contents
 //--------------------------------------------------------------------------------------------------
-//	mode: w, w+, a, a+
+//arg: fileName - absolute fileName [string]
+//arg: contents - new body of file [string]
+//arg: mode - file mode (w|w+|a|a+) [string]
+//returns: true on success, false on failure [bool]
+//: plus sign in file mode causes files to be created if the do not exist
 
 function filePutContents($fileName, $contents, $mode) {
 	fileMakeSubdirs($fileName);
@@ -163,8 +213,9 @@ function filePutContents($fileName, $contents, $mode) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	ensire that directory exists
+//|	ensure that directory exists
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - containing full path to be confirmed or created [string]
 
 function fileMakeSubdirs($fileName) {
 	global $installPath;
@@ -180,18 +231,32 @@ function fileMakeSubdirs($fileName) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	download a file using curl
+//|	HTTP GET a URL using cURL, respecting kapenta settings for proxy, etc
 //--------------------------------------------------------------------------------------------------
+//: TODO - attempt other download methods (wget, file wrapper, etc) if curl not present
+//: TODO - implement password for systems which use older HTTP authentication methods
+//: TODO - handle HTTP error codes
+//arg: url - a URL [string]
+//opt: password - reserved for HTTP/1.x credentials, not implemented [string]
+//returns: result of HTTP GET request, false if no cURL [string]
 
-function curlGet($url, $password) {
-	if (function_exists('curl_init') == false) { return false; }	// is curl installed?
+function curlGet($url, $password = '') {
+	global $hostInterface;
+	global $proxyEnabled;
+	global $proxyAddress;
+	global $proxyUser;
+	global $proxyPass;
+	global $proxyPort;
+	
+	if (function_exists('curl_init') == false) { return false; }	// is cURL installed?
 
 	//---------------------------------------------------------------------------------------------
 	//	create baisc cURL HTTP GET request
 	//---------------------------------------------------------------------------------------------
 	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
 
 	//---------------------------------------------------------------------------------------------
 	//	use HTTP proxy if enabled
@@ -215,8 +280,13 @@ function curlGet($url, $password) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	render a 2d array as a table
+//|	render a 2d array as a table
 //--------------------------------------------------------------------------------------------------
+//arg: ary - 2d array of table rows and columns [array]
+//opt: wireframe - use kapenta's default wireframe table style [bool]
+//opt: firstrowtitle - if column titles in first row to be highlighted [bool]
+//returns: HTML table [string]
+//: TODO: consider moving this to theme
 
 function arrayToHtmlTable($ary, $wireframe = false, $firstrowtitle = false) {
 	if (false == $wireframe) { 
@@ -244,8 +314,11 @@ function arrayToHtmlTable($ary, $wireframe = false, $firstrowtitle = false) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	mark up html for injection via javascript
+//|	mark up html for injection via javascript
 //--------------------------------------------------------------------------------------------------
+//arg: txt - text to be marked up [string]
+//returns: escaped txt [string]
+//: this is deprecated in favor of base64 encoding
 
 function jsMarkup($txt) {
 	$txt = str_replace("'", '--squote--', $txt);
@@ -257,12 +330,17 @@ function jsMarkup($txt) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	convert to base64 (TODO: make this more efficient)
+//|	convert to base64 (TODO: make this more efficient)
 //--------------------------------------------------------------------------------------------------
+//arg: varName - JavaScript variable name [string]
+//arg: text - value of javascript variable [string]
+//opt: scriptTags - wrap in html script tags if true [bool]
+//returns: code for javascript variable assignment [string]
+
 
 function base64EncodeJs($varName, $text, $scriptTags = true) {
 	$b64 = base64_encode($text);										// encode
-	$b64 = wordwrap($b64, 80, "\n", true);								// break into 80 car lines
+	$b64 = wordwrap($b64, 80, "\n", true);								// break into 80 char lines
 	$break = "\"\n" . str_repeat(' ', strlen($varName) + 5) . "+ \"";	// newline/indent pattern
 	$b64 = str_replace("\n", $break, $b64);								// apply pattern to lines
 	$b64 = "var $varName = \"" . $b64 . "\";\n";						// add js varname
@@ -273,8 +351,13 @@ function base64EncodeJs($varName, $text, $scriptTags = true) {
 //--------------------------------------------------------------------------------------------------
 // 	start a process in background (*nix only)
 //--------------------------------------------------------------------------------------------------
-//	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
-//	TODO: find equivalent for windows
+//:	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
+//:	TODO: find equivalent for windows
+//: will probably not work in safe mode, forking in PHP is too large a topic to be covered here
+
+//arg: Command - shell command [string]
+//arg: Priority - runlevel [int]
+//returns: ID of new process (PID) [int]
 
 function procExecBackground($Command, $Priority = 0) {
 	$PID = false;
@@ -288,9 +371,12 @@ function procExecBackground($Command, $Priority = 0) {
 }
 
 //--------------------------------------------------------------------------------------------------
-// 	discover if a process is running
+//|	discover if a process is running
 //--------------------------------------------------------------------------------------------------
-//	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
+//:	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
+//: *Nix only, might work on windows with Cygwin or GNU tools, probably won't work in safe mode
+//arg: PID - process ID [int] [string]
+//returns: true if running, otherwise false [bool]
 
 function procIsRunning($PID) {
 	exec("ps $PID", $ProcessState);
@@ -300,32 +386,40 @@ function procIsRunning($PID) {
 //--------------------------------------------------------------------------------------------------
 // 	remove javascript from html (prevent XSS worms, etc)
 //--------------------------------------------------------------------------------------------------
-//	source: http://us3.php.net/manual/en/function.strip-tags.php
+//:	source: http://us3.php.net/manual/en/function.strip-tags.php
+//: TODO: review this 
+//arg: Source - HTML to strip of Javascript [string]
+//opt: aAllowedTags - tags which may contain javascript (?) [array]
+//opt: aDisabledAttributes - attributes which tags may not have (?) [array]
+//returns: sanitized (X)HTML [string]
 
-function stripJavascript(	$sSource, 
-							$aAllowedTags = array(), 
-							$aDisabledAttributes = array(	
-									'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 
-									'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 
-									'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 
-									'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 
-									'onbounce', 'oncellchange', 'onchange', 'onclick', 
-									'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 
-									'ondataavaible', 'ondatasetchanged', 'ondatasetcomplete', 
-									'ondblclick', 'ondeactivate', 'ondrag', 'ondragdrop', 
-									'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 
-									'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 
-									'onfilterupdate', 'onfinish', 'onfocus', 'onfocusin', 
-									'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 
-									'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 
-									'onmouseenter', 'onmouseleave', 'onmousemove', 'onmoveout', 
-									'onmouseover', 'onmouseup', 'onmousewheel', 'onmove',
-									'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange',
-									'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 
-									'onresizestart', 'onrowexit', 'onrowsdelete', 
-									'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 
-									'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload') 
-							) {
+function stripJavascript( $sSource, $aAllowedTags = array(), $aDisabledAttributes = array() ) {
+	//---------------------------------------------------------------------------------------------
+	//	if no attributes to diable have been specified, use these:
+	//---------------------------------------------------------------------------------------------
+	if (count($aDisabledAttributes) == 0) {	
+		$aDisabledAttributes = array(	
+								'onabort', 'onactivate', 'onafterprint', 'onafterupdate', 
+								'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 
+								'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 
+								'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 
+								'onbounce', 'oncellchange', 'onchange', 'onclick', 
+								'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 
+								'ondataavaible', 'ondatasetchanged', 'ondatasetcomplete', 
+								'ondblclick', 'ondeactivate', 'ondrag', 'ondragdrop', 
+								'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 
+								'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 
+								'onfilterupdate', 'onfinish', 'onfocus', 'onfocusin', 
+								'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 
+								'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 
+								'onmouseenter', 'onmouseleave', 'onmousemove', 'onmoveout', 
+								'onmouseover', 'onmouseup', 'onmousewheel', 'onmove',
+								'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange',
+								'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 
+								'onresizestart', 'onrowexit', 'onrowsdelete', 
+								'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 
+								'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+	}
 
 	if (empty($aDisabledAttributes)) return strip_tags($sSource, implode('', $aAllowedTags));
 
@@ -337,7 +431,18 @@ function stripJavascript(	$sSource,
 					. "array('', '', ' '), stripslashes('\\1')) . '>'";
 
 	return preg_replace($pattern, $replacement, $sSource);
+}
 
+//--------------------------------------------------------------------------------------------------
+// 	convert plain text to html (quite basic for now)
+//--------------------------------------------------------------------------------------------------
+
+function txtToHtml($txt) {
+	$html = str_replace('<', '&lt;', $txt);
+	$html = str_replace('>', '&gt;', $html);
+	$html = str_replace("\r", '', $html);
+	$html = str_replace("\n", "<br/>\n", $html);
+	return $html;
 }
 
 ?>

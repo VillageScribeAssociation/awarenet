@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	select box for choosing a user's group (sensitive information, only available to admins)
+//|	select box for choosing a user's group (sensitive information, only available to admins)
 //--------------------------------------------------------------------------------------------------
-// * $args['default'] = group the user is currently in, set to 'public' of blank
+//arg: default - group the user is currently in, set to 'public' if blank [string]
 
 function users_selectgroup($args) {
 	global $user;

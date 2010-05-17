@@ -1,10 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	add a user as a friend
+//	add a user as a friend (DEPRECTED, REDUNDANT, REMOVE?)
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
 
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('users', 'addfriend', 'users', $request['ref']);
@@ -13,7 +13,7 @@
 	//	check that the friendship does not already exist
 	//----------------------------------------------------------------------------------------------
 
-	$friend = new Users($request['ref']);
+	$friend = new User($request['ref']);
 	if ($user->isFriend($friend->data['UID'])) {
 		$_SESSION['sMessage'] .= "You are already friends.<br/>\n";
 		do302('users/profile/' . $request['ref']);

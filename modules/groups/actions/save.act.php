@@ -11,7 +11,7 @@
 	   AND (array_key_exists('UID', $_POST))
 	   AND (dbRecordExists('groups', sqlMarkup($_POST['UID']))) ) {
 	
-		require_once($installPath . 'modules/groups/models/groups.mod.php');
+		require_once($installPath . 'modules/groups/models/group.mod.php');
 		
 		$p = new Group(sqlMarkup($_POST['UID']));
 		

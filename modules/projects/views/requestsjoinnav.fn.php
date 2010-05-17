@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list requests made by others to join a project
+//|	list requests made by others to join a project
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['raUID'] = UID or recordAlias of a project
+//arg: raUID - UID or recordAlias of a project [string]
+//opt: projectUID - overrides raUID [string]
 
 function projects_requestsjoinnav($args) {
 	global $user;
@@ -56,3 +56,4 @@ function projects_requestsjoinnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

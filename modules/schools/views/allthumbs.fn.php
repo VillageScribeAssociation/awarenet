@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	all images of all schools (thumbnails, no arguments)
+//|	all images of all schools (thumbnails, no arguments)
 //--------------------------------------------------------------------------------------------------
 
 function schools_allthumbs($args) {
@@ -28,3 +28,4 @@ function schools_allthumbs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

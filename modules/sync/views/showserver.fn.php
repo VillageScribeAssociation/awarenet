@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show
+//|	show
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of a post
+//arg: raUID - recordAlias or UID of a peer server record [string]
 
 function sync_showserver($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }

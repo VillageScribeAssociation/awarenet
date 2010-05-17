@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	find all files in this project which should be tracked by subversion
+//|	find all files in this project which should be tracked by subversion
 //-------------------------------------------------------------------------------------------------
 
 function admin_svnadd($args) {
@@ -88,3 +88,4 @@ function admin_svnadd($args) {
 
 //-------------------------------------------------------------------------------------------------
 ?>
+

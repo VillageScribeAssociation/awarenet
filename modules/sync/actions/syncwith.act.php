@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 	if ($user->data['ofGroup'] != 'admin') { doXmlError('only admins may do this'); }
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 
 	//---------------------------------------------------------------------------------------------
 	//	load the server's record
@@ -15,6 +15,8 @@
 	if (dbRecordExists('servers', $request['ref']) == false) { doXmlError('peer not found'); }
 
 	$peer = new Server($request['ref']);
+
+	$syncIgnoreTables[] = 'comments';
 
 	//---------------------------------------------------------------------------------------------
 	//	sync database
@@ -29,16 +31,7 @@
 			$leUrl = $peer->data['serverurl'] . 'sync/tablele/' . $table;
 			echo "at: $leUrl<br/>\n";
 		
-			$syncTime = time();
-			$syncTimestamp = 'Sync-timestamp: ' . $syncTime;
-			$syncProof = 'Sync-proof: ' . sha1($server->data['password'] . $syncTime);
-			$syncSource = 'Sync-source: ' . $ownData['serverurl'];
-			$postHeaders = array($syncTimestamp, $syncProof, $syncSource);
-
-			$ch = curl_init($leUrl);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$result = curl_exec($ch);
+			$result = syncCurlGet($leUrl, $server->data['password']);
 
 			echo "loaded record list (" . strlen($result) . "bytes)<br/>\n"; flush();
 
@@ -82,16 +75,7 @@
 
 						echo $rUrl . "<br/>\n";
 
-						$syncTime = time();
-						$syncTimestamp = 'Sync-timestamp: ' . $syncTime;
-						$syncProof = 'Sync-proof: ' . sha1($server->data['password'] . $syncTime);
-						$syncSource = 'Sync-source: ' . $ownData['serverurl'];
-						$postHeaders = array($syncTimestamp, $syncProof, $syncSource);
-
-						$ch = curl_init($rUrl);
-						curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-						$recordxml = curl_exec($ch);
+						$recordxml = syncCurlGet($rUrl, $server->data['password']);
 					
 						if (strpos($recordxml, '</update>') != false) {
 							//---------------------------------------------------------------------
@@ -108,6 +92,8 @@
 							//---------------------------------------------------------------------
 							$peerUrl = $peer->data['serverurl'];
 							echo "could not download $table $rUid from $peerUrl <br/>\n";
+							echo "<textarea rows='10' cols='80'>$recordxml</textarea><br/>\n";
+							echo "<textarea rows='10' cols='80'>" . implode(file($rUrl)) . "</textarea><br/>\n";
 							logSync("could not download $table $rUid from $peerUrl \n");
 
 						}

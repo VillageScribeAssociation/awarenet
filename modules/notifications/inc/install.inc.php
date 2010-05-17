@@ -4,7 +4,7 @@
 //	installer for images module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/notifications/models/notifications.mod.php');
+require_once($installPath . 'modules/notifications/models/notification.mod.php');
 require_once($installPath . 'modules/notifications/models/pagechannel.mod.php');
 require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
 

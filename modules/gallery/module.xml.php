@@ -18,10 +18,10 @@
         <perm>show|%%user.ofGroup%%=teacher</perm>
         <perm>imageupload|%%user.ofGroup%%=student</perm>
         <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
         <perm>comment|%%user.ofGroup%%=student</perm>
         <perm>comment|%%user.ofGroup%%=teacher</perm>
+        <perm>images|%%user.ofGroup%%=student</perm>
+        <perm>images|%%user.ofGroup%%=teacher</perm>
     </permissions>
     <blocks>
     </blocks>

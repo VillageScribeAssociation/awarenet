@@ -2,6 +2,7 @@
 %%titlebar%%
 <form name='friendRequest' method='POST' action='/users/addfriendrequest/' >
 <input type='hidden' name='action' value='addFriendReq' />
+<input type='hidden' name='friendshipUID' value='%%friendshipUID%%' />
 <input type='hidden' name='friendUID' value='%%friendUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?

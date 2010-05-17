@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display upload/view for a single image (eg, user profile picture)
+//|	display upload/view for a single image (eg, user profile picture)
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = name of a module
-// * $args['refUID'] = record which owns this image
-// * $args['category'] = category of image, eg userprofile
+//arg: refModule - name of a module [string]
+//arg: refUID - record which owns this image [string]
+//opt: category - category of image, eg userprofile [string]
 
 function images_uploadsingle($args) {	
 	//----------------------------------------------------------------------------------------------
@@ -35,3 +35,4 @@ function images_uploadsingle($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

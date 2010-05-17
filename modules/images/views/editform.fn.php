@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for editing images
+//|	form for editing images
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
-// * $args['return'] = return to upload dialog
+//arg: raUID - recordAlias or UID of image record [string]
+//opt: return - return to upload dialog (set to 'uploadmultiple') [string]
 
 function images_editform($args) {
 	$return = '';
@@ -34,3 +34,4 @@ function images_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

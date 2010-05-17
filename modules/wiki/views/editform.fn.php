@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or wiki entry
+//arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_editform($args) {
 	if (authHas('wiki', 'edit', '') == false) { return false; }

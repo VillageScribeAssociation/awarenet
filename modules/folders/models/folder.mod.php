@@ -1,17 +1,16 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for user folders
+//*	object for user folders
 //--------------------------------------------------------------------------------------------------
-
-//	Folders can nest, parent may be 'root' or the UID of another folder, users can manage their 
-//	own folders, admins can change any folder.  Description field is currently unused, same as 
-//	galleries.
-//	
-//	children and files fields contain simple serialized arrays of precached queries.  children
-//	array does not contain these two fields.
-//
-//	Might add: thumbnails, as opposed to generic icons for file types
+//+	Folders can nest, parent may be 'root' or the UID of another folder, users can manage their 
+//+	own folders, admins can change any folder.  Description field is currently unused, same as 
+//+	galleries.
+//+	
+//+	children and files fields contain simple serialized arrays of precached queries.  children
+//+	array does not contain these two fields.
+//+
+//+	Might add: thumbnails, as opposed to generic icons for file types
 
 class Folder {
 
@@ -25,10 +24,11 @@ class Folder {
 	var $dbSchema;		// database table structure
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of a folder [string]
 
-	function Folder($UID = '') {
+	function Folder($raUID = '') {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
@@ -36,18 +36,25 @@ class Folder {
 		$this->data['title'] = 'New folder ' . $this->data['UID'];
 		$this->data['children'] = '';
 		$this->data['files'] = '';
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of a folder record [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('folders', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('folders', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 
 	function loadArray($ary) {
 		$this->data = $ary;
@@ -56,7 +63,7 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -73,8 +80,9 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -92,8 +100,9 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -118,16 +127,16 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		global $user;
@@ -206,7 +215,7 @@ class Folder {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
 		$ary['userRa'] = $model->data['recordAlias'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
@@ -216,8 +225,10 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing folder Module</h3>\n";
@@ -238,7 +249,7 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a record (including all files and subfolders)
+	//.	delete a record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
@@ -268,7 +279,7 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	update array of children
+	//.	update array of children
 	//----------------------------------------------------------------------------------------------
 
 	function updateChildren() {
@@ -293,7 +304,7 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	update array of files
+	//.	update array of files
 	//----------------------------------------------------------------------------------------------
 
 	function updateFiles() {
@@ -311,8 +322,9 @@ class Folder {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	update parent (for when this record changes name, description)
+	//.	update parent (for when this record changes name, description)
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	function updateParent() {
 		if ($this->data['parent'] == 'root') { return false; }

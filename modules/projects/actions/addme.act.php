@@ -11,11 +11,12 @@
 	   && (array_key_exists('UID', $_POST) == true)
 	   && (dbRecordExists('projects', $_POST['UID']) == true) ) {
 
-		require_once($installPath . 'modules/projects/models/projects.mod.php');
+		require_once($installPath . 'modules/projects/models/project.mod.php');
 
 		//------------------------------------------------------------------------------------------
 		//	check for an existing request
 		//------------------------------------------------------------------------------------------
+		// TODO: use projectmembers object
 
 		$sql = "select * from projectmembers "
 			 . "where projectUID='" . sqlMarkup($_POST['UID']) . "' "
@@ -27,12 +28,15 @@
 		//------------------------------------------------------------------------------------------
 		//	no existing request, make one 
 		//------------------------------------------------------------------------------------------
+		//TODO: use projectmembers object
 
 		$fields = array('UID' => createUID(), 'projectUID' => sqlMarkup($_POST['UID']),
-						'userUID' => $user->data['UID'], 'datetime' => mysql_datetime() );
+						'userUID' => $user->data['UID'], 'datetime' => mysql_datetime(), 
+						'editedOn' => mysql_datetime(), 'editedBy' => $user->data['UID']);
 						
 		$sql = "insert into projectmembers values "
-			 . "('%%UID%%', '%%projectUID%%', '%%userUID%%', 'asked', '%%datetime%%')";
+			 . "('%%UID%%', '%%projectUID%%', '%%userUID%%', 'asked', '%%datetime%%', "
+			 . "'%%editedOn%%', '%%editedBy%%')";
 
 		dbQuery(replaceLabels($fields, $sql));
 

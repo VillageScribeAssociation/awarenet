@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	full-page display of an image + caption, etc
+//|	small column of full-page display of an image + caption, etc
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
+//arg: raUID - recordAlias or UID of an image record [string]
 
 function images_showfullnav($args) {
 	global $serverPath;
@@ -51,3 +51,4 @@ function images_showfullnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

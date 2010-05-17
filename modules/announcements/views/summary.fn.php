@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary
+//|	summary
 //--------------------------------------------------------------------------------------------------
 
 function announcements_summary($args) {
@@ -18,3 +18,4 @@ function announcements_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

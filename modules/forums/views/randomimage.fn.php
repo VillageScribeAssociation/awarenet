@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a random image from a forum  <--- NOT USED YET
+//|	display a random image from a forum  <--- NOT USED YET
 //--------------------------------------------------------------------------------------------------
-// * $args['forumsUID'] = UID of a forums (required)
-// * $args['size'] = size of image (optional)
+//arg: forumsUID - UID of a forums [string]
+//opt: size - size of image (default is 'thumbsm') [string]
 
 function forums_randomimage($args) {
 	$size = 'thumbsm';
@@ -33,3 +33,4 @@ function forums_randomimage($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

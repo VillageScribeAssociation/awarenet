@@ -1,8 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for recording files which we are currently downloading
+//*	object to represent loghged in user sessions
 //--------------------------------------------------------------------------------------------------
+//+	this is used by features such as the chat, which need to know whether a user is logged in and 
+//+	to which peer.
 
 class UserLogin {
 
@@ -10,14 +12,15 @@ class UserLogin {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
-	var $maxAge = 300;
+	var $maxAge = 300;	// maximum age of user login session, in seconds [int]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: userUID - UID of a user [string]
 
 	function UserLogin($userUID = '') {
 		global $serverPath;
@@ -27,12 +30,13 @@ class UserLogin {
 		$this->data['lastseen'] = time();
 		$this->data['logintime'] = mysql_datetime();
 		$this->data['serverurl'] = $serverPath;
-		if ($UID != '') { $this->load($UID); }
+		if ($userUID != '') { $this->load($userUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a login session object by user UID
 	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a user [string]
 
 	function load($userUID) {
 		$sql = "select * from userlogin where userUID='" . sqlMarkup($userUID) . "'";
@@ -45,13 +49,16 @@ class UserLogin {
 
 		} else { return false; }
 	}
-	
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+	
+	function loadArray($ary) { $this->data = $ary; }
+
+	//----------------------------------------------------------------------------------------------
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -61,8 +68,9 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a object is valid before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -72,8 +80,9 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -94,16 +103,18 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object as an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() {
 		return $this->data;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need, can't imagine this will be used
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;			
@@ -111,8 +122,10 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
 		$report = "<h3>Installing User Login  Table</h3>\n";
@@ -131,7 +144,7 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a sync record
+	//.	delete the current user login session object
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
@@ -139,7 +152,7 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	clear old entries from the userlogin table
+	//.	clear old entries from the userlogin table
 	//----------------------------------------------------------------------------------------------
 
 	function clearOldEntries() {
@@ -152,8 +165,10 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	discover if there is already an entry for this user
+	//.	discover if there is already an entry for this user
 	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a user [string]
+	//returns: true if there is a record of a current session, otherwise false [bool]
 
 	function inList($userUID) {
 		$sql = "select * from userlogin where userUID='" . sqlMarkup($userUID) . "'";
@@ -163,7 +178,7 @@ class UserLogin {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	update lastseen to current time
+	//.	update lastseen to current time
 	//----------------------------------------------------------------------------------------------
 
 	function updateLastSeen() {

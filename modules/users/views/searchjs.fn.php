@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	user search results, javascript format
+//|	user search results, javascript format
 //--------------------------------------------------------------------------------------------------
-// * $args['squery'] = query
-// * $args['callback'] = javascript function on parent window - fn(UID, uHtml, uName, uThumb) {}
-// * $args['pageno'] = page number
+//arg: squery - query [string]
+//arg: callback - javascript function on parent window - fn(UID, uHtml, uName, uThumb) {} [string]
+//arg: pageno - page number (To be implemented) [string]
 
 function users_searchjs($args) {
 	$js = '';

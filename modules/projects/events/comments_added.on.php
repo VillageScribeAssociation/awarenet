@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/projects/models/projects.mod.php');
+require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a comment is added
@@ -21,7 +21,7 @@ function projects__cb_comments_added($args) {
 	if (dbRecordExists('users', $args['refUID']) == false) { return false; }
 	
 	$model = new Moblog($args['refUID']);
-	$u = new Users($model->data['createdBy']);
+	$u = new User($model->data['createdBy']);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members

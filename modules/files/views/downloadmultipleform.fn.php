@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for downloading multiple files
+//|	form for downloading multiple files
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of files per page
+//arg: refModule - module to list on [string]
+//arg: refUID - number of files per page [string]
 
 function files_downloadmultipleform($args) {
 	//----------------------------------------------------------------------------------------------
@@ -29,3 +29,4 @@ function files_downloadmultipleform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

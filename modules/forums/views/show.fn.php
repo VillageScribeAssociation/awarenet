@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a record
+//|	show a record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or forums entry
+//arg: raUID - recordAlias or UID or forums entry [string]
 
 function forums_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -18,3 +18,4 @@ function forums_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,36 +1,35 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	HOW XML PARSING WORKS
+//*	HOW XML PARSING WORKS
 //--------------------------------------------------------------------------------------------------
-//
-//	an XmlEntity object is passed a string containing XML, the first opening tag is found.
-//	if no other opening tags exist within that first tag is used for this element and the remainder
-//	of the string is passed to this XmlEntity's parent.
-//
-//	If another opening tag is incountered before this entities closing tag, a child XmlEntity object
-//	is created and added to this objects collection of children, and the string, starting from the
-//	end of the opening tag is passed to the child object.  The child object will then
-//	pass back the remainder of the string when it is finished.
-//
-//	The cycle then repeats, if an opening tag is found before this entity's closing tag, another
-//	child is created until there are no more to process.  Any remaining xml after this entities
-//	tag is passed to this entities parent.  If this is the root entity, it is stashed in surplus
-//	for the program using this class to deal with.
-//
-//	CDATA sections are stripped out into a global array before processing and replaced by a 
-//	marker in the XML.  This marker is replaced by the CDATA section after the document tree has
-//	been created.
-//
-//	CDATA sections will set $this->cdata to true, and wrapping is added back on toString/toXml
-//	
+//+	an XmlEntity object is passed a string containing XML, the first opening tag is found.
+//+	if no other opening tags exist within that first tag is used for this element and the remainder
+//+	of the string is passed to this XmlEntity's parent.
+//+
+//+	If another opening tag is incountered before this entities closing tag, a child XmlEntity object
+//+	is created and added to this objects collection of children, and the string, starting from the
+//+	end of the opening tag is passed to the child object.  The child object will then
+//+	pass back the remainder of the string when it is finished.
+//+
+//+	The cycle then repeats, if an opening tag is found before this entity's closing tag, another
+//+	child is created until there are no more to process.  Any remaining xml after this entities
+//+	tag is passed to this entities parent.  If this is the root entity, it is stashed in surplus
+//+	for the program using this class to deal with.
+//+
+//+	CDATA sections are stripped out into a global array before processing and replaced by a 
+//+	marker in the XML.  This marker is replaced by the CDATA section after the document tree has
+//+	been created.
+//+
+//+	CDATA sections will set $this->cdata to true, and wrapping is added back on toString/toXml
+//+	
 //--------------------------------------------------------------------------------------------------
-//	TO CONSIDER:
-//	- adding a UID to every entity for easy addressing 
-//	- replace globals with values on the root entity passed by reference
+//+	TO CONSIDER:
+//+	- adding a UID to every entity for easy addressing 
+//+	- replace globals with values on the root entity passed by reference
 //--------------------------------------------------------------------------------------------------
 
-global $xml_proc_curr;
+global $xml_proc_curr;		// ugly, but leave for now
 global $xml_cdata_set;
 
 class XmlEntity {
@@ -52,8 +51,9 @@ class XmlEntity {
 	var $cdata = FALSE;
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: xml - raw XML to parse [string]
 
 	function XmlEntity($xml = '') {
 		$this->attributes = array();
@@ -63,8 +63,11 @@ class XmlEntity {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	convert XML into more XmlEntity objects
+	//.	convert XML into more XmlEntity objects
 	//----------------------------------------------------------------------------------------------
+	//opt: xml - raw XML to parse [string]
+	//returns: false if XML not parsed [bool]
+	//: this is in a recursive relationship with childPassBack()
 
 	function loadFromString($xml = '') {
 		global $xml_proc_curr;
@@ -120,8 +123,9 @@ class XmlEntity {
 	} // end loadFromString()
 
 	//----------------------------------------------------------------------------------------------
-	//	no longer called by children due to stack space issues (consider renaming)
+	//.	no longer called by children due to stack space issues (consider renaming)
 	//----------------------------------------------------------------------------------------------
+	//: this is where the structure of XmlEntity objects get built and linked together, important
 
 	function childPassBack() { 
 		global $xml_proc_curr;
@@ -254,9 +258,10 @@ class XmlEntity {
 	} // end childPassBlock
 
 	//----------------------------------------------------------------------------------------------
-	//	find first <tag> or <tag /> which is not a closing tag starting from a given position
+	//.	find first <tag> or <tag /> which is not a closing tag starting from a given position
 	//----------------------------------------------------------------------------------------------
-	// returns array of [start], [end]
+	//arg: searchFrom - position to begin searching from in xml_proc_curr
+	//returns: array of (start, end) or false on failure [array] [bool]
 
 	function getFirstOpen($searchFrom) {
 		global $xml_proc_curr;
@@ -284,9 +289,11 @@ class XmlEntity {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find first </tag> starting from a given position
+	//.	find first </tag> starting from a given position
 	//----------------------------------------------------------------------------------------------
-	// returns array of [start], [end]
+	//arg: tag - entity type to look for [string]
+	//arg: searchFrom - position within xml_proc_curr [int]
+	//returns: array of (start, end) or false if not found [array] [bool]
 
 	function getFirstClose($tag, $searchFrom) {
 		global $xml_proc_curr;
@@ -299,9 +306,11 @@ class XmlEntity {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	divides an opening tag into its components ( <tag x='2' y='5'> into array [type][attribs] )
+	//.	divides an opening tag into its components ( <tag x='2' y='5'> into array [type][attribs] )
 	//----------------------------------------------------------------------------------------------
-	// test case <something x='223' y=" soe  ">
+	//arg: tag - a self-closing XML entity or opening tag [string]
+	//returns: array of type and nested associative array of attributes [array]
+	//: test case <something x='223' y=" soe  ">
 
 	function expandTag($tag) {
 		$rv = array();

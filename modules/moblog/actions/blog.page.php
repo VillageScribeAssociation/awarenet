@@ -6,7 +6,6 @@
 <title>:: awareNet :: uberblog :: [`|pc][`|pc]userName[`|pc][`|pc] ::</title>
 <script></script>
 <nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
-[`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Author:]]
 [[:users::avatar::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::size=width300:]]
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]

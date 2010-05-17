@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for manging wiki revisions
+//*	object for manging wiki revisions
 //--------------------------------------------------------------------------------------------------
 
 class WikiRevision {
@@ -10,15 +10,16 @@ class WikiRevision {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database table structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database table structure [array]
 
 
-	var $allRevisions;	// php enclosed wikicode
+	var $allRevisions;	// php enclosed wikicode [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of a wiki revision [string]
 
 	function WikiRevision($UID = '') {
 		global $user;
@@ -34,8 +35,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a wiki revision [string]
 
 	function load($UID) {
 		$ary = dbLoad('wikirevisions', $UID);
@@ -43,12 +45,15 @@ class WikiRevision {
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -59,8 +64,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that an object is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -72,8 +78,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -95,14 +102,16 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;
@@ -129,8 +138,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete an article and all its assets
+	//.	delete the current revision from the database
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	function delete() {
 		if (dbRecordExists('wikirevisions', $this->data['UID']) == false) { return false; }
@@ -139,8 +149,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find UID of previous version of this wiki article or talk page
+	//.	find UID of previous version of this wiki article or talk page
 	//----------------------------------------------------------------------------------------------
+	//returns: UID of previous revision, false if not found [string][bool]
 
 	function getPreviousUID() {
 		foreach($this->allRevisions as $key => $row) {	// for each revision
@@ -158,8 +169,9 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find UID of next version of this wiki article or talk page
+	//.	find UID of next version of this wiki article or talk page
 	//----------------------------------------------------------------------------------------------
+	//returns: UID of next revision, false if not found [string][bool]
 
 	function getNextUID() {
 		foreach($this->allRevisions as $key => $row) {	// for each revision
@@ -177,13 +189,13 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find all revisions to this wiki article or talk page, make list at $this->allRevisions
+	//.	find all revisions to this wiki article or talk page, make list at $this->allRevisions
 	//----------------------------------------------------------------------------------------------
 
 	function getAllRevisions() {
 		if ($this->data['refUID'] == '') { return false; }
 		$this->allRevisions = array();
-
+		//TODO: use dbLoadRange
 		$sql = "select UID, refUID, type, reason, editedBy, editedOn from wikirevisions "
 			 . "where refUID='" . $this->data['refUID'] . "' "
 			 . "and type='" . $this->data['type'] . "' "
@@ -195,8 +207,10 @@ class WikiRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
 		$report = "<h3>Installing Wiki Revisions</h3>\n";

@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return a list of schools
+//|	return a list of schools
 //--------------------------------------------------------------------------------------------------
-// * $args['varname'] = name of variable
-// * $args['default'] = current value
+//opt: varname - name of variable (default is 'school') [string]
+//opt: default - default value (should be the UID of a school record) [string]
 
 function schools_select($args) {
 	$varname = 'school';
@@ -34,3 +34,4 @@ function schools_select($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

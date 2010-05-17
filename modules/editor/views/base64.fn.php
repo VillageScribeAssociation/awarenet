@@ -1,12 +1,12 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	add a WYSWYG editor to an HTML page and initialize with 
+//|	add a WYSWYG editor to an HTML page and initialize with 
 //-------------------------------------------------------------------------------------------------
-//arg: jsvar - name of javascript variable which holds content to be edited
-//arg: name - name of html field
-//opt: width - width of editor in pixels
-//opt: height - height of editor in pixels
+//arg: jsvar - name of javascript variable which holds content to be edited [string]
+//arg: name - name of html field [string]
+//opt: width - width of editor in pixels [string]
+//opt: height - height of editor in pixels [string]
 
 function editor_base64($args) {
 	global $page;
@@ -43,3 +43,4 @@ function editor_base64($args) {
 
 //-------------------------------------------------------------------------------------------------
 ?>
+

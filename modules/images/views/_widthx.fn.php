@@ -3,14 +3,15 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a single image at a given size
+//|	display a single image at a given size
 //--------------------------------------------------------------------------------------------------
-// * $args['imageUID'] = overrides raUID
-// * $args['raUID'] = record alias or UID
-// * $args['link'] = link to larger version (yes|no)
-// * $args['size'] = scale type
-// * $args['align'] = left|right
-// * $args['caption'] = yes|no - display caption
+//arg: raUID - recordAlias or UID of an image record [string]
+//opt: link - link to larger version (yes|no) [string]
+//opt: size - scale type, default is width300 [string]
+//opt: align - deprecated (left|right) [string]
+//opt: caption - display caption, deprecated (yes|no) [string]
+//opt: imageUID - overrides raUID [string]
+//opt: pad - blank space to elave around image [string]
 
 function images__widthx($args) {
 	global $serverPath;
@@ -21,12 +22,18 @@ function images__widthx($args) {
 	if (array_key_exists('c', $args) == true) { $caption = $args['c']; }
 	if (array_key_exists('caption', $args) == true) { $caption = $args['caption']; }
 	if (array_key_exists('size', $args)) { $size = $args['size']; }
-	if (array_key_exists('align', $args)) { $align = $args['align']; }
-	
+	if (array_key_exists('align', $args)) { $align = $args['align']; }	
+
 	$linkUrl = $serverPath . 'images/' . $args['raUID'];
 	$imgUrl = $serverPath . 'images/' . $size . '/' . $args['raUID'];
 
-	$html =  "<img src='" . $imgUrl . "' border='0' />";	
+	$pad = '';
+	if (array_key_exists('pad', $args) {
+		$padBy = (int)$args['pad'];
+		$pad = "vspace='" . $padBy . "px' hspace='" . $padby . "px'";
+	}
+
+	$html =  "<img src='" . $imgUrl . "' border='0' $pad />";	
 	if ($link == 'yes') { $html = "<a href='" . $linkUrl . "'>$html</a>"; }
 
 	if ($caption == 'yes') {

@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for interacting with repository
+//*	object for interacting with kapenta code repository
 //--------------------------------------------------------------------------------------------------
 
 class CodeRepository {
@@ -10,16 +10,19 @@ class CodeRepository {
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 
-	public $list = '';		// location of list of objects
-	public $post = '';		// location to post objects to
-	public $key = '';		// authorises post
+	public $list = '';		// location of list of objects [string]
+	public $post = '';		// location to post objects to [string]
+	public $key = '';		// authorises post [string]
 
-	private $exemptions;	// array of locations which are not uploaded
-	public $skipped;		// list of local files which will not be uploaded
+	private $exemptions;	// array of locations which are not uploaded [array]
+	public $skipped;		// list of local files which will not be uploaded [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//arg: listUrl - URL of repository file list [string]
+	//arg: postUrl - URL of repository posting interface [string]
+	//arg: postKey - repository password [string]
 
 	function CodeRepository($listUrl, $postUrl, $postKey) {
 		$this->list = $listUrl;
@@ -29,23 +32,31 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	add an exemption
+	//.	add an exemption
 	//----------------------------------------------------------------------------------------------
+	//arg: match - filenames/paths containing this string will be ignored [string]
 
 	function addExemption($match) {
 		if (in_array($match, $this->exemptions) == false) {	$this->exemptions[] = $match; }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	get or clear exemptions
+	//.	get list of exemptions
 	//----------------------------------------------------------------------------------------------
+	//returns: current list of exemptions [array]
 
 	function getExemptions() { return $this->exemptions; }
+
+	//----------------------------------------------------------------------------------------------
+	//.	clear list of exemptions
+	//----------------------------------------------------------------------------------------------
+
 	function clearExemptions() { $this->exemptions = array(); }
 
 	//----------------------------------------------------------------------------------------------
-	//	download repository list and convert into an array
+	//.	download repository list and convert into an array
 	//----------------------------------------------------------------------------------------------
+	//returns: list of files maintained in the respository and their metadata [array]
 
 	function getRepositoryList() {
 		$rlist = array();
@@ -66,9 +77,11 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	examine local files and create list - same format as $this->getRepositoryList()
+	//.	examine local files and create list - same format as getRepositoryList()
 	//----------------------------------------------------------------------------------------------
-	// 	any exemptions should be set up before this is called
+	//arg: repositoryList - as produced by getRepositoryList(), for matching UIDs of items [array]
+	//returns: list of files in the local installation and their metadata [array]	
+	//, any exemptions should be set up before this is called
 
 	function getLocalList($repositoryList) {
 		global $installPath;
@@ -165,9 +178,12 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	compare local and repository lists to create a list of files to be updated
+	//.	compare local and repository lists to create a list of files to be updated
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: repositoryList - a list of files [array]	
+	//arg: localList - a list of files [array]
+	//returns: list of files to be created/updated in the repository [array]
+
 	function makeUploadList($repositoryList, $localList) {
 		$uploadList = array();
 		foreach($localList as $litem) {
@@ -191,7 +207,7 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	perform uploads
+	//.	perform uploads
 	//----------------------------------------------------------------------------------------------
 
 	function doUploads($uploadList) {
@@ -201,8 +217,11 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a new file to the repository
+	//.	save a new file (or directory) to the repository
 	//----------------------------------------------------------------------------------------------
+	//arg: path - relative to installPath [string]
+	//arg: type - file type, as per guessFileType() [string]
+	//arg: hash - sha1 hash of file (or directory) [string]
 
 	function storeFile($path, $type, $hash) {
 		global $installPath;
@@ -260,11 +279,14 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	get the sha1 hash of a file, give location relative to installPath
+	//.	get the sha1 hash of a file
 	//----------------------------------------------------------------------------------------------
+	//arg: relFile - file location relative to installPath [string]
+	//returns: sha1 hash of file [string]
 
 	function getFileHash($relFile) {
 		global $installPath;
+		//TODO: error checking, traversal checking, use centralised IO functions
 		$absFile = str_replace('//', '/', $installPath . $relFile);
 		$raw = implode(file($absFile));		
 		$hash = sha1($relFile . $raw);		
@@ -272,8 +294,10 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	decide which type a file is
+	//.	decide which type a file is
 	//----------------------------------------------------------------------------------------------
+	//arg: path - filename including path [string]
+	//returns: best guess at file type, or false if not determined [string][bool]
 
 	function guessFileType($path) {
 		if (strpos($path, '.') == false) { return 'folder'; }
@@ -303,8 +327,11 @@ class CodeRepository {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return a list of objects as an html table
+	//.	return a list of objects as an html table
 	//----------------------------------------------------------------------------------------------
+	//arg: list - list of files [array]
+	//returns: html [string]
+	//, TODO: use arrayToHtmlTable
 
 	function listToHtml($list) {
 		$newCount = 0;

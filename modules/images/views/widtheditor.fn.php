@@ -4,11 +4,11 @@
 	require_once($installPath . 'modules/images/inc/images__widthx.inc.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a single image 560px wide
+//|	display a single image 560px wide
 //--------------------------------------------------------------------------------------------------
-// * $args['imageUID'] = overrides raUID
-// * $args['raUID'] = record alias or UID
-// * $args['link'] = link to larger version (yes|no)
+//arg: raUID - record alias or UID [string]
+//opt: imageUID - overrides raUID [string]
+//opt: link - link to larger version (yes|no) [string]
 
 function images_widtheditor($args) { 
 	global $serverPath;
@@ -44,3 +44,4 @@ function images_widtheditor($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

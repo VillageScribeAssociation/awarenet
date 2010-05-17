@@ -4,7 +4,7 @@
 //	page for downloading files and associating them with records
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	control variables

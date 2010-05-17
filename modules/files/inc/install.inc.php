@@ -4,7 +4,7 @@
 //	installer for files module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/files/models/files.mod.php');
+require_once($installPath . 'modules/files/models/file.mod.php');
 
 function install_files_module() {
 	global $installPath;

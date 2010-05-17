@@ -1,36 +1,37 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	functions for loading, executing and displaying blocks (transcluded sections)
+//*	functions for loading, executing and displaying blocks (transcluded sections)
 //--------------------------------------------------------------------------------------------------
 
-//	Modules, themes and the kapenta core express a blocks API for dynamicaly transcluding data as a 
-//	page is requested.  Generally, evey section on a page will be expressed as a block.  They have 
-//	the following format:
-//
-//	[[::blockapi::method::argument::]]
-//
-//	For example:
-//
-//	[[::blog::show::23498723484::]]		// generate HTML of blog post UID:23498723484
-//	[[::blog::navlist::10::0::]]		// list the 10 latest blog posts, formatted for nav bar
-//
-//	BlockAPI may be a module, 'theme' for the current theme's api (menus, pagination, etc) and the 
-//	method is a hook defined on that API, with any number of arguments.  Blocks may return HTML or 
-//	text including other blocks which are processed recursively.  One must be careful when 
-//	designing pages not to allow an infinite loop to occur: [[block A]] loads [[block B]] which 
-//	loads [[block A]] again
-//
-//	Access control is provided by the block API itself consulting the users permissions.  Blocks 
-//	may also be used in determining a users level of access by returning data to the permissions 
-//	manager.
-//
-//	Blocks may be cached for the public user to allow faster loading of pages and increase overall 
-//	efficiency.  Some blocks, such as search results, should not be cached.
+//+	Modules, themes and the kapenta core express a blocks API for dynamicaly transcluding data as a 
+//+	page is requested.  Generally, evey section on a page will be expressed as a block.  They have 
+//+	the following format:
+//+
+//+	[[::blockapi::method::argument::]]
+//+
+//+	For example:
+//+
+//+	[[::blog::show::23498723484::]]		// generate HTML of blog post UID:23498723484
+//+	[[::blog::navlist::10::0::]]		// list the 10 latest blog posts, formatted for nav bar
+//+
+//+	BlockAPI may be a module, 'theme' for the current theme's api (menus, pagination, etc) and the 
+//+	method is a hook defined on that API, with any number of arguments.  Blocks may return HTML or 
+//+	text including other blocks which are processed recursively.  One must be careful when 
+//+	designing pages not to allow an infinite loop to occur: [[block A]] loads [[block B]] which 
+//+	loads [[block A]] again
+//+
+//+	Access control is provided by the block API itself consulting the users permissions.  Blocks 
+//+	may also be used in determining a users level of access by returning data to the permissions 
+//+	manager.
+//+
+//+	Blocks may be cached for the public user to allow faster loading of pages and increase overall 
+//+	efficiency.  Some blocks, such as search results, should not be cached.
 
 //--------------------------------------------------------------------------------------------------
-//      load a block template file
+//|	load a block template file
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - relative to installPath [string]
 
 function loadBlock($fileName) {
 	global $installPath;
@@ -56,8 +57,10 @@ function loadBlock($fileName) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      save a block
+//|	save a block, deprecated TODO: replace with filePutContents
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - absolute fileName [string]
+//arg: raw - file contents [string]
 
 function saveBlock($fileName, $raw) {
 	$fh = fopen($fileName, 'w+');
@@ -68,15 +71,17 @@ function saveBlock($fileName, $raw) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      expand all blocks within a string
+//|	expand all blocks within a string
 //--------------------------------------------------------------------------------------------------
+//arg: txt - text containing block tags to be expanded [string]
+//arg: calledBy - newline delimited list of parents, set to empty string [string]
+//: calledBy is used to prevent infinite recursion, newline delimited list of parents
 
 function expandBlocks($txt, $calledBy) {
 
 	//----------------------------------------------------------------------------------------------
 	//	filter out any calling blocks - prevent infinite recursion
 	//----------------------------------------------------------------------------------------------
-
 	$ban = explode("\n", $calledBy);
 	foreach($ban as $killThis) {
 	  if (strlen($killThis) > 3) {
@@ -87,22 +92,18 @@ function expandBlocks($txt, $calledBy) {
 	//----------------------------------------------------------------------------------------------
 	//	replace each block with result from the appropriate blocks API
 	//----------------------------------------------------------------------------------------------
-
 	$blocks = findUniqueBlocks($txt);
-
 	foreach ($blocks as $block) {
 
 		//------------------------------------------------------------------------------------------
 		// 	load the appropriate block API and execute the hook
 		//------------------------------------------------------------------------------------------
-
 		$ba = blockToArray($block);
 		$bHTML = runBlock($ba);
 
 		//------------------------------------------------------------------------------------------
 		// 	recurse, expand any blocks that were created by the hook
 		//------------------------------------------------------------------------------------------
-
 		$bHTML = expandBlocks($bHTML, $calledBy . $block. "\n");
 		$txt = str_replace($block, $bHTML, $txt);
 
@@ -112,8 +113,9 @@ function expandBlocks($txt, $calledBy) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      read block to extract api, method and arguments
+//|	read block to extract api, method and arguments
 //--------------------------------------------------------------------------------------------------
+//arg: block - a block tag [string]
 
 function blockToArray($block) {
 	global $page;
@@ -159,8 +161,9 @@ function blockToArray($block) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      extract all blocks from a piece of text and return an array
+//|	extract all blocks from a piece of text and return an array
 //--------------------------------------------------------------------------------------------------
+//arg: txt - text or HTML which may contain block tags [string]
 
 function findUniqueBlocks($txt) {
 	$blocks = array();
@@ -190,8 +193,10 @@ function findUniqueBlocks($txt) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      a get block API's filename
+//|	a get block API's filename
 //--------------------------------------------------------------------------------------------------
+//arg: module - module name [string]
+//arg: fn - view name [string]
 
 function getBlockApiFile($module, $fn) {
 	global $defaultTheme;
@@ -204,8 +209,10 @@ function getBlockApiFile($module, $fn) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      execute a block
+//|	execute a block
 //--------------------------------------------------------------------------------------------------
+//arg: ba - block tag data [array]
+//: this is quite an old function, from before views were separated into their own files
 
 function runBlock($ba) {
 	$apiFile = getBlockApiFile($ba['api'], $ba['method']);
@@ -225,8 +232,10 @@ function runBlock($ba) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//      remove blocks from a string (TODO: use a regex)
+//|	remove blocks from a string (TODO: use a regex)
 //--------------------------------------------------------------------------------------------------
+//arg: txt - text or HTML which may contain blocks [string]
+//: useful for summaries, text snippets, etc
 
 function strip_blocks($txt) {
 	$txt = str_replace('<', '{{-less-than-}}', $txt);
@@ -240,8 +249,9 @@ function strip_blocks($txt) {
 } 
 
 //--------------------------------------------------------------------------------------------------
-//      substitute an array of values for labels in text
+//|	substitute an array of values for labels in text
 //--------------------------------------------------------------------------------------------------
+//arg: labels - array of variable names (keys) and values to replace them with [array]
 
 function replaceLabels($labels, $txt) {
 	global $serverPath;

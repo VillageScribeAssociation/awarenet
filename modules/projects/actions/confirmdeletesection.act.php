@@ -9,7 +9,7 @@
 	if (array_key_exists('section', $request['args']) == false) { do404(); }
 	if (dbRecordExists('projects', $request['args']['uid']) == false) { do404(); }
 	
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	$model = new Project($request['args']['uid']);
 	$thisRa = $model->data['recordAlias'];

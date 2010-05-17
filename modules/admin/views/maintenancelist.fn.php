@@ -1,9 +1,8 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	find all files in this project which should be tracked by subversion
+//|	find all files in this project which should be tracked by subversion
 //-------------------------------------------------------------------------------------------------
-//ofgroup: admin
 
 function admin_maintenancelist($args) {
 	global $user;
@@ -41,3 +40,4 @@ function admin_maintenancelist($args) {
 }
 
 ?>
+

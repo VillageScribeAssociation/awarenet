@@ -4,7 +4,7 @@
 //	edit a calendar event
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('calendar', 'edit', '') == false) { do304(); }
+	if (authHas('calendar', 'edit', '') == false) { do403(); }
 	
 	if ($request['ref'] == '') { do404(); }
 	

@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for adding new sections
+//|	form for adding new sections
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or projects entry
+//arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_addsectionform($args) {
 	global $user;
@@ -21,3 +21,4 @@ function projects_addsectionform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

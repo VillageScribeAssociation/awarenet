@@ -17,8 +17,8 @@ function images__cb_object_deleted($args) {
 	//	delete any images owned by this record
 	//----------------------------------------------------------------------------------------------
 
-	$contitions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
-							"refModule='" . sqlMarkup($args['UID']) . "'"	);
+	$conditions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
+							"refModule='" . sqlMarkup($args['module']) . "'"	);
 
 	$rows = dbLoadRange('images', '*', $conditions, '', '', '');
 
@@ -26,6 +26,7 @@ function images__cb_object_deleted($args) {
 		$model = new Image();
 		$model->loadArray($row);
 		$model->delete();
+		logSync("images module is deleting record " . $model->data['UID'] . " in response to event<br/>\n");
 	}
 
 	return true;

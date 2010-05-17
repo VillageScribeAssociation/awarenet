@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find common friends between the current user and some random, returns thumbnails
+//|	find common friends between the current user and some random, returns thumbnails
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = overrides raUID
-// * $args['UID'] = recordAlias or UID or groups entry
-// * $args['size'] = of images returned
+//arg: UID - UID of a user [string]
+//opt: userUID - overrides UID [string]
+//opt: size - of images returned [string]
 
 function users_commonfriendsnav($args) {
 	global $user;

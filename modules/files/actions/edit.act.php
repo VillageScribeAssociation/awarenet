@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------------------
 //	needs the file's UID/recordAlias and optionally /return_uploadmultiple
 	
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 	
 	//------------------------------------------------------------------------------------------------------
 	//	check page arguments and authorisation

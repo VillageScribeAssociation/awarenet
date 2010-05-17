@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------------------
-//	object for managing static pages
+//*	object representing static pages
 //--------------------------------------------------------------------------------------------------------------
 
 class StaticPage {
@@ -10,37 +10,42 @@ class StaticPage {
 	//	member variables (as retieved from database)
 	//------------------------------------------------------------------------------------------------------
 
-	var $data;		// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// object data [array]
+	var $dbSchema;		// database structure [array]
 
 	//------------------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//------------------------------------------------------------------------------------------------------
+	//opt: raUID - recordAlias or UID of a static page [string]
 
-	function StaticPage($UID = '') {
+	function StaticPage($raUID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] == 'New Static Page';
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//------------------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//------------------------------------------------------------------------------------------------------
+	//arg: raUID - recordAlias or UID of a school [string]
 
-	function load($uid) {
-		$ary = dbLoadRa('static', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('static', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 
-	//------------------------------------------------------------------------------------------------------
-	//	save a record
-	//------------------------------------------------------------------------------------------------------
+	function loadArray($ary) { $this->data = $ary; }
+
+	//----------------------------------------------------------------------------------------------
+	//.	save the current object to database
+	//----------------------------------------------------------------------------------------------
 
 	function save() {
 		$verify = $this->verify();
@@ -51,9 +56,10 @@ class StaticPage {
 		dbSave($this->data, $this->dbSchema); 
 	}
 
-	//------------------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	verify - check that a record is correct before allowing it to be stored in the database
+	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -65,9 +71,10 @@ class StaticPage {
 		return $verify;
 	}
 
-	//------------------------------------------------------------------------------------------------------
-	//	sql information
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	sql information
+	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -93,9 +100,9 @@ class StaticPage {
 		return $dbSchema;
 	}
 
-	//------------------------------------------------------------------------------------------------------
-	//	delete the current record
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	delete the current object from the database
+	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		if (authHas('static', 'delete', '') == false) { return false; }
@@ -106,15 +113,17 @@ class StaticPage {
 		eventSendAll('object_deleted', $args);
 	}
 	
-	//------------------------------------------------------------------------------------------------------
-	//	return the data
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	serialize this object as an array
+	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
-	//------------------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	make an extended array of all data a view will need
+	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;
@@ -164,9 +173,11 @@ class StaticPage {
 		return $ary;
 	}
 
-	//------------------------------------------------------------------------------------------------------
-	//	install this module
-	//------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//.	install this module
+	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Static Pages Module</h3>\n";

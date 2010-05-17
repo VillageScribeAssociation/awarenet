@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list recent projects in the nav
+//|	list recent projects in the nav
 //--------------------------------------------------------------------------------------------------
-// * $args['num'] = max number to display (optional)
+//opt: num - max number to display (default is 20) [string]
 
 function projects_listprojectsnav($args) {
 	$num = 20; $html = '';
@@ -27,3 +27,4 @@ function projects_listprojectsnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

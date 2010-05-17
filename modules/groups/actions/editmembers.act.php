@@ -7,7 +7,7 @@
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('groups', 'editmembers', 'groups', $request['ref']);
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	$model = new Group($request['ref']);
 	$members = $model->getMembers();
 

@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	count the number of images in a forums <--- NOT USED YET
+//|	count the number of images in a forums <--- NOT USED YET
 //--------------------------------------------------------------------------------------------------
-// * $args['forumUID'] = UID of a forum (required)
+//arg: forumUID - UID of a forum [string]
 
 function forums_imagecount($args) {
 	if (array_key_exists('forumUID', $args) == false) { return false; }
@@ -23,3 +23,4 @@ function forums_imagecount($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

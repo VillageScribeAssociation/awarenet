@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	nav box (iframe) for editing a project's index
+//|	nav box (iframe) for editing a project's index
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['UID'] = UID or recordAlias of a project
+//arg: UID - UID or recordAlias of a project [string]
+//opt: projectUID - overrides raUID [string]
 
 function projects_editindexnav($args) {
 	if (authHas('projects', 'view', '') == false) { return false; }
@@ -28,3 +28,4 @@ function projects_editindexnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

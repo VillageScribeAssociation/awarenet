@@ -2,10 +2,10 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to create a new project (formatted for nav, noargs)
+//|	form to create a new project (formatted for nav)
 //--------------------------------------------------------------------------------------------------
 
 function projects_newprojectform($args) {
@@ -16,3 +16,4 @@ function projects_newprojectform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

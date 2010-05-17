@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for downloading multiple images
+//|	form for downloading multiple images
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of images per page
+//arg: refModule - module to list on [string]
+//arg: refUID - item which will own the downloaded image [string]
 
 function images_downloadmultipleform($args) {
 	//----------------------------------------------------------------------------------------------
@@ -29,3 +29,4 @@ function images_downloadmultipleform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

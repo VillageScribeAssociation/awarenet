@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make table of permissions available on a module (perm:manage)
+//|	make table of permissions available on a module (perm:manage)
 //--------------------------------------------------------------------------------------------------
-// * $args['modulename'] = name of a module
+//arg: modulename - name of a module [string]
 
 function mods_editpermissions($args) {
 	if (array_key_exists('modulename', $args) == false) { return false; }
@@ -25,3 +25,4 @@ function mods_editpermissions($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

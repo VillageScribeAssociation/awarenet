@@ -14,9 +14,11 @@
 //	include the kapenta core functions (database access, templating system, etc)
 //--------------------------------------------------------------------------------------------------
 
+	$hostInterface = '';
+
 	include 'setup.inc.php'; // system settings
-	include $installPath . 'modules/users/models/users.mod.php';
-	include $installPath . 'modules/pages/models/pages.mod.php';
+	include $installPath . 'modules/users/models/user.mod.php';
+	include $installPath . 'modules/pages/models/page.mod.php';
 	include $installPath . 'core/core.inc.php';
 
 //--------------------------------------------------------------------------------------------------
@@ -31,7 +33,7 @@
 //	load the current user (public if not logged in)
 //--------------------------------------------------------------------------------------------------
 
-	$user = new Users($_SESSION['sUserUID']);
+	$user = new User($_SESSION['sUserUID']);
 	$userlogin = new UserLogin();
 	if ($user->data['ofGroup'] != 'public') {
 		$exists = $userlogin->load($_SESSION['sUserUID']);

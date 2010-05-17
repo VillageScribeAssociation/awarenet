@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to add group members
+//|	form to add group members
 //--------------------------------------------------------------------------------------------------
-// * $args['groupUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
+//arg: raUID - recordAlias or UID of a group [string]
+//opt: groupUID - overrides raUID [string]
 
 function groups_addmemberform($args) {
 	if (array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
@@ -19,3 +19,4 @@ function groups_addmemberform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show friend requests (from others)
+//|	show friend requests (from others)
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user whose profile this box is on
+//arg: userUID - UID of user whose profile this box is on [string]
 
 function users_showfriendrequests($args) {
 	global $user; $html = '';
@@ -22,10 +22,11 @@ function users_showfriendrequests($args) {
 	
 	if (count($reqs) > 0) {
 		$html .= "[[:theme::navtitlebox::label=Friend Requests (to me):]]\n";
+		$block = loadBlock('modules/users/views/confirmfriendnav.block.php');
 
 		foreach($reqs as $friendUID => $relationship) {
 			$labels = array('friendUID' => $friendUID, 'relationship' => $relationship);
-			$html .= replaceLabels($labels, loadBlock('modules/users/views/confirmfriendnav.block.php'));
+			$html .= replaceLabels($labels, $block);
 		}
 
 	}	

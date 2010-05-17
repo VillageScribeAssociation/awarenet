@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for forums, no arguments
+//|	menu for forums, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function messages_menu($args) {

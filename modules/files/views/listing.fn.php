@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	add a list of files on a modules
+//|	add a list of files on a modules
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of files per page
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of object which owns these files [string]
 
 function files_listing($args) {
 	global $serverPath;
@@ -33,3 +33,4 @@ function files_listing($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return thumbnails of random gallery images
+//|	return thumbnails of random gallery images
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page we're at
-// * $args['num'] = maximum number of thumbs to show (most recent first) (optional)
+//opt: page - page we're at (default is 1) [string]
+//opt: num - maximum number of thumbs to show (most recent first) (default is 20)  [string]
 
 function gallery_recentthumbsall($args) {
 	$page = 1; $num = 20; $size = 'thumb'; $html = '';
@@ -52,3 +52,4 @@ function gallery_recentthumbsall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

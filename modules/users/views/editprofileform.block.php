@@ -1,7 +1,11 @@
 <? /*
-<form name='editprofile' method='POST' action='/users/save/' />
+<form name='editprofile' id='formEditProfile' method='POST' action='/users/save/' onSubmit="formCheckRemove('formEditProfile');" />
 <input type='hidden' name='action' value='saveProfile' />
 <input type='hidden' name='UID' value='%%UID%%' />
+
+<b>Birth Year</b>
+<input type='text' name='birthyear' size='4' value='%%birthyear%%'> <small>When were you born (yyyy)?</small>
+<br/><br/>
 
 <b>Interests</b>
 <small>what are you interested in?</small>
@@ -29,4 +33,9 @@
 
 <input type='submit' value='Save Changes to Profile' />
 </form>
+
+<script language='Javascript'>
+	formCheckAdd('formEditProfile');
+</script>
+
 */ ?>

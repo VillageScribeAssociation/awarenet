@@ -4,10 +4,10 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list recent posts for nav from a particular school
+//|	list recent posts for nav from a particular school
 //--------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = overrides raUID
-// * $args['num'] = number of posts to show
+//arg: schoolUID - UID of a school record [string]
+//opt: num - number of posts to show (default is 10) [string]
 
 function moblog_schoolrecentnav($args) {
 	global $user;
@@ -41,3 +41,4 @@ function moblog_schoolrecentnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

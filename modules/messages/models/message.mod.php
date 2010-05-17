@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for personal messages
+//*	object for personal messages, like webmail
 //--------------------------------------------------------------------------------------------------
 
 class Message {
@@ -10,12 +10,13 @@ class Message {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database table structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database table structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of group membership index record [string]
 
 	function Message($UID = '') {
 		global $user;
@@ -26,21 +27,26 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a group membership [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoad('messages', $uid);
+	function load($UID) {
+		$ary = dbLoad('messages', $UID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -50,8 +56,9 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -62,8 +69,9 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -90,16 +98,16 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		global $user;
@@ -155,7 +163,7 @@ class Message {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
 		$ary['userRa'] = $model->data['recordAlias'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
@@ -165,8 +173,10 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Messages Module</h3>\n";
@@ -187,17 +197,14 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		//------------------------------------------------------------------------------------------
 		//	delete any images associated with this message
 		//------------------------------------------------------------------------------------------
-
-		//------------------------------------------------------------------------------------------
-		//	delete any files associated with this message
-		//------------------------------------------------------------------------------------------
+		//TODO
 
 		//------------------------------------------------------------------------------------------
 		//	delete this record

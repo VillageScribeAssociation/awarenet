@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	anchor list of modules (perm:manage)
+//|	anchor list of modules (perm:manage)
 //--------------------------------------------------------------------------------------------------
 
 function mods_anchorlist($args) {

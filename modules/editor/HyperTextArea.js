@@ -292,8 +292,14 @@ function HyperTextArea(name, html, width, height,resourcePath,styleSheetUrl,dela
 		var oRTE = document.getElementById(this.name);
 	
 		replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only
-		replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only
+		replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only - TODO why twice?
 	
+		// strip any newlines and carriage returns
+		var raw = oRTE.contentWindow.document.body.innerHTML;
+		raw = raw.replace(new RegExp("\\n", "g"), '');
+		raw = raw.replace(new RegExp("\\r", "g"), '');
+		raw = oRTE.contentWindow.document.body.innerHTML;
+
 		if (this.isRichText) {
 			if (oHdnMessage.value == null) oHdnMessage.value = "";
 			if (document.all) {
@@ -1065,10 +1071,14 @@ function editorProcessBlocks(html) {
 
 		switch(args[0]) {
 			case 'images':
-				// replace with actual image tag
-				var imgtag = editorMkImageFromBlock(args);
-				html = editorReplaceAll(html, block, imgtag);
-				break;
+				if (args[1] == 'slideshow') {
+					// leave it be (block as editable text)
+				} else {
+					// replace with actual image tag
+					var imgtag = editorMkImageFromBlock(args);
+					html = editorReplaceAll(html, block, imgtag);
+					break;
+				}
 		}
 	}
 

@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show child pages
+//|	show child galleries - currently unused in awareNet
 //--------------------------------------------------------------------------------------------------
-// * $args['UID'] = UID or a page
+//arg: UID - UID of a gallery [string]
 
 function gallery_showchildren($args) {
 	if (array_key_exists('UID', $args) == false) { return false; }
@@ -26,3 +26,4 @@ function gallery_showchildren($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -17,6 +17,7 @@
 	$repository = new CodeRepository($repository, $projectUID);
 
 	$repository->addExemption("setup.inc.php");				// dynamically generated on install
+	$repository->addExemption("install.php");				// security risk
 	$repository->addExemption("uploader/");					// this module (CONTAINS KEY)
 	$repository->addExemption("install/");					// defunct
 	$repository->addExemption(".svn");						// sybversion files and directories
@@ -50,7 +51,7 @@
 		$absFile = str_replace('//', '/', $installPath . $item['relfile']);
 		if (file_exists($absFile) == false) {
 			echo "[*] $absFile is missing.<br/>\n";
-			downloadFileFromRepository($item);	
+			if ('/install.php' != $item['relfile']) { downloadFileFromRepository($item); }
 		}
 	}
 
@@ -87,7 +88,7 @@
 		//	compare hash with local file
 		//-----------------------------------------------------------------------------------------
 
-		if ($skip == false) {
+		if (($skip == false) && (filesize($installPath . $line) < 10000000)) {
 			$itemUID = ''; 
 			$sha1 = sha1(implode(file($installPath . $line)));
 
@@ -101,7 +102,8 @@
 				//----------------------------------------------------------------------------------
 				//	is not in repository, note this to user
 				//----------------------------------------------------------------------------------
-				echo "[>] not in repository: $line <br/>\n"; flush();
+				if (substr($line, 0, 6) != '/data/') 
+					{ echo "[>] not in repository: $line <br/>\n"; flush(); }
 				
 
 			} else {
@@ -109,7 +111,7 @@
 					//------------------------------------------------------------------------------
 					//	is different to version in repository, update it
 					//------------------------------------------------------------------------------
-					$relFile = rList[$itemUID]['relfile'];
+					$relFile = $rList[$itemUID]['relfile'];
 					echo "[i] this file should be updated: " . $relFile . " <br/>\n";
 					downloadFileFromRepository($rList[$itemUID]);
 
@@ -141,16 +143,21 @@
 function downloadFileFromRepository($item) {
 	global $repository;
 	global $installPath;
+
+	$outFile = $installPath . $item['relfile'];
+	$outFile = str_replace('//', '/', $outFile);
+
 	//----------------------------------------------------------------------------------------------
 	//	create all folders
 	//----------------------------------------------------------------------------------------------
-	
+	if ('folder' == $item['type']) {
+		echo "[i] Creating directory $outFile <br/>\n";
+		return true;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	download the file
 	//----------------------------------------------------------------------------------------------
-	$outFile = $installPath . $item['relfile'];
-	$outFile = str_replace('//', '/', $outFile);
 
 	if (file_exists($outFile) == true) { echo "[|] Replacing $outFile (already present)<br/>\n"; }
 	else { echo "[|] Downloading $outFile (not present in local installation)<br/>\n"; }
@@ -158,7 +165,7 @@ function downloadFileFromRepository($item) {
 	//----------------------------------------------------------------------------------------------
 	//	download from repository door
 	//----------------------------------------------------------------------------------------------
-	$content = @file($repository->doorUrl . $item['uid']);
+	$content = curlGet($repository->doorUrl . $item['uid'], '');
 
 	if ($content == false) 
 		{ echo "[*] Error: could not download $outFile (UID:" . $item['uid'] . ")<br/>\n";	} 
@@ -166,7 +173,7 @@ function downloadFileFromRepository($item) {
 		//------------------------------------------------------------------------------------------
 		//	content is base64 encoded
 		//------------------------------------------------------------------------------------------
-		$content = base64_decode(implode($content));
+		$content = base64_decode($content);
 
 		//------------------------------------------------------------------------------------------
 		//	save it :-)

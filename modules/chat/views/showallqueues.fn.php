@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display contents of all message queues (admin only, no arguments as yet)
+//|	display contents of all message queues (admin only, no arguments as yet)
 //--------------------------------------------------------------------------------------------------
 
 function chat_showallqueues($args) {

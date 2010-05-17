@@ -1,8 +1,12 @@
 <? /*
 <page>
 <template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]</content>
-<title>:: awareNet :: admin :: console ::</title>
+<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]
+
+[[:admin::moduleconsole:]]
+
+</content>
+<title>:: kapenta :: admin :: console ::</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>
 <nav2></nav2>

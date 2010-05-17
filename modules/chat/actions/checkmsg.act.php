@@ -69,4 +69,23 @@
 
 	echo $html;
 
+//----------------------------------------------------------------------------------------------
+//	chat utility functions
+//----------------------------------------------------------------------------------------------
+//	mark up HTML so that it doesn't form child elements in the chatqueue XML
+//	DEPRECATED, TODO: fidn out if anything still uses this after switching from iframes
+
+//function chatMarkup($txt) {
+//	$txt = str_replace('<', '{*[', $txt);	
+//	$txt = str_replace('>', ']*}', $txt);
+//	$txt = str_replace("\"", "'", $txt);		// javascript safe
+//	return $txt;
+//}
+
+function chatRemoveMarkup($txt) {
+	$txt = str_replace('{*[', '<', $txt);	
+	$txt = str_replace(']*}', '>', $txt);	
+	return $txt;
+}
+
 ?>

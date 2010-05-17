@@ -12,10 +12,15 @@
     </dependancy>
     <permissions>
         <perm>view|%%user.ofGroup%%=student</perm>
+        <perm>view|%%user.ofGroup%%=teacher</perm>
         <perm>list|%%user.ofGroup%%=student</perm>
+        <perm>list|%%user.ofGroup%%=teacher</perm>
         <perm>summarylist|%%user.ofGroup%%=student</perm>
+        <perm>summarylist|%%user.ofGroup%%=teacher</perm>
         <perm>summary|%%user.ofGroup%%=student</perm>
+        <perm>summary|%%user.ofGroup%%=teacher</perm>
         <perm>edit|%%user.ofGroup%%=student</perm>
+        <perm>edit|%%user.ofGroup%%=teacher</perm>
     </permissions>
     <blocks>
     </blocks>

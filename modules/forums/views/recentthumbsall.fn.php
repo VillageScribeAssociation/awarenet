@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return thumbnails of random forums images <--- NOT USED YET
+//|	return thumbnails of random forums images <--- NOT USED YET
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page we're at
-// * $args['num'] = maximum number of thumbs to show (most recent first) (optional)
+//arg: page - page we're at (default is 1) [string]
+//opt: num - maximum number of thumbs to show (most recent first) (default is 20) [string]
 
 function forums_recentthumbsall($args) {
 	$page = 1; $num = 20; $size = 'thumb'; $html = '';
@@ -54,3 +54,4 @@ function forums_recentthumbsall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

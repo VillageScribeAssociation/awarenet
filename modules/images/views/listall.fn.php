@@ -3,11 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a set of x thumbnails
+//|	make a set of x thumbnails
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = results page
-// * $args['refMod'] = module to list on
-// * $args['num'] = number of images per page
+//opt: page - results page (default is 1) [string]
+//opt: num - number of images per page (default is 30) [string]
 
 function images_listall($args) {
 	//----------------------------------------------------------------------------------------------
@@ -37,3 +36,4 @@ function images_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

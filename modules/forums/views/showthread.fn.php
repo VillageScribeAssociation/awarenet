@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a thread
+//|	display a thread
 //--------------------------------------------------------------------------------------------------
-// * $args['threadUID'] = UID of a forum thread
+//arg: threadUID - UID of a forum thread [string]
 
 function forums_showthread($args) {
 	// TODO: auth
@@ -20,3 +20,4 @@ function forums_showthread($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

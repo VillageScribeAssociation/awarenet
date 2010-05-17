@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ($user->data['ofGroup'] != 'admin') { do403(); } // only admins can use this module
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 
 	if ( (array_key_exists('action', $_POST) == true) 
 		&& ($_POST['action'] == 'updateServer')

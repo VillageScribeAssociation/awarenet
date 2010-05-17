@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
-//--------------------------------------------------------------------------------------------------
-//	select box for choosing a user // TODO: security consideration of access to this
-//--------------------------------------------------------------------------------------------------
-// * $args['default'] = default value (UID of a user), current user if not supplied
-// * $args['varname'] = field name, default is 'user'
+//-------------------------------------------------------------------------------------------------
+//|	select box for choosing a user // TODO: security consideration of access to this
+//-------------------------------------------------------------------------------------------------
+//arg: default - default value (UID of a user), current user if not supplied [string]
+//arg: varname - field name, default is 'user' [string]
 
 function users_select($args) {
 	global $user;
@@ -33,6 +33,6 @@ function users_select($args) {
 	return $html;
 }
 
-//--------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 ?>

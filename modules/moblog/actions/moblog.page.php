@@ -16,7 +16,7 @@
 
 [[:theme::navtitlebox::label=Recent Posts::toggle=divMoblogRecent::hidden=yes:]]
 [`|lt]div id=[`|sq]divMoblogRecent[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:moblog::listpopularnav:]]
+[[:moblog::listrecentnav:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

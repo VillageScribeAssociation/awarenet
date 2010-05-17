@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary list
+//|	summary list
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page no to display
-// * $args['num'] = number of records per page
+//opt: page - page no to display (default 0) [string]
+//opt: num - number of records per page (default 30) [string]
 
 function comments_summarylist($args) {
 	if (authHas('comments', 'list', '') == false) { return false; }
@@ -38,3 +38,4 @@ function comments_summarylist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

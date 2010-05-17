@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a record
+//|	show a record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or gallery entry
+//arg: raUID - recordAlias or UID of a gallery [string]
 
 function gallery_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -16,3 +16,4 @@ function gallery_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

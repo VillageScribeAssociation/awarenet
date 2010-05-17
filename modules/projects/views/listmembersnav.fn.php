@@ -2,14 +2,14 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list project members for the nav (300 px wide)
+//|	list project members for the nav (300 px wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or projects entry
-// * $args['editmode'] = set to yes to show 'remove member' links
+//arg: raUID - recordAlias or UID or projects entry [string]
+//opt: editmode - set to yes to show 'remove member' links [string]
+//opt: projectUID - overrides raUID [string]
 
 function projects_listmembersnav($args) {
 	global $user;
@@ -42,3 +42,4 @@ function projects_listmembersnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,11 +1,11 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for user galleries
+//*	object to represent user galleries
 //--------------------------------------------------------------------------------------------------
 
-//	note that galleries can nest, parent may be 'root' or the UID of another gallery, users can
-//	edit their own galleries, admins can edit any gallery.
+//+	note that galleries can nest, parent may be 'root' or the UID of another gallery, users can
+//+	edit their own galleries, admins can edit any gallery.
 
 class Gallery {
 
@@ -13,38 +13,44 @@ class Gallery {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database table structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database table structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of a gallery [string]
 
-	function Gallery($UID = '') {
+	function Gallery($raUID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['parent'] = 'root';
 		$this->data['title'] = 'New Gallery ' . $this->data['UID'];
-		$this->data['comments'] = 'no';
-		if ($UID != '') { $this->load($UID); }
+		$this->data['imagecount'] = 0;
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of a gallery record [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('gallery', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('gallery', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -57,8 +63,9 @@ class Gallery {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -69,8 +76,9 @@ class Gallery {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -80,29 +88,32 @@ class Gallery {
 			'parent' => 'VARCHAR(30)',
 			'title' => 'VARCHAR(255)',
 			'description' => 'TEXT',
+			'imagecount' => 'BIGINT(20)',
 			'createdBy' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(30)',
 			'recordAlias' => 'VARCHAR(255)' );
 
-		$dbSchema['indices'] = array('UID' => '10', 'parent' => 10, 'recordAlias' => '20' );
+		$dbSchema['indices'] = array('UID' => '10', 'parent' => 10, 'recordAlias' => '10' );
 
 		$dbSchema['nodiff'] = array('UID', 'recordAlias');
 		return $dbSchema;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() {
 		return $this->data;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		global $user;
@@ -172,7 +183,7 @@ class Gallery {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
 		$ary['userRa'] = $model->data['recordAlias'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
@@ -182,14 +193,16 @@ class Gallery {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Gallery Module</h3>\n";
 
 		//------------------------------------------------------------------------------------------
-		//	create Gallery table if it does not exist
+		//	create gallery table if it does not exist
 		//------------------------------------------------------------------------------------------
 
 		if (dbTableExists('gallery') == false) {	
@@ -204,7 +217,7 @@ class Gallery {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {	
@@ -214,6 +227,16 @@ class Gallery {
 		// allow other modules to respond to this event
 		$args = array('module' => 'gallery', 'UID' => $this->data['UID']);
 		eventSendAll('object_deleted', $args);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	update image count of the current gallery
+	//----------------------------------------------------------------------------------------------
+
+	function updateImageCount() {
+		$block = "[[:images::count::refModule=gallery::refUID=" . $this->data['UID'] . ":]]";
+		$this->data['imagecount'] = expandBlocks($block, '');
+		$this->save();
 	}
 
 }

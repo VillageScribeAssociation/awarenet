@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list group members for the nav (300 px wide)
+//|	list group members for the nav (300 px wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['groupUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['editmode'] = set to yes to show 'remove member' links
+//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: groupUID - overrides raUID [string]
+//opt: editmode - set to yes to show 'remove member' links [string]
 
 function groups_listmembersnav($args) {
 	global $user;
@@ -41,3 +41,4 @@ function groups_listmembersnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

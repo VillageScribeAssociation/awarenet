@@ -19,16 +19,16 @@
 var chatWindows = Array();
 var chatMsg = Array();			
 
-var lastUpdate = 0;				// last time a cookie was changed
-var lastMsg = 0;				// timestamp of the last message this client received
-var contentHeight = 800;		// height of window
+var lastUpdate = 0;			// last time a cookie was changed
+var lastMsg = 0;			// timestamp of the last message this client received
+var contentHeight = 800;	// height of window
 
-var _startX = 0; // mouse starting positions 
+var _startX = 0; 			// mouse starting positions 
 var _startY = 0;		
-var _offsetX = 0; // current element offset 
+var _offsetX = 0; 			// current element offset 
 var _offsetY = 0; 
-var _dragElement; // needs to be passed from OnMouseDown to OnMouseMove 
-var _oldZIndex = 0; // we temporarily increase the z-index during drag 
+var _dragElement; 			// needs to be passed from OnMouseDown to OnMouseMove 
+var _oldZIndex = 0; 		// we temporarily increase the z-index during drag 
 
 var timerInterval = 1000;	// timer ticks ~ every 1 second
 var timerStep = 8;			// check for new messages every 8 seconds
@@ -54,12 +54,20 @@ function chatInit() {
 //--------------------------------------------------------------------------------------------------
 
 function chatStart(userUID) {
+	cLogDebug('chatStart');
 	if (windowExists(userUID) == false) { 
 		var xPos = Math.round(Math.random() * 700);
 		var yPos = Math.round(Math.random() * 200);
 		windowCreate(userUID, xPos, yPos);
 	} 
 }
+
+	function cLogDebug(msg) {									// DELETE ME
+		//alert(msg);
+		//theDiv = document.getElementById('debugger');
+		//theDiv.innerHTML = theDiv.innerHTML + msg + "<br>\n";
+	}
+
 
 //==================================================================================================
 //	message handling
@@ -78,7 +86,10 @@ function msgh_chat(channel, event, args) {
 	var time = parts[2];
 	var timestamp = parts[3];
 	var content = base64_decode(parts[4]);
-	var isMine = Math.floor(parts[5]);
+	var isMine = (parts[5] == '1');
+
+	if (isMine == true) { cLogDebug('isMine is TRUE'); } 
+	else { cLogDebug('isMine is FALSE'); }
 
 	if (windowExists(fromUID) == false) { 
 		var xPos = Math.round(Math.random() * 700);
@@ -123,7 +134,6 @@ function OnMouseDown(e) {
 	var target = e.target != null ? e.target : e.srcElement;
 
 	//tempVar = target.className == 'drag' ? 'draggable element clicked' : 'NON-draggable element clicked'; 			
-	//debugNotify(tempVar);
 			
 	//----------------------------------------------------------------------------------------------
 	//	Determine which button was clicked
@@ -185,7 +195,6 @@ function OnMouseMove(e) {
 		_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
 		_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px'; 
 
-		//debugNotify ( '(' + _dragElement.style.left + ', ' + _dragElement.style.top + ')' );
 	  }
 	}
 		
@@ -207,8 +216,8 @@ function OnMouseUp(e) {
 		var stTop = Number(_dragElement.style.top.replace("px", "")) - 47;
 		var stFromUID = _dragElement.id.replace('cw', '');
 		//alert("offsets: " + stLeft + ',' + (stTop + contentHeight) + "id: " + stFromUID);
-		//cookieMoveWindow(stFromUID, stLeft, (stTop + contentHeight));
-		//lastUpdate = cookieSetChatUpdate();
+		cookieMoveWindow(stFromUID, stLeft, (stTop + contentHeight));
+		lastUpdate = cookieSetChatUpdate();
 
 		//------------------------------------------------------------------------------------------
 		//	if we are presently dragging something, let it go
@@ -420,7 +429,7 @@ function windowReloadTxt(fromUser) {
 	for (msgIdx = 0; msgIdx < chatMsg.length; msgIdx++) {
 		var thisMsg = chatMsg[msgIdx];
 		if (thisMsg[1] == fromUser) {
-			if (thisMsg[5] == 'yes') {
+			if ((thisMsg[5] == 'yes') || (thisMsg[5] == true)) {
 				newMsgTxt = newMsgTxt + "<font color='green'>" + thisMsg[4]
 						  + '<br/><small>' + thisMsg[2] + '</small></font><br/>';
 			} else {
@@ -454,6 +463,7 @@ function sendReply(fromUser) {
 	theCwtDiv.innerHTML = theCwtDiv.innerHTML + "<font color='#888888'>" + theTxtBox.value
 							 + '<br/><small>' + dtStr + '</small></font><br/>';
 	theCwtDiv.scrollTop = theCwtDiv.scrollHeight;
+	cLogDebug('sending message: ' + theTxtBox.value);
 	theTxtBox.value = '';
 }
 
@@ -467,12 +477,12 @@ function messageAdd(msgUID, fromUser, time, timestamp, content, isMine) {
 	//	check if message is known to other windows, if not add it
 	//----------------------------------------------------------------------------------------------
 	//if (false == cookieMessageExists(msgUID)) {
-		// check if this is the start of a new conversation
-		//if (false == cookieWindowExists(fromUser)) { 
-		//	cookieAddWindow(fromUser, 100, 100); 
-		//	cookieSetChatUpdate();
-		//}
-		//cookieAddMessage(msgUID);
+	//	// check if this is the start of a new conversation
+	//	if (false == cookieWindowExists(fromUser)) { 
+	//		cookieAddWindow(fromUser, 100, 100); 
+	//		cookieSetChatUpdate();
+	//	}
+	//	cookieAddMessage(msgUID);
 	//}
 
 	//----------------------------------------------------------------------------------------------
@@ -519,11 +529,12 @@ function messageExists(msgUID) {
 //	create/write a cookie
 //--------------------------------------------------------------------------------------------------
 
-//function cookieCreate(cookieName,value,days) {
+//function cookieCreate(cookieName, value, days) {
+//	cLogDebug('cookieCreate(' + cookieName + ', ' + value + ', ' + days + ')');
 //	if (days) {
 //		var date = new Date();
-//		date.setTime(date.getTime()+(days*24*60*60*1000));
-//		var expires = "; expires="+date.toGMTString();
+//		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+//		var expires = "; expires=" + date.toGMTString();
 //	}
 //	else var expires = "";
 //	document.cookie = cookieName+"="+value+expires+"; path=/";
@@ -534,12 +545,18 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieRead(cookieName) {
+//	cLogDebug('cookieRead(' + cookieName + ')');
 //	var nameEQ = cookieName + "=";
+//	alert(document.cookie);
 //	var ca = document.cookie.split(';');
-//	for(var i=0;i < ca.length;i++) {
+//	for(var i=0; i < ca.length; i++) {
+//		alert('loop');
 //		var c = ca[i];
-//		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-//		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+//		while (c.charAt(0) == ' ') {
+//			alert(c); 
+//			c = c.substring(1,c.length); 
+//		}
+//		if (c.indexOf(nameEQ) == 0)  { return c.substring(nameEQ.length,c.length); }
 //	}
 //	return null;
 //}
@@ -549,8 +566,9 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieErase(cookieName) {
+//	cLogDebug('cookieErase(' + cookieName + ')');
 //	cookieCreate(cookieName,"",-1);
-//}
+///}
 
 //--------------------------------------------------------------------------------------------------
 //	add a window to chatwindows cookie
@@ -558,6 +576,7 @@ function messageExists(msgUID) {
 //	javascript:cookieAddWindow('public', 100, 100); //124289610010992581 //102266576519543775
 
 //function cookieAddWindow(fromUID, xPos, yPos) {
+//	cLogDebug('cookieAddWindow(' + fromUID + ', ' + xPos + ', ' + yPos + ')');
 //	if (true == cookieWindowExists(fromUID)) { cookieRemoveWindow(fromUID); }	// prevent duplicates
 //	var cWindowList = cookieRead('chatwindows');
 //	if (null == cWindowList) { cWindowList = ''; }
@@ -571,6 +590,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieWindowExists(fromUID) {
+//	cLogDebug('cookieWindowExists(' + fromUID + ')');
 //	var windowAry = cookieGetWindowArray();
 //	for (idx = 0; idx < windowAry.length; idx++) {
 //		var thisWin = windowAry[idx];
@@ -584,6 +604,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieMoveWindow(fromUID, xPos, yPos) {
+//	cLogDebug('cookieMoveWindow(' + fromUID + ', ' + xPos + ', ' + yPos + ')');
 //	var wndArray = cookieGetWindowArray()
 //	var newStr = '';
 //	if (xPos > 900) { xPos = 900; }
@@ -605,6 +626,7 @@ function messageExists(msgUID) {
 //	javascript:cookieRemoveWindow('public');
 
 //function cookieRemoveWindow(fromUID) {
+//	cLogDebug('cookieRemoveWindow(' + fromUID + ')');
 //	var winAry = cookieGetWindowArray();
 //	//alert("winAry length = " + winAry.length);
 //	var newCookie = '';
@@ -624,6 +646,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieGetWindowArray() {
+//	cLogDebug('cookieGetWindowArray()');
 //	var windowArray = new Array();
 //
 //	// get the cookie string
@@ -649,6 +672,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieGetChatUpdate() {
+//	cLogDebug('cookieGetChatUpdate');
 //	var tsUpdate = cookieRead('chatupdate');
 //	if (null == tsUpdate) {
 //		timestamp = Number(new Date());
@@ -662,6 +686,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieSetChatUpdate() {
+//	cLogDebug('cookieSetChatUpdate');
 //	timestamp = Number(new Date());
 //	cookieCreate('chatupdate', timestamp, 7);
 //	return timestamp;
@@ -672,6 +697,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieGetMessageArray() {
+//	cLogDebug('cookieGetMessageArray()');
 //	var msgArray = new Array();
 //	var msgString = cookieRead('chatmessages');
 //	if (null == msgString) { 
@@ -693,6 +719,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieMakeMessageString() {
+//	cLogDebug('cookieMakeMessageString');
 //	var msgString = '';  var maxMsg = msgQueueSize;		// maximum number
 //	for (i = 0; i < chatMsg.length; i++) {
 //		var msgCols = chatMsg[i];
@@ -709,6 +736,7 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieMessageExists(msgUID) {
+//	cLogDebug('cookieMessageExists(' + msgUID + ')');
 //	var cMsgAry = cookieGetMessageArray();
 //	for (cM = 0; cM < cMsgAry.length; cM++) {
 //		if (msgUID == cMsgAry[cM]) { return true; }
@@ -721,10 +749,11 @@ function messageExists(msgUID) {
 //--------------------------------------------------------------------------------------------------
 
 //function cookieAddMessage(msgUID) {
+//	cLogDebug('cookieAddMessage');
 //	var cMsgAry = cookieGetMessageArray();
 //	var msgQCount = msgQueueSize;
 //	newStr = msgUID + '|';
-//	for(cMs = 0; cMs < cMsgAry; cMs++) {
+//	for(cMs = 0; cMs < cMsgAry.length; cMs++) {
 //		if (msgQCount > 0) { newStr = newStr + cMsgAry[cMs] + '|';	}
 //		msgQCount--;
 //	}
@@ -736,16 +765,15 @@ function messageExists(msgUID) {
 //==================================================================================================
 //	javascript:testAlertWindowArray()
 
-function testAlertWindowArray() {
-	var alertStr = "cookie:chatwindows\n";
-	var windowArray = cookieGetWindowArray();
-	for (i = 0; i < windowArray.length; i++) {
-		alertStr = alertStr + '[' + i + ']' + "\n";
-		var cols = windowArray[i];
-		for (j = 0; j < cols.length; j++) {
-			alertStr = alertStr + '[' + i + '][' + j + '] = ' + cols[j] + "\n";
-		}
-	}
-	alert(alertStr);
-}
-
+//function testAlertWindowArray() {
+//	var alertStr = "cookie:chatwindows\n";
+//	var windowArray = cookieGetWindowArray();
+//	for (i = 0; i < windowArray.length; i++) {
+//		alertStr = alertStr + '[' + i + ']' + "\n";
+//		var cols = windowArray[i];
+//		for (j = 0; j < cols.length; j++) {
+//			alertStr = alertStr + '[' + i + '][' + j + '] = ' + cols[j] + "\n";
+//		}
+//	}
+//	alert(alertStr);
+//}

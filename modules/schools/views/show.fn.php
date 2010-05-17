@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a record
+//|	show a record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or schools entry
+//arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -16,3 +16,4 @@ function schools_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edittalk form (for discussion about articles)
+//|	show the edittalk form (for discussion about articles)
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or wiki entry
+//arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_edittalkform($args) {
 	if (authHas('wiki', 'edit', '') == false) { return false; }

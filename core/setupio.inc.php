@@ -1,15 +1,18 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	code for reading and writing the setup.inc.php
+//*	code for reading and writing the setup.inc.php
 //--------------------------------------------------------------------------------------------------
-//	This is used only by the install script and the admin console.  Ordinary users should not be 
-//	able to  do this, so these functions are individually checked for auth.
+//+	This is used only by the install script and the admin console.  Ordinary users should not be 
+//+	able to  do this, so these functions are individually checked for auth.
+//+
+//+	TODO: This should probably be moved to modules/admin/inc/
 
 //--------------------------------------------------------------------------------------------------
-//	parse setup.inc.php for values
+//|	parse setup.inc.php for values
 //--------------------------------------------------------------------------------------------------
-//	returns array of varname => value
+//arg: fileName - absolute fileName [string]
+//returns: array of varname => value [array]
 
 function readGlobalSetup($fileName) {
   	if ($_SESSION['sGroup'] == 'admin') {
@@ -46,6 +49,9 @@ function readGlobalSetup($fileName) {
 //--------------------------------------------------------------------------------------------------
 //	parse setup.inc.php and replace variables with those from array
 //--------------------------------------------------------------------------------------------------
+//arg: setupVars - associative array, variable names as keys [array]
+//arg: fileName - absolute file name [string]
+//returns: success (true) or failure [bool]
 
 function writeGlobalSetup($setupVars, $fileName) {
   if ($_SESSION['sGroup'] == 'admin') {

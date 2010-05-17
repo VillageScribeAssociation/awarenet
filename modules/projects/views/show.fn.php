@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a record
+//|	show a record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or projects entry
+//arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_show($args) {
 	global $page;
@@ -20,3 +20,4 @@ function projects_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

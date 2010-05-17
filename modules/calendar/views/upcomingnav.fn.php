@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	get next [num] events
+//|	get next [num] events
 //--------------------------------------------------------------------------------------------------
-// * $args['num'] = number of events to show
+//opt: num - number of events to show [string]
 
 function calendar_upcomingnav($args) {
 	global $serverPath;
@@ -27,3 +27,4 @@ function calendar_upcomingnav($args) {
 
 
 ?>
+

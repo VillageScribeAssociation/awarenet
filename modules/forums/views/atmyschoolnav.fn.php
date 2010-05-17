@@ -5,7 +5,7 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all forums at current user's school (formatted for nav)
+//|	list all forums at current user's school (formatted for nav)
 //--------------------------------------------------------------------------------------------------
 
 function forums_atmyschoolnav($args) {

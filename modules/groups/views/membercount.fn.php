@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return number of members in group
+//|	return number of members in group
 //--------------------------------------------------------------------------------------------------
-// * $args['groupUID'] = overrides raUID
+//arg: groupUID - UID of a group (NOT recordAlias) [string]
 
 function groups_membercount($args) {
 	if (authHas('groups', 'show', '') == false) { return false; }
@@ -23,3 +23,4 @@ function groups_membercount($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

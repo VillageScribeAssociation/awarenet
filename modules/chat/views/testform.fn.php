@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display test message form (admins only, no arguments)
+//|	display test message form (admins only, no arguments)
 //--------------------------------------------------------------------------------------------------
 
 function chat_testform($args) {

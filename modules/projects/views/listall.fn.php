@@ -2,10 +2,10 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all (TODO: pagination, etc)
+//|	list all (TODO: pagination, etc)
 //--------------------------------------------------------------------------------------------------
 
 function projects_listall($args) {
@@ -21,3 +21,4 @@ function projects_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

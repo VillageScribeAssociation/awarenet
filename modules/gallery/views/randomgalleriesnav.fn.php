@@ -3,15 +3,15 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list som random gallery summaries formatted for the nav
+//|	list some random gallery summaries (formatted for the nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['num'] = max number to show (optional)
+// opt: num = max number to show (default is 10)
 
 function gallery_randomgalleriesnav($args) {
 	$num = 10; $html = '';
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
 
-	$sql = "select * from gallery order by RAND() limit 0," . sqlMarkup($num);
+	$sql = "select * from gallery where imagecount > 0 order by RAND() limit 0," . sqlMarkup($num);
 	$block = loadBlock('modules/gallery/views/summarynav.block.php');
 
 	$result = dbQuery($sql);
@@ -30,3 +30,4 @@ function gallery_randomgalleriesnav($args) {
 
 
 ?>
+

@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise for the nav (300 wide)
+//|	summarise for the nav (300 wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['forumUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID of forums page
+//arg: raUID - recordAlias or UID of forum [string]
+//opt: forumUID - overrides raUID [string]
 
 function forums_summarynav($args) {
 	if (array_key_exists('forumUID', $args)) { $args['raUID'] = $args['forumUID']; }
@@ -21,3 +21,4 @@ function forums_summarynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

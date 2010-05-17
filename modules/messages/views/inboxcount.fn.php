@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	count new messages in inbox
+//|	count new messages in inbox
 //--------------------------------------------------------------------------------------------------
 
 function messages_inboxcount($args) {

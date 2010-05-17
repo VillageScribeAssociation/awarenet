@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise
+//|	summarise
 //--------------------------------------------------------------------------------------------------
-// * $args['pageUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID of gallery page
+//arg: raUID - recordAlias or UID of a gallery [string]
+//opt: pageUID - overrides raUID [string]
 
 function gallery_summary($args) {
 	if (array_key_exists('pageUID', $args)) { $args['raUID'] = $args['pageUID']; }
@@ -18,3 +18,4 @@ function gallery_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

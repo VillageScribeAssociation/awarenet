@@ -1,9 +1,9 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	makes link for chatting with this user
+//|	makes link for chatting with this user
 //-------------------------------------------------------------------------------------------------
-//arg: userUID - UID of the user whose login status we're cheking
+//arg: userUID - UID of the user whose login status we're cheking [string]
 
 function users_chatlink($args) {
 	if (array_key_exists('userUID', $args) == false) { return ''; }

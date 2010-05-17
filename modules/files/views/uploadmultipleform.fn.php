@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for uploading multiple files
+//|	form for uploading multiple files
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of files per page
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of item which owns these files [string]
 
 function files_uploadmultipleform($args) {
 	//----------------------------------------------------------------------------------------------
@@ -29,3 +29,4 @@ function files_uploadmultipleform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

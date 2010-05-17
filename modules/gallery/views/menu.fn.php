@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for gallery, no arguments
+//|	menu for gallery, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function gallery_menu($args) {

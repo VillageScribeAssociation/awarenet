@@ -4,7 +4,7 @@
 //	post a spurious sql update to self
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 	$postUrl = $serverPath . 'sync/recvsql/';

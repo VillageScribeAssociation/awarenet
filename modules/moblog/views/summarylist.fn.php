@@ -4,10 +4,10 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary list (the 'moblog itself')
+//|	summary list (the 'moblog itself')
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page no to display
-// * $args['num'] = number of records per page
+//opt: page - page no to display (default is 0) [string]
+//opt: num - number of records per page (default is 30) [string]
 
 function moblog_summarylist($args) {
 	global $user;
@@ -63,3 +63,4 @@ function moblog_summarylist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

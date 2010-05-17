@@ -3,29 +3,38 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return thumbnails of gallery images
+//|	return thumbnails of gallery images
 //--------------------------------------------------------------------------------------------------
-// * $args['UID'] = UID of gallery (and not recordAlias)
-// * $args['size'] = size to show thumbs (optional)
-// * $args['num'] = maximum number of thumbs to show (most recent first) (optional)
+//arg: UID - UID of gallery (and not recordAlias) [string]
+//opt: size - size to show thumbs (default is 'thumb') [string]
+//opt: num - maximum number of thumbs to show (most recent first) (default is no limit) [string]
 
 function gallery_thumbs($args) {
 	$limit = ''; $html = ''; $size = 'thumb';
+
+	//---------------------------------------------------------------------------------------------
+	//	check arguments
+	//---------------------------------------------------------------------------------------------
 	if (array_key_exists('UID', $args) == false) { return false; }
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
-	if (array_key_exists('num', $args) == true) { $limit = 'limit ' . $args['num']; }
+	if (array_key_exists('num', $args) == true) { $limit = (int)$args['num']; }
 
-	$sql = "select * from images "
-		 . "where refUID='" . sqlMarkup($args['UID']) . "' and refModule='gallery' "
-		 . "order by createdOn DESC $limit";
+	//---------------------------------------------------------------------------------------------
+	//	load images
+	//---------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "refModule='gallery'";
+	$conditions[] = "refUID='" . sqlMarkup($args['UID']) . "'";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$range = dbLoadRange('images', '*', $conditions, 'weight ASC', $limit, '');
+
+	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['recordAlias'];
-		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['recordAlias'];
+		//$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['UID'];
+		//	  . "<img src='" . $thumbUrl . "' title='" . $row['title'] . "' border='0' vspace='2px' hspace='2px' /></a>\n";
 		$html .= "<a href='" . $viewUrl . "'>"
-			  . "<img src='" . $thumbUrl . "' title='" . $row['title'] . "' border='0' vspace='2px' hspace='2px' /></a>\n";
+			   . "[[:images::$size::imageUID=" . $row['UID'] . "::pad=2::link=no:]]"
+			   . "</a>\n";
 	}
 
 	return $html;
@@ -34,3 +43,4 @@ function gallery_thumbs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

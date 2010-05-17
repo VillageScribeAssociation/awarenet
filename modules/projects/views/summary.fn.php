@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise
+//|	summarise
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or projects entry
+//arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_summary($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -18,3 +18,4 @@ function projects_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

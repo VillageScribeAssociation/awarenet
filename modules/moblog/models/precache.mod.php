@@ -1,29 +1,31 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for moblog precache
+//*	object for moblog precache
 //--------------------------------------------------------------------------------------------------
-//	to avoid making 9001 queries to create a feed combining blog posts by a user's network,
-//	the feed is generated in advance as items are created and removed.
+//+	to avoid making 9001 queries to create a feed combining blog posts by a user's network,
+//+	the feed is generated in advance as items are created and removed.
 //
-//	the precache is stored as a php array of postUID => timestamp, sorted by timestamp
+//+	the precache is stored as a php array of postUID => timestamp, sorted by timestamp
 //
-//	at present precaching is only done for users networks, but could concievably be done for groups,
-//	projects, etc
+//+	at present precaching is only done for users networks, but could concievably be done for groups,
+//+	projects, etc
 
 class MoblogPreCache {
 	//----------------------------------------------------------------------------------------------
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
-	var $preCache;
+	var $preCache;		// 
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//arg: refTable - name of a database table [string]
+	//arg: refUID - UID [string]
 
 	function MoblogPreCache($refTable, $refUID) {
 		if (dbRecordExists($refTable, $refUID) == false) { return false; }	
@@ -50,14 +52,20 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load an object given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a prcache object [string]
 
-	function load($uid) {
-		$ary = dbLoad('moblogprecache', $uid);
+	function load($UID) {
+		$ary = dbLoad('moblogprecache', $UID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 
 	function loadArray($ary) {
 		$this->data = $ary;
@@ -65,7 +73,7 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -77,13 +85,18 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	discover if a precache exists for a given user, returns UID on success
+	//.	discover if a precache exists for a given user, returns UID on success
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: refTable - name of a database table [string]
+	//arg: refUID - UID [string]	
+	//returns: precache object UID or false if none found [string][bool]
+
 	function preCacheExists($refTable, $refUID) {
 		$sql = "select UID from moblogprecache "
 			 . "where refTable='" . sqlMarkup($userUID) . "' "
 			 . "and refUID='" . sqlMarkup($refUID) . "'";
+
+		//TODO: use dbLoadRange
 
 		$result = dbQuery($sql);
 		if (dbNumRows($result) == 0) { return false; }
@@ -92,8 +105,9 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a object is valid before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -105,8 +119,9 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -127,14 +142,16 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object as an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;	
@@ -142,8 +159,10 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	create blog table if it does not exist
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
 		$report = "<h3>Installing Moblog Precache</h3>\n";
@@ -158,7 +177,7 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	expand precache
+	//.	expand precache
 	//----------------------------------------------------------------------------------------------
 
 	function expandPreCache() {
@@ -173,7 +192,7 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	collapse precache
+	//.	collapse precache
 	//----------------------------------------------------------------------------------------------
 
 	function collapePreCache() {
@@ -185,8 +204,10 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	add a blog post to the precache
+	//.	add a blog post to the precache
 	//----------------------------------------------------------------------------------------------
+	//arg: postUID - UID of a blog post [string]
+	//arg: timestamp - then the item was added to the cache [int]
 
 	function addItem($postUID, $timestamp) {
 		$this->preCache[$postUID] = $timestamp;
@@ -194,8 +215,10 @@ class MoblogPreCache {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	remove a blog post from the precache
+	//.	remove a blog post from the precache
 	//----------------------------------------------------------------------------------------------
+	//arg: postUID - UID of a blog post [string]
+	//returns: true on success, false on failure [bool]
 
 	function removeItem($postUID) {
 		if (array_key_exists($postUID, $this->preCache) == true) {

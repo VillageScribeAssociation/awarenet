@@ -1,15 +1,15 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing moblog posts
+//*	object for managing moblog posts
 //--------------------------------------------------------------------------------------------------
-// NOTES:
-// content can contain a special '{fold}' keyword, which determines how much of the post is included
-// in the summary.
+//+ NOTES:
+//+ content can contain a special '{fold}' keyword, which determines how much of the post is included
+//+ in the summary.
 //
-// 'published' field allows posts to be invisible to the public while they are being composed or 
-// until they should be released, values can be 'yes', 'no'.  admins and the user which created a 
-// post can see unpublished content.
+//+ 'published' field allows posts to be invisible to the public while they are being composed or 
+//+ until they should be released, values can be 'yes', 'no'.  admins and the user which created a 
+//+ post can see unpublished content.
 
 class Moblog {
 
@@ -17,14 +17,15 @@ class Moblog {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;		// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;		// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - recordAlias or UID of a moblog post [string]
 
-	function Moblog($UID = '') {
+	function Moblog($raUID = '') {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
@@ -33,25 +34,29 @@ class Moblog {
 		$this->data['school'] = $user->data['school'];
 		$this->data['grade'] = $user->data['grade'];
 		$this->data['hitcount'] = '0';
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - recordAlias or UID of a moblog post [string]
 
-	function load($uid) {
-		$ary = dbLoadRa('moblog', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('moblog', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -64,8 +69,9 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: empty string if record passes, message to user if it does not [string]
 
 	function verify() {
 		$verify = '';
@@ -80,8 +86,9 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: nested [array] describing database table layout, indices and versioning behavior
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -112,14 +119,16 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of object properties in context of the current user [array]
 
 	function extArray() {
 		global $user;
@@ -166,7 +175,7 @@ class Moblog {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	namespace conflict
+		//	namespace conflict - TODO: remove this
 		//------------------------------------------------------------------------------------------
 
 		$ary['mbTitle'] = $ary['title'];
@@ -176,7 +185,7 @@ class Moblog {
 		//	user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $model->data['recordAlias'];
 		$ary['userLink'] = "<a href='" . $ary['userUrl'] . "'>" . $ary['userName'] . "</a>";
@@ -221,8 +230,10 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	create database table to store instances of this object
 	//----------------------------------------------------------------------------------------------
+	//returns: HTML message describing success or failure of this operation [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Moblog Module</h3>\n";
@@ -243,7 +254,7 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a blog post
+	//.	delete the current moblog post
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {	
@@ -256,13 +267,11 @@ class Moblog {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	increment hit count
+	//.	increment hit count
 	//----------------------------------------------------------------------------------------------
 
-	function incHitCount() {
-		$this->data['hitcount'] = $this->data['hitcount'] + 1;
-		$this->save();
-	}
+	function incHitCount() 
+		{ dbUpdateQuiet('moblog', $this->data['UID'], 'hitcount', ($this->data['hitcount'] + 1)); }
 
 }
 

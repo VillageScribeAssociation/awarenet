@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or forums entry
+//arg: raUID - recordAlias or UID or forums entry [string]
 
 function forums_editform($args) {
 	if (authHas('forums', 'edit', '') == false) { return false; }
@@ -21,3 +21,4 @@ function forums_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

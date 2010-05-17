@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	select box of all permissions on all modules
+//|	select box of all permissions on all modules
 //--------------------------------------------------------------------------------------------------
 
 function mods_selectallpermissions($args) {

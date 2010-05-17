@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	listfriends
+//|	list friends of a given user
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user whose profile this box is on
+//arg: userUID - UID of user whose profile this box is on [string]
 
 function users_listfriends($args) {
 	global $user; $html = '';
@@ -17,8 +17,16 @@ function users_listfriends($args) {
 	$friends = $model->getFriends($args['userUID']);	
 	
 	if (count($friends) > 0) {
-		foreach($friends as $fUID => $rsp) 
-			{ $html .= "[[:users::summarynav::userUID=$fUID::extra=(relationship; $rsp):]]\n"; }
+		foreach($friends as $fUID => $rsp) { 
+			$rmLink = '';
+			if ($args['userUID'] == $user->data['UID']) {
+				$rmUrl = "users/editfriend/" . $fUID;
+				$rmLink = "<a href='%%serverPath%%" . $rmUrl . "'>[modify]</a>";
+			}
+			
+			$html .= "[[:users::summarynav::userUID=$fUID::"
+					 . "extra= $rmLink (relationship; $rsp):]]\n"; 
+		}
 
 	} else { $html .= "(none added yet)<br/>";	}
 	return $html;

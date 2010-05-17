@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return an file tag for a thumbnail
+//|	return an file tag for a thumbnail
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
-// * $args['link'] = link to file page (yes|no)
+//arg: raUID - recordAlias or UID of record [string]
+//arg: link - link to file page (yes|no) [string]
 
 function files_thumb($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -23,3 +23,4 @@ function files_thumb($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

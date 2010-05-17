@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/static/models/static.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary list (the 'static itself')
+//|	summary list (list of all static pages)
 //--------------------------------------------------------------------------------------------------------------
-// * $args['page'] = page no to display
-// * $args['num'] = number of records per page
+//opt: page - page no to display (default is 1) [string]
+//opt: num - number of records per page (default 300) [string]
 
 function static_list($args) {
 	if (authHas('static', 'view', '') == false) { return false; }

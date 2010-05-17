@@ -22,7 +22,6 @@
 	<title>:: awareNet :: moblog ::</title>
 	<script></script>
 	<nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
-[`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Author:]]
 [[:moblog::showauthornav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

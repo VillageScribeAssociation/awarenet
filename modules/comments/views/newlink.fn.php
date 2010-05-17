@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	create a link to add a new comment to something
+//|	create a link to add a new comment to something
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = the module that will own the new comment
-// * $args['refUID'] = the record that will own the new announcment
+//arg: refModule - the module that will own the new comment [string]
+//arg: refUID - the record that will own the new announcment [string]
 
 function comments_newlink($args) {
 	if (authHas('comments', 'edit', $args) == false) { return false; }
@@ -20,3 +20,4 @@ function comments_newlink($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

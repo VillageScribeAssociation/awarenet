@@ -1,14 +1,12 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for parsing formatting wikicode into html and editable sections
+//*	object for parsing formatting wikicode into html and editable sections
 //--------------------------------------------------------------------------------------------------
-
-// PROPOSED CHANGES: infobox markup to define blocks instead of lines, infobox sections, references,
-// etc to be stripped from main document and rendered separately.
-
-// TODO: define citation style for references:
-// @ref: label|URL
+//+	PROPOSED CHANGES: infobox markup to define blocks instead of lines, infobox sections, references,
+//+	etc to be stripped from main document and rendered separately.
+//+	TODO: define citation style for references:
+//+	@ref: label|URL
 
 class WikiCode {
 
@@ -17,17 +15,17 @@ class WikiCode {
 	//----------------------------------------------------------------------------------------------
 
 	var $source = '';
-	var $sections = array();
+	var $sections = array();	// article sections [array]
 
-	var $html = '';
-	var $contents = '';
-	var $infobox = '';
+	var $html = '';				// html [string]
+	var $contents = '';			// html [string]
+	var $infobox = '';			// html [string]
 
-	var $expanded = false;
-	var $trasclude = true;		// controls whether transclusions and expanded or ignored
+	var $expanded = false;		// is set to true when item is fully expanded [bool]
+	var $trasclude = true;		// controls whether transclusions and expanded or ignored [bool]
 
 	//----------------------------------------------------------------------------------------------
-	//	expand wiki text
+	//.	expand wiki text
 	//----------------------------------------------------------------------------------------------
 
 	function expandWikiCode() {
@@ -119,8 +117,10 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	convert a section of wikicode to html
+	//.	convert a section of wikicode to html
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode to be rendered in HTML [string]
+	//returns: true on success, false on failure [bool]
 
 	function wikiCodeToHtml($text) {
 		$lines = explode("\n", $text);
@@ -198,8 +198,9 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	compile html version of content
+	//.	compile html version of content
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	function compileSections() {
 		if ($this->expanded == false) { return false; }
@@ -246,8 +247,11 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	replace phpBBcode
+	//.	replace phpBBcode
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode which may contain phpBBcode [string]
+	//returns: wikicode with phpBBcode converted to HTML [string]
+
 
 	function replacePhpBBCode($text) {
 		$search = array('[i]', '[/i]', '[b]', '[/b]', '[box]', '[/box]', 
@@ -261,8 +265,10 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make anchors from [[wiki|links]]
+	//.	make anchors from [[wiki|links]]
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode which may contain anchors [string]
+	//returns: wikicode with anchors converted to HTML [string]
 
 	function replaceWikiLinks($text) {
 		// remove blocks
@@ -284,8 +290,10 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make an anchor from a single wikilink
+	//.	make an anchor from a single wikilink
 	//----------------------------------------------------------------------------------------------
+	//arg: wikiLink - a reference to another wiki article or URL [string]
+	//returns: link converted to HTML anchor tag [string]
 
 	function wiki2anchor($wikiLink) {
 		//------------------------------------------------------------------------------------------
@@ -352,8 +360,10 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	wrap sets of elements, <li></li> => <ul><li></li></ul>
+	//.	wrap sets of elements, <li></li> => <ul><li></li></ul>
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode which may contain grouped elements [string]
+	//returns: text with grouped elements rendered into HTML [string]
 
 	function wrapCollectedElements($text) {
 		$text = $this->wrapElement($text, 'li3', 'ul');
@@ -374,8 +384,12 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	ensure a given tag is flanked by another (eg, add 'ul' to 'li', 'table' to 'tr', etc)
+	//.	ensure a given tag is flanked by another; eg, add 'ul' to 'li', 'table' to 'tr', etc
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode which may contain an HTML tag to be wrapped in another HTML tag [string]
+	//arg: m - marker, eg li [string]
+	//arg: w - wrap, eg ul [string]
+	//returns: text with any grouped HTML elements wrapped in container tag
 
 	function wrapElement($text, $m, $w) { 								// m = marker, w = wrap
 		$text = str_replace("<$m>", "<$w><$m>", $text);					// add <wrap>
@@ -388,8 +402,10 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	remove any html tags from <pre> elements
+	//.	remove any html tags from <pre> elements
 	//----------------------------------------------------------------------------------------------
+	//arg: text - wikicode which may contain <pre> sections [string]
+	//returns: text with HTML tags removed from <pre> sections [string]
 
 	function enforcePre($text) {
 		$text = ' ' . $text;		// padded with ' ' in case $text begins with '<pre>'
@@ -413,9 +429,11 @@ class WikiCode {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	retrieve a transcluded section ={=recordAlias|section=}=
+	//.	retrieve a transcluded section ={=recordAlias|section=}=
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: line - line containing transclusion tag [string]
+	//returns: wikicode to be transcluded [string]	
+
 	function getTransclusion($line) {
 		$recordAlias = ''; $section = '';
 

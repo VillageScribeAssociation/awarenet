@@ -5,7 +5,7 @@
 //	change the order (weight) of sections relative to one another
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	if ($request['ref'] == '') { do404(); }
 	if (array_key_exists('move', $request['args']) == false) { do404(); }

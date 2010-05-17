@@ -5,7 +5,7 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for forums, no arguments
+//|	menu for forums, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function forums_menu($args) {

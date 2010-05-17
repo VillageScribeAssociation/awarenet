@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show
+//|	show
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of post to edit [string]
 
 function announcements_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -17,3 +17,4 @@ function announcements_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

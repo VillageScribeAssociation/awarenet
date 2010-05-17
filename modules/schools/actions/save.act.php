@@ -11,7 +11,7 @@
 	   AND (array_key_exists('UID', $_POST))
 	   AND (dbRecordExists('schools', sqlMarkup($_POST['UID']))) ) {
 	
-		require_once($installPath . 'modules/schools/models/schools.mod.php');
+		require_once($installPath . 'modules/schools/models/school.mod.php');
 		
 		$model = new School(sqlMarkup($_POST['UID']));
 		

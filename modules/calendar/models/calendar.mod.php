@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing calendar posts
+//*	object for managing calendar entries
 //--------------------------------------------------------------------------------------------------
 
 class Calendar {
@@ -10,14 +10,15 @@ class Calendar {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;		// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database table definition [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of a calendar entry [string]
 
-	function Calendar($UID = '') {
+	function Calendar($raUID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] = 'New Calendar Item';
@@ -28,25 +29,30 @@ class Calendar {
 		$this->data['eventStart'] = '00:00';
 		$this->data['eventEnd'] = '00:00';
 		$this->data['published'] = 'no';
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of a calendar entry [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('calendar', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('calendar', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -60,8 +66,9 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -74,8 +81,9 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -105,14 +113,16 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;
@@ -163,8 +173,10 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing calendar Module</h3>\n";
@@ -185,9 +197,13 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	draw a calendar month
+	//.	draw a calendar month
 	//----------------------------------------------------------------------------------------------
-	//	$days is an array ([day] => [bgcolor][label]
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//arg: days - an array of day => bgcolor,label [array]
+	//arg: size - may be rendered large for content column or sidebar size (large|small) [string]
+	//returns: html [string]
 	
 	function drawMonthTable($month, $year, $days, $size) {		
 		global $serverPath;
@@ -252,9 +268,11 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find out how many days are in a month
+	//.	find out how many days are in a month
 	//----------------------------------------------------------------------------------------------
-	//	month is 01 through 12, year is four digits
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//,	month is 01 through 12, year is four digits
 	
 	function daysInMonth($month, $year) {
 		$leap = false;
@@ -271,8 +289,13 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	find first day of month (mon-sun)
+	//.	find first day of month (mon-sun)
 	//----------------------------------------------------------------------------------------------
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: 3 letter day abbreviation [string]
+	//,	month is 01 through 12, year is four digits
+
 
 	function firstDayOfMonth($month, $year) {
 		$ts = strtotime($year . '/' . $month . '/01');
@@ -280,8 +303,10 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	get month name, 01 => January
+	//.	get month name, 01 => January
 	//----------------------------------------------------------------------------------------------
+	//arg: month - month number ('01'-'12') [string]
+	//returns: full name of month or false on failure [string][bool]
 
 	function getMonthName($month) {
 		switch($month) {
@@ -302,8 +327,12 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	get day name, Monday - Sunday
+	//.	get day name, Monday - Sunday
 	//----------------------------------------------------------------------------------------------
+	//arg: day - two digit day number ('00'-'31') [string]
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: full day name (Monday-Sunday) [string]
 
 	function getDayName($day, $month, $year) {
 		$ts = strtotime($year . '/' . $month . '/' . $day);
@@ -311,8 +340,11 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	load a month's worth of data into an array
+	//.	load a month's worth of data into an array
 	//----------------------------------------------------------------------------------------------
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: nested array of calendar entries [array]	
 
 	function loadMonth($month, $year) {
 		$retVal = array();
@@ -325,8 +357,12 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a day's worth of data into an array
+	//.	load a day's worth of data into an array
 	//----------------------------------------------------------------------------------------------
+	//arg: day - two digit day number ('00'-'31') [string]
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: nested array of calendar entries [array]	
 
 	function loadDay($day, $month, $year) {
 		$retVal = array();
@@ -340,8 +376,12 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	make an html calendar for a given month, $size = large|small, $month = mm, $year = yyyy
+	//.	make an html calendar for a given month, $size = large|small, $month = mm, $year = yyyy
 	//----------------------------------------------------------------------------------------------
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//arg: size - may be rendered large for content column or sidebar size (large|small) [string]
+	//returns: html table [string]
 
 	function drawMonth($month, $year, $size) {
 		//------------------------------------------------------------------------------------------
@@ -387,38 +427,66 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load upcoming events in a certain category
+	//.	load upcoming events in a certain category
 	//----------------------------------------------------------------------------------------------
+	//arg: category - an event category [string]
+	//arg: num - maximum number of entrie to return [string]
+	//returns: nested array of calendar entries [array]	
 
 	function loadUpcoming($category, $num) {
 		$retVal = array();
-		$sql = "select * from calendar where category='" . $category . "' and year >= " . date('Y') 
-			 . " and month >= " . date('m') . " and day >= " . date('j') . " and published='yes' " 
-		     . "order by year, month, day, eventStart limit $num";
+		
+		$conditions = array();
+		$conditions[] = "category='" . sqlMarkup($category) . "'";
+		$conditions[] = "year >= " . date('Y');
+		$conditions[] = "month >= " . date('m');
+		$conditions[] = "day >= " . date('j');
+		$conditions[] = "published='yes'";
+
+		//$sql = "select * from calendar where category='" . $category . "' and year >= " . date('Y') 
+		//	  . " and month >= " . date('m') . " and day >= " . date('j') . " and published='yes' " 
+		//    . "order by year, month, day, eventStart limit " . (int)$num;
 	
-		$result = dbQuery($sql);
-		while($row = dbFetchAssoc($result)) { $retVal[$row['UID']] = sqlRMArray($row); }
+		$by = "year, month, day, eventStart";
+		
+		$range = dbLoadRange('calendar', '*', $conditions, $by, (int)$num, '');
+
+		foreach($range as $row) { $retVal[$row['UID']] = sqlRMArray($row); }
 		return $retVal;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load all upcoming events 
+	//.	load all upcoming events 
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: num - maximum number of entrie to return [string]	
+	//returns: nested array of calendar entries [array]	
+
 	function loadAllUpcoming($num) {
 		$retVal = array();
-		$sql = "select * from calendar where year >= " . date('Y') . " and month >= " 
-		     . date('m') . " and day >= " . date('j') . " and published='yes' " 
-		     . "order by year, month, day, eventStart limit $num";
+
+		$conditions = array();
+		$conditions[] = "year >= " . date('Y');
+		$conditions[] = "month >= " . date('m');
+		$conditions[] = "day >= " . date('j');
+		$conditions[] = "published='yes'";
+
+		$by = "year, month, day, eventStart";
+
+		//$sql = "select * from calendar where year >= " . date('Y') . " and month >= " 
+		//     . date('m') . " and day >= " . date('j') . " and published='yes' " 
+		//     . "order by year, month, day, eventStart limit $num";
 	
-		$result = dbQuery($sql);
-		while($row = dbFetchAssoc($result)) { $retVal[$row['UID']] = sqlRMArray($row); }
+		$range = dbLoadRange('calendar', '*', $conditions, $by, (int)$num, '');
+
+		foreach($range as $row) { $retVal[$row['UID']] = sqlRMArray($row); }
 		return $retVal;
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	ensure a number has two digits (9 => 09)
+	//.	ensure a number has two digits (9 => 09)
 	//----------------------------------------------------------------------------------------------
+	//arg: num - string representing a number [string]
+	//returns: two digit number [string]
 
 	function twoDigits($num) {
 		if (strlen($num) == 2) { return $num; }
@@ -426,9 +494,12 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	find the next calendar month (returns array [year][month])
+	//.	find the next calendar month ()
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: array of {year, month} [array]
+
 	function getNextMonth($month, $year) {
 		$next = array();
 		$next['month'] = $month;
@@ -441,8 +512,11 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find the previous calendar month (returns array [year][month])
+	//.	find the previous calendar month (returns array [year][month])
 	//----------------------------------------------------------------------------------------------
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: array of {year, month} [array]
 	
 	function getPrevMonth($month, $year) {
 		$next = array();
@@ -456,8 +530,12 @@ class Calendar {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	find the next calendar day (returns array [year][month][day])
+	//.	find the next calendar day (returns array [year][month][day])
 	//----------------------------------------------------------------------------------------------
+	//arg: day - two digit day number ('01'-'31') [string]
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: array of {year, month, day} [array]
 	
 	function getNextDay($day, $month, $year) {
 		$ts = strtotime($year . '/' . $month . '/' . $day);
@@ -470,9 +548,13 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find the previous calendar day (returns array [year][month][day])
+	//.	find the previous calendar day (returns array [year][month][day])
 	//----------------------------------------------------------------------------------------------
-	
+	//arg: day - two digit day number ('01'-'31') [string]
+	//arg: month - month number ('01'-'12') [string]
+	//arg: year - four digit year [string]
+	//returns: array of {year, month, day} [array]		
+
 	function getPrevDay($day, $month, $year) {
 		$ts = strtotime($year . '/' . $month . '/' . $day);
 		$ts -= (60 * 60 * 24); // add one day
@@ -484,7 +566,7 @@ class Calendar {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete the current entry
+	//.	delete the current entry
 	//----------------------------------------------------------------------------------------------
 	
 	function delete() {

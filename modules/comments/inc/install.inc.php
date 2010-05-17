@@ -4,7 +4,7 @@
 //	installer for images module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/comments/models/comments.mod.php');
+require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 function install_comments_module() {
 	global $installPath;

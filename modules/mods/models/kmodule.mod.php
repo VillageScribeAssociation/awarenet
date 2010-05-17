@@ -1,7 +1,8 @@
 <?
 
+/*
 //--------------------------------------------------------------------------------------------------
-//	object for working with module data
+//*	object for working with module data
 //--------------------------------------------------------------------------------------------------
 
 class KModule {
@@ -26,20 +27,22 @@ class KModule {
 	var $blocks;
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: moduleName - name of a module [string]
 
-	function KModule($modulename = '') {
+	function KModule($moduleName = '') {
 		$this->permissions = array();
 		$this->dependency = array();
 		$this->blocks = array();
 
-		if ($modulename != '') { $this->load($modulename); }
+		if ($moduleName != '') { $this->load($moduleName); }
 	}	
 
 	//----------------------------------------------------------------------------------------------
-	//	load a module.xml.php file
+	//.	load a module.xml.php file
 	//----------------------------------------------------------------------------------------------
+	//arg: moduleName - name of a module [string]
 
 	function load($moduleName) {
 		global $installPath;
@@ -108,7 +111,7 @@ class KModule {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a module.xml.php file // TODO: use XmlEntity for this
+	//.	save a module.xml.php file // TODO: use XmlEntity for this
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -152,8 +155,9 @@ class KModule {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	to array
+	//.	to array
 	//----------------------------------------------------------------------------------------------
+	//returns: [array] of module data
 
 	function toArray() {
 		$ary = array();
@@ -170,5 +174,5 @@ class KModule {
 	}
 
 }
-
+*/
 ?>

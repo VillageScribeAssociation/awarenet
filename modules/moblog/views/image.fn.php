@@ -4,12 +4,12 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the first image associated with a mobblog post
+//|	find the first image associated with a mobblog post
 //--------------------------------------------------------------------------------------------------
-// * $args['postUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: postUID - overrides raUID [string]
+//opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 (default width300) [string]
+//opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function moblog_image($args) {
 	global $serverPath;
@@ -51,3 +51,4 @@ function moblog_image($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

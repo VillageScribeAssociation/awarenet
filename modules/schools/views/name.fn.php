@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return a school's name
+//|	return a school's name
 //--------------------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = overrides $raUID
-// * $args['raUID'] = recordAlias or UID or schools entry
-// * $args['link'] = link to this record?
+//arg: raUID - recordAlias or UID or schools entry [string]
+//opt: schoolUID - overrides raUID [string]
+//opt: link - link to this record? [string]
 
 function schools_name($args) {
 	$link = 'no';
@@ -26,3 +26,4 @@ function schools_name($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

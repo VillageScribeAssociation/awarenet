@@ -5,15 +5,15 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	all images associated with an article (default is thumbnails)
+//|	all images associated with an article (default is thumbnails)
 //--------------------------------------------------------------------------------------------------
-// * $args['articleUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or wiki entry
-// * $args['size'] = size of images
+//arg: raUID - recordAlias or UID or wiki entry [string]
+//opt: articleUID - overrides raUID [string]
+//opt: size - size of images (default is thumb90) [string]
 
 function wiki_allthumbs($args) {
 	global $serverPath;
-	$size = 'width300';
+	$size = 'thumb90';
 
 	if (array_key_exists('articleUID', $args)) { $args['raUID'] = $args['articleUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }

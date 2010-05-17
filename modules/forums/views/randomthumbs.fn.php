@@ -5,11 +5,11 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return thumbnails of random forums images <---- NOT USED AS YET
+//|	return thumbnails of random forums images <---- NOT USED AS YET
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user (and not recordAlias)
-// * $args['size'] = size to show thumbs (optional)
-// * $args['num'] = maximum number of thumbs to show (most recent first) (optional)
+//arg: userUID - UID of user (and not recordAlias) [string]
+//opt: size - size to show thumbs (default is 'thumbsm') [string]
+//opt: num - maximum number of thumbs to show (most recent first) (default is no limit) [string]
 
 function forums_randomthumbs($args) {
 	$limit = ''; $html = ''; $size = 'thumbsm';
@@ -37,3 +37,4 @@ function forums_randomthumbs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to add project members
+//|	form to add project members
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or projects entry
+//arg: raUID - recordAlias or UID or projects entry [string]
+//opt: projectUID - overrides raUID [string]
 
 function projects_addmemberform($args) {
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
@@ -20,3 +20,4 @@ function projects_addmemberform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

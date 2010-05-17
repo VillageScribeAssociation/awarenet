@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	subnav for month display
+//|	subnav for month display
 //--------------------------------------------------------------------------------------------------
-// * $args['year'] = year (yyyy)
-// * $args['month'] = month (mm) 01 to 12
+//arg: year - year (yyyy) [string]
+//arg: month - month (mm) 01 to 12 [string]
 
 function calendar_monthsubnav($args) {
 	global $serverPath;
@@ -39,3 +39,4 @@ function calendar_monthsubnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

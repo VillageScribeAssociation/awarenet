@@ -7,7 +7,7 @@
 	if ($user->data['ofGroup'] == 'public') { do403(); }
 	if ($request['ref'] == '') { do404(); }
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the request
@@ -34,7 +34,7 @@
 	//	authorised, notify current members of new addition
 	//----------------------------------------------------------------------------------------------
 
-	$newUser = new Users($membership['userUID']);
+	$newUser = new User($membership['userUID']);
 
 	$title = $newUser->getNameLink() . " is now a member of project " . $model->getLink();
 	$content = "Added by " . $user->getNameLink() . ' on ' . mysql_datetime();

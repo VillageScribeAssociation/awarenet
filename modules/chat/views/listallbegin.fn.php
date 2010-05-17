@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all users with links to start a chat
+//|	list all users with links to start a chat
 //--------------------------------------------------------------------------------------------------
 
 function chat_listallbegin($args) {

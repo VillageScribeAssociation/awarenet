@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show list of events on a given day
+//|	show list of events on a given day
 //--------------------------------------------------------------------------------------------------
-// * $args['year'] = year (yyyy)
-// * $args['month'] = month (mm) 01 to 12
-// * $args['day'] = day (dd) 01 to 31
+//arg: year - year (yyyy) [string]
+//arg: month - month (mm) 01 to 12 [string]
+//arg: day - day (dd) 01 to 31 [string]
 
 function calendar_listday($args) {
 	if (array_key_exists('day', $args) == false) { return false; }
@@ -41,3 +41,4 @@ function calendar_listday($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/pages/models/pages.mod.php');
+	require_once($installPath . 'modules/pages/models/page.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all pages (and blocks) on all modules
+//|	list all pages (and blocks) on all modules
 //--------------------------------------------------------------------------------------------------------------
 
 function pages_listall($args) {
@@ -24,3 +24,4 @@ function pages_listall($args) {
 //--------------------------------------------------------------------------------------------------------------
 
 ?>
+

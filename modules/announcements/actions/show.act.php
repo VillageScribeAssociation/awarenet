@@ -6,7 +6,7 @@
 	
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('announcements', 'show', 'announcements', $request['ref']);
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 	$model = new Announcement($request['ref']);
 
 	//----------------------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	all images of all groups (thumbnails, no arguments)
+//|	all images of all groups (thumbnails, no arguments) TODO: school argument?
 //--------------------------------------------------------------------------------------------------
 
 function groups_allthumbs($args) {
@@ -29,3 +29,4 @@ function groups_allthumbs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

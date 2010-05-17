@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show list of upcoming events in the same category
+//|	show list of upcoming events in the same category
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or calendar entry
+//arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_samecategorynav($args) {
 	global $serverPath;
@@ -40,3 +40,4 @@ function calendar_samecategorynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

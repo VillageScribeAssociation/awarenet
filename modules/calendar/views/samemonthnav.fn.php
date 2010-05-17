@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a mini calendar of events in the same month
+//|	show a mini calendar of events in the same month
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or calendar entry
+//arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_samemonthnav($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -16,3 +16,4 @@ function calendar_samemonthnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

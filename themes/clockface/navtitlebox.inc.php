@@ -26,7 +26,7 @@ function theme_navtitlebox($args) {
 	//----------------------------------------------------------------------------------------------
 	//	add toggle button 
 	//----------------------------------------------------------------------------------------------	
-	$toggle = ''; $onClick = '';
+	$toggle = ''; $onClick = ''; $eventJs = '';
 	if (array_key_exists('toggle', $args) == true) {
 		$icoFile = '%%serverPath%%themes/clockface/icons/btn-minus.png';
 		if ((array_key_exists('hidden', $args) == true) AND ($args['hidden'] == 'yes')) 
@@ -35,13 +35,15 @@ function theme_navtitlebox($args) {
 		$UID = createUID();
 		$id = "id='ti" . $UID . "'";
 		$onClick = "onClick=\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\"";
-		$toggle = "<img $id class='navboxbtn' src='" . $icoFile . "' width='16px' $onClick>";
+		$toggle = "<img $id class='navboxbtn' src='" . $icoFile . "' width='16px'>";
+		$eventJs = "<script language='Javascript'>attachOnClick('ti" . $UID . "', "
+		  	  	 . "\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\");</script>";
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make html
+	//	make html (attache button event with javascript or it behaves strangely
 	//----------------------------------------------------------------------------------------------	
-	$html = "<div class='navbox' $onClick>" . $s['label'] . $toggle . "</div>\n";
+	$html = "<div class='navbox' $onClick>" . $s['label'] . $toggle . "</div>\n$eventJs";
 
 	return $html;
 }

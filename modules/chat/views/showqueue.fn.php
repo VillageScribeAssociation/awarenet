@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display contents of a single message queue, formatted as a table
+//|	display contents of a single message queue, formatted as a table
 //--------------------------------------------------------------------------------------------------
-// * $args['user'] = UID of user to show queue for, default to current user
+//arg: user - UID of user to show queue for, default to current user [string]
 
 function chat_showqueue($args) {
 	global $user;
@@ -32,3 +32,4 @@ function chat_showqueue($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

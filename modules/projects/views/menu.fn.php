@@ -2,10 +2,10 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for projects, no arguments
+//|	menu for projects, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function projects_menu($args) {
@@ -34,3 +34,4 @@ function projects_menu($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,16 +1,16 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	profile box on users profile page
+//|	profile box on users profile page
 //--------------------------------------------------------------------------------------------------
-// * $args['userRA'] = recordAlias of record to summarise
+//arg: userRA - recordAlias of record to summarise [string]
 
 function users_profile($args) {
 	if (array_key_exists('userRa', $args) == false) { return false; }
-	$u = new Users($args['userRa']);
+	$u = new User($args['userRa']);
 	return replaceLabels($u->extArray(), loadBlock('modules/users/views/profile.block.php'));
 }
 

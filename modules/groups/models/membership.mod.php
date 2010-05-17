@@ -1,9 +1,8 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	index table
+//*	index table for group membership (users <-> groups)
 //--------------------------------------------------------------------------------------------------
-//	group type could be Team/Club/Society, etc
 
 class GroupMembership {
 
@@ -11,12 +10,13 @@ class GroupMembership {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of group membership index record [string]
 
 	function GroupMembership($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -25,19 +25,26 @@ class GroupMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a group membership [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('groupmembers', $uid);
+	function load($UID) {
+		$ary = dbLoad('groupmembers', $UID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -47,8 +54,9 @@ class GroupMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -65,8 +73,9 @@ class GroupMembership {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -88,10 +97,11 @@ class GroupMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
+		//TODO: fire off some events here, maybe some notifications
 		dbDelete('groupmembers', $this->data['UID']);
 	}
 

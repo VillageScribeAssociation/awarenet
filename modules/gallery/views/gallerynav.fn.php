@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display gallery navigation (TODO: make more efficient, only load the records we need, by weight)
+//|	display gallery navigation (TODO: make more efficient, only load the records we need, by weight)
 //--------------------------------------------------------------------------------------------------
-// * $args['galleryUID'] = UID of a gallery (required)
-// * $args['imageUID'] = UID of current image (required)
-// * $args['size'] = optional
+//arg: galleryUID - UID of a gallery [string]
+//arg: imageUID - UID of current image [string]
+//opt: size - image size (thumb90, thumbsm, width300, etc) [string]
 
 function gallery_gallerynav($args) {
 	$size = 'thumbsm';
@@ -61,3 +61,4 @@ function gallery_gallerynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

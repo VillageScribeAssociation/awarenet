@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID or calendar entry
+//arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_editform($args) {
 	if (authHas('calendar', 'edit', '') == false) { return false; }
@@ -18,3 +18,4 @@ function calendar_editform($args) {
 
 //--------------------------------------------------------------------------------------------------
 ?>
+

@@ -1,10 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary
+//|	summary
 //--------------------------------------------------------------------------------------------------
+//arg: UID - UID of comment [string]
 
 function comments_summary($args) {
 	if (authHas('comments', 'view', '') == false) { return ''; }
@@ -18,3 +19,4 @@ function comments_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -2,14 +2,14 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return a project's title
+//|	return a project's title
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides $raUID
-// * $args['raUID'] = recordAlias or UID or projects entry
-// * $args['link'] = link to this record?
+//arg: raUID - recordAlias or UID or projects entry [string]
+//opt: projectUID - overrides $raUID [string]
+//opt: link - link to this record? [string]
 
 function projects_title($args) {
 	$link = 'no';
@@ -28,3 +28,4 @@ function projects_title($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

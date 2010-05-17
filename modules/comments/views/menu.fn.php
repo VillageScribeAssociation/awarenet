@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu
+//|	menu
 //--------------------------------------------------------------------------------------------------
 
 function comments_menu($args) { return loadBlock('modules/comments/menu.block.php'); }
@@ -11,3 +11,4 @@ function comments_menu($args) { return loadBlock('modules/comments/menu.block.ph
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

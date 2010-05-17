@@ -4,7 +4,7 @@
 //	edit a wiki article
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('wiki', 'edit', '') == false) { do304(); }			// check permissions
+	if (authHas('wiki', 'edit', '') == false) { do403(); }			// check permissions
 	if ($request['ref'] == '') { do404(); }							// check for ref	
 	$UID = raFindRedirect('wiki', 'edit', 'wiki', $request['ref']);	// check correct ref
 	

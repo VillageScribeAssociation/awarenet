@@ -8,7 +8,7 @@
 	//	check request vars 
 	//----------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 	if (array_key_exists('refModule', $_POST) == false) { do404(); }
 	if (array_key_exists('refUID', $_POST) == false) { do404(); }

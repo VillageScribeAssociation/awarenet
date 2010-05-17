@@ -3,25 +3,34 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return thumbnails of random gallery images
+//|	return thumbnails of random gallery images
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user (and not recordAlias)
-// * $args['size'] = size to show thumbs (optional)
-// * $args['num'] = maximum number of thumbs to show (most recent first) (optional)
+//arg: userUID - UID of a user (and not recordAlias) [string]
+//opt: size - size to show thumbs (optional) [string]
+//opt: num - maximum number of thumbs to show (most recent first) (default is all images) [string]
+//: note the direct use of images table - TODO: work around this
 
 function gallery_randomthumbs($args) {
 	$limit = ''; $html = ''; $size = 'thumbsm';
+
+	//---------------------------------------------------------------------------------------------
+	//	check arguments
+	//---------------------------------------------------------------------------------------------
 	if (array_key_exists('userUID', $args) == false) { return false; }
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
-	if (array_key_exists('num', $args) == true) { $limit = 'limit ' . $args['num']; }
+	if (array_key_exists('num', $args) == true) { $limit = (int)$args['num']; }
 
-	$sql = "select * from images "
-		 . "where createdBy='" . sqlMarkup($args['userUID']) . "' and refModule='gallery' "
-		 . "order by RAND() $limit";
+	//---------------------------------------------------------------------------------------------
+	//	get random image UIDs
+	//---------------------------------------------------------------------------------------------
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$conditions = array();
+	$conditions[] = "createdBy='" . sqlMarkup($args['userUID']) . "'";
+	$conditions[] = "refModule='gallery'";
+
+	$range = dbLoadRange('images', '*', $conditions, 'RAND()', $limit, '');
+
+	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['recordAlias'];
 		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['recordAlias'];
 		$html .= "<a href='" . $viewUrl . "'>"
@@ -35,3 +44,4 @@ function gallery_randomthumbs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

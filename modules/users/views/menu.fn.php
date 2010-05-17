@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	submenu
+//|	users submenu
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of a user
-// * $args['userRef'] = recordAlias of a user
+//opt: userRa - recordAlias of a user [string]
+//opt: userUID - UID of a user [string]
 
 function users_menu($args) {
 	global $user;

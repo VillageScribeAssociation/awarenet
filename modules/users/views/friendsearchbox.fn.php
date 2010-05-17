@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make iframe to search for friends
+//|	make iframe to search for friends
 //--------------------------------------------------------------------------------------------------
 
 function users_friendsearchbox($args) {

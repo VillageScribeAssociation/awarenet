@@ -21,13 +21,15 @@
 	$repository->addExemption("setup.inc.php");				// dynamically generated on install
 	$repository->addExemption("uploader/");					// this module (CONTAINS KEY)
 	$repository->addExemption("install/");					// defunct
-	$repository->addExemption(".svn");						// sybversion files and directories
-	$repository->addExemption("data/log/e");					// ?
+	$repository->addExemption(".svn");						// subversion files and directories
+	$repository->addExemption("data/log/e");				// ?
 	$repository->addExemption("svnadd.sh");					// ?
 	$repository->addExemption("svndelete.sh");				// ?
+	$repository->addExemption("core/lastcycle.txt");		// changes every few page loads
+	$repository->addExemption("projects/tmp.xml");			// a debugging file
 	$repository->addExemption("data/log/e");				// ?
 	$repository->addExemption(".log.php");					// log files
-	$repository->addExemption("phpinfo.php");					// log files
+	$repository->addExemption("phpinfo.php");				// log files
 	$repository->addExemption("~");							// gedit revision files
 	$repository->addExemption("/drawcache/");				// dynamically generated images
 

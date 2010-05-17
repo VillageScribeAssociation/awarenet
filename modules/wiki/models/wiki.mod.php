@@ -1,24 +1,23 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing wiki articles
+//*	object representing wiki articles
 //--------------------------------------------------------------------------------------------------
-
-//	Note: articles are divided up into sections based on wiki markup.  This is so that sections
-//	may be modified independantly of each other to minimise collisions when multiple users are
-//	editing the same document.
-//
-//	Note: this module has many satellite tables, with their own models for building and
-//	maintaining the wiki.  They are:
-//
-//	wikicategories.mod.php - heirarchies of categories to which articles may belong
-//	wikicatindex.mod.php - associates articles with categories
-//	wikirevisions.mod.php - article histories (diff, revert changes, etc)
-//	wikidelete.mod.php - tracks articles nominated for deletion
-//
-//	Permissions may be set on each article as to who may edit it, these override module-wide
-//	permissions for a single article only, and only to the extent Kapenta settings allow.  The
-//	lock field may be set to a user group (public/user/admin).
+//+	Note: articles are divided up into sections based on wiki markup.  This is so that sections
+//+	may be modified independantly of each other to minimise collisions when multiple users are
+//+	editing the same document.
+//+
+//+	Note: this module has many satellite tables, with their own models for building and
+//+	maintaining the wiki.  They are:
+//+
+//+	wikicategories.mod.php - heirarchies of categories to which articles may belong
+//+	wikicatindex.mod.php - associates articles with categories
+//+	wikirevisions.mod.php - article histories (diff, revert changes, etc)
+//+	wikidelete.mod.php - tracks articles nominated for deletion
+//+
+//+	Permissions may be set on each article as to who may edit it, these override module-wide
+//+	permissions for a single article only, and only to the extent Kapenta settings allow.  The
+//+	lock field may be set to a user group (public/user/admin).
 
 require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
 
@@ -28,19 +27,20 @@ class Wiki {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database table structure
+	var $data;												// currently loaded record [array]
+	var $dbSchema;											// database table structure [array]
 
-	var $defaultIndexPage = 'modules/wiki/index.wiki.php';	// php enclosed wikicode
-	var $content;
-	var $talk;
-	var $expanded = false;
+	var $defaultIndexPage = 'modules/wiki/index.wiki.php';	// php enclosed wikicode [string]
+	var $content;											// 
+	var $talk;												//
+	var $expanded = false;									// [bool]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - recordAlias or UID of a wiki page [string]
 
-	function Wiki($UID = '') {
+	function Wiki($raUID = '') {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
@@ -52,25 +52,31 @@ class Wiki {
 		$this->data['editedOn'] = mysql_datetime();
 		$this->data['locked'] = 'user';
 		$this->data['hitcount'] = '0';
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a wiki page by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - recordAlias or UID of a wiki page [string]
+	//returns: true if the page exists and is loaded, otherwise false [bool]
+	
 
-	function load($uid) {
-		$ary = dbLoadRa('wiki', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('wiki', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current page to the database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -83,8 +89,9 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that an object is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -96,8 +103,9 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -124,16 +132,16 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;
@@ -222,7 +230,7 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	expand wiki text and talk pages
+	//.	expand wiki text and talk pages
 	//----------------------------------------------------------------------------------------------
 
 	function expandWikiCode() {
@@ -238,7 +246,7 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete an article and all its assets
+	//.	delete the current article and all its assets
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
@@ -251,7 +259,7 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	create the default page (index)
+	//.	create the default page (index)
 	//----------------------------------------------------------------------------------------------
 
 	function mkDefault() {
@@ -274,8 +282,10 @@ class Wiki {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Wiki Module</h3>\n";

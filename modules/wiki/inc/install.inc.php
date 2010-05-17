@@ -46,11 +46,31 @@ function install_wiki_module() {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	unstall the wiki
+//	check if this module is installed
 //--------------------------------------------------------------------------------------------------
+//returns: html report describing status of wiki module [string]
 
 function isinstalled_wiki_module() {
-	// TODO
+	$report = '';
+
+	//---------------------------------------------------------------------------------------------
+	//	wiki table
+	//---------------------------------------------------------------------------------------------
+	if (dbTableExists('wiki') == false) { 
+		$report .= "[*] Database table 'wiki' is not installed.<br/>\n";
+	} else {
+		$report .= "[*] Wiki table exists.<br/>\n";
+		$model = new Wiki();
+		$modelSchema = $model->initDbSchema();
+		$liveSchema = dbGetSchema('wiki');
+		if (dbCompareSchema($modelSchema , $liveSchema) == false) {
+			$report .= "[*] Wiki table exists but does not match schema.<br/>\n";
+		} else {
+			$report .= "[*] Wiki table and indices match schema.<br/>\n";
+		}
+	}
+
+	return $report;
 }
 
 //--------------------------------------------------------------------------------------------------

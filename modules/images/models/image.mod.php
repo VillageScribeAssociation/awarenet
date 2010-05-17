@@ -1,19 +1,18 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing images
+//*	object for managing images
 //--------------------------------------------------------------------------------------------------
-//	
-//	The following types are supported: jpeg, gif, png
-//
-//	Transforms are derivative images that do not need their own record, such as thumbnails.  They 
-//	are automatically created as needed and destroyed if unused for a period of time, to free disk 
-//	space.
-//
-//	examples: /images/width300/someimage.jpg /images/thumb/someimage.jpg
-//
-//	Transform scripts can be modifed to perform actions such as automatically watermarking images
-//	uploaded to a website.
+//+	The following types are supported: jpeg, gif, png
+//+
+//+	Transforms are derivative images that do not need their own record, such as thumbnails.  They 
+//+	are automatically created as needed and destroyed if unused for a period of time, to free disk 
+//+	space.
+//+
+//+	examples: /images/width300/someimage.jpg /images/thumb/someimage.jpg
+//+
+//+	Transform scripts can be modifed to perform actions such as automatically watermarking images
+//+	uploaded to a website.
 
 class Image {
 
@@ -27,28 +26,36 @@ class Image {
 	var $img;			// image handle
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of an announcement [string]
 
-	function Image($UID = '') {
+	function Image($raUID = '') {
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['fileName'] = '';
 		$this->transforms = array();
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of an announcement record [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('images', $uid, 'true');
+	function load($raUID) {
+		$ary = dbLoadRa('images', $raUID, 'true');
 		if ($ary == false) { return false; }
 		$this->data = $ary;
 		$this->expandTransforms();
 		return true;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 	
 	function loadArray($ary) {
 		$this->data = $ary;
@@ -56,7 +63,7 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -69,8 +76,9 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -83,8 +91,9 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -122,26 +131,28 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		// TODO
+		// TODO?
 		$ary = $this->data;	
 		return $ary;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Images Module</h3>\n";
@@ -161,7 +172,7 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	expand transforms
+	//.	expand transforms
 	//----------------------------------------------------------------------------------------------
 
 	function expandTransforms() {
@@ -178,8 +189,10 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	check if a given transform exists
+	//.	check if a given transform exists
 	//----------------------------------------------------------------------------------------------
+	//arg: transName - name of a transform, eg thumb [string]
+	//returns: location of transformed file if it exists, false if not [string][bool]
 
 	function hasTrasform($transName) {
 		global $installPath;
@@ -190,7 +203,7 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load actual image (rather than the record)
+	//.	load actual image (rather than the record)
 	//----------------------------------------------------------------------------------------------
 
 	function loadImage() {
@@ -204,8 +217,10 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	scale the image to a given width
+	//.	scale the image to a given width
 	//----------------------------------------------------------------------------------------------
+	//arg: width - width in pixels [int]
+	//returns: handle to new image [int]
 
 	function scaleToWidth($width) {
 		$aspect = (imagesx($this->img) / imagesy($this->img));
@@ -218,8 +233,11 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	scale and crop the image to fit a given box
+	//.	scale and crop the image to fit a given box
 	//----------------------------------------------------------------------------------------------
+	//arg: toWidth - box width [int]
+	//arg: toHeight - box height [int]
+	//returns: handle of new image [int]
 
 	function scaleToBox($toWidth, $toHeight) {
 		$srcAspect = (imagesx($this->img) / imagesy($this->img));
@@ -279,13 +297,19 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	find a single image on a given record and module
+	//.	find a single image on a given record and module, and load it
 	//----------------------------------------------------------------------------------------------
+	//arg: refModule - module which controls this image's owner [string]
+	//arg: refUID - UID of object which owns this image [string]
+	//arg: category - unused at present [string]
+	//returns: UID of image, or false if one was not found [string][bool]
 
 	function findSingle($refModule, $refUID, $category) {
 		$sql = "select * from images where refModule='" . sqlMarkup($refModule) 
 		     . "' and refUID='" . sqlMarkup($refUID) 
 			 . "' and category = '" . sqlMarkup($category) . "'";
+
+		//TODO: dbLoadRange
 
 		$result = dbQuery($sql);
 		while ($row = dbFetchAssoc($result)) { 
@@ -297,8 +321,9 @@ class Image {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	save an image to disk and record the filename in $this->fileName
+	//.	save an image to disk and record the filename in $this->fileName
 	//----------------------------------------------------------------------------------------------
+	//arg: img - an image handle [int]
 
 	function storeFile($img) {
 		global $installPath;
@@ -325,12 +350,42 @@ class Image {
 	}
 
 	//---------------------------------------------------------------------------------------------
-	//	delete current image and all transforms
+	//.	nominally delete the current record, dissociate from owner
 	//---------------------------------------------------------------------------------------------
+	//, due to some messed up events of March 2010, images are not deleted first time round
 
 	function delete() {
+		$ext = $this->extArray();
+
+		$this->data['refUID']  = str_replace('del-', '', $this->data['refUID']);
+		$this->data['refModule']  = str_replace('del-', '', $this->data['refModule']);
+
+		$this->data['refUID'] = 'del-' . $this->data['refUID'];
+		$this->data['refModule'] = 'del-' . $this->data['refModule'];
+		$this->save();
+
+		//-----------------------------------------------------------------------------------------
+		//	send specific event to module responsible for object which owned the deleted image
+		//-----------------------------------------------------------------------------------------
+		$args = array('module' => 'images', 'UID' => $this->data['UID'], 'title' => $ext['title']);
+		eventSendSingle($ext['refModule'], 'images_deleted', $args);
+
+		//-----------------------------------------------------------------------------------------
+		//	allow other modules to respond to this event
+		//-----------------------------------------------------------------------------------------
+		$args = array('module' => 'images', 'UID' => $this->data['UID']);
+		eventSendAll('object_deleted', $args);
+
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//.	delete current image and all transforms
+	//---------------------------------------------------------------------------------------------
+
+	function finalDelete() {
 		global $installPath;
-			
+		$ext = $this->extArray();
+
 		//-----------------------------------------------------------------------------------------
 		//	delete the file and any transforms
 		//-----------------------------------------------------------------------------------------
@@ -349,6 +404,12 @@ class Image {
 		dbDelete('images', $this->data['UID']);
 
 		//-----------------------------------------------------------------------------------------
+		//	send specific event to module responsible for object which owned the deleted image
+		//-----------------------------------------------------------------------------------------
+		$args = array('module' => 'images', 'UID' => $this->data['UID'], 'title' => $ext['title']);
+		eventSendSingle($ext['refModule'], 'image_deleted', $args);
+
+		//-----------------------------------------------------------------------------------------
 		//	allow other modules to respond to this event
 		//-----------------------------------------------------------------------------------------
 		$args = array('module' => 'images', 'UID' => $this->data['UID']);
@@ -356,7 +417,7 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	bump up the hitcount by one
+	//.	bump up the hitcount by one
 	//----------------------------------------------------------------------------------------------
 
 	function incHitCount() {

@@ -1,14 +1,15 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the school's logo/picture (300px) or a blank image
+//|	find the school's logo/picture (300px) or a blank image
 //--------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or schools entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or schools entry [string]
+//opt: schoolUID - overrides raUID [string]
+//opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 [string]
+//opt: link - link to larger image (yes|no) [string]
+//: deprecated, TODO: remove this and replace blocks with call to images module
 
 function schools_image($args) {
 	global $serverPath;
@@ -54,3 +55,4 @@ function schools_image($args) {
 //--------------------------------------------------------------------------------------------------------------
 
 ?>
+

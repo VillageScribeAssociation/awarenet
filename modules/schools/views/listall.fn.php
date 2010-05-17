@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all
+//|	list all
 //--------------------------------------------------------------------------------------------------
 
 function schools_listall($args) {
@@ -19,3 +19,4 @@ function schools_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

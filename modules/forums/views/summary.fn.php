@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise
+//|	summarise
 //--------------------------------------------------------------------------------------------------
-// * $args['forumUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID of forums page
+//arg: raUID - recordAlias or UID of forums page [string]
+//opt: forumUID - overrides raUID [string]
 
 function forums_summary($args) {
 	if (array_key_exists('forumUID', $args)) { $args['forumUID'] = $args['pageUID']; }
@@ -20,3 +20,4 @@ function forums_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

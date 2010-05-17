@@ -3,57 +3,37 @@
 //-------------------------------------------------------------------------------------------------
 //	list all files on this server which can be synced
 //-------------------------------------------------------------------------------------------------
-//	note: $request['ref'] should be a recent timestamp
-//	note: auth is sha1('password' . 'timestamp')
+//	status might be all, missing or present
+//	format may be xml, csv or html
 
 	//---------------------------------------------------------------------------------------------
-	//	check auth
+	//	authorization
 	//---------------------------------------------------------------------------------------------
-
-	$time = $request['ref'];
-	$now = time();
-
-	//if (is_numeric($time) == false) { doXmlError('invalid timestamp'); }
-	//if (($time > ($now + 600)) || ($time < ($now - 600))) { doXmlError('invalid timestamp'); }
-
-	//if (array_key_exists('auth', $request['args']) == fale) { doXmlError('not authorized'); }
-
-	//$self = syncGetOwnData();
-	//$auth = sha1($self['password'] . $time);
-	//if ($request['args']['auth'] != $auth) { doXmlError('not authorized'); }
+	//TODO
 
 	//---------------------------------------------------------------------------------------------
-	//	auth checks out, list the files
+	//	get request arguments
+	//---------------------------------------------------------------------------------------------
+	$format = 'xml';
+	$status = 'present';	
+
+	if (array_key_exists('status', $request['args'])) { $status = $request['args']['status']; }
+	if (array_key_exists('format', $request['args'])) { $format = $request['args']['format']; }
+
+	//---------------------------------------------------------------------------------------------
+	//	get file lists from all modules which implement listfiles
 	//---------------------------------------------------------------------------------------------
 
-	echo "#START\n";
-	syncPrintFiles('data/images/');
-	echo "#END";
+	$output = '';
 
-	//---------------------------------------------------------------------------------------------
-	//	utility function to recursively print all files
-	//---------------------------------------------------------------------------------------------
-	function syncPrintFiles($rootPath = UPLOAD_PATH_PROJECT, $iDepth = 0) {
-		global $installPath;
-		$iDepth++;
-		if ($iDepth >= 10) { return false; }	// just in case
-		$subDirs = array();
+	$mods = listModules();
+	foreach($mods as $mod) {
+		$block = "[[:" . $mod . "::listfiles::status=" . $status . "::format=" . $format . ":]]";
+		$output .= expandBlocks($block, '');
+	}
 
-		//-----------------------------------------------------------------------------------------
-		//	print all files in this dir
-		//-----------------------------------------------------------------------------------------
-		$files = scandir($installPath . $rootPath);
-		foreach ($files as $file) {
-			if (($file != '.') && ($file != '..') && ($file != '.svn')) { 
-				if (is_dir($installPath . $rootPath . $file) == true) { $subDirs[] = $rootPath . $file . '/'; }
-				else { echo $rootPath . $file . "\n"; }
-			}
-		}
-	
-		//-----------------------------------------------------------------------------------------
-		//	recurse into all subdirectories
-		//-----------------------------------------------------------------------------------------
-		foreach ($subDirs as $subDir) {	syncPrintFiles($subDir, $iDepth); }
-	} 
+	if ('xml' == $format) { $output = "<?xml version=\"1.0\"?>\n<files>\n$output</files>\n"; }
+
+	echo $output;
 
 ?>

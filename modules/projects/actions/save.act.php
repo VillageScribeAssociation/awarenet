@@ -8,7 +8,7 @@
 	//	check permissions and load model
 	//----------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	$authorised = false;
 	$model = new Project();

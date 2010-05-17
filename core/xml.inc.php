@@ -1,23 +1,27 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	uses xmlentity.class.php
-//--------------------------------------------------------------------------------------------------
-
-require_once($installPath . 'core/xmlentity.class.php');
+	require_once($installPath . 'core/xmlentity.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//	convert object heirarchy into array
+//*	uses xmlentity.class.php
 //--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+//|	convert object heirarchy into array
+//--------------------------------------------------------------------------------------------------
+//: not yet implemnted, consider if actually useful
 
 function xmlToArray($xml) {
 	// TODO
 }
 
 //--------------------------------------------------------------------------------------------------
-//	load a file as PHP-escaped XML and return xmlentity object
+//|	load a file as PHP-escaped XML and return xmlentity object
 //--------------------------------------------------------------------------------------------------
-//	<tag>value</tag> to array['tag'] = 'value';
+//:	<tag>value</tag> to array['tag'] = 'value';
+
+//arg: fileName - absolute fileName [string]
+//returns: XmlEntity root object [object]
 
 function xmlLoad($fileName) {
 	if (file_exists($fileName) == false) { return false; }
@@ -30,6 +34,10 @@ function xmlLoad($fileName) {
 //--------------------------------------------------------------------------------------------------
 //	convert a 2d array to xml
 //--------------------------------------------------------------------------------------------------
+//arg: ary - associative array of entity type => value [array]
+//arg: type - entity type of parent [string]
+//opt: indent - lines are prefixed with this [string]
+//returns: xml [string]
 
 function arrayToXml2d($ary, $type, $indent = '') {
 	$retVal = $indent . "<$type>\n";

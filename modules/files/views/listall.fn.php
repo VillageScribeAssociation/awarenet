@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a list of x files, ordered by date uploaded to system
+//|	make a list of x files, ordered by date uploaded to system
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = results page
-// * $args['refMod'] = module to list on
-// * $args['num'] = number of files per page
+//opt: refModule - module to list on [string]
+//opt: page - results page [string]
+//opt: num - number of files per page [string]
 
 function files_listall($args) {
 	//----------------------------------------------------------------------------------------------
@@ -37,3 +37,4 @@ function files_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

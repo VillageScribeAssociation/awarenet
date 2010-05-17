@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all gallerys for the nav 
+//|	list all galleries for the nav 
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = user whose galleries we wish to show
+//arg: userUID - user whose galleries we wish to show [string]
 
 function gallery_navlist($args) {
 	if (array_key_exists('userUID', $args) == false) { return false; }
@@ -38,3 +38,4 @@ function gallery_navlist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

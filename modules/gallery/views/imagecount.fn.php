@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	count the number of images in a gallery
+//|	count the number of images in a gallery
 //--------------------------------------------------------------------------------------------------
-// * $args['galleryUID'] = UID of a gallery (required)
+//arg: galleryUID - UID of a gallery [string]
 
 function gallery_imagecount($args) {
 	if (array_key_exists('galleryUID', $args) == false) { return false; }
@@ -22,3 +22,4 @@ function gallery_imagecount($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

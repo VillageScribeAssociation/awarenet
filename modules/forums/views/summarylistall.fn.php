@@ -5,7 +5,7 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all forums, grouped by school (noargs)
+//|	list all forums, grouped by school (noargs)
 //--------------------------------------------------------------------------------------------------
 
 function forums_summarylistall($args) {

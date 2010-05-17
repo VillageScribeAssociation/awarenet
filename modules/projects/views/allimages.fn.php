@@ -2,14 +2,14 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	all images of a project (default 300px wide)
+//|	all images of a project (default 300px wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or projects entry
-// * $args['size'] = sinze to display images
+//arg: raUID - recordAlias or UID or projects entry [string]
+//opt: projectUID - overrides raUID [string]
+//opt: size - size to display images (default is width300) [string]
 
 function projects_allimages($args) {
 	global $serverPath;
@@ -39,3 +39,4 @@ function projects_allimages($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

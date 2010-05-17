@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	mini nav of all months
+//|	mini nav of all months
 //--------------------------------------------------------------------------------------------------
-// * $args['year'] = year (yyyy)
+//arg: year - year (yyyy) [string]
 
 function calendar_allmonthsnav($args) {
 	if (array_key_exists('year', $args) == false) { return false; }
@@ -20,3 +20,4 @@ function calendar_allmonthsnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

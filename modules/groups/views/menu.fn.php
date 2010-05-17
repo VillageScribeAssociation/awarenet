@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for groups, no arguments
+//|	menu for groups, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function groups_menu($args) {
@@ -32,3 +32,4 @@ function groups_menu($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/pages/models/pages.mod.php');
+	require_once($installPath . 'modules/pages/models/page.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for editing pages
+//|	form for editing pages
 //--------------------------------------------------------------------------------------------------------------
 
 function pages_editform($args) {
@@ -38,3 +38,4 @@ function pages_editform($args) {
 
 
 ?>
+

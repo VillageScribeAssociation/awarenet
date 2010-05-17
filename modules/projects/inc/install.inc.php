@@ -4,7 +4,7 @@
 //	installer for images module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/projects/models/projects.mod.php');
+require_once($installPath . 'modules/projects/models/project.mod.php');
 require_once($installPath . 'modules/projects/models/membership.mod.php');
 require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
 

@@ -1,19 +1,19 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for managing page notifications
+//*	object for managing page notifications
 //--------------------------------------------------------------------------------------------------
-//	A channel is a meeting point where pages can subscribe to be notified of events.  Channels
-//	consist of a list of subscribed clients (page instances by a UID).  When a notification
-//	is broadcast on a channel, the list of subscribed clients is loaded and the notification added 
-//	to all of their buffers (PageClients).  If any of these PageClients have timed out it is 
-//	removed from the channel.  If a channel has no subscribers it is removed.
-//
-//	NOTE:
-//	* PageChannels are created by client demand, they die without subscribers
-//	* clients is a simple list of pageUIDs delimited by newlines
-//	* channel IDs start with the name of the module which will be broadcasting, eg, admin-syslog
-//	* before subscribing to a channel, a user must pass authorization from the module
+//+	A channel is a meeting point where pages can subscribe to be notified of events.  Channels
+//+	consist of a list of subscribed clients (page instances by a UID).  When a notification
+//+	is broadcast on a channel, the list of subscribed clients is loaded and the notification added 
+//+	to all of their buffers (PageClients).  If any of these PageClients have timed out it is 
+//+	removed from the channel.  If a channel has no subscribers it is removed.
+//+
+//+	NOTE:
+//+	* PageChannels are created by client demand, they die without subscribers
+//+	* clients is a simple list of pageUIDs delimited by newlines
+//+	* channel IDs start with the name of the module which will be broadcasting, eg, admin-syslog
+//+	* before subscribing to a channel, a user must pass authorization from the module
 
 require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
 
@@ -23,12 +23,13 @@ class PageChannel {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;				// currently loaded record
-	var $dbSchema;			// database structure
+	var $data;				// currently loaded record [array]
+	var $dbSchema;			// database structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: channelID - ID of a page channel [string]
 
 	function PageChannel($channelID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -37,8 +38,9 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by userUID, create a notification queue if one does not exist
+	//.	load a channel by ID, create a record for it if it does not exist
 	//----------------------------------------------------------------------------------------------
+	//arg: channelID - ID of a page channel [string]
 
 	function load($channelID) {
 		$sql = "select * from pagechannels where channelID='" . sqlMarkup($channelID) . "'";
@@ -55,10 +57,15 @@ class PageChannel {
 		return true;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -68,15 +75,16 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
-	//	nothing to check as yet
+	//,	nothing to check as yet
 
 	function verify() { return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -92,13 +100,14 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make array of notifications, ordered by time
+	//.	extended array of pagechannel members and metadata, unimplemented
 	//----------------------------------------------------------------------------------------------
 
 	function extArray() {
@@ -106,8 +115,10 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing PageChannels Table</h3>\n";
@@ -127,7 +138,7 @@ class PageChannel {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {	
@@ -135,19 +146,23 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	check if a client is aldready subscribed to this channel
+	//.	check if a client is already subscribed to this channel
 	//----------------------------------------------------------------------------------------------	
+	//arg: pageUID - UID of a client page [string]
+	//returns: true if this client is registered with the channel, otherwise false [bool]
 
 	function hasClient($pageUID) { 
 		return in_array($pageUID, explode("\n", $this->data['clients']));
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	subscribe a client to the channel
+	//.	subscribe a client to the channel
 	//----------------------------------------------------------------------------------------------
+	//arg: pageUID - UID of a client page [string]
+	//returns: true on success, false on failure [bool]
 
 	function addClient($pageUID) {
-		echo "#pagechannel->addClient('" . $pageUID . "');";
+		//echo "#pagechannel->addClient('" . $pageUID . "');";
 		if ($this->hasClient($pageUID) == false) {
 			$this->data['clients'] = $this->data['clients'] . $pageUID . "\n";
 			$this->save();
@@ -158,8 +173,9 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	remove a client from the channel
+	//.	remove a client from the channel
 	//----------------------------------------------------------------------------------------------	
+	//arg: pageUID - UID of a client page [string]
 
 	function removeClient($pageUID) {
 		//------------------------------------------------------------------------------------------
@@ -170,7 +186,7 @@ class PageChannel {
 		foreach($clients as $client) {
 			if (($client != $pageUID) && (strlen($client) > 3)) { $newClients[] = $client; }
 		}
-		$this->data['clients'] = implode("\n", $newClients);
+		$this->data['clients'] = implode("\n", $newClients) . "\n";
 		$this->save();
 
 		//------------------------------------------------------------------------------------------
@@ -181,8 +197,10 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	broadcast a message to all clients
+	//.	broadcast a message to all clients
 	//----------------------------------------------------------------------------------------------	
+	//arg: event - event type [string]
+	//arg: data - details of the event [string]
 
 	function broadcast($event, $data) {
 		$clients = explode("\n", $this->data['clients']);
@@ -197,8 +215,10 @@ class PageChannel {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	discover if a channel exists
+	//.	discover if a channel exists
 	//----------------------------------------------------------------------------------------------	
+	//arg: channelID - ID fo a page channel [string]
+	//returns: true if a record exists for this channel, false if one does not [bool]
 
 	function channelExists($channelID) {
 		$sql = "select count(UID) as numInst from pagechannels where channelID='" . sqlMarkup($channelID) . "'";

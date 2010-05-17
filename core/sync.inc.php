@@ -1,24 +1,25 @@
 <?
 
-//-------------------------------------------------------------------------------------------------
-//	synchronize content and broadcast events between servers
-//-------------------------------------------------------------------------------------------------
-//	events, such as database updates or file stores are stored in the sync database which acts 
-//	like a queue or outbox.  Once successfully passed to all peers the event is deleted.
-
 require_once($installPath . 'modules/sync/models/sync.mod.php');
-require_once($installPath . 'modules/sync/models/downloads.mod.php');
+require_once($installPath . 'modules/sync/models/download.mod.php');
 
-// 	tables which are not synced
+//-------------------------------------------------------------------------------------------------
+//*	synchronize content and broadcast events between servers
+//-------------------------------------------------------------------------------------------------
+//+	events, such as database updates or file stores are stored in the sync database which acts 
+//+	like a queue or outbox.  Once successfully passed to all peers the event is deleted.
+
+// 	tables which are not synced TODO: module config file
 $syncIgnoreTables = array(	'changes', 'sync', 'delitems', 'chat', 'downloads', 
 							'servers', 'pageclients', 'pagechannels'  );	
 
-//	notifications which are not synced
+//	notifications which are not synced TODO: module config file
 $syncIgnoreChannels = array('admin-syspagelog', 'admin-syspagelogsimple');	
 
 //-------------------------------------------------------------------------------------------------
-//	get this server's password (note: this should not be passed in any blocks, hence sql here)
+//|	get this server's password (note: this should not be passed in any blocks, hence sql here)
 //-------------------------------------------------------------------------------------------------
+//returns: peer server record (database makeup removed) or false if not found [array] [bool]
 
 function syncGetOwnData() {
 	$sql = "select * from servers where direction='self'";
@@ -53,8 +54,9 @@ function syncGetOwnData() {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	get this server's list of peers
+//|	get this server's list of peers
 //-------------------------------------------------------------------------------------------------
+//returns: array of peer server records in associative array form [array]
 
 function syncListPeers() {
 	$conditions = array("direction != 'self'");
@@ -63,8 +65,11 @@ function syncListPeers() {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	create a new sync event and fork a new thread/process to execute it
+//|	create a new sync event and fork a new thread/process to execute it
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: type - type (dbUpdate|dbDelete|fileCreate|fileDelete|notification) [string]
+//arg: data - message data, often base64 encoded XML [string]
 
 function syncCreate($source, $type, $data) {
 	global $installPath;
@@ -106,8 +111,11 @@ function syncCreate($source, $type, $data) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	broadcast a database update to peers
+//|	broadcast a database update to peers
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: table - name of table containing record to be updated [string]
+//arg: record - XML with base64 encoded values [string]
 
 function syncBroadcastDbUpdate($source, $table, $record) {
 	global $syncIgnoreTables;
@@ -122,8 +130,11 @@ function syncBroadcastDbUpdate($source, $table, $record) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	when a record is deleted
+//|	when a record is deleted
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: table - name of database table this record belongs to [string]
+//arg: UID - UID of the record being deleted
 
 function syncBroadcastDbDelete($source, $table, $UID) {
 	global $syncIgnoreTables;
@@ -138,16 +149,21 @@ function syncBroadcastDbDelete($source, $table, $UID) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	when a file is uploaded to downloaded into an awareNet server
+//|	when a file is uploaded to downloaded into an awareNet server
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: fileName - relative to installPath [string]
+//: not implemented here (files are pulled as needed, implement if you want a pushing system)
 
 function syncBroadcastFileCreate($source, $fileName) {
 	// NOT BROADCAST AT PRESENT, FILES ARE PULLED AS NEEDED
 }
 
 //-------------------------------------------------------------------------------------------------
-//	when a file is deleted
+//|	when a file is deleted
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: fileName - relative to installPath [string]
 
 function syncBroadcastFileDelete($source, $fileName) {
 	logSync("received notification of file deletion: $file<br/>\n");
@@ -155,8 +171,12 @@ function syncBroadcastFileDelete($source, $fileName) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	broadcast a notification to page clients
+//|	broadcast a notification to page clients
 //-------------------------------------------------------------------------------------------------
+//arg: source - source of this message [string]
+//arg: channelID - label identifying a page channel [string]
+//arg: event - as defined by channel [string]
+//arg: data - usually a base64 encoded string [string]
 
 function syncBroadcastNotification($source, $channelID, $event, $data) {
 	global $syncIgnoreChannels;
@@ -176,11 +196,15 @@ function syncBroadcastNotification($source, $channelID, $event, $data) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	record that a record has been deleted
+//|	note that a record has been deleted
 //-------------------------------------------------------------------------------------------------
-//	so that is it not resurrected on sync with a server which still has this record
+//: this is so that is it not resurrected on sync with a server which still has this record
+//arg: refTable - table which contained the deleted record [string]
+//arg: refUID - UID of the deleted record [string]
+//opt: source - peer we heard about this deletion from [string]
+//returns: true on success [bool]
 
-function syncRecordDeletion($refTable, $refUID) {
+function syncRecordDeletion($refTable, $refUID, $source = 'self') {
 	global $syncIgnoreTables;
 	if (in_array($refTable, $syncIgnoreTables) == true) { return false; }
 
@@ -191,7 +215,7 @@ function syncRecordDeletion($refTable, $refUID) {
 	//---------------------------------------------------------------------------------------------
 	if (syncRecordDeleted($refTable, $refUID) == true) { return false; }
 	
-	syncBroadcastDbDelete('self', $refTable, $refUID);
+	syncBroadcastDbDelete($source, $refTable, $refUID);
 
 	//---------------------------------------------------------------------------------------------
 	//	insert directly into database
@@ -207,8 +231,11 @@ function syncRecordDeletion($refTable, $refUID) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	check if a record has been deleted
+//|	check if a record has been deleted
 //-------------------------------------------------------------------------------------------------
+//arg: refTable - table which contained(s) deleted record [string]
+//arg: refUID - UID of deleted record [string]
+//returns: [bool]
 
 function syncRecordDeleted($refTable, $refUID) {
 	$sql = "select * from delitems "
@@ -221,9 +248,10 @@ function syncRecordDeleted($refTable, $refUID) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	get schema of sync table
+//|	get schema of sync table
 //-------------------------------------------------------------------------------------------------
-//	note that this also exists in /modules/sync/sync.mod.php, copy any changes there
+//:	note that this also exists in /modules/sync/sync.mod.php, copy any changes there
+//returns: dbSchema, see mysql.inc.php [array]
 
 function syncDbSchema() {
 	$model = new Sync();
@@ -231,8 +259,11 @@ function syncDbSchema() {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	convert a record to base64_encoded XML
+//|	convert a record to base64_encoded XML
 //-------------------------------------------------------------------------------------------------
+//arg: table - name of database table [string]
+//arg: data - associative array of field name => value pairs [array]
+//returns: base64 encoded XML [string]
 
 function syncBase64EncodeSql($table, $data) {
 	$xml = "<update>\n";
@@ -250,8 +281,10 @@ function syncBase64EncodeSql($table, $data) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	convert base64_encoded XML to array
+//|	convert base64_encoded XML to array
 //-------------------------------------------------------------------------------------------------
+//arg: xml - base64 encoded XML representation of a record [string]
+//returns: partial dbSchema [array]
 
 function syncBase64DecodeSql($xml) {
 	$data = array();
@@ -273,14 +306,15 @@ function syncBase64DecodeSql($xml) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	authenticate a request on the sync API
+//|	authenticate a request on the sync API
 //-------------------------------------------------------------------------------------------------
-//	HTTP header of request should contain a timestamp within 10 minutes of the request being
-//	recieved and an authentication proof; sha1 hash of this server's password and the 
-//	timestamp sha1('password' . 'timestamp')
-//	Sync-timestamp: 12314235
-//	Sync-proof:	69eba3375528ad645d6902792ca36132fc728d73
-//	Sync-source: URL of peer
+//:	HTTP header of request should contain a timestamp within 10 minutes of the request being
+//:	recieved and an authentication proof; sha1 hash of this server's password and the 
+//:	timestamp sha1('password' . 'timestamp')
+//:	Sync-timestamp: 12314235
+//:	Sync-proof:	69eba3375528ad645d6902792ca36132fc728d73
+//:	Sync-source: URL of peer
+//returns: true if credentials sent in header by current browser request check out, or false [bool]
 
 $syncTimeDiffMax = 600;		// 10 minutes
 
@@ -309,9 +343,10 @@ function syncAuthenticate() {
 }	
 
 //-------------------------------------------------------------------------------------------------
-//	get all HTTP headers (getallheaders() only works when PHP is apache module)
+//|	get all HTTP headers (getallheaders() only works when PHP is apache module)
 //-------------------------------------------------------------------------------------------------
-//	source: http://www.rvaidya.com/blog/php/2009/02/25/get-request-headers-sent-by-client-in-php/
+//+	source: http://www.rvaidya.com/blog/php/2009/02/25/get-request-headers-sent-by-client-in-php/
+//returns: the headers [array]
 
 function syncGetHeaders() {
 	//logSync("Getting request headers:\n");
@@ -328,8 +363,11 @@ function syncGetHeaders() {
 }  
 
 //-------------------------------------------------------------------------------------------------
-//	save something to the database, without triggering sync or saving changes to record
+//|	save something to the database, without triggering sync or saving changes to record
 //-------------------------------------------------------------------------------------------------
+//arg: tableName - name of a database table [string]
+//arg: data - array fo field name => value pairs [array]
+//: TODO: maybe move this into mysql.inc.php
 
 function syncDbSave($tableName, $data) {
 	if (array_key_exists('UID', $data) == false) { return false; }	
@@ -379,10 +417,14 @@ function syncDbSave($tableName, $data) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	HTTP GET something from a peer 
+//|	HTTP GET something from a peer 
 //-------------------------------------------------------------------------------------------------
+//arg: url - URL of sync API on peer [string]
+//arg: password - password for this peer [string]
+//returns: result of HTTP request [string]
 
 function syncCurlGet($url, $password) {
+	global $hostInterface;
 	global $proxyEnabled;
 	global $proxyAddress;
 	global $proxyPort;
@@ -407,7 +449,7 @@ function syncCurlGet($url, $password) {
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
+	if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
 
 	//---------------------------------------------------------------------------------------------
 	//	use HTTP proxy if enabled
@@ -431,10 +473,15 @@ function syncCurlGet($url, $password) {
 }
 
 //-------------------------------------------------------------------------------------------------
-//	HTTP GET something from a peer 
+//|	HTTP POST something to a peer 
 //-------------------------------------------------------------------------------------------------
+//arg: url - URL of sync API on peer [string]
+//arg: password - password for this peer [string]
+//arg: postVars - body of post [array]
+//returns: result of HTTP POST, as returned by peer [string]
 
 function syncCurlPost($url, $password, $postVars) {
+	global $hostInterface;
 	global $proxyEnabled;
 	global $proxyAddress;
 	global $proxyPort;
@@ -467,6 +514,8 @@ function syncCurlPost($url, $password, $postVars) {
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+	if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
+
 	//---------------------------------------------------------------------------------------------
 	//	use HTTP proxy if enabled
 	//---------------------------------------------------------------------------------------------
@@ -492,6 +541,8 @@ function syncCurlPost($url, $password, $postVars) {
 //-------------------------------------------------------------------------------------------------
 //	request a file, search on peers and download it if found 
 //-------------------------------------------------------------------------------------------------
+//arg: fileName - relative to installPath [string]
+//returns: true if requested, distinct from request being filled [bool]
 
 function syncRequestFile($fileName) {
 	global $installPath;

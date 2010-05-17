@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	create form for editing an announcement record
+//|	create form for editing an announcement record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of post to edit [string]
 
 function announcements_editform($args) {
 	if (authHas('announcements', 'edit', $args) == false) { return false; }
@@ -20,3 +20,4 @@ function announcements_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

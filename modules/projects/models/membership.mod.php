@@ -1,14 +1,14 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	index table
+//*	index table (users <-> projects)
 //--------------------------------------------------------------------------------------------------
-//	project members can all edit the project, but only the person who intiated the project may 
-//	add members.
-
-//	Member role may be:
-//	 admin (can add members, edit project)
-//	 member (can edit project)
+//+	project members can all edit the project, but only the person who intiated the project may 
+//+	add members.
+//+
+//+	Member role may be:
+//+	- admin (can add members, edit project)
+//+	- member (can edit project)
 
 class ProjectMembership {
 
@@ -20,8 +20,10 @@ class ProjectMembership {
 	var $dbSchema;		// database structure
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: projectUID - UID of a project [string]
+	//opt: userUID - UID of a user [string]
 
 	function ProjectMembership($projectUID = '', $userUID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -30,8 +32,11 @@ class ProjectMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record given project and user UIDs
 	//----------------------------------------------------------------------------------------------
+	//arg: projectUID - UID of a project [string]
+	//arg: userUID - UID of a user [string]	
+	//returns: true if record is found, false if not found [bool]
 
 	function load($projectUID, $userUID) {
 		$sql = "select * from projectmembers "
@@ -46,10 +51,15 @@ class ProjectMembership {
 		return false;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -59,8 +69,9 @@ class ProjectMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -80,8 +91,9 @@ class ProjectMembership {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -102,16 +114,19 @@ class ProjectMembership {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		dbDelete('projectmembers', $this->data['UID']);
+		//TODO: send some notifications, eg, user has left your project
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this model
+	//.	install this model
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Project Memberships</h3>\n";

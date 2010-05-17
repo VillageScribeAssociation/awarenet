@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	editform
+//|	editform
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of comment to edit [string]
 
 function comments_editform($args) {
 	if (authHas('comments', 'edit', $args) == false) { return false; }
@@ -18,3 +18,4 @@ function comments_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

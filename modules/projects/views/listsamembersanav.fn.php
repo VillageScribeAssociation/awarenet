@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list recent projects in the nav
+//|	list recent projects in the nav
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides UID
-// * $args['UID'] = UID of a project
+//arg: UID - UID of a project [string]
+//opt: projectUID - overrides UID [string]
 
 function projects_listsamembersanav($args) {
 	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID'];}	
@@ -38,3 +38,4 @@ function projects_listsamembersanav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

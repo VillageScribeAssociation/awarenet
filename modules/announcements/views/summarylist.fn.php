@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary list
+//|	summary list
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page no to display
-// * $args['num'] = number of records per page
+//opt: page - page no to display (default is 0) [string]
+//opt: num - number of records per page (default is 30) [string]
 
 function announcements_summarylist($args) {
 	if (authHas('announcements', 'show', '') == false) { return false; }
@@ -37,3 +37,4 @@ function announcements_summarylist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

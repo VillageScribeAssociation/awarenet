@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show
+//|	show
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of post to edit [string]
 
 function comments_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -17,3 +17,4 @@ function comments_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

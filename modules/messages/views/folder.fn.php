@@ -3,12 +3,12 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a user's mail folder
+//|	show a user's mail folder
 //--------------------------------------------------------------------------------------------------
-// * $args['num'] = number of messages to show
-// * $args['page'] = page to display
-// * $args['owner'] = page to display
-// * $args['folder'] = page to display
+//arg: owner - whose folder? (default is current user) [string]
+//arg: folder - folder to display [string]
+//opt: page - page to display (default is 1) [string]
+//opt: num - number of messages to show (default is 50) [string]
 
 function messages_folder($args) {
 	global $user;
@@ -33,7 +33,7 @@ function messages_folder($args) {
 	$total = ceil($row['numRecords'] / $num);
 
 	//----------------------------------------------------------------------------------------------
-	//	make thumbs of images on this page
+	//	load page of messages
 	//----------------------------------------------------------------------------------------------
 	$limit = "limit " . (($page - 1) * $num) . ", ". sqlMarkup($num);
 	$sql = "select * from messages "
@@ -68,3 +68,4 @@ function messages_folder($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

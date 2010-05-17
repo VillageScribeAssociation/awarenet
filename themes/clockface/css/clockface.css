@@ -101,11 +101,12 @@ div.navbox a {
 	color: #444444;
 }
 
+
 img.navboxbtn {
 	float: right; 
 	position: relative; 
-	top: -21px; 
-	left: -5px;
+	top: 5px; 
+	left: -5px; 
 }
 
 /* indented div --------------------------------------------------------------------------------- */
@@ -167,6 +168,12 @@ span.ajaxmsg {
 
 span.ajaxerror {
 	background-color: red;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxwarn {
+	background-color: #ff6600;
 	padding-right: 10px;
 	padding-left: 10px;
 }

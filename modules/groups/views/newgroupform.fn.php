@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to add a new group, shown in nav
+//|	form to add a new group, shown in nav
 //--------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = UID of the school this group belongs to
+//arg: schoolUID - UID of the school this group belongs to [string]
 
 function groups_newgroupform($args) {
 	if (authHas('groups', 'edit', '') == false) { return false; }
@@ -19,3 +19,4 @@ function groups_newgroupform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

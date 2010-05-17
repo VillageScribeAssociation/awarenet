@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	returns whether current user is a group admin
+//|	returns whether current user is a group admin
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = group UID or recordAlias
+//arg: raUID - group UID or recordAlias [string]
 
 function groups_haseditauth($args) {
 	global $user;
@@ -19,3 +19,4 @@ function groups_haseditauth($args) {
 
 
 ?>
+

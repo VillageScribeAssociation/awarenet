@@ -6,7 +6,7 @@
 
 	if (authHas('groups', 'edit', '') == false) { do403(); }
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	$model = new group();
 	$model->save();
 	

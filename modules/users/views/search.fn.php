@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	user search results
+//|	user search results  // TODO: pagination
 //--------------------------------------------------------------------------------------------------
-// * $args['fsearch'] = query
-// * $args['pageno'] = page number
+//arg: fsearch - query [string]
+//opt: pageno - page number (not yet implemented) [string]
 
 function users_search($args) {
 	$html = '';

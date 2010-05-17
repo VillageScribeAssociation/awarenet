@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list administrators of a group
+//|	list administrators of a group
 //--------------------------------------------------------------------------------------------------
-// * $args['groupUID'] = overrides raUID
-// * $args['target'] = link tagrget
+//arg: groupUID - UID of a group [string]
+//opt: target = link target (for frames, etc) [string]
 
 function groups_listadmins($args) {
 	if (authHas('groups', 'show', '') == false) { return false; }
@@ -49,3 +49,4 @@ function groups_listadmins($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

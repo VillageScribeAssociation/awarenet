@@ -11,7 +11,7 @@
 	  AND (array_key_exists('UID', $_POST)) 
 	  AND (dbRecordExists('announcements', $_POST['UID'])) ) {
 	  
-		require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+		require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 	  
 		$model = new Announcement();
 		$model->load($_POST['UID']);

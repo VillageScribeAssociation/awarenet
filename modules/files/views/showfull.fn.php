@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	full-page display of an file + caption, etc
+//|	full-page display of an file + caption, etc
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
+//arg: raUID - recordAlias or UID of record [string]
 
 function files_showfull($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -23,3 +23,4 @@ function files_showfull($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

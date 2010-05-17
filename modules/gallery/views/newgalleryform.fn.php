@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to create a new gallery (formatted for nav, noargs)
+//|	form to create a new gallery (formatted for nav, noargs)
 //--------------------------------------------------------------------------------------------------
 
 function gallery_newgalleryform($args) {

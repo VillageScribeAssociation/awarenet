@@ -4,10 +4,10 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise for the nav (300 wide)
+//|	summarise for the nav (300 wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['postUID'] = overrides raUID
+//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: postUID - overrides raUID [string]
 
 function moblog_summarynav($args) {
 	if (array_key_exists('postUID', $args) == true) { $args['raUID'] = $args['postUID']; }
@@ -19,3 +19,4 @@ function moblog_summarynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

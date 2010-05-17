@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return a list of groups
+//|	return a list of groups
 //--------------------------------------------------------------------------------------------------
-// * $args['varname'] = name of variable
-// * $args['default'] = current value
+//opt: varname - name of variable (default is 'group') [string]
+//opt: default - set default value (should be a group UID) [string]
 
 function groups_select($args) {
 	$varname = 'group';
@@ -35,3 +35,4 @@ function groups_select($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

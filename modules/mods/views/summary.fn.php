@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary of a module, with buttons to install/enable/disable a given module (perm:manage)
+//|	summary of a module, with buttons to install/enable/disable a given module (perm:manage)
 //--------------------------------------------------------------------------------------------------
-// * $args['modulename'] = name of a module
+//arg: modulename - name of a module [string]
 
 function mods_summary($args) {
 	global $user;
@@ -18,3 +18,4 @@ function mods_summary($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

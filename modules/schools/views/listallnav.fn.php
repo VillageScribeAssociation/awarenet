@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all formatted for nav (300 px wide)
+//|	list all formatted for nav (300 px wide)
 //--------------------------------------------------------------------------------------------------
 
 function schools_listallnav($args) {
@@ -20,3 +20,4 @@ function schools_listallnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

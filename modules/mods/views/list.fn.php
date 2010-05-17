@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all modules (perm:view)
+//|	list all modules (perm:view)
 //--------------------------------------------------------------------------------------------------
 
 function mods_list($args) {

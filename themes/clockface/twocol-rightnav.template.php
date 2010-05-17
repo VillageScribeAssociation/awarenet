@@ -21,6 +21,7 @@
 	var jsServerPath = '%%serverPath%%';
 	var jsPageUID = '%%pageInstanceUID%%';
 	var jsUserUID = '%%jsUserUID%%';
+	var formChecks = new Array();
 
 	//----------------------------------------------------------------------------------------------
 	//	initialise page
@@ -30,14 +31,24 @@
 		%%jsinit%%
 		msgPump();
 		if (true == awareNetChat) { chatInit(); }
+
+		// set checks for form completion, TODO: try to avoid this closure
+		window.onbeforeunload = function() {
+			testResult = formCheckExecuteAll();
+			if (testResult != false) { return testResult; }
+		}
 	}
+
+	//---------------------------------------------------------------------------------------------
+	//	defined by page tempate:
+	//---------------------------------------------------------------------------------------------
 
 	%%script%%
 
 </script>
 </head>
 
-<body onLoad="kPageInit();"> 
+<body onLoad="kPageInit();" > 
 <center>
 <table class='tableborder' cellspacing='0' cellpadding='0' height='100%' class='table_main' >
 

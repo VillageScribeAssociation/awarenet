@@ -1,17 +1,17 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for revieving page notifications
+//*	object for revieving page notifications
 //--------------------------------------------------------------------------------------------------
-//	when a page subscribes to a notification channel, the channel ID is stored in [channels]
-//  when a page checks its inbox, its timestamp is updated
-//	if a timestamp has not been updated in over 5 minutes, the record is killed
-//
-//	messages are stored one per line and consist of base64_encoded strings separated by pipes
-//	eg: channelID|event|data
-//
-//	what the data is and how it is formatted is up to the module which sent the notification
-//	timestamp is not updated every thime the inbox is checked, only if 3 minutes since last updated
+//+	when a page subscribes to a notification channel, the channel ID is stored in [channels]
+//+	when a page checks its inbox, its timestamp is updated
+//+	if a timestamp has not been updated in over 5 minutes, the record is killed
+//+
+//+	messages are stored one per line and consist of base64_encoded strings separated by pipes
+//+	eg: channelID|event|data
+//+
+//+	what the data is and how it is formatted is up to the module which sent the notification
+//+	timestamp is not updated every thime the inbox is checked, only if 3 minutes since last updated
 
 require_once($installPath . 'modules/notifications/models/pagechannel.mod.php');
 
@@ -21,15 +21,15 @@ class PageClient {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;				// currently loaded record
-	var $dbSchema;			// database structure
-	var $old = false;				// is this old
-	
-	var $oldTime = 180;		// number of seconds at which page is considered old
+	var $data;				// currently loaded record [array]
+	var $dbSchema;			// database structure [array]
+	var $old = false;		// is this old [bool]
+	var $oldTime = 180;		// number of seconds at which page is considered old [int]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: pageUID - UID of a client page's inbox [string]
 
 	function PageClient($pageUID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -39,21 +39,27 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by pageUID, create it if it does not yet exist
+	//.	load a record by pageUID, create it if it does not yet exist
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a client page's inbox [string]
 
-	function load($uid) {
-		if (dbRecordExists('pageclients', $uid) == false) {
+	function load($UID) {
+		if (dbRecordExists('pageclients', $UID) == false) {
 			// object does not exist, create it
-			$this->data['UID'] = $uid;
+			$this->data['UID'] = $UID;
 			$this->save();
 		} else {
 			// load it
-			$ary = dbLoad('pageclients', $uid);
+			$ary = dbLoad('pageclients', $UID);
 			$this->loadArray($ary);
 		}
 		return true;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 
 	function loadArray($ary) { 
 		$this->data = $ary; 
@@ -61,7 +67,7 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -71,15 +77,16 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
-	//	nothing to check as yet
+	//,	nothing to check as yet
 
 	function verify() { return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -97,22 +104,26 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make array of notifications, ordered by time
+	//.	make array of messages, ordered by time
 	//----------------------------------------------------------------------------------------------
+	//,	no use for this as yet
 
 	function extArray() {
 		// TODO
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing PageClients Table</h3>\n";
@@ -132,7 +143,7 @@ class PageClient {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
@@ -152,12 +163,13 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	subscribe this page to a channel
+	//.	subscribe this page to a channel
 	//----------------------------------------------------------------------------------------------	
-	
+	//arg: channelID - ID of a page channel [string]	
+
 	function subscribe($channelID) {
-		echo "#pageclient->data['UID'] = '" . $this->data['UID'] . "'\n";
-		echo "#pageclient->subscribe('" . $channelID . "')\n";
+		//echo "#pageclient->data['UID'] = '" . $this->data['UID'] . "'\n";
+		//echo "#pageclient->subscribe('" . $channelID . "')\n";
 		//------------------------------------------------------------------------------------------
 		//	let the channel know
 		//------------------------------------------------------------------------------------------
@@ -179,7 +191,7 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	update timestamp
+	//.	update timestamp
 	//----------------------------------------------------------------------------------------------	
 
 	function updateTimeStamp() {
@@ -188,8 +200,11 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	add message to this page's inbox
+	//.	add message to this page's inbox
 	//----------------------------------------------------------------------------------------------	
+	//arg: channel - ID of a page channel [string]
+	//arg: event - event type [string]
+	//arg: msg - details of event [string]
 
 	function addMessage($channel, $event, $msg) {
 		$this->data['inbox'] .= $channel . '|' . $event . '|' . $msg . "\n";
@@ -197,19 +212,20 @@ class PageClient {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	destroy any pageclients which are timed out
+	//.	destroy any pageclients which are timed out
 	//----------------------------------------------------------------------------------------------	
 
 	function bringOutYourDead() {
 		// construct a timestamp which was 10 minutes ago
 		$minAge = (time() - (60 * 10));
 		$sql = "select UID from pageclients where timestamp < $minAge ";
+		//TODO: dbLoadRange
 		$result = dbQuery($sql);
 		while ($row = dbFetchAssoc($result)) {
 			$row = sqlRMArray($row);
 			$model = new PageClient($row['UID']);
 			$model->delete();
-			echo "removed dead PageClient: " . $row['UID'] . "<br/>\n";
+			//echo "removed dead PageClient: " . $row['UID'] . "<br/>\n";
 		}
 	}
 

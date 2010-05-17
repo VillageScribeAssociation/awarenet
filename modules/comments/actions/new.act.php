@@ -8,7 +8,7 @@
 	if (array_key_exists('refmodule', $request['args']) == false) { do403(); }
 	if (array_key_exists('refuid', $request['args']) == false) { do403(); }
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 	$model = new Announcement();
 	$model->data['notifications'] = 'init';

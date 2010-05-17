@@ -16,6 +16,7 @@
 
 		$refModule = ''; //*************
 	
+		logSync("deleteing image " . $i->data['UID'] . "via for on images module.\n");
 		$i->delete();
 	
 		if (array_key_exists('return', $_POST)) {

@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show friend request box (if not already friend)
+//|	show friend request box (if not already friend)
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user whose profile this box is on
-// * $args['notitle'] = yes|no (optional)
+//arg: userUID - UID of user whose profile this box is on [string]
+//opt: notitle - surpress display of title (yes|no) [string]
 
 function users_friendrequestprofilenav($args) {
 	global $user; $html = '';

@@ -4,9 +4,9 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list x recent posts from the same blog (ie same user) as the post UID supplied
+//|	list x recent posts from the same blog (ie same user) as the post UID supplied
 //--------------------------------------------------------------------------------------------------
-//opt: num - max number of posts to show (default is 10)
+//opt: num - max number of posts to show (default is 10) [string]
 
 function moblog_listpopularnav($args) {
 	$num = 10; $html = '';
@@ -32,3 +32,4 @@ function moblog_listpopularnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

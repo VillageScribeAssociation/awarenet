@@ -8,17 +8,7 @@
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Years:]]
 
-[`|lt]h1[`|gt]
-[`|lt]a class=[`|sq]black[`|sq] href=[`|sq]/calendar/list/year[`|us][`|pc][`|pc]prevyear[`|pc][`|pc]/[`|sq][`|gt]
-[`|lt]img src=[`|sq]/themes/clockface/images/arrow[`|us]left[`|us]sm.jpg[`|sq] border=[`|sq]0[`|sq] /[`|gt][`|lt]/a[`|gt]
-[`|lt]a class=[`|sq]black[`|sq] href=[`|sq]/calendar/list/year[`|us][`|pc][`|pc]prevyear[`|pc][`|pc]/[`|sq][`|gt]
-[`|pc][`|pc]prevyear[`|pc][`|pc][`|lt]/a[`|gt]
-|
-[`|lt]a class=[`|sq]black[`|sq] href=[`|sq]/calendar/list/year[`|us][`|pc][`|pc]nextyear[`|pc][`|pc]/[`|sq][`|gt]
-[`|pc][`|pc]nextyear[`|pc][`|pc][`|lt]/a[`|gt]
-[`|lt]a class=[`|sq]black[`|sq] href=[`|sq]/calendar/list/year[`|us][`|pc][`|pc]nextyear[`|pc][`|pc]/[`|sq][`|gt]
-[`|lt]img src=[`|sq]/themes/clockface/images/arrow[`|us]right[`|us]sm.jpg[`|sq] border=[`|sq]0[`|sq] /[`|gt][`|lt]/a[`|gt]
-[`|lt]/h1[`|gt]
+[[:calendar::yearsubnav::year=[`|pc][`|pc]year[`|pc][`|pc]:]]
 
 [[:theme::navtitlebox::label=Months:]]
 [[:calendar::allmonthsnav::year=[`|pc][`|pc]year[`|pc][`|pc]:]]

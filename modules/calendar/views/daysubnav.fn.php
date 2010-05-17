@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	subnav for day display
+//|	subnav for day display
 //--------------------------------------------------------------------------------------------------
-// * $args['year'] = year (yyyy)
-// * $args['month'] = month (mm) 01 to 12
-// * $args['day'] = day (dd) 01 to 31
+//arg: year - year (yyyy) [string]
+//arg: month - day (mm) 01 to 12 [string]
+//arg: day - day (dd) 01 to 31 [string]
 
 function calendar_daysubnav($args) {
 	global $serverPath;
@@ -43,3 +43,4 @@ function calendar_daysubnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

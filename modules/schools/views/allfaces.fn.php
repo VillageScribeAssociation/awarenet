@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	all images of a school (300px wide)
+//|	all images of a school (300px wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or schools entry
+//arg: raUID  - recordAlias or UID or schools entry [string]
+//opt: schoolUID - overrides raUID [string]
 
 function schools_allfaces($args) {
 	global $serverPath;
@@ -35,3 +35,4 @@ function schools_allfaces($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a thread and paginated replies
+//|	display a thread and paginated replies
 //--------------------------------------------------------------------------------------------------
-// * $args['threadUID'] = UID of a forum thread
-// * $args['pageno'] = page to display
+//arg: threadUID - UID of a forum thread [string]
+//opt: pageno - page to display (default is 1) [string]
 
 function forums_showreplies($args) {
 	$pageno = 1; $num = 5; $html = '';
@@ -62,3 +62,4 @@ function forums_showreplies($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

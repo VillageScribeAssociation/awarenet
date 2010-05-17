@@ -1,15 +1,15 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for user forums
+//*	object for user forums
 //--------------------------------------------------------------------------------------------------
-//	A very limited phpBB clone.  Forums may be general bound to a school.  Everyone can view forums,
-//	but posting may be limited.  Special members - moderators - can delete unwanted posts, change
-//	the forum's title and description, add more moderators, etc.
-
-//  What type a forum is is dependant on the 'school' field, if it contains the UID of a school,
-//	it is bound to that school, if blank, it is general, if 'private' it is limited to whomever
-//	is in the 'members' field
+//+	A very limited phpBB clone.  Forums may be general bound to a school.  Everyone can view forums,
+//+	but posting may be limited.  Special members - moderators - can delete unwanted posts, change
+//+	the forum's title and description, add more moderators, etc.
+//+
+//+	What type a forum is is dependant on the 'school' field, if it contains the UID of a school,
+//+	it is bound to that school, if blank, it is general, if 'private' it is limited to whomever
+//+	is in the 'members' field
 
 require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 require_once($installPath . 'modules/forums/models/forumreply.mod.php');
@@ -28,28 +28,36 @@ class Forum {
 	var $banned;		// array of user UIDs
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of a forum [string]
 
-	function Forum($UID = '') {
+	function Forum($raUID = '') {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
 		$this->data['title'] = 'New Forum ' . $this->data['UID'];
 		$this->data['moderators'] = $user->data['UID'];
 		$this->expandData();
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of a forum [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('forums', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('forums', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
 
 	function loadArray($ary) {
 		$this->data = $ary;
@@ -57,7 +65,7 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -73,8 +81,9 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -83,7 +92,7 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	expand moderators, members, banned
+	//.	expand moderators, members, banned
 	//----------------------------------------------------------------------------------------------
 
 	function expandData() {
@@ -101,7 +110,7 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	collapse back to flat record
+	//.	collapse back to flat record
 	//----------------------------------------------------------------------------------------------
 
 	function collapseData() {
@@ -112,8 +121,9 @@ class Forum {
 
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -142,16 +152,18 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
 	function toArray() {
 		return $this->data;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		global $user;
@@ -221,7 +233,7 @@ class Forum {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
 		$ary['userRa'] = $model->data['recordAlias'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
@@ -231,8 +243,10 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing forums Module</h3>\n";
@@ -253,12 +267,12 @@ class Forum {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		//------------------------------------------------------------------------------------------
-		//	delete all threads
+		//	delete all threads //TODO: replace this with an event hander (forums_deleted)
 		//------------------------------------------------------------------------------------------
 		$sql = "select * from forumthreads where forum='" . sqlMarkup($this->data['UID']) . "'";
 		$result = dbQuery($sql);
@@ -267,14 +281,6 @@ class Forum {
 			$thread->loadArray(sqlRMArray($row));
 			$thread->delete();
 		}
-
-		//------------------------------------------------------------------------------------------
-		//	delete any images associated with this thread
-		//------------------------------------------------------------------------------------------
-
-		//------------------------------------------------------------------------------------------
-		//	delete any files associated with this thread
-		//------------------------------------------------------------------------------------------
 
 		//------------------------------------------------------------------------------------------
 		//	delete this record

@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	nav form to add a user as a friend
+//|	nav form to add a user as a friend
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = overrides raUID
-// * $args['UID'] = recordAlias or UID or groups entry
+//arg: UID - recordAlias or UID or groups entry [string]
+//opt: userUID - overrides raUID [string]
 
 function users_addfriendform($args) {
 	if (array_key_exists('userUID', $args) == true) { $args['UID'] = $args['userUID']; }

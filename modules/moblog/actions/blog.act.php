@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$userUID = $user->data['UID'];	// default to own blog
-	$model = new Users();
+	$model = new User();
 
 	if ($request['ref'] != '') {
 		if ($model->load($request['ref']) == false) { do404(); }

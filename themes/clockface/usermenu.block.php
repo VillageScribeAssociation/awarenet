@@ -11,6 +11,7 @@
 					<a href='%%serverPath%%users/profile/' class='menu'>My Pages</a><small>&nbsp</small>
 					<a href='%%serverPath%%notifications/' class='menu'>My Feed</a><small>&nbsp</small>
 					<a href='%%serverPath%%messages/inbox/' class='menu'>Inbox ([[:messages::inboxcount:]])</a><small>&nbsp</small>		
+					%%adminConsoleLink%%
 				</span>
 			</div>
 

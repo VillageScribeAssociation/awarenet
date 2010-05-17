@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	history summary formatted for nav
+//|	history summary formatted for nav
 //--------------------------------------------------------------------------------------------------
-// * $args['UID'] = UID of wiki entry
-// * $args['num'] = number of recent entries to show
+//arg: UID - UID of wiki entry [string]
+//opt: num - number of recent entries to show (default is 10) [string]
 
 function wiki_historynav($args) {
 	$num = 10; $html = ''; $total = '0';

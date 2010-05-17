@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list busiest threads on all forums (formatted for nav)
+//|	list busiest threads on all forums (formatted for nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['num'] = number of threads to show, optional
+//opt: num - number of threads to show (default is 10) [string]
 
 function forums_busiestthreads($args) {
 	$num = 10; $html = '';
@@ -37,3 +37,4 @@ function forums_busiestthreads($args) {
 
 
 ?>
+

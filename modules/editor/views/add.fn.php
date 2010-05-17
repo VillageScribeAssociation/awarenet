@@ -1,11 +1,11 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	add a WYSWYG editor to an HTML page (empty)
+//|	add a WYSWYG editor to an HTML page (empty)
 //-------------------------------------------------------------------------------------------------
-//arg: name - name of html field
-//opt: width - width of editor in pixels
-//opt: height - height of editor in pixels
+//arg: name - name of html field [string]
+//opt: width - width of editor in pixels [string]
+//opt: height - height of editor in pixels [string]
 
 function editor_add($args) {
 	global $page;
@@ -40,3 +40,4 @@ function editor_add($args) {
 
 //-------------------------------------------------------------------------------------------------
 ?>
+

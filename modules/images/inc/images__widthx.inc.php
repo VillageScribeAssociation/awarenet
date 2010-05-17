@@ -14,7 +14,11 @@
 
 function images__widthx($args) {
 	global $serverPath;
-	$link = 'yes';	$caption = 'no'; $size = 'width300'; $html = ''; $align = '';
+	$link = 'yes';	$caption = 'no'; $size = 'width300'; $html = ''; $align = ''; $pad = '';
+
+	//---------------------------------------------------------------------------------------------
+	//	read and check arguments
+	//---------------------------------------------------------------------------------------------
 	if (array_key_exists('imageUID', $args) == true) { $args['raUID'] = $args['imageUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('link', $args)) { $link = $args['link']; }
@@ -23,10 +27,19 @@ function images__widthx($args) {
 	if (array_key_exists('size', $args)) { $size = $args['size']; }
 	if (array_key_exists('align', $args)) { $align = $args['align']; }
 	
+	if (array_key_exists('pad', $args) == true) {
+		$padBy = (int)$args['pad'];
+		$pad = "vspace='" . $padBy . "px' hspace='" . $padBy . "px' ";
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	make html
+	//---------------------------------------------------------------------------------------------
+
 	$linkUrl = $serverPath . 'images/' . $args['raUID'];
 	$imgUrl = $serverPath . 'images/' . $size . '/' . $args['raUID'];
 
-	$html =  "<img src='" . $imgUrl . "' border='0' />";	
+	$html =  "<img src='" . $imgUrl . "' border='0' $pad/>";	
 	if ($link == 'yes') { $html = "<a href='" . $linkUrl . "'>$html</a>"; }
 
 	if ($caption == 'yes') {

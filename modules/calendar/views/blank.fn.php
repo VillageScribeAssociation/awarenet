@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a blank calendar (testing)
+//|	display a blank calendar (testing)
 //--------------------------------------------------------------------------------------------------
-// * $args['month'] = show a day, month or year
-// * $args['year'] = day, month or year to show
-// * $args['size'] = large or small
+//arg: month - show a day, month or year [string]
+//arg: year - day, month or year to show [string]
+//arg: size - large or small [string]
 
 function calendar_blank($args) {
 	$month = '10'; $year = '2008'; $size = 'large';
@@ -26,3 +26,4 @@ function calendar_blank($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

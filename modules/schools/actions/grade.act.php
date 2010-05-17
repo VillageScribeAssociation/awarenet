@@ -12,7 +12,7 @@
 
 	if (array_key_exists('grade', $request['args']) == true) { 
 		if ($request['ref'] == '') { do404(); }
-		require_once($installPath . 'modules/schools/models/schools.mod.php');
+		require_once($installPath . 'modules/schools/models/school.mod.php');
 		$model = new School($request['ref']);
 
 		$page->load($installPath . 'modules/schools/actions/grade.page.php');
@@ -37,9 +37,9 @@
 	//----------------------------------------------------------------------------------------------
 
 	if (array_key_exists('user', $request['args']) == true) {
-		require_once($installPath . 'modules/schools/models/schools.mod.php');
+		require_once($installPath . 'modules/schools/models/school.mod.php');
 	
-		$u = new Users($request['args']['user']);
+		$u = new User($request['args']['user']);
 		$model = new School($u->data['school']);
 
 		$page->load($installPath . 'modules/schools/actions/grade.page.php');

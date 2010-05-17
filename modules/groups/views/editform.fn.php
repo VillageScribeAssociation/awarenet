@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or groups entry
+//arg: raUID - recordAlias or UID or groups entry [string]
 
 function groups_editform($args) {
 	if (authHas('groups', 'edit', '') == false) { return false; }
@@ -20,3 +20,4 @@ function groups_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

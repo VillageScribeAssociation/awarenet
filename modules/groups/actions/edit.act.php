@@ -6,7 +6,7 @@
 
 	if (authHas('groups', 'edit', '') == false) { do403(); }
 	raFindRedirect('groups', 'editabstract', 'groups', $request['ref']);
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the group and check if user has is authorised to edit it

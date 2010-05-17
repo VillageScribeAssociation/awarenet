@@ -4,7 +4,7 @@
 //	installer for groups module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/groups/models/groups.mod.php');
+require_once($installPath . 'modules/groups/models/group.mod.php');
 
 function install_groups_module() {
 	global $installPath;

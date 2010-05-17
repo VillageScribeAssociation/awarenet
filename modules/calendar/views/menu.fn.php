@@ -3,7 +3,7 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for calendar, no arguments
+//|	menu for calendar, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function calendar_menu($args) {

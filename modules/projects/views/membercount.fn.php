@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	return number of members in project
+//|	return number of members in project
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
+//arg: projectUID - UID pf project to count members for [string]
 
 function projects_membercount($args) {
 	if (authHas('projects', 'view', '') == false) { return false; }
@@ -24,3 +24,4 @@ function projects_membercount($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -3,6 +3,7 @@
 //--------------------------------------------------------------------------------------------------
 //	make a slideshow
 //--------------------------------------------------------------------------------------------------
+//TODO: add javascript nav buttons and reload (avoid jumpy iframe)
 
 	if ( (array_key_exists('refmodule', $request['args'])) 
 	   AND (array_key_exists('refuid', $request['args'])) ) {

@@ -1,8 +1,9 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	perform some action regularly (ie, no more than every 5 minutes)
+//*	perform some action regularly (ie, no more than every 1 minutes)
 //-------------------------------------------------------------------------------------------------
+//+ This is likely to be moved to its own module and called by system cron via wget
 
 $cronInterval = 60;	// one minute
 cronTest();

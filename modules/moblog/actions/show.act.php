@@ -17,7 +17,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Moblog($request['ref']);
-	$thisUser = new Users($model->data['createdBy']);
+	$thisUser = new User($model->data['createdBy']);
 
 	//----------------------------------------------------------------------------------------------
 	//	user can create new posts on their own blog

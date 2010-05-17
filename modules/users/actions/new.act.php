@@ -6,8 +6,8 @@
 
 	if (authHas('users', 'edit', '') == false) { do403(); }
 
-	require_once($installPath . 'modules/users/models/users.mod.php');
-	$model = new Users();
+	require_once($installPath . 'modules/users/models/user.mod.php');
+	$model = new User();
 
 	if (array_key_exists('school', $_POST)) { $model->data['school'] = $_POST['school']; }
 	if (array_key_exists('grade', $_POST)) { $model->data['grade'] = $_POST['grade']; }

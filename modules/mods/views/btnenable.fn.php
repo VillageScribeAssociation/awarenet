@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	enable button (perm:manage)
+//|	enable button (perm:manage)
 //--------------------------------------------------------------------------------------------------
-// * $args['modulename'] = name of a module
+//arg: modulename - name of a module [string]
 
 function mods_btnenable($args) {
 	if (array_key_exists('modulename', $args) == false) { return false; }
@@ -18,3 +18,4 @@ function mods_btnenable($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

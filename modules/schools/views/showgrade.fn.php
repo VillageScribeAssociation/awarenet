@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all grades/years/forms/standards at a school
+//|	list all grades/years/forms/standards at a school
 //--------------------------------------------------------------------------------------------------
-// * $args['schoolUID'] = overrides raUID
-// * $args['grade'] = grade which studenta are in
+//arg: schoolUID - overrides raUID [string]
+//arg: grade - grade which studenta are in [string]
 
 function schools_showgrade($args) {
 	global $serverPath;
@@ -56,3 +56,4 @@ function schools_showgrade($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-//args: raUID - recordAlias or UID or schools entry
+//arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_editform($args) {
 	if (authHas('schools', 'edit', '') == false) { return false; }
@@ -19,3 +19,4 @@ function schools_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

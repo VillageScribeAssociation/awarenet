@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	editform
+//|	form for editing a peer record
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = UID of server record
+//arg: raUID - UID of server record [string]
 
 function sync_editserverform($args) {
 	if (authHas('sync', 'edit', $args) == false) { return false; }

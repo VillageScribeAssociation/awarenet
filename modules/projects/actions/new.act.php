@@ -6,7 +6,7 @@
 
 	if (authHas('projects', 'edit', '') == false) { do403(); }
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	create project

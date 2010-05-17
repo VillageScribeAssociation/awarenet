@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	tags (no args)
+//|	tags (no args)
 //--------------------------------------------------------------------------------------------------
-// * $args['fileUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID
+//arg: fileUID - overrides raUID [string]
+//arg: raUID - recordAlias or UID [string]
 
 function files_tags($args) {
 	if (array_key_exists('fileUID', $args)) { $args['raUID'] = $args['fileUID']; }
@@ -24,3 +24,4 @@ function files_tags($args) {
 
 
 ?>
+

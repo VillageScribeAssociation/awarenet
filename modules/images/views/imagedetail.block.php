@@ -2,7 +2,7 @@
 <table noborder width='100%'>
   <tr>
     <td valign='top'><a href='%%editUrl%%'>
-        <img src='%%thumbUrl%%' border='0' /></a>
+        [[:images::thumb::imageUID=%%UID%%::link=no:]]</a>
     </td>
     <td valign='top'>
         <b>%%title%%</b><br/>

@@ -5,9 +5,10 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for wiki, no arguments
+//|	menu for wiki, no arguments
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or wiki entry, or 'no' if no edit link
+//opt: raUID - recordAlias or UID or wiki entry, or 'no' if no edit link [string]
+//opt: type - may be 'content' (default) or 'talk', requires raUID [string]
 
 function wiki_menu($args) {
 	$type = 'content'; $raUID = 'no';

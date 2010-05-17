@@ -5,11 +5,11 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list threads in a forum
+//|	list threads in a forum
 //--------------------------------------------------------------------------------------------------
-// * $args['forumUID'] = UID of a forum
-// * $args['pageno'] = page number
-// * $args['num'] = number of threads per page
+//arg: forumUID - UID of a forum [string]
+//opt: pageno - page number (default is 1) [string]
+//opt: num - number of threads per page (default is 20) [string]
 
 function forums_showthreads($args) {
 	$pageno = 1; $num = 20; $html = '';
@@ -61,3 +61,4 @@ function forums_showthreads($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

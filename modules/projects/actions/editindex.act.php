@@ -4,7 +4,7 @@
 //	show project index /w edit links
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('projects', 'editabstract', 'projects', $request['ref']);

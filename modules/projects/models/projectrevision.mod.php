@@ -1,8 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for manging wiki revisions
+//*	object to represent project revisions
 //--------------------------------------------------------------------------------------------------
+//+	since the projects module is derived from the wiki module, changes to wiki revisions model
+//+	should be copied here.
 
 class ProjectRevision {
 
@@ -10,12 +12,13 @@ class ProjectRevision {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database table structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database table structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of a project revision [string]
 
 	function ProjectRevision($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -24,8 +27,10 @@ class ProjectRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a project revision given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a project revision [string]
+	//returns: true if object is found and loaded, otherise false [bool]
 
 	function load($UID) {
 		$ary = dbLoad('projectrevisions', $UID);
@@ -33,12 +38,17 @@ class ProjectRevision {
 		return false;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) {
 		$this->data = $ary;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -48,8 +58,9 @@ class ProjectRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that object is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -61,8 +72,9 @@ class ProjectRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -84,16 +96,16 @@ class ProjectRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;
@@ -120,18 +132,19 @@ class ProjectRevision {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a revision and all its assets
+	//.	delete the current revision and all its assets
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		if (dbRecordExists('projectrevisions', $this->data['UID']) == false) { return false; }
 		dbDelete('projectrevisions', $this->data['UID']);
-		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this model
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Project Revisions</h3>\n";

@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the first picture on the announcement (if there is one) or return info icon
+//|	find the first picture on the announcement (if there is one) or return info icon
 //--------------------------------------------------------------------------------------------------
-// * $args['announcementUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or groups entry [string]
+//arg: size - 100, 200, 300, 570, thumb or thumb90 [string]
+//opt: announcementUID - overrides raUID [string]
+//opt: link - link to larger image (yes|no) [string]
 
 function announcements_image($args) {
 	global $serverPath;
@@ -49,3 +49,4 @@ function announcements_image($args) {
 
 
 ?>
+

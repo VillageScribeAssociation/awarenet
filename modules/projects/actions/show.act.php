@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('projects', 'show', 'projects', $request['ref']);
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the model and determine if the current user can edit it

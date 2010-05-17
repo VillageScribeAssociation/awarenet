@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	add a slideshow
+//|	add a slideshow
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of images per page
+//arg: refModule - module to list on [string]
+//arg: refUID - number of images per page [string]
 
 function images_slideshow($args) {
 	global $serverPath;
@@ -33,3 +33,4 @@ function images_slideshow($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -19,9 +19,10 @@
 
 [[:theme::navtitlebox::label=Friends::width=570::toggle=divUserFriends:]]
 [`|lt]div id='divUserFriends'[`|gt]
+[[:users::listfriends::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
-[[:users::listfriends::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
+</content>
 <title>:: awareNet :: users :: profile ::</title>
 <script></script>
 <nav1>[`|pc][`|pc]profilePicture[`|pc][`|pc]

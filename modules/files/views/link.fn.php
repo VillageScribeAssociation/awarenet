@@ -1,12 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a link to a file
+//|	make a link to a file
 //--------------------------------------------------------------------------------------------------
-// * $args['fileUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID
+//arg: raUID - recordAlias or UID [string]
+//opt: fileUID - overrides raUID [string]
+
 function files_link($args) {
 	if (array_key_exists('fileUID', $args)) { $args['raUID'] = $args['fileUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -19,3 +20,4 @@ function files_link($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

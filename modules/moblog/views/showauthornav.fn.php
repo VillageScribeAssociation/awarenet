@@ -4,10 +4,10 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary of author in the nav
+//|	summary of author in the nav
 //--------------------------------------------------------------------------------------------------
-// * $args['postUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID of post
+//arg: raUID - recordAlias or UID of post [string]
+//opt: postUID - overrides raUID [string]
 
 function moblog_showauthornav($args) {
 	if (array_key_exists('postUID', $args) == true) { $args['raUID'] = $args['postUID']; }
@@ -28,3 +28,4 @@ function moblog_showauthornav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

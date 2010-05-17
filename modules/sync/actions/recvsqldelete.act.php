@@ -41,22 +41,10 @@
 	dbQuery($sql);
 
 	//---------------------------------------------------------------------------------------------
-	//	add to deleted items
+	//	add to deleted items and pass on to peers
 	//---------------------------------------------------------------------------------------------
-
-	$model = new DeletedItem();
-	$model->data['refTable'] = $delTable;
-	$model->data['refUID'] = $delUID;
-	$model->data['timestamp'] = time();
-	$model->save();
-
-	//---------------------------------------------------------------------------------------------
-	//	pass on to peers
-	//---------------------------------------------------------------------------------------------	
-
-	$syncHeaders = syncGetHeaders();
 	$source = $syncHeaders['Sync-source'];
-	syncBroadcastDbDelete($source, $delTable, $delUid);
+	syncRecordDeletion($refTable, $refUID, $source)
 
 	//---------------------------------------------------------------------------------------------
 	//	done

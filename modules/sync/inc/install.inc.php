@@ -4,10 +4,10 @@
 //	installer for gallery module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/sync/models/servers.mod.php');
+require_once($installPath . 'modules/sync/models/server.mod.php');
 require_once($installPath . 'modules/sync/models/deleted.mod.php');
 require_once($installPath . 'modules/sync/models/sync.mod.php');
-require_once($installPath . 'modules/sync/models/downloads.mod.php');
+require_once($installPath . 'modules/sync/models/download.mod.php');
 
 function install_sync_module() {
 	global $installPath;

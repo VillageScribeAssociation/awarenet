@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all most recent x comments owned by a particular record on a given module
+//|	list all most recent x comments owned by a particular record on a given module
 //--------------------------------------------------------------------------------------------------
-// * $args['refUID'] = record which owns the comments
-// * $args['refModule'] = module which owns the record
-// * $args['num'] = number of records per page
+//arg: refUID - record which owns the comments [string]
+//arg: refModule - module which owns the record [string]
+//opt: num - number of records per page (default 10) [string]
 
 function comments_listjs($args) {
 	global $serverPath;
@@ -69,3 +69,4 @@ function comments_listjs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

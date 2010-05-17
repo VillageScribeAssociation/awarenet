@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show friend requests (to others)
+//|	show friend requests (to others)
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of user whose profile this box is on
+//arg: userUID - UID of user whose profile this box is on [string]
 
 function users_showrequestedfriends($args) {
 	global $user; $html = '';
@@ -27,7 +27,18 @@ function users_showrequestedfriends($args) {
 			//$labels = array('userUID' => $friendUID, 'relationship' => $relationship);
 			//$html .= replaceLabels($labels, loadBlock('modules/users/views/confirmfriendnav.block.php'));
 			$html .= "[[:users::summarynav::userUID=" . $friendUID 
-					. "::extra=(relationship: $relationship):]]<hr/>\n";
+					. "::extra=(relationship: $relationship):]]\n";
+
+			$rmUrl = '%%serverPath%%users/removefriend/';
+
+			$html .= "<form name='withdrawFriendRequest' method='POST' action='" . $rmUrl . "'>\n"
+					. "<input type='hidden' name='action' value='withdrawRequest' />\n"
+					. "<input type='hidden' name='friendUID' value='" . $friendUID . "' />\n"
+					. "<input type='submit' value='widthdraw request' />\n"
+					. "</form>\n";
+
+			$html .= "<hr/>\n";
+
 		}
 
 	}	

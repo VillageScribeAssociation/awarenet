@@ -4,7 +4,7 @@
 //	discover if this peer has a file
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/sync/models/downloads.mod.php');
+	require_once($installPath . 'modules/sync/models/download.mod.php');
 
 	//---------------------------------------------------------------------------------------------
 	//	authenticate

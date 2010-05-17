@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/static/models/static.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	editform
+//|	editform
 //--------------------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of static page to edit [string]
 
 function static_editform($args) {
 	if (authHas('static', 'edit', $args) == false) { return false; }

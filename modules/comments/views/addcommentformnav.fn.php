@@ -1,14 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to add new comments, narrow version for the nav
+//|	form to add new comments, narrow version for the nav
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module which owns the record, required
-// * $args['refUID'] = record which owns the comment, required
-// * $args['return'] = page to return to, required
-// * $args['invitation'] = text encouraging someone to leave a comment, optional
+//arg: refModule - module which owns the record, required [string]
+//arg: refUID - record which owns the comment, required [string]
+//arg: return - page to return to, required [string]
+//opt: invitation - text encouraging someone to leave a comment, optional [string]
 
 function comments_addcommentformnav($args) {
 	$invitation = 'Add a comment';
@@ -31,3 +31,4 @@ function comments_addcommentformnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

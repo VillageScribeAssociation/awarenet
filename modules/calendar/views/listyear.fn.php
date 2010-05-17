@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display upload/view for a single image (eg, user profile picture)
+//|	display upload/view for a single image (eg, user profile picture)
 //--------------------------------------------------------------------------------------------------
-// * $args['year'] = show a year
+//arg: year - show a year [string]
 
 function calendar_listyear($args) {	
 	//----------------------------------------------------------------------------------------------
@@ -54,3 +54,4 @@ function calendar_listyear($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

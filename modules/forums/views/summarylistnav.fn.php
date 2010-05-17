@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all forums at a specific school (formatted for nav)
+//|	list all forums at a specific school (formatted for nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['school'] = user whose galleries to list
+//arg: school - UID of a school (not recordAlias) [string]
 
 function forums_summarylistnav($args) {
 	if (array_key_exists('school', $args) == false) { return false; }
@@ -32,3 +32,4 @@ function forums_summarylistnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

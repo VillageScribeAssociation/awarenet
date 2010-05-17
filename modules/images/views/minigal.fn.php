@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	add a minitaure gallery - like a slideshow, but with bigger thumbs, no next/prev
+//|	add a minitaure gallery - like a slideshow, but with bigger thumbs, no next/prev
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of images per page
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of item this owns images [string]
 
 function images_minigal($args) {
 	global $serverPath;
@@ -33,3 +33,4 @@ function images_minigal($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

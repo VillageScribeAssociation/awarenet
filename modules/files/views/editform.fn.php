@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for editing files
+//|	form for editing file metadata
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
-// * $args['return'] = return to upload dialog
+//arg: raUID - recordAlias or UID of record [string]
+//opt: return - return to upload dialog [string]
 
 function files_editform($args) {
 	$return = '';
@@ -34,3 +34,4 @@ function files_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

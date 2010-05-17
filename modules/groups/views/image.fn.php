@@ -1,15 +1,15 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	find the group's logo/picture (300px) or a blank image
+//|	find the group's logo/picture (300px) or a blank image
 //--------------------------------------------------------------------------------------------------
-// * $args['groupUID'] = overrides raUID
-// * $args['raUID'] = recordAlias or UID or groups entry
-// * $args['size'] = 100, 200, 300, 570, thumb or thumb90
-// * $args['link'] = link to larger image (yes|no)
+//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: groupUID - overrides raUID [string]
+//opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 [string]
+//opt: link - link to larger image (yes|no) [string]
 
 function groups_image($args) {
 	global $serverPath;
@@ -51,3 +51,4 @@ function groups_image($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

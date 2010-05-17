@@ -5,10 +5,10 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list wiki articles
+//|	list wiki articles
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = UID of wiki entry
-// * $args['num'] = number of entries to show per page
+//opt: page - page number (default is 1) [string]
+//opt: num - number of entries to show per page (default is 30) [string]
 
 function wiki_listall($args) {
 	$pageno = 1; $num = 30; $total = 0; $numPages = 0; $start = 0;

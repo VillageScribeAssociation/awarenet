@@ -1,9 +1,9 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu for schools, no arguments
+//|	menu for schools, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function schools_menu($args) {
@@ -19,3 +19,4 @@ function schools_menu($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

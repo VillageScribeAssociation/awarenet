@@ -4,7 +4,7 @@
 //	delete an file
 //--------------------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 	
 	if (array_key_exists('rmfile', $request['args'])) {
 		$fileUID = $request['args']['rmfile'];

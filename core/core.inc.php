@@ -1,8 +1,9 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	default libraries and objects available to modules
+//*	default libraries and objects available to modules
 //--------------------------------------------------------------------------------------------------
+//+ Many or all of these may eventually be moved to their own modules
 
 	include 'http.inc.php';
 	include 'routing.inc.php';

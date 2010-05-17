@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all users
+//|	list all users
 //--------------------------------------------------------------------------------------------------
-// * $args['page'] = page no to display
-// * $args['num'] = number of records per page
+//opt: page - page no to display (default is 1) [string]
+//opt: num - number of records per page (default is 300) [string]
 
 function users_summarylist($args) {
 	if (authHas('users', 'summarylist', '') == false) { return ''; }

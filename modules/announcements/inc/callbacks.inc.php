@@ -4,7 +4,7 @@
 //	callbacks allow modules to interact with being necessarily dependant on one another
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	when a record is deleted on another module

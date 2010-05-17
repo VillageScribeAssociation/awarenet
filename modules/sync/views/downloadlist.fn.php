@@ -1,9 +1,8 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	displays this peer's current download list
+//|	displays this peer's current download list
 //-------------------------------------------------------------------------------------------------
-//ifgroup: admin
 
 function sync_downloadlist($args) {
 	global $user;

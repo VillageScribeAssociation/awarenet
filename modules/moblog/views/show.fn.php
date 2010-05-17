@@ -4,9 +4,9 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show
+//|	show
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of a post
+//arg: raUID - recordAlias or UID of a post [string]
 
 function moblog_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -18,3 +18,4 @@ function moblog_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

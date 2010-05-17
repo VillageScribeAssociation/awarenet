@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarize a folder for the nav
+//|	summarize a folder for the nav
 //--------------------------------------------------------------------------------------------------
-// * $args['owner'] = UID of message owner
-// * $args['folder'] = folder to summarize
+//opt: folder - folder to summarize (default is 'inbox') [string]
+//opt: owner - UID of message owner (default is current user) [string]
 
 function messages_summarynav($args) {
 	global $user;
@@ -55,3 +55,4 @@ function messages_summarynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

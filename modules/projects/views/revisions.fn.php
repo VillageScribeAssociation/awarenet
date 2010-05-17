@@ -2,13 +2,13 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list revisions made to a project
+//|	list revisions made to a project
 //--------------------------------------------------------------------------------------------------
-// * $args['projectUID'] = overrides raUID
-// * $args['UID'] = UID or recordAlias of a project
+//arg: UID - UID or recordAlias of a project [string]
+//opt: projectUID - overrides UID [string]
 
 function projects_revisions($args) {
 	require_once($installPath . 'modules/projects/inc/diff.inc.php');
@@ -64,3 +64,4 @@ function projects_revisions($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

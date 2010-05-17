@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summarise for nav (300 px wide)
+//|	summarise for nav (300 px wide)
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or schools entry
-// * $args['schoolUID'] = overrides raUID
+//arg: raUID - recordAlias or UID or schools entry [string]
+//opt: schoolUID - overrides raUID [string]
 
 function schools_summarynav($args) {
 	if (array_key_exists('schoolUID', $args) == true) { $args['raUID'] = $args['schoolUID']; }
@@ -18,3 +18,4 @@ function schools_summarynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

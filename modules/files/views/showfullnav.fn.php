@@ -1,11 +1,11 @@
 <?
 
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	full-page display of an file + caption, etc
+//|	full-page display of an file + caption, etc
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID of record
+//arg: raUID - recordAlias or UID of record [string]
 
 function files_showfullnav($args) {
 	global $serverPath;
@@ -50,3 +50,4 @@ function files_showfullnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

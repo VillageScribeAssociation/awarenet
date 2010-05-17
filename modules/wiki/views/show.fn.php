@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show an article
+//|	show an article
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or wiki entry
+//arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_show($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }

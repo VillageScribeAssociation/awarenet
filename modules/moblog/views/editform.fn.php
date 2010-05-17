@@ -4,9 +4,9 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	editform
+//|	editform
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID of post to edit
+//arg: raUID - recordAlias or UID of post to edit [string]
 
 function moblog_editform($args) {
 	if (authHas('moblog', 'edit', $args) == false) { return false; }
@@ -21,3 +21,4 @@ function moblog_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -4,7 +4,7 @@
 //	looks for a file among peers and downloads it if found
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/sync/models/downloads.mod.php');
+	require_once($installPath . 'modules/sync/models/download.mod.php');
 
 	//---------------------------------------------------------------------------------------------
 	//	load the download record and set status to 'searching'

@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a set of images associated with something
+//|	display a set of images associated with something
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of images per page
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of item which owns the images [string]
 
 function images_imageset($args) {
 	global $serverPath;
@@ -45,3 +45,4 @@ function images_imageset($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -4,7 +4,7 @@
 //	callbacks allow modules to interact with being necessarily dependant on one another
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/users/models/users.mod.php');
+require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	when a comment is posted
@@ -13,7 +13,7 @@ require_once($installPath . 'modules/users/models/users.mod.php');
 function users__cb_comments_add($refUID, $commentUID, $comment) {
 	global $user;
 	if (dbRecordExists('users', $refUID) == false) { return false; }
-	$model = new Users($refUID);
+	$model = new User($refUID);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members

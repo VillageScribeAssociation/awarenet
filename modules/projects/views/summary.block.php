@@ -3,7 +3,7 @@
   <tr>
     <td valign='top'><br/>
       <a href='/projects/%%recordAlias%%'>
-      [[:projects::image::raUID=%%UID%%::size=width200::link=no:]]</a>
+      [[:images::default::refModule=projects::refUID=%%UID%%::size=width200::link=no:]]</a>
     </td>
     <td width='10'></td>
     <td valign='top'>

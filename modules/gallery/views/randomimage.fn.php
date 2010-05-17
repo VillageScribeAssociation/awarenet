@@ -3,13 +3,16 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a random image from a gallery
+//|	display a random image from a gallery
 //--------------------------------------------------------------------------------------------------
-// * $args['galleryUID'] = UID of a gallery (required)
-// * $args['size'] = size of image (optional)
+//arg: galleryUID - UID of a gallery [string]
+//opt: size  - size of image [string]
 
 function gallery_randomimage($args) {
+
 	$size = 'thumbsm';
+
+
 	if (array_key_exists('galleryUID', $args) == false) { return false; }
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
 
@@ -31,3 +34,4 @@ function gallery_randomimage($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -16,7 +16,7 @@
 		//	load the project and check that user has edit permissions on this project
 		//------------------------------------------------------------------------------------------
 	  
-		require_once($installPath . 'modules/projects/models/projects.mod.php');
+		require_once($installPath . 'modules/projects/models/project.mod.php');
 	  
 		$model = new Project();
 		$model->load($_POST['UID']);

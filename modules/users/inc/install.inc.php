@@ -4,9 +4,9 @@
 //	installer for images module (creates table)
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/users/models/users.mod.php');
+require_once($installPath . 'modules/users/models/user.mod.php');
 require_once($installPath . 'modules/users/models/userlogin.mod.php');
-require_once($installPath . 'modules/users/models/friendships.mod.php');
+require_once($installPath . 'modules/users/models/friendship.mod.php');
 
 function install_users_module() {
 	global $installPath;
@@ -19,7 +19,7 @@ function install_users_module() {
 	//	create users table
 	//------------------------------------------------------------------------------------------
 
-	$model = new Users();
+	$model = new User();
 	$report .= $model->install();
 
 	//------------------------------------------------------------------------------------------

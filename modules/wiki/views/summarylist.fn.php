@@ -5,7 +5,7 @@
 	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all
+//|	list all wiki pages
 //--------------------------------------------------------------------------------------------------
 
 function wiki_summarylist($args) {

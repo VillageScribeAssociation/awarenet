@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form for editing the abstract
+//|	form for editing the abstract
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or projects entry
+//arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_editabstractform($args) {
 	global $user;
@@ -23,3 +23,4 @@ function projects_editabstractform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

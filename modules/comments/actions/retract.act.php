@@ -4,7 +4,7 @@
 //	retract a comment (users can retract their own comments, admins can just blast away)
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/comments/models/comments.mod.php');
+	require_once($installPath . 'modules/comments/models/comment.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference, permissions

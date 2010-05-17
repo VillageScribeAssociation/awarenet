@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the file record
 	//----------------------------------------------------------------------------------------------
-	require_once($installPath . 'modules/files/models/files.mod.php');
+	require_once($installPath . 'modules/files/models/file.mod.php');
 	if ($request['ref'] == '') { do404(); }
 	raFindRedirect('files', 'dn', 'files', $request['ref']);
 	$f = new File($request['ref']);

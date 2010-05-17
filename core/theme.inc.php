@@ -1,12 +1,14 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	functions for reading and writing /theme/x/style.xml.php
+//*	functions for reading and writing /theme/x/style.xml.php
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-//	load theme style variables into an array (usually attached to page object)
+//|	load theme style variables into an array (usually attached to page object)
 //--------------------------------------------------------------------------------------------------
+//arg: theme - theme name [string]
+//returns: theme stylesheet; associative array [array]
 
 function themeReadStyle($theme) {
 	global $installPath;
@@ -19,6 +21,10 @@ function themeReadStyle($theme) {
 //--------------------------------------------------------------------------------------------------
 //	save an array of style variables
 //--------------------------------------------------------------------------------------------------
+//arg: fileName - absolute file name [string]
+//arg: style - theme stylesheet; associative array [array]
+//returns: true on success, else false [bool]
+//: TODO: use filePutContents
 
 function themeWriteStyle($fileName, $style) {
 	global $installPath;

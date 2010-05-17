@@ -10,7 +10,7 @@
 	//	which school blog to show?
 	//----------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/schools/models/schools.mod.php');
+	require_once($installPath . 'modules/schools/models/school.mod.php');
 	$model = new School();
 
 	if ($request['ref'] != '') {

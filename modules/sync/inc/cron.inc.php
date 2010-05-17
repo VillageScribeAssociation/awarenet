@@ -4,7 +4,7 @@
 //	periodic maintenance of sync
 //-------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/sync/models/downloads.mod.php');
+require_once($installPath . 'modules/sync/models/download.mod.php');
 require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 function sync_cron() {

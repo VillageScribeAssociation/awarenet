@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	form to add a new user (to be displayed in the subnav, 300px wide, no arguments)
+//|	form to add a new user (to be displayed in the subnav, 300px wide, no arguments)
 //--------------------------------------------------------------------------------------------------
 
 function users_newuserform($args) {

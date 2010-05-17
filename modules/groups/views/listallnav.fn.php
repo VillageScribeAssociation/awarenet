@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all formatted for navigation bar
+//|	list all formatted for navigation bar
 //--------------------------------------------------------------------------------------------------
-// * $args['school'] = UID of a school, constrains results
-// * $args['sameschool'] = UID of a group, constrains results to those of the same school
+//opt: school - UID of a school, constrains results [string]
+//opt: sameschool - UID of a group, constrains results to those of the same school [string]
 
 function groups_listallnav($args) {
 	$school = ''; $userUID = ''; $sameschool = '';
@@ -37,3 +37,4 @@ function groups_listallnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

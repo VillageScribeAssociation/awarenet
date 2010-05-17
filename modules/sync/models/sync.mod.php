@@ -1,20 +1,20 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for recording sync notices
+//*	object for recording sync notices
 //--------------------------------------------------------------------------------------------------
-//	when an event occurs or we are notified on one by a peer it is stored in the sync table until
-//	successfully rebroadcast to all peers which need to know about it.  Retrying periodically.
-//	
-//	Database fields mean the following:
-//	UID 		- a unique ID
-//	source 		- peer we recieved this from, 'self' if the event occured on this server
-//	type		- type of event, eg 'dbupdate', 'dbdelete', etc
-//	data		- serialized, depends on type
-//	peer		- UID of peer to broadcast this to
-//	status		- locked / failed
-//	received	- when this entry was created
-//	timestamp	- of last attempt to pass on to peer
+//+	when an event occurs or we are notified of one by a peer it is stored in the sync table until
+//+	successfully rebroadcast to all peers which need to know about it.  Retrying periodically.
+//+	
+//+	Database fields mean the following:
+//+	UID 		- a unique ID
+//+	source 		- peer we recieved this from, 'self' if the event occured on this server
+//+	type		- type of event, eg 'dbupdate', 'dbdelete', etc
+//+	data		- serialized, depends on type
+//+	peer		- UID of peer to broadcast this to
+//+	status		- locked / failed
+//+	received	- when this entry was created
+//+	timestamp	- of last attempt to pass on to peer
 
 class Sync {
 
@@ -22,12 +22,13 @@ class Sync {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of object recording deleted item (not the UID of the item itself) [string]
 
 	function Sync($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -39,22 +40,29 @@ class Sync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load an object given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a sync notice [string]
+	//returns: true if object is found and loaded, otherwise false [bool]
 
-	function load($uid) {
-		$ary = dbLoad('sync', $uid, 'true');
+	function load($UID) {
+		$ary = dbLoad('sync', $UID, 'true');
 		if ($ary == false) { return false; }
 		$this->data = $ary;
 		return true;
 	}
 	
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
 	function loadArray($ary) {
 		$this->data = $ary;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -66,8 +74,9 @@ class Sync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a object is valid before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -80,9 +89,10 @@ class Sync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
-	//	note that this also exists in /core/sync.inc.php, copy any changes there
+	//returns: database table layout [array]
+	//,	note that this also exists in /core/sync.inc.php, copy any changes there
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -104,25 +114,31 @@ class Sync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object as an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need, can't imagine this will be used
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;			
+		$ary['datahtml'] = wordwrap($ary['data'], 40, "\n", true);
+		$ary['datahtml'] = str_replace("<", "&lt;", $ary['datahtml']);
+		$ary['datahtml'] = str_replace(">", "&gt;", $ary['datahtml']);
+		$ary['datahtml'] = str_replace("\n", "<br/>\n", $ary['datahtml']);
 		return $ary;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
 		$report = "<h3>Installing Sync (sync) Model</h3>\n";
@@ -141,7 +157,7 @@ class Sync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a sync record
+	//.	delete the current sync notice from the database
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {

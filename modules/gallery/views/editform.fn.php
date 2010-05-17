@@ -3,9 +3,9 @@
 	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show the edit form
+//|	show the edit form
 //--------------------------------------------------------------------------------------------------
-// * $args['raUID'] = recordAlias or UID or gallery entry
+//arg: raUID - recordAlias or UID of a gallery [string]
 
 function gallery_editform($args) {
 	if (authHas('gallery', 'edit', '') == false) { return false; }
@@ -20,3 +20,4 @@ function gallery_editform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

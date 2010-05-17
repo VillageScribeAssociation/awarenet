@@ -1,5 +1,5 @@
 <? /*
 <h1>%%name%% (%%country%%)</h1>
-%%contentHtml%%<br/>
+%%description%%<br/>
 %%editLink%%<br/>
 */ ?>

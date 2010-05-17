@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all forums for the nav 
+//|+	list all forums for the nav 
 //--------------------------------------------------------------------------------------------------
-// * $args['school'] = school to show forums for
+//arg: school - UID of school to show forums for [string]
 
 function forums_navlist($args) {
 	if (array_key_exists('school', $args) == false) { return false; }
@@ -38,3 +38,4 @@ function forums_navlist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

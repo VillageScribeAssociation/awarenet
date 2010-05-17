@@ -1,17 +1,17 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendships.mod.php');
-	require_once($installPath . 'modules/users/models/users.mod.php');
+	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a list of users who are currently online at a given school (formatted for nav)
+//|	make a list of users who are currently online at a given school (formatted for nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['school'] = UID of school 
+//arg: school - UID of school [string]
 
 function users_onlineschoolnav($args) {
 	$html = '';
 	if (array_key_exists('school', $args) == false) { return false; }
-
+	// TODO this needs fixing
 	$sql = "select * from users "
 		 . "where (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(lastOnline)) < 7300 "
 		 . "order by firstname";

@@ -1,10 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for recording deleted items, so that they are not respawned by the sync
+//*	object for recording deleted items, so that they are not respawned by the sync
 //--------------------------------------------------------------------------------------------------
-//	note that file/image deletions are also stroed in this table, with 'refTable' set to
-// 'localfile', and the refUID to relative filename.
+//+	note that file/image deletions are also stored in this table, with 'refTable' set to
+//+	'localfile', and the refUID to relative filename.
 
 class DeletedItem {
 
@@ -12,12 +12,13 @@ class DeletedItem {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
+	var $data;			// currently loaded record [array]
+	var $dbSchema;		// database structure [array]
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: UID - UID of object recording deleted item (not the UID of the item itself) [string]
 
 	function DeletedItem($UID = '') {
 		$this->dbSchema = $this->initDbSchema();
@@ -27,22 +28,26 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load an object given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of obect recording deleted item (not the UID of the item itself) [string]
 
-	function load($uid) {
-		$ary = dbLoad('delitems', $uid, 'true');
+	function load($UID) {
+		$ary = dbLoad('delitems', $UID, 'true');
 		if ($ary == false) { return false; }
 		$this->data = $ary;
 		return true;
 	}
-	
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	load an object provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
+
+	//----------------------------------------------------------------------------------------------
+	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -54,8 +59,9 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a object is valid before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -68,8 +74,9 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -78,6 +85,7 @@ class DeletedItem {
 			'UID' => 'VARCHAR(30)',
 			'refTable' => 'VARCHAR(50)',
 			'refUID' => 'VARCHAR(255)',	
+			'detail' => 'TEXT',
 			'timestamp' => 'VARCHAR(20)'
 		);
 
@@ -87,16 +95,16 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object as an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make and extended array of all data a view will need, can't imagine this will be used
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		$ary = $this->data;			
@@ -104,8 +112,10 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
 		$report = "<h3>Installing Deleted Items Table</h3>\n";
@@ -124,7 +134,7 @@ class DeletedItem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a sync record
+	//.	delete the current object from the database
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {

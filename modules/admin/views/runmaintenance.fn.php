@@ -1,9 +1,8 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	run a maintenance script and return the report (as html)
+//|	run a maintenance script and return the report (as html)
 //-------------------------------------------------------------------------------------------------
-//ofgroup: admin
 
 function admin_runmaintenance($args) {
 	global $user;
@@ -34,3 +33,4 @@ function admin_runmaintenance($args) {
 }
 
 ?>
+

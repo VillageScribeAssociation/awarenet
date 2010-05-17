@@ -72,7 +72,7 @@
 			//--------------------------------------------------------------------------------------
 			$_SESSION['sMessage'] .= "Creating your account...<br/>\n";
 
-			$model = new Users();
+			$model = new User();
 			$model->data['UID'] = createUID();
 			$model->data['school'] = clean_string($formvars['school']);
 			$model->data['ofGroup'] = 'student';

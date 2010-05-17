@@ -3,8 +3,9 @@
 	require_once($installPath . 'modules/static/models/static.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary
+//|	summary
 //--------------------------------------------------------------------------------------------------------------
+//args: UID - UID of a static page [string]
 
 function static_summary($args) {
 	if (authHas('static', 'view', '') == false) { return ''; }

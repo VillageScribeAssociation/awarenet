@@ -8,9 +8,8 @@
 
 			<div style="margin-right:60px; margin-top:0px; text-align:right">
 				<span style='vertical-align: bottom; background-color: black;'>
-					<a href='%%serverPath%%users/' class='menu'>Home</a>&nbsp;
+					<a href='%%serverPath%%/' class='menu'>Home</a>&nbsp;
 					<a href='%%serverPath%%users/login/' class='menu'>Log In</a>&nbsp;
-					<a href='%%serverPath%%users/signup/' class='menu'>Sign Up</a>&nbsp;		
 				</span>
 			</div>
 

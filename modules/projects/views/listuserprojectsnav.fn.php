@@ -2,12 +2,12 @@
 
 	require_once($installPath . 'modules/projects/models/membership.mod.php');
 	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/projects.mod.php');
+	require_once($installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all projects which a user belongs to (formatted for nav)
+//|	list all projects which a user belongs to (formatted for nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of a user
+//arg: userUID - UID of a user [string]
 
 function projects_listuserprojectsnav($args) {
 	if (array_key_exists('userUID', $args) == false) { return false; }
@@ -26,3 +26,4 @@ function projects_listuserprojectsnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

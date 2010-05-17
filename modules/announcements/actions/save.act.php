@@ -7,7 +7,7 @@
 	if (array_key_exists('UID', $_POST)) { do404; }
 	if (dbRecordExists('announcements', $_POST['UID']) == false) { do404(); }
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 	$model = new Announcement($_POST['UID']);
 
 	$refModule = $model->data['refModule'];

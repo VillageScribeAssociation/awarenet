@@ -3,10 +3,10 @@
 	require_once($installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list of contacts a person messages most often
+//|	list of contacts a person messages most often //| TODO: pagination
 //--------------------------------------------------------------------------------------------------
-// * $args['owner'] = UID of message owner
-// * $args['num'] = number of contacts to display
+//opt: owner - UID of message owner (default is current user) [string]
+//opt: num - number of contacts to display (not implemented) [string]
 
 function messages_contactlist($args) {
 	global $user;
@@ -30,3 +30,4 @@ function messages_contactlist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

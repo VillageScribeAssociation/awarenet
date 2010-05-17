@@ -5,9 +5,9 @@
 	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	add a reply form
+//|	add a reply form
 //--------------------------------------------------------------------------------------------------
-// * $args['threadUID'] = UID of a forum thread
+//arg: threadUID - UID of a forum thread [string]
 
 function forums_replyform($args) {
 	// TODO: auth
@@ -20,3 +20,4 @@ function forums_replyform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

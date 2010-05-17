@@ -1,11 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/servers.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
 	require_once($installPath . 'modules/sync/models/sync.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	summary
+//|	summary
 //--------------------------------------------------------------------------------------------------
+//arg: UID - UID of a peer server record [string]
 
 function sync_serversummary($args) {
 	if (authHas('sync', 'view', '') == false) { return ''; }

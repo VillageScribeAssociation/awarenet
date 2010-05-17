@@ -1,12 +1,12 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all groups which a user belongs to (formatted for nav)
+//|	list all groups which a user belongs to (formatted for nav)
 //--------------------------------------------------------------------------------------------------
-// * $args['userUID'] = UID of a user
+//arg: userUID - UID of a user [string]
 
 function groups_listusergroupsnav($args) {
 	if (array_key_exists('userUID', $args) == false) { return false; }
@@ -24,3 +24,4 @@ function groups_listusergroupsnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

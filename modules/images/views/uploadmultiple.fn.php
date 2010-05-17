@@ -3,11 +3,11 @@
 	require_once($installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	iframe to upload multiple images
+//|	iframe to upload multiple images
 //--------------------------------------------------------------------------------------------------
-// * $args['refModule'] = module to list on
-// * $args['refUID'] = number of images per page
-// * $args['categories'] = comma delimited list of categories these pictures can belong to
+//arg: refModule - module to list on [string]
+//arg: refUID - UID of item which own images [string]
+//opt: categories - comma delimited list of categories these pictures can belong to [string]
 
 function images_uploadmultiple($args) {
 	global $serverPath; 
@@ -40,3 +40,4 @@ function images_uploadmultiple($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -1,13 +1,13 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcements.mod.php');
+	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all most recent x announcments owned by a particular record on a given module
+//|	list all most recent x announcments owned by a particular record on a given module
 //--------------------------------------------------------------------------------------------------
-// * $args['refUID'] = record which owns the announcements
-// * $args['refModule'] = module which owns the record
-// * $args['num'] = number of records per page
+//arg: refUID - record which owns the announcements [string]
+//arg: refModule - module which owns the record [string]
+//opt: num - number of records per page (default is 10) [string]
 
 function announcements_list($args) {
 	if (authHas('announcements', 'show', '') == false) { return false; }
@@ -46,3 +46,4 @@ function announcements_list($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -4,16 +4,10 @@
 	require_once($installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	menu
+//|	moblog submenu
 //--------------------------------------------------------------------------------------------------
 
 function moblog_menu($args) { return loadBlock('modules/moblog/views/menu.block.php'); }
-
-function moblog_menunewpost($args) { 
-	if (authHas('moblog', 'edit', '') == true) {
-		return '[[:theme::submenu::label=New Post::link=/moblog/new/:]]';
-	}
-}
 
 //--------------------------------------------------------------------------------------------------
 

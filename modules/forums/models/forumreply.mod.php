@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	object for forum thread replies
+//*	object for forum thread replies
 //--------------------------------------------------------------------------------------------------
 
 class ForumReply {
@@ -14,32 +14,38 @@ class ForumReply {
 	var $dbSchema;		// database table structure
 
 	//----------------------------------------------------------------------------------------------
-	//	constructor
+	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//opt: raUID - UID or recordAlias of a reply to a thread [string]
 
-	function ForumReply($UID = '') {
+	function ForumReply($raUID = '') {
 		global $user;
 		$this->dbSchema = $this->initDbSchema();
 		$this->data = dbBlank($this->dbSchema);
-		if ($UID != '') { $this->load($UID); }
+		if ($raUID != '') { $this->load($raUID); }
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load a record by UID or recordAlias
+	//.	load a record by UID or recordAlias
 	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or recordAlias of a a reply to a thread [string]
+	//returns: true on success, false on failure [bool]
 
-	function load($uid) {
-		$ary = dbLoadRa('forumreplies', $uid);
+	function load($raUID) {
+		$ary = dbLoadRa('forumreplies', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
 
-	function loadArray($ary) {
-		$this->data = $ary;
-	}
+	//----------------------------------------------------------------------------------------------
+	//.	load a record provided as an associative array
+	//----------------------------------------------------------------------------------------------
+	//arg: ary - associative array of fields and values [array]
+
+	function loadArray($ary) { $this->data = $ary; }
 
 	//----------------------------------------------------------------------------------------------
-	//	save a record
+	//.	save a record
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
@@ -53,8 +59,9 @@ class ForumReply {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	verify - check that a record is correct before allowing it to be stored in the database
+	//.	verify - check that a record is correct before allowing it to be stored in the database
 	//----------------------------------------------------------------------------------------------
+	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
 		$verify = '';
@@ -63,8 +70,9 @@ class ForumReply {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	sql information
+	//.	sql information
 	//----------------------------------------------------------------------------------------------
+	//returns: database table layout [array]
 
 	function initDbSchema() {
 		$dbSchema = array();
@@ -89,16 +97,16 @@ class ForumReply {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	return the data
+	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all variables which define this instance [array]
 
-	function toArray() {
-		return $this->data;
-	}
+	function toArray() { return $this->data; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make an extended array of all data a view will need
+	//.	make an extended array of all data a view will need
 	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
 		global $user;
@@ -161,7 +169,7 @@ class ForumReply {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new Users($ary['createdBy']);
+		$model = new User($ary['createdBy']);
 		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
 		$ary['userRa'] = $model->data['recordAlias'];
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
@@ -171,8 +179,10 @@ class ForumReply {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	install this module
+	//.	install this module
 	//----------------------------------------------------------------------------------------------
+	//returns: html report lines [string]
+	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
 		$report = "<h3>Installing Fourm Replies Table</h3>\n";
@@ -193,19 +203,14 @@ class ForumReply {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	delete a record
+	//.	delete the current record
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		//------------------------------------------------------------------------------------------
-		//	delete any images associated with this thread
+		//	delete any images associated with this reply
 		//------------------------------------------------------------------------------------------
-		// TODO
-
-		//------------------------------------------------------------------------------------------
-		//	delete any files associated with this thread
-		//------------------------------------------------------------------------------------------
-		// TODO
+		// TODO: event for this (object_deleted?)
 
 		//------------------------------------------------------------------------------------------
 		//	delete all images associated with this thread

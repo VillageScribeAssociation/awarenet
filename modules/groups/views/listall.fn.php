@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/groups.mod.php');
+	require_once($installPath . 'modules/groups/models/group.mod.php');
 	require_once($installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all
+//|	list all TODO: add school argument?
 //--------------------------------------------------------------------------------------------------
 
 function groups_listall($args) {
@@ -20,3 +20,4 @@ function groups_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
+

@@ -36,9 +36,17 @@
 					//	feedback and redirect
 					//------------------------------------------------------------------------------
 
+					$msg = "[[:theme::navtitlebox::label=Notice:]]"
+						 . "<div class='inlinequote'><p>"
+						 . "<img src='%%serverPath%%themes/clockface/images/info.png' "
+						 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
+						 . "You are now logged in.</p></div>\n";
+
+
 					$_SESSION['sUser'] = $row['username'];
 					$_SESSION['sUserUID'] = $row['UID'];
-					$_SESSION['sMessage'] .= "You are now logged in.<br/>\n";
+
+					$_SESSION['sMessage'] .= $msg;
 					$user->load($row['UID']);
 					do302('notifications/'); // user notifications
 
@@ -51,7 +59,14 @@
 		//	cound not authenticate
 		//------------------------------------------------------------------------------------------
 		
-		$_SESSION['sMessage'] .= "Username or password not recognised, you are not logged in.<br/>\n";
+		$msg = "[[:theme::navtitlebox::label=Notice:]]"
+			 . "<div class='inlinequote'><p>"
+			 . "<img src='%%serverPath%%themes/clockface/images/btn-del.png' "
+			 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
+			 . "Username or password not recognised, you are not logged in.</p></div>\n";
+
+		$_SESSION['sMessage'] .= $msg;
+								
 
 	}
 

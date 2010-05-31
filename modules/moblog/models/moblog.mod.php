@@ -186,9 +186,9 @@ class Moblog {
 		//------------------------------------------------------------------------------------------
 
 		$model = new User($ary['createdBy']);
-		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];
-		$ary['userUrl'] = '%%serverPath%%users/profile/' . $model->data['recordAlias'];
-		$ary['userLink'] = "<a href='" . $ary['userUrl'] . "'>" . $ary['userName'] . "</a>";
+		$ary['userName'] = '[[:users::name::userUID=' . $ary['createdBy'] . ':]]';
+		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['createdBy'];
+		$ary['userLink'] = '[[:users::namelink::userUID=' . $ary['createdBy'] . ':]]';
 
 		//------------------------------------------------------------------------------------------
 		//	unpublished items

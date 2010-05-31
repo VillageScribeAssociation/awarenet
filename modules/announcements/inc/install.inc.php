@@ -45,45 +45,15 @@ function announcements_install_status_report() {
 	//	ensure that the announcement table exists and is correct
 	//---------------------------------------------------------------------------------------------
 	$installed = true;
+	$installNotice = '<!-- table installed correctly -->';
 	$model = new Announcement();
 	$dbSchema = $model->initDbSchema();
 
-	if (dbTableExists($dbSchema['table']) == true) {
-		//-----------------------------------------------------------------------------------------
-		//	table present
-		//-----------------------------------------------------------------------------------------
-		$extantSchema = dbGetSchema($dbSchema['table']);
+	$report = dbGetTableInstallStatus($dbSchema);
 
-		if (dbCompareSchema($dbSchema, $extantSchema) == false) {
-			//-------------------------------------------------------------------------------------
-			// table schemas DO NOT match (fail)
-			//-------------------------------------------------------------------------------------
-			$installed = false;		
-			$report .= "<p>A '" . $dbSchema['table'] . "' table exists, but does not match "
-					 . "object's schema.</p>\n"
-					 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n"
-					 . "<b>Extant Table:</b><br/>\n" . dbSchemaToHtml($extantSchema) . "<br/>\n";
+	if (strpos($report, $installNotice) == false) { $installed = false; }
 
-		} else {
-			//-------------------------------------------------------------------------------------
-			// table schemas match
-			//-------------------------------------------------------------------------------------
-			$report .= "<p>'" . $dbSchema['table'] . "' table exists, matches object schema.</p>\n"
-					 . "<b>Database Table:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-
-		}
-
-	} else {
-		//-----------------------------------------------------------------------------------------
-		//	table missing (fail)
-		//-----------------------------------------------------------------------------------------
-		$installed = false;
-		$report .= "<p>'" . $dbSchema['table'] . "' table does not exist in the database.</p>\n"
-				 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-	}
-
-	if (true == $installed) { $report .= "<!-- installed correctly -->"; }
-
+	if (true == $installed) { $report .= "<!-- module installed correctly -->"; }
 	return $report;
 }
 

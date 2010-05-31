@@ -17,6 +17,9 @@
 			$model = new Forum($_POST['UID']);
 			$model->data['title'] = $_POST['title'];
 			$model->data['description'] = $_POST['description'];
+			if (true == dbRecordExists('schools', $_POST['school'])) {
+				$model->data['school'] = $_POST['school'];
+			}
 			$model->save();
 			$_SESSION['sMessage'] .= "Saved changes to forums.<br/>\n";
 			do302('forums/' . $model->data['recordAlias']);			

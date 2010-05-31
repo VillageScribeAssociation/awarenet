@@ -11,6 +11,9 @@
 
 function comments_listjs($args) {
 	global $serverPath;
+	global $user;
+
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (authHas('comments', 'list', '') == false) { return false; }
 	if (authHas('comments', 'view', '') == false) { return false; }
 	if (array_key_exists('refModule', $args) == false) { return false; }

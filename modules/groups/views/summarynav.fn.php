@@ -8,10 +8,15 @@
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID or groups entry [string]
 //arg: groupUID - overrides raUID [string]
+// TODO: stop using [[groups::image::...::]]
 
 function groups_summarynav($args) {
+	global $user;
+
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('groupUID', $args) == true) { $args['raUID'] = $args['groupUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
+
 	$g = new Group(sqlMarkup($args['raUID']));	
 	return replaceLabels($g->extArray(), loadBlock('modules/groups/views/summarynav.block.php'));
 }

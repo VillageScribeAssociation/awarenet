@@ -10,6 +10,10 @@
 
 function projects_menu($args) {
 	$labels = array();
+	$labels['newEntry'] = '';				// defaults for public/unauthorized user
+	$labels['editCurrentProject'] = '';		// ...
+	$labels['viewCurrentProject'] = '';		// ...
+
 	if (authHas('projects', 'edit', '')) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Create New Project::link=/projects/new/:]]';
 		$labels['editCurrentProject'] = '';

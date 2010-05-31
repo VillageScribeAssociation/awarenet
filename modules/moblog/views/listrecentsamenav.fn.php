@@ -13,6 +13,8 @@
 function moblog_listrecentsamenav($args) {
 	global $user;
 	$num = 10; $html = '';
+
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('postUID', $args) == true) { $args['raUID'] = $args['postUID']; }
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }

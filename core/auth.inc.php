@@ -112,8 +112,12 @@ function authUpdatePermissions() {
 		  }
 		}
 
-		$u->data['permissions'] = trim($newUserPerms);
-		$u->save();
+		$newUserPerms = trim($newUserPerms);
+
+		if ($u->data['permissions'] != $newUserPerms) {
+			$u->data['permissions'] = $newUserPerms;
+			$u->save();
+		}
 	}
 }
 

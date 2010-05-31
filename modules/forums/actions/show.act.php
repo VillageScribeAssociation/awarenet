@@ -7,8 +7,8 @@
 	if (authHas('forums', 'show', '') == false) { do403(); }		// check basic permissions
 	if ($request['ref'] == '') { do404(); }							// check ref
 
-	if (raGetOwner($request['ref'], 'forums') == false) { do404(); }  		// check forum exists
 	$UID = raFindRedirect('forums', 'show', 'forums', $request['ref']); 	// check correct ref
+	if (raGetOwner($request['ref'], 'forums') == false) { do404(); }  		// check forum exists
 	
 	require_once($installPath . 'modules/forums/models/forum.mod.php');			// load the model
 	$model = new Forum($request['ref']);									

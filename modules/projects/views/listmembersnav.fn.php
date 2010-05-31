@@ -14,6 +14,7 @@
 function projects_listmembersnav($args) {
 	global $user;
 	$editmode = 'no';
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (authHas('projects', 'view', '') == false) { return false; }
 	if (array_key_exists('editmode', $args) == true) { $editmode = $args['editmode']; }
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }

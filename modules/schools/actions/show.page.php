@@ -28,7 +28,7 @@
 [[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
 [[:groups::listallnav::school=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Moblog:]]
+[[:theme::navtitlebox::label=Blogs At This School:]]
 [[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Online Now:]]

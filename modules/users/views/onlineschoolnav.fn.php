@@ -9,7 +9,11 @@
 //arg: school - UID of school [string]
 
 function users_onlineschoolnav($args) {
+	global $user;
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
+
 	$html = '';
+
 	if (array_key_exists('school', $args) == false) { return false; }
 	// TODO this needs fixing
 	$sql = "select * from users "

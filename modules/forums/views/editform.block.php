@@ -8,6 +8,10 @@
     <td><b>Title:</b></td>
     <td><input type='text' name='title' value='%%forumTitle%%' size='50' /></td>
   </tr>
+  <tr>
+    <td><b>School:</b></td>
+    <td>[[:schools::select::varname=school::default=%%school%%:]]</td>
+  </tr>
 </table>
 <br/>
 <b>Description:</b> <small>what is this forum about?</small><br/>

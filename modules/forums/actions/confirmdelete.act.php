@@ -10,7 +10,7 @@
 	
 	$thisRa = raGetDefault('forums', $request['args']['uid']);
 	
-	$labels = array('UID' => $request['args']['uid'], 'raUID' => $groupRa);
+	$labels = array('UID' => $request['args']['uid'], 'raUID' => $thisRa);
 	
 	$html .= replaceLabels($labels, loadBlock('modules/forums/views/confirmdelete.block.php'));
 	

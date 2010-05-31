@@ -10,16 +10,28 @@
 //arg: userUID - UID of a user [string]
 
 function projects_listuserprojectsnav($args) {
-	if (array_key_exists('userUID', $args) == false) { return false; }
+	global $user;
 	$html = '';
-	$sql = "select * from projectmembers "
-		 . "where userUID='" . sqlMarkup($args['userUID']) . "' and role != 'asked' "
-		 . "order by joined";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$html .= "[[:projects::summarynav::projectUID=" . $row['projectUID'] . ":]]";
-	}
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and auth
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
+	if (array_key_exists('userUID', $args) == false) { return false; }
+
+	//----------------------------------------------------------------------------------------------
+	//	get list projects by checking memberships
+	//----------------------------------------------------------------------------------------------
+
+	$conditions = array();
+	$conditions[] = "userUID='" . sqlMarkup($args['userUID']) . "'";	// this user
+	$conditions[] = "(role='admin' OR role='member')";					// only confirmed
+
+	$range = dbLoadRange('projectmembers', '*', $conditions, 'joined');
+
+	foreach($range as $row) 
+		{ $html .= "[[:projects::summarynav::projectUID=" . $row['projectUID'] . ":]]"; }
+
 	return $html;
 }
 

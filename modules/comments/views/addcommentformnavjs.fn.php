@@ -11,7 +11,10 @@
 //opt: invitation - text encouraging someone to leave a comment, optional [string]
 
 function comments_addcommentformnavjs($args) {
+	global $user;
 	$invitation = 'Add a comment';
+
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('refModule', $args) == false) { return false; }
 	if (array_key_exists('refUID', $args) == false) { return false; }
 	if (array_key_exists('return', $args) == false) { return false; }

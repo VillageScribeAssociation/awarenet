@@ -1,7 +1,7 @@
 <? /*
 <page>
 <template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::width=570::label=Edit Gallery:]]
+<content>[[:theme::navtitlebox::width=570::label=Edit Forum:]]
 [`|lt]h1[`|gt]Edit Forum[`|lt]/h1[`|gt]
 
 [[:forums::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

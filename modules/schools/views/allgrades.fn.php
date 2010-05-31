@@ -10,6 +10,10 @@
 
 function schools_allgrades($args) {
 	global $serverPath;
+	global $user;
+
+	if ($user->data['ofGroup'] == 'public') { return '[[:users::pleaselogin:]]'; }
+
 	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';

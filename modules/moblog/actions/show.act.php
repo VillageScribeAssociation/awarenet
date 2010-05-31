@@ -7,8 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check auth and recordAlias
 	//----------------------------------------------------------------------------------------------
-
-	if (authHas('moblog', 'view', '') == false) { do403(''); }
+	//if (authHas('moblog', 'view', '') == false) { do403(''); } // changed to allow public access
 	raFindRedirect('moblog', '', 'moblog', $request['ref']);	
 	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
 

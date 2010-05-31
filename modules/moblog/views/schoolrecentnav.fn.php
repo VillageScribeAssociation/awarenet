@@ -12,6 +12,7 @@
 function moblog_schoolrecentnav($args) {
 	global $user;
 	$num = 10; $html = '';
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('schoolUID', $args) == false) { do404(); }
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
 	if (dbRecordExists('schools', $args['schoolUID']) == false) { return false; }

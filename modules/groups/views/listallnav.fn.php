@@ -10,6 +10,9 @@
 //opt: sameschool - UID of a group, constrains results to those of the same school [string]
 
 function groups_listallnav($args) {
+	global $user;
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }	
+
 	$school = ''; $userUID = ''; $sameschool = '';
 	if (array_key_exists('school', $args)) { $school = $args['school']; }
 	if (array_key_exists('sameschool', $args)) { $sameschool = $args['sameschool']; }

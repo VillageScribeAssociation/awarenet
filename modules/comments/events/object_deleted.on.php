@@ -17,7 +17,7 @@ function comments__cb_object_deleted($args) {
 	//	delete any comments owned by this record
 	//----------------------------------------------------------------------------------------------
 
-	$contitions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
+	$conditions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
 							"refModule='" . sqlMarkup($args['module']) . "'"	);
 
 	$rows = dbLoadRange('comments', '*', $conditions, '', '', '');

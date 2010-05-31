@@ -3,10 +3,10 @@
 //--------------------------------------------------------------------------------------------------
 //	returns a navbox title graphic
 //--------------------------------------------------------------------------------------------------
-//opt: label - text displayed on the box
-//opt: width - width of the box - default=20
-//opt: toggle - id of a div to toggle visibility
-//opt: hidden - set to yes if div id hidden by default
+//opt: label - text displayed on the box [string]
+//opt: width - width of the box - default=20 [string]
+//opt: toggle - id of a div to toggle visibility [string]
+//opt: hidden - set to yes if div is hidden by default, initial state of (+) button [string]
 
 function theme_navtitlebox($args) {
 	global $installPath;

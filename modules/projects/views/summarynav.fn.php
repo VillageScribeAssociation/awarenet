@@ -11,13 +11,29 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_summarynav($args) {
+	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permisisons
+	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$g = new project(sqlMarkup($args['raUID']));	
-	return replaceLabels($g->extArray(), loadBlock('modules/projects/views/summarynav.block.php'));
+	//TODO: permission check
+
+	//----------------------------------------------------------------------------------------------
+	//	load the model
+	//----------------------------------------------------------------------------------------------
+	$model = new project(sqlMarkup($args['raUID']));
+	if (false == $model->loaded) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	fill out the block template and return it
+	//----------------------------------------------------------------------------------------------
+	$block = loadBlock('modules/projects/views/summarynav.block.php');
+	$html = replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

@@ -10,8 +10,9 @@ class ForumThread {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record [array]
-	var $dbSchema;		// database table structure [array]
+	var $data;				// object members [array]
+	var $dbSchema;			// database table structure [array]
+	var $loaded = false;	// set to true when an object has been loaded into this 
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -44,7 +45,10 @@ class ForumThread {
 	//----------------------------------------------------------------------------------------------
 	//arg: ary - associative array of fields and values [array]
 
-	function loadArray($ary) { $this->data = $ary; }
+	function loadArray($ary) { 
+		$this->data = $ary; 
+		$this->loaded = true;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	save the current record
@@ -137,7 +141,7 @@ class ForumThread {
 
 		$auth = false;
 		if ($user->data['ofGroup'] == 'admin') { $auth = true; }
-		if ($user->data['UID'] == $ary['createdBy']) { $auth = true; }
+		//if ($user->data['UID'] == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
@@ -149,12 +153,12 @@ class ForumThread {
 		}
 
 		if ($auth == true) {
-			$ary['editUrl'] =  '%%serverPath%%forumthreads/edit/' . $ary['recordAlias'];
+			$ary['editUrl'] = '%%serverPath%%forumthreads/edit/' . $ary['recordAlias'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
-			$ary['newUrl'] = "%%serverPath%%forumthreads/new/";
+			$ary['newUrl'] = "%%serverPath%%forums/newthread/";
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new forumthreads]</a>";  
-			$ary['delUrl'] = "%%serverPath%%forumthreads/confirmdelete/UID_" . $ary['UID'] . '/';
-			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete forumthreads]</a>";  
+			$ary['delUrl'] = "%%serverPath%%forums/confirmdeletethread/UID_" . $ary['UID'] . '/';
+			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete this thread]</a>";  
 		}
 
 		//------------------------------------------------------------------------------------------

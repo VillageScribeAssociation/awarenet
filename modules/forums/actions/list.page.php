@@ -1,8 +1,7 @@
 <? /*
 <page>
 <template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::label=All Forums::width=570:]]
-[`|lt]h1[`|gt]All Forums[`|lt]/h1[`|gt]
+<content>
 [[:forums::summarylistall:]]</content>
 <title>awareNet - forums</title>
 <script></script>

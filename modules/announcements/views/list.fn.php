@@ -10,6 +10,9 @@
 //opt: num - number of records per page (default is 10) [string]
 
 function announcements_list($args) {
+	global $user;
+	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
+
 	if (authHas('announcements', 'show', '') == false) { return false; }
 	if (array_key_exists('refModule', $args) == false) { return false; }
 	if (array_key_exists('refUID', $args) == false) { return false; }

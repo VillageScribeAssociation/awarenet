@@ -178,6 +178,11 @@ span.ajaxwarn {
 	padding-left: 10px;
 }
 
+image.infobutton {
+	position: relative; 
+	top: 3px;
+}
+
 /* inline quote boxes --------------------------------------------------------------------------- */
 
 div.inlinequote {

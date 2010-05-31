@@ -383,14 +383,14 @@ function dbBlank($sqlData) {
 //:	TODO: more security checks for sql inclusion, especially on conditons
 
 //arg: table - name of database table [string]
-//arg: fields - list of fields or empty string (SELECT clause) [string]
-//arg: conditions - array of conditions (WHERE clause) [array]
-//arg: by - field(s) to order by or empty string [string]
-//arg: limit - max record to return [int]
-//arg: offset - skip this many records from start [int]
+//opt: fields - list of fields or empty string (SELECT clause) [string]
+//opt: conditions - array of conditions (WHERE clause) [array]
+//opt: by - field(s) to order by or empty string [string]
+//opt: limit - max record to return [int]
+//opt: offset - skip this many records from start [int]
 //returns: array of associative arrays (field -> value) with database markup removed [array]
 
-function dbLoadRange($table, $fields, $conditions, $by, $limit, $offset) {
+function dbLoadRange($table, $fields = '*', $conditions = '', $by = '', $limit = '', $offset = '') {
 
 	//----------------------------------------------------------------------------------------------
 	//	basic sql query to select all rows in table
@@ -733,7 +733,7 @@ function dbGetTableInstallStatus($dbSchema) {
 				 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
 	}
 	
-	if (true == $installed) { $report .= "<!-- installed correctly -->"; }
+	if (true == $installed) { $report .= "<!-- table installed correctly -->"; }
 	return $report;
 }
 

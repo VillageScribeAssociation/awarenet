@@ -11,10 +11,17 @@
 //opt: target - link larget (for iFrames) [string]
 
 function users_namelink($args) {
+	global $user;
+
 	$target = '';
 	if (array_key_exists('userUID', $args) == true) { $args['raUID'] = $args['userUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';
+
+	if ('public' == $user->data['ofGroup']) { 
+		// public user canot see profiles, so don't link them
+		return '[[:users::name::userUID=' . $args['raUID'] . ':]]'; 
+	}
 
 	if (array_key_exists('target', $args) == true) { $target = "target='". $args['target'] ."'"; }
 

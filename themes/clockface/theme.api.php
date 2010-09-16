@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------------------
-//	blocks api - defines actions the theme can take
+//*	blocks api - defines actions the theme can take
 //--------------------------------------------------------------------------------------------------------------
 
 include 'navtitlebox.inc.php';
@@ -31,7 +31,7 @@ function theme_selecttemplates($args) {
 }
 
 //--------------------------------------------------------------------------------------------------------------
-//	make a menu item
+//|	make a menu item
 //--------------------------------------------------------------------------------------------------------------
 //	arguments: [label][link][alt][selected]
 
@@ -40,7 +40,8 @@ function theme_menu($args) {
 	global $serverPath;
 	global $defaultTheme;
 	global $page;
-	$s = $page->style;
+	global $theme;
+	$s = $theme->style;
 
 	//------------------------------------------------------------------------------------------------------
 	//	arguments
@@ -72,6 +73,8 @@ function theme_menu($args) {
 
 function theme__mkMenuItem($s, $fileName, $label, $selected) {
 	global $installPath;
+	global $theme;
+	$s = $theme->style;
 
 	//------------------------------------------------------------------------------------------------------
 	//	measure the text
@@ -176,8 +179,8 @@ function theme_submenu($args) {
 	global $installPath;
 	global $serverPath;
 	global $defaultTheme;
-	global $page;
-	$s = $page->style;
+	global $theme;
+	$s = $theme->style;
 
 	//----------------------------------------------------------------------------------------------
 	//	arguments

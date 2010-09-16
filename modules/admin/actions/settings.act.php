@@ -1,30 +1,28 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	action for viewing/editing module settings
+//*	action for viewing/editing module settings
 //--------------------------------------------------------------------------------------------------
-	
-	if ($user->data['ofGroup'] != admin) { do403(); }
+//role: admin - only administrators may do this
+
+	//----------------------------------------------------------------------------------------------
+	//	check user role
+	//----------------------------------------------------------------------------------------------	
+	if ($user->role != admin) { $page->do403('you are not authorized to edit module settings'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that the module is known to the system (protect against directory traversal, etc)
 	//----------------------------------------------------------------------------------------------
-	$checkRef = false;
-	$modList = listModules();
-	foreach($modList as $module) { 
-		if (strtolower($module) == strtolower($request['ref'])) { $checkRef = true; }
+	if (false == $kapenta->moduleExists($req->ref)) {
+		$session->msg("Invalid module name.", 'bad');
+		$page->do302('admin/listmodules/');
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page (or bounce to /)
 	//----------------------------------------------------------------------------------------------
-	if ($checkRef == true) {
-		$page->load($installPath . 'modules/admin/actions/settings.page.php');
-		$page->blockArgs['showModule'] = $request['ref'];
-		$page->render();
-	} else {
-		$_SESSION['sMessage'] .= "Invalid module name.<br/>\n";
-		do302('/');
-	}
+	$page->load('modules/admin/actions/settings.page.php');
+	$page->blockArgs['showModule'] = $req->ref;
+	$page->render();
 
 ?>

@@ -1,34 +1,36 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	iframe to upload multiple files
 //--------------------------------------------------------------------------------------------------
 //arg: refModule - module to list on [string]
-//arg: refUID - number of files per page [string]
+//arg: refModel - type of object which will own files [string]
+//arg: refUID - UID of object which will own files [string]
 //opt: categories - comma delimited list of categories these files can belong to [string]
 
 function files_uploadmultiple($args) {
-	global $serverPath; 
+	global $user; 
 	
 	//----------------------------------------------------------------------------------------------
 	//	input validation
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('refModule', $args) == false) { return '(no module)'; }
-	if (array_key_exists('refUID', $args) == false) { return '(no UID)'; }
+	if (false == array_key_exists('refModule', $args)) { return '(no module)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no model)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no UID)'; }
 	$categories = '';
 	
-	//----------------------------------------------------------------------------------------------
-	//	check user is authorised
-	//----------------------------------------------------------------------------------------------
-	if (authHas($args['refModule'], 'view', '') == false) { return ''; }
+	if (false == $user->authHas($args['refModule'], $args['refModel'], 'files-add', $args['refUID']))
+		{ return ''; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the iframe
 	//----------------------------------------------------------------------------------------------
-	$srcUrl = $serverPath . 'files/uploadmultiple/refModule_' . $args['refModule'] 
-		. '/refUID_' . $args['refUID'] . '/';
+	$srcUrl = $serverPath . 'files/uploadmultiple'
+		 . '/refModule_' . $args['refModule']
+		 . '/refModel_' . $args['refModel']  
+		 . '/refUID_' . $args['refUID'] . '/';
 		
 	if (array_key_exists('categories', $args)) { $srcUrl .= '/cats_' . $args['categories']; }
 	$html = "<iframe src='" . $srcUrl . "' name='filesMul" . $args['refModule'] . "'" 

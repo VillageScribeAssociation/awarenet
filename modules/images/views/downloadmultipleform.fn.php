@@ -1,32 +1,42 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for downloading multiple images
 //--------------------------------------------------------------------------------------------------
-//arg: refModule - module to list on [string]
-//arg: refUID - item which will own the downloaded image [string]
+//arg: refModule - module to which image may be exported [string]
+//arg: refModel - type of object which will own image [string]
+//arg: refUID - object which will own the downloaded image [string]
 
 function images_downloadmultipleform($args) {
+	global $theme, $user;
+	$html = '';					//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	$authArgs = array('UID' => $args['refUID']);
-	if (authHas($args['refModule'], 'images', $authArgs) == false) { return false; }
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
+
+	if (false == $user->authHas($args['refModule'], $args['refModel'], 'images-add', $args['refUID']))
+		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	add the form
+	//	make the form
 	//----------------------------------------------------------------------------------------------
-	$labels = array('refModule' => $args['refModule'], 'refUID' => $args['refUID']);
-	$html = replaceLabels($labels, loadBlock('modules/images/views/downloadmultiple.block.php'));
-	
+	$labels = array(
+		'refModule' => $args['refModule'],
+		'refModel' => $args['refModel'],
+		'refUID' => $args['refUID']
+	);
+
+	$block = $theme->loadBlock('modules/images/views/downloadmultiple.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

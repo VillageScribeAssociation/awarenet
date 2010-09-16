@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/inc/wikicode.class.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	history summary formatted for nav
@@ -11,6 +11,8 @@
 //opt: num - number of recent entries to show (default is 10) [string]
 
 function wiki_historynav($args) {
+	global $db;
+
 	$num = 10; $html = ''; $total = '0';
 	if (array_key_exists('UID', $args) == false) { return false; }
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
@@ -19,27 +21,31 @@ function wiki_historynav($args) {
 	//	count all revisions to this article
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select count(UID) as revcount "
-		 . "from wikirevisions where refUID='" . sqlMarkup($args['UID']) . "'";
+	$conditions = array();
+	$conditions[] = "articleUID='" . $db->addMarkup($args['UID']) . "'";
 
-	$result = dbQuery($sql);
-	$row = dbFetchAssoc($result);
-	$total = $row['revcount'];
+	//$sql = "select count(UID) as revcount "
+	//	 . "from Wiki_Revision "
+	//	 . "where UID='" . $db->addMarkup($args['UID']) . "'";
+
+	//$result = $db->query($sql);
+	//$row = $db->fetchAssoc($result);
+	$total = $db->countRange('Wiki_Revision', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make list of recent revisions
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from wikirevisions "
-		 . "where refUID='" . sqlMarkup($args['UID']) . "' "
-		 . "order by editedOn DESC limit $num";
+	$range = $db->loadRange('Wiki_Revision', '*', $conditions, 'editedOn DESC', (int)$num);
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	//$sql = "select * from Wiki_Revision "
+	//	 . "where UID='" . $db->addMarkup($args['UID']) . "' "
+	//	 . "order by editedOn DESC limit $num";
+
+	foreach ($range as $row) {
 		$reason = '';
 
-		if (trim($row['reason']) != '') 
+		if ('' != trim($row['reason'])) 
 			{ $reason = "reason: <i>" . $row['reason'] . "</i><br/>\n"; }
 
 		$html .= "<small>edit by: [[:users::fullname::userUID=" . $row['editedBy'] . ":]]<br/>"

@@ -1,16 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/server.mod.php');
-	require_once($installPath . 'modules/sync/models/sync.mod.php');
-
 //--------------------------------------------------------------------------------------------------
 //|	form to add a new server (formatted for nav)
 //--------------------------------------------------------------------------------------------------
 
 function sync_addserverform($args) {
-	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-	return loadBlock('modules/sync/views/addserverform.block.php');
+	global $theme, $user;
+	if ('admin' != $user->role) { return ''; }
+	$block = $theme->loadBlock('modules/sync/views/addserverform.block.php');
+	return $block;
 }
 
 

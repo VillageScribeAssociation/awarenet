@@ -1,76 +1,78 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	save a blog posts
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('moblog', 'edit', '') == false) { do403(''); }
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
+	if (false == array_key_exists('action', $_POST)) { $page->do404('action not supported'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	create a new post given its title
 	//----------------------------------------------------------------------------------------------
+	
 
-	if ( (array_key_exists('action', $_POST) == true) AND ($_POST['action'] == 'newMoblogPost') ) {
+	if ('newMoblogPost' == $_POST['action']) ) {
+		if (false == $user->authHas('moblog', 'Moblog_Post', 'new')) 
+			{ $page->do403('You are not permitted to create new blog posts.'); }
 
-		$title = clean_string($_POST['title']);
-		if (trim($title) == '') { 
-			$_SESSION['sMessage'] .= "Please enter a title for your new blog post.<br/>\n";
-			do302('moblog/blog/' . $user->data['recordAlias']);
+		$title = $utils->cleanString($_POST['title']);
+
+		if ('' == trim($title)) { 
+			$session->msg('Please enter a title for your new blog post.', 'bad');
+			$page->do302('moblog/blog/' . $user->alias);
 		}
 
-		$model = new Moblog();
-		$model->data['title'] = $title;
+		$model = new Moblog_Post();
+		$model->title = $title;
 		$model->save();
 
-		do302('moblog/edit/' . $model->data['recordAlias']);
-
+		$page->do302('moblog/edit/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	save a blog posts from edit form
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true) 
-	     AND (array_key_exists('UID', $_POST) == true)
-	     AND ($_POST['action'] == 'saveRecord') 
-	     AND (dbRecordExists('moblog', $_POST['UID']) == true) ) {
-
+	if ('saveRecord' == $_POST['action']) {
+		if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.'); }
 		//------------------------------------------------------------------------------------------
 		//	load and check permissions
 		//------------------------------------------------------------------------------------------
 
-		$authorised = false;
-		$model = new Moblog($_POST['UID']);
-		if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-		if ($user->data['UID'] == $model->data['createdBy']) { $authorised = true; }
+		$model = new Moblog_Post($_POST['UID']);
+		if (false == $model->loaded) { $page->do404(); }
+		if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID))
+			{ $page->do403('You cannot edit this blog post.'); }
 
 		//------------------------------------------------------------------------------------------
 		//	update the record
 		//------------------------------------------------------------------------------------------
 		
-		if (array_key_exists('title', $_POST))
-			{ $model->data['title'] = trim($_POST['title']); }
+		if (true == array_key_exists('title', $_POST))
+			{ $model->title = trim($_POST['title']); }
 
-		if (array_key_exists('content', $_POST))
-			{ $model->data['content'] = trim($_POST['content']); }
+		if (true == array_key_exists('content', $_POST))
+			{ $model->content = trim($_POST['content']); }
 
-		if (array_key_exists('published', $_POST))
-			{ $model->data['published'] = $_POST['published']; }
+		if (true == array_key_exists('published', $_POST))
+			{ $model->published = $_POST['published']; }
 
 		//------------------------------------------------------------------------------------------
 		//	save it and redirect
 		//------------------------------------------------------------------------------------------
 
-		$model->save();
-		do302('moblog/' . $model->data['recordAlias']);
+		$report = $model->save();
+		if ('' != $report) { $session->msg($report, 'bad'); }
+		$page->do302('moblog/' . $model->alias);
 	
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		// 	invalid submission (TODO: error logging here)
 		//------------------------------------------------------------------------------------------
-		$page->load($installPath . 'modules/home/actions/error.page.php');
+		$page->load('modules/home/actions/error.page.php');
 		$page->render();
 	}
 

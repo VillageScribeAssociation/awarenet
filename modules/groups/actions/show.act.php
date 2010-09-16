@@ -1,36 +1,37 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show a group record
+//*	show a group record
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	authentication (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->data['ofGroup'] == 'public') || ($user->data['ofGroup'] == 'banned')) { do403(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------	
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('groups', 'show', 'groups', $request['ref']);
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Groups_Group');
 
 	//----------------------------------------------------------------------------------------------	
 	//	load the model
 	//----------------------------------------------------------------------------------------------	
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	$model = new Group($request['ref']);
-
-	if ($model->hasEditAuth($user->data['UID']) == true) 
-		{ $editUrl = $serverPath . 'groups/edit/' . $model->data['recordAlias']; }
+	$editUrl = '';
+	$model = new Groups_Group($UID);
+	if (true == $model->hasEditAuth($user->UID)) 
+		{ $editUrl = '%%serverPath%%groups/edit/' . $model->alias; }
 
 	//----------------------------------------------------------------------------------------------	
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load($installPath . 'modules/groups/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = $model->data['UID'];
-	$page->blockArgs['groupName'] = $model->data['name'];
+	$page->load('modules/groups/actions/show.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['groupName'] = $model->name;
 	$page->blockArgs['editGroupUrl'] = $editUrl;
 	$page->render();
 

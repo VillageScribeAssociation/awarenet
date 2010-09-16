@@ -1,74 +1,93 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	page for accepting upload of files and associating them with records
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	page for accepting upload of files and associating them with records
+//--------------------------------------------------------------------------------------------------
+//TODO: improve and document this
 
 	//----------------------------------------------------------------------------------------------
 	//	control variables
 	//----------------------------------------------------------------------------------------------
-	$refModule = ''; $refUID = ''; $return = ''; $tempFile = ''; $srcName = '';
-	if (array_key_exists('refModule', $_POST)) { $refModule = sqlMarkup($_POST['refModule']); }
-	if (array_key_exists('refUID', $_POST)) { $refUID = sqlMarkup($_POST['refUID']); }
-	if (array_key_exists('return', $_POST)) { $return = $_POST['return']; }
+	$refModule = '';
+	$refModel = '';
+	$refUID = '';
+	$return = '';
+	$tempFile = '';
+	$srcName = '';
+
+	$msg = '';
+	$raw = '';
+	$fName = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check POST vars
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
+	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
+	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
+	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	security and validation
 	//----------------------------------------------------------------------------------------------
-	$msg = ''; $raw = ''; $fName = '';
-	
-	if (($refUID == '') OR ($refModule == '')) { $msg = "(missing arguments to file download)"; }
-	if (($msg = '') AND (authHas($refModule, 'files', '') == false)) { $msg = "(not authorised)";  }
+	if (('' == $refUID) OR ('' == $refModule)) { $msg = "(missing arguments to file download)"; }
+	if (('' == $msg) AND (false == $user->authHas($refModule, $refModel, 'files', $refUID)))
+		{ $msg = "(not authorised)";  }
 
 	//----------------------------------------------------------------------------------------------
 	//	get the upload
 	//----------------------------------------------------------------------------------------------
-	if (($msg == '') AND (array_key_exists('userfile', $_FILES))) {
+	if (('' == $msg) AND (true == array_key_exists('userfile', $_FILES))) {
 	
 		$tempFile = $_FILES['userfile']['tmp_name'];
 		$srcName = $_FILES['userfile']['name'];
 		
-		if (($srcName != '') AND (file_exists($tempFile))) {
-			$raw = implode(file($tempFile));
-		} else {
-			$msg = '(no file uploaded)';
-		}
+		if (($srcName != '') AND (file_exists($tempFile))) { $raw = implode(file($tempFile)); }
+		else { $msg = '(no file uploaded)'; }
 		
 	} else { $msg = '(no file uploaded)'; }
 		
 	//----------------------------------------------------------------------------------------------
 	//	get file name
 	//----------------------------------------------------------------------------------------------
-	if ($msg == '') {
+	if ('' == $msg) {
 		$fName = strtolower($srcName);
-		if ($fName == '') { $fName = createUID() . '.xxx'; }
+		if ('' == $fName) { $fName = $kapenta->createUID() . '.xxx'; }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	create file record and save file
 	//----------------------------------------------------------------------------------------------
-	if ($msg == '') {
-		$f = new file();
-		$f->data['refUID'] = $refUID;
-		$f->data['refModule'] = $refModule;
-		$f->data['title'] = $fName;
-		$f->storeFile($raw);
-		$f->data['licence'] = 'unknown';
-		$f->data['attribURL'] = $URL;
-		$f->data['weight'] = '0';
-		$f->save();
+	if ('' == $msg) {
+		$model = new Files_File();
+		$model->refModule = $refModule;
+		$model->refModel = $refModel;
+		$model->refUID = $refUID;
+		$model->title = $fName;
+		$model->storeFile($raw);
+		$model->licence = 'unknown';
+		$model->attribURL = $URL;
+		$model->weight = '0';
+		$model->save();
 		$msg = "Uploaded file: $srcName <br/>\n";
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back 
 	//----------------------------------------------------------------------------------------------
+	//TODO: more security checks here
 	
-	$_SESSION['sMessage'] .= $msg;
+	$session->msg($msg);
 	if ($return = 'uploadmultiple') {
-		do302('files/uploadmultiple/refModule_' . $refModule . '/refUID_' . $refUID . '/');
+
+		$retUrl = 'files/uploadmultiple'
+			 . '/refModule_' . $refModule
+			 . '/refModel_' . $refModel
+			 . '/refUID_' . $refUID . '/'
+
+		$page->do302($retUrl);
 	}
 
 ?>

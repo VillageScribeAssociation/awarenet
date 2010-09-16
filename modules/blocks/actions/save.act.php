@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { do403(); } // admins only
+	if ('admin' != $user->role) { $page->do403(); } // admins only
 
 	if ( (array_key_exists('action', $_POST) == true)
 		 AND ($_POST['action'] == 'saveBlock') 
@@ -26,8 +26,8 @@
 
 		} else { $_SESSION['sMessage'] .= "no such block :-(<br/>\n"; }
 
-		do302('pages/list/');
+		$page->do302('pages/list/');
 
-	} else { do404(); }
+	} else { $page->do404(); }
 
 ?>

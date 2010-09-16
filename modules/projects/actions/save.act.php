@@ -1,49 +1,48 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	save some change to a project
+//*	save some change to a project
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and load model
 	//----------------------------------------------------------------------------------------------
-
-	require_once($installPath . 'modules/projects/models/project.mod.php');
-
 	$authorised = false;
-	$model = new Project();
+	$model = new Projects_Project();
 
-	if ( (array_key_exists('UID', $_POST) == true) 
-		AND (dbRecordExists('projects', $_POST['UID']) == true) ) {
+	if ( (true == array_key_exists('UID', $_POST)) 
+		AND (true == $db->objectExists('Projects_Project', $_POST['UID'])) ) {
 
 		$model->load($_POST['UID']);
-		if ($model->isMember($user->data['UID']) == true) { $authorised = true; }
+		if (true == $model->isMember($user->UID)) { $authorised = true; }
 	
-	} else { do404(); } // no such project, or UID not specified
+	} else { $page->do404(); } // no such project, or UID not specified
 
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-	if ($authorised == false) { do403(); }
+	if ('admin' == $user->role) { $authorised = true; }
+	if (false == $authorised) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save changes to title
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	    AND ($_POST['action'] == 'saveChangeTitle')
-		AND (array_key_exists('title', $_POST) == true) ) {
+	if ( (true == array_key_exists('action', $_POST))
+	    AND ('saveChangeTitle' == $_POST['action'])
+		AND (true == array_key_exists('title', $_POST)) ) {
 
 		//------------------------------------------------------------------------------------------
 		//	check that it's different, make revision
 		//------------------------------------------------------------------------------------------
-		if ($model->data['title'] != clean_string($_POST['title'])) { $model->saveRevision(); }
+		if ($model->title != $utils->cleanString($_POST['title'])) { $model->saveRevision(); }
 		
 		//------------------------------------------------------------------------------------------
 		//	save the record
 		//------------------------------------------------------------------------------------------
-		$model->data['title'] = clean_string($_POST['title']);
+		$model->title = $utils->cleanString($_POST['title']);
 		$model->save();
 		
-		do302('projects/edit/' . $model->data['recordAlias']);
+		$page->do302('projects/edit/' . $model->alias);
 	}
 
 
@@ -51,50 +50,50 @@
 	//	save changes to abstract
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	    AND ($_POST['action'] == 'saveAbstract')
-		AND (array_key_exists('abstract', $_POST) == true) ) {
+	if ( (true == array_key_exists('action', $_POST))
+	    AND ('saveAbstract' == $_POST['action'])
+		AND (true == array_key_exists('abstract', $_POST)) ) {
 
 		//------------------------------------------------------------------------------------------	
 		//	note the revision
 		//------------------------------------------------------------------------------------------
-		if ($model->data['abstract'] != $_POST['abstract']) { $model->saveRevision(); }
+		if ($model->abstract != $_POST['abstract']) { $model->saveRevision(); }
 
 		//------------------------------------------------------------------------------------------	
 		//	save the record
 		//------------------------------------------------------------------------------------------
-		$model->data['abstract'] = $_POST['abstract'];
+		$model->abstract = $_POST['abstract'];
 		$model->save();
 		
-		do302('projects/edit/' . $model->data['recordAlias']);
+		$page->do302('projects/edit/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	add a new section
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	    AND ($_POST['action'] == 'addSection')
-		AND (array_key_exists('sectionTitle', $_POST) == true) ) {
+	if ( (true == array_key_exists('action', $_POST))
+	    AND ('addSection' == $_POST['action'])
+		AND (true == array_key_exists('sectionTitle', $_POST)) ) {
 
-		$sectionTitle = clean_string($_POST['sectionTitle']);
+		$sectionTitle = $utils->cleanString($_POST['sectionTitle']);
 		$weight = $model->getMaxWeight() + 1;
 		$model->addSection($sectionTitle, $weight);
 		$_SESSION['sMessage'] .= "Added new section $sectionTitle<br/>\n";
 		$model->saveRevision();
-		do302('projects/editindex/' . $model->data['recordAlias']);
+		$page->do302('projects/editindex/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	save changes to a section
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	    AND ($_POST['action'] == 'saveSection')
-		AND (array_key_exists('sectionUID', $_POST) == true) 
-		AND (array_key_exists($_POST['sectionUID'], $model->sections) == true) ) {
+	if ( (true == array_key_exists('action', $_POST))
+	    AND ('saveSection' == $_POST['action'])
+		AND (true == array_key_exists('sectionUID', $_POST)) 
+		AND (true == array_key_exists($_POST['sectionUID'], $model->sections)) ) {
 
-		$sectionTitle = clean_string($_POST['sectionTitle']);
+		$sectionTitle = $utils->cleanString($_POST['sectionTitle']);
 		$content = strip_tags($_POST['content'], $model->allowTags);
 
 		//------------------------------------------------------------------------------------------
@@ -115,13 +114,13 @@
 		$newVersion = $model->getSimpleHtml();
 		if ($newVersion != $oldVersion) { $model->saveRevision(); }
 		
-		do302('projects/editsection/section_' . $_POST['sectionUID'] .  '/' . $model->data['recordAlias']);
+		$page->do302('projects/editsection/section_' . $_POST['sectionUID'] .  '/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	nothing doing, unsupported action requested?
 	//----------------------------------------------------------------------------------------------
 	
-	do404();
+	$page->do404();
 
 ?>

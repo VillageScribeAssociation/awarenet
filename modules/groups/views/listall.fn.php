@@ -1,23 +1,26 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all TODO: add school argument?
 //--------------------------------------------------------------------------------------------------
+//TODO: fix this up
 
 function groups_listall($args) {
-	$sql = "select * from groups";
-	$result = dbQuery($sql);
+	global $db;
 	$html = '';
-	while ($row = dbFetchAssoc($result)) {
-		$html .= "[[:groups::summary::raUID=" . $row['UID'] . ":]]";
-	}
+
+	$sql = "select * from Groups_Group";
+	$result = $db->query($sql);
+
+	while ($row = $db->fetchAssoc($result)) 
+		{ $html .= "[[:groups::summary::raUID=" . $row['UID'] . ":]]"; }
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

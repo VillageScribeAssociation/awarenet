@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	editform
@@ -9,16 +9,28 @@
 //arg: raUID - recordAlias or UID of post to edit [string]
 
 function moblog_editform($args) {
-	if (authHas('moblog', 'edit', $args) == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$model = new moblog($args['raUID']);
-	if ($model->data['UID'] == '') { return ''; }
+	global $theme, $user;
+	$html = '';				//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	$model = new Moblog_Post($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$ext['contentJs64'] = base64EncodeJs('contentJs64', $ext['content']);
-	return replaceLabels($ext, loadBlock('modules/moblog/views/editform.block.php'));
+	$block = $theme->loadBlock('modules/moblog/views/editform.block.php');
+	$html = $theme->replaceLabels($ext, $block);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

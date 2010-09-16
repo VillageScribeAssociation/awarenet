@@ -1,12 +1,20 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	edit a project
+//*	edit a project abstract (since moved to editabstract.act.php) 	//TODO: remove this if possible
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'edit', 'projects', $request['ref']);
+	//----------------------------------------------------------------------------------------------
+	//	check reference and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
+	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $UID)) 
+		{ $page->do403('You are not authorized to edit this project.'); }
 
-	do302('projects/editabstract/' . $request['ref']);
+	//----------------------------------------------------------------------------------------------
+	//	check reference and permissions
+	//----------------------------------------------------------------------------------------------
+	$page->do302('projects/editabstract/' . $req->ref);
 
 ?>

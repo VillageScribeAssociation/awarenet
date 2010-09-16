@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object for managing images
 //--------------------------------------------------------------------------------------------------
@@ -14,170 +16,300 @@
 //+	Transform scripts can be modifed to perform actions such as automatically watermarking images
 //+	uploaded to a website.
 
-class Image {
+class Images_Image {
 
 	//----------------------------------------------------------------------------------------------
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record
-	var $dbSchema;		// database structure
-	var $transforms;	// array of transforms (derivative images)
-	var $img;			// image handle
+	var $data;				//_	currently loaded database record [array]
+	var $dbSchema;			//_	database table definition [array]
+	var $loaded;			//_	set to true when an object has been loaded [bool]
+
+	var $UID;				//_ UID [string]
+	var $refModule;			//_ module [string]
+	var $refModel;			//_ model [string]
+	var $refUID;			//_ ref:*-* [string]
+	var $title;				//_ title [string]
+	var $licence;			//_ varchar(30) [string]
+	var $attribName;		//_ varchar(255) [string]
+	var $attribUrl;			//_ varchar(255) [string]
+	var $fileName;			//_ varchar(255) [string]
+	var $format;			//_ varchar(30) [string]
+	var $transforms;		//_ plaintext [string]
+	var $caption;			//_ plaintext [string]
+	var $category;			//_ varchar(100) [string]
+	var $weight;			//_ int [string]
+	var $createdOn;			//_ datetime [string]
+	var $createdBy;			//_ ref:Users_User [string]
+	var $editedOn;			//_ datetime [string]
+	var $editedBy;			//_ ref:Users_User [string]
+	var $alias;				//_ alias [string]
+
+	var $img;				// image handle
 
 	//----------------------------------------------------------------------------------------------
-	//.	constructor
+	//. constructor
 	//----------------------------------------------------------------------------------------------
-	//opt: raUID - UID or recordAlias of an announcement [string]
+	//opt: raUID - UID or alias of a Image object [string]
 
-	function Image($raUID = '') {
-		$this->dbSchema = $this->initDbSchema();
-		$this->data = dbBlank($this->dbSchema);
-		$this->data['fileName'] = '';
-		$this->transforms = array();
-		if ($raUID != '') { $this->load($raUID); }
+	function Images_Image($raUID = '') {
+		global $db;
+		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
+		if (false == $this->loaded) {						// check if we did
+			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->loadArray($this->data);					// initialize
+			$this->title = 'New Image ' . $this->UID;		// set default title
+			$this->transforms = array();					// no transforms yet
+			$this->weight = 10000;							// end of list (corrected on save())
+			$this->loaded = false;
+		}
+	}
+	//----------------------------------------------------------------------------------------------
+	//. load an object from the database given its UID or an alias
+	//----------------------------------------------------------------------------------------------
+	//arg: raUID - UID or alias of a Image object [string]
+	//returns: true on success, false on failure [bool]
+
+	function load($raUID = '') {
+		global $db;
+		$objary = $db->loadAlias('Images_Image', $raUID);
+		if ($objary != false) { $this->loadArray($objary); return true; }
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record by UID or recordAlias
+	//. load Image object serialized as an associative array
 	//----------------------------------------------------------------------------------------------
-	//arg: raUID - UID or recordAlias of an announcement record [string]
+	//arg: ary - associative array of members and values [array]
 	//returns: true on success, false on failure [bool]
 
-	function load($raUID) {
-		$ary = dbLoadRa('images', $raUID, 'true');
-		if ($ary == false) { return false; }
-		$this->data = $ary;
-		$this->expandTransforms();
+	function loadArray($ary) {
+		global $db;
+		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		$this->UID = $ary['UID'];
+		$this->refModule = $ary['refModule'];
+		$this->refModel = $ary['refModel'];
+		$this->refUID = $ary['refUID'];
+		$this->title = $ary['title'];
+		$this->licence = $ary['licence'];
+		$this->attribName = $ary['attribName'];
+		$this->attribUrl = $ary['attribUrl'];
+		$this->fileName = $ary['fileName'];
+		$this->format = $ary['format'];
+		$this->transforms = $this->expandTransforms($ary['transforms']);
+		$this->caption = $ary['caption'];
+		$this->category = $ary['category'];
+		$this->weight = $ary['weight'];
+		$this->createdOn = $ary['createdOn'];
+		$this->createdBy = $ary['createdBy'];
+		$this->editedOn = $ary['editedOn'];
+		$this->editedBy = $ary['editedBy'];
+		$this->alias = $ary['alias'];
+		$this->loaded = true;
 		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record provided as an associative array
+	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
-	//arg: ary - associative array of fields and values [array]
-	
-	function loadArray($ary) {
-		$this->data = $ary;
-		$this->expandTransforms();
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	save the current record
-	//----------------------------------------------------------------------------------------------
+	//returns: null string on success, html report of errors on failure [string]
+	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		$verify = $this->verify();
-		if ($verify != '') { return $verify; }
+		global $db, $aliases;
+		$report = $this->verify();
+		if ('' != $report) { return $report; }
+		$this->alias = $aliases->create('images', 'Images_Image', $this->UID, $this->title);
+		$check = $db->save($this->toArray(), $this->dbSchema);
+		if (false == $check) { return "Database error.<br/>\n"; }
 
-		$ra = raSetAlias('images', $this->data['UID'], $this->data['title'] . '.jpg','images');
-		$this->data['recordAlias'] = $ra;
-		dbSave($this->data, $this->dbSchema); 
+		// update image weights
+		$set = new Images_Imageset($this->refModule, $this->refModel, $this->UID);
+		$set->checkWeights();
+
+		return '';
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	verify - check that a record is correct before allowing it to be stored in the database
+	//. check that object is correct before allowing it to be stored in database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$verify = '';
-		$d = $this->data;
-
-		if (strlen($d['UID']) < 5) 
-			{ $verify .= "UID not present.\n"; }
-
-		return $verify;
+		$report = '';
+		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		return $report;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	sql information
+	//. database table definition and content versioning
 	//----------------------------------------------------------------------------------------------
-	//returns: database table layout [array]
+	//returns: information for constructing SQL queries [array]
 
-	function initDbSchema() {
+	function getDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'images';
+		$dbSchema['module'] = 'images';
+		$dbSchema['table'] = 'Images_Image';
+
+		//table columns
 		$dbSchema['fields'] = array(
-			'UID' => 'VARCHAR(30)',
-			'refUID' => 'VARCHAR(30)',
-			'refModule' => 'VARCHAR(30)',			
+			'UID' => 'VARCHAR(33)',
+			'refModule' => 'VARCHAR(50)',
+			'refModel' => 'VARCHAR(50)',
+			'refUID' => 'VARCHAR(33)',
 			'title' => 'VARCHAR(255)',
-			'licence' => 'VARCHAR(100)',
+			'licence' => 'VARCHAR(30)',
 			'attribName' => 'VARCHAR(255)',
-			'attribURL' => 'VARCHAR(255)',
+			'attribUrl' => 'VARCHAR(255)',
 			'fileName' => 'VARCHAR(255)',
-			'format' => 'VARCHAR(255)',
+			'format' => 'VARCHAR(30)',
 			'transforms' => 'TEXT',
 			'caption' => 'TEXT',
 			'category' => 'VARCHAR(100)',
-			'weight' => 'VARCHAR(10)',
+			'weight' => 'BIGINT',
 			'createdOn' => 'DATETIME',
-			'createdBy' => 'VARCHAR(30)',
-			'hitcount' => 'VARCHAR(30)',
+			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(30)',
-			'recordAlias' => 'VARCHAR(255)' );
+			'editedBy' => 'VARCHAR(33)',
+			'alias' => 'VARCHAR(255)' );
 
+		//these fields will be indexed
 		$dbSchema['indices'] = array(
-			'UID' => '10', 
+			'UID' => '10',
+			'refModule' => '10',
+			'refModel' => '10',
 			'refUID' => '10',
-			'refModule' => '10',  
-			'recordAlias' => '20', 
-			'category' => '20' );
+			'createdOn' => '',
+			'createdBy' => '10',
+			'editedOn' => '',
+			'editedBy' => '10',
+			'alias' => '10' );
 
-		$dbSchema['nodiff'] = array('UID', 'recordAlias', 'hitcount', 'transforms');
+		//revision history will be kept for these fields
+		$dbSchema['nodiff'] = array(
+			'UID',
+			'weight' );
+
 		return $dbSchema;
+		
+	} // end getDbSchema
+
+	//----------------------------------------------------------------------------------------------
+	//. serialize this object to an array
+	//----------------------------------------------------------------------------------------------
+	//returns: associative array of all members which define this instance [array]
+
+	function toArray() {
+		$serialize = array(
+			'UID' => $this->UID,
+			'refModule' => $this->refModule,
+			'refModel' => $this->refModel,
+			'refUID' => $this->refUID,
+			'title' => $this->title,
+			'licence' => $this->licence,
+			'attribName' => $this->attribName,
+			'attribUrl' => $this->attribUrl,
+			'fileName' => $this->fileName,
+			'format' => $this->format,
+			'transforms' => $this->collapseTransforms($this->transforms),
+			'caption' => $this->caption,
+			'category' => $this->category,
+			'weight' => $this->weight,
+			'createdOn' => $this->createdOn,
+			'createdBy' => $this->createdBy,
+			'editedOn' => $this->editedOn,
+			'editedBy' => $this->editedBy,
+			'alias' => $this->alias
+		);
+		return $serialize;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	serialize this object to an array
+	//. serialize this object to xml
 	//----------------------------------------------------------------------------------------------
-	//returns: associative array of all variables which define this instance [array]
+	//arg: xmlDec - include xml declaration? [bool]
+	//arg: indent - string with which to indent lines [bool]
+	//returns: xml serialization of this object [string]
 
-	function toArray() { return $this->data; }
+	function toXml($xmlDec = false, $indent = '', $oldFormat = false) {
+		//NOTE: any members which are not XML clean should be marked up before sending
+
+		$xType = 'kobject';
+		if (true == $oldFormat) { $xType = 'image'; }
+
+		$xml = $indent . "<$xType type='Images_Image'>\n"
+			. $indent . "    <UID>" . $this->UID . "</UID>\n"
+			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
+			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
+			. $indent . "    <refUID>" . $this->refUID . "</refUID>\n"
+			. $indent . "    <title>" . $this->title . "</title>\n"
+			. $indent . "    <licence>" . $this->licence . "</licence>\n"
+			. $indent . "    <attribName>" . $this->attribName . "</attribName>\n"
+			. $indent . "    <attribUrl>" . $this->attribUrl . "</attribUrl>\n"
+			. $indent . "    <fileName>" . $this->fileName . "</fileName>\n"
+			. $indent . "    <format>" . $this->format . "</format>\n"
+			. $indent . "    <transforms>" . $this->transforms . "</transforms>\n"
+			. $indent . "    <caption>" . $this->caption . "</caption>\n"
+			. $indent . "    <category>" . $this->category . "</category>\n"
+			. $indent . "    <weight>" . $this->weight . "</weight>\n"
+			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
+			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
+			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
+			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <alias>" . $this->alias . "</alias>\n"
+			. $indent . "</$xType>\n";
+
+		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}
+		return $xml;
+	}
+
 
 	//----------------------------------------------------------------------------------------------
-	//.	make an extended array of all data a view will need
+	//. make an extended array of data views may need
 	//----------------------------------------------------------------------------------------------
-	//returns: extended array of member variables and metadata [array]
+	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		// TODO?
-		$ary = $this->data;	
-		return $ary;
-	}
+		global $user;
+		$ext = $this->toArray();
 
-	//----------------------------------------------------------------------------------------------
-	//.	install this module
-	//----------------------------------------------------------------------------------------------
-	//returns: html report lines [string]
-	//, deprecated, this should be handled by ../inc/install.inc.inc.php
-
-	function install() {
-		$report = "<h3>Installing Images Module</h3>\n";
+		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
+		$ext['editUrl'] = '';	$ext['editLink'] = '';
+		$ext['delUrl'] = '';	$ext['delLink'] = '';
+		$ext['newUrl'] = '';	$ext['newLink'] = '';
 
 		//------------------------------------------------------------------------------------------
-		//	create blog table if it does not exist
+		//	links
 		//------------------------------------------------------------------------------------------
-
-		if (dbTableExists('images') == false) {	
-			dbCreateTable($this->dbSchema);	
-			$this->report .= 'created images table and indices...<br/>';
-		} else {
-			$this->report .= 'images table already exists...<br/>';	
+		if (true == $user->authHas('images', 'Images_Image', 'show', $this->UID)) {
+			$ext['viewUrl'] = "";
+			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		return $report;
+		if (true == $user->authHas('images', 'Images_Image', 'edit', $this->UID)) {
+			$ext['editUrl'] = '%~%serverPath%~%Images/editimage/' . $ext['alias'];
+			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
+		}
+
+		if (true == $user->authHas('images', 'Images_Image', 'delete', $this->UID)) {
+			$ext['delUrl'] = '%~%serverPath%~%Images/delimage/' . $ext['alias'];
+			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
+		}
+
+		return $ext;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	expand transforms
 	//----------------------------------------------------------------------------------------------
+	//arg: serialized - serialized transforms [string]
+	//returns: array of transforms, size => fileName [string]
 
-	function expandTransforms() {
-		$this->transforms = array();
-		$lines = explode("\n", $this->data['transforms']);
+	function expandTransforms($serialized) {
+		$transforms = array();
+		$lines = explode("\n", $serialized);
 		foreach($lines as $line) {
 		  $pipe = strpos($line, '|');
 		  if ($pipe != false) {
@@ -186,6 +318,21 @@ class Image {
 			$this->transforms[$transName] = $transFile;
 		  }
 		}
+		return $transforms;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	collapse transforms
+	//----------------------------------------------------------------------------------------------
+	//arg: transforms - transforms array [array]
+	//returns: transforms serialized to string [string]
+
+	function collapseTransforms($transforms) {
+		$serialized = '';								//%	return value [string]
+		foreach($transforms as $transName => $transFile) 
+			{ $serialized .= $transName . '|' . $transFile . "\n"; }
+
+		return $serialized;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -205,14 +352,16 @@ class Image {
 	//----------------------------------------------------------------------------------------------
 	//.	load actual image (rather than the record)
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	function loadImage() {
-		global $installPath;
-		$fileName = $installPath . $this->data['fileName'];
-		if (file_exists($fileName) == false) { return false; }
-		if ($this->data['format'] == 'jpg') { $this->img = imagecreatefromjpeg($fileName); }
-		if ($this->data['format'] == 'png') { $this->img = imagecreatefrompng($fileName); }
-		if ($this->data['format'] == 'gif') { $this->img = imagecreatefromgif($fileName); }
+		global $kapenta;
+		if (false == $kapenta->fileExists($this->fileName)) { return false; }
+		$fileName = $kapenta->installPath . $this->fileName;
+		if ('jpg' == $this->format) { $this->img = @imagecreatefromjpeg($fileName); }
+		if ('png' == $this->format) { $this->img = @imagecreatefrompng($fileName); }
+		if ('gif' == $this->format) { $this->img = @imagecreatefromgif($fileName); }
+		if (false == $this->img) { return false; }
 		return true;
 	}
 
@@ -297,7 +446,7 @@ class Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	find a single image on a given record and module, and load it
+	//.	find a single image on a given object and module, and load it
 	//----------------------------------------------------------------------------------------------
 	//arg: refModule - module which controls this image's owner [string]
 	//arg: refUID - UID of object which owns this image [string]
@@ -305,14 +454,15 @@ class Image {
 	//returns: UID of image, or false if one was not found [string][bool]
 
 	function findSingle($refModule, $refUID, $category) {
-		$sql = "select * from images where refModule='" . sqlMarkup($refModule) 
-		     . "' and refUID='" . sqlMarkup($refUID) 
-			 . "' and category = '" . sqlMarkup($category) . "'";
+		global $db;
 
-		//TODO: dbLoadRange
+		$conditions = array();
+		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "category='" . $db->addMarkup($category) . "'";
+		$range = $db->loadRange('Images_Image', '*', $conditions, 'weight', '1', '');
 
-		$result = dbQuery($sql);
-		while ($row = dbFetchAssoc($result)) { 
+		foreach($range as $row) {
 			$this->load($row['UID']); 
 			return $row['UID']; 
 		}
@@ -326,27 +476,20 @@ class Image {
 	//arg: img - an image handle [int]
 
 	function storeFile($img) {
-		global $installPath;
-		
-		//------------------------------------------------------------------------------------------
-		//	ensure directory exists
-		//------------------------------------------------------------------------------------------
-		$baseDir = $installPath . 'data/images/';
-		$baseDir .= substr($this->data['UID'], 0, 1) . '/';
-		@mkdir($baseDir);
-		$baseDir .= substr($this->data['UID'], 1, 1) . '/';
-		@mkdir($baseDir);
-		$baseDir .= substr($this->data['UID'], 2, 1) . '/';
-		@mkdir($baseDir);
-		
+		global $kapenta;
+		//TODO: make JPEG quality a setting
 		//------------------------------------------------------------------------------------------
 		//	save the file
 		//------------------------------------------------------------------------------------------
-		$fileName = $baseDir . $this->data['UID'] . '.jpg';
-		imagejpeg($img, $fileName, 95);
-		
-		$this->data['fileName'] = str_replace($installPath, '', $fileName);
-		$this->data['format'] = 'jpg';
+		$baseDir = 'data/images/'
+			 . substr($this->UID, 0, 1) . '/'
+			 . substr($this->UID, 1, 1) . '/'
+			 . substr($this->UID, 2, 1) . '/';
+
+		$this->fileName = $baseDir . $this->UID . '.jpg';
+		$kapenta->fileMakeSubdirs($this->fileName, true);				// ensure directory exists
+		imagejpeg($img, $kapenta->installPath . $this->fileName, 95);	// save it
+		$this->format = 'jpg';
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -357,25 +500,19 @@ class Image {
 	function delete() {
 		$ext = $this->extArray();
 
-		$this->data['refUID']  = str_replace('del-', '', $this->data['refUID']);
-		$this->data['refModule']  = str_replace('del-', '', $this->data['refModule']);
+		$this->refUID  = str_replace('del-', '', $this->refUID);
+		$this->refModule  = str_replace('del-', '', $this->refModule);
 
-		$this->data['refUID'] = 'del-' . $this->data['refUID'];
-		$this->data['refModule'] = 'del-' . $this->data['refModule'];
+		$this->refUID = 'del-' . $this->refUID;
+		$this->refModule = 'del-' . $this->refModule;
 		$this->save();
 
-		//-----------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		//	send specific event to module responsible for object which owned the deleted image
-		//-----------------------------------------------------------------------------------------
-		$args = array('module' => 'images', 'UID' => $this->data['UID'], 'title' => $ext['title']);
-		eventSendSingle($ext['refModule'], 'images_deleted', $args);
-
-		//-----------------------------------------------------------------------------------------
-		//	allow other modules to respond to this event
-		//-----------------------------------------------------------------------------------------
-		$args = array('module' => 'images', 'UID' => $this->data['UID']);
-		eventSendAll('object_deleted', $args);
-
+		//------------------------------------------------------------------------------------------
+		//$args = array('module' => 'images', 'UID' => $this->UID, 'title' => $ext['title']);
+		//eventSendSingle($ext['refModule'], 'images_deleted', $args);
+		//TODO: this
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -383,7 +520,7 @@ class Image {
 	//---------------------------------------------------------------------------------------------
 
 	function finalDelete() {
-		global $installPath;
+		global $kapenta, $db;;
 		$ext = $this->extArray();
 
 		//-----------------------------------------------------------------------------------------
@@ -391,39 +528,28 @@ class Image {
 		//-----------------------------------------------------------------------------------------
 		$this->expandTransforms();
 		foreach($this->transforms as $transName => $fileName) {
-			$fileName = $installPath . $fileName;
+			$fileName = $kapenta->installPath . $fileName;
 			if (file_exists($fileName) == true) { @unlink($fileName); }
 		}
 		
-		if (file_exists($installPath . $this->data['fileName']) == true) 
-			{ @unlink($installPath . $this->data['fileName']); }
+		if (file_exists($kapenta->installPath . $this->fileName) == true) 
+			{ @unlink($installPath . $this->fileName); }		// TODO: kapenta should hand this
 
 		//-----------------------------------------------------------------------------------------
 		//	delete the record
 		//-----------------------------------------------------------------------------------------
-		dbDelete('images', $this->data['UID']);
+		if (false == $this->loaded) { return false; }		// nothing to do
+		if (false == $db->delete('images', 'Images_Image', $this->UID)) { return false; }
+		return true;
 
 		//-----------------------------------------------------------------------------------------
 		//	send specific event to module responsible for object which owned the deleted image
 		//-----------------------------------------------------------------------------------------
-		$args = array('module' => 'images', 'UID' => $this->data['UID'], 'title' => $ext['title']);
-		eventSendSingle($ext['refModule'], 'image_deleted', $args);
-
-		//-----------------------------------------------------------------------------------------
-		//	allow other modules to respond to this event
-		//-----------------------------------------------------------------------------------------
-		$args = array('module' => 'images', 'UID' => $this->data['UID']);
-		eventSendAll('object_deleted', $args);
+		//$args = array('module' => 'images', 'UID' => $this->UID, 'title' => $ext['title']);
+		//eventSendSingle($ext['refModule'], 'image_deleted', $args);
+		//TODO: this
 	}
 
-	//----------------------------------------------------------------------------------------------
-	//.	bump up the hitcount by one
-	//----------------------------------------------------------------------------------------------
-
-	function incHitCount() {
-		dbUpdateQuiet('images', $this->data['UID'], 'hitcount', ($this->data['hitcount'] + 1));
-	}
-	
 }
 
 ?>

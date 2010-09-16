@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all grades/years/forms/standards at a school
@@ -9,32 +9,40 @@
 //opt: schoolUID - overrides raUID [string]
 
 function schools_allgrades($args) {
-	global $serverPath;
-	global $user;
-
-	if ($user->data['ofGroup'] == 'public') { return '[[:users::pleaselogin:]]'; }
-
-	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	global $db,	$user;
 	$html = '';
 
-	$model = new School($args['raUID']);	
-	$sql = "select grade, count(UID) as members from users "
-		 . "where school='" . $model->data['UID'] . "' group by grade";
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permisisons
+	//----------------------------------------------------------------------------------------------
+	if ($user->role == 'public') { return '[[:users::pleaselogin:]]'; }
+	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
+	if (array_key_exists('raUID', $args) == false) { return false; }
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$link = $serverPath . 'schools/grade/grade_' . base64_encode($row['grade'])
-			  . '/' . $model->data['recordAlias'];
+	$model = new Schools_School($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	//TODO: permissions checks here
+
+	//----------------------------------------------------------------------------------------------
+	//	query database and make the block
+	//----------------------------------------------------------------------------------------------
+
+	$sql = "select grade, count(UID) as members from Users_User "
+		 . "where school='" . $model->UID . "' group by grade";
+
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
+		$link = '%%serverPath%%schools/grade/grade_' . base64_encode($row['grade'])
+			  . '/' . $model->alias;
 
 		$html .= "<a href='" . $link . "'>" . $row['grade']
 			  . " (". $row['members'] ." people)</a><br/>";
 	}
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

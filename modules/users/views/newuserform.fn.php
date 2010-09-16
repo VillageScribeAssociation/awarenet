@@ -1,16 +1,18 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form to add a new user (to be displayed in the subnav, 300px wide, no arguments)
 //--------------------------------------------------------------------------------------------------
 
 function users_newuserform($args) {
+	global $theme;
+
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-	return loadBlock('modules/users/views/newuserform.block.php');
+	if ('admin' != $user->role) { return false; }
+	return $theme->loadBlock('modules/users/views/newuserform.block.php');
 }
 
 

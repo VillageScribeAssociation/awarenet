@@ -1,29 +1,43 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	confirm deletion of a project section
+//*	confirm deletion of a project section
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('projects', 'edit', '') == false) { do403(); }
-	if (array_key_exists('uid', $request['args']) == false) { do404(); }
-	if (array_key_exists('section', $request['args']) == false) { do404(); }
-	if (dbRecordExists('projects', $request['args']['uid']) == false) { do404(); }
-	
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
 
-	$model = new Project($request['args']['uid']);
-	$thisRa = $model->data['recordAlias'];
-	if (false == $model->hasEditAuth($user->data['UID'])) { do403(); }
+	if (false == array_key_exists('uid', $req->args))
+		{ $page->do404('Project (UID) not specified.'); }
+
+	if (false == array_key_exists('section', $req->args))
+		{ $page->do404('Section (UID) not specified'); }
+
+	$model = new Projects_Project($req->args['uid']);
+	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID))
+		{ $page->do403(); }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the confirmation block and show section to be deleted
+	//----------------------------------------------------------------------------------------------
+
+	if (false == $model->hasEditAuth($user->UID)) { $page->do403(); }	//TODO: replace
 	
 	$labels = array(
-					'UID' => $request['args']['uid'], 
-					'section' => $request['args']['section'],
-					'raUID' => $model->data['recordAlias']
-					);
+		'UID' => $model->UID, 
+		'section' => $req->args['section'],
+		'raUID' => $model->alias
+	);
 	
-	$html .= replaceLabels($labels, loadBlock('modules/projects/views/confirmdeletesection.block.php'));
+	$block = $theme->loadBlock('modules/projects/views/confirmdeletesection.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	
-	$_SESSION['sMessage'] .= $html;
-	do302('projects/editsection/section_' . $request['args']['section'] . '/' . $thisRa);
+	$session->msg($html, 'warn');
+	$page->do302('projects/editsection/section_' . $req->args['section'] . '/' . $model->alais);
+	//TODO: descurity checks on $req->args['section']
 
 ?>

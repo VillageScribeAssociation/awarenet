@@ -216,8 +216,8 @@ function OnMouseUp(e) {
 		var stTop = Number(_dragElement.style.top.replace("px", "")) - 47;
 		var stFromUID = _dragElement.id.replace('cw', '');
 		//alert("offsets: " + stLeft + ',' + (stTop + contentHeight) + "id: " + stFromUID);
-		cookieMoveWindow(stFromUID, stLeft, (stTop + contentHeight));
-		lastUpdate = cookieSetChatUpdate();
+		//cookieMoveWindow(stFromUID, stLeft, (stTop + contentHeight));
+		//lastUpdate = cookieSetChatUpdate();
 
 		//------------------------------------------------------------------------------------------
 		//	if we are presently dragging something, let it go

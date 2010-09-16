@@ -11,25 +11,32 @@
     <search>no</search>
     <dependancy>
     </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>list|%%user.ofGroup%%=teacher</perm>
-        <perm>summarylist|%%user.ofGroup%%=student</perm>
-        <perm>summarylist|%%user.ofGroup%%=teacher</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=teacher</perm>
-        <perm>comment|%%user.ofGroup%%=student</perm>
-        <perm>comment|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=admin</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-    </permissions>
+	<models>
+		<model>
+			<name>Announcements_Announcement</name>
+			<description></description>
+			<permissions>
+				<permission>new</permission>
+				<permission>show</permission>
+				<permission>list</permission>
+				<permission>delete</permission>
+				<export>announcement-add</export>
+				<export>announcement-edit</export>
+				<export>announcement-show</export>
+				<export>announcement-delete</export>
+			</permissions>
+			<relationships>
+				<relationship>creator</relationship>
+			</relationships>
+		</model>
+	</models>
+    <defaultpermissions>
+		student:p|announcements|Announcements_Announcement|show
+		student:p|announcements|Announcements_Announcement|list
+		teacher:p|announcements|Announcements_Announcement|announcement-add
+		teacher:c|announcements|Announcements_Announcement|announcement-edit|(if)|creator
+		teacher:c|announcements|Announcements_Announcement|announcement-delete|(if)|creator
+    </defaultpermissions>
     <blocks>
     </blocks>
 </module>

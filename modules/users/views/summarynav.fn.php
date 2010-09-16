@@ -1,7 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	short summary of user record formatted or the nav bar (300px wide)
@@ -12,19 +11,30 @@
 //opt: target - a URL or _parent, for iFrames [string]
 
 function users_summarynav($args) {
-	if (authHas('users', 'summary', '') == false) { return ''; }
-	if (array_key_exists('userUID', $args) == true) { $args['UID'] = $args['userUID']; }
-	if (array_key_exists('UID', $args) == false) { return false; }
+	global $db, $user, $theme;
+	$html = '';						//%	return value [string]
 
-	$model = new User($args['UID']);
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('userUID', $args)) { $args['UID'] = $args['userUID']; }
+	if (false == array_key_exists('UID', $args)) { return '(no uid)'; }
+
+	$model = new Users_User($args['UID']);
+	if (false == $user->authHas('users', 'Users_User', 'show', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$labels = $model->extArray();
 	$labels['extra'] = '';
 
-	if (array_key_exists('extra', $args)) { $labels['extra'] = $args['extra']; }
+	if (true == array_key_exists('extra', $args)) { $labels['extra'] = $args['extra']; }
 
-	$html = replaceLabels($labels, loadBlock('modules/users/views/summarynav.block.php'));
+	$block = $theme->loadBlock('modules/users/views/summarynav.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 
-	if (array_key_exists('target', $args) == true) 
+	if (true == array_key_exists('target', $args)) 
 		{ $html = str_replace("<a href=", "<a target='" . $args['target'] . "' href=", $html); }
 
 	return $html;

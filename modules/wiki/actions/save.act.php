@@ -1,86 +1,59 @@
 <?
+	
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	save an edit to a wiki page
+//*	save an edit to a wiki page
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('wiki', 'edit', '') == false) { do403(); }
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	//------------------------------------------------------------------------------------------
+	//	check action
+	//------------------------------------------------------------------------------------------
+	if (false == array_key_exists('action', $_POST)) { $page->do404('action not supplied'); }
+	if ('savePage' != $_POST['action']) { $page->do404('action not supported'); }
 
-	if (array_key_exists('action', $_POST)) {
+	//------------------------------------------------------------------------------------------
+	//	save from edit form
+	//------------------------------------------------------------------------------------------
+	$model = new Wiki_Article($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('no such article'); }
+	if (false == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) { $page->do403(); }
 
-		//------------------------------------------------------------------------------------------
-		//	create a new page
-		//------------------------------------------------------------------------------------------
+	$model->title = $_POST['title'];
+	$model->content = $_POST['content'];
+	$model->nav = $_POST['nav'];
+	$model->editedBy = $user->UID;
+	$model->editedOn = $db->datetime();
+	$model->save();
+	$thisRa = $model->alias;
 
-		if ($_POST['action'] == 'newPage') {
-			
-			// ensure a title was supplied
-			if ((array_key_exists('title', $_POST) == false) OR (trim($_POST['title']) == '')) { 
-				$_SESSION['sMessage'] .= 'Please choose a title for your new article.';
-				do302('/wiki/new/');
-			}
+	//--------------------------------------------------------------------------------------
+	//	save new content in revisions table
+	//--------------------------------------------------------------------------------------
+	
+	$model = new Wiki_Revision();
+	$model->refUID = $_POST['UID'];
+	$model->articleUID = $_POST['UID'];
+	$model->content = $_POST['content'];
+	$model->nav = $_POST['nav'];
+	$model->title = $_POST['title'];
+	$model->type = 'content';
+	$model->reason = strip_tags($_POST['reason']);
+	$model->editedBy = $user->UID;
+	$model->editedOn = $db->datetime();
+	$model->save();
 
-			//--------------------------------------------------------------------------------------
-			//	save the current wiki record
-			//--------------------------------------------------------------------------------------
+	$session->msgAdmin("Saved revision .", 'ok');
+	
+	//--------------------------------------------------------------------------------------
+	//	done, 302 back to the article
+	//--------------------------------------------------------------------------------------
 
-			$model = new Wiki();
-			$model->data['title'] = $_POST['title'];
-			$model->data['content'] = '';
-			$model->data['locked'] = 'user';
-			$model->save();
+	$session->msg("Saved edit to wiki article.", 'ok');
+	$page->do302('wiki/' . $thisRa);			
 
-			//--------------------------------------------------------------------------------------
-			//	done, 302 to the article edit form
-			//--------------------------------------------------------------------------------------
-
-			$_SESSION['sMessage'] .= "Created new wiki article.<br/>\n";
-			do302('wiki/edit/' . $model->data['recordAlias']);			
-
-		}
-
-		//------------------------------------------------------------------------------------------
-		//	save from edit form
-		//------------------------------------------------------------------------------------------
-
-		if ($_POST['action'] == 'savePage') {
-
-			//--------------------------------------------------------------------------------------
-			//	save the current wiki record
-			//--------------------------------------------------------------------------------------
-
-			if (dbRecordExists('wiki', $_POST['UID']) == false) { do404(); }
-
-			$model = new Wiki($_POST['UID']);
-			$model->data['title'] = $_POST['title'];
-			$model->data['content'] = $_POST['content'];
-			$model->data['editedBy'] = $user->data['UID'];
-			$model->data['editedOn'] = mk_mysql_datetime(time());
-			$model->save();
-			$thisRa = $model->data['recordAlias'];
-
-			//--------------------------------------------------------------------------------------
-			//	save new content in revisions table
-			//--------------------------------------------------------------------------------------
-
-			$model = new WikiRevision();
-			$model->data['refUID'] = $_POST['UID'];
-			$model->data['content'] = $_POST['content'];
-			$model->data['type'] = 'content';
-			$model->data['reason'] = strip_tags($_POST['reason']);
-			$model->data['editedBy'] = $user->data['UID'];
-			$model->data['editedOn'] = mk_mysql_datetime(time());
-			$model->save();
-
-			//--------------------------------------------------------------------------------------
-			//	done, 302 back to the article
-			//--------------------------------------------------------------------------------------
-
-			$_SESSION['sMessage'] .= "Saved edit to wiki article.<br/>\n";
-			do302('wiki/' . $thisRa);			
-		}
+	/*
 
 		//------------------------------------------------------------------------------------------
 		//	save from edit talk form
@@ -92,26 +65,26 @@
 			//	save the current wiki record
 			//--------------------------------------------------------------------------------------
 
-			if (dbRecordExists('wiki', $_POST['UID']) == false) { do404(); }
+			if ($db->objectExists('wiki', $_POST['UID']) == false) { $page->do404(); }
 
 			$model = new Wiki($_POST['UID']);
-			$model->data['talk'] = $_POST['talk'];
-			$model->data['editedBy'] = $user->data['UID'];
-			$model->data['editedOn'] = mk_mysql_datetime(time());
+			$model->talk = $_POST['talk'];
+			$model->editedBy = $user->UID;
+			$model->editedOn = $db->datetime();
 			$model->save();
-			$thisRa = $model->data['recordAlias'];
+			$thisRa = $model->alias;
 
 			//--------------------------------------------------------------------------------------
 			//	save new content in revisions table
 			//--------------------------------------------------------------------------------------
 
 			$model = new WikiRevision();
-			$model->data['refUID'] = $_POST['UID'];
-			$model->data['content'] = $_POST['talk'];
-			$model->data['type'] = 'talk';
-			$model->data['reason'] = strip_tags($_POST['reason']);
-			$model->data['editedBy'] = $user->data['UID'];
-			$model->data['editedOn'] = mk_mysql_datetime(time());
+			$model->refUID = $_POST['UID'];
+			$model->content = $_POST['talk'];
+			$model->type = 'talk';
+			$model->reason = strip_tags($_POST['reason']);
+			$model->editedBy = $user->UID;
+			$model->editedOn = $db->datetime();
 			$model->save();
 
 			//--------------------------------------------------------------------------------------
@@ -119,9 +92,10 @@
 			//--------------------------------------------------------------------------------------
 
 			$_SESSION['sMessage'] .= "Saved edit to discussion.<br/>\n";
-			do302('wiki/talk/' . $thisRa);			
+			$page->do302('wiki/talk/' . $thisRa);			
 		}
 
 	}
+	*/
 
 ?>

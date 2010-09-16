@@ -1,29 +1,84 @@
 <?
 
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/notifications/models/notification.mod.php');
+	require_once($kapenta->installPath . 'modules/notifications/models/userindex.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	installer for images module (creates table)
+//*	install script for Notifications module
 //--------------------------------------------------------------------------------------------------
+//+	reports are human-readable HTML, with script-readable HTML comments
 
-require_once($installPath . 'modules/notifications/models/notification.mod.php');
-require_once($installPath . 'modules/notifications/models/pagechannel.mod.php');
-require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
+//--------------------------------------------------------------------------------------------------
+//|	install the Notifications module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
 
-function install_notifications_module() {
-	global $installPath;
-	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-
+function notifications_install_module() {
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
 	$report = '';
 
-	$model = new NotificationQueue();
-	$report .= $model->install();
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Notifications_Notification table
+	//----------------------------------------------------------------------------------------------
+	$model = new Notifications_Notification();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	$model = new PageClient();
-	$report .= $model->install();
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Notifications_UserIndex table
+	//----------------------------------------------------------------------------------------------
+	$model = new Notifications_UserIndex();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	$model = new PageChannel();
-	$report .= $model->install();
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	return $report;
+}
 
+//--------------------------------------------------------------------------------------------------
+//|	discover if this module is installed
+//--------------------------------------------------------------------------------------------------
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
+
+function notifications_install_status_report() {
+	global $user;
+	if ('admin' != $user->role) { return false; }
+
+	$dba = new KDBAdminDriver();
+	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
+	$installed = true;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Notification objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Notifications_Notification();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores UserIndex objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Notifications_UserIndex();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

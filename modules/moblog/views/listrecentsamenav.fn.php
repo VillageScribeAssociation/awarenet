@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list x recent posts from the same blog (ie same user) as the post UID supplied
@@ -11,27 +11,44 @@
 //opt: num - max number of posts to show (default 10) [string]
 
 function moblog_listrecentsamenav($args) {
-	global $user;
-	$num = 10; $html = '';
+	global $db, $theme, $user;
+	$html = '';						//%	return value [string]
+	$num = 10;						//% default max number of items to show [int]
 
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
-	if (array_key_exists('postUID', $args) == true) { $args['raUID'] = $args['postUID']; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
 
-	$model = new Moblog($args['raUID']);
-	if ($model->data['UID'] == '') { return false; }
+	if (true == array_key_exists('postUID', $args)) { $args['raUID'] = $args['postUID']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 
-	$sql = "select * from moblog"
-		 . " where createdBy='" . $model->data['createdBy'] . "'"
-		 . " and (published='yes' or createdBy='" . $user->data['UID'] . "')"
-		 . " order by createdOn DESC limit $num ";	
+	$model = new Moblog_Post($args['raUID']);
+	if (false == $model->loaded) { return ''; }
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$model = new Moblog();
-		$model->loadArray(sqlRMArray($row));
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/moblog/views/summarynav.block.php'));
+	//----------------------------------------------------------------------------------------------
+	//	load items from database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "createdBy='" . $db->addMarkup($model->createdBy) . "'";
+	$conditions[] = "(published='yes' or createdBy='" . $db->addMarkup($user->UID) . "')";
+
+	$range = $db->loadRange('Moblog_Post', '*', $conditions, "createdOn DESC", $num); 
+
+	//$sql = "select * from moblog"
+	//	 . " where createdBy='" . $model->createdBy . "'"
+	//	 . " and (published='yes' or createdBy='" . $user->UID . "')"
+	//	 . " order by createdOn DESC limit $num ";	
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
+	foreach ($range as $row) {
+		$model = new Moblog_Post();
+		$model->loadArray($row);
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
 
 	return $html;
@@ -40,4 +57,3 @@ function moblog_listrecentsamenav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

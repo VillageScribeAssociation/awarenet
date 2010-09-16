@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summarise for the nav (300 wide)
@@ -11,14 +11,30 @@
 // TODO: stop using [[groups::image::...::]]
 
 function groups_summarynav($args) {
-	global $user;
+	global $user, $theme;
+	$html = '';					//% return value [string]
 
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and args
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('groupUID', $args) == true) { $args['raUID'] = $args['groupUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 
-	$g = new Group(sqlMarkup($args['raUID']));	
-	return replaceLabels($g->extArray(), loadBlock('modules/groups/views/summarynav.block.php'));
+	//----------------------------------------------------------------------------------------------
+	//	load the group
+	//----------------------------------------------------------------------------------------------
+	$model = new Groups_Group($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/groups/views/summarynav.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

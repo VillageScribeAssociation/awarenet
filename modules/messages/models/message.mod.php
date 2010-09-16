@@ -4,105 +4,180 @@
 //*	object for personal messages, like webmail
 //--------------------------------------------------------------------------------------------------
 
-class Message {
+class Messages_Message {
 
 	//----------------------------------------------------------------------------------------------
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			// currently loaded record [array]
-	var $dbSchema;		// database table structure [array]
+	var $data;				//_	currently loaded database record [array]
+	var $dbSchema;			//_	database table definition [array]
+	var $loaded;			//_	set to true when an object has been loaded [bool]
+
+	var $UID;				//_ UID [string]
+	var $owner;				//_ varchar(33) [string]
+	var $folder;			//_ varchar(33) [string]
+	var $fromUID;			//_ varchar(33) [string]
+	var $toUID;				//_ varchar(33) [string]
+	var $cc;				//_ text [string]
+	var $title;				//_ title [string]
+	var $content;			//_ wyswyg [string]
+	var $status;			//_ varchar(10) [string]
+	var $re;				//_ varchar(33) [string]
+	var $createdOn;			//_ datetime [string]
+	var $createdBy;			//_ ref:Users_User [string]
+	var $editedOn;			//_ datetime [string]
+	var $editedBy;			//_ ref:Users_User [string]
 
 	//----------------------------------------------------------------------------------------------
-	//.	constructor
+	//. constructor
 	//----------------------------------------------------------------------------------------------
-	//opt: UID - UID of group membership index record [string]
+	//opt: UID - UID of a Message object [string]
 
-	function Message($UID = '') {
-		global $user;
-		$this->dbSchema = $this->initDbSchema();
-		$this->data = dbBlank($this->dbSchema);
-		$this->data['title'] = 'New Message ' . $this->data['UID'];
-		if ($UID != '') { $this->load($UID); }
+	function Messages_Message($UID = '') {
+		global $db;
+		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+		if ('' != $UID) { $this->load($UID); }			// try load an object from the database
+		if (false == $this->loaded) {						// check if we did
+			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->loadArray($this->data);					// initialize
+			$this->title = 'New Message ' . $this->UID;		// set default title
+			$this->loaded = false;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record by UID or recordAlias
+	//. load an object from the db given its UID
 	//----------------------------------------------------------------------------------------------
-	//arg: UID - UID of a group membership [string]
+	//arg: UID - UID of a Message object [string]
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		$ary = dbLoad('messages', $UID);
-		if ($ary != false) { $this->loadArray($ary); return true; } 
+		global $db;
+		$objary = $db->load('Messages_Message', $UID);
+		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record provided as an associative array
+	//. load Message object serialized as an associative array
 	//----------------------------------------------------------------------------------------------
-	//arg: ary - associative array of fields and values [array]
+	//arg: ary - associative array of members and values [array]
+	//returns: true on success, false on failure [bool]
 
-	function loadArray($ary) { $this->data = $ary; }
-
-	//----------------------------------------------------------------------------------------------
-	//.	save the current record
-	//----------------------------------------------------------------------------------------------
-
-	function save() {
-		$verify = $this->verify();
-		if ($verify != '') { return $verify; }
-		dbSave($this->data, $this->dbSchema); 
+	function loadArray($ary) {
+		global $db;
+		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		$this->UID = $ary['UID'];
+		$this->owner = $ary['owner'];
+		$this->folder = $ary['folder'];
+		$this->fromUID = $ary['fromUID'];
+		$this->toUID = $ary['toUID'];
+		$this->cc = $ary['cc'];
+		$this->title = $ary['title'];
+		$this->content = $ary['content'];
+		$this->status = $ary['status'];
+		$this->re = $ary['re'];
+		$this->createdOn = $ary['createdOn'];
+		$this->createdBy = $ary['createdBy'];
+		$this->editedOn = $ary['editedOn'];
+		$this->editedBy = $ary['editedBy'];
+		$this->loaded = true;
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	verify - check that a record is correct before allowing it to be stored in the database
+	//. save the current object to database
+	//----------------------------------------------------------------------------------------------
+	//returns: null string on success, html report of errors on failure [string]
+	//: $db->save(...) will raise an object_updated event if successful
+
+	function save() {
+		global $db, $aliases;
+		$report = $this->verify();
+		if ('' != $report) { return $report; }
+		$check = $db->save($this->toArray(), $this->dbSchema);
+		if (false == $check) { return "Database error.<br/>\n"; }
+		return '';
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. check that object is correct before allowing it to be stored in database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$verify = '';
-
-		if (strlen($this->data['UID']) < 5) { $verify .= "UID not present.\n"; }
-
-		return $verify;
+		$report = '';
+		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		return $report;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	sql information
+	//. database table definition and content versioning
 	//----------------------------------------------------------------------------------------------
-	//returns: database table layout [array]
+	//returns: information for constructing SQL queries [array]
 
-	function initDbSchema() {
+	function getDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'messages';
+		$dbSchema['module'] = 'messages';
+		$dbSchema['table'] = 'Messages_Message';
+
+		//table columns
 		$dbSchema['fields'] = array(
-			'UID' => 'VARCHAR(30)',
-			'owner' => 'VARCHAR(30)',
-			'folder' => 'VARCHAR(30)',
-			'fromUID' => 'VARCHAR(30)',
-			'toUID' => 'VARCHAR(30)',
+			'UID' => 'VARCHAR(33)',
+			'owner' => 'VARCHAR(33)',
+			'folder' => 'VARCHAR(33)',
+			'fromUID' => 'VARCHAR(33)',
+			'toUID' => 'VARCHAR(33)',
 			'cc' => 'TEXT',
 			'title' => 'VARCHAR(255)',
-			're' => 'VARCHAR(30)',
+			're' => 'VARCHAR(33)',
 			'content' => 'TEXT',
 			'status' => 'VARCHAR(10)',
-			'createdBy' => 'VARCHAR(30)',
-			'createdOn' => 'DATETIME', 
+			'createdOn' => 'DATETIME',
+			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(30)' );
+			'editedBy' => 'VARCHAR(33)' );
 
-		$dbSchema['indices'] = array('UID' => '10', 'fromUID' => 10, 'toUID' => '10' );
-		$dbSchema['nodiff'] = array('UID');
+		//these fields will be indexed
+		$dbSchema['indices'] = array(
+			'UID' => '10',
+			'createdOn' => '',
+			'createdBy' => '10',
+			'editedOn' => '',
+			'editedBy' => '10' );
+
+		//revision history will be kept for these fields
+		$dbSchema['nodiff'] = array();
+
 		return $dbSchema;
+		
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	serialize this object to an array
+	//. serialize this object to an array
 	//----------------------------------------------------------------------------------------------
-	//returns: associative array of all variables which define this instance [array]
+	//returns: associative array of all members which define this instance [array]
 
-	function toArray() { return $this->data; }
+	function toArray() {
+		$serialize = array(
+			'UID' => $this->UID,
+			'owner' => $this->owner,
+			'folder' => $this->folder,
+			'fromUID' => $this->fromUID,
+			'toUID' => $this->toUID,
+			'cc' => $this->cc,
+			'title' => $this->title,
+			'content' => $this->content,
+			'status' => $this->status,
+			're' => $this->re,
+			'createdOn' => $this->createdOn,
+			'createdBy' => $this->createdBy,
+			'editedOn' => $this->editedOn,
+			'editedBy' => $this->editedBy
+		);
+		return $serialize;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	make an extended array of all data a view will need
@@ -111,7 +186,7 @@ class Message {
 
 	function extArray() {
 		global $user;
-		$ary = $this->data;
+		$ary = $this->toArray();
 
 		$ary['editUrl'] = '';		$ary['editLink'] = '';
 		$ary['viewUrl'] = '';		$ary['viewLink'] = '';
@@ -123,24 +198,24 @@ class Message {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ($user->data['ofGroup'] == 'admin') { $auth = true; }
-		if ($user->data['UID'] == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $user->role) { $auth = true; }
+		if ($user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (authHas('messages', 'view', $this->data)) { 
-			$ary['viewUrl'] = '%%serverPath%%messages/' . $ary['recordAlias'];
+		if (true == $user->authHas('messages', 'Messages_Message', 'show', $this->UID)) { 
+			$ary['viewUrl'] = '%%serverPath%%messages/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[see all threads &gt;&gt;]</a>"; 
 		}
 
 		if ($auth == true) {
-			$ary['editUrl'] =  '%%serverPath%%messages/edit/' . $ary['recordAlias'];
+			$ary['editUrl'] =  '%%serverPath%%messages/edit/' . $ary['UID'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['newUrl'] = "%%serverPath%%messages/new/";
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new messages]</a>";  
-			$ary['addChildUrl'] = "%%serverPath%%messages/addchild/" . $ary['recordAlias'];
+			$ary['addChildUrl'] = "%%serverPath%%messages/addchild/" . $ary['UID'];
 			$ary['addChildLink'] = "<a href='" . $ary['addChildUrl'] . "'>[add child messages]</a>";  
 			$ary['delUrl'] = "%%serverPath%%messages/confirmdelete/UID_" . $ary['UID'] . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete messages]</a>";  
@@ -150,7 +225,7 @@ class Message {
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
 
-		$ary['longdate'] = date('jS F, Y', strtotime($ary['date']));
+		$ary['longdate'] = date('jS F, Y', strtotime($ary['createdOn']));
 		$ary['titleUpper'] = strtoupper($ary['title']);
 
 		//------------------------------------------------------------------------------------------
@@ -163,9 +238,9 @@ class Message {
 		//	look up user
 		//------------------------------------------------------------------------------------------
 
-		$model = new User($ary['createdBy']);
-		$ary['userName'] = $model->data['firstname'] . ' ' . $model->data['surname'];		
-		$ary['userRa'] = $model->data['recordAlias'];
+		$model = new Users_User($ary['createdBy']);
+		$ary['userName'] = $model->firstname . ' ' . $model->surname;		
+		$ary['userRa'] = $model->alias;
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
 		$ary['userLink'] = "<a href='" . $ary['userUrl'] . "'>" . $ary['userRa'] . "</a>";
 	
@@ -173,44 +248,16 @@ class Message {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	install this module
+	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//returns: html report lines [string]
-	//, deprecated, this should be handled by ../inc/install.inc.inc.php
-
-	function install() {
-		$report = "<h3>Installing Messages Module</h3>\n";
-
-		//------------------------------------------------------------------------------------------
-		//	create messages table if it does not exist
-		//------------------------------------------------------------------------------------------
-
-		if (dbTableExists('messages') == false) {	
-			echo "installing messages module\n";
-			dbCreateTable($this->dbSchema);	
-			$this->report .= 'created messages table and indices...<br/>';
-		} else {
-			$this->report .= 'messages table already exists...<br/>';	
-		}
-
-		return $report;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	delete the current record
-	//----------------------------------------------------------------------------------------------
+	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		//------------------------------------------------------------------------------------------
-		//	delete any images associated with this message
-		//------------------------------------------------------------------------------------------
-		//TODO
-
-		//------------------------------------------------------------------------------------------
-		//	delete this record
-		//------------------------------------------------------------------------------------------		
-		raDeleteAll('messages', $this->data['UID']);
-		dbDelete('messages', $this->data['UID']);
+		global $db;
+		if (false == $this->loaded) { return false; }		// nothing to do
+		if (false == $db->delete('messages', 'Messages_Message', $this->UID)) { return false; }
+		return true;
 	}
 
 }

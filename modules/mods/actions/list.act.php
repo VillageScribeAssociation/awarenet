@@ -4,9 +4,9 @@
 //	list admin modules
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
-	$page->load($installPath . 'modules/mods/actions/list.page.php');
+	$page->load('modules/mods/actions/list.page.php');
 	$page->render();
 
 ?>

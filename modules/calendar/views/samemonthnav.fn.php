@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show a mini calendar of events in the same month
@@ -9,8 +9,8 @@
 
 function calendar_samemonthnav($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$c = new Calendar($args['raUID']);
-	return $c->drawMonth($c->data['month'], $c->data['year'], 'small');
+	$c = new Calendar_Entry($args['raUID']);
+	return $c->drawMonth($c->month, $c->year, 'small');
 }
 
 //--------------------------------------------------------------------------------------------------

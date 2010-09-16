@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/wiki.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/wikicode.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	make a select element listing all wiki articles (?)
@@ -11,6 +11,8 @@
 // * $args['default'] = current value
 
 function wiki_select($args) {
+	global $db;
+
 	$varname = 'person';
 	$default = '';
 	if (array_key_exists('varname', $args)) { $varname = $args['varname']; }
@@ -18,9 +20,9 @@ function wiki_select($args) {
 	$html = '';
 	
 	$sql = "select * from wiki order by name";
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 	$html .= "<select name='" . $varname . "'>\n";
-	while ($row = dbFetchAssoc($result)) {
+	while ($row = $db->fetchAssoc($result)) {
 		if ($row['UID'] == $default) {
 			$html .= "<option value='" . $row['UID'] . "' CHECKED='CHECKED'>" 
 			      . $row['name'] . "</option>\n";

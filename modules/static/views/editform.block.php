@@ -1,6 +1,6 @@
 <? /*
 <h1>Edit Page: %%p_title%%</h1>
-<form name='editStaticPage' method='POST' action='/static/save/'>
+<form name='editStaticPage' method='POST' action='%%serverPath%%static/save/'>
 <input type='hidden' name='action' value='saveStaticPage'>
 <input type='hidden' name='UID' value='%%p_UID%%'>
 

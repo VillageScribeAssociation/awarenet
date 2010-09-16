@@ -1,44 +1,109 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	installer for gallery module (creates table)
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/sync/models/download.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
 
-require_once($installPath . 'modules/sync/models/server.mod.php');
-require_once($installPath . 'modules/sync/models/deleted.mod.php');
-require_once($installPath . 'modules/sync/models/sync.mod.php');
-require_once($installPath . 'modules/sync/models/download.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	install script for Sync module
+//--------------------------------------------------------------------------------------------------
+//+	reports are human-readable HTML, with script-readable HTML comments
 
-function install_sync_module() {
-	global $installPath;
+//--------------------------------------------------------------------------------------------------
+//|	install the Sync module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
+
+function sync_install_module() {
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Sync_Download table
+	//----------------------------------------------------------------------------------------------
+	$model = new Sync_Download();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Sync_Notice table
+	//----------------------------------------------------------------------------------------------
+	$model = new Sync_Notice();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Sync_Server table
+	//----------------------------------------------------------------------------------------------
+	$model = new Sync_Server();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	import any records from previous server table
+	//----------------------------------------------------------------------------------------------
+	$rename = array();
+	$count = $dba->copyAll('servers', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'servers' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	return $report;
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	discover if this module is installed
+//--------------------------------------------------------------------------------------------------
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
+
+function sync_install_status_report() {
 	global $user;
+	if ('admin' != $user->role) { return false; }
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-
-	//----------------------------------------------------------------------------------------------
-	//	servers table
-	//----------------------------------------------------------------------------------------------
-	$model = new Server();
-	$report = $model->install();
+	$dba = new KDBAdminDriver();
+	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
+	$installed = true;
 
 	//----------------------------------------------------------------------------------------------
-	//	deleted items table
+	//	ensure the table which stores Download objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new DeletedItem();
-	$report = $model->install();
+	$model = new Sync_Download();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	sync events table
+	//	ensure the table which stores Notice objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Sync();
-	$report .= $model->install();
+	$model = new Sync_Notice();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	downloads table
+	//	ensure the table which stores Server objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Download();
-	$report .= $model->install();
+	$model = new Sync_Server();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
 
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

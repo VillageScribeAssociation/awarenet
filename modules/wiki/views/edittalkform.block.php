@@ -1,7 +1,7 @@
 <? /*
 <h1>%%title%%</h1>
 
-<form name='editArticle' method='POST' action='/wiki/save/'>
+<form name='editArticle' method='POST' action='%%serverPath%%wiki/save/'>
 <input type='hidden' name='action' value='saveTalkPage' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

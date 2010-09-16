@@ -1,27 +1,29 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/sync/models/download.mod.php');
+
 //-------------------------------------------------------------------------------------------------
 //	discover if this peer has a file
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/sync/models/download.mod.php');
-
 	//---------------------------------------------------------------------------------------------
 	//	authenticate
 	//---------------------------------------------------------------------------------------------
-	if (syncAuthenticate() == false) { doXmlError('could not authenticate'); }
+	if (false == $sync->authenticate()) { $page->doXmlError('could not authenticate'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	check if the file exists
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('file', $request['args']) == false) { doXmlError('file not specified'); }
-	if ($request['args']['file'] == '') { doXmlError('file not specified'); }
+	if (false == array_key_exists('file', $req->args)) { $page->doXmlError('file not specified'); }
+	if ($req->args['file'] == '') { $page->doXmlError('file not specified'); }
 
-	$fileName = base64_decode($request['args']['file']);
-	if (substr($fileName, 0, 5) != 'data/') { doXmlError('access denied ref: ' . $request['args']['file'] . ' filename: ' . $fileName); }
+	$fileName = base64_decode($req->args['file']);
+	if (substr($fileName, 0, 5) != 'data/')
+		{ $page->doXmlError('access denied ref: ' . $req->args['file'] . ' filename: ' . $fileName); }
+
 	$fileName = str_replace('/.', 'XXXX' , $fileName);
 	
-	if (file_exists($installPath . $fileName) == true) {
+	if (true == file_exists($installPath . $fileName)) {
 		//-----------------------------------------------------------------------------------------
 		//	file exists on this server
 		//-----------------------------------------------------------------------------------------
@@ -33,25 +35,25 @@
 		//-----------------------------------------------------------------------------------------
 		//	file file does not exist on this server, add to list of files to download
 		//-----------------------------------------------------------------------------------------
-		$model = new Download();
-		if ($model->inList($fileName) == false) {
-			logSync("hasfile: file does not exist in download list: $fileName download: " . $model->data['UID'] . "\n");
-			$model->data['filename'] = $fileName;
-			$model->data['status'] = 'wait';
+		$model = new Sync_Download();
+		if (false == $model->inList($fileName)) {
+			$kapenta->logSync("hasfile: file does not exist in download list: $fileName download: " . $model->UID . "\n");
+			$model->filename = $fileName;
+			$model->status = 'wait';
 			$model->save();
 			
 			//-------------------------------------------------------------------------------------
 			//	look for this file on peers, download if found
 			//-------------------------------------------------------------------------------------
-			$url = $serverPath . 'sync/findfile/' . $model->data['UID'];
-			$od = $installPath . 'data/temp/' . createUID() . '.sync';
-			procExecBackground("wget --output-document=" . $od . " $url");
+			$url = $serverPath . 'sync/findfile/' . $model->UID;
+			$od = $installPath . 'data/temp/' . $kapenta->createUID() . '.sync';
+			$kapenta->procExecBackground("wget --output-document=" . $od . " $url");
 
 		} else {
 			//-------------------------------------------------------------------------------------
 			//	already searching peers
 			//-------------------------------------------------------------------------------------
-			logSync("hasfile: file already exists in download list: $fileName \n");
+			$kapenta->logSync("hasfile: file already exists in download list: $fileName \n");
 
 		}
 

@@ -4,12 +4,12 @@
 //	list all announcements
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('announcements', 'view', '') == false) { do403(); }
+	if ($user->authHas('announcements', 'Announcements_Announcement', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }
 	
-	$school = $user->data['school'];
-	if (array_key_exists('sc', $request['args']) == true) { $school = $request['args']['sc']; }
+	$school = $user->school;
+	if (array_key_exists('sc', $req->args) == true) { $school = $req->args['sc']; }
 
-	$page->load($installPath . 'modules/announcements/actions/list.page.php');
+	$page->load('modules/announcements/actions/list.page.php');
 	$page->blockArgs['schoolUID'] = $school;
 	$page->render();
 

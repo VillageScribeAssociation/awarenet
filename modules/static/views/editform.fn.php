@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/static/models/static.mod.php');
+	require_once($kapenta->installPath . 'modules/static/models/static.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	editform
@@ -8,10 +8,12 @@
 //arg: raUID - recordAlias or UID of static page to edit [string]
 
 function static_editform($args) {
-	if (authHas('static', 'edit', $args) == false) { return false; }
+	global $theme;
+
+	if ($user->authHas('home', 'Home_Static', 'edit', $args) == false) { return false; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new StaticPage($args['raUID']);
-	if ($model->data['UID'] == '') { return false; }
+	if ($model->UID == '') { return false; }
 	
 	$extArray = $model->extArray();
 	$labels = array();
@@ -24,7 +26,7 @@ function static_editform($args) {
 		$labels['p_' . $key] = $val;
 	}
 	
-	return replaceLabels($labels, loadBlock('modules/static/views/editform.block.php'));
+	return $theme->replaceLabels($labels, $theme->loadBlock('modules/static/views/editform.block.php'));
 }
 
 

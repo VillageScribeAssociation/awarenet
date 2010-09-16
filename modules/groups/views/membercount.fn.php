@@ -1,23 +1,31 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	return number of members in group
 //--------------------------------------------------------------------------------------------------
-//arg: groupUID - UID of a group (NOT recordAlias) [string]
+//arg: groupUID - UID of a group (NOT alais) [string]
+//opt: UID - overrides groupUID [string]
 
 function groups_membercount($args) {
-	if (authHas('groups', 'show', '') == false) { return false; }
-	if (array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
+	global $user;
+	$memberCount = '0';		//%	return value [string]
 
-	$sql = "select count(UID) as memberCount from groupmembers "
-		 . "where groupUID='" . $args['groupUID'] . "'";
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and args
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('UID', $args)) { $args['groupUID'] = $args['UID']; }
+	if (false == array_key_exists('groupUID', $args)) { return ''; }
 
-	$result = dbQuery($sql);
-	$row = dbFetchAssoc($result);
-	return $row['memberCount'];
+	$model = new Groups_Group($args['raUID']);
+
+	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return false; }
+
+	$memberCount = '' . count($model->members);
+
+	return $memberCount;
 }
 
 //--------------------------------------------------------------------------------------------------

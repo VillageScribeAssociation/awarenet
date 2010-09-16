@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list threads in a forum
@@ -12,53 +12,56 @@
 //opt: num - number of threads per page (default is 20) [string]
 
 function forums_showthreads($args) {
-	$pageno = 1; $num = 20; $html = '';
-	if (array_key_exists('forumUID', $args) == false) { return false; }
-	if (array_key_exists('pageno', $args) == true) { $pageno = $args['pageno']; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }		
-	$fUID = sqlMarkup($args['forumUID']);
-	$fRa = raGetDefault('forums', $fUID);
+	global $db, $page, $theme;
+	$pageno = 1; 		//%	current page number [int]
+	$num = 20; 			//%	number of threads per page [int]
+	$html = '';			//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('forumUID', $args)) { return ''; }
+	if (true == array_key_exists('pageno', $args)) { $pageno = (int)$args['pageno']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }		
+
+	$model = new Forums_Board($args['forumUID']);
+	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	count all threads on this forum
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numRecords from forumthreads where forum='" . $fUID . "'";
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
-	$total = ceil($row['numRecords'] / $num);
+	$conditions = array("board='" . $model->UID . "'");
+	$totalItems = $db->countRange('Forums_Thread', $conditions);
+	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page
 	//----------------------------------------------------------------------------------------------
-	$limit = "limit " . (($pageno - 1) * $num) . ", ". sqlMarkup($num);
-	$sql = "select * from forumthreads where forum='" . $fUID . "' order by updated DESC " . $limit;	
-	$result = dbQuery($sql);
+	$start = (($pageno - 1) * $num);
+	$range = $db->loadRange('Forums_Thread', '*', $conditions, 'updated DESC', $num, $start);
 
-	$rowBlock = loadBlock('modules/forums/views/threadrow.block.php');
+	//$sql = "select * from Forums_Thread where forum='" . $fUID . "' order by updated DESC " . $limit;	
+	$rowBlock = $theme->loadBlock('modules/forums/views/threadrow.block.php');
 
 	$html .= "<table noborder>";
-	while ($row = dbFetchAssoc($result)) {
-		$thisThread = new ForumThread();
-		$thisThread->loadArray(sqlRMArray($row));
-		$html .= replaceLabels($thisThread->extArray(), $rowBlock);
-		
+	foreach ($range as $row) {
+		$thisThread = new Forums_Thread();
+		$thisThread->loadArray($row);
+		$html .= $theme->replaceLabels($thisThread->extArray(), $rowBlock);
 	}
+
 	$html .= "</table>";
 
-	$link = '%%serverPath%%forums/show/' . $fRa . '/';
+	$link = '%%serverPath%%forums/show/' . $model->alias . '/';
 
-	$pagination .= "[[:theme::pagination::page=" . sqlMarkup($page) 
-				. "::total=" . $total . "::link=" . $link . ":]]\n";
+	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageno) 
+				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
-	if (0 == $total) { $html = "(no threads in this forum as yet)";	}
+	if (0 == $totalItems) { $html = "(no threads in this forum as yet)";	}
 
 	return $pagination . $html . $pagination;
-
-
-
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

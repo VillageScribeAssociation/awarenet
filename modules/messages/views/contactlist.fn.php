@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/messages/models/message.mod.php');
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list of contacts a person messages most often //| TODO: pagination
@@ -9,18 +9,26 @@
 //opt: num - number of contacts to display (not implemented) [string]
 
 function messages_contactlist($args) {
-	global $user;
-	$owner = $user->data['UID']; $html = '';
-	if ('public' == $user->data['ofGroup']) { return false; }
-	if (array_key_exists('owner', $args) == true) { $owner = sqlMarkup($args['owner']); }
+	global $db, $user;
+	$owner = $user->UID;
+	$html = '';
 
-	$sql = "select count(UID) as numSent, toUID from messages "
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return false; }
+	if (true == array_key_exists('owner', $args)) { $owner = $db->addMarkup($args['owner']); }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the contact list
+	//----------------------------------------------------------------------------------------------
+	$sql = "select count(UID) as numSent, toUID from Messages_Message "
 		 . "where owner='" . $owner . "' and fromUID='" . $owner . "' "
 		 . "group by toUID order by numSent";
 	
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		$extra = "<a href='/messages/compose/to_" . $row['toUID'] . "'>[send message]</a>";
 		$html .= "[[:users::summarynav::userUID=" . $row['toUID'] . "::extra=" . $extra . ":]]";
 	}
@@ -30,4 +38,3 @@ function messages_contactlist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

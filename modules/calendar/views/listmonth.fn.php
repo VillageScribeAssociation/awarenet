@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show list of events in a given month
@@ -9,13 +9,16 @@
 //arg: month - month (mm) 01 to 12 [string]
 
 function calendar_listmonth($args) {
+	global $theme;
+
+	global $db;
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
-	$year = sqlMarkup($args['year']);
-	$month = sqlMarkup($args['month']);
+	$year = $db->addMarkup($args['year']);
+	$month = $db->addMarkup($args['month']);
 	$html = '';
 	
-	$c = new Calendar();
+	$c = new Calendar_Entry();
 	$html = $c->drawMonth($month, $year, 'large');
 	$ev = $c->loadMonth($month, $year);
 	
@@ -25,7 +28,7 @@ function calendar_listmonth($args) {
 	if (count($ev) > 0) {
 		foreach($ev as $UID => $row) {
 			$c->loadArray($row);
-			$html .= replaceLabels($c->extArray(), loadBlock('modules/calendar/views/entry.block.php'));
+			$html .= $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/calendar/views/entry.block.php'));
 		}
 	} else {
 		$html .= '<p>(no events are recorded for this month)</p>';
@@ -37,4 +40,3 @@ function calendar_listmonth($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

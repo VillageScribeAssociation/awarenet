@@ -1,27 +1,27 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	edit a group record
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
 
-	if (authHas('groups', 'edit', '') == false) { do403(); }
-	raFindRedirect('groups', 'editabstract', 'groups', $request['ref']);
-	require_once($installPath . 'modules/groups/models/group.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	edit a group record
+//--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	load the group and check if user has is authorised to edit it
+	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
+	$UID = $aliases->findRedirect('Groups_Group');
+	if (false == $user->authHas('groups', 'Groups_Group', 'edit', $UID)) { $page->do403(); }
 
-	$model = new Group($request['ref']);
-	if ($model->hasEditAuth($user->data['UID']) == true) { $hasauth = true; }
+	$model = new Groups_Group($UID);
+	if (true == $model->hasEditAuth($user->UID)) { $hasauth = true; }
+	if (false == $hasauth) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/groups/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['viewGroupUrl'] = '%%serverPath%%groups/' . $model->data['recordAlias'];
+	$page->load('modules/groups/actions/edit.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['viewGroupUrl'] = '%%serverPath%%groups/' . $model->alias;
 	$page->render();
 
 ?>

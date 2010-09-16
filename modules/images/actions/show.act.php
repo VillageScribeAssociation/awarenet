@@ -1,22 +1,26 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	page to display a single image
+//*	page to display a single image
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	authentication (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->data['ofGroup'] == 'public') || ($user->data['ofGroup'] == 'banned')) { do403(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
+	//TODO: use a permission
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('images', 'show', 'images', $request['ref']);	
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Images_Image');	
 
-	$page->load($installPath . 'modules/images/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/images/actions/show.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->render();
 
 ?>

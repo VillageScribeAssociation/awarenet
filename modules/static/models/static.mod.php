@@ -19,9 +19,11 @@ class StaticPage {
 	//opt: raUID - recordAlias or UID of a static page [string]
 
 	function StaticPage($raUID = '') {
-		$this->dbSchema = $this->initDbSchema();
-		$this->data = dbBlank($this->dbSchema);
-		$this->data['title'] == 'New Static Page';
+	global $db;
+
+		$this->dbSchema = $this->getDbSchema();
+		$this->data = $db->makeBlank($this->dbSchema);
+		$this->title == 'New Static Page';
 		if ($raUID != '') { $this->load($raUID); }
 	}
 
@@ -31,7 +33,9 @@ class StaticPage {
 	//arg: raUID - recordAlias or UID of a school [string]
 
 	function load($raUID) {
-		$ary = dbLoadRa('static', $raUID);
+	global $db;
+
+		$ary = $db->loadAlias('static', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -48,12 +52,14 @@ class StaticPage {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
+	global $db;
+
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
-		$ra = raSetAlias('static', $this->data['UID'], $this->data['title'], 'static');
-		$this->data['recordAlias'] = $ra;
-		dbSave($this->data, $this->dbSchema); 
+		$ra = raSetAlias('static', $this->UID, $this->title, 'static');
+		$this->alias = $ra;
+		$db->save($this->data, $this->dbSchema); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -93,10 +99,10 @@ class StaticPage {
 			'createdBy' => 'VARCHAR(30)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(30)',
-			'recordAlias' => 'VARCHAR(255)' );
+			'alias' => 'VARCHAR(255)' );
 
-		$dbSchema['indices'] = array('UID' => '10', 'recordAlias' => '20');
-		$dbSchema['nodiff'] = array('UID', 'recordAlias');
+		$dbSchema['indices'] = array('UID' => '10', 'alias' => '20');
+		$dbSchema['nodiff'] = array('UID', 'alias');
 		return $dbSchema;
 	}
 
@@ -105,11 +111,13 @@ class StaticPage {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		if (authHas('static', 'delete', '') == false) { return false; }
-		dbDelete('static', $this->data['UID']);
+	global $db;
+
+		if ($user->authHas('home', 'Home_Static', 'delete', 'TODO:UIDHERE') == false) { return false; }
+		$db->delete('static', $this->UID);
 
 		// allow other modules to respond to this event
-		$args = array('module' => 'static', 'UID' => $this->data['UID']);
+		$args = array('module' => 'static', 'UID' => $this->UID);
 		eventSendAll('object_deleted', $args);
 	}
 	
@@ -142,23 +150,23 @@ class StaticPage {
 		//	links
 		//----------------------------------------------------------------------------------------------
 
-		if (authHas('static', 'view', $this->data)) { 
-			$ary['viewUrl'] = '%%serverPath%%static/' . $this->data['recordAlias'];
+		if ($user->authHas('home', 'Home_Static', 'show', $this->UID)) { 
+			$ary['viewUrl'] = '%%serverPath%%static/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>"; 
 		}
 
-		if (authHas('static', 'edit', $this->data)) {
-			$ary['editUrl'] =  '%%serverPath%%static/edit/' . $this->data['recordAlias'];
+		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) {
+			$ary['editUrl'] =  '%%serverPath%%static/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (authHas('static', 'edit', $this->data)) { 
+		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) { 
 				$ary['newUrl'] = "%%serverPath%%static/new/"; 
 				$ary['newLink'] = "<a href='" . $newUrl . "'>[new]</a>";
 		}
 		
-		if (authHas('static', 'edit', $this->data)) {
-			$ary['delUrl'] =  '%%serverPath%%static/confirmdelete/' . $this->data['recordAlias'];
+		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) {
+			$ary['delUrl'] =  '%%serverPath%%static/confirmdelete/' . $this->alias;
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 
@@ -180,13 +188,15 @@ class StaticPage {
 	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
+	global $db;
+
 		$report = "<h3>Installing Static Pages Module</h3>\n";
 
 		//----------------------------------------------------------------------------------------------
 		//	create static table if it does not exist
 		//----------------------------------------------------------------------------------------------
 		
-		if (dbTableExists('static') == false) {	
+		if ($db->tableExists('static') == false) {	
 			echo "installing static module\n";
 			dbCreateTable($this->dbSchema);	
 			$this->report .= 'created static table and indices...<br/>';

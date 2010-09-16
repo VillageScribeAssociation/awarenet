@@ -1,13 +1,15 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/server.mod.php');
-	require_once($installPath . 'modules/sync/models/sync.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	menu
 //--------------------------------------------------------------------------------------------------
 
-function sync_menu($args) { return loadBlock('modules/sync/views/menu.block.php'); }
+function sync_menu($args) {
+	global $theme;
+ return $theme->loadBlock('modules/sync/views/menu.block.php'); }
 
 //--------------------------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@
 //	display an image thumbnail
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/images/inc/sendimg.inc.php');
+	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
 	imgSend('thumbsm');
 
 ?>

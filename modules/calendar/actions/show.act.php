@@ -1,28 +1,27 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');	
+
 //--------------------------------------------------------------------------------------------------
-//	view a calendar event
+//*	view a calendar entry
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	anyone can view calendar entries
+	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	if (raGetOwner($request['ref'], 'calendar') == false) {do404();}
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');	
-
-	//----------------------------------------------------------------------------------------------
-	//	load the model
-	//----------------------------------------------------------------------------------------------
-	$model = new Calendar($request['ref']);
+	if ('' == $req->ref) { $page->do404(); }			// consider redirecting to ./default/
+	$UID = $aliases->findRedirect('Calendar_Entry');
+	$model = new Calendar_Entry($req->ref);
+	if (false == $model->loaded) { $page->do404('No such calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/calendar/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['calendarTitle'] = $model->data['title'];
-	$page->blockArgs['calendarCategory'] = $model->data['category'];
+	$page->load('modules/calendar/actions/show.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['calendarTitle'] = $model->title;
+	$page->blockArgs['calendarCategory'] = $model->category;
 	$page->render();
 
 ?>

@@ -1,27 +1,27 @@
 <?
 
-//-------------------------------------------------------------------------------------------------
-//	post a spurious notice to self
-//-------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
 
-	require_once($installPath . 'modules/sync/models/server.mod.php');
-	require_once($installPath . 'modules/sync/models/sync.mod.php');
+//-------------------------------------------------------------------------------------------------
+//*	post a spurious notice to self
+//-------------------------------------------------------------------------------------------------
 
 	$postUrl = $serverPath . 'sync/recvnotice/';
 
-	$ownData = syncGetOwnData();
+	$ownData = $sync->getOwnData();
 
-	$server = new Server($ownData['UID']);
+	$server = new Sync_Server($ownData['UID']);
 
 	$syncTime = time();
 	$syncTimestamp = 'Sync-timestamp: ' . $syncTime;
-	$syncProof = 'Sync-proof: ' . sha1($server->data['password'] . $syncTime);
+	$syncProof = 'Sync-proof: ' . sha1($server->password . $syncTime);
 	$syncSource = 'Sync-source: ' . $ownData['serverurl'];
 	$postHeaders = array($syncTimestamp, $syncProof, $syncSource);
 
 	$channelId = 'admin-syspagelogsimple';
 	$event = 'add';
-	$entry = mysql_datetime() . " - " . $user->data['username'] . ' - ' . '/test/spurious/';
+	$entry = $db->datetime() . " - " . $user->username . ' - ' . '/test/spurious/';
 	$entry = base64_encode($entry);
 
 	$data = "<notification>\n"

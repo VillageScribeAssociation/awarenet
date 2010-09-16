@@ -1,6 +1,7 @@
 <? /*
-<form name='siteLogin' method='POST' action='/users/login/'>
+<form name='siteLogin' method='POST' action='%%serverPath%%users/login/'>
 <input type='hidden' name='action' value='login' />
+%%redirectUrl%%
 <table noborder>
   <tr>
     <td><b>User</b></td>

@@ -1,59 +1,48 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+
 //-------------------------------------------------------------------------------------------------
-//	show project index /w edit links
+//*	show project index with edit links
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/projects/models/project.mod.php');
-
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'editabstract', 'projects', $request['ref']);
-	$projectUID = raGetOwner($request['ref'], 'projects');
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this projects abstract
 	//----------------------------------------------------------------------------------------------
 
-	$authorised = false;
+	$model = new Projects_Project($UID);
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	$pM = new ProjectMembership();
-	if (false == $pM->load($projectUID, $user->data['UID'])) {
-		$_SESSION['sMessage'] .= "You are not a member of this project, you can't edit it.<br/>\n";
-		$_SESSION['sMessage'] .= "project UID: $projectUID userUID: " . $user->data['UID'] . ".<br/>\n";
-		do302('projects/' . $projectUID);
+	if ((false == $model->isMember($user->UID)) && ('admin' != $user->role)) {
+		// TODO: use a permission for this
+		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
+		$page->do302('projects/' . $model->alias);
 	}
-
-	if (($pM->data['role'] == 'member') OR ($pM->data['role'] == 'admin')) { $authorised = true; }
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
 
 	//----------------------------------------------------------------------------------------------
 	//	increment or decrement section weights (move up or down)
 	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('inc', $request['args']) == true) {
-		//$_SESSION['sMessage'] .= "incrementing section " . $request['args']['inc'] . "<br/>\n";
-		$model = new Project($projectUID);
-		$model->incrementSection($request['args']['inc']);
+	if (array_key_exists('inc', $req->args) == true) {
+		//$session->msg("incrementing section " . $req->args['inc'], 'ok');
+		$model->incrementSection($req->args['inc']);
 	}
 
-	if (array_key_exists('dec', $request['args']) == true) {
-		//$_SESSION['sMessage'] .= "decrementing section " . $request['args']['dec'] . "<br/>\n";
-		$model = new Project($projectUID);
-		$model->decrementSection($request['args']['dec']);
+	if (array_key_exists('dec', $req->args) == true) {
+		//$session->msg("decrementing section " . $req->args['inc'], 'ok');
+		$model->decrementSection($req->args['dec']);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load the page (or 403)
 	//----------------------------------------------------------------------------------------------
 
-	if ($authorised == true) {
-		$page->load($installPath . 'modules/projects/actions/editindex.if.page.php');
-		$page->blockArgs['raUID'] = $request['ref'];
-		$page->blockArgs['UID'] = $projectUID;
-		$page->render();
-	} else {
-		do403();
-	}
+	$page->load('modules/projects/actions/editindex.if.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->render();
 
 ?>

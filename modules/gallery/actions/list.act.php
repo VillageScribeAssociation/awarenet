@@ -7,33 +7,31 @@
 	//----------------------------------------------------------------------------------------------
 	// check basic permissions
 	//----------------------------------------------------------------------------------------------
-
-	if (authHas('gallery', 'show', '') == false) { do403(); }	
+	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'show')) { $page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	decide which users galleries to show
 	//----------------------------------------------------------------------------------------------
-
-	$userUID = $user->data['UID'];
+	$userUID = $user->UID;
 	$userName = $user->getName();
 
-	if ($request['ref'] != '') {
-		$userUID = raGetOwner($request['ref'], 'users');
-		if ($userUID == false) { do404(); }
-		$userName = expandBlocks('[[:users::name::userUID=' . $userUID . ':]]', '');
+	if ('' != $req->ref) {
+		$userUID = $aliases->getOwner('Users_User');
+		if (false == $userUID) { $page->do404(); }
+		$userName = $theme->expandBlocks('[[:users::name::userUID=' . $userUID . ':]]', '');
 	}
 
-	$userRa = raGetDefault('users', $userUID);
+	$userRa = $aliases->getDefault('users', $userUID);
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/gallery/actions/list.page.php');		
+	$page->load('modules/gallery/actions/list.page.php');		
 	$page->blockArgs['userUID'] = $userUID;								
 	$page->blockArgs['userRa'] = $userRa;
 	$page->blockArgs['userName'] = $userName;
-	$page->data['title'] = 'awareNet - galleries by ' . $userName;
+	$page->title = 'awareNet - galleries by ' . $userName;
 	$page->render();													
 
 ?>

@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/projects/models/project.mod.php');
+require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a comment is added
@@ -11,6 +11,8 @@ require_once($installPath . 'modules/projects/models/project.mod.php');
 //arg: comment - text/html of comment
 
 function projects__cb_comments_add($args) {
+	global $db;
+
 	global $user;
 	if (array_key_exists('refModule', $args) == false) { return false; }
 	if (array_key_exists('refUID', $args) == false) { return false; }
@@ -18,10 +20,10 @@ function projects__cb_comments_add($args) {
 	if (array_key_exists('comment', $args) == false) { return false; }
 
 	if ($args['refModule'] != 'projects') { return false; }
-	if (dbRecordExists('users', $args['refUID']) == false) { return false; }
+	if ($db->objectExists('users', $args['refUID']) == false) { return false; }
 	
-	$model = new Moblog($args['refUID']);
-	$u = new User($model->data['createdBy']);
+	$model = new Moblog_Post($args['refUID']);
+	$u = new Users_User($model->createdBy);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members
@@ -35,7 +37,7 @@ function projects__cb_comments_add($args) {
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 	$imgUID = imgGetDefaultUID('moblog', $args['refUID']);
 
-	if ($user->data['UID'] == $u->data['UID']) 
+	if ($user->UID == $u->UID) 
 		{ $title = $user->getNameLink() . " commented on their own blog post " . $link; }
 
 	notifyFriends($args['refUID'], $args['commentUID'], 

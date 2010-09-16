@@ -1,16 +1,27 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	moblog, all posts of from all blogs ordered by date
+//*	moblog, all posts of from all blogs ordered by date
 //--------------------------------------------------------------------------------------------------
-	
-	if (authHas('moblog', 'view', '') == false) { do403(''); }
 
+	//----------------------------------------------------------------------------------------------
+	//	page variables
+	//----------------------------------------------------------------------------------------------
 	$pageNo = 1; // if not specified
-	if (array_key_exists('page', $request['args']) == true) 
-		{ $pageNo = floor($request['args']['page']); }
 
-	$page->load($installPath . 'modules/moblog/actions/moblog.page.php');
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', ''))
+		{ $page->do403('You are not authorized to view blog posts.'); }
+
+	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }
+
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/moblog/actions/moblog.page.php');
 	$page->blockArgs['pageno'] = $pageNo;
 	$page->render();
 

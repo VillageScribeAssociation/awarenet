@@ -4,8 +4,8 @@
 //	list static pages
 //--------------------------------------------------------------------------------------------------------------
 
-	if (authHas('static', 'view', '') == false) { return false; }
-	$page->load($installPath . 'modules/static/actions/list.page.php');
+	if ($user->authHas('home', 'Home_Static', 'show', 'TODO:UIDHERE') == false) { return false; }
+	$page->load('modules/static/actions/list.page.php');
 	$page->render();
 
 ?>

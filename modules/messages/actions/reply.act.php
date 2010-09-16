@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	show form to create a new message
 //--------------------------------------------------------------------------------------------------
@@ -7,19 +9,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send mail
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->data['ofGroup']) { do403(); }
-	require_once($installPath . 'modules/messages/models/message.mod.php');
+	if ('public' == $user->role) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	is this to be sent to a specific user, or in response to another message
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('re', $request['args']) == false) { do404(); }
-	$model = new Message($request['args']['re']);
-	if ($model->data['owner'] != $user->data['UID']) { do403(); }	// not your message
+	if (false == array_key_exists('re', $req->args)) { $page->do404('message not specified'); }
+	$model = new Messages_Message($req->args['re']);
+	if ($model->owner != $user->UID) { $page->do403(); }	// not your message
 
-	$jsrUID = $model->data['fromUID'];
+	$jsrUID = $model->fromUID;
 
-	$userBlock = expandBlocks("[[:users::summarynav::userUID=" . $jsrUID . ":]]", '');
+	$userBlock = $theme->expandBlocks("[[:users::summarynav::userUID=" . $jsrUID . ":]]", '');
 
 	$jsrHtml = "<div id='usrd" . $jsrUID . "'>"
 					 . "<table noborder><td><a href='#' onClick=\"mcRemoveRecipient('" . $jsrUID . "')\">"
@@ -32,13 +33,13 @@
 	//	show the form
 	//----------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/messages/actions/reply.page.php');
-	$page->blockArgs['toUser'] = $toUser;
-	$page->blockArgs['reMsg'] = $reMsg;
-	$page->blockArgs['UID'] = $model->data['UID'];
-	$page->blockArgs['folder'] = $model->data['folder'];
-	$page->blockArgs['owner'] = $model->data['owner'];
-	$page->blockArgs['subject'] = 'RE: ' . $model->data['title'];
+	$page->load('modules/messages/actions/reply.page.php');
+	$page->blockArgs['toUser'] = $model->fromUID;
+	$page->blockArgs['reMsg'] = $model->UID;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['folder'] = $model->folder;
+	$page->blockArgs['owner'] = $model->owner;
+	$page->blockArgs['subject'] = 'RE: ' . $model->title;
 	$page->blockArgs['jsRecipientUID'] = $jsrUID;
 	$page->blockArgs['jsRecipientHtml'] = $jsrHtml;
 

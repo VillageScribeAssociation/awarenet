@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------------------------
 
 function home_menu($args) {
+	global $theme;
+
 	global $user;
 	$labels = array();
 
@@ -12,11 +14,11 @@ function home_menu($args) {
 	$labels['menuLogin'] = "[[:theme::menu::label=Log in::link=/users/login/::alt=log in:]]\n";
 	$labels['menuLogout'] = "[[:theme::menu::label=Log out::link=/users/logout/::alt=log out:]]\n";
 
-	if ($user->data['ofGroup'] != 'admin') { $labels['menuAdmin'] = ''; }
-	if ($user->data['ofGroup'] == 'public') { $labels['menuLogout'] = ''; }
-	if ($user->data['ofGroup'] != 'public') { $labels['menuLogin'] = ''; }
+	if ('admin' != $user->role) { $labels['menuAdmin'] = ''; }
+	if ('public' == $user->role) { $labels['menuLogout'] = ''; }
+	if ('public' != $user->role) { $labels['menuLogin'] = ''; }
 
-	return replaceLabels($labels, loadBlock('modules/home/views/menu.block.php'));
+	return $theme->replaceLabels($labels, $theme->loadBlock('modules/home/views/menu.block.php'));
 }
 
 

@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/inc/wikicode.class.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	article statistics formatted for nav
@@ -10,23 +10,26 @@
 //arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_statsnav($args) {
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	global $theme;
+
+	if (false == array_key_exists('raUID', $args)) { return false; }
 	$html = '';
 	
-	$model = new Wiki($args['raUID']);
+	$model = new Wiki_Article($args['raUID']);
+	if (false == $model->loaded) { return ''; }
 	$extArray = $model->extArray();
 
 	//----------------------------------------------------------------------------------------------
 	//	look up revision stats
 	//----------------------------------------------------------------------------------------------
-
-	$sql = "select * from wikirevisions where refUID='" . $extArray['UID'] . "'";
+	//TODO create some stats for the nav
+	//$sql = "select * from wikirevisions where refUID='" . $extArray['UID'] . "'";
 
 	//----------------------------------------------------------------------------------------------
 	//	assemble the block
 	//----------------------------------------------------------------------------------------------
 
-	$html = replaceLabels($extArray, loadBlock('modules/wiki/views/stats.block.php'));
+	$html = $theme->replaceLabels($extArray, $theme->loadBlock('modules/wiki/views/stats.block.php'));
 	return $html; 
 }
 

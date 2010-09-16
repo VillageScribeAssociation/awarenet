@@ -1,16 +1,22 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	edit a wiki article
+//*	edit a wiki article
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('wiki', 'edit', '') == false) { do403(); }			// check permissions
-	if ($request['ref'] == '') { do404(); }							// check for ref	
-	$UID = raFindRedirect('wiki', 'edit', 'wiki', $request['ref']);	// check correct ref
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and reference
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404(); }				// check for ref	
+	$UID = $aliases->findRedirect('Wiki_Article');			// check correct ref
+	if (false == $user->authHas('wiki', 'Wiki_Article', 'edit', $UID)) { $page->do403(); }
 	
-	$page->load($installPath . 'modules/wiki/actions/edit.page.php');
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/wiki/actions/edit.page.php');
 	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $request['ref'];
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->render();
 
 ?>

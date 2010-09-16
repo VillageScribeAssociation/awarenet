@@ -1,6 +1,6 @@
 <? /*
 %%titlebar%%
-<form name='friendRequest' method='POST' action='/users/addfriendrequest/' >
+<form name='friendRequest' method='POST' action='%%serverPath%%users/addfriendrequest/' >
 <input type='hidden' name='action' value='addFriendReq' />
 <input type='hidden' name='friendshipUID' value='%%friendshipUID%%' />
 <input type='hidden' name='friendUID' value='%%friendUID%%' />

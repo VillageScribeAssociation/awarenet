@@ -1,76 +1,74 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	install script for announcements modules
-//--------------------------------------------------------------------------------------------------
-
-require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	install the gallery module
+//*	install script for Announcements module
 //--------------------------------------------------------------------------------------------------
-//returns: html report [string]
+//+	reports are human-readable HTML, with script-readable HTML comments
+
+//--------------------------------------------------------------------------------------------------
+//|	install the Announcements module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
 
 function announcements_install_module() {
-	global $user;
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Announcements_Announcement table
+	//----------------------------------------------------------------------------------------------
+	$model = new Announcements_Announcement();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	$report .= "<h3>Installing Announcements Module</h3>\n";
+	//----------------------------------------------------------------------------------------------
+	//	copy all records from previous table
+	//----------------------------------------------------------------------------------------------
+	$rename = array('recordAlias' => 'alias');
+	$count = $dba->copyAll('announcements', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'announcements' table.</b><br/>";
 
-	//------------------------------------------------------------------------------------------
-	//	create announcement table if it does not exist, upgrade it if it does
-	//------------------------------------------------------------------------------------------
-	$model = new Announcement();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbInstallTable($dbSchema);	
 
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	done
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	return $report;
 }
 
 //--------------------------------------------------------------------------------------------------
-//	discover if this module is installed
+//|	discover if this module is installed
 //--------------------------------------------------------------------------------------------------
-//returns: HTML installation report [string]
-// if installed correctly report will contain HTML comment <!-- installed correctly -->
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
 
 function announcements_install_status_report() {
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	if ('admin' != $user->role) { return false; }
 
-	//---------------------------------------------------------------------------------------------
-	//	ensure that the announcement table exists and is correct
-	//---------------------------------------------------------------------------------------------
-	$installed = true;
-	$installNotice = '<!-- table installed correctly -->';
-	$model = new Announcement();
-	$dbSchema = $model->initDbSchema();
-
-	$report = dbGetTableInstallStatus($dbSchema);
-
-	if (strpos($report, $installNotice) == false) { $installed = false; }
-
-	if (true == $installed) { $report .= "<!-- module installed correctly -->"; }
-	return $report;
-}
-
-//-------------------------------------------------------------------------------------------------
-//	deprecated	// TODO: remove
-//-------------------------------------------------------------------------------------------------
-
-function install_announcements_module() {
-	global $installPath;
-	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-
-	$model = new Announcement();
-
+	$dba = new KDBAdminDriver();
 	$report = '';
-	$report .= $model->install();
+	$installNotice = '<!-- table installed correctly -->';
+	$installed = true;
 
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Announcement objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Announcements_Announcement();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

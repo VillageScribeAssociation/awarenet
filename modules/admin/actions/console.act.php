@@ -4,11 +4,11 @@
 //	show the admin console
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] == 'admin') {
-		$page->load($installPath . 'modules/admin/actions/console.page.php');
+	if ('admin' == $user->role) {
+		$page->load('modules/admin/actions/console.page.php');
 		$page->render();
 	} else {
-		do403();  // not logged in as admin, deny
+		$page->do403();  // not logged in as admin, deny
 	}
 
 ?>

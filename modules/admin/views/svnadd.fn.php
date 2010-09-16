@@ -8,7 +8,7 @@ function admin_svnadd($args) {
 	global $user;
 	global $installPath;
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	if ('admin' != $user->role) { return false; }
 
 	//---------------------------------------------------------------------------------------------
 	//	define which files should not be tracked by SVN

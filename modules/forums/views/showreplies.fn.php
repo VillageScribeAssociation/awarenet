@@ -1,59 +1,67 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a thread and paginated replies
 //--------------------------------------------------------------------------------------------------
 //arg: threadUID - UID of a forum thread [string]
-//opt: pageno - page to display (default is 1) [string]
+//opt: pageno - page to display, default is 1 (int) [string]
+//opt: num - number of replies per page, default is 5 (int) [string]
 
 function forums_showreplies($args) {
-	$pageno = 1; $num = 5; $html = '';
-	if (array_key_exists('threadUID', $args) == false) { return false; }
-	if (array_key_exists('pageno', $args) == true) { $pageno = $args['pageno']; }	
-	$tUID = sqlMarkup($args['threadUID']);
+	global $db, $page, $theme, $user;
+
+	$pageno = 1; 
+	$num = 5; 
+	$html = '';		//%	return value [string]
+
+	if (false == array_key_exists('threadUID', $args)) { return ''; }
+	if (true == array_key_exists('pageno', $args)) { $pageno = (int)$args['pageno']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }		
 
 	//----------------------------------------------------------------------------------------------
 	//	load thread model
 	//----------------------------------------------------------------------------------------------
-	$model = new ForumThread($tUID);
+	$model = new Forums_Thread($args['threadUID']);
+	if (false == $model->loaded) { return ''; }
+	//TODO: check permission here
 
 	//----------------------------------------------------------------------------------------------
 	//	count all replies in this thread
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numRecords from forumreplies where thread='" . $tUID . "'";
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
-	$total = ceil($row['numRecords'] / $num);
+	$conditions = array("thread='" . $model->UID . "'");
+	$totalItems = $db->countRange('Forums_Reply', $conditions);
+	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page
 	//----------------------------------------------------------------------------------------------
-	$limit = "limit " . (($pageno - 1) * $num) . ", ". sqlMarkup($num);
-	$sql = "select * from forumreplies "
-		 . "where thread='" . $tUID . "' "
-		 . "order by createdOn ASC " . $limit;	
+	$start = (($pageno - 1) * $num);
+	$range = $db->loadRange('Forums_Reply', '*', $conditions, 'createdOn ASC', $num, $start);
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$reply = new ForumReply();
+	//$sql = "select * from Forums_Reply "
+	//	 . "where thread='" . $model->UID . "' "
+	//	 . "order by createdOn ASC " . $limit;	
+
+	$block = $theme->loadBlock('modules/forums/views/reply.block.php');
+
+	foreach ($range as $row) {
+		$reply = new Forums_Reply();
 		$reply->loadArray($row);
 		$ext = $reply->extArray();
-		$ext['threadTitle'] = $model->data['title'];
-
-		$html .= replaceLabels($ext, loadBlock('modules/forums/views/reply.block.php'));
+		$ext['threadTitle'] = $model->title;
+		$html .= $theme->replaceLabels($ext, $block);
 	}
 
-	$link = '%%serverPath%%forums/showthread/' . $model->data['recordAlias'] . '/';
+	$link = '%%serverPath%%forums/showthread/' . $model->alias . '/';
 
-	$pagination .= "[[:theme::pagination::page=" . sqlMarkup($page) 
-				. "::total=" . $total . "::link=" . $link . ":]]\n";
+	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageno) 
+				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
-	if (0 == $total) { $html = "(no replies yet)";	}
+	if (0 == $totalItems) { $html = "(no replies yet)";	}
 
 	return $pagination . $html . $pagination;
 
@@ -62,4 +70,3 @@ function forums_showreplies($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

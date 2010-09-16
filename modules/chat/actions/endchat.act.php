@@ -7,17 +7,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	public users can't chat
 	//----------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] == 'public') { echo "Not logged in."; flush(); die(); }
+	if ($user->role == 'public') { echo "Not logged in."; flush(); die(); }
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	remove messages from the queue
 	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('fromuid', $request['args']) == true) {
-		$fromUID = $request['args']['fromuid'];
-		$queue = new Chat($user->data['UID']);
+	if (array_key_exists('fromuid', $req->args) == true) {
+		$fromUID = $req->args['fromuid'];
+		$queue = new Chat($user->UID);
 		$queue->expandMessages();
 		foreach ($queue->messages as $key => $msg) 
 			{	if($msg['from'] == $fromUID) { $queue->messages[$key]['UID'] = ''; }	}

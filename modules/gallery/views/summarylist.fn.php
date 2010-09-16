@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all galleries belonging to a specified user
@@ -12,7 +12,12 @@
 //returns: html list [string]
 
 function gallery_summarylist($args) {
-	$orderBy = 'title';	$pageNo = 1; $pageSize = 10; $html = ''; $ad = 'DESC';
+	global $db, $theme;
+	$orderBy = 'title';
+	$pageNo = 1;
+	$pageSize = 10;
+	$html = '';
+	$ad = 'DESC';
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
@@ -35,21 +40,21 @@ function gallery_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');	// do not show galleries with no images
-	$numRows = dbCountRange('gallery', $conditions);
+	$numRows = $db->countRange('gallery', $conditions);
 	$numPages = ceil($numRows / $pageSize);
 	$startRow = $pageSize * ($pageNo - 1);
 
-	$range = dbLoadRange('gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
+	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
 
 	//---------------------------------------------------------------------------------------------
 	//	render html
 	//---------------------------------------------------------------------------------------------
 
 	$linkBase = '%%serverPath%%gallery/listall/orderby_';
-	$pagination .= "[[:theme::pagination::page=" . $pageNo 
+	$pagination = "[[:theme::pagination::page=" . $pageNo 
 				 . "::total=" . $numPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
 
-	$orderLinks .= "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
+	$orderLinks = "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
 				. "&nbsp;&nbsp; list by: "
 				. "<a href='" . $linkBase . "title'>[title]</a> "
 				. "<a href='" . $linkBase . "imagecount'>[number of images]</a> "

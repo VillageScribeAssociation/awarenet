@@ -1,29 +1,29 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show revisions to a project
+//*	show revisions to a project
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	TODO: check permissions here
+	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	$UID = raFindRedirect('projects', 'show', 'projects', $request['ref']);
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
 
-	//----------------------------------------------------------------------------------------------
-	//	load the model
-	//----------------------------------------------------------------------------------------------
-	$model = new Project($request['ref']);
+	$model = new Projects_Project($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
+	if (false == $user->authHas('projects', 'Projects_Revision', 'show')) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page = new Page($installPath . 'modules/projects/actions/revisions.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
+	$page->load($installPath . 'modules/projects/actions/revisions.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
 	$page->blockArgs['projectUID'] = $UID;
-	$page->blockArgs['projectRa'] = $request['ref'];
-	$page->blockArgs['projectTitle'] = $model->data['title'];
+	$page->blockArgs['projectRa'] = $model->alias;
+	$page->blockArgs['projectTitle'] = $model->title;
 	$page->render();
 
 ?>

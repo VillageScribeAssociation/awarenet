@@ -3,7 +3,11 @@
 <template>twocol-rightnav.template.php</template>
 <content>[`|lt]h1[`|gt]404 - Not Found[`|lt]/h1[`|gt]
 
-[`|lt]p[`|gt]The page you requested could not be found.  It may have been removed or [`|delete]d, check for typos in the link you followed to get here.[`|lt]/p[`|gt]</content>
+[`|lt]p[`|gt]The page you requested could not be found.  It may have been removed or [`|delete]d, check for typos in the link you followed to get here.[`|lt]/p[`|gt]
+
+%%message%%
+
+</content>
 <title>awareNet - page not found</title>
 <script>awareNetChat = false[`|sc]</script>
 <nav1></nav1>

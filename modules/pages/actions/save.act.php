@@ -20,7 +20,7 @@ if ((array_key_exists('action', $_POST) AND ($_POST['action'] == 'savePage'))) {
 
 	} else { $_SESSION['sMessage'] .= "no such page :-(<br/>\n"; }
 
-	do302('pages/list/');
+	$page->do302('pages/list/');
 
 }
 

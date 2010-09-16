@@ -4,11 +4,11 @@
 //	broadcast a test message to admin from Chisai.Gondo
 //-------------------------------------------------------------------------------------------------
 
-	$msgUID = createUID();
+	$msgUID = $kapenta->createUID();
 	$cfUID = '748248257198046057';
 
 	$msg = base64_encode('this is a test message ' . rand());
-	$msg = base64_encode($msgUID . '|' . $cfUID . '|' . mysql_datetime() . '|' . time() . '|' . $msg);
+	$msg = base64_encode($msgUID . '|' . $cfUID . '|' . $db->datetime() . '|' . time() . '|' . $msg);
 
 	notifyChannel('chat-user-admin', 'add', $msg);
 

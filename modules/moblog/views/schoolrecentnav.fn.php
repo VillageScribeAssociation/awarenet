@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list recent posts for nav from a particular school
@@ -10,31 +10,39 @@
 //opt: num - number of posts to show (default is 10) [string]
 
 function moblog_schoolrecentnav($args) {
-	global $user;
-	$num = 10; $html = '';
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
-	if (array_key_exists('schoolUID', $args) == false) { do404(); }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
-	if (dbRecordExists('schools', $args['schoolUID']) == false) { return false; }
+	global $db, $page, $user;
+	$num = 10; 						//%	number of recent items to show [int]
+	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if (false == array_key_exists('schoolUID', $args)) { return ''; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	//if (false == $db->objectExists('Schools_School', $args['schoolUID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get recent posts from this school
 	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions = "school='". $db->addMarkup($args['schoolUID']) ."'";
+	$conditions = "published='yes'";
 
-	$sql = "select UID from moblog " 
-		 . "where school='". sqlMarkup($args['schoolUID']) ."' and published='yes'"
-		 . "order by createdOn limit " . sqlMarkup($num);
+	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn', $num);
+	if (0 == count($range)) { return ''; }
 
-	$result = dbQuery($sql);
-	$recentPosts = '';
+	//$sql = "select UID from moblog " 
+	//	 . "where school='". $db->addMarkup($args['schoolUID']) ."' and published='yes'"
+	//	 . "order by createdOn limit " . $db->addMarkup($num);
 
-	if (dbNumRows($result) <= 0) { return false; }
-	while ($row = dbFetchAssoc($result)) 
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	foreach ($range as $row) 
 		{ $html .= "[[:moblog::summarynav::postUID=". $row['UID'] .":]]"; }
 
-	//----------------------------------------------------------------------------------------------
-	//	assemble the block
-	//----------------------------------------------------------------------------------------------
+	//TODO: make this more efficient
 
 	return $html;
 }
@@ -42,4 +50,3 @@ function moblog_schoolrecentnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

@@ -1,50 +1,66 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all most recent x comments owned by a particular record on a given module, naarow for nav
 //--------------------------------------------------------------------------------------------------
-//arg: refUID - record which owns the comments [string]
-//arg: refModule - module which owns the record [string]
+//arg: refModule - a kapenta module [string]
+//arg: refModel - type of object which may have comments [string]
+//arg: refUID - UID of object which owns comments [string]
 //opt: num - number of records per page (default 10) [string]
+//TODO: pagination here
 
 function comments_listnav($args) {
-	if (authHas('comments', 'list', '') == false) { return false; }
-	if (authHas('comments', 'view', '') == false) { return false; }
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-
-	$num = 10;
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+	global $db, $user, $theme;
+	$num = 10;	
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
-	//	query database
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
 
-	$sql = "select * from comments "
-		 . "where refModule='" . sqlMarkup($args['refModule']) . "' "
-		 . "and refUID='" . sqlMarkup($args['refUID']) . "' "
-		 . "order by createdOn DESC limit " . sqlMarkup($num) . "";
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
 
-	$blockFile = 'modules/comments/views/summarynav.block.php';
+	if (false == $user->authHas($refModule, $refModel, 'comments-show', $refUID)) { return ''; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
-			$model = new comment();
-			$model->loadArray($row);
-			$html .= replaceLabels($model->extArray(), loadBlock($blockFile));
-		}  
-	} else {
-		$html .= "(no comments at present)<br/>";
+	//----------------------------------------------------------------------------------------------
+	//	load a page of comments from the database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+
+	$range = $db->loadRange('Comments_Comment', '*', $conditions, 'createdOn DESC', $num);
+
+	//$sql = "select * from Comments_Comment "
+	//	 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
+	//	 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
+	//	 . "order by createdOn DESC limit " . $db->addMarkup($num) . "";
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/comments/views/summarynav.block.php');
+
+	if (0 == count($range)) { return "(no comments at present)<br/>"; }
+
+
+	foreach ($range as $row) {
+		$model = new Comments_Comment();
+		$model->loadArray($row);
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

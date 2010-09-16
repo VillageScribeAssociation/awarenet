@@ -4,7 +4,7 @@
 //	callbacks allow modules to interact with being necessarily dependant on one another
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	when a record is deleted on another module
@@ -13,6 +13,8 @@ require_once($installPath . 'modules/announcements/models/announcement.mod.php')
 // * args['UID'] = UID of the record which was deleted
 
 function announcements__cb_record_delete($args) {
+	global $db;
+
 	if (array_key_exists('module', $args) == false) { return false; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 
@@ -20,16 +22,16 @@ function announcements__cb_record_delete($args) {
 	//	discover if any announcements belonging this record and delete them
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select UID from announcements "
-		 . "where refUID='". sqlMarkup($args['UID']) ."' "
-		 . "and refModule='". sqlMarkup($args['module']) ."'";
+	$sql = "select UID from Announcements_Announcement "
+		 . "where refUID='". $db->addMarkup($args['UID']) ."' "
+		 . "and refModule='". $db->addMarkup($args['module']) ."'";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$model = new Announcement($row['UID']);
-		$_SESSION['sMessage'] .= "Deleted announcement " . $model->data['title'] . "<br/>\n";
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
+		$model = new Announcements_Announcement($row['UID']);
+		$_SESSION['sMessage'] .= "Deleted announcement " . $model->title . "<br/>\n";
 		$model->delete();
 	}
 }

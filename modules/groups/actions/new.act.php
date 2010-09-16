@@ -1,15 +1,18 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	add a new group
+//*	add a new group
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('groups', 'edit', '') == false) { do403(); }
+	if (false == $user->authHas('groups', 'Groups_Group', 'new', '')) 
+		{ $page->do403('You are not authorized to create new groups.'); }
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	$model = new group();
+	$model = new Groups_Group();
+
 	$model->save();
 	
-	do302('groups/edit/' . $model->data['UID']);
+	$page->do302('groups/edit/' . $model->UID);
 
 ?>

@@ -11,7 +11,8 @@
 //+	at present precaching is only done for users networks, but could concievably be done for groups,
 //+	projects, etc
 
-class MoblogPreCache {
+class Moblog_Precache {
+
 	//----------------------------------------------------------------------------------------------
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
@@ -28,7 +29,9 @@ class MoblogPreCache {
 	//arg: refUID - UID [string]
 
 	function MoblogPreCache($refTable, $refUID) {
-		if (dbRecordExists($refTable, $refUID) == false) { return false; }	
+	global $db;
+
+		if ($db->objectExists($refTable, $refUID) == false) { return false; }	
 		$UID = $this->preCacheExists($refTable, $refUID);
 
 		if (false == $UID) {
@@ -37,14 +40,14 @@ class MoblogPreCache {
 			//--------------------------------------------------------------------------------------
 			global $user;
 			$this->preCache = array();
-			$this->dbSchema = $this->initDbSchema();
-			$this->data = dbBlank($this->dbSchema);
-			$this->data['refTable'] = $refTable;
-			$this->data['refUID'] = $refUID;
-			$this->data['createdOn'] = mysql_datetime();
-			$this->data['createdBy'] = $user->data['UID'];
-			$this->data['editedOn'] = mysql_datetime();
-			$this->data['editedBy'] = $user->data['UID'];
+			$this->dbSchema = $this->getDbSchema();
+			$this->data = $db->makeBlank($this->dbSchema);
+			$this->refTable = $refTable;
+			$this->refUID = $refUID;
+			$this->createdOn = $db->datetime();
+			$this->createdBy = $user->UID;
+			$this->editedOn = $db->datetime();
+			$this->editedBy = $user->UID;
 		
 
 		} else { $this->load($UID); }
@@ -57,7 +60,9 @@ class MoblogPreCache {
 	//arg: UID - UID of a prcache object [string]
 
 	function load($UID) {
-		$ary = dbLoad('moblogprecache', $UID);
+	global $db;
+
+		$ary = $db->load('moblogprecache', $UID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -77,11 +82,13 @@ class MoblogPreCache {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
+	global $db;
+
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
 		$this->collapsePreCache();
-		dbSave($this->data, $this->dbSchema); 
+		$db->save($this->data, $this->dbSchema); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -92,15 +99,17 @@ class MoblogPreCache {
 	//returns: precache object UID or false if none found [string][bool]
 
 	function preCacheExists($refTable, $refUID) {
+	global $db;
+
 		$sql = "select UID from moblogprecache "
-			 . "where refTable='" . sqlMarkup($userUID) . "' "
-			 . "and refUID='" . sqlMarkup($refUID) . "'";
+			 . "where refTable='" . $db->addMarkup($userUID) . "' "
+			 . "and refUID='" . $db->addMarkup($refUID) . "'";
 
 		//TODO: use dbLoadRange
 
-		$result = dbQuery($sql);
-		if (dbNumRows($result) == 0) { return false; }
-		$row = dbFetchAssoc($result);
+		$result = $db->query($sql);
+		if ($db->numRows($result) == 0) { return false; }
+		$row = $db->fetchAssoc($result);
 		return $row['UID'];
 	}
 
@@ -112,7 +121,7 @@ class MoblogPreCache {
 	function verify() {
 		$verify = '';
 
-		if (strlen($this->data['UID']) < 5) 
+		if (strlen($this->UID) < 5) 
 			{ $verify .= "UID not present.\n"; }
 
 		return $verify;
@@ -165,9 +174,11 @@ class MoblogPreCache {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
+	global $db;
+
 		$report = "<h3>Installing Moblog Precache</h3>\n";
 
-		if (dbTableExists('moblogprecache') == false) {	
+		if ($db->tableExists('moblogprecache') == false) {	
 			dbCreateTable($this->dbSchema);	
 			$report .= 'created moblog precache...<br/>';
 

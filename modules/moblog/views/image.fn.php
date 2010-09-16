@@ -1,10 +1,10 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	find the first image associated with a mobblog post
+//|	find the first image associated with a mobblog post  //TODO: remove this
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID or groups entry [string]
 //opt: postUID - overrides raUID [string]
@@ -12,13 +12,19 @@
 //opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function moblog_image($args) {
-	global $serverPath;
+	global $kapenta, $db;
 	$size = 'width300';
 	$link = 'yes';
-	if (array_key_exists('postUID', $args)) { $args['raUID'] = $args['postUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	if (array_key_exists('link', $args) == 'no') { $link = 'no'; }
+	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('postUID', $args)) { $args['raUID'] = $args['postUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	if ('no' == array_key_exists('link', $args)) { $link = 'no'; }
 	if (array_key_exists('size', $args)) {
+		//TODO: use a switch, or load image sizes from Images_Image module
 		if ($args['size'] == 'thumb') { $size = 'thumb'; }
 		if ($args['size'] == 'thumbsm') { $size = 'thumbsm'; }
 		if ($args['size'] == 'thumb90') { $size = 'thumb90'; }
@@ -28,27 +34,26 @@ function moblog_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new Moblog($args['raUID']);	
-	$sql = "select * from images where refModule='moblog' and refUID='" . $model->data['UID'] 
+	$model = new Moblog_Post($args['raUID']);	
+	$sql = "select * from Images_Image where refModule='moblog' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+			return "<a href='/images/show/" . $row['alias'] . "'>" 
+				. "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->title . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->title . "'>";
 		}
 	}
 	
 	// no images found for this group
-	return "[[:users::avatar::size=" . $size . "::userUID=" . $model->data['createdBy'] . ":]]"; 
+	return "[[:images::default::refModule=users::size=" . $size . "::refUID=" . $model->createdBy . ":]]"; 
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

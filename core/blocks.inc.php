@@ -12,8 +12,8 @@
 //+
 //+	For example:
 //+
-//+	[[::blog::show::23498723484::]]		// generate HTML of blog post UID:23498723484
-//+	[[::blog::navlist::10::0::]]		// list the 10 latest blog posts, formatted for nav bar
+//+	[[::blog::show::UID=23498723484::]]		// generate HTML of blog post UID:23498723484
+//+	[[::blog::navlist::num=10::start=0::]]	// list the 10 latest blog posts, formatted for nav bar
 //+
 //+	BlockAPI may be a module, 'theme' for the current theme's api (menus, pagination, etc) and the 
 //+	method is a hook defined on that API, with any number of arguments.  Blocks may return HTML or 
@@ -34,26 +34,10 @@
 //arg: fileName - relative to installPath [string]
 
 function loadBlock($fileName) {
-	global $installPath;
-	global $user;
-	global $request;
-	
-	if (file_exists($installPath . $fileName)) {
-	  	$raw = implode(file($fileName));
-	  	$raw = phpUnComment($raw);
-
-		// special admin option
-		if (($user->data['ofGroup'] == 'admin') AND (substr($fileName, 0, 8) == 'modules/')) {
-		  if ($request['module'] != 'blocks') {
-			$parts = explode('/', $fileName);
-			//$raw .= "<small><a href='/blocks/edit/module_" . $parts[1] . '/'
-			//     . $parts[2] . "'>[edit block]</a></small>";
-		  }
-		}
-
-	  	return $raw;
-
-	} else { return false; }
+	global $theme, $session;
+	$session->msg('deprecated: loadBlock(...) => $theme->loadBlock', 'bug');
+	$block = $theme->loadBlock($fileName);
+	return $block;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -63,11 +47,10 @@ function loadBlock($fileName) {
 //arg: raw - file contents [string]
 
 function saveBlock($fileName, $raw) {
-	$fh = fopen($fileName, 'w+');
-	if ($fh != false) {
-		fwrite($fh, "<? /*\n" . trim($raw) . "\n*/ ?>");
-		fclose($fh);
-	} else { return false; }
+	global $theme, $session;
+	$session->msgAdmin('deprecated: saveBlock(...) => \$theme->saveBlock(...)', 'bug');	
+	$r = $theme->saveBlock($fileName, $raw);
+	return $r;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -75,40 +58,13 @@ function saveBlock($fileName, $raw) {
 //--------------------------------------------------------------------------------------------------
 //arg: txt - text containing block tags to be expanded [string]
 //arg: calledBy - newline delimited list of parents, set to empty string [string]
+//returns: txt with blocks recusively expanded [string]
 //: calledBy is used to prevent infinite recursion, newline delimited list of parents
 
 function expandBlocks($txt, $calledBy) {
-
-	//----------------------------------------------------------------------------------------------
-	//	filter out any calling blocks - prevent infinite recursion
-	//----------------------------------------------------------------------------------------------
-	$ban = explode("\n", $calledBy);
-	foreach($ban as $killThis) {
-	  if (strlen($killThis) > 3) {
-		$txt = str_replace($killThis, '', $txt);
-	  }
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	replace each block with result from the appropriate blocks API
-	//----------------------------------------------------------------------------------------------
-	$blocks = findUniqueBlocks($txt);
-	foreach ($blocks as $block) {
-
-		//------------------------------------------------------------------------------------------
-		// 	load the appropriate block API and execute the hook
-		//------------------------------------------------------------------------------------------
-		$ba = blockToArray($block);
-		$bHTML = runBlock($ba);
-
-		//------------------------------------------------------------------------------------------
-		// 	recurse, expand any blocks that were created by the hook
-		//------------------------------------------------------------------------------------------
-		$bHTML = expandBlocks($bHTML, $calledBy . $block. "\n");
-		$txt = str_replace($block, $bHTML, $txt);
-
-	}
-
+	global $theme, $session;
+	$session->msgAdmin('deprecated: expandBlocks(...) => \$theme->expandBlocks(...)', 'bug');	
+	$txt = $theme->expandBlocks($txt, $calledBy);
 	return $txt;
 }
 
@@ -118,45 +74,9 @@ function expandBlocks($txt, $calledBy) {
 //arg: block - a block tag [string]
 
 function blockToArray($block) {
-	global $page;
-	$ba = array();
-
-	$block = str_replace("[[:", '', $block);
-	$block = str_replace(":]]", '', $block);
-	$parts = explode('::', $block);
-	if (count($parts) >= 2) {
-
-		//------------------------------------------------------------------------------------------
-		//	get the api and method
-		//------------------------------------------------------------------------------------------
-		$ba['api'] = array_shift($parts);
-		$ba['method'] = array_shift($parts);
-		$ba['args'] = array();
-
-		//------------------------------------------------------------------------------------------
-		//	add page arguments
-		//------------------------------------------------------------------------------------------
-		foreach($page->blockArgs as $argName => $argValue) {
-			$ba['args'][$argName] = $argValue;
-		}
-
-		//------------------------------------------------------------------------------------------
-		//	get any explicit arguments (overrwrites page args)
-		//------------------------------------------------------------------------------------------
-
-		foreach($parts as $part) {
-			$eqPos = strpos($part, '=');
-			if ($eqPos == false) {
-				$ba['args'][$part] = true;
-			} else {
-				$argName = substr($part, 0, $eqPos);
-				$argValue = substr($part, ($eqPos + 1));
-				$ba['args'][$argName] = $argValue;
-			}
-		}
-
-	} else { return false; }
-
+	global $theme, $session;
+	$session->msgAdmin('deprecated: blockToArray(...) => \$theme->blockToArray(...)', 'bug');	
+	$ba = $theme->blockToArray($block);
 	return $ba;
 }
 
@@ -166,29 +86,9 @@ function blockToArray($block) {
 //arg: txt - text or HTML which may contain block tags [string]
 
 function findUniqueBlocks($txt) {
-	$blocks = array();
-
-	$txt = str_replace("\r", '', $txt);		// strip newlines
-	$txt = str_replace("\n", '', $txt);
-
-	$txt = str_replace('[[:', "\n[[:", $txt);	// place blocks on their own line
-	$txt = str_replace(':]]', ":]]\n", $txt);
-
-	$lines = explode("\n", $txt);			// for each line which might be a block
-	foreach($lines as $line) {
-	  $line = trim($line);
-	  if (strlen($line) > 8) {
-		//------------------------------------------------------------------------------------------
-		//	if this line begins with [[:: and ends with ::]]
-		//------------------------------------------------------------------------------------------
-		if ((substr($line, 0, 3) == '[[:') AND (substr(strrev($line), 0, 3) == ']]:')) {
-			$blocks[] = $line;
-		}
-
-	  }
-	}
-		
-	$blocks = array_unique($blocks);		// prevent looking up the same thing twice
+	global $theme, $session;
+	$session->msgAdmin('deprecated: findUniqueBlocks(...) => \$theme->findUniqueBlocks(...)','bug');
+	$block = $theme->findUniqueBlocks($txt);
 	return $blocks;
 }
 
@@ -199,13 +99,10 @@ function findUniqueBlocks($txt) {
 //arg: fn - view name [string]
 
 function getBlockApiFile($module, $fn) {
-	global $defaultTheme;
-	global $installPath;
-
-	$fileName = 'modules/' . $module . '/views/' . $fn . '.fn.php';
-	if ($module == 'theme') { $fileName = 'themes/' . $defaultTheme . '/theme.api.php'; }
-	
-	return $installPath . $fileName;
+	global $theme, $session;
+	$session->msgAdmin('deprecated: getBlockApiFile(...) => \$theme->getBlockApiFile(...)', 'bug');
+	$filename = $theme->getBlockApiFile($module, $fn);
+	return $filename;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -215,20 +112,10 @@ function getBlockApiFile($module, $fn) {
 //: this is quite an old function, from before views were separated into their own files
 
 function runBlock($ba) {
-	$apiFile = getBlockApiFile($ba['api'], $ba['method']);
-	$fnName = $ba['api'] . '_' . $ba['method'];
-
-	if (file_exists($apiFile)) {
-		require_once($apiFile);
-		if (function_exists($fnName)) {
-			return call_user_func($fnName, ($ba['args']));
-
-		} else { 
-			logErr('blocks', 'runBlock', "called function $fnName does not exist in $apiFile"); 
-
-		}
-	} else { logErr('blocks', 'runBlock', "api file does not exist: " . $apiFile); 	}	
-	return '';
+	global $theme, $session;
+	$session->msgAdmin('deprecated: runBlock(...) => \$theme->runBlock(...)', 'bug');
+	$block = $theme->runBlock($ba);
+	return $block;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -238,31 +125,21 @@ function runBlock($ba) {
 //: useful for summaries, text snippets, etc
 
 function strip_blocks($txt) {
-	$txt = str_replace('<', '{{-less-than-}}', $txt);
-	$txt = str_replace('>', '{{-greater-than-}}', $txt);
-	$txt = str_replace('[[:', "<blocktag '", $txt);
-	$txt = str_replace(':]]', "'>", $txt);
-	$txt = strip_tags($txt);
-	$txt = str_replace('{{-less-than-}}', '<', $txt);
-	$txt = str_replace('{{-greater-than-}}', '>', $txt);
+	global $theme, $session;
+	$session->msgAdmin('deprecated: strip_blocks(...) => \$theme->stripBlocks(...)', 'bug');
+	$txt = $theme->stripBlocks($txt);
 	return $txt;
-} 
-
+}
+ 
 //--------------------------------------------------------------------------------------------------
 //|	substitute an array of values for labels in text
 //--------------------------------------------------------------------------------------------------
 //arg: labels - array of variable names (keys) and values to replace them with [array]
 
 function replaceLabels($labels, $txt) {
-	global $serverPath;
-	global $websiteName;
-
-	$labels['serverPath'] = $serverPath;
-	$labels['websiteName'] = $websiteName;
-
-	foreach($labels as $label => $val) {
-		$txt = str_replace('%%' . $label . '%%', $val, $txt);
-	}
+	global $session, $theme;
+	$session->msgAdmin('deprecated: replaceLabels(...) => $theme->replaceLabels(...)', 'bug');
+	$txt = $theme->replaceLabels($labels, $txt);	
 	return $txt;
 }
 

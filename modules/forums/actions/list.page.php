@@ -22,4 +22,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Forums - ::link=/forums/:]]
 [[:theme::breadcrumb::label=All::link=/forums/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

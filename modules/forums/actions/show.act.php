@@ -1,28 +1,41 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	display a gallery page
+//*	display a forum
 //--------------------------------------------------------------------------------------------------
-	
-	if (authHas('forums', 'show', '') == false) { do403(); }		// check basic permissions
-	if ($request['ref'] == '') { do404(); }							// check ref
 
-	$UID = raFindRedirect('forums', 'show', 'forums', $request['ref']); 	// check correct ref
-	if (raGetOwner($request['ref'], 'forums') == false) { do404(); }  		// check forum exists
-	
-	require_once($installPath . 'modules/forums/models/forum.mod.php');			// load the model
-	$model = new Forum($request['ref']);									
+	//----------------------------------------------------------------------------------------------	
+	// control variables
+	//----------------------------------------------------------------------------------------------	
+	$pageNo = 1; 		//% list page to show (default is 1) [int]
 
-	$pageNo = 1; // if not specified
-	if (array_key_exists('page', $request['args']) == true) 
-		{ $pageNo = floor($request['args']['page']); }
+	//----------------------------------------------------------------------------------------------	
+	// check permissions and reference
+	//----------------------------------------------------------------------------------------------	
+	if ('' == $req->ref) { $page->do404('no such forum'); }					// check ref
+	$UID = $aliases->findRedirect('Forums_Board'); 							// check correct ref
+	if (false == $user->authHas('forums', 'Forums_Board', 'show', $UID)) 
+		{ $page->do403('You are not authorized to view this forum.'); }
 
-	$page->load($installPath . 'modules/forums/actions/show.page.php');
+	//----------------------------------------------------------------------------------------------	
+	// load the model
+	//----------------------------------------------------------------------------------------------	
+	$model = new Forums_Board($req->ref);									
+
+	if (array_key_exists('page', $req->args) == true) 
+		{ $pageNo = floor($req->args['page']); }
+
+	//----------------------------------------------------------------------------------------------	
+	// render the page
+	//----------------------------------------------------------------------------------------------	
+	$page->load('modules/forums/actions/show.page.php');
 	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $request['ref'];
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->blockArgs['pageno'] = $pageNo;
-	$page->blockArgs['school'] = $model->data['school'];
-	$page->blockArgs['forumTitle'] = $model->data['title'];
+	$page->blockArgs['school'] = $model->school;
+	$page->blockArgs['forumTitle'] = $model->title;
 	$page->render();
 
 ?>

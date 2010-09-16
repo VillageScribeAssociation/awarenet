@@ -4,12 +4,12 @@
 //	add a new school
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('schools', 'edit', '') == false) { do403(); }
+	if ($user->authHas('schools', 'Schools_School', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
-	$model = new School();
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+	$model = new Schools_School();
 	$model->save();
 	
-	do302('schools/edit/' . $model->data['UID']);
+	$page->do302('schools/edit/' . $model->UID);
 
 ?>

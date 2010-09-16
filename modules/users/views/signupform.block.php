@@ -1,5 +1,5 @@
 <? /*
-<form name='signup' method='POST' action='/users/signup/'>
+<form name='signup' method='POST' action='%%serverPath%%users/signup/'>
 <input type='hidden' name='action' value='userSignup' />
 <div class='inlinequote'>
 

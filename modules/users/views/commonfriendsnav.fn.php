@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find common friends between the current user and some random, returns thumbnails
@@ -11,18 +11,18 @@
 //opt: size - of images returned [string]
 
 function users_commonfriendsnav($args) {
-	global $user;
+	global $user, $alises;
 	if (array_key_exists('userUID', $args) == true) { $args['UID'] = $args['userUID']; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 	$html = '';
 
-	$model = new Friendship();
-	$common = $model->findCommonFriends($user->data['UID'], $args['UID']);
+	$model = new Users_Friendship();
+	$common = $model->findCommonFriends($user->UID, $args['UID']);
 
 	if (count($common) > 0) {
 		$html .= "[[:theme::navtitlebox::label=Friends In Common:]]";
 		foreach ($common as $userUID) {
-			$userRa = raGetDefault('users', $userUID);
+			$userRa = $aliases->getDefault('Users_User', $userUID);	// clunky, TODO: improve
 			$html .= "<a href='/users/profile/" . $userRa . "'>" 
 					. "[[:users::avatar::userUID=" . $userUID . "::size=thumbsm:]]</a>\n";
 		}

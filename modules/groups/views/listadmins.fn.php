@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list administrators of a group
@@ -10,25 +10,34 @@
 //opt: target = link target (for frames, etc) [string]
 
 function groups_listadmins($args) {
-	if (authHas('groups', 'show', '') == false) { return false; }
-	if (array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
-
+	global $user;
 	$target = '';
-	if (array_key_exists('target', $args)) { $target = '::target=' . $args['target']; }
+	$html = '';			//%	return value [string]
 
-	$model = new Group($args['raUID']);
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	if (true == array_key_exists('target', $args)) { $target = '::target=' . $args['target']; }
+
+	$model = new Groups_Group($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return ''; }
 	$members = $model->getMembers();
-	
-	$admins = array();
 
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------	
+	$admins = array();
+	//TODO: more checks here
 	foreach ($members as $row) {
-		if ($row['admin'] == 'yes') 
+		if ('yes' == $row['admin']) 
 			{ $admins[] = '[[:users::namelink::userUID=' . $row['userUID'] . $target . ':]]'; }
 	}	
 	
-	if (count($admins) == 0) { 
-		$html = "(This group has no administrators, only sysadmins can edit it)<br/>"; 
-	}
+	if (0 == count($admins))
+		{ $html = "(This group has no administrators, only sysadmins can edit it)<br/>"; }
 
 	if (count($admins) >= 1) {
 		$html .= "This group is administered by ";

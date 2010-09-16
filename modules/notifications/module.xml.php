@@ -3,21 +3,30 @@
     <modulename>notifications</modulename>
     <version>1.0</version>
     <revision>0</revision>
-    <description>This is a core module for awareNet, any module may create notifications for users.</description>
+    <description>Notifications are small messages to allow user to keep track of events on the system.</description>
     <core>yes</core>
     <installed>no</installed>
     <enabled>no</enabled>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>summarylist|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <models>
+      <model>
+        <name>Notifications_Notification</name>
+		<description></description>
+        <permissions>
+          <permission>show</permission>
+          <permission>hide</permission>
+          <export>notificaions-show</export>
+          <export>notificaions-list</export>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>member</relationship>
+        </relationships>
+      </model>
+    </models>
+    <defaultpermissions>
+		student:c|notifications|Notifications_Notification|show|(if)|member
+		teacher:c|notifications|Notifications_Notification|show|(if)|member
+    </defaultpermissions>
 </module>
 */ ?>

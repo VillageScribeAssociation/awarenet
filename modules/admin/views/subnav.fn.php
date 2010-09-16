@@ -6,9 +6,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_subnav($args) {
-	if (authHas('admin', 'administer', '')) {
-		return replaceLabels(array(), loadBlock('modules/admin/views/subnav.block.php'));
-	}
+	global $theme;
+
+	global $user;
+	if ('admin' != $user->role) { return ''; }
+	return $theme->replaceLabels(array(), $theme->loadBlock('modules/admin/views/subnav.block.php'));
 }
 
 

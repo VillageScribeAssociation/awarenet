@@ -6,8 +6,7 @@
 [[:moblog::summarylist::page=%%pageno%%::num=10:]]</content>
 	<title>awareNet - blogs - everyone</title>
 	<script></script>
-	<nav1>[[:theme::navtitlebox::label=Tags:]]
-[`|lt]br/[`|gt]
+	<nav1>
 [[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
 [`|lt]div id=[`|sq]divSchoolStats[`|sq][`|gt]
 [[:moblog::schoolstatsnav:]]

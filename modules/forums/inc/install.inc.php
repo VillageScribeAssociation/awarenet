@@ -1,142 +1,123 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	install scripts for forums module
-//--------------------------------------------------------------------------------------------------
-
-require_once($installPath . 'modules/forums/models/forum.mod.php');
-require_once($installPath . 'modules/forums/models/forumthread.mod.php');
-require_once($installPath . 'modules/forums/models/forumreply.mod.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	install the gallery module
+//*	install script for Forums module
 //--------------------------------------------------------------------------------------------------
-//returns: html report [string]
+//+	reports are human-readable HTML, with script-readable HTML comments
+
+//--------------------------------------------------------------------------------------------------
+//|	install the Forums module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
 
 function forums_install_module() {
-	global $user;
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Forums_Board table
+	//----------------------------------------------------------------------------------------------
+	$model = new Forums_Board();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	$report .= "<h3>Installing Forums Module</h3>\n";
+	//----------------------------------------------------------------------------------------------
+	//	copy all records from previous table
+	//----------------------------------------------------------------------------------------------
+	$rename = array('recordAlias' => 'alias');
+	$count = $dba->copyAll('forums', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'forums' table.</b><br/>";
 
-	//------------------------------------------------------------------------------------------
-	//	create forums table if it does not exist, upgrade it if it does
-	//------------------------------------------------------------------------------------------
-	$model = new Forum();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbInstallTable($dbSchema);	
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Forums_Reply table
+	//----------------------------------------------------------------------------------------------
+	$model = new Forums_Reply();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	//------------------------------------------------------------------------------------------
-	//	create forumthreads table if it does not exist, upgrade it if it does
-	//------------------------------------------------------------------------------------------
-	$model = new ForumThread();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbInstallTable($dbSchema);	
+	//----------------------------------------------------------------------------------------------
+	//	copy all records from previous table
+	//----------------------------------------------------------------------------------------------
+	$rename = array();
+	$count = $dba->copyAll('forumreplies', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'forumreplies' table.</b><br/>";
 
-	//------------------------------------------------------------------------------------------
-	//	create forumreplies table if it does not exist, upgrade it if it does
-	//------------------------------------------------------------------------------------------
-	$model = new ForumReply();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbInstallTable($dbSchema);	
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Forums_Thread table
+	//----------------------------------------------------------------------------------------------
+	$model = new Forums_Thread();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//	copy all records from previous table
+	//----------------------------------------------------------------------------------------------
+	$rename = array('recordAlias' => 'alias', 'forum' => 'board');
+	$count = $dba->copyAll('forumthreads', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'forumthreads' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
 	//	done
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	return $report;
 }
 
 //--------------------------------------------------------------------------------------------------
-//	discover if this module is installed
+//|	discover if this module is installed
 //--------------------------------------------------------------------------------------------------
-//returns: HTML installation report [string]
-// if installed correctly report will contain HTML comment <!-- installed correctly -->
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
 
 function forums_install_status_report() {
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	if ('admin' != $user->role) { return false; }
 
+	$dba = new KDBAdminDriver();
+	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
 
-	//---------------------------------------------------------------------------------------------
-	//	ensure that the forums table exists and is correct
-	//---------------------------------------------------------------------------------------------
-	$model = new Forum();
-	$dbSchema = $model->initDbSchema();
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Board objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Forums_Board();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
 
-	if (dbTableExists($dbSchema['table']) == true) {
-		//-----------------------------------------------------------------------------------------
-		//	table present
-		//-----------------------------------------------------------------------------------------
-		$extantSchema = dbGetSchema($dbSchema['table']);
-
-		if (dbCompareSchema($dbSchema, $extantSchema) == false) {
-			//-------------------------------------------------------------------------------------
-			// table schemas DO NOT match (fail)
-			//-------------------------------------------------------------------------------------
-			$installed = false;		
-			$report .= "<p>A '" . $dbSchema['table'] . "' table exists, but does not match "
-					 . "object's schema.</p>\n"
-					 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n"
-					 . "<b>Extant Table:</b><br/>\n" . dbSchemaToHtml($extantSchema) . "<br/>\n";
-
-		} else {
-			//-------------------------------------------------------------------------------------
-			// table schemas match
-			//-------------------------------------------------------------------------------------
-			$report .= "<p>'" . $dbSchema['table'] . "' table exists, matches object schema.</p>\n"
-					 . "<b>Database Table:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-
-		}
-
-	} else {
-		//-----------------------------------------------------------------------------------------
-		//	table missing (fail)
-		//-----------------------------------------------------------------------------------------
-		$installed = false;
-		$report .= "<p>'" . $dbSchema['table'] . "' table does not exist in the database.</p>\n"
-				 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-	}
-
-
-	//---------------------------------------------------------------------------------------------
-	//	ensure that the forumthreads table exists and is correct
-	//---------------------------------------------------------------------------------------------
-	$model = new ForumThread();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbGetTableInstallStatus($dbSchema);
-
-	
-
-	return $report;
-}
-
-
-function install_forums_module() {
-	global $installPath;
-	global $user;
-
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	main forums table
+	//	ensure the table which stores Reply objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Forum();
-	$report = $model->install();
+	$model = new Forums_Reply();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	threads table
+	//	ensure the table which stores Thread objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new ForumThread();
-	$report .= $model->install();
+	$model = new Forums_Thread();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	replies table
+	//	done
 	//----------------------------------------------------------------------------------------------
-	$model = new ForumReply();
-	$report .= $model->install();
-
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summary list
@@ -9,33 +9,39 @@
 //opt: num - number of records per page (default 30) [string]
 
 function comments_summarylist($args) {
-	if (authHas('comments', 'list', '') == false) { return false; }
-	if (authHas('comments', 'view', '') == false) { return false; }
+	global $db, $page, $theme;
+	$num = 30;							//%	number of items per page [int]
+	$pageNo = 1;						//%	page number, starts from 1 [int]
+	$start = 0;							//%	starting position within SQL results [int]
+	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	arguments
 	//----------------------------------------------------------------------------------------------
-	$start = 0; $num = 30; $page = 1;
+	if (false == $user->authHas('comments', 'Comment_Comment', 'list')) { return ''; }
+	if (false == $user->authHas('comments', 'Comment_Comment', 'show')) { return ''; }
 
-	if (array_key_exists('num', $args)) { $num = $args['num']; }
-	if (array_key_exists('page', $args)) { 
-		$page = $args['page']; 
-		$start = ($page - 1) * $num;
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('page', $args)) { 
+		$pageNo = (int)$args['page']; 
+		$start = ($pageNo - 1) * $num;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	query database
+	//	query database and make block
 	//----------------------------------------------------------------------------------------------
-	$list = dbLoadRange('comments', '*', '', 'createdOn', $num, $start);
+	$list = $db->loadRange('Comments_Comment', '*', '', 'createdOn', $num, $start);
+	$block = $theme->loadBlock('modules/comments/views/summary.block.php');
+
 	foreach($list as $UID => $row) {
-		$model = new comments();
+		$model = new Comments_Comment();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/comments/views/summary.block.php'));
-	}  
+		$html .= $theme->replaceLabels($model->extArray(), $block);
+	}
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

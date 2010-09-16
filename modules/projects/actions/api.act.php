@@ -1,39 +1,39 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	API of projects module. No public actions.
-//--------------------------------------------------------------------------------------------------
-
-if ($user->data['ofGroup'] == 'public') { doXmlError('not logged in'); }
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list records owned by the current user
+//*	API of projects module. No public actions.
 //--------------------------------------------------------------------------------------------------
 
+	if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 
-if ($request['ref'] == 'myrecords') {
+	//----------------------------------------------------------------------------------------------
+	//	list objects owned by the current user
+	//----------------------------------------------------------------------------------------------
+	//NOTE: this is a legacy API, still used by firefox extension, but deprecated
 
-	$sql = "select projects.UID, projects.title, projects.recordAlias " 
-		 . "from projectmembers, projects "
-		 . "where projectmembers.userUID='" . $user->data['UID'] . "' "
-		 . "and projects.UID=projectmembers.projectUID";
+	if ($req->ref == 'myrecords') {
 
-	$result = dbQuery($sql);
-	
-	echo "<?xml version=\"1.0\"?>\n";
-	echo "<recordset>\n";
-	while ($row = sqlRMArray(dbFetchAssoc($result))) { 
-		$ary = array(	'uid' => $row['UID'], 
-						'module' => 'projects',
-						'title' => $row['title'],
-						'recordalias' => $row['recordAlias'],
-						'files' => 'none',
-						'images' => 'uploadmultiple',
-						'videos' => 'none' );
+		$conditions = array();
+		$conditions = "userUID='" . $db->addMarkup($user->UID) . "'";
+		$conditions = "(role='member' OR role='admin')";
+		$range = $db->loadRange('Projects_Membership', '*', $conditions);
 
-		echo arrayToXml2d($ary, 'record', '  '); 
+		while ($range = $row) { 
+			$model = new Projects_Project($row['projectUID']);
+			$ary = array(	'uid' => $model->UID, 
+							'module' => 'projects',
+							'model' => 'Projects_Project',
+							'title' => $model->title,
+							'recordalias' => $model->alias,
+							'files' => 'none',
+							'images' => 'uploadmultiple',
+							'videos' => 'none' );
+
+			echo $utils->arrayToXml2d('record', $ary, true); 
+		}
 	}
-	echo "</recordset>\n";	
 }
 
 ?>

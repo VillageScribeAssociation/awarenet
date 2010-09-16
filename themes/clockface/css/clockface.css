@@ -183,6 +183,31 @@ image.infobutton {
 	top: 3px;
 }
 
+/* session messages --------------------------------------------------------------------------- */
+
+div.sessionmsg {
+	margin: 0px 0px 4px 0px;
+	display: block;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #ddd;
+	border-right-color: #ddd;
+	border-bottom-color: #ddd;
+	border-left-color: #ddd;
+	background-color: #e0ffff;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #333333;
+	font-size: 12px;
+	text-decoration: none;
+	/* font-weight: 200; */
+ }
+
 /* inline quote boxes --------------------------------------------------------------------------- */
 
 div.inlinequote {

@@ -10,18 +10,33 @@
     <search>no</search>
     <dependancy>
     </dependancy>
-    <permissions>
-        <perm>view|%%user.ofGroup%%=student</perm>
-        <perm>view|%%user.ofGroup%%=teacher</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>list|%%user.ofGroup%%=teacher</perm>
-        <perm>summarylist|%%user.ofGroup%%=student</perm>
-        <perm>summarylist|%%user.ofGroup%%=teacher</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-    </permissions>
+    <models>
+        <model>
+            <name>Comments_Comment</name>
+            <permissions>
+                <permission>retractall</permission>
+                <permission>showall</permission>
+                <permission>show</permission>
+                <permission>delete</permission>
+                <export>comment-add</export>
+                <export>comment-retract</export>
+                <export>comment-show</export>
+                <export>comment-edit</export>
+                <export>comment-remove</export>
+            </permissions>
+            <relationships>
+			    <relationship>creator</relationship>
+			</relationships>
+        </model>
+    </models>
+    <defaultpermissions>
+		student:p|comments|Comments_Comment|show
+		student:p|comments|Comments_Comment|showall
+		student:c|comments|Comments_Comment|retract|(if)|creator
+		teacher:p|comments|Comments_Comment|show
+		teacher:p|comments|Comments_Comment|showall
+		teacher:c|comments|Comments_Comment|retract|(if)|creator
+    </defaultpermissions>
     <blocks>
     </blocks>
 </module>

@@ -1,15 +1,27 @@
 <?
 
+	//require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+	// ^ sometimes needed for breadcrumbs, etc
+
 //--------------------------------------------------------------------------------------------------
-//	edit a school record
+//*	show form to edit a School object
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('schools', 'edit', '') == false) { do403(); }
-	if ($request['ref'] == '') { do404(); }
-	
-	$page->load($installPath . 'modules/schools/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = raGetOwner($request['ref'], 'schools');
+	//----------------------------------------------------------------------------------------------
+	//	check permissions
+	//----------------------------------------------------------------------------------------------
+	$UID = $aliases->findRedirect('Schools_School');
+	if (false == $user->authHas('schools', 'Schools_School', 'edit', $UID))
+		{ $page->do403('You are not authorized to edit this Schools.'); }
+
+	if ('' == $req->ref) { $page->do404(); }
+
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------	
+	$page->load('modules/schools/actions/edit.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['UID'] = $UID;
 	$page->render();
 
 ?>

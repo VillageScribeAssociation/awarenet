@@ -1,42 +1,27 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	delete a moblog post
+//*	delete a moblog post
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('moblog', 'edit', '') == false) { do403(); }
+	if (false == array_key_exists('action', $_POST)) { $page->do404('sction not specified'); }
+	if ('deleteRecord' != $_POST['action']) { $page->do404('action not supported'); }
+	if (false == array_key_exists('UID', $_POST) { $page->do404('UID of post not given'); }
 
-	if ( (array_key_exists('action', $_POST)) 
-	  AND ($_POST['action'] == 'deleteRecord') 
-	  AND (array_key_exists('UID', $_POST)) 
-	  AND (dbRecordExists('moblog', $_POST['UID'])) ) {
-
-		//-----------------------------------------------------------------------------------------
-		//	load the post in question
-		//-----------------------------------------------------------------------------------------
-	  
-		require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	  
-		$model = new Moblog();
-		$model->load($_POST['UID']);
+	//----------------------------------------------------------------------------------------------
+	//	load the post in question
+	//----------------------------------------------------------------------------------------------
+	$model = new Moblog_Post($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Post not found.'); }
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID)) { $page->do403(); }
 		
-		//-----------------------------------------------------------------------------------------
-		//	check that user has authority to delete this post
-		//-----------------------------------------------------------------------------------------
-
-		$authorised = false;
-		if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-		if ($user->data['UID'] == $model->data['createdBy']) { $authorised = true; }		
-		if ($authorised == false) { do403(); }
-
-		//-----------------------------------------------------------------------------------------
-		//	delete it
-		//-----------------------------------------------------------------------------------------
-
-		$_SESSION['sMessage'] .= "Deleted moblog post: " . $model->data['title'] . "<br/>\n";
-		$model->delete();
-		do302('moblog/');
-	  
-	} else { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	delete it
+	//----------------------------------------------------------------------------------------------
+	$model->delete();
+	$session->msg("Deleted moblog post: " . $model->title, 'ok');
+	$page->do302('moblog/'); 
 
 ?>

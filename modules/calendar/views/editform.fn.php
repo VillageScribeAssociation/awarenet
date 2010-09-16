@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show the edit form
@@ -8,14 +8,27 @@
 //arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_editform($args) {
-	if (authHas('calendar', 'edit', '') == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$model = new Calendar($args['raUID']);
+	global $theme, $user;
+	$html = '';				//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	$model = new Calendar_Entry($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('calendar', 'Calendar_Entry', 'edit', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$ext['contentJs64'] = base64EncodeJs('contentJs64', $ext['content']);
-	return replaceLabels($ext, loadBlock('modules/calendar/views/editform.block.php'));
+	$block = $theme->loadBlock('modules/calendar/views/editform.block.php');
+	$html = $theme->replaceLabels($ext, $block);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 ?>
-

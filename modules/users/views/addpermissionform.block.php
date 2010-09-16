@@ -1,5 +1,5 @@
 <? /*
-<form name='addUserPermission' method='POST' action='/users/save/'>
+<form name='addUserPermission' method='POST' action='%%serverPath%%users/save/'>
 <input type='hidden' name='action' value='addUserPermission' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

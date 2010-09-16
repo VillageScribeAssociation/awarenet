@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summary list (the 'moblog itself')
@@ -10,57 +10,57 @@
 //opt: num - number of records per page (default is 30) [string]
 
 function moblog_summarylist($args) {
-	global $user;
-	if (authHas('moblog', 'list', '') == false) { return false; }
-	if (authHas('moblog', 'view', '') == false) { return false; }
-
-	//----------------------------------------------------------------------------------------------
-	//	arguments
-	//----------------------------------------------------------------------------------------------
-	$start = 0; $num = 30; $page = 1;
+	global $page, $db, $user, $theme;
+	$start = 0;
+	$num = 30;
+	$pageNo = 1;
 	$html = '';
 
-	if (array_key_exists('num', $args)) { $num = $args['num']; }
-	if (array_key_exists('page', $args)) { 
-		$page = $args['page']; 
-		$start = ($page - 1) * $num;
-	}
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { return ''; }
+
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('page', $args)) 
+		{ $pageNo = $args['page']; $start = ($pageNo - 1) * $num; }
 
 	//----------------------------------------------------------------------------------------------
 	//	count visible posts
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numRecords from moblog where published='yes'";
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
-	$total = ceil($row['numRecords'] / $num);
+	$conditions = array();
+	$conditions[] = " (published='yes' or createdBy='" . $user->UID . "') ";
+	if (true == array_key_exists('userUID', $args)) 
+		{ $conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'"; }
 
+	if (true == array_key_exists('schoolUID', $args)) 
+		{ $conditions[] = "school='" . $db->addMarkup($args['schoolUID']) . "'"; }
+
+	$totalItems = $db->countRange('Moblog_Post', $conditions);
+	$totalPages = ceil($totalItems / $num);
 
 	$link = '%%serverPath%%moblog/';
-	$pagination .= "[[:theme::pagination::page=" . sqlMarkup($page) 
-				. "::total=" . $total . "::link=" . $link . ":]]\n";
+	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
-	//	query database
+	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
+	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn DESC', $num, $start);
 
-	$conditions = array();
-	$conditions[] = " (published='yes' or createdBy='" . $user->data['UID'] . "') ";
-	if (array_key_exists('userUID', $args) == true) 
-		{ $conditions[] = "createdBy='" . sqlMarkup($args['userUID']) . "'"; }
+	$block = $theme->loadBlock('modules/moblog/views/summary.block.php');
 
-	if (array_key_exists('schoolUID', $args) == true) 
-		{ $conditions[] = "school='" . sqlMarkup($args['schoolUID']) . "'"; }
-
-	$list = dbLoadRange('moblog', '*', $conditions, 'createdOn DESC', $num, $start);
-	foreach($list as $UID => $row) {
-		$model = new moblog();
+	foreach($range as $UID => $row) {
+		$model = new Moblog_Post();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/moblog/views/summary.block.php'));
-	}  
-	return $pagination . $html . $pagination;
+		$html .= $theme->replaceLabels($model->extArray(), $block);
+	}
+
+	$html = $pagination . $html . $pagination;
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

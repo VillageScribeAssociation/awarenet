@@ -1,31 +1,48 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	save a school record
+//*	save a school record
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('schools', 'edit', '') == false) { do403(); }
-	
-	if ( (array_key_exists('action', $_POST))
-	   AND ($_POST['action'] == 'saveRecord') 
-	   AND (array_key_exists('UID', $_POST))
-	   AND (dbRecordExists('schools', sqlMarkup($_POST['UID']))) ) {
-	
-		require_once($installPath . 'modules/schools/models/school.mod.php');
-		
-		$model = new School(sqlMarkup($_POST['UID']));
-		
-		$model->data['name'] = $_POST['name'];
-		$model->data['description'] = $_POST['description'];
-		$model->data['geocode'] = $_POST['geocode'];
-		$model->data['country'] = $_POST['country'];
-				
-		$model->save();
-		
-		do302('schools/' . $model->data['recordAlias']);
-		
-	} else { 
-		do404();
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and POST variables
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); } 
+	if (false == array_key_exists('UID', $_POST)) { $page->do404('School not specified (UID).'); }
+
+	$model = new Schools_School($db->addMarkup($_POST['UID']));
+	if (false == $model->loaded) { $page->do404("could not load School $UID");}
+	if (false == $user->authHas('schools', 'Schools_School', 'edit', $model->UID))
+		{ $page->do403('You are not authorized to edit this school.'); }
+
+
+	//----------------------------------------------------------------------------------------------
+	//	load and update the object
+	//----------------------------------------------------------------------------------------------
+	foreach($_POST as $field => $value) {
+		switch(strtolower($field)) {
+			case 'name':	$model->name = $utils->cleanString($value); break;
+			case 'description':	$model->description = $utils->cleanString($value); break;
+			case 'geocode':	$model->geocode = $utils->cleanString($value); break;
+			case 'region':	$model->region = $utils->cleanString($value); break;
+			case 'country':	$model->country = $utils->cleanString($value); break;
+		}
 	}
+	$report = $model->save();
+		
+	//----------------------------------------------------------------------------------------------
+	//	check that object was saved and redirect
+	//----------------------------------------------------------------------------------------------
+	if ('' == $report) { $session->msg('Saved changes to school: ' . $model->name); }
+	else { $session->msg('Could not save School:<br/>' . $report); }
+
+	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+	else { $page->do302('/schools/' . $model->alias); }
+
+	$page->do302('schools/' . $model->alias);
+		
 
 ?>

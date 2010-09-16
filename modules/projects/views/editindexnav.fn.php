@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	nav box (iframe) for editing a project's index
@@ -11,15 +11,21 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindexnav($args) {
-	if (authHas('projects', 'view', '') == false) { return false; }
-	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	global $db, $user;
+	$html = '';				//%	return value [string]
+	
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 
-	$thisRa = $args['raUID'];
-	if (dbRecordExists('projects', $thisRa) == true) { $thisRa = raGetDefault('projects', $thisRa); }
+	$model = new Projects_Project($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	//if ($user->authHas('projects', 'Projects_Project', 'show', 'TODO:UIDHERE') == false) { return false; }
 
 	$html .= "<iframe name='editProjectIndex' id='editpi'"
-		  . " src='%%serverPath%%projects/editindex/" . $thisRa . "'"
+		  . " src='%%serverPath%%projects/editindex/" . $model->alias . "'"
 		  . " width='300' height='120' frameborder='no'></iframe>\n";
 
 	return $html;
@@ -28,4 +34,3 @@ function projects_editindexnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

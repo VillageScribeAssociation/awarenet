@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all most recent x comments owned by a particular record on a given module
@@ -10,12 +10,11 @@
 //opt: num - number of records per page (default 10) [string]
 
 function comments_listjs($args) {
-	global $serverPath;
-	global $user;
+	global $theme, $kapenta, $db, $user, $utils;
 
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
-	if (authHas('comments', 'list', '') == false) { return false; }
-	if (authHas('comments', 'view', '') == false) { return false; }
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ($user->authHas('comments', 'Comment_Comment', 'list', 'TODO:UIDHERE') == false) { return false; }
+	if ($user->authHas('comments', 'Comment_Comment', 'show', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('refModule', $args) == false) { return false; }
 	if (array_key_exists('refUID', $args) == false) { return false; }
 
@@ -27,13 +26,13 @@ function comments_listjs($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from comments "
-		 . "where refModule='" . sqlMarkup($args['refModule']) . "' "
-		 . "and refUID='" . sqlMarkup($args['refUID']) . "' "
+	$sql = "select * from Comments_Comment "
+		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
+		 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
 		 . "order by createdOn DESC";
 
-	$blockTemplate = loadBlock('modules/comments/views/summary.block.php');
-	$scriptUrl = $serverPath . 'modules/comments/js/comments.js';
+	$blockTemplate = $theme->loadBlock('modules/comments/views/summary.block.php');
+	$scriptUrl = $kapenta->serverPath . 'modules/comments/js/comments.js';
 
 		
 	$js .= "<script src='" . $scriptUrl . "' language='javascript'></script>";
@@ -42,18 +41,18 @@ function comments_listjs($args) {
 	$js .= "var commentsPage = 0;\n";
 	$js .= "var aryComments = new Array();\n";
 	
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
-			$model = new comment();
+	$result = $db->query($sql);
+	if ($db->numRows($result) > 0) {
+		while ($row = $db->fetchAssoc($result)) {
+			$row = $db->rmArray($row);
+			$model = new Comments_Comment();
 			$model->loadArray($row);
 			$ext = $model->extArray();
 
-			$blockHtml = replaceLabels($ext, $blockTemplate);
-			$blockHtml = expandBlocks($blockHtml, '');
+			$blockHtml = $theme->replaceLabels($ext, $blockTemplate);
+			$blockHtml = $theme->expandBlocks($blockHtml, '');
 	
-			$js .= base64EncodeJs('b64c' . $ext['UID'], $blockHtml ,false);
+			$js .= $utils->base64EncodeJs('b64c' . $ext['UID'], $blockHtml ,false);
 			$js .= "aryComments.push(new Array(\"" . $ext['UID'] . "\", b64c" . $ext['UID'] . "));\n\n";
 
 		}  
@@ -72,4 +71,3 @@ function comments_listjs($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

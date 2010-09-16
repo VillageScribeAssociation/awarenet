@@ -6,7 +6,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_menu($args) {
-	if (authHas('admin', 'administer', '')) { return loadBlock('modules/admin/views/menu.block.php');	}
+	global $user, $theme;
+	if ('admin' != $user->role) { return ''; }
+	$block = $theme->loadBlock('modules/admin/views/menu.block.php');
+	return $block;
 }
 
 //--------------------------------------------------------------------------------------------------

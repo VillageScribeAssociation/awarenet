@@ -2,8 +2,9 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Notifications:]]
+[`|lt]h1[`|gt]All Activity: %%userName%%[`|lt]/h1[`|gt]
 [`|lt]br/[`|gt]
-[[:notifications::list::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+[[:notifications::list::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::page=%%pageNo%%:]]
 [`|lt]br/[`|gt]</content>
 <title>awareNet - my notifications</title>
 <script></script>

@@ -1,32 +1,44 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	all images of all groups (thumbnails, no arguments) TODO: school argument?
 //--------------------------------------------------------------------------------------------------
+//TODO: this should be moved to the images module
 
 function groups_allthumbs($args) {
-	global $serverPath;
-	$sql = "select * from images where refModule='groups' order by weight";
-	$html = '';
-	
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
-			$thisRa = raGetDefault('groups', $row['refUID']);
-			$alt = str_replace('-', ' ', $coinRa);
-			$html .= "<a href='/groups/show/" . $thisRa . "'>" 
-				. "<img src='/images/thumb90/" . $row['recordAlias'] 
+	global $db, $user, $aliases;
+	$html = '';					//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	load images from the database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array("refModule='groups'");
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------	
+	if (0 == count($range)) { return ''; }
+
+	foreach ($range as $row) {
+		$thisRa = $aliases->getDefault('Groups_Group', $row['refUID']);
+		$alt = str_replace('-', ' ', $thisRa);
+		$html .= "<a href='/groups/show/" . $thisRa . "'>" 
+				. "<img src='/images/thumb90/" . $row['alias'] 
 				. "' border='0' alt='" . $alt . "'></a> ";
-		}
 	} 
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

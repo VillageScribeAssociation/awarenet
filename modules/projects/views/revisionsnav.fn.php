@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
@@ -11,7 +11,9 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_revisionsnav($args) {
-	if (authHas('projects', 'view', '') == false) { return false; }
+	global $db;
+
+	if ($user->authHas('projects', 'Projects_Project', 'show', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID']; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 	$html = '';
@@ -20,12 +22,12 @@ function projects_revisionsnav($args) {
 	//	load all revisions
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from projectrevisions "
-		 . "where refUID='" . sqlMarkup($args['UID']) . "' order by editedOn";
+	$sql = "select * from Projects_Revision "
+		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 
 		$revisionLink = '/projects/revision/' . $row['UID'];
 		$revisionDate = date('Y-m-d', strtotime($row['editedOn']));
@@ -42,4 +44,3 @@ function projects_revisionsnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

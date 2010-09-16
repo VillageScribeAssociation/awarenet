@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list group members for the nav (300 px wide)
@@ -13,23 +13,31 @@
 function groups_listmembersnav($args) {
 	global $user;
 	$editmode = 'no';
-	if (authHas('groups', 'show', '') == false) { return false; }
-	if (array_key_exists('editmode', $args) == true) { $editmode = $args['editmode']; }
-	if (array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	$html = '';				//%	return value [string]
 
-	$model = new Group($args['raUID']);
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('editmode', $args)) { $editmode = $args['editmode']; }
+	if (true == array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+
+	$model = new Groups_Group($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$members = $model->getMembers();
-	$html = '';
-
-	$isAdmin = $model->hasEditAuth($user->data['UID']);
+	$isAdmin = $model->hasEditAuth($user->UID);		//TODO: use permission for this
 
 	foreach($members as $mbr) {
 		$html .= "[[:users::summarynav::userUID=" . $mbr['userUID']
 			  . "::extra=(" . $mbr['position'] . ")::target=_parent:]]\n";
 
 		$userUID = $mbr['userUID'];
-		if ( (true == $isAdmin) && ($userUID != $user->data['UID']) && ('yes' == $editmode) ) {
+		if ( (true == $isAdmin) && ($userUID != $user->UID) && ('yes' == $editmode) ) {
 			$rmUrl = "%%serverPath%%groups/editmembers/removemember_" . $userUID . "/" . $args['groupUID'];
 			$html .= "<a href='" . $rmUrl . "'>[ remove member &gt;&gt; ]</a><br/><br/>";
 		}

@@ -1,68 +1,32 @@
 <?
 
+		require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show all users in a given year for a given school
+//*	show all users in a given year for a given school
 //--------------------------------------------------------------------------------------------------
 
-	// TODO: This should really be split into two actions
-
 	//----------------------------------------------------------------------------------------------
-	//	show a named grade
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('grade', $req->args)) { $page->do404('grade not given'); }
+	if ('' == $req->ref) { $page->do404(); }
 
-	if (array_key_exists('grade', $request['args']) == true) { 
-		if ($request['ref'] == '') { do404(); }
-		require_once($installPath . 'modules/schools/models/school.mod.php');
-		$model = new School($request['ref']);
-
-		$page->load($installPath . 'modules/schools/actions/grade.page.php');
-		$page->blockArgs['raUID'] = $request['ref'];
-		$page->blockArgs['schoolUID'] = $model->data['UID'];
-		$page->blockArgs['schoolName'] = $model->data['name'];
-		$page->blockArgs['schoolDescription'] = $model->data['description'];
-		$page->blockArgs['grade'] = base64_decode($request['args']['grade']);
-
-		$page->data['breadcrumb'] = ""
-						  . "[[:theme::breadcrumb::label=Schools - ::link=/schools/:]]\n"
-						  . "[[:theme::breadcrumb::label=" . $model->data['name']
-						  . " - ::link=/schools/" . $model->data['recordAlias'] . ":]]\n"				
-						  . "[[:theme::breadcrumb::label=" . $page->blockArgs['grade'] . ":]]\n";
-
-		$page->render();
-
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	show the grade of a specified user
-	//----------------------------------------------------------------------------------------------
-
-	if (array_key_exists('user', $request['args']) == true) {
-		require_once($installPath . 'modules/schools/models/school.mod.php');
+	$model = new Schools_School($req->ref);
+	//TODO: permission check here
 	
-		$u = new User($request['args']['user']);
-		$model = new School($u->data['school']);
-
-		$page->load($installPath . 'modules/schools/actions/grade.page.php');
-		$page->blockArgs['raUID'] = $request['ref'];
-		$page->blockArgs['schoolUID'] = $model->data['UID'];
-		$page->blockArgs['schoolName'] = $model->data['name'];
-		$page->blockArgs['schoolDescription'] = $model->data['description'];
-		$page->blockArgs['grade'] = $u->data['grade'];
-		$page->blockArgs['userRa'] = $u->data['recordAlias'];
-		$page->blockArgs['userUID'] = $u->data['UID'];
-		$page->blockArgs['userName'] = $u->getName();
-
-		$page->data['menu2'] = "[[:users::menu::userUID=" . $u->data['UID'] . ":]]";
-		$page->data['title'] = 'awareNet - ' . $u->getName() . ' (classmates )';
-
-		$page->render();		
-	}
-
 	//----------------------------------------------------------------------------------------------
-	//	just in case
+	//	render the page
 	//----------------------------------------------------------------------------------------------
+	$page->load('modules/schools/actions/grade.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['schoolUID'] = $model->UID;
+	$page->blockArgs['schoolName'] = $model->name;
+	$page->blockArgs['schoolDescription'] = $model->description;
+	$page->blockArgs['grade'] = base64_decode($req->args['grade']);
 
-	if ( (array_key_exists('user', $request['args']) == false) 
-	   && (array_key_exists('grade', $request['args']) == false) ) { do404(); }
+	//TODO: sanitize $req->args['grade']
+	$page->blockArgs['gradeLink'] = "grade_" . $req->args['grade'] . '/' . $model->alias;
+	$page->render();
 
 ?>

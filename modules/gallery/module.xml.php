@@ -9,21 +9,32 @@
     <enabled>yes</enabled>
     <dbschema></dbschema>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>comment|%%user.ofGroup%%=student</perm>
-        <perm>comment|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
-</module>
+	<dependencies>
+	</dependencies>
+    <models>
+      <model>
+        <name>Gallery_Gallery</name>
+		<description>User picture gallery.</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>owner</relationship>
+        </relationships>
+      </model>
+    </models>
+    <defaultpermissions>
+		student:p|gallery|Gallery_Gallery|new
+		student:p|gallery|Gallery_Gallery|show
+		student:p|gallery|Gallery_Gallery|edit|(if)|creator
+		student:p|gallery|Gallery_Gallery|delete|(if)|creator
+		teacher:p|gallery|Gallery_Gallery|new
+		teacher:p|gallery|Gallery_Gallery|show
+		teacher:p|gallery|Gallery_Gallery|edit|(if)|creator
+		teacher:p|gallery|Gallery_Gallery|delete|(if)|creator
+    </defaultpermissions></module>
 */ ?>

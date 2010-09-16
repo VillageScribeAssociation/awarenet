@@ -1,12 +1,14 @@
 <?
 
-	require_once($installPath . 'modules/pages/models/page.mod.php');
+	require_once($kapenta->installPath . 'modules/pages/models/page.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for editing pages
 //--------------------------------------------------------------------------------------------------------------
 
 function pages_editform($args) {
+	global $theme;
+
 	global $installPath;
 	if ((array_key_exists('xmodule', $args) AND (array_key_exists('xpage', $args)))) {
 
@@ -31,11 +33,10 @@ function pages_editform($args) {
 			$labels[$label] = str_replace('>', '&gt;', $labels[$label]);
 		}
 
-		$block = loadBlock('modules/pages/views/editform.block.php');	// load form
-		return replaceLabels($labels, $block);
+		$block = $theme->loadBlock('modules/pages/views/editform.block.php');	// load form
+		return $theme->replaceLabels($labels, $block);
 	}
 }
 
 
 ?>
-

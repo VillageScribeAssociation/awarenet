@@ -1,12 +1,13 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	login form
+//*	login form
 //--------------------------------------------------------------------------------------------------
+//+	TODO: make the landing page after login a setting which admins can change
 
-//--------------------------------------------------------------------------------------------------
-//	handle submissions
-//--------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//	handle submissions
+	//----------------------------------------------------------------------------------------------
 
 	if ((array_key_exists('action', $_POST)) AND ($_POST['action'] == 'login')) {
 
@@ -14,21 +15,22 @@
 		//	authenticate the user
 		//------------------------------------------------------------------------------------------
 
-		$username = sqlMarkup($_POST['user']);
-		$password = sqlMarkup($_POST['pass']);
+		$username = $db->addMarkup($_POST['user']);
+		$password = $db->addMarkup($_POST['pass']);
 
-		$sql = "select * from users where username='" . $username . "'";
-		$result = dbQuery($sql);
-		if (dbNumRows($result) > 0) {
-			$row = dbFetchAssoc($result);
+		$range = $db->loadRange('Users_User', '*', array("username='" . $username . "'"));
+		// ^ "select * from Users_User where username='" . $username . "'";
+
+		if (count($range) > 0) {
+			$row = array_shift($range);									//%	first row [array]
 			if ($row['password'] == sha1($password . $row['UID'])) {
 
-				if ($row['ofGroup'] == 'banned') {
+				if ($row['role'] == 'banned') {
 					//------------------------------------------------------------------------------
 					//	details correct, but user is banhammered
 					//------------------------------------------------------------------------------
-					$_SESSION['sMessage'] .= "You have been banned, you are not logged in.<br/>\n";
-					do302(''); // homepage
+					$session->msg('You have been banned, you are not logged in.', 'no');
+					$page->do302(''); 									// redirect to homepage
 
 				} else {
 
@@ -36,19 +38,25 @@
 					//	feedback and redirect
 					//------------------------------------------------------------------------------
 
-					$msg = "[[:theme::navtitlebox::label=Notice:]]"
-						 . "<div class='inlinequote'><p>"
-						 . "<img src='%%serverPath%%themes/clockface/images/info.png' "
-						 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
-						 . "You are now logged in.</p></div>\n";
+
+					//$msg = "[[:theme::navtitlebox::label=Notice:]]"
+					//	 . "<div class='inlinequote'><p>"
+					//	 . "<img src='%%serverPath%%themes/clockface/images/info.png' "
+					//	 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
+					//	 . "You are now logged in.</p></div>\n";
 
 
-					$_SESSION['sUser'] = $row['username'];
-					$_SESSION['sUserUID'] = $row['UID'];
+					$session->user = $row['UID'];						//	set current user UID
+					$session->store();									//	and save
+					$session->msg('You are now logged in.', 'ok');
 
-					$_SESSION['sMessage'] .= $msg;
-					$user->load($row['UID']);
-					do302('notifications/'); // user notifications
+					$user->loadArray($row);
+
+					if (true == array_key_exists('redirect', $_POST)) { 
+						$page->do302($_POST['redirect']); 				// retry action after login
+					} else {
+						$page->do302('notifications/'); 				// default landing page
+					}
 
 				}
 
@@ -59,13 +67,13 @@
 		//	cound not authenticate
 		//------------------------------------------------------------------------------------------
 		
-		$msg = "[[:theme::navtitlebox::label=Notice:]]"
-			 . "<div class='inlinequote'><p>"
-			 . "<img src='%%serverPath%%themes/clockface/images/btn-del.png' "
-			 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
-			 . "Username or password not recognised, you are not logged in.</p></div>\n";
+		//$msg = "[[:theme::navtitlebox::label=Notice:]]"
+		//	 . "<div class='inlinequote'><p>"
+		//	 . "<img src='%%serverPath%%themes/clockface/images/btn-del.png' "
+		//	 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
+		//	 . "</div>\n";
 
-		$_SESSION['sMessage'] .= $msg;
+		$session->msg('Username or password not recognised, you are not logged in.', 'no');
 								
 
 	}
@@ -74,7 +82,7 @@
 //	display form
 //--------------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/users/actions/login.page.php');
+	$page->load('modules/users/actions/login.page.php');
 	$page->render();
 
 ?>

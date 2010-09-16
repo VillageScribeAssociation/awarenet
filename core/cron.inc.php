@@ -1,34 +1,36 @@
 <?
 
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //*	perform some action regularly (ie, no more than every 1 minutes)
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //+ This is likely to be moved to its own module and called by system cron via wget
+//TODO: upgrade this to version 4, move it to the system object
 
-$cronInterval = 60;	// one minute
 cronTest();
 
 function cronTest() {
-	global $installPath;
+	global $kapenta;
 	global $cronInterval;
 
-	$fileName = $installPath . 'core/lastcycle.txt';
-	if (file_exists($fileName) == false) { filePutContents($fileName, time(), 'w+'); }
-	$lastTime = implode(file($fileName));
+	$fileName = 'core/lastcycle.txt';		//%	location of cron data file [string]
+	if (false == $kapenta->fileExists($fileName)) 
+		{ $kapenta->filePutContents($fileName, time(), false, true); }
 
-	//---------------------------------------------------------------------------------------------
+	$lastTime = $kapenta->fileGetContents($fileName, false, true);
+
+	//----------------------------------------------------------------------------------------------
 	//	run module cron scripts if enough time has elapsed
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	if (time() > ($lastTime + $cronInterval)) {
-		filePutContents($fileName, time(), 'w+');	// set lastcycle to current time
+		$kapenta->filePutContents($fileName, time(), false, true);	// set lastcycle to current time
 
-		$mods = listModules();
+		$mods = $kapenta->listModules();
 		foreach($mods as $mod) {
-			$incFile = $installPath . 'modules/' . $mod . '/inc/cron.inc.php';
-			if (file_exists($incFile) == true) {
+			$incFile = 'modules/' . $mod . '/inc/cron.inc.php';
+			if (true == $kapenta->fileExists($incFile)) {
 				require_once($incFile);
 				$cronFn = $mod . '_cron';
-				if (function_exists($cronFn) == true) { $cronFn(); }
+				if (true == function_exists($cronFn)) { $cronFn(); }
 			} // end if file exists
 		} // end foreach mod
 	} // end if time

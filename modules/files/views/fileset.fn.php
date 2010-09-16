@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a set of files associated with something
@@ -9,31 +9,34 @@
 //arg: refUID - number of files per page [string]
 
 function files_fileset($args) {
-	global $serverPath;
-	
+	global $db, $user;
+	$html = '';
+
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('refModule', $args) == false) { return false; }
 	if (array_key_exists('refUID', $args) == false) { return false; }
-	$authArgs = array('UID' => $args['refUID']);
-	if (authHas($args['refModule'], 'files', $authArgs) == false) { return false; }
+	//$authArgs = array('UID' => $args['refUID']);
+	//if (authHas($args['refModule'], 'files', $authArgs) == false) { return false; }
+	//TODO: permissions check
 
 	//----------------------------------------------------------------------------------------------
 	//	load the file records and make html
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from files where refModule='" . sqlMarkup($args['refModule']) 
-	     . "' and refUID='" . sqlMarkup($args['refUID']) . "'";
-	     
-	$html = '';
-	$result = dbQuery($sql);
-	while($row = dbFetchAssoc($result)) {
+	$sql = "select * from Files_File where refModule='" . $db->addMarkup($args['refModule']) 
+	     . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
+	
+	//TODO: $db->loadRange
+
+	$result = $db->query($sql);
+	while($row = $db->fetchAssoc($result)) {
 		
-		$imgUrl = $serverPath . 'files/thumb/' . $row['recordAlias'];
-		$editURL = $serverPath . 'files/edit/return_uploadmultiple/' . $row['recordAlias'];
-		if (authHas($row['refModule'], 'files', '') == false) {
-			$editURL = $serverPath . 'files/viewset/return_uploadmultiple/' . $recordAlias;
-		}
+		$imgUrl = $serverPath . 'files/thumb/' . $row['alias'];
+		$editURL = $serverPath . 'files/edit/return_uploadmultiple/' . $row['alias'];
+		//if (authHas($row['refModule'], 'files', '') == false) {
+		//	$editURL = $serverPath . 'files/viewset/return_uploadmultiple/' . $recordAlias;
+		//}
 		
 		$html .= "<a href='" . $editURL . "'>" 
 			. "<img src='" . $imgUrl . "' border='0' /></a>\n";
@@ -45,4 +48,3 @@ function files_fileset($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

@@ -5,14 +5,14 @@ Confirm: you wish to delete this record?<br/><br/>
 <table noborder>
   <tr>
     <td valign='top'>
-    <form name='confirmDelete' method='POST' action='/schools/delete/'>
+    <form name='confirmDelete' method='POST' action='%%serverPath%%schools/delete/'>
     <input type='hidden' name='action' value='deleteRecord' />
     <input type='hidden' name='UID' value='%%UID%%' />
     <input type='submit' value='Yes: Delete it' />
     </form>
     </td>
     <td valign='top'>
-    <form name='confirmDelete' method='POST' action='/schools/%%raUID%%/'>
+    <form name='confirmDelete' method='POST' action='%%serverPath%%schools/%%raUID%%/'>
     <input type='submit' value='No: Cancel' />
     </form>
     </td>

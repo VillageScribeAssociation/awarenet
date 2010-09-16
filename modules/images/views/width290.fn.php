@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
-	require_once($installPath . 'modules/images/inc/images__widthx.inc.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/inc/images__widthx.inc.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a single image 290px wide

@@ -1,7 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list x recent posts from the same blog (ie same user) as the post UID supplied
@@ -9,21 +8,35 @@
 //opt: num - max number of posts to show (default is 10) [string]
 
 function moblog_listrecentnav($args) {
-	$num = 10; $html = '';
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+	global $db, $user, $theme;
+	$html = '';				//%	return value [string]
+	$num = 10; 				//%	default number of posts to show [int]	
 
-	$model = new Moblog($args['raUID']);
-	if ($model->data['UID'] == '') { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', '')) { return ''; }
 
-	$sql = "select * from moblog"
-		 . " where published='yes'"
-		 . " order by createdOn DESC limit $num";	
+	//----------------------------------------------------------------------------------------------
+	//	load items from database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array("published='yes'");	
+	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn DESC', $num);
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$model = new Moblog();
-		$model->loadArray(sqlRMArray($row));
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/moblog/views/summarynav.block.php'));
+	//$sql = "select * from moblog"
+	//	 . " where published='yes'"
+	//	 . " order by createdOn DESC limit $num";	
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
+
+	foreach ($range as $row) {
+		$model = new Moblog_Post();
+		$model->loadArray($db->rmArray($row));
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
 
 	return $html;

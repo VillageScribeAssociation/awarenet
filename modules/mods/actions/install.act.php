@@ -7,9 +7,9 @@
 //	named install_modulename_module (eg, install_blog_module), which takes no arguments and returns
 //	a report.
 
-	if ($user->ofGroup == 'admin') { do403(''); }
+	if ($user->role == 'admin') { $page->do403(''); }
 
-	$installMod = $request['ref'];
+	$installMod = $req->ref;
 	
 	$incFile = $installPath . 'modules/' . $installMod . '/inc/install.inc.php';
 	require_once($incFile);

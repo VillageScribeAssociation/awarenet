@@ -41,31 +41,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function logPageView() {
-	global $installPath;
-	global $page;
-	global $user;
-
-	$fileName = $installPath . 'data/log/' . date("y-m-d") . "-pageview.php";
-	if (file_exists($fileName) == false) { makeEmptyLog($fileName);	}
-
-	$entry = "<entry>\n"
-		. "\t<timstamp>" . time() . "</timestamp>\n"
-		. "\t<mysqltime>" . mysql_datetime() . "</mysqltime>\n"
-		. "\t<user>" . $user->data['username'] . "</user>\n"
-		. "\t<remotehost>" . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</remotehost>\n"
-		. "\t<remoteip>" . $_SERVER['REMOTE_ADDR'] . "</remoteip>\n"
-		. "\t<request>" . $_SERVER['REQUEST_URI'] . "</request>\n"
-		. "\t<referrer>" . $_SERVER['HTTP_REFERER'] . "</referrer>\n"
-		. "\t<useragent>" . $_SERVER['HTTP_USER_AGENT'] . "</useragent>\n"
-		. "\t<uid>" . $page->UID . "</uid>\n"
-		. "</entry>\n";
-
-	$result = filePutContents($fileName, $entry, 'a+');
-
-	notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
-	$entry = mysql_datetime() . " - " . $user->data['username'] . ' - ' . $_SERVER['REQUEST_URI'];
-	notifyChannel('admin-syspagelogsimple', 'add', base64_encode($entry));
-
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: logPageView => \$kapenta->logPageView()", 'bug');
+	$result = $kapenta->logPageView();
 	return $result;
 }
 
@@ -75,16 +53,10 @@ function logPageView() {
 //arg: fileName - absolute fileName [string]
 
 function makeEmptyLog($fileName) {
-	$defaultLog = "<?\n" .
-	$defaultLog .= "\tinclude '../../setup.inc.php';\n";
-	$defaultLog .= "\tinclude \$installPath . 'core/core.inc.php';\n";
-	$defaultLog .= "\tlogErr('log', 'eventLog', 'direct access by browser');\n";
-	$defaultLog .= "\tdo404();\n";
-	$defaultLog .= "?>\n\n";
-
-	$fH = fopen($fileName, 'w+');
-	fwrite($fH, $defaultLog);
-	fclose($fH);
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: makeEmptyLog => \$kapenta->makeEmptyLog()", 'bug');
+	$result = $kapenta->makeEmptyLog($fileName);
+	return $result;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -97,30 +69,10 @@ function makeEmptyLog($fileName) {
 //returns: true on success or false on failure [bool]
 
 function logEvent($log, $subsystem, $fn, $msg) {
-	global $installPath;
-
-	//----------------------------------------------------------------------------------------------
-	//	create new log files as necessary
-	//----------------------------------------------------------------------------------------------
-
-	$fileName = $installPath . 'data/log/' . date("y-m-d") . '-' . $log . '.log.php';
-	if (file_exists($fileName) == false) { makeEmptyLog($fileName);	}
-
-	//----------------------------------------------------------------------------------------------
-	//	add a new entry to the log file
-	//----------------------------------------------------------------------------------------------
-
-	$entry = "<event>\n";
-	$entry .= "\t<datetime>" . mysql_datetime() . "</datetime>\n";
-	$entry .= "\t<session>" . $_SESSION['sUID'] . "</session>\n";
-	$entry .= "\t<ip>" . $_SERVER['REMOTE_ADDR'] . "</ip>\n";
-	$entry .= "\t<system>" . $subsystem . "</system>\n";
-	$entry .= "\t<user>" . $_SESSION['sUserUID'] . "</user>\n";
-	$entry .= "\t<function>" . $fn . "</function>\n";
-	$entry .= "\t<msg>$msg</msg>\n";
-	$entry .= "</event>\n";
-
-	return filePutContents($fileName, $entry, 'a+');
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: logEvent(...) => \$kapenta->logEvent(...)", 'bug');
+	$result = $kapenta->logEvent($log, $subsystem, $fn, $msg);
+	return $result;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -133,9 +85,10 @@ function logEvent($log, $subsystem, $fn, $msg) {
 //returns: true on success or false on failure [bool]
 
 function logEv($granularity, $subsystem, $fn, $msg) {
-	global $logLevel;
-	if ($logLevel >= $granularity) { return logEvent('event', $subsystem, $fn, $msg); }
-	return false;
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: logEv(...) => \$kapenta->logEv(...)", 'bug');
+	$result = $kapenta->logEv($granularity, $subsystem, $fn, $msg);
+	return $result;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -146,7 +99,12 @@ function logEv($granularity, $subsystem, $fn, $msg) {
 //arg: msg - message to log [string]
 //returns: true on success or false on failure [bool]
 
-function logErr($subsystem, $fn, $msg) { return logEvent('error', $subsystem, $fn, $msg); }
+function logErr($subsystem, $fn, $msg) { 
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: logErr(...) => \$kapenta->logErr(...)", 'bug');
+	$result = $kapenta->logErr($subsystem, $fn, $msg);
+	return $result;
+}
 
 //--------------------------------------------------------------------------------------------------
 //|	log sync activity
@@ -156,10 +114,10 @@ function logErr($subsystem, $fn, $msg) { return logEvent('error', $subsystem, $f
 //: that the sync module is pretty stable.
 
 function logSync($msg) {
-	$fileName = $installPath . 'data/log/' . date("y-m-d") . '-sync.log.php';
-	if (file_exists($fileName) == false) { makeEmptyLog($fileName);	}
-	$msg = mysql_datetime() . " *******************************************************\n" . $msg;
-	return filePutContents($fileName, $msg, 'a+');
+	global $kapenta, $session;
+	$session->msgAdmin("deprecated: logSync(...) => \$kapenta->logSync(...)", 'bug');
+	$result = $kapenta->logSync($msg);
+	return $result;
 }
 
 ?>

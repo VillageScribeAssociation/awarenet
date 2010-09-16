@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show list of events on a given day
@@ -10,15 +10,18 @@
 //arg: day - day (dd) 01 to 31 [string]
 
 function calendar_listday($args) {
+	global $theme;
+
+	global $db;
 	if (array_key_exists('day', $args) == false) { return false; }
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
-	$year = sqlMarkup($args['year']);
-	$month = sqlMarkup($args['month']);
-	$day = sqlMarkup($args['day']);
+	$year = $db->addMarkup($args['year']);
+	$month = $db->addMarkup($args['month']);
+	$day = $db->addMarkup($args['day']);
 	$html = '';
 	
-	$c = new Calendar();
+	$c = new Calendar_Entry();
 	$html = $c->drawMonth($month, $year, 'large');
 	$ev = $c->loadDay($day, $month, $year);
 	
@@ -29,7 +32,7 @@ function calendar_listday($args) {
 	if (count($ev) > 0) {
 		foreach($ev as $UID => $row) {
 			$c->loadArray($row);
-			$html .= replaceLabels($c->extArray(), loadBlock('modules/calendar/views/show.block.php'));
+			$html .= $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/calendar/views/show.block.php'));
 		}
 	} else {
 		$html .= '<p>(no events are recorded for this date)</p>';
@@ -41,4 +44,3 @@ function calendar_listday($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

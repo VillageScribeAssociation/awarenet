@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	get a users name
@@ -14,8 +14,8 @@ function users_name($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';
 
-	$model = new User($args['raUID']);
-	$html = $model->data['firstname'] . ' ' . $model->data['surname'];
+	$model = new Users_User($args['raUID']);
+	$html = $model->firstname . ' ' . $model->surname;
 	return $html;
 }
 

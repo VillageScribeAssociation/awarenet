@@ -1,33 +1,38 @@
 <?
 
-//--------------------------------------------------------------------------------------------------------------
-//	display a static page
-//--------------------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/static/models/static.mod.php');
 
-	//if (authHas('static', 'view', '') == false) { do403(); }
+//--------------------------------------------------------------------------------------------------
+//*	display a static page
+//--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') { $request['ref'] == 'frontpage'; }
+	//----------------------------------------------------------------------------------------------
+	//	check reference and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $req->ref == 'frontpage'; }
+	$UID = $aliases->findRedirect('Home_Static');
+	$model = new StaticPage($req->ref);
+	//permissions check suspended, anyone can view static pages
+	//if (false == $user->authHas('home', 'Home_Static', 'show', $UID)) { $page->do403(); }
 
-	raFindRedirect('static', 'show', 'static', $request['ref']);
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------	
+	$page->template = 'twocol-rightnav.template.php';		//TODO: make this a setting
+	$page->content = $model->content;
+	$page->nav1 = $model->nav1;
+	$page->nav2 = $model->nav2;
+	$page->menu1 = $model->menu1;
+	$page->menu2 = $model->menu2;
+	$page->title = $model->title;
+	$page->script = $model->script;
 	
-	require_once($installPath . 'modules/static/models/static.mod.php');
-	$model = new StaticPage($request['ref']);
-	
-	$page->data['template'] = 'twocol-rightnav.template.php';
-	$page->data['content'] = $model->data['content'];
-	$page->data['nav1'] = $model->data['nav1'];
-	$page->data['nav2'] = $model->data['nav2'];
-	$page->data['menu1'] = $model->data['menu1'];
-	$page->data['menu2'] = $model->data['menu2'];
-	$page->data['title'] = $model->data['title'];
-	$page->data['script'] = $model->data['script'];
-	
-	if ($user->data['ofGroup'] == 'admin') { 
-		$page->data['content'] .= "<br/><a href='/static/edit/" . $model->data['recordAlias']
+	if ('admin' == $user->role) { 
+		$page->content .= "<br/><a href='/static/edit/" . $model->alias
 					. "'>[edit static page]</a><br/>\n";
 	}
 	
-	$page->blockArgs['staticTitle'] = $model->data['title'];
+	$page->blockArgs['staticTitle'] = $model->title;
 	$page->render();
 	
 ?>

@@ -5,7 +5,7 @@
 
 <h1>%%projectTitle%% (Abstract)</h1>
 
-<form name='editProject' method='POST' action='/projects/save/'>
+<form name='editProject' method='POST' action='%%serverPath%%projects/save/'>
 <input type='hidden' name='action' value='saveChangeTitle' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -19,7 +19,7 @@
 </form>
 <br/>
 
-<form name='editAbstract' method='POST' action='/projects/save/'>
+<form name='editAbstract' method='POST' action='%%serverPath%%projects/save/'>
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -42,6 +42,6 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=projects::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]
 <br/>UID:%%UID%%<br/>
 */ ?>

@@ -1,40 +1,42 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	save a forums entry
+//*	save a forums entry
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('forums', 'edit', '') == false) { do403(); }
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
 
-	if (array_key_exists('action', $_POST)) {
+	//----------------------------------------------------------------------------------------------
+	//	save from edit form
+	//----------------------------------------------------------------------------------------------
 
-		//------------------------------------------------------------------------------------------
-		//	save from edit form
-		//------------------------------------------------------------------------------------------
+	$model = new Forums_Board($_POST['UID']);
+	if (false == $model->loaded) { $page->do404(); }
+	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID))	{ $page->do403(); }
 
-		if ($_POST['action'] == 'saveRecord') {
-			$model = new Forum($_POST['UID']);
-			$model->data['title'] = $_POST['title'];
-			$model->data['description'] = $_POST['description'];
-			if (true == dbRecordExists('schools', $_POST['school'])) {
-				$model->data['school'] = $_POST['school'];
-			}
-			$model->save();
-			$_SESSION['sMessage'] .= "Saved changes to forums.<br/>\n";
-			do302('forums/' . $model->data['recordAlias']);			
-		}
+	$model->title = $_POST['title'];
+	$model->description = $_POST['description'];
+	if (true == $db->objectExists('Schools_School', $_POST['school'])) 
+		{ $model->school = $_POST['school']; }
 
-		//------------------------------------------------------------------------------------------
-		//	add a user to list of moderators/members/bans
-		//------------------------------------------------------------------------------------------
+	$report = $model->save();
 
-		if ($_POST['action'] == 'addForumUser') {
-			// TODO			
-			$_SESSION['sMessage'] .= "Saved changes to forums.<br/>\n";
-			do302('forums/' . $model->data['recordAlias']);			
-		}
+	if ('' == $report) { $session->msg('Saved changes to forum: ' . $model->name, 'ok'); }
+	else { $session->msg('Could not save changes:<br/>' . $report, 'bad'); }
+	$page->do302('forums/' . $model->alias);			
 
+	//----------------------------------------------------------------------------------------------
+	//	add a user to list of moderators/members/bans
+	//----------------------------------------------------------------------------------------------
+	/*	TODO: make this a separate action
+	if ($_POST['action'] == 'addForumUser') {
+		// TODO			
+		$_SESSION['sMessage'] .= "Saved changes to forums.<br/>\n";
+		$page->do302('forums/' . $model->alias);			
 	}
+	*/
 
 ?>

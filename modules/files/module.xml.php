@@ -8,18 +8,26 @@
     <installed>no</installed>
     <enabled>no</enabled>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=public</perm>
-        <perm>show|%%user.ofGroup%%=user</perm>
-        <perm>show|%%user.ofGroup%%=admin</perm>
-        <perm>list|%%user.ofGroup%%=admin</perm>
-        <perm>upload|%%user.ofGroup%%=admin</perm>
-        <perm>summary|%%user.ofGroup%%=admin</perm>
-        <perm>edit|%%user.ofGroup%%=admin</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <models>
+      <model>
+        <name>Files_File</name>
+		<description></description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+          <export>files-add</export>
+          <export>files-show</export>
+          <export>files-deleteall</export>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+        </relationships>
+      </model>
+	</models>
+    <dependencies>
+        <module>aliases</module>
+    </dependencies>
 </module>
 */ ?>

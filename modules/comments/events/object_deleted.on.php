@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/comments/models/comment.mod.php');
+require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a record is deleted
@@ -9,6 +9,8 @@ require_once($installPath . 'modules/comments/models/comment.mod.php');
 //arg: UID - UID of deleted record
 
 function comments__cb_object_deleted($args) {
+	global $db;
+
 	global $user;
 	if (array_key_exists('module', $args) == false) { return false; }
 	if (array_key_exists('UID', $args) == false) { return false; }
@@ -17,13 +19,13 @@ function comments__cb_object_deleted($args) {
 	//	delete any comments owned by this record
 	//----------------------------------------------------------------------------------------------
 
-	$conditions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
-							"refModule='" . sqlMarkup($args['module']) . "'"	);
+	$conditions = array(	"refUID='" . $db->addMarkup($args['UID']) . "'", 
+							"refModule='" . $db->addMarkup($args['module']) . "'"	);
 
-	$rows = dbLoadRange('comments', '*', $conditions, '', '', '');
+	$rows = $db->loadRange('Comments_Comment', '*', $conditions, '', '', '');
 
 	foreach($rows as $row) {
-		$model = new Comment();
+		$model = new Comments_Comment();
 		$model->loadArray($row);
 		$model->delete();
 	}

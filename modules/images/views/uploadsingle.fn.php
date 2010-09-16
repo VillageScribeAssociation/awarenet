@@ -1,33 +1,57 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display upload/view for a single image (eg, user profile picture)
 //--------------------------------------------------------------------------------------------------
 //arg: refModule - name of a module [string]
-//arg: refUID - record which owns this image [string]
+//arg: refModel - object type [string]
+//arg: refUID - UID of object which owns image [string]
 //opt: category - category of image, eg userprofile [string]
+//opt: width - width of image (?) [string]
 
-function images_uploadsingle($args) {	
+function images_uploadsingle($args) {
+	global $kapenta, $db, $theme, $user;	
+	$html = '';					//%	return value [string]
+	$refModule = '';			//%	a kapenta module name [string]
+	$refModel = '';				//%	a model type name [string]
+	$refUID = '';				//%	UID of object which owns this [string]
+	$category = '';				//%	no default category [string]
+	$width = '300';				//%	default width to display current image at [int]
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	$category = ''; $width = '300';
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('category', $args) == false) { $category = $args['category']; }
-	if (array_key_exists('width', $args) == false) { $width = $args['width']; }
-	if (authHas($args['refModule'], 'imageupload', $args) == 0) { return false; }
+
+	if (false == array_key_exists('refModule', $args)) { return ''; }
+	if (false == array_key_exists('refModel', $args)) { return ''; }
+	if (false == array_key_exists('refUID', $args)) { return ''; }
+
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
+
+	if (false == $kapenta->moduleExists($refModule)) { return ''; }
+	if (false == $db->tableExists($refModel)) { return ''; }
+	if (false == $db->objectExists($refModel, $refUID)) { return ''; }
+
+	if (false == $user->authHas($refModule, $refModel, 'imageupload', $refUID)) { return ''; }
+	//TODO: check permission for uploading images
+
+	if (true == array_key_exists('category', $args)) { $category = $args['category']; }
+	if (true == array_key_exists('width', $args)) { $width = $args['width']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	add block
 	//----------------------------------------------------------------------------------------------
 	$labels = array();
-	$labels['refModule'] = $args['refModule'];
-	$labels['refUID'] = $args['refUID'];
+	$labels['refModule'] = $refModule;
+	$labels['refModel'] = $refModel;
+	$labels['refUID'] = $refUID;
 
-	$html = replaceLabels($labels, loadBlock('modules/images/views/uploadsingle.block.php'));
+	$block = $theme->loadBlock('modules/images/views/uploadsingle.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	
 	return $html;
 }
@@ -35,4 +59,3 @@ function images_uploadsingle($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

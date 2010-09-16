@@ -4,7 +4,7 @@
 //	test of fork function
 //-------------------------------------------------------------------------------------------------
 
-if (array_key_exists('data', $request['args']) == true) { 
+if (array_key_exists('data', $req->args) == true) { 
 
 	for ($i = 0; $i < 10; $i++) {
 

@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+//	require_once($kapenta->installPath . 'modules/wiki/models/wikicode.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list wiki articles
@@ -11,6 +11,10 @@
 //opt: num - number of entries to show per page (default is 30) [string]
 
 function wiki_listall($args) {
+	global $db;
+
+	global $page;
+
 	$pageno = 1; $num = 30; $total = 0; $numPages = 0; $start = 0;
 	if (array_key_exists('pageno', $args) == true) { $pageno = $args['pageno']; }
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
@@ -19,9 +23,9 @@ function wiki_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count all wiki articles
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numarticles from wiki";
-	$result = dbQuery($sql);
-	$row = dbFetchAssoc($result);
+	$sql = "select count(UID) as numarticles from Wiki_Article";
+	$result = $db->query($sql);
+	$row = $db->fetchAssoc($result);
 	$total = $row['numarticles'];
 	$numPages = ceil($total / $num);
 
@@ -29,8 +33,8 @@ function wiki_listall($args) {
 	//	load records
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$sql = "select * from wiki order by title ASC limit $start, $num";
-	$result = dbQuery($sql);
+	$sql = "select * from Wiki_Article order by title ASC limit $start, $num";
+	$result = $db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make table
@@ -45,9 +49,9 @@ function wiki_listall($args) {
 			. "\t\t<td class='title'>Hitcount</td>\n" 
 			. "\t</tr>";
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$ra = $row['recordAlias'];
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
+		$ra = $row['alias'];
 
 		$alink = "<a href='%%serverPath%%wiki/". $ra ."'>". $row['title'] ."</a>";
 		$talk = "<a href='%%serverPath%%wiki/talk/". $ra ."'>[discuss]</a>";
@@ -59,7 +63,7 @@ function wiki_listall($args) {
 				. "\t\t<td><small>" . $hist . "</small></td>\n"
 				. "\t\t<td><small>" . strlen($row['content']) . " bytes</small></td>\n"
 				. "\t\t<td><small>" . strlen($row['talk']) . " bytes</small></td>\n"
-				. "\t\t<td>" . $row['hitcount'] . "</td>"
+				. "\t\t<td>" . $row['viewcount'] . "</td>"
 				. "\t</tr>";
 	}
 	$table .= "</table>\n";
@@ -69,11 +73,9 @@ function wiki_listall($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$plink = "%%serverPath%%wiki/list/";
-	$html = "[[:theme::pagination::page=". $page ."::total=". $numPages ."::link=". $plink .":]]\n";
+	$html = "[[:theme::pagination::page=". $pageNo ."::total=". $numPages ."::link=". $plink .":]]\n";
 	$html = $html . $table . $html;
 
 	return $html;
 }
-
-
 ?>

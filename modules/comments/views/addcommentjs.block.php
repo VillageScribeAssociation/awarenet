@@ -1,22 +1,24 @@
 <? /*
+
 <table noborder>
   <tr>
-    <td>
+    <td valign='top'>
 
-    <form name='addComment' id='formCommentsAdd' method='POST' action='/comments/add/'>
-    <input type='hidden' id='iCommentRefModule' name='refModule' value='%%refModule%%' />
-    <input type='hidden' id='iCommentRefUID' name='refUID' value='%%refUID%%' />
-    <input type='hidden' id='iCommentReturn' name='return' value='none' />
+  	  <form name='addComment' id='formCommentsAdd' method='POST' action='%%serverPath%%comments/add/'>
+  	  <input type='hidden' id='iCommentRefModule' name='refModule' value='%%refModule%%' />
+  	  <input type='hidden' id='iCommentRefModel' name='refModel' value='%%refModel%%' />
+  	  <input type='hidden' id='iCommentRefUID' name='refUID' value='%%refUID%%' />
+  	  <input type='hidden' id='iCommentReturn' name='return' value='none' />
 
-    <textarea id='txtComment' name='comment' rows='7' cols='50'></textarea><br/>
+  	  <textarea id='txtComment' name='comment' rows='7' cols='50'></textarea><br/>
 
-    <table noborder>
-      <tr>
-        <td><input type='button' onClick='commentsPostNew();' value='Post Comment' /></td>
-        <td><div id='divCommentSendStatus'></div></td>
-      </tr>
-	</table>
-</form>
+  	  <table noborder>
+  	    <tr>
+  	      <td><input type='button' onClick='commentsPostNew();' value='Post Comment' /></td>
+  	      <td><div id='divCommentSendStatus'></div></td>
+  	    </tr>
+	  </table>
+      </form>
 
     </td>
     <td valign='top'>

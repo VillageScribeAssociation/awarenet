@@ -5,7 +5,7 @@ Confirm: you wish to delete this blog post?<br/><br/>
 <table noborder>
   <tr>
     <td valign='top'>
-    <form name='confirmDelete' method='POST' action='/moblog/delete/'>
+    <form name='confirmDelete' method='POST' action='%%serverPath%%moblog/delete/'>
     <input type='hidden' name='action' value='deleteRecord' />
     <input type='hidden' name='UID' value='%%UID%%' />
     <input type='submit' value='Yes: Delete it' />

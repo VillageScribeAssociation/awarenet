@@ -1,7 +1,8 @@
 <? /*
 <!-- <h2>%%invitation%%</h2> -->
-<form name='addComment' method='POST' action='/comments/add/'>
+<form name='addComment' method='POST' action='%%serverPath%%comments/add/'>
 <input type='hidden' name='refModule' value='%%refModule%%' />
+<input type='hidden' name='refModel' value='%%refModel%%' />
 <input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 

@@ -1,99 +1,73 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	install scripts for gallery module
-//--------------------------------------------------------------------------------------------------
-
-require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	install the gallery module
+//*	install script for Gallery module
 //--------------------------------------------------------------------------------------------------
-//returns: html report [string]
+//+	reports are human-readable HTML, with script-readable HTML comments
+
+//--------------------------------------------------------------------------------------------------
+//|	install the Gallery module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
 
 function gallery_install_module() {
-	global $user;
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Gallery_Gallery table
+	//----------------------------------------------------------------------------------------------
+	$model = new Gallery_Gallery();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
-	$report .= "<h3>Installing Gallery Module</h3>\n";
+	//----------------------------------------------------------------------------------------------
+	//	copy all records from previous table
+	//----------------------------------------------------------------------------------------------
+	$rename = array('recordAlias' => 'alias');
+	$count = $dba->copyAll('gallery', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'gallery' table.</b><br/>";
 
-	//------------------------------------------------------------------------------------------
-	//	create gallery table if it does not exist, upgrade it if it does
-	//------------------------------------------------------------------------------------------
-	$model = new Gallery();
-	$dbSchema = $model->initDbSchema();
-	$report .= dbInstallTable($dbSchema);	
-
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	done
-	//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	return $report;
 }
 
 //--------------------------------------------------------------------------------------------------
-//	discover if this module is installed
+//|	discover if this module is installed
 //--------------------------------------------------------------------------------------------------
-//returns: HTML installation report [string]
-// if installed correctly report will contain HTML comment <!-- installed correctly -->
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
 
 function gallery_install_status_report() {
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }	// only admins can do this
+	if ('admin' != $user->role) { return false; }
 
-	//---------------------------------------------------------------------------------------------
-	//	ensure that the gallery table exists and is correct
-	//---------------------------------------------------------------------------------------------
+	$dba = new KDBAdminDriver();
+	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
-	$model = new Gallery();
-	$dbSchema = $model->initDbSchema();
 
-	if (dbTableExists($dbSchema['table']) == true) {
-		//-----------------------------------------------------------------------------------------
-		//	table present
-		//-----------------------------------------------------------------------------------------
-		$extantSchema = dbGetSchema($dbSchema['table']);
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Gallery objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Gallery_Gallery();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
 
-		if (dbCompareSchema($dbSchema, $extantSchema) == false) {
-			//-------------------------------------------------------------------------------------
-			// table schemas DO NOT match (fail)
-			//-------------------------------------------------------------------------------------
-			$installed = false;		
-			$report .= "<p>A '" . $dbSchema['table'] . "' table exists, but does not match "
-					 . "object's schema.</p>\n"
-					 . "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n"
-					 . "<b>Extant Table:</b><br/>\n" . dbSchemaToHtml($extantSchema) . "<br/>\n";
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
-		} else {
-			//-------------------------------------------------------------------------------------
-			// table schemas match
-			//-------------------------------------------------------------------------------------
-			$report .= "<p>'gallery' table exists, matching object schema.</p>";
-			$report .= "<b>Database Table:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-
-		}
-
-	} else {
-		//-----------------------------------------------------------------------------------------
-		//	table missing (fail)
-		//-----------------------------------------------------------------------------------------
-		$report .= "<p>'gallery' table does not exist in the database.</p>";
-		$report .= "<b>Object Schema:</b><br/>\n" . dbSchemaToHtml($dbSchema) . "<br/>\n";
-		$installed = false;
-	}
-
-	if (true == $installed) { $report .= "<!-- installed correctly -->"; }
-
-	return $report;
-}
-
-//-------------------------------------------------------------------------------------------------
-//	deprecated	// TODO: remove
-//-------------------------------------------------------------------------------------------------
-
-function install_gallery_module() {
-	$model = new Gallery();
-	$report = $model->install();
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

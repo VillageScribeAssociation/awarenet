@@ -6,25 +6,30 @@
     <description>Schools module, top of class heirarchy.</description>
     <core>yes</core>
     <installed>no</installed>
-    <enabled>no</enabled>
+    <enabled>yes</enabled>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>view|%%user.ofGroup%%=student</perm>
-        <perm>view|%%user.ofGroup%%=teacher</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>list|%%user.ofGroup%%=teacher</perm>
-        <perm>summarylist|%%user.ofGroup%%=student</perm>
-        <perm>summarylist|%%user.ofGroup%%=teacher</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=admin</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+	<models>
+      <model>
+        <name>Schools_Schools</name>
+		<description>Represents schools.</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>member</relationship>
+        </relationships>
+      </model>
+    </models>
+    <defaultpermissions>
+		public:p|schools|Schools_School|show
+		student:p|schools|Schools_School|show
+		student:c|schools|Schools_School|edit|(if)|creator
+		teacher:p|schools|Schools_School|show
+		teacher:c|schools|Schools_School|edit|(if)|creator
+    </defaultpermissions>
 </module>
 */ ?>

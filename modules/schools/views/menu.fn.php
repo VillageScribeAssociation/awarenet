@@ -1,22 +1,24 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	menu for schools, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function schools_menu($args) {
+	global $theme;
+
+	global $user;
 	$labels = array();
-	if (authHas('schools', 'edit', '')) {
+	if ($user->authHas('schools', 'Schools_School', 'edit', 'TODO:UIDHERE')) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Add School::link=/schools/new/:]]';
 	} else { $labels['newEntry'] = ''; }
 	
-	$html = replaceLabels($labels, loadBlock('modules/schools/views/menu.block.php'));
+	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/schools/views/menu.block.php'));
 	return $html;	
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

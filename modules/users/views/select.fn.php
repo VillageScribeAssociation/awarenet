@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //|	select box for choosing a user // TODO: security consideration of access to this
@@ -10,19 +10,25 @@
 //arg: varname - field name, default is 'user' [string]
 
 function users_select($args) {
-	global $user;
+	global $db, $user;
 	$varname = 'user';
-	$default = $user->data['UID'];
-	if (array_key_exists('varname', $args) == true) { $varname = $args['varname']; }
-	if (array_key_exists('default', $args) == true) { $default = $args['default']; }
+	$default = $user->UID;
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return ''; }
+	if (true == array_key_exists('varname', $args)) { $varname = $args['varname']; }
+	if (true == array_key_exists('default', $args)) { $default = $args['default']; }
 
 	$html = "<select name='" . $varname . "'>\n";
-	$sql = "select UID, firstname, surname, username, recordAlias "
-		 . "from users order by firstname, surname";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$sql = "select UID, firstname, surname, username, alias "	// TODO: $db->loadRange _
+		 . "from Users_User order by firstname, surname";
+
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		$name = $row['firstname'] . ' ' . $row['surname'];
 		$checked = '';
 		if ($row['UID'] == $default) { $checked = "checked='checked'"; }

@@ -1,8 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	ask to join a project
@@ -11,32 +10,44 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_askjoinnav($args) {
-	global $user;
-	if (authHas('projects', 'view', '') == false) { return false; }
+	global $db, $theme, $user;
+	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------	
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$html = '';
+
+	$model = new Projects_Project($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	determine if user is a member of project already
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from projectmembers "
-		 . "where projectUID='" . sqlMarkup($args['raUID']) . "' "
-		 . "and userUID='" . $user->data['UID'] . "'";
+	$member = false;					//%	is the user already a memebr of this project? [bool]
+	$asked = false;						//%	has the user already asked to join this project? [bool]
 
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		$row = dbFetchAssoc($result);
-		if ($row['role'] == 'asked') {
+	if (true == array_key_exists($user->UID, $model->getMembers())) { $member = true; }
+	if (true == array_key_exists($user->UID, $model->getProspectiveMembers())) { $asked = true; }
+	
+	if (true == $member) { return ''; }	//	can't ask to join if you are already a member
+
+	if ((true == $asked) || (true == $member)) {
+		if (true == 'asked') {
 			$html = "[[:theme::navtitlebox::label=Ask to Join Project:]]\n"
-				  . "You have already asked to join this project.<br/><br/>";
+				  . "You have asked to join this project.<br/><br/>";
 		}
+
 	} else {
-		$ary = array(	'userUID' => $user->data['UID'], 
-						'userName' => $user->getName(),
-						'projectUID' => $args['raUID']
-					);
-		$html = replaceLabels($ary, loadBlock('modules/projects/views/addme.block.php'));
+		$labels = array(	'userUID' => $user->UID, 
+							'userName' => $user->getName(),
+							'projectUID' => $model->UID
+						);
+
+		$block = $theme->loadBlock('modules/projects/views/addme.block.php');
+		$html = $theme->replaceLabels($labels, $block);
 	}
 
 	return $html;
@@ -45,4 +56,3 @@ function projects_askjoinnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

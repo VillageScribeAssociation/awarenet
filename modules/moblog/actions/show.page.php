@@ -26,12 +26,10 @@
 [[:theme::navtitlebox::label=Author:]]
 [[:moblog::showauthornav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
-
 [[:theme::navtitlebox::label=In This Blog:]]
 [[:moblog::listrecentsamenav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Tags:]]
-[`|lt]br/[`|gt]</nav1>
+</nav1>
 	<nav2></nav2>
 	<banner></banner>
 	<head></head>

@@ -7,15 +7,15 @@
 	//---------------------------------------------------------------------------------------------
 	//	authorization
 	//---------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { doXmlError('not authorized'); }
+	if ('admin' != $user->role) { $page->doXmlError('not authorized'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	get path (if present)
 	//---------------------------------------------------------------------------------------------
 	
 	$browsePath = $installPath;
-	if (array_key_exists('path', $request['args']) == true) { 
-		$browsePath = $installPath . base64_decode($request['args']['path']);
+	if (array_key_exists('path', $req->args) == true) { 
+		$browsePath = $installPath . base64_decode($req->args['path']);
 		$browsePath = str_replace('//', '/', $browsePath);
 		$browsePath = str_replace('..', '.', $browsePath);
 	}
@@ -90,7 +90,7 @@
 	//	render page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/admin/actions/filebrowser.page.php');
+	$page->load('modules/admin/actions/filebrowser.page.php');
 	$page->blockArgs['filePath'] = '~/' . str_replace($installPath, '', $browsePath);
 	$page->blockArgs['fileList'] = $fileList;
 	$page->blockArgs['parentLink'] = $parentLink;

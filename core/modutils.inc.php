@@ -18,15 +18,9 @@
 //: TODO: find any remaing instances of this and remove them
 
 function imgGetDefault($refModule, $refUID) {	
-	$sql = "select * from images "
-		 . "where refModule='" . sqlMarkup($refModule) . "'"
-		 . " and refUID='" . sqlMarkup($refUID) . "' "
-		 . "order by weight ASC limit 1";
+	global $session;
 
-	$result = dbQuery($sql);
-	if (dbNumRows($result) == false) { return false; }
-	$row = dbFetchAssoc($result);
-	return sqlRMArray($row);
+	$session->msg("Function removed: imgGetDefault");
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -39,6 +33,9 @@ function imgGetDefault($refModule, $refUID) {
 //: TODO: find any remaing instances of this and remove them
 
 function imgGetDefaultUrl($refModule, $refUID, $size) {
+	global $session;
+
+	$session->msg("DEPRECATED: imgGetDefaultUrl => block images, defaulturl");
 	$row = imgGetDefault($refModule, $refUID);
 	if ($row == false) { return '%%serverPath%%/themes/%%%defaultTheme%%/unavailable/' . $size; }
 	return '%%serverPath%%/images/' . $size . '/' . $row['recordAlias'];
@@ -53,20 +50,9 @@ function imgGetDefaultUrl($refModule, $refUID, $size) {
 //: TODO: find any remaing instances of this and remove them
 
 function imgGetDefaultUID($refModule, $refUID) {
-	$row = imgGetDefault($refModule, $refUID);
-	if ($row == false) { return false; }
-	return $row['UID'];
-}
+	global $session;
+	$session->msg("DEPRECATED: imgGetDefaultUrl => block images, defaulturl");
 
-//--------------------------------------------------------------------------------------------------
-//|	delete all images something owns, not implemented, replaced by events TODO: delete this
-//--------------------------------------------------------------------------------------------------
-//arg: refModule - module name [string]
-//arg: refUID - UID of object which may own images [string]
-//: permissions must be checked
-
-function imgDeleteAll($refModule, $refUID) {
-	// TODO? 
 }
 
 ?>

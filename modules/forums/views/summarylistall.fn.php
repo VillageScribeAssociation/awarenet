@@ -1,31 +1,33 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all forums, grouped by school (noargs)
 //--------------------------------------------------------------------------------------------------
 
 function forums_summarylistall($args) {
-	$html = '';
+	global $db, $user, $aliases;
+	$html = '';		//% return value [string]
 
-	$sql = "select count(UID) as numForums, school from forums group by school";
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) { 
-			$row = sqlRMArray($row);
-			$schoolName = '';
-			if ($row['school'] == '') {
-				$schoolName = 'General';
-			} else {
-				$schoolName = raGetDefault('schools', $row['school']);
-			}
-			$html .= "[[:theme::navtitlebox::width=570::label=$schoolName:]]\n"
-				   . "[[:forums::summarylist::school=" . $row['school'] . ":]]\n";
-		}	
-	} else { $html = "(no forums as yet)<br/>\n"; }
+	//TODO: check permissions
+	$sql = "select count(UID) as numForums, school from Forums_Board group by school";
+	$result = $db->query($sql);
+
+	if ($db->numRows($result) == 0) { return "(no forums as yet)<br/>\n"; }
+
+	while ($row = $db->fetchAssoc($result)) { 
+		$row = $db->rmArray($row);
+		$schoolName = '';
+		if ('' == $row['school']) { $schoolName = 'General'; }
+		else { $schoolName = $aliases->getDefault('Schools_School', $row['school']);  }
+
+		$html .= "[[:theme::navtitlebox::width=570::label=$schoolName:]]\n"
+			   . "[[:forums::summarylist::school=" . $row['school'] . ":]]\n";
+
+	}	
 
 	return $html;
 }

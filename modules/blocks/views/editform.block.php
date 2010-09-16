@@ -1,5 +1,7 @@
+<? /*
+
 <h2>edit block</h2>
-<form name='editBlock' method='POST' action='/blocks/save/'>
+<form name='editBlock' method='POST' action='%%serverPath%%blocks/save/'>
 <input type='hidden' name='action' value='saveBlock' />
 <input type='hidden' name='module' value='%%refModuleName%%' />
 <input type='hidden' name='block' value='%%refBlockName%%' />
@@ -8,7 +10,8 @@
 <script>
 %%blockContentJs64%%
 base64_loadTextArea('taBlockContentJs', blockContentJs64);
-</script>
+</script>
+
 <table noborder>
   <tr>
     <td valign='top'>
@@ -21,3 +24,5 @@ base64_loadTextArea('taBlockContentJs', blockContentJs64);
     </td>
   </tr>
 </table>
+
+*/ ?>

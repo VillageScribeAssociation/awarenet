@@ -1,8 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list requests made by others to join a project
@@ -11,43 +10,34 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_requestsjoinnav($args) {
-	global $user;
-	if (authHas('projects', 'view', '') == false) { return false; }
+	global $db, $user;
+	$html = '';					//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$html = '';
+
+	$model = new Projects_Project($args['raUID']);	
+	if (false == $model->loaded) { return ''; }
+
+	if ((false == $model->isAdmin($user->UID)) && ('admin' != $user->role)) { return ''; }
+	//if (false == $user->authHas('projects', 'Projects_Project', 'administer', $model->UID))
+	//	{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	discover if user is an admin of this project, if not, do nothing
+	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from projectmembers "
-		 . "where projectUID='" . sqlMarkup($args['raUID']) . "' "
-		 . "and userUID='" . $user->data['UID'] . "' and role='admin'";
 
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		//------------------------------------------------------------------------------------------
-		//	user is a project admin
-		//------------------------------------------------------------------------------------------
-		
-		$sql = "select * from projectmembers "
-			 . "where projectUID='" . sqlMarkup($args['raUID']) . "' and role='asked'";
+	$pm = $model->getProspectiveMembers();
+	if (0 == count($pm)) { return ''; }			// nothing to show
 
-		$result = dbQuery($sql);
-		if (dbNumRows($result) > 0) {		
-			//--------------------------------------------------------------------------------------
-			//	people have asked to join this project
-			//--------------------------------------------------------------------------------------
-			$html .= "[[:theme::navtitlebox::label=Have Asked To Join:]]\n";
-			while ($row = dbFetchAssoc($result)) {
-
-				$addUrl = "%%serverPath%%projects/acceptmember/" . $row['UID'];
-
-				$html .= "[[:users::summarynav::userUID=" . $row['userUID'] . ":]]\n"
-					   . "<a href='$addUrl'>[add as project member >> ]</a><hr/>\n";
-
-			}
-		}
+	$html .= "[[:theme::navtitlebox::label=Have Asked To Join:]]\n";
+	foreach($pm as $userUID => $role) {
+		$addUrl = "%%serverPath%%projects/acceptmember/" . $row['UID'];
+		$html .= "[[:users::summarynav::userUID=" . $row['userUID'] . ":]]\n"
+			   . "<a href='$addUrl'>[add as project member >> ]</a><hr/>\n";
 	}
 	
 	return $html;
@@ -56,4 +46,3 @@ function projects_requestsjoinnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

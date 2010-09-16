@@ -13,41 +13,46 @@
 //--------------------------------------------------------------------------------------------------
 //	include the kapenta core functions (database access, templating system, etc)
 //--------------------------------------------------------------------------------------------------
-
-	$hostInterface = '';
-
-	include 'setup.inc.php'; // system settings
-	include $installPath . 'modules/users/models/user.mod.php';
-	include $installPath . 'modules/pages/models/page.mod.php';
+	
+	include 'setup.inc.php';
 	include $installPath . 'core/core.inc.php';
-
+	
 //--------------------------------------------------------------------------------------------------
-//	important variables
+//	important global objects
 //--------------------------------------------------------------------------------------------------
 
-	$page = new Page();
-	$request = getRequestParams();	// details of request made by browser
-	$ref = $request['ref'];			// record or other item being referred to
+	$kapenta = new KSystem();						//	object for interacting with core
+	$session = new KSession();						//	current user session
+	$db = new KDBDriver();							//	database wrapper
+	$req = new KRequest($_SERVER['REQUEST_URI']);	//	interpret HTTP request
+	$theme = new KTheme($kapenta->defaultTheme);	//	the current theme
+	$page = new KPage();							//	document to be returned
+	$aliases = new KAliases();						//	handles object aliases
+	$notifications = new KNotifications();			//	User notification of events
+	$utils = new KUtils();							//	miscellaneous
+	$sync = new KSync();							//	P2P subsystem
+
+	$request = $req->toArray();						//	(DEPRECATED)
+	$ref = $req->ref;								//	(DEPRECATED)
 
 //--------------------------------------------------------------------------------------------------
 //	load the current user (public if not logged in)
 //--------------------------------------------------------------------------------------------------
 
-	$user = new User($_SESSION['sUserUID']);
-	$userlogin = new UserLogin();
-	if ($user->data['ofGroup'] != 'public') {
-		$exists = $userlogin->load($_SESSION['sUserUID']);
-		if (false == $exists) {
-			$userlogin->data['userUID'] = $_SESSION['sUserUID'];
-			$userlogin->save();
-		} else {
-			$userlogin->updateLastSeen();
-		}
-	}
+	$user = new Users_User($session->user);
+	$role = new Users_Role($user->role, true);
 
+	// toggle debug mode
+	if (true == array_key_exists('debug', $req->args)) {
+		if ('on' == $req->args['debug']) { $session->debug = true; }
+		else { $session->debug = false; }
+	}
+	$page->logDebug = $session->debug;
+	
 //--------------------------------------------------------------------------------------------------
 //	load the action requested by the user
 //--------------------------------------------------------------------------------------------------
-	include $installPath.'modules/'.$request['module'].'/actions/'.$request['action'].'.act.php';
+
+	include $installPath . 'modules/'. $req->module . '/actions/' . $req->action . '.act.php';
 
 ?>

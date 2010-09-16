@@ -29,7 +29,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/chat/actions/testbot.page.php');
+	$page->load('modules/chat/actions/testbot.page.php');
 	$page->blockArgs['html'] = $html;
 	$page->render();
 

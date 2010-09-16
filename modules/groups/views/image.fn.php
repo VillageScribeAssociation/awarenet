@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find the group's logo/picture (300px) or a blank image
@@ -12,9 +12,10 @@
 //opt: link - link to larger image (yes|no) [string]
 
 function groups_image($args) {
-	global $serverPath;
+	global $db, $user;
 	$size = 'width300';
 	$link = 'yes';
+
 	if (array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('link', $args) == 'no') { $link = 'no'; }
@@ -28,19 +29,21 @@ function groups_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new Group(sqlMarkup($args['raUID']));	
-	$sql = "select * from images where refModule='groups' and refUID='" . $model->data['UID'] 
+	$model = new Groups_Group($db->addMarkup($args['raUID']));	
+	if (false == $model->loaded) { return ''; }
+
+	$sql = "select * from Images_Image where refModule='groups' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+			return "<a href='/images/show/" . $row['alias'] . "'>" 
+				. "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $p->name . "'>";
 		}
 	}
 	
@@ -51,4 +54,3 @@ function groups_image($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

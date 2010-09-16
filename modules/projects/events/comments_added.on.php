@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/projects/models/project.mod.php');
+require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a comment is added
@@ -11,22 +11,23 @@ require_once($installPath . 'modules/projects/models/project.mod.php');
 //arg: comment - text/html of comment
 
 function projects__cb_comments_added($args) {
-	global $user;
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('commentUID', $args) == false) { return false; }
-	if (array_key_exists('comment', $args) == false) { return false; }
+	global $db, $user;
+	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refUID', $args)) { return false; }
+	if (false == array_key_exists('commentUID', $args)) { return false; }
+	if (false == array_key_exists('comment', $args)) { return false; }
 
 	if ($args['refModule'] != 'projects') { return false; }
-	if (dbRecordExists('users', $args['refUID']) == false) { return false; }
 	
-	$model = new Moblog($args['refUID']);
-	$u = new User($model->data['createdBy']);
-
+	$model = new Projects_Project($args['refUID']);
+	if (false == $model->loaded) { return false; }
+	$u = new Users_User($model->createdBy);
+	if (false == $u->loaded) { return false; }
+	
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members
 	//----------------------------------------------------------------------------------------------
-
+	/*	TODO: re-add notifications
 	$ext = $model->extArray();
 	$commentUrl = $ext['viewUrl'] . "#comment" . $args['commentUID'];
 
@@ -35,7 +36,7 @@ function projects__cb_comments_added($args) {
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 	$imgUID = imgGetDefaultUID('moblog', $args['refUID']);
 
-	if ($user->data['UID'] == $u->data['UID']) 
+	if ($user->UID == $u->UID) 
 		{ $title = $user->getNameLink() . " commented on their own blog post " . $link; }
 
 	notifyFriends($args['refUID'], $args['commentUID'], 
@@ -46,6 +47,7 @@ function projects__cb_comments_added($args) {
 	notifyUser($args['refUID'], $args['commentUID'], 
 				  $user->getName(), $user->getUrl(),
 				  $title, $args['comment'], $url, $imgUID );
+	*/
 
 	return true;
 }

@@ -1,32 +1,37 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	display the current user's notifications
+//*	display the current user's notifications
 //--------------------------------------------------------------------------------------------------
+//TODO: allow users to see other people's activity feeds
+
+	$pageNo = 1;
 
 	//----------------------------------------------------------------------------------------------
-	//	authorization
+	//	check arguments and authorization
 	//----------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] == 'public') { do403(); }	// user must be logged in
+	if ('public' == $user->role) { $page->do403(); }	// user must be logged in
+	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
 
-	$userUID = $user->data['UID'];
 
-	if ($request['ref'] != '') {
-		if ($user->data['ofGroup'] == 'admin') {
-			// only admins can see other peoples notification feed
-			raFindRedirect('notifications', 'show', 'users', $recordAlias);
-			$userUID = raGetOwner('users', $request['ref']);
+	$model = $user;
 
-		} else { do403(); }
+	if (('' != $req->ref) && ('admin' == $user->role)) {
+		// only admins can see other peoples notification feed
+		$model = new Users_User($req->ref);
+		if (false == $model->loaded) { $page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/notifications/actions/show.page.php');
-	$page->blockArgs['userUID'] = $userUID;
-	$page->blockArgs['userRa'] = $user->data['recordAlias'];
-	$page->blockArgs['userName'] = $user->getName();
+	$page->load('modules/notifications/actions/show.page.php');
+	$page->blockArgs['userUID'] = $model->UID;
+	$page->blockArgs['userRa'] = $model->alias;
+	$page->blockArgs['userName'] = $model->getName();
+	$page->blockArgs['pageNo'] = $pageNo;
 	$page->render()
 
 ?>

@@ -12,5 +12,5 @@
 
 %%editProfileLink%%
 
-<small>Joined: %%createdOn%% Group: %%ofGroup%%</small><br/>
+<small>Joined: %%createdOn%% Role: %%role%%</small><br/>
 */ ?>

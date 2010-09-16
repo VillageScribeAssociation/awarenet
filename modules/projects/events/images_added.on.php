@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/projects/models/project.mod.php');
+require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when an image is added 
@@ -11,20 +11,19 @@ require_once($installPath . 'modules/projects/models/project.mod.php');
 //arg: imageTitle - text/html of comment
 
 function projects__cb_images_added($args) {
-	global $user;
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('imageUID', $args) == false) { return false; }
-	if (array_key_exists('imageTitle', $args) == false) { return false; }
+	global $db, $user;
+	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refUID', $args)) { return false; }
+	if (false == array_key_exists('imageUID', $args)) { return false; }
+	if (false == array_key_exists('imageTitle', $args)) { return false; }
 
-	if (dbRecordExists('projects', $args['refUID']) == false) { return false; }
-
-	$model = new Project($args['refUID']);
+	$model = new Projects_Project($args['refUID']);
+	if (false == $model->loaded) { return false; }	
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project member and friends of uplaoder
 	//----------------------------------------------------------------------------------------------
-
+	/*	TODO: re-add notifications
 	$ext = $model->extArray();
 	$link = "<a href='" . $ext['viewUrl'] . "/'>" . $ext['title'].  '</a>';
 	$title = $user->getNameLink() . ' added a new image to your project: ' . $link;
@@ -42,6 +41,7 @@ function projects__cb_images_added($args) {
 	notifyFriends($args['refUID'], $args['imageUID'], 
 				  $user->getName(), $user->getUrl(),
 				  $title, $content, $url, $args['imageUID'] );
+	*/
 
 	return true;
 }

@@ -1,18 +1,28 @@
 <?
 
-	require_once($installPath . 'modules/messages/models/message.mod.php');
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	menu for forums, no arguments
 //--------------------------------------------------------------------------------------------------
 
 function messages_menu($args) {
+	global $theme, $user;
 	$labels = array();
-	if (authHas('messages', 'send', '')) {
-		$labels['newEntry'] = '[[:theme::submenu::label=Compose::link=/messages/compose/:]]';
-	} else { $labels['newEntry'] = ''; }
-	
-	$html = replaceLabels($labels, loadBlock('modules/messages/views/menu.block.php'));
+	$html = '';				//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	$labels['newEntry'] = '';
+	if ($user->authHas('messages', 'Messages_Message', 'send')) 
+		{ $labels['newEntry'] = '[[:theme::submenu::label=Compose::link=/messages/compose/:]]'; } 
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------	
+	$block = $theme->loadBlock('modules/messages/views/menu.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;	
 }
 

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display gallery navigation (TODO: make more efficient, only load the records we need, by weight)
@@ -10,38 +10,42 @@
 //opt: size - image size (thumb90, thumbsm, width300, etc) [string]
 
 function gallery_gallerynav($args) {
+	global $db;
+	$html = '';					//%	return value [string]
 	$size = 'thumbsm';
-	if (array_key_exists('galleryUID', $args) == false) { return false; }
-	if (array_key_exists('imageUID', $args) == false) { return false; }
-	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
-	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permission
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('galleryUID', $args)) { return ''; }
+	if (false == array_key_exists('imageUID', $args)) { return ''; }
+	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load images js into array
 	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "refUID='" . $db->addMarkup($args['galleryUID']) . "'";
+	$conditions[] = "refModule='gallery'";
 
-	$sql = "select UID, title, weight, recordAlias from images "
-		 . "where refUID='" . sqlMarkup($args['galleryUID']) . "' and refModule='gallery' "
-		 . "order by weight ";
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
 
-	$result = dbQuery($sql);
+	//$sql = "select UID, title, weight, recordAlias from Images_Image "
+	//	 . "where refUID='" . $db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
+	//	 . "order by weight ";
+
 	$images = array();
 	$idx = 0;
 	$currIdx = 0;
 
-	$js .= "var galThumbs = new Array();\n";
+	$js = "var galThumbs = new Array();\n";
 
-	while ($row = sqlRMArray(dbFetchAssoc($result))) {
-		$row = sqlRMArray($row);
-
+	foreach ($range as $row) {
 		if ($row['UID'] == $args['imageUID']) { $currIdx = $idx; }
-
 		$jsUID = jsMarkup($row['UID']);
 		$jsTitle = jsMarkup($row['title']);
-		$jsRA = jsMarkup($row['recordAlias']);
-
+		$jsRA = jsMarkup($row['alias']);
 		$js .= "galThumbs[$idx] = new Array('". $jsUID ."','". $jsTitle ."', '" . $jsRA . "');\n";
-
 		$idx++;
 	}
 
@@ -61,4 +65,3 @@ function gallery_gallerynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

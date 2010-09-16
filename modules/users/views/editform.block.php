@@ -1,6 +1,6 @@
 <? /*
 <h1>Edit User: %%username%%</h1>
-<form name='editUser' method='POST' action='/users/save/'>
+<form name='editUser' method='POST' action='%%serverPath%%users/save/'>
 <input type='hidden' name='action' value='saveUserRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 <table noborder>
@@ -76,5 +76,5 @@
   </tr>
 </table>
 </form>
-<small>UID: %%UID%% recordAlias: %%recordAlias%%</small>
+<small>UID: %%UID%% recordAlias: %%alias%%</small>
 */ ?>

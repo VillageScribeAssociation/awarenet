@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	count the number of images in a gallery
@@ -8,13 +8,17 @@
 //arg: galleryUID - UID of a gallery [string]
 
 function gallery_imagecount($args) {
-	if (array_key_exists('galleryUID', $args) == false) { return false; }
+	global $db;
 
-	$sql = "select count(UID) as numRecords from images "
-		 . "where refModule='gallery' and refUID='" . sqlMarkup($args['galleryUID']) . "'";
+	if (false == array_key_exists('galleryUID', $args)) { return ''; }
 
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
+	$sql = "select count(UID) as numRecords from Images_Image "
+		 . "where refModule='gallery' and refUID='" . $db->addMarkup($args['galleryUID']) . "'";
+
+	//TODO: use $db->countRange
+
+	$result = $db->query($sql);
+	$row = $db->rmArray($db->fetchAssoc($result));
 	return $row['numRecords'];
 }
 
@@ -22,4 +26,3 @@ function gallery_imagecount($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

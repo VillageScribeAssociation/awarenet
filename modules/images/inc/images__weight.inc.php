@@ -1,33 +1,35 @@
 <?
 
-//-------------------------------------------------------------------------------------------------
-//	functions for arranging images by weight
-//-------------------------------------------------------------------------------------------------
-
-require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	ensure that all images attached to an item have consecutive weight
+//*	functions for arranging images by weight (DEPRECATED)
+//-------------------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------------------
+//|	ensure that all images attached to an item have consecutive weight
 //-------------------------------------------------------------------------------------------------
 
 function images__checkWeight($refModule, $refUID) {
-	$sql = "select UID, weight from images "
-		 . "where refUID='" . sqlMarkup($refUID) . "' "
-		 . "and refModule='" . sqlMarkup($refModule) . "' "
+	global $db;
+
+	$sql = "select UID, weight from Images_Image "
+		 . "where refUID='" . $db->addMarkup($refUID) . "' "
+		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 	$idx = 0;
 
 	//---------------------------------------------------------------------------------------------
 	//	ensure that all images are weighted 0-n
 	//---------------------------------------------------------------------------------------------
 
-	while ($row = dbFetchAssoc($result)) {			// for all images attached to this item
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {			// for all images attached to this item
+		$row = $db->rmArray($row);
 		if ($row['weight'] != $idx) { 				// if this one is not in order
-			$model = new Image($row['UID']);		// load record
-			$model->data['weight'] = $idx;			// set weight to idx
+			$model = new Images_Image($row['UID']);		// load record
+			$model->weight = $idx;			// set weight to idx
 			$model->save();							// save it
 		}
 		$idx++;		
@@ -39,14 +41,16 @@ function images__checkWeight($refModule, $refUID) {
 //-------------------------------------------------------------------------------------------------
 
 function images__getNextHeaviest($refModule, $refUID, $weight) {
-	$sql = "select UID, weight from images "
-		 . "where refUID='" . sqlMarkup($refUID) . "' "
-		 . "and refModule='" . sqlMarkup($refModule) . "' "
+	global $db;
+
+	$sql = "select UID, weight from Images_Image "
+		 . "where refUID='" . $db->addMarkup($refUID) . "' "
+		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		if ($row['weight'] > $weight) { return $row['UID']; }
 	}
 	
@@ -58,16 +62,18 @@ function images__getNextHeaviest($refModule, $refUID, $weight) {
 //-------------------------------------------------------------------------------------------------
 
 function images__getNextLightest($refModule, $refUID, $weight) {
-	$sql = "select UID, weight from images "
-		 . "where refUID='" . sqlMarkup($refUID) . "' "
-		 . "and refModule='" . sqlMarkup($refModule) . "' "
+	global $db;
+
+	$sql = "select UID, weight from Images_image "
+		 . "where refUID='" . $db->addMarkup($refUID) . "' "
+		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 	$retVal = false;
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		if ($row['weight'] < $weight) { $retVal = $row['UID']; }
 	}
 	
@@ -79,17 +85,19 @@ function images__getNextLightest($refModule, $refUID, $weight) {
 //-------------------------------------------------------------------------------------------------
 
 function images__getHeaviest($refModule, $refUID) {
+	global $db;
+
 	$retVal = 0;
 
-	$sql = "select UID, weight from images "
-		 . "where refUID='" . sqlMarkup($refUID) . "' "
-		 . "and refModule='" . sqlMarkup($refModule) . "' "
+	$sql = "select UID, weight from Images_Image "
+		 . "where refUID='" . $db->addMarkup($refUID) . "' "
+		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		if ($row['weight'] > $retVal) { $retVal = $row['weight']; }
 	}
 	

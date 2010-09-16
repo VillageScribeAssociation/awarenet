@@ -4,7 +4,7 @@
 //	display an image scaled to 290 px wide
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/images/inc/sendimg.inc.php');
+	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
 	imgSend('width290');
 
 ?>

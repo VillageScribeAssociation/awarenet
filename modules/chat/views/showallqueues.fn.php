@@ -1,21 +1,23 @@
 <?
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display contents of all message queues (admin only, no arguments as yet)
 //--------------------------------------------------------------------------------------------------
 
 function chat_showallqueues($args) {
+	global $db;
+
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	if ('admin' != $user->role) { return false; }
 
 	$html = '';
-	$sql = "select * from users order by surname, firstname";
+	$sql = "select * from Users_User order by surname, firstname";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		$html .= "<h2>" . $row['surname'] . ', ' . $row['firstname'] . "</h2>\n";
 		$html .= "<input type='button' onClick=\"cookieAddWindow('" . $row['UID'] . "', '100', '100'); cookieSetChatUpdate();\" "
 				 . "value='chat' > (" . $row['UID'] . ")\n";

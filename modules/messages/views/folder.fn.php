@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/messages/models/message.mod.php');
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show a user's mail folder
@@ -11,61 +11,72 @@
 //opt: num - number of messages to show (default is 50) [string]
 
 function messages_folder($args) {
-	global $user;
-	$page = 1; $num = 50; $size = 'thumb'; $html = '';
-	$owner = $user->data['UID']; $folder = 'inbox';
-	if ('public' == $user->data['ofGroup']) { return false; }
-	if (array_key_exists('page', $args) == true) { $page = $args['page']; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
-	if (array_key_exists('owner', $args) == true) { $owner = sqlMarkup($args['owner']); }
-	if (array_key_exists('folder', $args) == true) { $folder = sqlMarkup($args['folder']); }
+	global $db, $page, $theme, $user;
+
+	$pageNo = 1;
+	$num = 50;
+	$size = 'thumb';
+	$html = '';
+	$owner = $user->UID;
+	$folder = 'inbox';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return ''; }
+	if (true == array_key_exists('page', $args)) { $pageNo = $args['page']; }
+	if (true == array_key_exists('num', $args)) { $num = $args['num']; }
+	if (true == array_key_exists('owner', $args)) { $owner = $args['owner']; }
+	if (true == array_key_exists('folder', $args)) { $folder = $args['folder']; }
+	//TODO: permissions check here 
 
 	//----------------------------------------------------------------------------------------------
 	//	count total records owned by this module
 	//----------------------------------------------------------------------------------------------
-	$userUID = $user->data['UID'];
-	$sql = "select count(UID) as numRecords from messages "
-		 . "where owner='" . $owner . "' and folder='" . $folder . "' "
-		 . "order by createdOn DESC";	
+	$conditions = array();
+	$conditions[] = "owner='" . $db->addMarkup($owner) . "'";
+	$conditions[] = "folder='" . $db->addMarkup($folder) . "'";
 
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
-	$total = ceil($row['numRecords'] / $num);
+	$totalItems = $db->countRange('Messages_Message', $conditions);
+	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load page of messages
 	//----------------------------------------------------------------------------------------------
-	$limit = "limit " . (($page - 1) * $num) . ", ". sqlMarkup($num);
-	$sql = "select * from messages "
-		 . "where owner='" . $owner . "' and folder='" . $folder . "' "
-		 . "order by createdOn DESC " . $limit;	
+	$start = (($pageNo - 1) * $num);
 
-	$result = dbQuery($sql);
-	$block = loadBlock('modules/messages/views/inboxrow.block.php');
+	$range = $db->loadRange('Messages_Message', '*', $conditions, 'createdOn DESC', $num, $start);
+
+	//	$sql = "select * from messages "
+	//		 . "where owner='" . $owner . "' and folder='" . $folder . "' "
+	//		 . "order by createdOn DESC " . $limit;	
+
+	$block = $theme->loadBlock('modules/messages/views/inboxrow.block.php');
 	
 	$html .= "<table noborder width='100%'>\n";
 	$html .= "<tr><td class='title'>From</td><td class='title'>To</td><td class='title'>Subject</td></tr>";
-	while ($row = dbFetchAssoc($result)) {
-		$thisMsg = new Message();
-		$thisMsg->loadArray(sqlRMArray($row));
+
+	foreach ($range as $row) {
+		$thisMsg = new Messages_Message();
+		$thisMsg->loadArray($row);
 		$ext = $thisMsg->extArray();
 		if ('outbox' == $ext['folder']) { $ext['status'] = 'sent'; }
-		$html .= replaceLabels($ext, $block);
+		$html .= $theme->replaceLabels($ext, $block);
 	}
 	$html .= "</table>\n";
 
-	if (0 == $total) { $html = "(you have no new messages)"; }
+	if (0 == $totalItems) { $html = "(you have no new messages)"; }
 
 	$link = '%%serverPath%%messages/inbox/';
 
-	$pagination .= "[[:theme::pagination::page=" . sqlMarkup($page) 
-				. "::total=" . $total . "::link=" . $link . ":]]\n";
+	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
-	return $pagination . $html . $pagination;
+	$html = $pagination . $html . $pagination;
+	return $html;
 }
 
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

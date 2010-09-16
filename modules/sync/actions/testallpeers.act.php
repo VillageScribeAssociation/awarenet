@@ -17,7 +17,7 @@
 		echo "URL: " . $peer['serverurl'] . "<br/>\n";
 	
 		$url = $peer['serverurl'] . 'sync/peertest/';
-		$result = syncCurlGet($url, $peer['password']);
+		$result = $sync->curlGet($url, $peer['password']);
 
 		$result = str_replace('>', '&gt;', $result);
 		$result = str_replace('<', '&lt;', $result);

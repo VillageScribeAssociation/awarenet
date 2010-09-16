@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show a record
@@ -8,12 +8,24 @@
 //arg: raUID - recordAlias or UID of a gallery [string]
 
 function gallery_show($args) {
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$s = new gallery($args['raUID']);
-	return replaceLabels($s->extArray(), loadBlock('modules/gallery/views/show.block.php'));
+	global $theme;
+	$html = '';				//% return value;
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	$model = new Gallery_Gallery($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/gallery/views/show.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

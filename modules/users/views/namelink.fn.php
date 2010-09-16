@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	make a link to a users profile with the users name
@@ -18,16 +18,16 @@ function users_namelink($args) {
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';
 
-	if ('public' == $user->data['ofGroup']) { 
+	if ('public' == $user->role) { 
 		// public user canot see profiles, so don't link them
 		return '[[:users::name::userUID=' . $args['raUID'] . ':]]'; 
 	}
 
 	if (array_key_exists('target', $args) == true) { $target = "target='". $args['target'] ."'"; }
 
-	$model = new User($args['raUID']);
-	$fullName = $model->data['firstname'] . ' ' . $model->data['surname'];
-	$html = "<a href='/users/profile/" . $model->data['recordAlias'] . "' $target>$fullName</a>";
+	$model = new Users_User($args['raUID']);
+	$fullName = $model->firstname . ' ' . $model->surname;
+	$html = "<a href='/users/profile/" . $model->alias . "' $target>$fullName</a>";
 	return $html;
 }
 

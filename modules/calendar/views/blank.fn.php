@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a blank calendar (testing)
@@ -14,7 +14,7 @@ function calendar_blank($args) {
 	if (array_key_exists('month', $args)) { $month = $args['month']; }
 	if (array_key_exists('year', $args)) { $month = $args['year']; }
 	if (array_key_exists('size', $args)) { $size = $args['size']; }
-	$c = new Calendar();
+	$c = new Calendar_Entry();
 	$days = array();
 	$daysInMonth = $c->daysInMonth($month, $year);	
 	for($i = 1; $i <= $daysInMonth; $i++) {

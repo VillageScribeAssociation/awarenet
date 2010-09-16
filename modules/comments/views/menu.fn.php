@@ -1,14 +1,15 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	menu
 //--------------------------------------------------------------------------------------------------
 
-function comments_menu($args) { return loadBlock('modules/comments/menu.block.php'); }
+function comments_menu($args) {
+	global $theme;
+ return $theme->loadBlock('modules/comments/menu.block.php'); }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

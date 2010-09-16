@@ -1,23 +1,26 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	make a slideshow
+//*	make a file listing
 //--------------------------------------------------------------------------------------------------
+//TODO: fix this up
 
-	if ( (array_key_exists('refmodule', $request['args'])) 
-	   AND (array_key_exists('refuid', $request['args'])) ) {
+	if ( (array_key_exists('refmodule', $req->args)) 
+	   AND (array_key_exists('refuid', $req->args)) ) {
 	  
 		//------------------------------------------------------------------------------------------
 		//	load all files associated with this record
 		//------------------------------------------------------------------------------------------
 
 		$rows = array();
-		$sql = "select * from files where refModule='" . sqlMarkup($request['args']['refmodule']) 
-			. "' and refUID='" . sqlMarkup($request['args']['refuid']) . "' order by weight";
+		$sql = "select * from Files_File where refModule='" . $db->addMarkup($req->args['refmodule']) 
+			. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
 			
-		$result = dbQuery($sql);
+		//TODO: $db->loadRange
+
+		$result = $db->query($sql);
 		$index = 0;
-		while ($row = dbFetchAssoc($result)) {
+		while ($row = $db->fetchAssoc($result)) {
 			if ($show == '') { $show = $row['UID']; }
 			$rows[$row['UID']] = $row;
 			$rows[$row['UID']]['index'] = $index;
@@ -34,11 +37,11 @@
 			$labels = $f->extArray();
 			$labels['thumbUrl'] = '/themes/clockface/images/arrow_down.jpg';
 			$labels['dnUrl'] = '/files/dn/' . sqlRemoveMarkup($row['title']);
-			$html .= replaceLabels($labels, loadBlock('modules/files/listing.block.php'));
+			$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/files/listing.block.php'));
 		}
 		
-		$page->load($installPath . 'modules/files/listing.page.php');
-		$page->data['content'] = $html;
+		$page->load('modules/files/listing.page.php');
+		$page->content = $html;
 		$page->render();
 		
 	}

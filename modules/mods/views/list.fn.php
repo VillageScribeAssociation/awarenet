@@ -1,18 +1,27 @@
 <?
 
-	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
+	require_once($kapenta->installPath . 'core/kmodule.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	list all modules (perm:view)
+//|	list all modules
 //--------------------------------------------------------------------------------------------------
+//role: admin - only administrators may use this
 
 function mods_list($args) {
-	global $serverPath;
-	$modList = listModules();
-	$html = '';
+	global $kapenta;
+	$html = '';		//% return value [string]
 
+	//----------------------------------------------------------------------------------------------
+	//	check user role
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { return ''; }	
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$modList = $kapenta->listModules();
 	foreach($modList as $module) 
-		{ $html .= "<a href='" . $serverPath . "mods/" . $module . "'>$module</a><br/>\n"; }
+		{ $html .= "<a href='%%serverPath%%mods/" . $module . "'>$module</a><br/>\n"; }
 
 	return $html;
 }

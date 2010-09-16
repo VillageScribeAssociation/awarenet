@@ -1,42 +1,34 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	edit a project abstract
+//*	edit a project abstract
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'editabstract', 'projects', $request['ref']);
-	$projectUID = raGetOwner($request['ref'], 'projects');
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this projects abstract
 	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Project($UID);
+	if (false == $model->loaded) { $page->do404('Project not found.'); }
 
-	$authorised = false;
-
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	$pM = new ProjectMembership();
-	if (false == $pM->load($projectUID, $user->data['UID'])) {
-		$_SESSION['sMessage'] .= "You are not a member of this project, you can't edit it.<br/>\n";
-		$_SESSION['sMessage'] .= "project UID: $projectUID userUID: " . $user->data['UID'] . ".<br/>\n";
-		do302('projects/' . $projectUID);
+	if ((false == $model->isMember($user->UID)) && ('admin' != $user->role)) {
+		// TODO: use a permission for this
+		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
+		$page->do302('projects/' . $model->alias);
 	}
 
-	if (($pM->data['role'] == 'member') OR ($pM->data['role'] == 'admin')) { $authorised = true; }
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-
 	//----------------------------------------------------------------------------------------------
-	//	load the page (or 403)
+	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	if ($authorised == true) {
-		$page->load($installPath . 'modules/projects/actions/editabstract.page.php');
-		$page->blockArgs['raUID'] = $request['ref'];
-		$page->blockArgs['UID'] = $projectUID;
-		$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $request['ref'];
-		$page->render();
-	} else {
-		do403();
-	}
+	$page->load('modules/projects/actions/editabstract.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
+	$page->render();
 
 ?>

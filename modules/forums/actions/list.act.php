@@ -4,13 +4,12 @@
 //	list all galleries in root
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('forums', 'show', '') == false) { do403(); }			// check basic permissions
+	if (false == $user->authHas('forums', 'Forums_Board', 'show')) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/forums/actions/list.page.php');		
+	$page->load('modules/forums/actions/list.page.php');	
 	$page->render();													
 
 ?>

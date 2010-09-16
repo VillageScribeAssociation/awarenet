@@ -615,7 +615,7 @@ class XmlEntity {
 				//echo "segment: " . substr($xml_proc_curr, $next['start'], $next['end'] - $next['start']) . "<br/>\n";
 				//echo "content: " . substr($xml_proc_curr, $next['startd'], $next['endd'] - $next['startd']) . "<br/>\n";
 					
-				$uid = createUID();
+				$uid = $kapenta->createUID();
 				$section = substr($xml_proc_curr, $next['startd'], $next['endd'] - $next['startd']);
 				$sections[$uid] = $section;
 				//echo "adding section $uid : $section <br/>\n";

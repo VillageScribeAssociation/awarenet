@@ -1,26 +1,28 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	count the number of images in a forums <--- NOT USED YET
 //--------------------------------------------------------------------------------------------------
 //arg: forumUID - UID of a forum [string]
+//TODO: move to images module or discard
 
 function forums_imagecount($args) {
-	if (array_key_exists('forumUID', $args) == false) { return false; }
+	global $db;
 
-	$sql = "select count(UID) as numRecords from images "
-		 . "where refModule='forums' and refUID='" . sqlMarkup($args['forumUID']) . "'";
+	if (false == array_key_exists('forumUID', $args)) { return ''; }
 
-	$result = dbQuery($sql);
-	$row = sqlRMArray(dbFetchAssoc($result));
+	$sql = "select count(UID) as numRecords from Images_Image "
+		 . "where refModule='forums' and refUID='" . $db->addMarkup($args['forumUID']) . "'";
+
+	$result = $db->query($sql);
+	$row = $db->rmArray($db->fetchAssoc($result));
 	return $row['numRecords'];
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

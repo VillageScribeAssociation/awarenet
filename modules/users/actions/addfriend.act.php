@@ -1,36 +1,37 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	add a user as a friend (DEPRECTED, REDUNDANT, REMOVE?)
+//*	add a user as a friend (DEPRECTED, REDUNDANT, REMOVE?)
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('users', 'addfriend', 'users', $request['ref']);
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('users', 'addfriend', 'users', $req->ref);
 
 	//----------------------------------------------------------------------------------------------
 	//	check that the friendship does not already exist
 	//----------------------------------------------------------------------------------------------
-
-	$friend = new User($request['ref']);
-	if ($user->isFriend($friend->data['UID'])) {
-		$_SESSION['sMessage'] .= "You are already friends.<br/>\n";
-		do302('users/profile/' . $request['ref']);
+	$friend = new Users_User($UID);
+	if ($user->isFriend($friend->UID)) {
+		$session->msg("You are already friends.", 'bad');
+		$page->do302('users/profile/' . $req->ref);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	create friend request
 	//----------------------------------------------------------------------------------------------
-	
-	$model = new Friendship();
-	$model->data['UID'] = createUID();
-	$model->data['friendUID'] = $friend->data['UID'];
-	$model->data['relationship'] = 'friend';
-	$model->data['status'] = 'unconfirmed';
+	$model = new Users_Friendship();
+	$model->userUID = $user->UID;
+	$model->friendUID = $friend->UID;
+	$model->relationship = 'friend';
+	$model->status = 'unconfirmed';
 	$model->save();
 
-	$_SESSION['sMessage'] .= "You have made a friend request.<br/>";
-	do302('users/profile/' . $request['ref']);
+	//----------------------------------------------------------------------------------------------
+	//	redirect back to user's profile
+	//----------------------------------------------------------------------------------------------
+	$session->msg("You have made a friend request.<br/>", 'ok');
+	$page->do302('users/profile/' . $req->ref);
 
 ?>

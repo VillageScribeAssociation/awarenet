@@ -4,12 +4,12 @@
 //	add a new calendar event
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('calendar', 'edit', '') == false) { do403(); }
+	if ($user->authHas('calendar', 'Calendar_Entry', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
-	$c = new Calendar();
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
+	$c = new Calendar_Entry();
 	$c->save();
 	
-	do302('calendar/edit/' . $c->data['UID']);
+	$page->do302('calendar/edit/' . $c->UID);
 
 ?>

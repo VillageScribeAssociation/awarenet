@@ -1,29 +1,31 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	user search results  // TODO: pagination
+//|	user search results  // TODO: pagination, fix this up
 //--------------------------------------------------------------------------------------------------
 //arg: fsearch - query [string]
 //opt: pageno - page number (not yet implemented) [string]
 
 function users_search($args) {
-	$html = '';
-	if (array_key_exists('fsearch', $args) == false) { return false; }
-	if (trim($args['fsearch']) == '') { return false; }
+	global $db;
+	$html = '';		//%	return value [string]
+
+	if (false == array_key_exists('fsearch', $args)) { return ''; }
+	if ('' == trim($args['fsearch'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make query (this can be much more efficient)
 	//----------------------------------------------------------------------------------------------
 	$parts = explode(' ', strtolower($args['fsearch']));
-	$sql = "select UID, concat(firstname, ' ', surname, ' ', username) as qs from users";
-	$result = dbQuery($sql);
+	$sql = "select UID, concat(firstname, ' ', surname, ' ', username) as qs from Users_User";
+	$result = $db->query($sql);
 	$count = 0;
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		$matchRow = true;
 		$qs = strtolower($row['qs']);
 
@@ -39,7 +41,7 @@ function users_search($args) {
 		}
 	}
 	
-	if ($html == '') {
+	if ('' == $html) { 
 		$html .= "<br/><b>no search results for: " . $args['fsearch'] . "</b><br/>\n";
 	} else {
 		$html = "<br/><b>$count results</b><br/>\n" . $html;

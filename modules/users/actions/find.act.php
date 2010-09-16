@@ -1,38 +1,33 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	action to search for friends
+//*	action to search for friends
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('users', 'view', '') == false) { 
-		echo "Please log in.<br/>\n";
-		die();
-	}
+	$search = '';		//%	search query, if any [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	POST var for search?
+	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
+	if (false == $user->authHas('users', 'Users_User', 'show'))
+		{ $page->do403('Please log in.', true); }
 
-	$search = '';
-	if (array_key_exists('q', $_POST) == true) {
-		$search = clean_string($_POST['q']);
-	}
+	if (true == array_key_exists('q', $_POST)) { $search = $utils->cleanString($_POST['q']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add var for search?
 	//----------------------------------------------------------------------------------------------
 
 	$add = '';
-	if (array_key_exists('add', $request['args']) == true) {
-		$add = "<br/>[[:users::friendrequestprofilenav::userUID=" 
-			 . $request['args']['add'] . "::notitle=yes:]]";
+	if (true == array_key_exists('add', $req->args)) {
+		$add = "<br/>[[:users::friendrequestprofilenav::"
+					 . "userUID=" . $req->args['add'] . "::notitle=yes:]]";
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/users/actions/find.page.php');
+	$page->load('modules/users/actions/find.page.php');
 	$page->blockArgs['fsearch'] = $search;
 	$page->blockArgs['fadd'] = $add;
 	$page->render();

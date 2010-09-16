@@ -1,33 +1,37 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show an announcement
+//*	show an announcement
 //--------------------------------------------------------------------------------------------------
-	
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('announcements', 'show', 'announcements', $request['ref']);
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
-	$model = new Announcement($request['ref']);
 
 	//----------------------------------------------------------------------------------------------
 	//	get name of announcement owner
-	//----------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------	
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Announcements_Announcement');
+	$model = new Announcements_Annoucement($req->ref);
+	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $UID)) 
+		{ $page->do403(); }
 
-	$cb = '[[:'. $model->data['refModule'] .'::name::raUID='. $model->data['refUID'] .'::link=no:]]';
-	$ownerName = expandBlocks($cb, '');
+	//----------------------------------------------------------------------------------------------
+	//	get name of announcement owner	//TODO: get rid of this
+	//----------------------------------------------------------------------------------------------
+	$cb = '[[:'. $model->refModule .'::name::raUID='. $model->refUID .'::link=no:]]';
+	$ownerName = $theme->expandBlocks($cb, '');
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/announcements/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = raGetOwner('announcements', $request['ref']);
-	$page->blockArgs['refUID'] = $model->data['refUID'];
-	$page->blockArgs['refModule'] = $model->data['refModule'];
+	$page->load('modules/announcements/actions/show.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['refUID'] = $model->refUID;
+	$page->blockArgs['refModule'] = $model->refModule;
 	$page->blockArgs['announceLink'] = $aaLink;
 	$page->blockArgs['announcementOwner'] = $ownerName;
-	$page->blockArgs['announcementTitle'] = $model->data['title'];
+	$page->blockArgs['announcementTitle'] = $model->title;
 	$page->render();
 
 ?>

@@ -1,6 +1,6 @@
 <? /*
 <br/>
-<form name='editPost' method='POST' action='/announcements/save/'>
+<form name='editPost' method='POST' action='%%serverPath%%announcements/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

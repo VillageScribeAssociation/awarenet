@@ -1,31 +1,44 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	all images of all schools (thumbnails, no arguments)
 //--------------------------------------------------------------------------------------------------
+//TODO: this should be on the images module
 
 function schools_allthumbs($args) {
-	global $serverPath;
-	$sql = "select * from images where refModule='schools' order by weight";
-	$html = '';
-	
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
-			$thisRa = raGetDefault('schools', $row['refUID']);
-			$alt = str_replace('-', ' ', $coinRa);
-			$html .= "<a href='/schools/show/" . $thisRa . "'>" 
-				. "<img src='/images/thumb90/" . $row['recordAlias'] 
+	global $db, $aliases, $user;
+	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	//TODO: arguments and permissions
+
+	//----------------------------------------------------------------------------------------------
+	//	load images from database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array("refModule='schools'");
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	//$sql = "select * from Images_Image where refModule='schools' order by weight";
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------	
+	if (0 == count($range)) { return ''; }
+
+	foreach ($range as $row) {
+		$thisRa = $aliases->getDefault('Schools_School', $row['refUID']);
+		$alt = str_replace('-', ' ', $thisRa);
+		$html .= "<a href='%%serverPath%%schools/show/" . $thisRa . "'>" 
+				. "<img src='/images/thumb90/" . $row['alias'] 
 				. "' border='0' alt='" . $alt . "'></a> ";
-		}
 	} 
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

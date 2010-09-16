@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for downloading multiple files
@@ -9,6 +9,8 @@
 //arg: refUID - number of files per page [string]
 
 function files_downloadmultipleform($args) {
+	global $theme;
+
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +23,7 @@ function files_downloadmultipleform($args) {
 	//	add the form
 	//----------------------------------------------------------------------------------------------
 	$labels = array('refModule' => $args['refModule'], 'refUID' => $args['refUID']);
-	$html = replaceLabels($labels, loadBlock('modules/files/views/downloadmultiple.block.php'));
+	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/files/views/downloadmultiple.block.php'));
 	
 	return $html;
 }
@@ -29,4 +31,3 @@ function files_downloadmultipleform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

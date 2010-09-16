@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	utility functions for working with images deprecated
+//*	utility functions for working with images deprecated  TODO: move to utils global object
 //--------------------------------------------------------------------------------------------------
 //+ these should be replaced by blocks on the images module, or moved to images/inc/
 

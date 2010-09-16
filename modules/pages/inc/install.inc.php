@@ -6,9 +6,9 @@
 
 function install_pages_module() {
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	if ('admin' != $user->role) { return false; }
 
-	//require_once($installPath . 'modules/mods/models/kmodule.mod.php');
+	//require_once($kapenta->installPath . 'modules/mods/models/kmodule.mod.php');
 	//$m = new KModule('pages');	
 	//$m->installed = 'yes';
 	//$m->save();

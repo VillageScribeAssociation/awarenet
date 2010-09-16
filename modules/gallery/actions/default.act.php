@@ -4,7 +4,7 @@
 //	default action for user galleries module (ie, no action specified in URL)
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') {
+	if ('' == $req->ref) {
 		// no recordAlias/UID given in URL, list all galleries
 		include $installPath . 'modules/gallery/actions/list.act.php';
 	} else {

@@ -7,32 +7,32 @@
 	//----------------------------------------------------------------------------------------------
 	// check permissions
 	//----------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { do403(); } 
+	if ('admin' != $user->role) { $page->do403(); } 
 
-	if ((array_key_exists('module', $request['args'])) AND ($request['ref'] != '')) {
+	if ((array_key_exists('module', $req->args)) AND ('' != $req->ref)) {
 		//------------------------------------------------------------------------------------------
 		// check the the block exists
 		//------------------------------------------------------------------------------------------
-		$module = $request['args']['module'];
-		$block = $request['ref'];
+		$module = $req->args['module'];
+		$block = $req->ref;
 		$fileName = $installPath . 'modules/' . $module . '/views/' .  $block . '.block.php';
 
 		if (file_exists($fileName)) {
 			//--------------------------------------------------------------------------------------
 			//	render the page
 			//--------------------------------------------------------------------------------------
-			$page->load($installPath . 'modules/blocks/actions/edit.page.php');
-			$page->blockArgs['refmodule'] = $request['args']['module'];
-			$page->blockArgs['refblock'] = $request['ref'];
+			$page->load('modules/blocks/actions/edit.page.php');
+			$page->blockArgs['refmodule'] = $req->args['module'];
+			$page->blockArgs['refblock'] = $req->ref;
 			$page->render();
 
-		} else { do404(); }	// block template file not found		
+		} else { $page->do404(); }	// block template file not found		
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		// module/block not provided
 		//------------------------------------------------------------------------------------------
-		do404();
+		$page->do404();
 
 	}
 

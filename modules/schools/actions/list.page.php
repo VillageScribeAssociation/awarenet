@@ -6,7 +6,7 @@
 <title>awareNet - all schools</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=All schools:]]
-[[:schools::allthumbs:]]</nav1>
+[[:images::allthumbs::refModule=schools:]]</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>

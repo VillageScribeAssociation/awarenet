@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all forums at current user's school (formatted for nav)
@@ -10,7 +10,7 @@
 
 function forums_atmyschoolnav($args) {
 	global $user;
-	return "[[:forums::summarylistnav::school=" . $user->data['school'] . ":]]";
+	return "[[:forums::summarylistnav::school=" . $user->school . ":]]";
 }
 
 //--------------------------------------------------------------------------------------------------

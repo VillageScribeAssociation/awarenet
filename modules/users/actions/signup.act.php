@@ -1,15 +1,16 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	page for signing up users
+//*	page for signing up users
 //--------------------------------------------------------------------------------------------------
+//TODO: tidy this up, add settings and permissions appropriate to this
 
 	//----------------------------------------------------------------------------------------------
 	//	form variables
 	//----------------------------------------------------------------------------------------------
 
 	$formvars = array(
-		'UID' => createUID(),
+		'UID' => $kapenta->createUID(),
 		'school' => '261390791197222710',
 		'grade' => '12',
 		'firstname' => '',	
@@ -26,7 +27,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	foreach($formvars as $field => $val) { 
-		if (array_key_exists($field, $_POST) == true) { $formvars[$field] = trim($_POST[$field]); }
+		if (true == array_key_exists($field, $_POST)) { $formvars[$field] = trim($_POST[$field]); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@
 	$report = '';
 	$showPage = true;
 
-	if ((array_key_exists('action', $_POST)) AND ($_POST['action'] == 'userSignup')) {
+	if ((true == array_key_exists('action', $_POST)) AND ('userSignup' == $_POST['action'])) {
 
 		// basic tests
 		if ($formvars['pass1'] != $formvars['pass2']) 
@@ -55,58 +56,59 @@
 			{ $report .= "[*] Please add your first name.<br/>\n"; }	
 
 		// check if user is already registered
-		$sql = "select * from users where lower(username)='". sqlMarkup($formvars['username']) ."'";
-		$result = dbQuery($sql);
-		if (dbNumRows($result) != 0) { 
+		$sql = "select * from Users_User"
+			 . " where lower(username)='" . $db->addMarkup($formvars['username']) ."'";
+
+		$result = $db->query($sql);
+
+		if ($db->numRows($result) != 0) { 
 			$report .= "[*] The username <i>" . $formvars['username']. "</i> has already been "
 					 . "registered, please choose another.<br/>\n"; 
 		}	
 
 		// check that school exists
-		if (dbRecordExists('schools', $formvars['school']) == false) 
+		if (false == $db->objectExists('Schools_School', $formvars['school'])) 
 			{ $report .= "[*] Please choose a school from the list.<br/>\n"; }	
 
-		if ($report == '') {
+		if ('' == $report) {
 			//--------------------------------------------------------------------------------------
 			//	create the account
 			//--------------------------------------------------------------------------------------
-			$_SESSION['sMessage'] .= "Creating your account...<br/>\n";
+			$session->msg('Creating your account...', 'ok');
 
-			$model = new User();
-			$model->data['UID'] = createUID();
-			$model->data['school'] = clean_string($formvars['school']);
-			$model->data['ofGroup'] = 'student';
-			$model->data['grade'] = clean_string($formvars['grade']);
-			$model->data['firstname'] = clean_string($formvars['firstname']);
-			$model->data['surname'] = clean_string($formvars['surname']);
-			$model->data['username'] = clean_string($formvars['username']);
-			$model->data['password'] = sha1($formvars['pass1'] . $model->data['UID']);
-			$model->data['lang'] = 'en';
-			$model->data['profile'] = '';
-			$model->data['permissions'] = '';
-			$model->data['lastOnline'] = mysql_datetime();
-			$model->data['createdOn'] = mysql_datetime();
-			$model->data['createdBy'] = 'admin';
+			$model = new Users_User();
+			$model->UID = $kapenta->createUID();
+			$model->school = $utils->cleanString($formvars['school']);
+			$model->role = 'student';
+			$model->grade = $utils->cleanString($formvars['grade']);
+			$model->firstname = $utils->cleanString($formvars['firstname']);
+			$model->surname = $utils->cleanString($formvars['surname']);
+			$model->username = $utils->cleanString($formvars['username']);
+			$model->password = sha1($formvars['pass1'] . $model->UID);
+			$model->lang = 'en';
+			$model->profile = '';
+			$model->permissions = '';
+			$model->lastOnline = $db->datetime();
+			$model->createdOn = $db->datetime();
+			$model->createdBy = 'admin';
 			$model->save();
 
-			authUpdatePermissions();
+			//authUpdatePermissions();
 
 			//--------------------------------------------------------------------------------------
 			//	sign user in
 			//--------------------------------------------------------------------------------------
-			$_SESSION['sUser'] = $model->data['username'];
-			$_SESSION['sUserUID'] = $model->data['UID'];
-			$_SESSION['sMessage'] .= "You are now logged in.<br/>\n";
-			$user->load($model->data['UID']);
-			do302('users/profile/'); // show user his profile
+			$session->user = $model->UID;
+			$session->msg('You are now logged in.', 'ok');
+			$user->load($model->UID);
+			$page->do302('users/profile/'); // show user his profile
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	not enough info yet
 			//--------------------------------------------------------------------------------------
 			$report = "<b>Before you continue:</b><br/>\n" . $report . "<br/><br/>\n";
-			$_SESSION['sMessage'] .= "[[:theme::navtitlebox::label=Notice:]]"
-								  . "<font color='red'>" . $report . "</font>";
+			$session->msg("<font color='red'>" . $report . "</font>", 'bad');
 		}
 
 	}
@@ -116,7 +118,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ($showPage == true) {
-		$page->load($installPath . 'modules/users/actions/signup.page.php');
+		$page->load('modules/users/actions/signup.page.php');
 		foreach($formvars as $field => $value) { $page->blockArgs[$field] = $value; }
 		$page->render();
 	}

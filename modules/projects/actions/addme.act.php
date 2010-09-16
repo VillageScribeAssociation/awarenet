@@ -1,79 +1,77 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	current user is requesting to join a project
 //--------------------------------------------------------------------------------------------------
 	
-	if ($user->data['ofGroup'] == 'public') { do403(); }	// public and banned users can't do this
-	
-	if ( (array_key_exists('action', $_POST) == true)
-	   && ($_POST['action'] == 'askToJoin')
-	   && (array_key_exists('UID', $_POST) == true)
-	   && (dbRecordExists('projects', $_POST['UID']) == true) ) {
+	if ('public' == $user->role) { $page->do403(); }	// public and banned users can't do this	
 
-		require_once($installPath . 'modules/projects/models/project.mod.php');
+	if ( (true == array_key_exists('action', $_POST))
+	   && ('askToJoin' == $_POST['action'])
+	   && (true == array_key_exists('UID', $_POST))
+	   && (true == $db->objectExists('Projects_Project', $_POST['UID'])) ) {
+
+		require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 		//------------------------------------------------------------------------------------------
 		//	check for an existing request
 		//------------------------------------------------------------------------------------------
-		// TODO: use projectmembers object
+		//$sql = "select * from Projects_Membership "
+		//	 . "where projectUID='" . $db->addMarkup($_POST['UID']) . "' "
+		//	 . "and userUID='" . $user->UID . "'";
 
-		$sql = "select * from projectmembers "
-			 . "where projectUID='" . sqlMarkup($_POST['UID']) . "' "
-			 . "and userUID='" . $user->data['UID'] . "'";
-
-		$result = dbQuery($sql);
-		if (dbNumRows($result) > 0) { do302('projects/' . $_POST['UID']); }
+		$model = new Projects_Membership();
+		$model->findAndLoad($_POST['UID'], $user->UID);
+		if (true == $model->loaded) { 
+			$session->msg('You have already asked to join this project.', 'bad');
+			$page->do302('projects/' . $_POST['UID']); 
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	no existing request, make one 
 		//------------------------------------------------------------------------------------------
-		//TODO: use projectmembers object
 
-		$fields = array('UID' => createUID(), 'projectUID' => sqlMarkup($_POST['UID']),
-						'userUID' => $user->data['UID'], 'datetime' => mysql_datetime(), 
-						'editedOn' => mysql_datetime(), 'editedBy' => $user->data['UID']);
-						
-		$sql = "insert into projectmembers values "
-			 . "('%%UID%%', '%%projectUID%%', '%%userUID%%', 'asked', '%%datetime%%', "
-			 . "'%%editedOn%%', '%%editedBy%%')";
-
-		dbQuery(replaceLabels($fields, $sql));
-
+		$model->projectUID = $_POST['UID'];
+		$model->userUID = $user->UID;
+		$model->joined = $db->datetime();
+		$report = $model = save();
+					
 		//------------------------------------------------------------------------------------------
 		//	notify admins of request
 		//------------------------------------------------------------------------------------------
 
-		$model = new Project($_POST['UID']);
+		$model = new Projects_Project($_POST['UID']);
 
 		$pUID = $_POST['UID'];													// UID of project
-		$nUID = createUID();													// notice UID
-		$uUID = $user->data['UID'];												// user UID
-		$fromUrl = "%%serverPath%%users/profile/" . $user->data['recordAlias'];	// user profile
-		$projectUrl = "%%serverPath%%projects/" . $model->data['recordAlias'];	
-		$projectLink = "<a href='" . $projectUrl . "'>" . $model->data['title'] . "</a>";
+		$nUID = $kapenta->createUID();											// notice UID
+		$uUID = $user->UID;														// user UID
+		$fromUrl = "%%serverPath%%users/profile/" . $user->alias;				// user profile
+		$projectUrl = "%%serverPath%%projects/" . $model->alias;	
+		$projectLink = "<a href='" . $projectUrl . "'>" . $model->title . "</a>";
 		$title = $user->getNameLink() . ' would like to join your project: ' . $projectLink;
 
 		$message = "(no message attached)";
 		if (array_key_exists('message', $_POST) == true) { 
-			$message = "message attached: " . stripslashes(clean_string($_POST['message']));
+			$message = "message attached: " . stripslashes($utils->cleanString($_POST['message']));
 		}
-
 		notifyProjectAdmins($pUID, $nUID, $uUID, $fromUrl, $title, $message, $projectUrl, '');
 
 		//------------------------------------------------------------------------------------------
 		//	return to project page
 		//------------------------------------------------------------------------------------------
 
-		$_SESSION['sMessage'] .= "[[:theme::navtitlebox::width=570::label=Request Made:]]\n"
-							   . "You have requested to join this project. "
-							   . "Please be patient in waiting for a response from the people "
-							   . "in charge of this project.<br/><br/>\n";
+		$msg . "You have requested to join this project. "
+			 . "Please be patient in waiting for a response from the people "
+			 . "in charge of this project.\n";
 
-		do302('projects/' . $_POST['UID']);
+		$session->msg($msg, 'ok');
+		$page->do302('projects/' . $_POST['UID']);
 
 	} else {
-		do404();
+		$page->do404();
 	}
 
 ?>

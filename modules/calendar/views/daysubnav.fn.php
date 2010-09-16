@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	subnav for day display
@@ -10,33 +10,33 @@
 //arg: day - day (dd) 01 to 31 [string]
 
 function calendar_daysubnav($args) {
-	global $serverPath;
+	global $db, $theme;
 	if (array_key_exists('day', $args) == false) { return false; }
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
-	$year = sqlMarkup($args['year']);
-	$month = sqlMarkup($args['month']);
-	$day = sqlMarkup($args['day']);
+	$year = $db->addMarkup($args['year']);
+	$month = $db->addMarkup($args['month']);
+	$day = $db->addMarkup($args['day']);
 	$html = '';
 	
-	$c = new Calendar();
+	$model = new Calendar_Entry();
 	$labels = array();
-	$prev = $c->getPrevDay($day, $month, $year);
-	$labels['prevDayUrl'] = $serverPath . 'calendar/day_' . $prev['year'] . '_' 
+	$prev = $model->getPrevDay($day, $month, $year);
+	$labels['prevDayUrl'] = '%%serverPath%%calendar/day_' . $prev['year'] . '_' 
 							. $prev['month'] . '_' . $prev['day'];
-	$next = $c->getNextDay($day, $month, $year);
-	$labels['nextDayUrl'] = $serverPath . 'calendar/day_' . $next['year'] . '_' 
+	$next = $model->getNextDay($day, $month, $year);
+	$labels['nextDayUrl'] = '%%serverPath%%calendar/day_' . $next['year'] . '_' 
 							. $next['month'] . '_' . $next['day'];
 	
-	$labels['plus1'] = $c->drawMonth($next['month'], $next['year'], 'small');
-	$next = $c->getNextMonth($next['month'], $next['year']);
-	$labels['plus2'] = $c->drawMonth($next['month'], $next['year'], 'small');
-	$next = $c->getNextMonth($next['month'], $next['year']);
-	$labels['plus3'] = $c->drawMonth($next['month'], $next['year'], 'small');
-	$next = $c->getNextMonth($next['month'], $next['year']);
-	$labels['plus4'] = $c->drawMonth($next['month'], $next['year'], 'small');
+	$labels['plus1'] = $model->drawMonth($next['month'], $next['year'], 'small');
+	$next = $model->getNextMonth($next['month'], $next['year']);
+	$labels['plus2'] = $model->drawMonth($next['month'], $next['year'], 'small');
+	$next = $model->getNextMonth($next['month'], $next['year']);
+	$labels['plus3'] = $model->drawMonth($next['month'], $next['year'], 'small');
+	$next = $model->getNextMonth($next['month'], $next['year']);
+	$labels['plus4'] = $model->drawMonth($next['month'], $next['year'], 'small');
 	
-	$html .= replaceLabels($labels, loadBlock('modules/calendar/views/daysubnav.block.php'));
+	$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/calendar/views/daysubnav.block.php'));
 	return $html;
 }
 

@@ -1,8 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list project members for the nav (300 px wide)
@@ -14,25 +13,34 @@
 function projects_listmembersnav($args) {
 	global $user;
 	$editmode = 'no';
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
-	if (authHas('projects', 'view', '') == false) { return false; }
-	if (array_key_exists('editmode', $args) == true) { $editmode = $args['editmode']; }
-	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	$html = '';				//%	return value [string]
 
-	$model = new project($args['raUID']);
-	$members = $model->getMembers();
-	$html = '';
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if (true == array_key_exists('editmode', $args)) { $editmode = $args['editmode']; }
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return false; }
 
+	$model = new Projects_Project($args['raUID']);
+
+	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$isAdmin = false;
-	foreach($members as $userUID => $role) { if ($userUID == $user->data['UID']) { $isAdmin = true; } }	
+	$members = $model->getMembers();
+	foreach($members as $userUID => $role) 
+		{ if (('admin' == $role) || ('admin' == $user->role)) { $isAdmin = true; } }
 
 	foreach($members as $userUID => $role) {
 		$html .= "[[:users::summarynav::userUID=" . $userUID 
 			   . "::extra=(" . $role . ")::target=_parent:]]\n";
 
-		if ( (true == $isAdmin) && ($userUID != $user->data['UID']) && ('yes' == $editmode) ) {
-			$rmUrl = "%%serverPath%%projects/editmembers/removemember_" . $userUID . "/" . $args['projectUID'];
+		if ( (true == $isAdmin) && ($userUID != $user->UID) && ('yes' == $editmode) ) {
+			$rmUrl = "%%serverPath%%projects/editmembers/removemember_". $userUID ."/". $model->UID;
 			$html .= "<a href='" . $rmUrl . "'>[ remove member &gt;&gt; ]</a><br/>";
 		}
 	}

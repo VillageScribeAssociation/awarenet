@@ -10,10 +10,10 @@ function admin_channelauth($args) {
 	if (array_key_exists('channel', $args) == false) { return ''; }
 
 	switch ($args['channel']) {
-		case 'syspagelog': 			if ($user->data['ofGroup'] == 'admin') {return 'yes'; }
+		case 'syspagelog': 			if ('admin' == $user->role) {return 'yes'; }
 									break;
 
-		case 'syspagelogsimple': 	if ($user->data['ofGroup'] == 'admin') {return 'yes'; }
+		case 'syspagelogsimple': 	if ('admin' == $user->role) {return 'yes'; }
 									break;
 	}
 	return 'no';

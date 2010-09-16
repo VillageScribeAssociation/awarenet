@@ -81,7 +81,11 @@ function stripHTML($someText) { return preg_replace("'<[\/\!]*?[^<>]*?>'si", "",
 //--------------------------------------------------------------------------------------------------
 //returns: date in format used by MySQL
 
-function mysql_dateTime() { return gmdate("Y-m-j H:i:s", time()); }
+function mysql_dateTime() { 
+	global $session, $db;
+	$session->msgAdmin('deprecated: mysql_dateTime() => $db->datetime($date)', 'bug');
+	return $db->datetime();
+}
 
 //--------------------------------------------------------------------------------------------------
 //|	convert some arbitrary date/time to mySQL format
@@ -89,7 +93,11 @@ function mysql_dateTime() { return gmdate("Y-m-j H:i:s", time()); }
 //arg: date - UNIX timestamp [string]
 //returns: date in format used by MySQL
 
-function mk_mysql_dateTime($date) { return gmdate("Y-m-j H:i:s", $date); }
+function mk_mysql_dateTime($date) { 
+	global $session, $db;
+	$session->msgAdmin('deprecated: mk_mysql_dateTime() => $db->datetime($date)', 'bug');
+	return $db->dateimte($date);
+}
 
 //--------------------------------------------------------------------------------------------------
 //|	get a field from $_GET, $_POST, or set it to a default value if it down not exist
@@ -173,7 +181,8 @@ function mb_endstr($numChars, $txt) {
 //: TODO: use centralized directory traversal check
 
 function is_extantrw($fileName) {
-	if (file_exists($fileName)) {
+	global $kapenta; 
+	if ($kapenta->fileExists($fileName)) {
 		if (is_readable($fileName) == false) { return false; }
 		if (is_writable($fileName) == false) { return false; }
 	} else { return false; }
@@ -218,7 +227,7 @@ function filePutContents($fileName, $contents, $mode) {
 //arg: fileName - containing full path to be confirmed or created [string]
 
 function fileMakeSubdirs($fileName) {
-	global $installPath;
+	global $kapenta;
 	$fileName = str_replace("//", '/', $fileName);	
 	$dirName = str_replace($installPath, '', $fileName);
 	$dirName = dirname($dirName);
@@ -226,7 +235,7 @@ function fileMakeSubdirs($fileName) {
 	$subDirs = explode('/', $dirName);
 	foreach($subDirs as $sdir) {
 		$base = $base . $sdir . '/';
-		if (file_exists($base) == false) { mkdir($base); }
+		if (false == $kapenta->fileExists($base)) { mkdir($base); }
 	}
 }
 
@@ -248,7 +257,7 @@ function curlGet($url, $password = '') {
 	global $proxyPass;
 	global $proxyPort;
 	
-	if (function_exists('curl_init') == false) { return false; }	// is cURL installed?
+	if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
 
 	//---------------------------------------------------------------------------------------------
 	//	create baisc cURL HTTP GET request
@@ -336,7 +345,6 @@ function jsMarkup($txt) {
 //arg: text - value of javascript variable [string]
 //opt: scriptTags - wrap in html script tags if true [bool]
 //returns: code for javascript variable assignment [string]
-
 
 function base64EncodeJs($varName, $text, $scriptTags = true) {
 	$b64 = base64_encode($text);										// encode

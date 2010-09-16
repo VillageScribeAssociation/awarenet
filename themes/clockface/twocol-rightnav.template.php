@@ -84,7 +84,7 @@
 
 		    <td valign='top' align='left'>
 				<br/>
-				<i>%%sMessage%%</i>
+				%%sMessage%%
 				%%content%%
 				<br/><br/><br/>
 		    </td>
@@ -128,6 +128,7 @@
 <div id='pumpDiv' name='xPump'></div>
 <br/>
 <br/><br/>
+%%debug%%
 </center>
 <div id='debugger'></div>
 </body>

@@ -1,6 +1,6 @@
 <? /*
 <h3>Add New User</h3>
-<form name='editUser' method='POST' action='/users/new/'>
+<form name='editUser' method='POST' action='%%serverPath%%users/new/'>
 <input type='hidden' name='action' value='newUserRecord' />
 <table noborder>
   <tr>

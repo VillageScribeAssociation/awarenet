@@ -2,7 +2,7 @@
 
 <script src='%%serverPath%%modules/messages/compose.js'></script>
 <h1>New Message</h1>
-<form name='sendMessage' method='POST' action='/messages/send/' />
+<form name='sendMessage' method='POST' action='%%serverPath%%messages/send/' />
 <input type='hidden' name='action' value='sendMessage' />
 <input type='hidden' name='re' value='%%reMsg%%' />
 <input type='hidden' id='txtRecipients' name='recipients' value='%%jsRecipientUID%%' />
@@ -31,7 +31,7 @@
       </form>
     </td>
     <td valign='top'>
-      <form name='cancelSend' method='GET' action='/messages/'>
+      <form name='cancelSend' method='GET' action='%%serverPath%%messages/'>
       <input type='submit' value='Cancel' />
       </form>
     </td>

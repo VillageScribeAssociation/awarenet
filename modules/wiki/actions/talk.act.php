@@ -1,20 +1,18 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/wiki/models/wiki.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show talk page for a given article
+//*	show talk page for a given article 
 //--------------------------------------------------------------------------------------------------
+//	NOTE! talks pages are now articles in a different namespace
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	$raUID = $request['ref'];
-
-	if ($request['ref'] == '') { do404(); } 
-
-	$UID = raFindRedirect('wiki', 'talk', 'wiki', $request['ref']);
+	if ('' == $req->ref) { $page->do404(); } 
+	$UID = $aliases->findRedirect('Wiki_Article');
 
 	//----------------------------------------------------------------------------------------------
 	//	load and process the article and talk page
 	//----------------------------------------------------------------------------------------------
-
 	$model = new Wiki($raUID);
 	$model->expandWikiCode();
 	$extArray = $model->extArray();	
@@ -26,8 +24,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show it
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/wiki/actions/talk.page.php');
+	$page->load('modules/wiki/actions/talk.page.php');
 	$page->blockArgs['raUID'] = $raUID;
 	foreach($extArray as $key => $value) { $page->blockArgs[$key] = $value; }
 	$page->render();

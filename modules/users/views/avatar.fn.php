@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find the group's logo/picture (300px) or a blank image
@@ -12,6 +12,7 @@
 //opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function users_avatar($args) {
+	global $db;
 	global $serverPath;
 	$size = 'width300';
 	$link = 'yes';
@@ -28,19 +29,20 @@ function users_avatar($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 
-	$model = new User(sqlMarkup($args['raUID']));	
-	$sql = "select * from images where refModule='users' and refUID='" . $model->data['UID'] 
+	$model = new Users_User($db->addMarkup($args['raUID']));	
+	$sql = "select * from Images_Image where refModule='users' and refUID='" 
+		 . $db->addMarkup($model->UID)
 	     . "' order by weight";
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+			return "<a href='/images/show/" . $row['alias'] . "'>" 
+				. "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->getName() . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->getName() . "'>";
 		}
 	}
 	

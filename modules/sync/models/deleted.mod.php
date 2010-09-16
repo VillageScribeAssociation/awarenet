@@ -21,9 +21,11 @@ class DeletedItem {
 	//opt: UID - UID of object recording deleted item (not the UID of the item itself) [string]
 
 	function DeletedItem($UID = '') {
-		$this->dbSchema = $this->initDbSchema();
-		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
+		global $kapenta, $db;
+
+		$this->dbSchema = $this->getDbSchema();
+		$this->data = $db->makeBlank($this->dbSchema);
+		$this->UID = $kapenta->createUID();
 		if ($UID != '') { $this->load($UID); }
 	}
 
@@ -33,8 +35,10 @@ class DeletedItem {
 	//arg: UID - UID of obect recording deleted item (not the UID of the item itself) [string]
 
 	function load($UID) {
-		$ary = dbLoad('delitems', $UID, 'true');
-		if ($ary == false) { return false; }
+		global $db;
+
+		$ary = $db->load('delitems', $UID, 'true');
+		if (false == $ary) { return false; }
 		$this->data = $ary;
 		return true;
 	}
@@ -51,11 +55,13 @@ class DeletedItem {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
+	global $db;
+
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
 		$d = $this->data;
-		dbSave($this->data, $this->dbSchema);	 // consider alternate save mechanism
+		$db->save($this->data, $this->dbSchema);	 // consider alternate save mechanism
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -118,12 +124,14 @@ class DeletedItem {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
+		global $db;
+
 		$report = "<h3>Installing Deleted Items Table</h3>\n";
 
 		//------------------------------------------------------------------------------------------
 		//	create blog table if it does not exist
 		//------------------------------------------------------------------------------------------
-		if (dbTableExists('delitems') == false) {	
+		if (false == $db->tableExists('delitems')) {	
 			dbCreateTable($this->dbSchema);	
 			$this->report .= 'created deleted items table and indices...<br/>';
 		} else {
@@ -138,7 +146,8 @@ class DeletedItem {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		dbDelete('delitems', $this->data['UID']);
+		global $db;
+		$db->delete('delitems', $this->UID);
 	}
 	
 }

@@ -1,24 +1,24 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
+	include $kapenta->installPath . 'modules/chat/inc/bots.inc.php';
+
 //--------------------------------------------------------------------------------------------------
 //	user has sent a message
 //--------------------------------------------------------------------------------------------------
 
-	include $installPath . 'modules/chat/inc/bots.inc.php';
-
 	//----------------------------------------------------------------------------------------------
 	//	make sure public users cannot send messages (spam)
 	//----------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] == 'public') { doXmlError('please log in'); } 
+	if ('public' == $user->role) { $page->doXmlError('please log in'); } 
 
 	//----------------------------------------------------------------------------------------------
 	//	OK, send the message
 	//----------------------------------------------------------------------------------------------
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
 
-	if ( (array_key_exists('toUser', $_POST))
-		 AND (dbRecordExists('users', $_POST['toUser']))
-		 AND (array_key_exists('content', $_POST))
+	if ( (true == array_key_exists('toUser', $_POST))
+		 AND (true == $db->objectExists('Users_User', $_POST['toUser']))
+		 AND (true == array_key_exists('content', $_POST))
 		) {
 
 		$cleanContent = trim(strip_tags($_POST['content']));
@@ -39,35 +39,35 @@
 		//$msgUID = $recipient->createMsgUID();
 
 		//$recipient->addMessage ('r' . $msgUID, 
-		//						$user->data['UID'], 
-		//					 	sqlMarkup($_POST['toUser']), 
+		//						$user->UID, 
+		//					 	$db->addMarkup($_POST['toUser']), 
 		//						chatMarkup($msgPair['recipient']),
 		//						'no');
 
 		//$recipient->save();
 
-		$msgUID = createUID();
+		$msgUID = $kapenta->createUID();
 		$b64Content = base64_encode($cleanContent);
-		$msg = base64_encode($msgUID . '|' . $user->data['UID'] . '|' . mysql_datetime() . '|' . time() . '|' . $b64Content . '|0');
+		$msg = base64_encode($msgUID . '|' . $user->UID . '|' . $db->datetime() . '|' . time() . '|' . $b64Content . '|0');
 		notifyChannel('chat-user-' . $_POST['toUser'], 'add', $msg);
 
 		//------------------------------------------------------------------------------------------
 		//	senders copy
  		//------------------------------------------------------------------------------------------
 
-		//$sender = new Chat($user->data['UID']);
+		//$sender = new Chat($user->UID);
 		//$msgUID = $sender->createMsgUID();
 
 		//$sender->addMessage('s' . $msgUID, 
-		//					sqlMarkup($_POST['toUser']), 
-		//					$user->data['UID'], 
+		//					$db->addMarkup($_POST['toUser']), 
+		//					$user->UID, 
 		//					chatMarkup($msgPair['sender']), 
 		//					'yes');
 
 		//$sender->save();
-		$msg = base64_encode($msgUID . '|' . $_POST['toUser'] . '|' . mysql_datetime() . '|' . time() . '|' . $b64Content . '|1');
-		notifyChannel('chat-user-' . $user->data['UID'], 'add', $msg);
 
+		$msg = base64_encode($msgUID . '|' . $_POST['toUser'] . '|' . $db->datetime() . '|' . time() . '|' . $b64Content . '|1');
+		notifyChannel('chat-user-' . $user->UID, 'add', $msg);
 
 	}
 

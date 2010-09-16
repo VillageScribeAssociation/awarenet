@@ -4,19 +4,19 @@
 //	add a new announcements post
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('announcements', 'edit', '') == false) { do403(); }
-	if (array_key_exists('refmodule', $request['args']) == false) { do403(); }
-	if (array_key_exists('refuid', $request['args']) == false) { do403(); }
+	if ($user->authHas('announcements', 'Announcements_Announcement', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if (array_key_exists('refmodule', $req->args) == false) { $page->do403(); }
+	if (array_key_exists('refuid', $req->args) == false) { $page->do403(); }
 
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
-	$model = new Announcement();
-	$model->data['notifications'] = 'init';
-	$model->data['title'] = '';
-	$model->data['refModule'] = $request['args']['refmodule'];
-	$model->data['refUID'] = $request['args']['refuid'];
+	$model = new Announcements_Announcement();
+	$model->notifications = 'init';
+	$model->title = '';
+	$model->refModule = $req->args['refmodule'];
+	$model->refUID = $req->args['refuid'];
 	$model->save();
 
-	do302('announcements/edit/' . $model->data['UID']);
+	$page->do302('announcements/edit/' . $model->UID);
 
 ?>

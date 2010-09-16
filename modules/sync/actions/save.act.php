@@ -1,38 +1,44 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	save updates to server records
+//*	save updates to server records
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); } // only admins can use this module
-	require_once($installPath . 'modules/sync/models/server.mod.php');
+	//----------------------------------------------------------------------------------------------
+	//	check user role and POST vars
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); } // only admins can use this module
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('updateServer' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $page->do404('Server not specified (UID).'); }
 
-	if ( (array_key_exists('action', $_POST) == true) 
-		&& ($_POST['action'] == 'updateServer')
-		&& (array_key_exists('UID', $_POST) == true)
-		&& (dbRecordExists('servers', $_POST['UID']) == true) ) {
 
-		//------------------------------------------------------------------------------------------
-		//	save changes to a server record
-		//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//	load and update the Sync_Server object
+	//----------------------------------------------------------------------------------------------
+	$model = new Sync_Server($UID);
+	if (false == $model->loaded) { $page->do404("could not load Server $UID");}
 
-		$model = new Server($_POST['UID']);
-		$model->data['servername'] = $_POST['servername'];
-		$model->data['serverurl'] = $_POST['serverurl'];
-		$model->data['password'] = $_POST['password'];
-		$model->data['direction'] = $_POST['direction'];
-		$model->data['active'] = $_POST['active'];
-		$model->save();
-
-		//------------------------------------------------------------------------------------------
-		//	redirect back to list of servers
-		//------------------------------------------------------------------------------------------
-		
-		$_SESSION['sMessage'] .= "Server record " . $_POST['UID'] . " updated<br/>\n";
-		do302('sync/listservers/');
-
+	foreach($_POST as $field => $value) {
+		switch(strtolower($field)) {
+			case 'servername':	$model->servername = $utils->cleanString($value); break;
+			case 'serverurl':	$model->serverurl = $utils->cleanString($value); break;
+			case 'password':	$model->password = $utils->cleanString($value); break;
+			case 'direction':	$model->direction = $utils->cleanString($value); break;
+			case 'active':	$model->active = $utils->cleanString($value); break;
+		}
 	}
-	
-	do404();
+	$report = $model->save();
+
+	//----------------------------------------------------------------------------------------------
+	//	check that object was saved and redirect
+	//----------------------------------------------------------------------------------------------
+	if ('' == $report) { $session->msg('Saved changes to server.', 'ok'); }
+	else { $session->msg('Could not save Server:<br/>' . $report, 'bad');
+
+	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+	else { $page->do302('/sync/show/' . $model->UID); }
 
 ?>

@@ -5,8 +5,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function blocks_editform($args) {
+	global $page;
+
+	global $theme;
+
 	global $serverPath;
-	if ($user->data['ofGroup'] == 'admin') { do404(); }
+	if ('admin' == $user->role) { $page->do404(); }
 	if ((array_key_exists('module', $args) AND (array_key_exists('block', $args)))) {
 		//-----------------------------------------------------------------------------------------
 		//	check arguments
@@ -21,7 +25,7 @@ function blocks_editform($args) {
 		//-----------------------------------------------------------------------------------------
 		//	load the block
 		//-----------------------------------------------------------------------------------------
-		$block = trim(loadBlock($fileName)) . "\n";
+		$block = trim($theme->loadBlock($fileName)) . "\n";
 		$block = str_replace($serverPath, '%%serverPath%%', $block);
 		$block = str_replace('http://kapenta.com', '%%serverPath%%', $block);
 		$block = str_replace('http://kapenta.org.uk', '%%serverPath%%', $block);
@@ -34,11 +38,10 @@ function blocks_editform($args) {
 		//-----------------------------------------------------------------------------------------
 		$labels['blockContent'] = $block;
 		$labels['blockContentJs64'] = base64EncodeJs('blockContentJs64', $block, false);
-		$block = loadBlock('modules/blocks/views/editform.block.php');	
-		return replaceLabels($labels, $block);
+		$block = $theme->loadBlock('modules/blocks/views/editform.block.php');	
+		return $theme->replaceLabels($labels, $block);
 	}
 }
 
 //--------------------------------------------------------------------------------------------------
 ?>
-

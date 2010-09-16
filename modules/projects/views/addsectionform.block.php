@@ -1,5 +1,5 @@
 <? /*
-<form name='addProjectSection' method='POST' action='/projects/save/'>
+<form name='addProjectSection' method='POST' action='%%serverPath%%projects/save/'>
 <input type='hidden' name='action' value='addSection' />
 <input type='hidden' name='UID' value='%%UID%%' />
 <b>Add Section:</b><br/>

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display contents of a single message queue, formatted as a table
@@ -10,7 +10,7 @@
 function chat_showqueue($args) {
 	global $user;
 	$html = '';
-	$userUID = $user->data['UID'];
+	$userUID = $user->UID;
 	if (array_key_exists('user', $args) == true) { $userUID = $args['user']; }	
 
 	$html .= "<table noborder>\n";

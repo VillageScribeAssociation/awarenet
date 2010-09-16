@@ -5,7 +5,7 @@
     </td>
     <td width='10'></td>
     <td valign='top'>
-      <b><a class='black' href='/forums/%%recordAlias%%'>%%title%%</a></b><br/>
+      <b><a class='black' href='/forums/%%alias%%'>%%title%%</a></b><br/>
 	  <small>
         Threads: %%threads%%<br/>
         Replies: %%replies%%<br/>

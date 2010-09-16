@@ -1,27 +1,27 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	delete a record
+//*	delete a Calendar_Entry object
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('calendar', 'edit', '') == false) { do403(); }
+	//----------------------------------------------------------------------------------------------
+	//	check POST vars and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('deleteRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $page->do404('Entry not specified (UID)'); }
+	  
+	$model = new Calendar_Entry($_POST['UID']);
+	if (false == $user->authHas('calendar', 'Calendar_Entry', 'delete', $model->UID))
+		{ $page->do403(); }	  
 
-	if ( (array_key_exists('action', $_POST)) 
-	  AND ($_POST['action'] == 'deleteRecord') 
-	  AND (array_key_exists('UID', $_POST)) 
-	  AND (dbRecordExists('calendar', $_POST['UID'])) ) {
-	  
-		require_once($installPath . 'modules/calendar/models/calendar.mod.php');
-	  
-		$c = new calendar();
-		$c->load($_POST['UID']);
-		
-		$_SESSION['sMessage'] .= "Deleted coin: " . $c->data['name'];
-		
-		$c->delete();
-		
-		do302('calendar/');
-	  
-	} else { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	delete the entry and redirect back to the calendar front page
+	//----------------------------------------------------------------------------------------------	
+	$model->delete();
+	$session->msg('Deleted calendar entry: ' . $model->title, 'ok');
+	$page->do302('calendar/');
 
 ?>

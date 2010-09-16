@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for uploading multiple files
@@ -9,6 +9,8 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_uploadmultipleform($args) {
+	global $theme;
+
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +23,7 @@ function files_uploadmultipleform($args) {
 	//	add the form
 	//----------------------------------------------------------------------------------------------
 	$labels = array('refModule' => $args['refModule'], 'refUID' => $args['refUID']);
-	$html = replaceLabels($labels, loadBlock('modules/files/views/uploadmultiple.block.php'));
+	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/files/views/uploadmultiple.block.php'));
 	
 	return $html;
 }
@@ -29,4 +31,3 @@ function files_uploadmultipleform($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

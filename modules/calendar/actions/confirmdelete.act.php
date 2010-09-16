@@ -1,20 +1,29 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	confirm deletion of a coin
+//*	confirm deletion of a calendar entry
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('calendar', 'edit', '') == false) { do403(); }
-	if (array_key_exists('uid', $request['args']) == false) { do404(); }
-	if (dbRecordExists('calendar', sqlMarkup($request['args']['uid'])) == false) { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('uid', $req->args))
+		{ $page->do404('Calendar entry not specified.'); }
+
+	$model = new Calendar_Entry($req->args['uid']);
+	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }
+	if (false == $user->authHas('calendar', 'Calendar_Entry', 'delete', $model->UID))
+		{ $page->do403('You are not authorized to delete this calendar entry.'); }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the confirmation block and redirect to the entry page
+	//----------------------------------------------------------------------------------------------
+	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	
-	$coinRa = raGetDefault('calendar', $request['args']['uid']);
+	$block = $theme->loadBlock('modules/calendar/views/confirmdelete.block.php');
+	$html .= $theme->replaceLabels($labels, $block);
 	
-	$labels = array('UID' => $request['args']['uid'], 'raUID' => $coinRa);
-	
-	$html .= replaceLabels($labels, loadBlock('modules/calendar/views/confirmdelete.block.php'));
-	
-	$_SESSION['sMessage'] .= $html;
-	do302('calendar/' . $coinRa);
+	$session->msg($html, 'warn');
+	$page->do302('calendar/' . $model->alias);
 
 ?>

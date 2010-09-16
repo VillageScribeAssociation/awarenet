@@ -7,12 +7,12 @@
 	//---------------------------------------------------------------------------------------------
 	//	auth - only admins can do this
 	//---------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	render page
 	//---------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/admin/actions/livelog.page.php');
+	$page->load('modules/admin/actions/livelog.page.php');
 	$page->data['jsinit'] .= "\n\t\tmsgSubscribe('admin-syspagelogsimple', msgh_sysPageLog);\n";
 	$page->render();
 

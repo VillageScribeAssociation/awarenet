@@ -1,39 +1,39 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	change the order (weight) of sections relative to one another
+//*	change the order (weight) of sections relative to one another
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	//----------------------------------------------------------------------------------------------
+	//	check reference, args and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404(); }
+	if (array_key_exists('move', $req->args) == false) { $page->do404(); }
+	if (array_key_exists('section', $req->args) == false) { $page->do404(); } 
 
-	if ($request['ref'] == '') { do404(); }
-	if (array_key_exists('move', $request['args']) == false) { do404(); }
-	if (array_key_exists('section', $request['args']) == false) { do404(); } 
+	$model = new Projects_Project($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
 
-	$projectUID = raGetOwner($request['ref'], 'projects');
-	$sectionUID = $request['args']['section'];
-
-	if (dbRecordExists('projects', $projectUID) == false) { do404(); }	// no such project
-	$model = new Project($projectUID);
-
-	if (array_key_exists($sectionUID, $model->sections) == false) { do404(); } // no such section
+	// check section exists
+	$sectionUID = $req->args['section'];
+	if (false == array_key_exists($sectionUID, $model->sections) == false) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this project
 	//----------------------------------------------------------------------------------------------
-
 	$authorised = false;
-	if ($model->isMember($user->data['UID']) == true) { $authorised = true; }
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
+	if ($model->isMember($user->UID) == true) { $authorised = true; }
+	if ('admin' == $user->role) { $authorised = true; }
 
-	if ($authorised == false) { do403(); }
+	if ($authorised == false) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	move the section up (decrease weight)
 	//----------------------------------------------------------------------------------------------
 
-	if ($request['args']['move'] == 'up') {
+	if ($req->args['move'] == 'up') {
 		$currWeight = $model->sections[$sectionUID]['weight'];
 
 		// find section with next lowest weight
@@ -50,14 +50,14 @@
 				break;
 			}
 		}
-		do302('projects/edit/' . $model->data['recordAlias']);
+		$page->do302('projects/edit/' . $model->alias);
 	} 
 
 	//----------------------------------------------------------------------------------------------
 	//	move the section down (increase weight)
 	//----------------------------------------------------------------------------------------------
 
-	if ($request['args']['move'] == 'down') {
+	if ($req->args['move'] == 'down') {
 		$currWeight = $model->sections[$sectionUID]['weight'];
 
 		// find section with next heighest weight
@@ -75,12 +75,12 @@
 			}
 		}
 
-		do302('projects/edit/' . $model->data['recordAlias']);
+		$page->do302('projects/edit/' . $model->alias);
 	} 
 
 	//----------------------------------------------------------------------------------------------
 	//	if unhandled
 	//----------------------------------------------------------------------------------------------
-	do404();
+	$page->do404();
 
 ?>

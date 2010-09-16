@@ -1,6 +1,6 @@
 <? /*
 [[:theme::navtitlebox::width=570::label=Image:]]
-<img src='/images/width570/%%recordAlias%%' border='0' />
+<img src='/images/width570/%%alias%%' border='0' />
 [[:theme::navtitlebox::width=570::label=Metadata::toggle=divImageMeta:]]
 <div id='divImageMeta'>
 <h1>%%title%%</h1>

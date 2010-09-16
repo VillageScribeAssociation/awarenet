@@ -1,49 +1,55 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	save changes to an file
+//*	save changes to a Files_File object
 //--------------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST))
-	   AND ($_POST['action'] == 'savefile')
-	   AND (array_key_exists('UID', $_POST)) ) {
+	if ( (true == array_key_exists('action', $_POST))
+	   AND ('savefile' == $_POST['action'])
+	   AND (true == array_key_exists('UID', $_POST)) ) {
 
 		//------------------------------------------------------------------------------------------
 		//	check reference and authorisation
 		//------------------------------------------------------------------------------------------
 	   
-		$f = new File($_POST['UID']);
-		if ($f->data['fileName'] == '') { do404(); }
+		$model = new Files_File($_POST['UID']);
+		if (false == $model->loaded) { $page->do404(); }
 		
-		$authArgs = array('UID' => $f->data['refUID']);
-		if (authHas($f->data['refModule'], 'files', '') == false) { return false; }
+		if (false == $user->authHas($model->refModule, $model->refModel, 'files-edit', $model->refUID)) 
+			{ $page->do403(''); }
+
+		//TODO: more permission options here
 
 		//------------------------------------------------------------------------------------------
 		//	make the changes
 		//------------------------------------------------------------------------------------------
+		//TODO: more checking/cleanign here *security risk
+		$model->title = $_POST['title'];
+		$model->caption = $_POST['caption'];
+		$model->licence = $_POST['licence'];
+		$model->attribName = $_POST['attribName'];
+		$model->attribURL = $_POST['attribURL'];
 		
-		$f->data['title'] = $_POST['title'];
-		$f->data['caption'] = $_POST['caption'];
-		$f->data['licence'] = $_POST['licence'];
-		$f->data['attribName'] = $_POST['attribName'];
-		$f->data['attribURL'] = $_POST['attribURL'];
-		
-		$f->save();
-		
+		$report = $model->save();
+		if ('' != $report) { $session->msg('Changes could not be saved:<br/>' . $report, 'bad');
+
 		//------------------------------------------------------------------------------------------
 		//	redirect back
 		//------------------------------------------------------------------------------------------
 		
-		if (array_key_exists('return', $_POST)) {
-			if ($_POST['return'] == 'uploadmultiple') {
-				$retUrl = 'files/uploadmultiple/refModule_' . $f->data['refModule'] 
-					. '/refUID_' . $f->data['refUID'] . '/';
-				do302($retUrl);
+		if (true == array_key_exists('return', $_POST)) {
+			if ('uploadmultiple' == $_POST['return']) {
+				$retUrl = 'files/uploadmultiple'
+					 . '/refModule_' . $model->refModule 
+					 . '/refModel_' . $model->refModel
+					 . '/refUID_' . $model->refUID . '/';
+
+				$page->do302($retUrl);
 			}
 		}
-		do302('files/edit/' . $f->data['recordAlias']);
+		$page->do302('files/edit/' . $model->alias);
 	}
 
 ?>

@@ -1,80 +1,83 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	add a comment to something
+//*	add a comment to something
 //--------------------------------------------------------------------------------------------------
 	
 	//----------------------------------------------------------------------------------------------
 	//	check request vars 
 	//----------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
-
-	if (array_key_exists('refModule', $_POST) == false) { do404(); }
-	if (array_key_exists('refUID', $_POST) == false) { do404(); }
-	if (array_key_exists('return', $_POST) == false) { do404(); }
+	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule not given'); }
+	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel not given'); }
+	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID not given'); }
+	if (false == array_key_exists('return', $_POST)) { $page->do404('no return url'); }
 
 	$refModule = $_POST['refModule'];
+	$refModel = $_POST['refModel'];
 	$refUID = $_POST['refUID'];
 	$return = $_POST['return'];
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions, valid module
 	//----------------------------------------------------------------------------------------------
-
-	if (authHas($refModule, 'comment', '') == false) { do403(); }
-	if (in_array($refModule, listModules()) == false) { do404(); }
+	//TODO: check that model exists
+	if (false == in_array($refModule, $kapenta->listModules())) { $page->do404(); }
+	if (false == $user->authHas($refModule, $refModel, 'comment', $refUID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	dont save blank comments
 	//----------------------------------------------------------------------------------------------
-
-	if (trim($_POST['comment']) == '') { do302($return); }
+	if ('' == trim($_POST['comment'])) { 
+		$session->msg('No comment entered', 'bad');
+		$page->do302($return); 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	save the record
 	//----------------------------------------------------------------------------------------------
 
-	$model = new Comment();
-	$model->data['UID'] = createUID();
-	$model->data['refModule'] = $refModule;
-	$model->data['refUID'] = $refUID;
-	$model->data['comment'] = strip_tags($_POST['comment']);
-	$model->data['createdBy'] = $user->data['UID'];
-	$model->data['createdOn'] = mysql_datetime();
+	$model = new Comments_Comment();
+	$model->refModule = $refModule;
+	$model->refModel = $refModel;
+	$model->refUID = $refUID;
+	$model->comment = strip_tags($_POST['comment']);		//TODO: better clean function here
 	$ext = $model->extArray();
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------
 	//	raise 'comment_added' event on refModule
 	//----------------------------------------------------------------------------------------------
-
+	/*	TODO: this
 	$args = array(	'refModule' => $refModule, 
 					'refUID' => $refUID, 
 					'commentUID' => $commentUID, 
 					'comment' => $ext['comment']    );
 
 	eventSendSingle($refModule, 'comments_added', $args);
+	*/
 
 	//----------------------------------------------------------------------------------------------
 	//	send out page notifications
 	//----------------------------------------------------------------------------------------------
-
+	/*	TODO: to be handled by page triggers
 	$channelID = 'comments-' . $refModule . '-' . $refUID;
-	$blockHtml = expandBlocks('[[:comments::summary::UID=' . $ext['UID'] . ':]]', '');
+	$blockHtml = $theme->expandBlocks('[[:comments::summary::UID=' . $ext['UID'] . ':]]', '');
 	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
 	notifyChannel($channelID, 'add', $data);
 
 	$channelID = 'comments-' . $refModule . '-' . $refUID . '-nav';
-	$blockHtml = expandBlocks('[[:comments::summarynav::UID=' . $ext['UID'] . ':]]', '');
+	$blockHtml = $theme->expandBlocks('[[:comments::summarynav::UID=' . $ext['UID'] . ':]]', '');
 	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
 	notifyChannel($channelID, 'add', $data);
-
+	*/
 	//----------------------------------------------------------------------------------------------
 	//	return to whence the comment came
 	//----------------------------------------------------------------------------------------------
 	
-	if ($return == 'none') { echo '#COMMENT ADDED\n'; }
-	else { do302($return); }
+	if ('none' == $return) { echo '#COMMENT ADDED\n'; }	//TODO: XML option
+	else { $page->do302($return); }
 
 ?>

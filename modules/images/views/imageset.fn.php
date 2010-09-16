@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a set of images associated with something
@@ -9,40 +9,43 @@
 //arg: refUID - UID of item which owns the images [string]
 
 function images_imageset($args) {
-	global $serverPath;
-	
+	global $db, $user;
+	$html = '';					//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	$authArgs = array('UID' => $args['refUID']);
-	if (authHas($args['refModule'], 'images', $authArgs) == false) { return false; }
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
+	if (false == $user->authHas($args['refModule'], $args['refModel'], 'images-show', $args['refUID']))
+		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the image records and make html
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from images where refModule='" . sqlMarkup($args['refModule']) 
-	     . "' and refUID='" . sqlMarkup($args['refUID']) . "'";
+	$conditions = array();
+	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+
+	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
+	//    . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
 	     
-	$html = '';
-	$result = dbQuery($sql);
-	while($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$imgUrl = $serverPath . 'images/thumb/' . $row['recordAlias'];
-		$editURL = $serverPath . 'images/edit/return_uploadmultiple/' . $row['recordAlias'];
-		if (authHas($row['refModule'], 'images', '') == false) {
-			$editURL = $serverPath . 'images/viewset/return_uploadmultiple/' . $recordAlias;
-		}
+	foreach ($range as $row) {
+		$imgUrl = '%%serverPath%%images/thumb/' . $row['alias'];
+		$editURL = '%%serverPath%%images/edit/return_uploadmultiple/' . $row['alias'];
+		if (false == $user->authHas($row['refModule'], $row['refModel'], 'images-edit', $row['refUID'])) 
+			{ $editURL = $serverPath . 'images/viewset/return_uploadmultiple/' . $recordAlias; }
 		
 		$html .= "<a href='" . $editURL . "'>" 
 			. "<img src='" . $imgUrl . "' border='0' /></a>\n";
 		
 	}
+
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

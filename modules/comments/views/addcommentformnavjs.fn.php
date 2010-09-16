@@ -1,37 +1,54 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form to add new comments, submitted by xmlHTTPrequest
 //--------------------------------------------------------------------------------------------------
-//arg: refModule - module which owns the record, required [string]
-//arg: refUID - UID of record which owns the comment, required [string]
+//arg: refModule - module to which comment is exported, required [string]
+//arg: refModel - type of object which owns the comment, required [string]
+//arg: refUID - UID of object which owns the comment, required [string]
 //arg: return - page to return to, required [string]
 //opt: invitation - text encouraging someone to leave a comment, optional [string]
 
 function comments_addcommentformnavjs($args) {
-	global $user;
+	global $theme, $user;
 	$invitation = 'Add a comment';
+	$html = '';							//%	return value [string]
 
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('return', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
+	if (false == array_key_exists('return', $args)) { return '(no return destination)'; }
 
-	if (array_key_exists('invitation', $args) == true) { $invitation = $args['invitiation']; }	
-	if (authHas($args['refModule'], 'comment', '') == false) { return false; }
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
 
+	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
+	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) 
+		{ return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$labels = array();
 	$labels['invitation'] = $invitation;
-	$labels['refModule'] = $args['refModule'];
-	$labels['refUID'] = $args['refUID'];
+	$labels['refModule'] = $refModule;
+	$labels['refModel'] = $refModel;
+	$labels['refUID'] = $refUID;
 	$labels['return'] = $args['return'];
 
-	return replaceLabels($labels, loadBlock('modules/comments/views/addcommentnavjs.block.php'));
+	$block =$theme->loadBlock('modules/comments/views/addcommentnavjs.block.php');
+	$html = $theme->replaceLabels($labels, $block);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

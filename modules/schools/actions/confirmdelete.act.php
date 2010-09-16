@@ -1,20 +1,31 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	confirm deletion of a school
+//*	confirm deletion of a school
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('schools', 'edit', '') == false) { do403(); }
-	if (array_key_exists('uid', $request['args']) == false) { do404(); }
-	if (dbRecordExists('schools', sqlMarkup($request['args']['uid'])) == false) { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('uid', $req->args)) { $page->do404('School not specified (UID)'); }
+
+	$model = new Schools_School($req->args['uid']);
+	if (false == $model->loaded) { $page->do404('School not found.'); }
+
+	if (false == $user->authHas('schools', 'Schools_School', 'delete', $model->UID))
+		{ $page->do403('You are not authorized to delete this school.'); }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the confirmation box and redirect to the school's page
+	//----------------------------------------------------------------------------------------------
+	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	
-	$thisRa = raGetDefault('schools', $request['args']['uid']);
+	$block = $theme->loadBlock('modules/schools/views/confirmdelete.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	
-	$labels = array('UID' => $request['args']['uid'], 'raUID' => $schoolRa);
-	
-	$html .= replaceLabels($labels, loadBlock('modules/schools/views/confirmdelete.block.php'));
-	
-	$_SESSION['sMessage'] .= $html;
-	do302('schools/' . $thisRa);
+	$session->msg($html, 'warn');
+	$page->do302('schools/' . $model->alias);
 
 ?>

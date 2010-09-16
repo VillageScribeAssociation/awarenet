@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
+	require_once($kapenta->installPath . 'core/kmodule.class.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	anchor list of modules (perm:manage)

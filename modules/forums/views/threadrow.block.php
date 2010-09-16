@@ -1,7 +1,7 @@
 <? /*
 <tr>
   <td valign='top'>
-    <a href='/forums/showthread/%%recordAlias%%'>%%title%%</a><br/>
+    <a href='/forums/showthread/%%alias%%'>%%title%%</a><br/>
     <small>
       Created On: %%createdOn%%
       Replies: %%replies%%

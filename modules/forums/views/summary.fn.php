@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summarise
@@ -11,13 +11,16 @@
 //opt: forumUID - overrides raUID [string]
 
 function forums_summary($args) {
+	global $db;
+
+	global $theme;
+
 	if (array_key_exists('forumUID', $args)) { $args['forumUID'] = $args['pageUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$model = new Forum(sqlMarkup($args['raUID']));	
-	return replaceLabels($model->extArray(), loadBlock('modules/forums/views/summary.block.php'));
+	$model = new Forums_Board($db->addMarkup($args['raUID']));	
+	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/forums/views/summary.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

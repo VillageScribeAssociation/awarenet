@@ -7,7 +7,7 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]
 [[:theme::navtitlebox::width=570::label=Images:]]
-[[:images::uploadmultiple::refModule=wiki::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:images::uploadmultiple::refModule=wiki::refModel=Wiki_Article::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]
 [[:theme::navtitlebox::width=570::label=Files:]]
 [[:files::uploadmultiple::refModule=wiki::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]

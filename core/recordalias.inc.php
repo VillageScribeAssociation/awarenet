@@ -33,54 +33,8 @@
 //returns: unique URL friendly record alias unique to table in question or false [string] [bool]
 
 function raSetAlias($refTable, $refUID, $plainText, $module) {
-	//----------------------------------------------------------------------------------------------
-	//	get the default recordAlias for this plaintext
-	//----------------------------------------------------------------------------------------------
-	$default = raFromString($plainText);
-
-	if (trim($default) == '') { 						// no plainText
-		$default = $refUID;								// no refUID
-		if (trim($default) == '') { return false; } 	// no service
-	}
-	
-	//----------------------------------------------------------------------------------------------
-	//	check if record (#refUID) already owns its default recordAlias - if so then we're done
-	//----------------------------------------------------------------------------------------------
-	$defaultOwner = raGetOwner($default, $refTable);
-	//echo "default owner: $defaultOwner refUID: $refUID <br/>\n";
-	
-	if ($defaultOwner == $refUID) { return $default; }
-	if ($defaultOwner == false) {
-		//------------------------------------------------------------------------------------------
-		//	alias is not owned, it can be assigned to this record
-		//------------------------------------------------------------------------------------------
-		raSaveAlias($refTable, $refUID, $default);
-		return $default;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	the default alias is already owned by another record
-	//----------------------------------------------------------------------------------------------
-	$currAliases = raGetAll($refTable, $refUID);
-
-	if ($currAliases == false) {
-		//------------------------------------------------------------------------------------------
-		//	this record has no alias yet, find an unused record by appending a number
-		//------------------------------------------------------------------------------------------
-		$available = raFindAvailable($refTable, $default, 0);
-		if ($available == false) { return false; }					// this really shouldn't happen
-		raSaveAlias($refTable, $refUID, $available);
-		return $available;			
-
-	} else {
-		//------------------------------------------------------------------------------------------
-		//	the default is owned by another record, return the first alias the record registered
-		//------------------------------------------------------------------------------------------
-		foreach ($currAliases as $caUID => $caAlias) { return $caAlias; }
-
-	}
-
-	return false; // just in case
+	global $aliases, $session;
+	$session->msg("ERROR: Function removed - raSetAlias()", 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -148,6 +102,7 @@ function raFindRedirect($module, $action, $refTable, $recordAlias) {
 //returns: UID of new recordAlias
 
 function raSaveAlias($refTable, $refUID, $recordAlias) {
+	global $db;
 	if ( (trim($refTable) == '')
 		 OR (trim($refUID) == '')
 		 OR (trim($recordAlias) == '')) { return false; }
@@ -159,7 +114,7 @@ function raSaveAlias($refTable, $refUID, $recordAlias) {
 					'refUID' => $refUID,
 					'aliaslc' => strtolower($recordAlias),
 					'alias' => $recordAlias,
-					'editedOn' => mysql_datetime(),
+					'editedOn' => $db->datetime(),
 					'editedBy' => $_SESSION['sUserUID']
 				);
 		

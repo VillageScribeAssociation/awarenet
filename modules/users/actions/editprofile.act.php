@@ -1,24 +1,31 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	users may edit their own profiles, and admins can edit anything
+//*	users may edit their own profiles, and admins can edit anything
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('users', 'editprofile', 'users', $request['ref']);
-	
-	$authorised = false;
-	$userUID = raGetOwner($request['ref'], 'users');
-	if ($userUID = $user->data['UID']) { $authorised = true; }
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-	if ($authorised == false) { do403(); } 
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and reference
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $req->ref = $user->alias; }
+	$UID = $aliases->findRedirect('Users_User');
+	$model = new Users_User($UID);
+	if (false == $model->loaded) { $page->do404('no such user'); }
 
-	$page->load($installPath . 'modules/users/actions/editprofile.page.php');
-	$page->blockArgs['userRa'] = $request['ref'];
-	$page->blockArgs['userUID'] = raGetOwner($request['ref'], 'users');
-	$page->blockArgs['userName'] = $user->getName();	// will be wrong for other peoples profile
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = raGetOwner($request['ref'], 'users');
+	$authorised = false;
+	if ($UID = $user->UID) { $authorised = true; }
+	if ('admin' == $user->role) { $authorised = true; }
+	if (false == $authorised) { $page->do403('you cannot edit this profile'); } 
+
+	//----------------------------------------------------------------------------------------------
+	//	render page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/users/actions/editprofile.page.php');
+	$page->blockArgs['userRa'] = $model->alias;
+	$page->blockArgs['userUID'] = $model->UID;
+	$page->blockArgs['userName'] = $model->getName();
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
 	$page->render();
 
 ?>

@@ -1,5 +1,5 @@
 <? /*
-<form name='editCalendar' method='POST' action='/calendar/save/'>
+<form name='editCalendar' method='POST' action='%%serverPath%%calendar/save/'>
 <input type='hidden' name='action' value='saveCalendar' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

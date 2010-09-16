@@ -4,7 +4,7 @@
 //	default action for schools module (ie, no action specified in URL)
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') {
+	if ('' == $req->ref) {
 		// no recordAlias/UID given in URL, list all schools
 		include $installPath . 'modules/schools/actions/list.act.php';
 	} else {

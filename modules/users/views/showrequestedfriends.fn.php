@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show friend requests (to others)
@@ -13,11 +13,11 @@ function users_showrequestedfriends($args) {
 	if (array_key_exists('userUID', $args) == false) { return false; }
 
 	// admins can see everyones friend requests
-	if ( ($args['userUID'] != $user->data['UID'])
-	 AND ( $user->data['ofGroup'] != 'admin')  ) { return false; }
+	if ( ($args['userUID'] != $user->UID)
+	 AND ( 'admin' != $user->role)  ) { return false; }
 
 	// make the list
-	$model = new Friendship();
+	$model = new Users_Friendship();
 	$reqs = $model->getFriendRequests($args['userUID']);	
 	
 	if (count($reqs) > 0) {
@@ -25,7 +25,7 @@ function users_showrequestedfriends($args) {
 
 		foreach($reqs as $friendUID => $relationship) {
 			//$labels = array('userUID' => $friendUID, 'relationship' => $relationship);
-			//$html .= replaceLabels($labels, loadBlock('modules/users/views/confirmfriendnav.block.php'));
+			//$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/users/views/confirmfriendnav.block.php'));
 			$html .= "[[:users::summarynav::userUID=" . $friendUID 
 					. "::extra=(relationship: $relationship):]]\n";
 

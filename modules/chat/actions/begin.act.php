@@ -5,21 +5,21 @@
 //	queue
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
 
-	if ($request['ref'] != '') {
+	if ('' != $req->ref) {
 
 		//------------------------------------------------------------------------------------------
 		// start the chat
 		//------------------------------------------------------------------------------------------
 
-		$toUser = new Users($request['ref']);
+		$toUser = new Users_User($req->ref);
 
-		$queue = new Chat($user->data['UID']);
-		$queue->addMessage($user->data['UID'], $toUser->data['UID'], '(***)');
+		$queue = new Chat($user->UID);
+		$queue->addMessage($user->UID, $toUser->UID, '(***)');
 
-		$queue = new Chat($toUser->data['UID']);
-		$queue->addMessage($toUser->data['UID'], $user->data['UID'], '(***)');
+		$queue = new Chat($toUser->UID);
+		$queue->addMessage($toUser->UID, $user->UID, '(***)');
 
 	}
 
@@ -28,7 +28,7 @@
 	//	list all users
 	//------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/chat/actions/begin.page.php');
+	$page->load('modules/chat/actions/begin.page.php');
 	$page->render();
 
 ?>

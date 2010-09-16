@@ -1,37 +1,31 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	edit a moblog post and associated files/images
+//*	edit a moblog post and associated files/images
 //--------------------------------------------------------------------------------------------------
 //	users can edit their own blog, admins can do as they please
-
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	check authorisation
 	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404('No blog post specified.'); }
 
-	$authorised = false;
+	$model = new Moblog_Post($req->ref);
+	if (false == $model->loaded) { $page->do404(); }	// no such post
 
-	if ($request['ref'] == '') { do404(); }
-	if (authHas('moblog', 'edit', '') == false) { do403(); }	// not authorised to have a blog
-
-	$model = new Moblog();
-	if ($model->load($request['ref']) == false) { do404(); }	// no such post
-
-	if ($model->data['createdBy'] == $user->data['UID']) { $authorised = true; } 	// own post
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }					// admin
-	if ($authorised == false) { do403(); }
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID))
+		{ $page->do403('You are not authorized to edit this blog post.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the edit page
-	//----------------------------------------------------------------------------------------------	
-
-	$page->load($installPath . 'modules/moblog/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['postUID'] = $model->data['UID'];
-	$page->blockArgs['postTitle'] = $model->data['title'];
-	$page->blockArgs['userRa'] = $user->data['recordAlias'];
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/moblog/actions/edit.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['postUID'] = $model->UID;
+	$page->blockArgs['postTitle'] = $model->title;
+	$page->blockArgs['userRa'] = $user->alias;
 	$page->blockArgs['userName'] = $user->getName();
 	$page->render();
 

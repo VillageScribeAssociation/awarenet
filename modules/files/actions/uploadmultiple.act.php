@@ -1,37 +1,43 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	iframe to upload multiple files
+//*	iframe to upload multiple files
 //--------------------------------------------------------------------------------------------------
 
-	if (array_key_exists('refmodule', $request['args'])) {
-	  if (array_key_exists('refuid', $request['args'])) {
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('refModule', $req->args)) { $page->do404('(no module)'); }
+	if (false == array_key_exists('refModel', $req->args)) { $page->do404('(no model)'); }
+	if (false == array_key_exists('refUID', $req->args)) { $page->do404('(no UID)'); }
 	
-		$refModule = $request['args']['refmodule'];
-		$refUID = $request['args']['refuid'];
+	$refModule = $req->args['refModule'];
+	$refModel = $req->args['refModel'];
+	$refUID = $req->args['refUID'];
+
+	//----------------------------------------------------------------------------------------------
+	//	render the (iframe) page
+	//----------------------------------------------------------------------------------------------
 		
-		$authArgs = array('UID' => $refUID);		
-		if (authHas($refModule, 'files', $authArgs) == false) {
-			//--------------------------------------------------------------------------------------
-			//	not authorised to edit files, just display
-			//--------------------------------------------------------------------------------------
-			$page->load($installPath . 'modules/files/actions/fileset.if.page.php');
-			$page->blockArgs['refModule'] = $refModule;
-			$page->blockArgs['refUID'] = $refUID;
-			$page->render();
+	//TODO: further permissions here
+	if (false == $user->authHas($refModule, $refModel, 'files-edit', $refUID)) {
+		//------------------------------------------------------------------------------------------
+		//	not authorised to edit files, just display
+		//------------------------------------------------------------------------------------------
+		$page->load('modules/files/actions/fileset.if.page.php');
+		$page->blockArgs['refModule'] = $refModule;
+		$page->blockArgs['refUID'] = $refUID;
+		$page->render();
 		
-		} else {
-			//--------------------------------------------------------------------------------------
-			//	authorised to edit files, show upload form
-			//--------------------------------------------------------------------------------------
-			$page->load($installPath . 'modules/files/actions/uploadmultiple.if.page.php');
-			$page->blockArgs['refModule'] = $refModule;
-			$page->blockArgs['refUID'] = $refUID;
-			$page->render();
+	} else {
+		//------------------------------------------------------------------------------------------
+		//	authorised to edit files, show upload form
+		//------------------------------------------------------------------------------------------
+		$page->load('modules/files/actions/uploadmultiple.if.page.php');
+		$page->blockArgs['refModule'] = $refModule;
+		$page->blockArgs['refUID'] = $refUID;
+		$page->render();
 			
-		}
-		
-	  } else { echo "(UID not specified)"; }
-	} else { echo "(module not specified)"; }
+	}
 
 ?>

@@ -1,15 +1,17 @@
 <?
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display test message form (admins only, no arguments)
 //--------------------------------------------------------------------------------------------------
 
 function chat_testform($args) {
+	global $theme;
+
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return false; }
-	return loadBlock('modules/chat/views/testaddmessage.block.php');
+	if ('admin' != $user->role) { return false; }
+	return $theme->loadBlock('modules/chat/views/testaddmessage.block.php');
 }
 
 //--------------------------------------------------------------------------------------------------

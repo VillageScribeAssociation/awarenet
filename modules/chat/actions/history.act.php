@@ -1,19 +1,28 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	view chat history (ones own, admins can view anyones history)
+//*	view chat history (ones own, admins can view anyones history)
 //--------------------------------------------------------------------------------------------------
 
-	$userUID = $user->data['UID'];
+	$userUID = $user->UID;
 	$pageNo = '1';
 
-	if (array_key_exists('page', $request['args'])) { $pageNo = $request['args']['page']; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
 
 	if ( ($rquest['ref'] != '')
-		AND (dbRecordExists('users', $request['ref']))
-		AND (authHas('chat', 'viewhistory', '') == true) ) { $userUID = $request['ref']; }
+		AND (true == $db->objectExists('Users_User', $req->ref))
+		AND (true == $user->authHas('chat', 'Chat_Discussion', 'viewhistory') == true) ) 
+		{ $userUID = $req->ref; }
 
-	$page->load($installPath . 'modules/chat/actions/history.page.php');
+	//TODO: permissions check here
+
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/chat/actions/history.page.php');
 	$page->blockArgs['userUID'] = $userUID;
 	$page->render();
 

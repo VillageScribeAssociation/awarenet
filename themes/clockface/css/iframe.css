@@ -55,6 +55,32 @@ img.imwidtheditor {
 	
 }
 
+
+/* ajax messages -------------------------------------------------------------------------------- */
+
+span.ajaxmsg {
+	background-color: green;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxerror {
+	background-color: red;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxwarn {
+	background-color: #ff6600;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+image.infobutton {
+	position: relative; 
+	top: 3px;
+}
+
 /* wireframe tables ----------------------------------------------------------------------------------------- */
 
 table.wireframe {

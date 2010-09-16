@@ -3,25 +3,27 @@
 //-------------------------------------------------------------------------------------------------
 //|	find all files in this project which should be tracked by subversion
 //-------------------------------------------------------------------------------------------------
+//role: admin - only administrators may use this
 
 function admin_maintenancelist($args) {
-	global $user;
-	global $installPath;
-	global $serverPath;
+	global $kapenta, $user;
 
 	$maint = array();
 	$count = 0;
-	$mods = listModules();
+	$mods = $kapenta->listModules();
 	$html = '';
 
-	if ($user->data['ofGroup'] != 'admin') { return ''; }
+	//---------------------------------------------------------------------------------------------
+	//	check user role
+	//---------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	go through all modules and look for maintenance script file (assume it contains function)
 	//---------------------------------------------------------------------------------------------
 	foreach($mods as $modName) {
-		$fileName = $installPath . 'modules/' . $modName . '/inc/maintenance.inc.php';
-		$maint[$modName] = file_exists($fileName);
+		$fileName = 'modules/' . $modName . '/inc/maintenance.inc.php';
+		$maint[$modName] = $kapenta->fileExists($fileName);
 		if (true == $maint[$modName]) { $count++; }
 	}
 
@@ -31,7 +33,7 @@ function admin_maintenancelist($args) {
 	$html .= "<h2>Module Maintenance Scripts</h2>\n";
 	foreach ($maint as $modName => $hasMaint) {
 		if (true == $hasMaint) {
-			$url = $serverPath . 'admin/maintenance/' . $modName;
+			$url = '%%serverPath%%admin/maintenance/' . $modName;
 			$html .= "<a href='" . $url . "'>[ Maintance: $modName module &gt;&gt; ]</a><br/>";
 		}
 	}

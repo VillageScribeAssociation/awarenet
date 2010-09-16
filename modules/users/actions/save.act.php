@@ -10,65 +10,82 @@
 //	for changing fields other than password
 //-------------------------------------------------------------------------------------------------
 
-if ((array_key_exists('action', $_POST) == true)
-	AND ($_POST['action'] == 'saveUserRecord')
-	AND (array_key_exists('UID', $_POST) == true)
- 	AND (dbRecordExists('users', $_POST['UID']) == true)
+if ((true == array_key_exists('action', $_POST))
+	AND ('saveUserRecord' == $_POST['action'])
+	AND (true == array_key_exists('UID', $_POST))
+ 	AND (true == $db->objectExists('users', $_POST['UID']))
 	) {
 
 	//----------------------------------------------------------------------------------------------
 	//	if admin editing any record
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] == 'admin') {
-		$u = new User($_POST['UID']);
-		if (array_key_exists('ofGroup', $_POST)) 	{ $u->data['ofGroup'] = $_POST['ofGroup']; }
-		if (array_key_exists('school', $_POST))		{ $u->data['school'] = $_POST['school']; }
-		if (array_key_exists('grade', $_POST)) 		{ $u->data['grade'] = $_POST['grade']; }
-		if (array_key_exists('firstname', $_POST)) 	{ $u->data['firstname'] = $_POST['firstname']; }
-		if (array_key_exists('surname', $_POST)) 	{ $u->data['surname'] = $_POST['surname']; }
-		if (array_key_exists('username', $_POST)) 	{ $u->data['username'] = $_POST['username']; }
-		if (array_key_exists('lang', $_POST))	 	{ $u->data['lang'] = $_POST['lang']; }
-		$u->save();
-		
-		if (array_key_exists('return', $_POST)) { do302($_POST['return']); }
-		authUpdatePermissions();
-		do302('/users/list/');
+	if ('admin' == $user->role) {
+		$model = new Users_User($_POST['UID']);
+		if (false == $model->loaded) { $page->do404("Could not load User $UID");}
+		foreach($_POST as $field => $value) {
+			switch(strtolower($field)) {
+				case 'role':		$model->role = $utils->cleanString($value); 		break;
+				case 'school':		$model->school = $utils->cleanString($value); 		break;
+				case 'grade':		$model->grade = $utils->cleanString($value); 		break;
+				case 'firstname':	$model->firstname = $utils->cleanString($value); 	break;
+				case 'surname':		$model->surname = $utils->cleanString($value); 		break;
+				case 'username':	$model->username = $utils->cleanString($value); 	break;
+				case 'password':	$model->password = $utils->cleanString($value); 	break;
+				case 'lang':		$model->lang = $utils->cleanString($value); 		break;
+			}
+		}
+		$report = $model->save();
+
+		if ('' == $report) { $session->msg('User account updated.', 'ok'); }
+		else { $session->msg($report, 'bad'); }
+
+		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+		$page->do302('/users/list/');
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	if non-admin editing own record
 	//----------------------------------------------------------------------------------------------
 
-	if (($user->data['UID'] == $_POST['UID']) AND ($user->data['ofGroup'] != 'admin')) {
-		$u = new User($_POST['UID']);
-		if (array_key_exists('firstname', $_POST)) 	{ $u->data['firstname'] = $_POST['firstname']; }
-		if (array_key_exists('surname', $_POST)) 	{ $u->data['surname'] = $_POST['surname']; }
-		if (array_key_exists('lang', $_POST))	 	{ $u->data['lang'] = $_POST['lang']; }
-		$u->save();
-		
-		if (array_key_exists('return', $_POST)) { do302($_POST['return']); }
-		authUpdatePermissions();
-		do302('users/profile/' . $u->data['recordAlias']);
+	if (($user->UID == $_POST['UID']) AND ('admin' != $user->role)) {
+		$model = new Users_User($_POST['UID']);
+		if (false == $model->loaded) { $page->do404("Could not load User $UID");}
+		foreach($_POST as $field => $value) {
+			switch(strtolower($field)) {
+				case 'firstname':	$model->firstname = $utils->cleanString($value); 	break;
+				case 'surname':		$model->surname = $utils->cleanString($value); 		break;
+				//case 'password':	$model->password = $utils->cleanString($value); 	break;
+				case 'lang':		$model->lang = $utils->cleanString($value); 		break;
+			}
+		}
+
+		$report = $model->save();
+		if ('' == $report) { $session->msg('Your account has been updated.', 'ok'); }
+		else { $session->msg($report, 'bad'); }
+			
+		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+		$page->do302('users/profile/' . $model->alias);		
+
 	}
 
 }
 
 //-------------------------------------------------------------------------------------------------
-//	for changing password
+//	for changing password	//TODO: make this a separate action, incoprorating strength tests
 //-------------------------------------------------------------------------------------------------
 
-if ((array_key_exists('action', $_POST) == true)
-	AND ($_POST['action'] == 'changeUserPass')
-	AND (array_key_exists('UID', $_POST) == true)
- 	AND (dbRecordExists('users', $_POST['UID']) == true)
+if ((true == array_key_exists('action', $_POST))
+	AND ('changeUserPass' == $_POST['action'])
+	AND (true == array_key_exists('UID', $_POST))
+ 	AND (true == $db->objectExists('users', $_POST['UID']))
 	) {
 
 	// users may only change their own password
-	if (($user->data['ofGroup'] != 'admin') AND ($user->data['UID'] != $_POST['UID'])) { do403(); }
+	if (('admin' != $user->role) AND ($user->UID != $_POST['UID'])) { $page->do403(); }
 
 	// load user record (it's already in $user, load it anyway)
-	$u = new User($_POST['UID']);
+	$model = new Users_User($_POST['UID']);
 
 	$pwdCurrent = trim($_POST['pwdCurrent']);
 	$pwdNew = trim($_POST['pwdNew']);
@@ -82,7 +99,7 @@ if ((array_key_exists('action', $_POST) == true)
 	$msg = '';
 
 	// check current password
-	if ($u->data['password'] != sha1($pwdCurrent . $u->data['UID'])) {
+	if ($model->password != sha1($pwdCurrent . $model->UID)) {
 		$msg .= "[*] Current password incorrent.<br/>\n";
 		$allOk = false;
 	}
@@ -121,87 +138,20 @@ if ((array_key_exists('action', $_POST) == true)
 	//----------------------------------------------------------------------------------------------
 
 	if ($allOk == true) {
-		$u->data['password'] = sha1($pwdNew . $u->data['UID']);
-		$u->save();
-		$_SESSION['sMessage'] .= "Your password has been changed.<br/>\n";
-		if (array_key_exists('return', $_POST)) { do302($_POST['return']); }
-		do302('users/profile/' . $_POST['UID']);
+		$model->password = sha1($pwdNew . $model->UID);
+		$model->save();
+		$session->msg('Your password has been changed.', 'ok');
+		if (array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+		$page->do302('users/profile/' . $_POST['UID']);
 
 	} else {
-		$_SESSION['sMessage'] .= "Your password was not changed:<br/><br/>\n" . $msg;
-		if (array_key_exists('return', $_POST)) { do302($_POST['return']); }
-		do302('users/profile/'. $_POST['UID']);
+		$session->msg('Your password was not changed:<br/>' . $msg, 'bad');
+		if (array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
+		$page->do302('users/profile/'. $_POST['UID']);
 
 	}
 
 }
 
-//-------------------------------------------------------------------------------------------------
-//	for updating a profile
-//-------------------------------------------------------------------------------------------------
-
-if ((array_key_exists('action', $_POST) == true)
-	AND ($_POST['action'] == 'saveProfile')
-	AND (array_key_exists('UID', $_POST) == true)
- 	AND (dbRecordExists('users', $_POST['UID']) == true)
-	) {
-
-	$authorised = false;
-	if ($user->data['UID'] == $_POST['UID']) { $authorised = true; }
-	if ($user->data['ofGroup'] == 'admin') { $authorised = true; }
-
-	//----------------------------------------------------------------------------------------------
-	//	if user has permissions
-	//----------------------------------------------------------------------------------------------
-
-	if ($authorised == true) {
-
-		$diff = '';
-
-		$u = new User($_POST['UID']);
-		foreach($u->profile as $field => $value) {
-			if (array_key_exists($field, $_POST) == true) {
-				if ($u->profile[$field] != $_POST[$field]) {
-					$diff .= "<b>$field:</b>" . $_POST[$field] . "<br/>\n";
-				}
-
-				//---------------------------------------------------------------------------------
-				// birthyear is a special case, check it's a 4 digit number
-				//---------------------------------------------------------------------------------
-				if ('birthyear' == $field) {
-					$_POST['birthyear'] = trim($_POST['birthyear']);
-					if ( (strlen($_POST[$field]) != 4) || (false == is_numeric($_POST[$field])) )
-						{ $_POST['birthyear'] = ''; }
-				}
-
-				$u->profile[$field] = $_POST[$field];
-			}
-		}
-		$u->save();
-
-		//------------------------------------------------------------------------------------------
-		//	send notification to friends
-		//------------------------------------------------------------------------------------------
-		$noticeUID = createUID();
-		$title = $user->getName() . " has updated their profile.";
-
-		$url = '/users/profile/'  . $user->data['UID'];
-		$fromUrl = '/users/profile/' . $user->data['UID'];
-		$imgRow = imgGetDefault('users', $user->data['UID']);
-		$imgUID = '';
-		if (false != $imgRow) { $imgUID = $imgRow['UID']; }
-
-		notifyFriends($user->data['UID'], $noticeUID, $user->getName(), 
-								$fromurl, $title, $diff, $url, $imgUID );
-
-		//------------------------------------------------------------------------------------------
-		//	redirect back to profile
-		//------------------------------------------------------------------------------------------
-		if (array_key_exists('return', $_POST)) { do302($_POST['return']); }
-		do302('users/profile/' . $u->data['recordAlias']);
-
-	} else { do403(); }
-
-}
 
 ?>

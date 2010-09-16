@@ -1,77 +1,131 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	page for accepting upload of images and associating them with records
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	page for accepting upload of images and associating them with records
+//--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	control variables
 	//----------------------------------------------------------------------------------------------
-	$refModule = ''; $refUID = ''; $category = ''; $return = ''; $tempFile = ''; $srcName = '';
-	if (array_key_exists('refModule', $_POST)) { $refModule = sqlMarkup($_POST['refModule']); }
-	if (array_key_exists('refUID', $_POST)) { $refUID = sqlMarkup($_POST['refUID']); }
-	if (array_key_exists('category', $_POST)) { $category = $_POST['category']; }
-	if (array_key_exists('return', $_POST)) { $return = $_POST['return']; }
+	$refModule = ''; 
+	$refModel = ''; 
+	$refUID = ''; 
+	$category = ''; 
+	$return = ''; 
+	$returnUrl = ''; 
+	$tempFile = ''; 
+	$srcName = '';
 	$nofile = false;	
+
+	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
+	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
+	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
+	if (true == array_key_exists('category', $_POST)) { $category = $_POST['category']; }
+	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	security and validation
 	//----------------------------------------------------------------------------------------------
-	$msg = ''; $raw = ''; $img = false; $imgName = '';
+	$msg = '';
+	$raw = '';
+	$img = false;
+	$imgName = '';
 	
-	if (($refUID == '') OR ($refModule == '')) { $msg = "(missing arguments to image download)"; }
-	if (($msg = '') AND (authHas($refModule, 'images', '') == false)) { $msg = "(not authorised)"; }
+	if (('' == $refUID) OR ('' == $refModule) OR ('' == $refModel)) 
+		{ $page->do404('(missing arguments to image upload)', true); }
+
+	switch(strtolower($return)) {
+		case 'uploadmultiple':
+			$returnUrl = 'images/uploadmultiple/'
+				. 'refModule_' . $refModule . '/'
+				. 'refModel_' . $refModel . '/'
+				. 'refUID_' . $refUID . '/';
+			break;
+
+		case 'uploadsingle':
+			$returnUrl = 'images/uploadsingle/'
+				. 'refModule_' . $refModule . '/'
+				. 'refModel_' . $refModel . '/'
+				. 'refUID_' . $refUID . '/';
+			break;
+
+		case 'xml':
+			//TODO
+			break;
+
+		default:
+			$page->do404('unknown return argument', true);
+			break;
+	}
+
+	//TODO: chck this permission name
+	if (false == $user->authHas($refModule, $refModel, 'addimages', $refUID)) {
+		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
+		$session->msg('You are not authorised to add images to this item.', 'bad');
+		$page->do302($returnUrl);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	get the upload
 	//----------------------------------------------------------------------------------------------
-	if (($msg == '') AND (array_key_exists('userfile', $_FILES))) {
-	
+	if (true == array_key_exists('userfile', $_FILES)) {
 		$tempFile = $_FILES['userfile']['tmp_name'];
 		$srcName = $_FILES['userfile']['name'];
-		if (file_exists($tempFile) == true) {
+		if (true == file_exists($tempFile)) {
 			$raw = @implode(@file($tempFile));
 		} else { 
-			$raw = ''; $msg = '(no file uploaded) '; 
+			$raw = ''; 
+			if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
+			$session->msg('No file uploaded.', 'bad'); 
+			$page->do302($returnUrl);			
 		}
 	
-	} else { $msg = '(no file uploaded) '; }
+	} else { 
+		$session->msg('No file uploaded.', 'bad'); 
+		$page->do302($returnUrl);
+	}
 	
 
 	//----------------------------------------------------------------------------------------------
 	//	load as image
 	//----------------------------------------------------------------------------------------------
 	$img = false;
-	if (($msg == '') AND ($raw != '')) { 
-		$img = @imagecreatefromstring($raw); 
+	if ('' != $raw) { $img = @imagecreatefromstring($raw); }
+	if (false == $img) {
+		if ('xml' == $return) { $page->doXmlError('Could not validate image.'); }
+		$session->msg('Could not validate image.', 'bad'); 
+		$page->do302($returnUrl);
 	}
-	if ($img == false) { $msg = "Could not validate image."; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	get image name
 	//----------------------------------------------------------------------------------------------
-	if ($msg == '') {
-		$imgName = strtolower($srcName);
-		$imgName = str_replace('.jpg', '', $imgName);
-		$imgName = str_replace('.jpeg', '', $imgName);
-		$imgName = str_replace('.png', '', $imgName);
-		$imgName = str_replace('.gif', '', $imgName);
-		if ($imgName == '') { $imgName = createUID() . '.jpg'; }
-	}
+	$imgName = strtolower($srcName);
+	$imgName = str_replace('.jpg', '', $imgName);
+	$imgName = str_replace('.jpeg', '', $imgName);
+	$imgName = str_replace('.png', '', $imgName);
+	$imgName = str_replace('.gif', '', $imgName);
+	if ('' == $imgName) { $imgName = $kapenta->createUID() . '.jpg'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	handle upload of single images (delete any others before saving)
 	//----------------------------------------------------------------------------------------------
-	if ((array_key_exists('action', $_POST)) && ($_POST['action'] == 'uploadSingleImage')) {
-		$sql = "select * from images "
-			 . "where refUID='" . $refUID . "' and refModule='" . $refModule . "'";
+	if ((true == array_key_exists('action', $_POST)) && ('uploadSingleImage' == $_POST['action'])) {
 
-		$result = dbQuery($sql);
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
-			$oldImg = new Image($row['UID']);
+		//$sql = "select * from Images_Image "
+		//	 . "where refUID='" . $db->addMarkup($refUID) . "'"
+		// . " and refModule='" . $sb->addMarkup($refModule) . "'";
+
+		$conditions = array();
+		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
+		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+	
+		$range = $db->loadRange('Images_Image', '*', $conditions);
+		foreach ($range as $row) {
+			$oldImg = new Images_Image($row['UID']);
 			$oldImg->delete();
 		}
 		
@@ -80,63 +134,47 @@
 	//----------------------------------------------------------------------------------------------
 	//	create image record and save file
 	//----------------------------------------------------------------------------------------------
-	$i = new Image();
-	if ($msg == '') {
-		$i->data['refUID'] = $refUID;
-		$i->data['refModule'] = $refModule;
-		$i->data['title'] = $imgName;
-		$i->storeFile($img);
-		$i->data['licence'] = 'unknown';
-		$i->data['attribURL'] = $URL;
-		$i->data['category'] = $category;
-		$i->data['weight'] = '0';
-		$ext = $i->extArray();
-		$i->save();
-		$msg = "Uploaded image: $srcName <br/>\n";
+	$model = new Images_Image();
+	$model->refUID = $refUID;
+	$model->refModule = $refModule;
+	$model->refModel = $refModel;
+	$model->title = $imgName;
+	$model->storeFile($img);
+	$model->licence = 'unknown';
+	$model->attribURL = '';
+	$model->category = $category;
+	//NOTE: weight is set by $model->save()
+	$ext = $model->extArray();
+	$report = $model->save();
 
-		//------------------------------------------------------------------------------------------
-		//	send 'images_added' event to module whose record owns this image
-		//------------------------------------------------------------------------------------------
-	
-		$args = array(	'refModule' => $refModule, 
-						'refUID' => $refUID, 
-						'imageUID' => $ext['UID'], 
-						'imageTitle' => $ext['title']    );
+	//------------------------------------------------------------------------------------------
+	//	send 'images_added' event to module whose record owns this image
+	//------------------------------------------------------------------------------------------
+	/*	
+	$args = array(	'refModule' => $refModule, 
+					'refUID' => $refUID, 
+					'imageUID' => $ext['UID'], 
+					'imageTitle' => $ext['title']    );
 
-		eventSendSingle($refModule, 'images_added', $args);
-
-	}
+	eventSendSingle($refModule, 'images_added', $args);
+	*/	// TODO: this
 
 	//----------------------------------------------------------------------------------------------
 	//	return xml or redirect back 
 	//----------------------------------------------------------------------------------------------
 	
 	if ($return == 'xml') {
-		if ($msg == '') {
-			//--------------------------------------------------------------------------------------
-			//	image saved
-			//--------------------------------------------------------------------------------------
-			echo "<?xml version=\"1.0\"?>\n";
-			echo arrayToXml2d($i->data, 'image', '');
-			die();
-
-		} else {
-			//--------------------------------------------------------------------------------------
-			//	image not saved
-			//--------------------------------------------------------------------------------------
-			echo "<?xml version=\"1.0\"?>\n";
-			echo "<error>$msg</error>";
-			die();
-		}
+		//--------------------------------------------------------------------------------------
+		//	image saved
+		//--------------------------------------------------------------------------------------
+		echo $model->toXml(true, '', true);
+		die();
 	}
 
-	$_SESSION['sMessage'] .= $msg;
-	if ($return == 'uploadmultiple') {
-		do302('images/uploadmultiple/refModule_' . $refModule . '/refUID_' . $refUID . '/');
-	}
+	//echo "returnURL: $returnUrl <br/>\n";
 
-	if ($return == 'uploadsingle') {
-		do302('images/uploadsingle/refModule_' . $refModule . '/refUID_' . $refUID . '/category_' . $category . '/');
-	}
+	if ('' == $report) { $report = "Uploaded image: $srcName <br/>\n"; }
+	$session->msg($report, 'ok');
+	$page->do302($returnUrl);
 
 ?>

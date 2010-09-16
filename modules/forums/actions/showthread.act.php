@@ -1,39 +1,41 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a forum thread
+//*	show a forum thread
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	check permissions ( TODO: banned, moderator, etc)
+	//	control variables
 	//----------------------------------------------------------------------------------------------
-
-	if (authHas('forums', 'show', '') == false) { do403(); }
+	$pageNo = 1;		//% default page to show [int]
 
 	//----------------------------------------------------------------------------------------------
-	//	load thread and forum
+	//	check permissions and reference ( TODO: banned, moderator, etc)
 	//----------------------------------------------------------------------------------------------
+	$threadUID = $aliases->findRedirect('Forums_Thread');
+	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }
 
-	$threadUID = raFindRedirect('forums', 'showthread', 'forumthreads', $request['ref']);
+	$thread = new Forums_Thread($threadUID);
+	$forum = new Forums_Board($thread->board);
 
-	$pageNo = 1;
-	if (array_key_exists('page', $request['args']) == true) 
-		{ $pageNo = floor($request['args']['page']); }
+	if (false == $user->authHas('forums', 'Forums_Thread', 'show', $thread->UID)) { $page->do403();}
+	if (false == $user->authHas('forums', 'Forums_Board', 'show', $forum->UID)) { $page->do403(); }	
 
-	$thread = new ForumThread($threadUID);
-	$forum = new Forum($thread->data['forum']);
-
-	$page->load($installPath . 'modules/forums/actions/showthread.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
+	//----------------------------------------------------------------------------------------------
+	//	redner the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/forums/actions/showthread.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->blockArgs['threadUID'] = $threadUID;
-	$page->blockArgs['forumUID'] = $forum->data['UID'];
+	$page->blockArgs['forumUID'] = $forum->UID;
 	$page->blockArgs['pageno'] = $pageNo;
-	$page->blockArgs['forumRa'] = $forum->data['recordAlias'];
-	$page->blockArgs['forumTitle'] = $forum->data['title'];
-	$page->blockArgs['threadRa'] = $thread->data['recordAlias'];
-	$page->blockArgs['threadTitle'] = $thread->data['title'];
+	$page->blockArgs['forumRa'] = $forum->alias;
+	$page->blockArgs['forumTitle'] = $forum->title;
+	$page->blockArgs['threadRa'] = $thread->alias;
+	$page->blockArgs['threadTitle'] = $thread->title;
 	$page->render();
 
 ?>

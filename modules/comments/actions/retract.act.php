@@ -1,50 +1,54 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	retract a comment (users can retract their own comments, admins can just blast away)
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	retract a comment (users can retract their own comments, admins can just blast away)
+//--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference, permissions
 	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404(); }
 
-	if ($request['ref'] == '') { do404(); }
-	if (dbRecordExists('comments', $request['ref']) == false) { do404(); }
+	$model = new Comments_Comment($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
 
-	$model = new Comment($request['ref']);
 	$authorised = false;
 
-	if ($model->data['createdBy'] == $user->data['UID']) { $authorised = true; }
-	if (authHas('comments', 'retractall', '') == true) { $authorised = true; }
+	if (true == $user->authHas('comments', 'Comments_Comment', 'retractall'))
+		{ $authorised = true; }
 
-	if ($authorised == false) { do403(); }
+	if (true == $user->authHas('comments', 'Comments_Comment', 'retract', $model->UID))
+		{ $authorised = true; }
+
+	if (true == $user->authHas($model->refModule, $model->refModel, 'comments-retract', $model->refUID)) 
+		{ $authorised = true; }
+
+	if (false == $authorised) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	blank the comment body
 	//----------------------------------------------------------------------------------------------
 
-	$model->data['comment'] = '<small>This comment has been retracted by the poster. '
-							. mysql_datetime() . '</small>';
+	$model->comment = '<small>This comment has been retracted by the poster. '
+							. $db->datetime() . '</small>';
 	$model->save();
 
-	$_SESSION['sMessage'] .= "Your comment has been retracted.<br/>\n";
+	$session->msg("Your comment has been retracted.");
 
 	//----------------------------------------------------------------------------------------------
 	//	return to page comment was retected from, or user profile if none supplied
 	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('HTTP_REFERER', $_SERVER) == true) {
+	if (true == array_key_exists('HTTP_REFERER', $_SERVER)) {
 		// TODO, conside the security implications of this
 		$referer = $_SERVER['HTTP_REFERER'];
 		$referer = str_replace($serverPath, '', $referer);
 		$referer = str_replace('//', '/', $referer);
 		if (substr($referer, 0, 1) == '/') { $referer = substr($referer, 1); }
-		do302($referer);
+		$page->do302($referer);
 
-	} else {
-		do302('users/profile/');
-	}
+	} else { $page->do302('users/profile/'); }
 
 ?>

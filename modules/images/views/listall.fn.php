@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	make a set of x thumbnails
@@ -9,25 +9,34 @@
 //opt: num - number of images per page (default is 30) [string]
 
 function images_listall($args) {
+	global $user, $db, $theme, $page;
+	$num = 30;							//%	number of items per page [int]
+	$pageNo = 1;						//%	page number, starts from 1 [int]
+	$start = 0;							//%	position in SQL results [int]
+	$html = '';							//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (authHas('images', 'list', '') == false) { return false; }
-	$start = 0; $num = 30; $page = 1;
-	if (array_key_exists('num', $args)) { $num = $args['num']; }
+	if (false == $user->authHas('images', 'Images_Image', 'show')) { return false; }
+
+	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (array_key_exists('page', $args)) { 
-		$page = $args['page']; 
-		$start = ($page - 1) * $num;
+		$pageNo = (int)$args['page']; 
+		$start = ($pageNo - 1) * $num;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load the images
+	//	load page of items from the database and make the block
 	//----------------------------------------------------------------------------------------------
-	$list = dbLoadRange('images', '*', '', 'createdOn', $num, $start);
-	foreach($list as $UID => $row) {
-		$model = new Image();
+	//TODO: add any conditions here
+	$range = $db->loadRange('Images_Image', '*', '', 'createdOn', $num, $start);
+	$block = $theme->loadBlock('modules/images/summary.block.php');
+
+	foreach($range as $UID => $row) {
+		$model = new Images_Image();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/images/summary.block.php'));
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}  
 	return $html;	
 	
@@ -36,4 +45,3 @@ function images_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

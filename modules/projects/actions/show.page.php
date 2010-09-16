@@ -14,13 +14,13 @@
 
 [[:theme::navtitlebox::label=Add A Comment::toggle=divAddCommentNav::hidden=yes:]]
 [`|lt]div id=[`|sq]divAddCommentNav[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:comments::addcommentformnavjs::refModule=projects::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[[:comments::addcommentformnav::refModule=projects::refModel=Projects_Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Recent Comments::toggle=divCommentsNav:]]
 [`|lt]div id=[`|sq]divCommentsNav[`|sq][`|gt]
-[[:comments::listnavjs::refModule=projects::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:comments::listnav::refModule=projects::refModel=Projects_Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Their Other Projects:]]

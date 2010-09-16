@@ -1,25 +1,23 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	send an image at the specified size
 //-------------------------------------------------------------------------------------------------
 
 function imgSend($size) {
-	global $request;
-	global $installPath;
-	global $defaultTheme;
+	global $req, $page, $request, $kapenta, $sync;
 
 	//----------------------------------------------------------------------------------------------
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
 	
-	if ($request['ref'] == '') { do404(); }
-	$i = new Image($request['ref']);
-	if ($i->data['fileName'] == '') { do404(); }
+	if ('' == $req->ref) { $page->do404(); }
+	$i = new Images_Image($req->ref);
+	if ('' == $i->fileName) { $page->do404(); }
 	
-	$lmDate = date(DATE_RFC1123, strtotime($i->data['createdOn']));
+	$lmDate = date(DATE_RFC1123, strtotime($i->createdOn));
 
 	//----------------------------------------------------------------------------------------------
 	//	check for If-Modified-Since header
@@ -61,20 +59,19 @@ function imgSend($size) {
 				case 'width570':	$thumb = $i->scaleToWidth(570);		break;
 				case 'widtheditor':	$thumb = $i->scaleToWidth(530);		break;
 				case 'slide':		$thumb = $i->scaleToBox(560, 300);	break;
-				default: do404();
+				default: $page->do404();
 			}
 
-			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $i->data['fileName']);
-			$i->data['transforms'] .= $size . '|' . $thumbFile . "\n";
-			$i->expandTransforms();
+			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $i->fileName);
+			$i->transforms[$size] = $thumbFile;
 			$i->save();
-			imagejpeg($thumb, $installPath . $thumbFile, 95);
+			imagejpeg($thumb, $kapenta->installPath . $thumbFile, 95);
 	
 		} else {
 			//-------------------------------------------------------------------------------------
 			//	full sized image does not exist on this peer
 			//-------------------------------------------------------------------------------------
-			syncRequestFile($i->data['fileName']);
+			$sync->requestFile($i->fileName);
 		}
 
 		if (true == $exists) { 
@@ -82,8 +79,9 @@ function imgSend($size) {
 			header('Last-Modified: ' . $lmDate);
 			header("ETag: \"" . md5($lmDate . $size) . "\"");
 			header('Cache-Control: max-age=3600');
-			readfile($installPath . $thumbFile);	
-		} else { do302('themes/' . $defaultTheme . '/unavailable/' . $size . '.jpg'); }
+			readfile($kapenta->installPath . $thumbFile);	
+
+		} else { $page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/'. $size .'.jpg'); }
 
 
 	} else {
@@ -92,7 +90,7 @@ function imgSend($size) {
 		//	return the transform
 		//------------------------------------------------------------------------------------------
 
-		if (file_exists($installPath . $i->transforms[$size]) == true) {
+		if (file_exists($$kapenta->installPath . $i->transforms[$size]) == true) {
 			//-------------------------------------------------------------------------------------
 			//	file exists on this peer
 			//-------------------------------------------------------------------------------------
@@ -100,14 +98,14 @@ function imgSend($size) {
 			header('Last-Modified: ' . $lmDate);
 			header("ETag: \"" . md5($lmDate . $size) . "\"");
 			header('Cache-Control: max-age=3600');
-			readfile($installPath . $i->transforms[$size]);
+			readfile($kapenta->installPath . $i->transforms[$size]);
 
 		} else {
 			//-------------------------------------------------------------------------------------
 			//	file does not exist on this peer, find it
 			//-------------------------------------------------------------------------------------
-			syncRequestFile($i->transforms[$size]);
-			do302('themes/' . $defaultTheme . '/unavailable/loading' . $size . '.jpg');
+			//$sync->requestFile($i->transforms[$size]);	//TODO: re-add this with sync object
+			$page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/loading'. $size .'.jpg');
 
 		}
 	}

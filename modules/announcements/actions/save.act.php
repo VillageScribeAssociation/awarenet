@@ -1,93 +1,61 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	save an announcement record
+//*	save an Announcements_Announcement object
 //--------------------------------------------------------------------------------------------------
+//TODO: update this with more generic (GENERATED) code
 
-	if (array_key_exists('UID', $_POST)) { do404; }
-	if (dbRecordExists('announcements', $_POST['UID']) == false) { do404(); }
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) 
+		{ $page->do404('Announcement not specified (UID)'); }
+	
+	$model = new Announcements_Announcement($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Announcement not found.'); }
 
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
-	$model = new Announcement($_POST['UID']);
-
-	$refModule = $model->data['refModule'];
-	$refUID = $model->data['refUID'];
 	$authorised = false;
 
-	//----------------------------------------------------------------------------------------------
 	//	group admins have the ability to post announcements from that group
-	//----------------------------------------------------------------------------------------------
-	if ($refModule == 'groups') {
-		if ($user->isGroupAdmin($refUID) == true) { $authorised = true; }
-	}
+	//if (('groups' == $refModule) && (true == $user->isGroupAdmin($refUID))) { $authorised = true; }
 
-	//----------------------------------------------------------------------------------------------
 	//	other auth methods (admins can make any announcement they please)
-	//----------------------------------------------------------------------------------------------
-	if (authHas($refModule, 'makeannouncements', '') == true) { $authorised = true; }
+	if (true == $user->authHas($model->refModule, $model->refModel, 'announcements-new', $model->refUID))
+		{ $authorised = true; }
+
+	if (false == $authorised) { $page->do403('You are not authorized to make announcements.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save the record
 	//----------------------------------------------------------------------------------------------
+	$model->title = $_POST['title'];
+	$model->content = $_POST['content'];
+	$ext = $model->extArray();
+	$model->save();
 
-	if ( ($authorised == true) 
-	   AND (array_key_exists('action', $_POST))
-	   AND ($_POST['action'] == 'saveRecord') 
-	   AND (array_key_exists('UID', $_POST))
-	   AND (dbRecordExists('announcements', sqlMarkup($_POST['UID']))) ) {
+	//----------------------------------------------------------------------------------------------
+	//	prepare notification
+	//----------------------------------------------------------------------------------------------
+	//TODO: this shoud be handled by an event	
 
-		$send = true;
-		if ('sent' == $model->data['notifications']) { $send = false; }
+	$mn = 'Announcements_Announcement';
+	$title = "Announcement: " . $ext['title'],
+	$content = $ext['summary'];
+	$url = $ext['viewUrl'];
+
+	if ($notifications->count('announcements', $mn, $model->UID) > 0) 
+		{ $content = "Announcement has been changed.<br/>\n"; }
+
+	$nUID = $notifications->create('announcements', $mn, $model->UID, $title, $content,	$url);
+
+	//----------------------------------------------------------------------------------------------
+	//	add appropriate users and redirect back
+	//----------------------------------------------------------------------------------------------
+	if ('schools' == $model->refModule) { $notifications->addSchool($nUID, $model->refUID); }
+	if ('groups' == $refModule) { $notifications->addGroup($nUID, $model->refUID); }
+	$notifications->addUser($nUID, $model->createdBy);	
 	
-		//------------------------------------------------------------------------------------------
-		//	save the record
-		//------------------------------------------------------------------------------------------
-		$model->data['title'] = $_POST['title'];
-		$model->data['content'] = $_POST['content'];
-		$ext = $model->extArray();
-		$model->save();
-
-		//------------------------------------------------------------------------------------------
-		//	prepare notification
-		//------------------------------------------------------------------------------------------
-		
-		$noticeUID = createUID();
-		$from = $user->getName();
-		$fromurl = $serverPath . 'users/profile/' . $ext['recordAlias'];
-		$title = "Announcement: " . $ext['title'];
-		$content = $ext['content'];
-		if (false == $send) { $content = "Announcement has been changed.<br/>\n"; }
-
-		//------------------------------------------------------------------------------------------
-		//	add notifications and redirect back
-		//------------------------------------------------------------------------------------------
-
-		if ($refModule == 'schools') { 
-			$schoolRa = raGetDefault('schools', $refUID);
-			$url = $serverPath . 'schools/' . $schoolRa . '#announce' . $ext['UID'];
-			$imgRow = imgGetDefault('schools', $refUID);
-			$imgUID = '';
-			if (false != $imgRow) { $imgUID = $imgRow['UID']; }
-
-			notifySchool($refUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-			$link = $schoolRa . '#announce' . $model->data['UID'];
-			do302('schools/' . $link); 
-		}
-		if ($refModule == 'groups') { 
-
-			$groupRa = raGetDefault('groups', $refUID);
-			$url = $serverPath . 'groups/' . $groupRa . '#announce' . $ext['UID'];
-			$imgRow = imgGetDefault('groups', $refUID);
-			$imgUID = '';
-			if (false != $imgRow) { $imgUID = $imgRow['UID']; }
-
-			notifyGroup($refUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-			$link = raGetDefault('groups', $refUID) . '#announce' . $model->data['UID'];
-			do302('groups/' . $link); 
-		}
-		
-	} else { 
-		do404();
-	}
+	$page->do302('announcements/' . $model->alias); 
 
 ?>

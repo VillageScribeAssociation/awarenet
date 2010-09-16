@@ -1,33 +1,32 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	display all blog posts from a particular school
 //--------------------------------------------------------------------------------------------------
-
-	if (authHas('moblog', 'view', '') == false) { do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	which school blog to show?
 	//----------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
-	$model = new School();
+	$model = new Schools_School();
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { $page->do403(); }
 
-	if ($request['ref'] != '') {
-		if ($model->load($request['ref']) == false) { do404(); }
-	} else {
-		$model->load($user->data['school']);
-	}
+	if ('' != $req->ref) {
+		$model->load($req->ref)
+		if (false  == $model->loaded) { $page->do404(); }
+
+	} else { $model->load($user->school); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/moblog/actions/school.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['schoolUID'] = $model->data['UID'];
-	$page->blockArgs['schoolName'] = $model->data['name'];
-	$page->blockArgs['schoolRa'] = $model->data['recordAlias'];
+	$page->load('modules/moblog/actions/school.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['schoolUID'] = $model->UID;
+	$page->blockArgs['schoolName'] = $model->name;
+	$page->blockArgs['schoolRa'] = $model->alias;
 	$page->allowBlockArgs('page,tag');
 	$page->render();
 

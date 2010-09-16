@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all users
@@ -10,25 +10,26 @@
 //opt: num - number of records per page (default is 300) [string]
 
 function users_summarylist($args) {
-	if (authHas('users', 'summarylist', '') == false) { return ''; }
-	global $request;
-	$html = '';
+	global $db, $req, $page, $user;
+	$num = 300;							//%	default number of items per page [int]
+	$start = 0;							//%	position in table [int]
+	$pageNo = 1;						//% starts at 1 [int]
+	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	arguments
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	$start = 0; $num = 300; $page = 1;
-
-	if (array_key_exists('num', $args)) { $num = $args['num']; }
-	if (array_key_exists('page', $request['args'])) { 
-		$page = $request['args']['page']; 
-		$start = ($page - 1) * $num;
+	if (false == $user->authHas('users', 'Users_User', 'list')) { return ''; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('page', $req->args)) { 
+		$pageNo = (int)$req->args['page']; 
+		$start = ($pageNo - 1) * $num;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$list = dbLoadRange('users', '*', '', 'username', $num, $start);
+	$list = $db->loadRange('Users_User', '*', '', 'username', $num, $start);
 	foreach($list as $UID => $row) {
 		$html .= "[[:users::summary::UID=" . $UID . ":]]";
 	}  // TODO: process blocks directly, more effient, fewer queries

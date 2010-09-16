@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/moblog/models/moblog.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a comment is added
@@ -11,17 +11,17 @@ require_once($installPath . 'modules/moblog/models/moblog.mod.php');
 //arg: comment - text/html of comment
 
 function moblog__cb_comments_added($args) {
-	global $user;
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('commentUID', $args) == false) { return false; }
-	if (array_key_exists('comment', $args) == false) { return false; }
+	global $db, $user;
+	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refUID', $args)) { return false; }
+	if (false == array_key_exists('commentUID', $args)) { return false; }
+	if (false == array_key_exists('comment', $args)) { return false; }
 
 	if ($args['refModule'] != 'moblog') { return false; }
-	if (dbRecordExists('users', $args['refUID']) == false) { return false; }
+	if (false == $db->objectExists('Moblog_Post', $args['refUID'])) { return false; }
 	
-	$model = new Moblog($args['refUID']);
-	$u = new User($model->data['createdBy']);
+	$model = new Moblog_Post($args['refUID']);
+	$u = new Users_User($model->createdBy);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to blogger and their friends
@@ -35,9 +35,10 @@ function moblog__cb_comments_added($args) {
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 	$imgUID = imgGetDefaultUID('moblog', $args['refUID']);
 
-	if ($user->data['UID'] == $u->data['UID']) 
+	if ($user->UID == $u->UID) 
 		{ $title = $user->getNameLink() . " commented on their own blog post " . $link; }
 
+	/*  TODO: re-add notifications
 	notifyFriends($args['refUID'], $args['commentUID'], 
 				  $user->getName(), $user->getUrl(),
 				  $title, $args['comment'], $url, $imgUID );
@@ -48,6 +49,7 @@ function moblog__cb_comments_added($args) {
 				  $user->getName(), $user->getUrl(),
 				  $title, $args['comment'], $url, $imgUID );
 
+	*/
 	return true;
 }
 

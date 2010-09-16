@@ -1,6 +1,6 @@
 <? /*
 <div class='indent'>
-<form name='addChildPage' method='POST' action='/book/save/'>
+<form name='addChildPage' method='POST' action='%%serverPath%%book/save/'>
 <input type='hidden' name='action' value='addChildPage' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

@@ -1,28 +1,30 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	edit an announcement and associated files/images
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
-	if ($request['ref'] == '') { do404(); }
-	if (authHas('announcements', 'edit', '') == false) { do403(); }
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	edit an announcement and associated files/images
+//--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	check user is authorised to edit this
+	//	check arguments and permisisons
 	//----------------------------------------------------------------------------------------------
 
-	$model = new Announcement($request['ref']);
-	$cb = "[[:". $model->data['refModule'] ."::haseditauth::raUID=".  $model->data['refUID'] .":]]";
-	$result = expandBlocks($cb, '');
-	if ('yes' != $result) { do403(); }
+	if ('' == $req->ref) { $page->do404(); }
+	$model = new Announcements_Announcement($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
+	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'edit', $model->UID))
+		{ $page->do403('You are not authorized to edit this announcement.'); }
+
+	//$cb = "[[:". $model->refModule ."::haseditauth::raUID=".  $model->refUID .":]]";
+	//$result = expandBlocks($cb, '');
+	//if ('yes' != $result) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/announcements/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
+	$page->load('modules/announcements/actions/edit.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->render();
 
 ?>

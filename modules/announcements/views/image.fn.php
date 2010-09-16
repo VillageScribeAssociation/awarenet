@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find the first picture on the announcement (if there is one) or return info icon
@@ -11,6 +11,8 @@
 //opt: link - link to larger image (yes|no) [string]
 
 function announcements_image($args) {
+	global $db;
+
 	global $serverPath;
 	$size = 'width300';
 	$link = 'yes';
@@ -27,19 +29,19 @@ function announcements_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new Announcement(sqlMarkup($args['raUID']));	
-	$sql = "select * from images where refModule='announcements' and refUID='" . $model->data['UID'] 
+	$model = new Announcements_Announcement($db->addMarkup($args['raUID']));	
+	$sql = "select * from Images_Image where refModule='announcements' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+			return "<a href='/images/show/" . $row['alias'] . "'>" 
+				. "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='/images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $p->name . "'>";
 		}
 	}
 	
@@ -49,4 +51,3 @@ function announcements_image($args) {
 
 
 ?>
-

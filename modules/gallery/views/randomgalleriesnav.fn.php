@@ -1,27 +1,40 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list some random gallery summaries (formatted for the nav)
 //--------------------------------------------------------------------------------------------------
-// opt: num = max number to show (default is 10)
+// opt: num = max number to show, default is 10 (int) [string]
 
 function gallery_randomgalleriesnav($args) {
-	$num = 10; $html = '';
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+	global $db, $theme;
+	$num = 10; 
+	$html = '';
 
-	$sql = "select * from gallery where imagecount > 0 order by RAND() limit 0," . sqlMarkup($num);
-	$block = loadBlock('modules/gallery/views/summarynav.block.php');
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$model = new Gallery();
+	//----------------------------------------------------------------------------------------------
+	//	load x random galleries from the database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array('imagecount > 0');
+	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, 'RAND()', $num);
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	//$sql = "select * from gallery where imagecount > 0 order by RAND() limit 0," . $db->addMarkup($num);
+	$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
+
+	foreach ($range as $row) {
+		$model = new Gallery_Gallery();
 		$model->loadArray($row);
 		$labels = $model->extArray();
 		$labels['galleryUID'] = $row['UID'];
-		$html .= replaceLabels($labels, $block);
+		$html .= $theme->replaceLabels($labels, $block);
 	}
 
 	return $html;

@@ -4,14 +4,14 @@
 //	create a new static page
 //--------------------------------------------------------------------------------------------------------------
 
-	if (authHas('static', 'create', '') == false) { do403(); }
+	if ($user->authHas('home', 'Home_Static', 'create', 'TODO:UIDHERE') == false) { $page->do403(); }
 	
-	require_once($installPath . 'modules/static/models/static.mod.php');
+	require_once($kapenta->installPath . 'modules/static/models/static.mod.php');
 	$model = new StaticPage();
-	$model->data['title'] = 'New Page ' . $model->data['UID'];
+	$model->title = 'New Page ' . $model->UID;
 	$model->data['menu1'] = '[[:home::menu:]]';
 	$model->save();
 	
-	do302('static/edit/' . $model->data['recordAlias']);
+	$page->do302('static/edit/' . $model->alias);
 
 ?>

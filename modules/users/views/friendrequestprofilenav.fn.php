@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show friend request box (if not already friend)
@@ -10,16 +10,18 @@
 //opt: notitle - surpress display of title (yes|no) [string]
 
 function users_friendrequestprofilenav($args) {
+	global $theme;
+
 	global $user; $html = '';
 	if (array_key_exists('userUID', $args) == false) { return false; }	// dud block
-	if ($args['userUID'] == $user->data['UID']) { return false; }		// own profile
+	if ($args['userUID'] == $user->UID) { return false; }		// own profile
 
-	$model = new Friendship();
+	$model = new Users_Friendship();
 
 	//----------------------------------------------------------------------------------------------
 	//	look for an existing friendship
 	//----------------------------------------------------------------------------------------------
-	$friends = $model->getFriends($user->data['UID']);
+	$friends = $model->getFriends($user->UID);
 	foreach($friends as $friendUID => $replationship) {
 		if ($friendUID == $args['userUID']) { return ''; }	// are already friends
 	}
@@ -34,7 +36,7 @@ function users_friendrequestprofilenav($args) {
 		$return = 'search';
 	}
 
-	$friends = $model->getFriendRequests($user->data['UID']);
+	$friends = $model->getFriendRequests($user->UID);
 	foreach($friends as $friendUID => $relationship) {
 		if ($friendUID == $args['userUID']) { 
 
@@ -55,7 +57,7 @@ function users_friendrequestprofilenav($args) {
 	$labels = array('friendUID' => $args['userUID']);
 	$labels['titlebar'] = $titlebar;
 	$labels['return'] = $return;
-	$html = replaceLabels($labels, loadBlock('modules/users/views/friendrequestform.block.php'));
+	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/users/views/friendrequestform.block.php'));
 
 	return $html;
 	

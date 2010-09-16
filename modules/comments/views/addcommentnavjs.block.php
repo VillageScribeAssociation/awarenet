@@ -1,6 +1,6 @@
 <? /*
 
-<form name='addComment' id='formCommentsAdd' method='POST' action='/comments/add/'>
+<form name='addComment' id='formCommentsAdd' method='POST' action='%%serverPath%%comments/add/'>
     <input type='hidden' id='iCommentRefModule' name='refModule' value='%%refModule%%' />
     <input type='hidden' id='iCommentRefUID' name='refUID' value='%%refUID%%' />
     <input type='hidden' id='iCommentReturn' name='return' value='none' />

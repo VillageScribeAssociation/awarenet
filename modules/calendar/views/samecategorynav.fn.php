@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	show list of upcoming events in the same category
@@ -10,10 +10,10 @@
 function calendar_samecategorynav($args) {
 	global $serverPath;
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$c = new Calendar($args['raUID']);
+	$c = new Calendar_Entry($args['raUID']);
 	$html = '';
 	
-	$ev = $c->loadUpcoming($c->data['category'], 20);
+	$ev = $c->loadUpcoming($c->category, 20);
 	
 	if (count($ev) > 0) {
 		$html .= "<table noborder>\n";
@@ -22,7 +22,7 @@ function calendar_samecategorynav($args) {
 		$html .= "<td class='title'>&nbsp;Event&nbsp;</td>\n";
 		$html .= "</tr>\n";
 		foreach($ev as $UID => $row) {
-			$link = $serverPath . 'calendar/' . $row['recordAlias'];
+			$link = $serverPath . 'calendar/' . $row['alias'];
 			$html .= "<tr>\n";			
 			$html .= "<td valign='top'>" . $row['year'] . '-' . $row['month'] 
 				. '-' . $row['day'] . "</td>\n";

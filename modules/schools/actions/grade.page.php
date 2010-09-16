@@ -3,7 +3,7 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
 [`|lt]h1[`|gt][`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc][`|lt]/h1[`|gt]
-[[:schools::showgrade::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::grade=[`|pc][`|pc]grade[`|pc][`|pc]:]]</content>
+[[:users::showgrade::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::grade=[`|pc][`|pc]grade[`|pc][`|pc]:]]</content>
 <title>awareNet - [`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc]</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=This School:]]
@@ -18,7 +18,8 @@
 <menu2>[[:schools::menu:]]</menu2>
 <section></section>
 <subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=People - ::link=/users/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]userName[`|pc][`|pc] - ::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
-[[:theme::breadcrumb::label=Classmates::link=/schools/grade/user[`|us][`|pc][`|pc]userRa[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+<breadcrumb>[[:theme::breadcrumb::label=Schools - ::link=/schools/:]]
+[[:theme::breadcrumb::label=[`|pc][`|pc]schoolName[`|pc][`|pc] - ::link=/schools/[`|pc][`|pc]schoolRa[`|pc][`|pc]:]]
+[[:theme::breadcrumb::label=Grade: %%grade%%::link=[`|us][`|pc][`|pc]gradeLink[`|pc][`|pc]:]]</breadcrumb>
+</page>
+*/ ?>

@@ -4,16 +4,18 @@
 //	callbacks allow modules to interact with being necessarily dependant on one another
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/users/models/user.mod.php');
+require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	when a comment is posted
 //--------------------------------------------------------------------------------------------------
 
 function users__cb_comments_add($refUID, $commentUID, $comment) {
+	global $db, 
+
 	global $user;
-	if (dbRecordExists('users', $refUID) == false) { return false; }
-	$model = new User($refUID);
+	if ($db->objectExists('users', $refUID) == false) { return false; }
+	$model = new Users_User($refUID);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members
@@ -26,7 +28,7 @@ function users__cb_comments_add($refUID, $commentUID, $comment) {
 	$imgUID = '';
 	$imgUID = imgGetDefaultUID('projects', $refUID);
 
-	if ($user->data['UID'] == $refUID) 
+	if ($user->UID == $refUID) 
 		{ $title = $user->getNameLink() . " commented on their own " . $link; }
 
 	notifyFriends($refUID, $commentUID, 
@@ -35,7 +37,7 @@ function users__cb_comments_add($refUID, $commentUID, $comment) {
 
 
 	$title = $user->getNameLink() . " commented on your " . $link;
-	if ($user->data['UID'] == $refUID) 
+	if ($user->UID == $refUID) 
 		{ $title = "You commented on their own " . $link; }
 
 	notifyUser($refUID, $commentUID, 

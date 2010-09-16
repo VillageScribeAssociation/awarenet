@@ -1,86 +1,110 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	installer for wiki module: creates wiki (articles), wikicategories, wikicatindex, wikirevisions
-//	and wikidelete tables
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/category.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
 
-require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	install script for Wiki module
+//--------------------------------------------------------------------------------------------------
+//+	reports are human-readable HTML, with script-readable HTML comments
 
-function install_wiki_module() {
-	global $installPath;
+//--------------------------------------------------------------------------------------------------
+//|	install the Wiki module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
+
+function wiki_install_module() {
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Wiki_Article table
+	//----------------------------------------------------------------------------------------------
+	$model = new Wiki_Article();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	import any records from previous Articles table
+	//----------------------------------------------------------------------------------------------
+	$rename = array('recordAlias' => 'alias');
+	$count = $dba->copyAll('wiki', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'wiki' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Wiki_Category table
+	//----------------------------------------------------------------------------------------------
+	$model = new Wiki_Category();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Wiki_Revision table
+	//----------------------------------------------------------------------------------------------
+	$model = new Wiki_Revision();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	return $report;
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	discover if this module is installed
+//--------------------------------------------------------------------------------------------------
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
+
+function wiki_install_status_report() {
 	global $user;
+	if ('admin' != $user->role) { return false; }
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	$dba = new KDBAdminDriver();
 	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
+	$installed = true;
 
 	//----------------------------------------------------------------------------------------------
-	//	create wiki (articles) table
+	//	ensure the table which stores Article objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Wiki();
-	$report .= $model->install();
+	$model = new Wiki_Article();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	create wikicategories table
+	//	ensure the table which stores Category objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	// TODO
+	$model = new Wiki_Category();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	create wikicatindex table
+	//	ensure the table which stores Revision objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	// TODO
+	$model = new Wiki_Revision();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	create wikirevisions table
+	//	done
 	//----------------------------------------------------------------------------------------------
-	$model = new WikiRevision();
-	$report .= $model->install();
-
-	//----------------------------------------------------------------------------------------------
-	//	create wikideletions table (articles nominated for deletion)
-	//----------------------------------------------------------------------------------------------
-	// TODO
-
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
-}
-
-//--------------------------------------------------------------------------------------------------
-//	check if this module is installed
-//--------------------------------------------------------------------------------------------------
-//returns: html report describing status of wiki module [string]
-
-function isinstalled_wiki_module() {
-	$report = '';
-
-	//---------------------------------------------------------------------------------------------
-	//	wiki table
-	//---------------------------------------------------------------------------------------------
-	if (dbTableExists('wiki') == false) { 
-		$report .= "[*] Database table 'wiki' is not installed.<br/>\n";
-	} else {
-		$report .= "[*] Wiki table exists.<br/>\n";
-		$model = new Wiki();
-		$modelSchema = $model->initDbSchema();
-		$liveSchema = dbGetSchema('wiki');
-		if (dbCompareSchema($modelSchema , $liveSchema) == false) {
-			$report .= "[*] Wiki table exists but does not match schema.<br/>\n";
-		} else {
-			$report .= "[*] Wiki table and indices match schema.<br/>\n";
-		}
-	}
-
-	return $report;
-}
-
-//--------------------------------------------------------------------------------------------------
-//	uninstall the wiki
-//--------------------------------------------------------------------------------------------------
-//	note: this will remove the wiki module, associated database tables and all data from the wiki,
-//	including attached files and images.
-
-function uninstall_wiki_module() {
-	// TODO
 }
 
 ?>

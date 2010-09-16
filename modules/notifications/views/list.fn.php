@@ -1,35 +1,65 @@
 <?
 
-	require_once($installPath . 'modules/notifications/models/notification.mod.php');
-
 //--------------------------------------------------------------------------------------------------
-//|	show latest x notifications recieved by a given user
+//*	list a user's recent activity
 //--------------------------------------------------------------------------------------------------
-//arg: userUID - UID of a user [string]
-//opt: num - number of notifications to show (default 20) [string]
+//arg: userUID - UID of a Users_User object [string]
+//opt: page - page number to display, default is 1 (int) [string]
+//opt: num - number of records per page (default is 30) [string]
 
 function notifications_list($args) {
-	$num = 20;	$html = '';
-	if (array_key_exists('userUID', $args) == false) { return false; }
-	if (dbRecordExists('users', $args['userUID']) == false) { return false; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+	global $page, $db, $user, $theme;
+	$start = 0;
+	$num = 30;
+	$pageNo = 1;
+	$html = '';				//%	return value [string]
 
-	$model = new NotificationQueue($args['userUID']);
-	$noticeArray = array_reverse($model->notifications);
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	//if (false == $user->authHas('notifications', 'Notifications_Notification', 'show'))
+	//		{ return ''; }
+	if (false == array_key_exists('userUID', $args)) { return '(user not specified)'; }
 
-	foreach($noticeArray as $UID => $notice) {
-		$notice['time'] = mk_mysql_datetime($notice['timestamp']) . ' (' . $notice['timestamp'] . ')';
+	$userUID = $args['userUID'];
+	if (false == $db->objectExists('Users_User', $userUID)) { return '(no such user)'; }
 
-		if ($noitice['imgUID'] != '') {
-			$html .= replaceLabels($notice, loadBlock('modules/notifications/views/notice.block.php')); 
-		} else { 
-			$html .= replaceLabels($notice, loadBlock('modules/notifications/views/noticeimg.block.php'));
-		}
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('page', $args)) 
+		{ $pageNo = $args['page']; $start = ($pageNo - 1) * $num; }
+
+	//----------------------------------------------------------------------------------------------
+	//	count visible notifications
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+	$conditions[] = "status='show'";
+
+	$totalItems = $db->countRange('Notifications_UserIndex', $conditions);
+	$totalPages = ceil($totalItems / $num);
+
+	if (0 == $totalItems) { 
+		$block = $theme->loadBlock('modules/notifications/views/nonotifications.block.php');
+		return $block;
 	}
 
+	$link = '%%serverPath%%notifications/';
+	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
+
+	//----------------------------------------------------------------------------------------------
+	//	load a page worth of notifications from the database
+	//----------------------------------------------------------------------------------------------
+	$range = $db->loadRange('Notifications_UserIndex', '*', $conditions, 'createdOn DESC', $num, $start);
+
+	foreach($range as $UID => $row) 
+		{ $html .= "[[:notifications::show::UID=" . $row['notificationUID'] . ":]]"; }
+
+	$html = $pagination . $html . $pagination;
+
 	return $html;
+
 }
 
 
 ?>
-

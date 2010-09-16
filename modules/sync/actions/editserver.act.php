@@ -1,16 +1,21 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	edit a server record
+//*	edit a server record
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	//----------------------------------------------------------------------------------------------
+	//	check user is an admin
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); }
+	if (trim('') == $req->ref) { $page->do404(); }
+	if (false == $db->objectExists('servers', $req->ref)) { $page->do404(); }
 
-	if (trim($request['ref'] == '')) { do404(); }
-	if (dbRecordExists('servers', $request['ref']) == false) { do404(); }
-
-	$page->load($installPath . 'modules/sync/actions/editserver.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/sync/actions/editserver.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
 	$page->render();
 
 ?>

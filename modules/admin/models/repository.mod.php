@@ -23,9 +23,9 @@ class CodeRepository {
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
 	//arg: url - location of a code repository module [string]
-	//arg: raUID - recordAlias or UID of a project in the repository [string]
+	//arg: raUID - alias or UID of a project in the repository [string]
 
-	function CodeRepository($url, $raUID) {
+	function CodeRepository($url, $raUID, $postKey) {
 		$this->listUrl = $url . "projectlist/" . $raUID . '/';
 		$this->postUrl = $url . 'commit/';
 		$this->doorUrl = $url . 'projectfile/';
@@ -60,8 +60,9 @@ class CodeRepository {
 	//returns: array of file metadata - uid, hash, type and relfile [array]
 
 	function getRepositoryList() {
+		global $utils;
 		$rlist = array();
-		$raw = curlGet($this->listUrl);	
+		$raw = $utils->curlGet($this->listUrl);	
 		$lines = explode("\n", $raw);
 		foreach($lines as $line) {
 			$cols = explode("\t", $line);
@@ -225,6 +226,8 @@ class CodeRepository {
 	//arg: hash - sha1 file hash [string]
 
 	function storeFile($path, $type, $hash) {
+	global $db;
+
 		global $installPath;
 	
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
@@ -234,7 +237,7 @@ class CodeRepository {
 		//------------------------------------------------------------------------------------------
 		$raw = implode(file($installPath . $path));
 		$dirname = str_replace("\\", '', dirname($path)) . '/';
-		$description = '(automatically uploaded ' . mysql_datetime() . ')';
+		$description = '(automatically uploaded ' . $db->datetime() . ')';
 		$isbinary = 'no';
 		$binary = '';
 		$content = '';

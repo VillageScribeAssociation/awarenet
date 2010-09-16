@@ -12,8 +12,8 @@ function theme_navtitlebox($args) {
 	global $installPath;
 	global $serverPath;
 	global $defaultTheme;
-	global $page;
-	$s = $page->style;
+	global $theme;
+	$s = $theme->style;
 	
 	//----------------------------------------------------------------------------------------------
 	//	read arguments

@@ -1,34 +1,36 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	view a school record
+//*	view a school object (if none specified, default is user's own school)
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	authentication (public users no longer banned)
 	//----------------------------------------------------------------------------------------------
-	//if (($user->data['ofGroup'] == 'public') || ($user->data['ofGroup'] == 'banned')) { do403(); }
+	//if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('schools', 'show', 'schools', $request['ref']);
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	if ('' == $req->ref) { $req->ref = $user->school; }
+	$aliases->findRedirect('Schools_School');
 
 	//----------------------------------------------------------------------------------------------
 	//	load model
 	//----------------------------------------------------------------------------------------------
-	$model = new School($request['ref']);
+	$model = new Schools_School($req->ref);
+	if (false == $model->loaded) { $page->do404('could not find school: ' . $req-ref); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/schools/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = $model->data['UID'];
-	$page->blockArgs['schoolName'] = $model->data['name'];
-	$page->blockArgs['schoolRa'] = $model->data['recordAlias'];
+	$page->load('modules/schools/actions/show.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['schoolName'] = $model->name;
+	$page->blockArgs['schoolRa'] = $model->alias;
 	$page->render();
 
 ?>

@@ -1,44 +1,38 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	iframe to display and add/remove project members, reference should be a projects' recordalias
+//*	iframe to display and add/remove project members, reference should be a projects' alias
 //--------------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'editmembers', 'projects', $request['ref']);
+	//----------------------------------------------------------------------------------------------
+	//	check reference and load project
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
 
-	require_once($installPath . 'modules/projects/models/project.mod.php');
-	$model = new Project($request['ref']);
+	$model = new Projects_Project($req->ref);
 	$members = $model->getMembers();
 
 	//----------------------------------------------------------------------------------------------
 	//	determine if current user is authorised to administer this project
-	//----------------------------------------------------------------------------------------------
-	
+	//----------------------------------------------------------------------------------------------	
 	$admin = false;
-	if ($user->data['ofGroup'] == 'admin') { $admin = true; }
+	if ('admin' == $user->role) { $admin = true; }
 
-	foreach($members as $userUID => $role) {
-		if (($userUID == $user->data['UID']) AND ($role == 'admin')) { $admin = true; }
-	}
+	foreach($members as $userUID => $role) 
+		{ if (($userUID == $user->UID) AND ($role == 'admin')) { $admin = true; } }
 
-	if ($admin == false) { 
-		echo "You cannot administer memberships of this project.<br/>\n";
-		flush();
-		die();
-	}
+	if ($admin == false) 
+		{ $page->do403("You cannot administer memberships of this project.<br/>\n", true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	accept HTTP POSTs to add new members
 	//----------------------------------------------------------------------------------------------
-
-	if ( (array_key_exists('action', $_POST) == true)
-		AND ($_POST['action'] == 'addMember') ) {
-
+	if ((true == array_key_exists('action', $_POST)) AND ('addMember' == $_POST['action'])) {
 		$model->addMember($_POST['user'], $_POST['role']);
-		$_SESSION['sMessage'] .= "Added new member to project: "
-							   . $model->data['title'] . ".<br/>\n";
-
+		$session->msg("Added new member to project: " . $model->title . ".", 'ok');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -46,20 +40,18 @@
 	//----------------------------------------------------------------------------------------------
 	// eg /projects/editmembers/removemember_8237146489/Some-Project
 
-	if ( (true == array_key_exists('removemember', $request['args']))
-		AND (true == dbRecordExists('users', $request['args']['removemember'])) ) {
-		$model->removeMember($request['args']['removemember']);
-		$_SESSION['sMessage'] .= "Removed member from " . $model->data['title'] . ".<br/>\n";
-
+	if ( (true == array_key_exists('removemember', $req->args))
+		AND (true == $db->objectExists('Users_User', $req->args['removemember'])) ) {
+		$model->removeMember($req->args['removemember']);
+		$session->msg("Removed member from " . $model->title . ".", 'ok');
 	}
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	
-	$page->load($installPath . 'modules/projects/actions/editmembers.if.page.php');
-	$page->blockArgs['UID'] = $model->data['UID'];
-	$page->blockArgs['raUID'] = $model->data['recordAlias'];
+	$page->load('modules/projects/actions/editmembers.if.page.php');
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['raUID'] = $model->alias;
 	$page->render();
 
 ?>

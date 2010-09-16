@@ -1,8 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikicode.mod.php');
-	require_once($installPath . 'modules/wiki/models/wikirevision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/inc/wikicode.class.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	menu for wiki, no arguments
@@ -11,9 +10,11 @@
 //opt: type - may be 'content' (default) or 'talk', requires raUID [string]
 
 function wiki_menu($args) {
+	global $theme, $user;	
+
 	$type = 'content'; $raUID = 'no';
-	if (array_key_exists('raUID', $args) == true) { $raUID = $args['raUID']; }
-	if (array_key_exists('type', $args) == true) { $type = $args['type']; }
+	if (true == array_key_exists('raUID', $args)) { $raUID = $args['raUID']; }
+	if (true == array_key_exists('type', $args)) { $type = $args['type']; }
 
 	$labels = array();
 	$labels['newarticle'] = '';
@@ -22,33 +23,37 @@ function wiki_menu($args) {
 	$labels['editthis'] = '';
 	$labels['history'] = '';
 
-	if (authHas('wiki', 'edit', '') == true) {
+	$model = new Wiki_Article($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+
+	if (true == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) {
 		$labels['newarticle'] = '[[:theme::submenu::label=New Article::link=/wiki/new/:]]';
 
 		if ($raUID != 'no') {
 			// we have an article, make some links for it
 			$labels['article'] = "[[:theme::submenu::label=Article::"
-								. "link=%%serverPath%%wiki/" . $raUID . ":]]";
+								. "link=%%serverPath%%wiki/" . $model->alias . ":]]";
 
 			$labels['talkpage'] = "[[:theme::submenu::label=Discussion::"
-								. "link=%%serverPath%%wiki/talk/" . $raUID . ":]]";
+								. "link=%%serverPath%%wiki/talk/" . $model->alias . ":]]";
 
 			$labels['history'] = "[[:theme::submenu::label=History::"
-								. "link=%%serverPath%%wiki/history/" . $raUID . ":]]";
+								. "link=%%serverPath%%wiki/history/" . $model->alias . ":]]";
 
 
 			if ($type == 'content') { 
 				$labels['editthis'] = "[[:theme::submenu::label=Edit This Page::"
-								    . "link=%%serverPath%%wiki/edit/" . $raUID . ":]]"; 
+								    . "link=%%serverPath%%wiki/edit/" . $model->alias . ":]]"; 
 			}
 
 			if ($type == 'talk') { 
 				$labels['editthis'] = "[[:theme::submenu::label=Edit This Page::"
-									. "link=%%serverPath%%wiki/edittalk/" . $raUID . ":]]"; }
+									. "link=%%serverPath%%wiki/edittalk/" . $model->alias . ":]]"; }
 		}
 	} 
 	
-	$html = replaceLabels($labels, loadBlock('modules/wiki/views/menu.block.php'));
+	$block = $theme->loadBlock('modules/wiki/views/menu.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;	
 }
 

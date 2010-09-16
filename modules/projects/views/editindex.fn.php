@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
@@ -11,21 +11,23 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindex($args) {
-	if (authHas('projects', 'view', '') == false) { return false; }
-	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	global $user, $theme;
+	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	load the project
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	$model = new Project($args['raUID']);
-	$thisRa = $model->data['recordAlias'];
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+
+	$model = new Projects_Project($args['raUID']);
+	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
 	$rows = array();
 
 	//----------------------------------------------------------------------------------------------
 	//	link to abstract
 	//----------------------------------------------------------------------------------------------
-	$abstractUrl = "%%serverPath%%projects/editabstract/" . $thisRa;
+	$abstractUrl = "%%serverPath%%projects/editabstract/" . $model->alias;
 	$abstract = array();
 	$abstract[] = "<a href='" . $abstractUrl . "' target='_parent'>Title / Abstract</a>";
 	$abstract[] = ''; $abstract[] = ''; 	// two blank cols
@@ -43,10 +45,10 @@ function projects_editindex($args) {
 		$dnImg = "<img src='". $imgPath ."btn-down.png' $imgStyle alt='move down'>";
 		//$rmImg = "<img src='". $imgPath ."btn-del.png' $imgStyle alt='delete'>";
 
-		$upLink = "%%serverPath%%projects/editindex/dec_" . $section['UID'] . '/' . $thisRa;
-		$dnLink = "%%serverPath%%projects/editindex/inc_" . $section['UID'] . '/' . $thisRa;
-		$esLink = "%%serverPath%%projects/editsection/section_" . $section['UID'] . '/' . $thisRa;
-		//$rmLink = "%%serverPath%%projects/editindex/crm_" . $section['UID'] . '/' . $thisRa;
+		$upLink = "%%serverPath%%projects/editindex/dec_" . $section['UID'] . '/' . $model->alias;
+		$dnLink = "%%serverPath%%projects/editindex/inc_" . $section['UID'] . '/' . $model->alias;
+		$esLink = "%%serverPath%%projects/editsection/section_" . $section['UID'] . '/' . $model->alias;
+		//$rmLink = "%%serverPath%%projects/editindex/crm_" . $section['UID'] . '/' . $model->alias;
 
 		$cols[] = "<a href='" . $esLink . "' target='_parent'>" . $section['title'] . "</a>";
 		$cols[] = "<a href='" . $upLink. "'>$upImg</a>";
@@ -55,7 +57,7 @@ function projects_editindex($args) {
 		$rows[] = $cols;
 	}
 
-	$html = arrayToHtmlTable($rows);
+	$html = $theme->arrayToHtmlTable($rows);
 	return $html;
 }
 

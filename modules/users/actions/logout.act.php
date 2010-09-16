@@ -4,22 +4,22 @@
 //	log the user out and redirect to the homepage
 //--------------------------------------------------------------------------------------------------------------
 
-	if ($_SESSION['sUser'] == 'public') {
+	if ('public' == $session->user) {
 		//----------------------------------------------------------------------------------------------
 		//	user was not logged in
 		//----------------------------------------------------------------------------------------------
-		$_SESSION['sMessage'] .= "You are already logged out.<br/>\n";
-		do302(''); // homepage		
+		$session->msg("You are already logged out.<br/>\n");
+		$page->do302(''); // homepage		
 
 	} else {
 		//----------------------------------------------------------------------------------------------
 		//	log them out
 		//----------------------------------------------------------------------------------------------
-		$userlogin->delete();
-		$_SESSION['sUser'] = 'public';
-		$_SESSION['sUserUID'] = 'public';
-		$_SESSION['sMessage'] .= "You are now logged out.<br/>\n";
-		do302('');
+		//$userlogin->delete();
+		$session->user = 'public';
+		$session->msg("You are now logged out.<br/>\n", 'ok');
+		$session->store();
+		$page->do302('');
 
 	}
 

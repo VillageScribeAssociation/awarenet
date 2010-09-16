@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (disallow public access)
 	//----------------------------------------------------------------------------------------------
-	if (($user->data['ofGroup'] == 'public') || ($user->data['ofGroup'] == 'banned')) { do403(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show calendar events for given period
@@ -16,22 +16,22 @@
 	$scope = '';
 	$period = '';
 
-	if (array_key_exists('day', $request['args'])) 
-		{ $scope = 'day'; $period = $request['args']['day']; }
-	if (array_key_exists('month', $request['args'])) 
-		{ $scope = 'month'; $period = $request['args']['month']; }
-	if (array_key_exists('year', $request['args'])) 
-		{ $scope = 'year'; $period = $request['args']['year']; }
+	if (array_key_exists('day', $req->args)) 
+		{ $scope = 'day'; $period = $req->args['day']; }
+	if (array_key_exists('month', $req->args)) 
+		{ $scope = 'month'; $period = $req->args['month']; }
+	if (array_key_exists('year', $req->args)) 
+		{ $scope = 'year'; $period = $req->args['year']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	default, show this month
 	//----------------------------------------------------------------------------------------------
 
 	if ($scope == '') {
-		require_once($installPath . 'modules/calendar/models/calendar.mod.php');
-		$c = new Calendar();
+		require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
+		$c = new Calendar_Entry();
 	
-		$page->load($installPath . 'modules/calendar/actions/month.page.php');
+		$page->load('modules/calendar/actions/month.page.php');
 		$page->blockArgs['year'] = date('Y');
 		$page->blockArgs['month'] = date('m');
 		$page->blockArgs['monthName'] = date('F');
@@ -43,7 +43,7 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ($scope == 'year') { 
-		$page->load($installPath . 'modules/calendar/actions/year.page.php');
+		$page->load('modules/calendar/actions/year.page.php');
 		$page->blockArgs['scope'] = $scope;
 		$page->blockArgs['year'] = $period;
 		$page->blockArgs['nextyear'] = ($period + 1);
@@ -59,19 +59,19 @@
 		$bits = explode('_', $period);
 		if (count($bits) == 2) {
 		
-			require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+			require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 		
-			$c = new Calendar();
+			$c = new Calendar_Entry();
 			$monthName = $c->getMonthName($bits[1]);
-			if ($monthName == false) { do404(); }
+			if ($monthName == false) { $page->do404(); }
 		
-			$page->load($installPath . 'modules/calendar/actions/month.page.php');
-			$page->blockArgs['year'] = sqlMarkup($bits[0]);
-			$page->blockArgs['month'] = sqlMarkup($bits[1]);
+			$page->load('modules/calendar/actions/month.page.php');
+			$page->blockArgs['year'] = $db->addMarkup($bits[0]);
+			$page->blockArgs['month'] = $db->addMarkup($bits[1]);
 			$page->blockArgs['monthName'] = $monthName;
 			$page->render();			
 			
-		} else { do404(); }
+		} else { $page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -82,20 +82,20 @@
 		$bits = explode('_', $period);
 		if (count($bits) == 3) {
 		
-			require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+			require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 		
-			$c = new Calendar();
+			$c = new Calendar_Entry();
 			$monthName = $c->getMonthName($bits[1]);
-			if ($monthName == false) { do404(); }
+			if ($monthName == false) { $page->do404(); }
 		
-			$page->load($installPath . 'modules/calendar/actions/day.page.php');
-			$page->blockArgs['year'] = sqlMarkup($bits[0]);
-			$page->blockArgs['month'] = sqlMarkup($bits[1]);
-			$page->blockArgs['day'] = sqlMarkup($bits[2]);
+			$page->load('modules/calendar/actions/day.page.php');
+			$page->blockArgs['year'] = $db->addMarkup($bits[0]);
+			$page->blockArgs['month'] = $db->addMarkup($bits[1]);
+			$page->blockArgs['day'] = $db->addMarkup($bits[2]);
 			$page->blockArgs['monthName'] = $monthName;
 			$page->render();			
 			
-		} else { do404(); }
+		} else { $page->do404(); }
 	}
 	
 ?>

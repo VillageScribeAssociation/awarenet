@@ -8,7 +8,7 @@
 	//	check if password is correct
 	//---------------------------------------------------------------------------------------------
 
-	if (syncAuthenticate() == false) { doXmlError('cound not authenticate'); }
+	if (false == $sync->authenticate()) { $page->doXmlError('cound not authenticate'); }
 	
 	//---------------------------------------------------------------------------------------------
 	//	OK, this server is online

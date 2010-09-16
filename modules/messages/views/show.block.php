@@ -15,7 +15,7 @@
 <table noborder>
   <tr>
     <td>
-      <form name='deleteMessage' method='POST' action='/messages/delete/'>
+      <form name='deleteMessage' method='POST' action='%%serverPath%%messages/delete/'>
 	  <input type='hidden' name='action' value='deleteMessage' />
 	  <input type='hidden' name='UID' value='%%UID%%' />
       <input type='submit' value='Delete' />

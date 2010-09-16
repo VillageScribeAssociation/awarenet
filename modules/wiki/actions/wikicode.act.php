@@ -4,7 +4,7 @@
 //	display wikicode help
 //--------------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/wiki/actions/wikicode.page.php');
+	$page->load('modules/wiki/actions/wikicode.page.php');
 	$page->render();
 
 ?>

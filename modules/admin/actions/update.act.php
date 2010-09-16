@@ -4,14 +4,14 @@
 //	uploading local installation from repository on kapenta.org.uk
 //-------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	//if ($user->data['ofGroup'] != 'admin') { do403(); }
 	require_once($installPath . 'modules/admin/models/repository.mod.php');
 
 	//---------------------------------------------------------------------------------------------
 	//	set up repository access
 	//---------------------------------------------------------------------------------------------
 
-	$projectUID = '106665425118526027';
+	$projectUID = '210833480571475984';
 	$repository = 'http://kapenta.org.uk/code/';
 
 	$repository = new CodeRepository($repository, $projectUID);

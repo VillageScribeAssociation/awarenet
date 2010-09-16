@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
@@ -11,9 +11,13 @@
 //opt: projectUID - overrides UID [string]
 
 function projects_revisions($args) {
-	require_once($installPath . 'modules/projects/inc/diff.inc.php');
+	global $db;
 
-	if (authHas('projects', 'view', '') == false) { return false; }
+	global $kapenta;
+
+	require_once($kapenta->installPath . 'modules/projects/inc/diff.inc.php');
+
+	if ($user->authHas('projects', 'Projects_Project', 'show', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID']; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 	$html = '';
@@ -22,13 +26,13 @@ function projects_revisions($args) {
 	//	load all revisions
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from projectrevisions "
-		 . "where refUID='" . sqlMarkup($args['UID']) . "' order by editedOn";
+	$sql = "select * from Projects_Revision "
+		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 	$lastRow = array();
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 
 		if (count($lastRow) > 0) {
 			$revisionLink = '/projects/revision/' . $row['UID'];
@@ -64,4 +68,3 @@ function projects_revisions($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

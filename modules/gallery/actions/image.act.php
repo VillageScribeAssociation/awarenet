@@ -1,38 +1,37 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show an image from a users gallery
+//*	show an image from a users gallery
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	anyone can view images TODO: add permissions
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	$imageUID = raGetOwner($request['ref'], 'images');
-	if ($imageUID == false) { do404(); }
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Images_Image');
+	$model = new Images_Image($UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	load models
 	//----------------------------------------------------------------------------------------------
-	require_once($installPath . 'modules/images/models/image.mod.php');
-	$model = new Image($imageUID);
-	$userRa = raGetDefault('users', $model->data['createdBy']);
-
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
-	$gallery = new Gallery($model->data['refUID']);
+	$userRa = $aliases->getDefault('Users_User', $model->createdBy);
+	$gallery = new Gallery_Gallery($model->refUID);
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/gallery/actions/image.page.php');
-	$page->blockArgs['imageUID'] = $imageUID;
-	$page->blockArgs['imageRa'] = $model->data['recordAlias'];
-	$page->blockArgs['imageTitle'] = $model->data['title'];
-	$page->blockArgs['userUID'] = $model->data['createdBy'];
+	$page->load('modules/gallery/actions/image.page.php');
+	$page->blockArgs['imageUID'] = $UID;
+	$page->blockArgs['imageRa'] = $model->alias;
+	$page->blockArgs['imageTitle'] = $model->title;
+	$page->blockArgs['userUID'] = $model->createdBy;
 	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['galleryUID'] = $model->data['refUID'];
-	$page->blockArgs['galleryTitle'] = $gallery->data['title'];
-	$page->blockArgs['galleryRa'] = $gallery->data['recordAlias'];
+	$page->blockArgs['galleryUID'] = $model->refUID;
+	$page->blockArgs['galleryTitle'] = $gallery->title;
+	$page->blockArgs['galleryRa'] = $gallery->alias;
 	$page->render();
 
 ?>

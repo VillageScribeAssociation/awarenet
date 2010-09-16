@@ -1,5 +1,5 @@
 <? /*
-<form name='editschool' method='POST' action='/groups/save/'>
+<form name='editschool' method='POST' action='%%serverPath%%groups/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

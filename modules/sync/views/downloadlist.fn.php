@@ -3,28 +3,36 @@
 //-------------------------------------------------------------------------------------------------
 //|	displays this peer's current download list
 //-------------------------------------------------------------------------------------------------
+//TODO: paginate this, use $db->loadRange(...)
 
 function sync_downloadlist($args) {
-	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return ''; }
+	global $db, $user, $theme;
 	$html = '';
 
-	$sql = "select * from downloads order by status";
-	$result = dbQuery($sql);
+	//----------------------------------------------------------------------------------------------
+	//	check user role
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { return ''; }
 
-	if (dbNumRows($result) > 0) {
+	//----------------------------------------------------------------------------------------------
+	//	load downloads from the database
+	//----------------------------------------------------------------------------------------------
+	$sql = "select * from Sync_Download order by status";
+	$result = $db->query($sql);
+
+	if ($db->numRows($result) > 0) {
 		//-----------------------------------------------------------------------------------------
 		//	add all results to a table
 		//-----------------------------------------------------------------------------------------
 		$ary = array();
 		$ary[] = array('File', 'Status', 'Timestamp');
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
+		while ($row = $db->fetchAssoc($result)) {
+			$row = $db->rmArray($row);
 			$ary[] = array($row['filename'], $row['status'], $row['timestamp']);
 		}
 
-		$html .= "<b>" . dbNumRows($result) . " items in download queue.</b>\n";
-		$html .= arrayToHtmlTable($ary, true, true);
+		$html .= "<b>" . $db->numRows($result) . " items in download queue.</b>\n";
+		$html .= $theme->arrayToHtmlTable($ary, true, true);
 
 	} else {
 		//-----------------------------------------------------------------------------------------

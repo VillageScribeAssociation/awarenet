@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for editing images
@@ -9,12 +9,14 @@
 //opt: return - return to upload dialog (set to 'uploadmultiple') [string]
 
 function images_editform($args) {
+	global $theme;
+
 	$return = '';
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('return', $args)) { $return = $args['return']; }
 	
-	$i = new Image($args['raUID']);
-	if ($i->data['fileName'] == '') { return '(image not found)'; }
+	$i = new Images_Image($args['raUID']);
+	if ($i->fileName == '') { return '(image not found)'; }
 	
 	$labels = $i->extArray();
 	$labels['return'] = $return;
@@ -28,10 +30,9 @@ function images_editform($args) {
 				      . "'>[&lt;&lt; return to upload form ]</a>";
 	}
 	
-	return replaceLabels($labels, loadBlock('modules/images/views/editform.block.php'));
+	return $theme->replaceLabels($labels, $theme->loadBlock('modules/images/views/editform.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

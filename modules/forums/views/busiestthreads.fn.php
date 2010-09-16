@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list busiest threads on all forums (formatted for nav)
@@ -10,23 +10,28 @@
 //opt: num - number of threads to show (default is 10) [string]
 
 function forums_busiestthreads($args) {
-	$num = 10; $html = '';
-	if (array_key_exists('num', $args) == true) { $num = floor($args['num']); }
-	// TODO: auth	
+	global $db, $theme, $user;
+	$num = 10;
+	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	// TODO: permissions check here
 
 	// thread with the smallest ammount of time between replies is the winner
-	$sql = "select *, ((now() - TIMESTAMP(createdOn)) / replies) as score from forumthreads "
+	$sql = "select *, ((now() - TIMESTAMP(createdOn)) / replies) as score from Forums_Thread "
 		 . "where replies > 0 order by score";
 
-	$summaryBlock = loadBlock('modules/forums/views/threadsummarynav.block.php');
+	$block = $theme->loadBlock('modules/forums/views/threadsummarynav.block.php');
 
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
 		if ($num > 0) {		
-			$thisThread = new ForumThread();
-			$thisThread->loadArray(sqlRMArray($row));
-
-			$html .= replaceLabels($thisThread->extArray(), $summaryBlock);
+			$thisThread = new Forums_Thread();
+			$thisThread->loadArray($db->rmArray($row));
+			$html .= $theme->replaceLabels($thisThread->extArray(), $block);
 
 		} else { break; }
 	}
@@ -37,4 +42,3 @@ function forums_busiestthreads($args) {
 
 
 ?>
-

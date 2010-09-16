@@ -1,29 +1,32 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	add a new project
+//*	add a new project
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('projects', 'edit', '') == false) { do403(); }
+	//----------------------------------------------------------------------------------------------
+	//	check permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == $user->authHas('projects', 'Projects_Project', 'new')) 
+		{ $page->do403('you are not authorized to create new projects'); }
 
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	if ('public' == $user->role) { $page->do403('Only registered users can create projects.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	create project
 	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Project();
+	$model->title = 'New Project ' . $projectUID;
 
-	$projectUID = createUID();
-	$model = new Project();
-	$model->data['UID'] = $projectUID;
-	$model->data['title'] = 'New Project ' . $projectUID;
-
-	if (array_key_exists('title', $_POST) == true) {
-		$title = clean_string($_POST['title']);
-		if ($title == '')  {
-			$_SESSION['sMessage'] .= "Please choose a name to create your project with.<br/>\n";
-			do302('/projects/');
+	if (true == array_key_exists('title', $_POST)) {
+		$title = $utils->cleanString($_POST['title']);
+		if ('' == $title)  {
+			$session->msg("Please choose a name to create your project with.", 'bad');
+			$page->do302('projects/');
 		}
-		$model->data['title'] = $title;
+		$model->title = $title;
 		$model->save(); 
 
 	} else { $model->save(); }
@@ -31,19 +34,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	create membership for current user
 	//----------------------------------------------------------------------------------------------
-	
-	$model = new ProjectMembership();
-	$model->data['UID'] = createUID();
-	$model->data['projectUID'] = $projectUID;
-	$model->data['userUID'] = $user->data['UID'];
-	$model->data['role'] = 'admin';
-	$model->data['joined'] = mysql_datetime();
-	$model->save();
+	$model->addMember($user->UID, 'admin')
 
 	//----------------------------------------------------------------------------------------------
-	//	redirect ro edit page
+	//	redirect to edit page
 	//----------------------------------------------------------------------------------------------
-
-	do302('projects/edit/' . $projectUID);
+	$page->do302('projects/edit/' . $model->alias);
 
 ?>

@@ -14,7 +14,6 @@ class UserLogin {
 
 	var $data;			// currently loaded record [array]
 	var $dbSchema;		// database structure [array]
-
 	var $maxAge = 300;	// maximum age of user login session, in seconds [int]
 
 	//----------------------------------------------------------------------------------------------
@@ -23,13 +22,15 @@ class UserLogin {
 	//opt: userUID - UID of a user [string]
 
 	function UserLogin($userUID = '') {
+		global $db, $kapenta;
+
 		global $serverPath;
-		$this->dbSchema = $this->initDbSchema();
-		$this->data = dbBlank($this->dbSchema);
-		$this->data['UID'] = createUID();
-		$this->data['lastseen'] = time();
-		$this->data['logintime'] = mysql_datetime();
-		$this->data['serverurl'] = $serverPath;
+		$this->dbSchema = $this->getDbSchema();
+		$this->data = $db->makeBlank($this->dbSchema);
+		$this->UID = $kapenta->createUID();
+		$this->lastseen = time();
+		$this->logintime = $db->datetime();
+		$this->serverurl = $serverPath;
 		if ($userUID != '') { $this->load($userUID); }
 	}
 
@@ -39,11 +40,13 @@ class UserLogin {
 	//arg: userUID - UID of a user [string]
 
 	function load($userUID) {
-		$sql = "select * from userlogin where userUID='" . sqlMarkup($userUID) . "'";
-		$result = dbQuery($sql);
-		if (dbNumRows($result) > 0) {
-			$row = dbFetchAssoc($result);
-			$row = sqlRMArray($row);
+	global $db;
+
+		$sql = "select * from Users_Login where userUID='" . $db->addMarkup($userUID) . "'";
+		$result = $db->query($sql);
+		if ($db->numRows($result) > 0) {
+			$row = $db->fetchAssoc($result);
+			$row = $db->rmArray($row);
 			$this->loadArray($row);
 			return true;
 
@@ -62,9 +65,11 @@ class UserLogin {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
+	global $db;
+
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
-		dbSave($this->data, $this->dbSchema);
+		$db->save($this->data, $this->dbSchema);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -74,8 +79,8 @@ class UserLogin {
 
 	function verify() {
 		$verify = '';
-		if (strlen($this->data['UID']) < 5) { $verify .= "UID not present.\n"; }
-		if (strlen($this->data['userUID']) < 5) { $verify .= "User UID not present.\n"; }
+		if (strlen($this->UID) < 5) { $verify .= "UID not present.\n"; }
+		if (strlen($this->userUID) < 5) { $verify .= "User UID not present.\n"; }
 		return $verify;
 	}
 
@@ -86,7 +91,7 @@ class UserLogin {
 
 	function initDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'userlogin';
+		$dbSchema['table'] = 'Users_Login';
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',
 			'userUID' => 'VARCHAR(255)',
@@ -128,16 +133,18 @@ class UserLogin {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
+	global $db;
+
 		$report = "<h3>Installing User Login  Table</h3>\n";
 
 		//------------------------------------------------------------------------------------------
 		//	create blog table if it does not exist
 		//------------------------------------------------------------------------------------------
-		if (dbTableExists('userlogin') == false) {	
+		if (false == $db->tableExists('Users_Login')) {	
 			dbCreateTable($this->dbSchema);	
-			$this->report .= 'created userlogin table and indices...<br/>';
+			$this->report .= 'created Users_Login table and indices...<br/>';
 		} else {
-			$this->report .= 'userlogin table already exists...<br/>';	
+			$this->report .= 'Users_Login table already exists...<br/>';	
 		}
 
 		return $report;
@@ -148,19 +155,20 @@ class UserLogin {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		dbDelete('userlogin', $this->data['UID']);
+		global $db;
+		$db->delete('users', 'Users_Login', $this->UID);
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	clear old entries from the userlogin table
+	//.	clear old entries from the Users_Login table
 	//----------------------------------------------------------------------------------------------
 
 	function clearOldEntries() {
-		global $serverPath;
-		$userlogin = dbLoadRange('userlogin', '*', '', '', '', '');
+		global $db, $serverPath;
+		$userlogin = $db->loadRange('Users_Login', '*', '', '', '', '');
 		foreach($userlogin as $row) {
 			if (($row['serverUrl'] == $serverPath) && (time() > ($row['lastseen'] + $this->maxAge)))
-				{ dbDelete('userlogin', $row['UID']); }
+				{ $db->delete('users', 'Users_Login', $row['UID']); }
 		}
 	}
 
@@ -171,9 +179,11 @@ class UserLogin {
 	//returns: true if there is a record of a current session, otherwise false [bool]
 
 	function inList($userUID) {
-		$sql = "select * from userlogin where userUID='" . sqlMarkup($userUID) . "'";
-		$result = dbQuery($sql);
-		if (dbNumRows($result) > 0) { return true; }
+		global $db;
+
+		$sql = "select * from Users_Login where userUID='" . $db->addMarkup($userUID) . "'";
+		$result = $db->query($sql);
+		if ($db->numRows($result) > 0) { return true; }
 		return false;
 	}
 
@@ -182,7 +192,8 @@ class UserLogin {
 	//----------------------------------------------------------------------------------------------
 
 	function updateLastSeen() {
-		dbUpdateQuiet('userlogin', $this->data['UID'], 'lastseen', time());
+		global $db;
+		$db->updateQuiet('Users_Login', $this->UID, 'lastseen', time());
 	}
 	
 }

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a single image (eg, user profile picture)
@@ -23,13 +23,13 @@ function images_single($args) {
 	//----------------------------------------------------------------------------------------------
 	//	find the image matching this space
 	//----------------------------------------------------------------------------------------------
-	$im = new Image();
+	$im = new Images_Image();
 	$imgUID = $im->findSingle($args['refModule'], $args['refUID'], $category);
 
 	if ($imgUID == false) { 
 		$html = "<img src='/themes/clockface/unavailable/" . $size . ".jpg' />";
 	} else {
-		$html = "<img src='/images/" . $size . "/" . $im->data['recordAlias'] . "' />";
+		$html = "<img src='/images/" . $size . "/" . $im->alias . "' />";
 	}
 	return $html;
 }

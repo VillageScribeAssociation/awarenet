@@ -1,34 +1,36 @@
 <?
 
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
-	require_once($installPath . 'modules/moblog/models/precache.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	blog stats (formatted for nav)
 //--------------------------------------------------------------------------------------------------
 
 function moblog_schoolstatsnav($args) {
-	//TODO: use dbLoadRange
-	$sql = "select count(UID) as postCount, school from moblog group by school";
-	$result = dbQuery($sql);
+	global $db, $user, $theme, $aliases;
+	if (false == $user->authHas('schools', 'Schools_School', 'show')) { return ''; }
+
+	$sql = "select count(UID) as postCount, school from Moblog_Post group by school";
+	$result = $db->query($sql);
 	$aryTable = array();
 	$aryTable[] = array('School', 'Posts');
 
-	while ($row = dbFetchAssoc($result)) {
+	while ($row = $db->fetchAssoc($result)) {
 		//TODO: remove inermodule dependancy (block on schools module?)
-		$row = sqlRMArray($row);
+		$row = $db->rmArray($row);
 		$schoolUID = $row['school'];
-		if (dbRecordExists('schools', $schoolUID) == true) {
-			$schoolRa = raGetDefault('schools', $schoolUID);
+		if (true == $db->objectExists('Schools_School', $schoolUID)) {
+			$schoolRa = $aliases->getDefault('Schools_School', $schoolUID);
 			$nameBlock = '[[:schools::name::schoolUID='. $schoolUID .'::link=no:]]';
-			$schoolName = expandBlocks($nameBlock, '');
+			$schoolName = $theme->expandBlocks($nameBlock, '');
 			$schoolUrl = "%%serverPath%%moblog/school/" . $schoolRa;
 			$schoolLink = "<a href='" . $schoolUrl . "'>$schoolName</a>";
 			$aryTable[] = array($schoolLink, $row['postCount']);
 		}
 	}
 
-	$html = arrayToHtmlTable($aryTable, true, true);
+	$html = $theme->arrayToHtmlTable($aryTable, true, true);
 
 	return $html;
 }

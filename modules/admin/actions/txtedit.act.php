@@ -7,7 +7,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	authorization
 	//---------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	handle submissions
@@ -25,8 +25,8 @@
 	//	working directory
 	//---------------------------------------------------------------------------------------------
 	$browsePath = '';
-	if (array_key_exists('path', $request['args']) == true) {
-		$browsePath = 'path_' . $request['args']['path'];
+	if (array_key_exists('path', $req->args) == true) {
+		$browsePath = 'path_' . $req->args['path'];
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -34,8 +34,8 @@
 	//---------------------------------------------------------------------------------------------
 
 	$editFile = '';
-	if (array_key_exists('file', $request['args']) == true) { 
-		$editFile = base64_decode($request['args']['file']);	
+	if (array_key_exists('file', $req->args) == true) { 
+		$editFile = base64_decode($req->args['file']);	
 		if (file_exists($installPath . $editFile) == false) { 
 			$_SESSION['sMessage'] .= "file '" . $editFile . "' does not exist.<br/>\n";
 			$editFile = ''; 
@@ -72,7 +72,7 @@
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/admin/actions/txtedit.page.php');
+	$page->load('modules/admin/actions/txtedit.page.php');
 	$page->blockArgs['editFile'] = $editFile;
 	$page->blockArgs['editorForm'] = $editorForm;
 	$page->blockArgs['editorList'] = $editorList;

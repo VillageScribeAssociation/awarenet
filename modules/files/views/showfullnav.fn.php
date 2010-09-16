@@ -1,36 +1,37 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	full-page display of an file + caption, etc
+//|	full-page display of an file + caption, etc (TODO: see if this can be removed)
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID of record [string]
+//arg: raUID - alias or UID of an object [string]
 
 function files_showfullnav($args) {
-	global $serverPath;
+	global $db, $theme;
+	$html = '';		
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$i = new file($args['raUID']);
-	if ($i->data['fileName'] == '') { return false; }
-	
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	$model = new Files_File($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	//TODO: permissions check here	
+
 	//----------------------------------------------------------------------------------------------
-	//	find related inages
+	//	find related files
 	//----------------------------------------------------------------------------------------------
-	
 	$related = '';
 	
-	$sql = "select * from files where refModule='" . $i->data['refModule'] 
-	     . "' order by refUID='" . $i->data['refUID'] . "' limit 20";
+	$sql = "select * from Files_File where refModule='" . $model->refModule 
+	     . "' order by refUID='" . $model->refUID . "' limit 20";
 	
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-	  if ($row['UID'] != $i->data['UID']) {
-		$showUrl = $serverPath . 'files/show/' . $row['recordAlias'];
-		$thumbUrl = $serverPath . 'files/thumb90/' . $row['recordAlias'];
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) {
+	  if ($row['UID'] != $model->UID) {
+		$showUrl = '%%serverPathfiles/show/' . $row['alias'];
+		$thumbUrl = '%%serverPath%%files/thumb90/' . $row['alias'];
 		$related .= "<a href='" . $showUrl . "'><img src='" . $thumbUrl 
 			 . "' border='0' alt='" . $row['title'] . "' /></a>\n";
 	  }
@@ -41,13 +42,13 @@ function files_showfullnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	mix and settle
 	//----------------------------------------------------------------------------------------------
-	$labels = $i->extArray();
+	$labels = $model->extArray();
 	$labels['related'] = $related;
-	$html = replaceLabels($labels, loadBlock('modules/files/showfullnav.block.php'));	
+	$block = $theme->loadBlock('modules/files/showfullnav.block.php');
+	$html = $theme->replaceLabels($labels, $block);	
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

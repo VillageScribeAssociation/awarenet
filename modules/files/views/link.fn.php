@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	make a link to a file
@@ -11,9 +11,9 @@
 function files_link($args) {
 	if (array_key_exists('fileUID', $args)) { $args['raUID'] = $args['fileUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$f = new File($args['raUID']);
-	$html = "<a href='/files/dn/" . $f->data['recordAlias'] . "' title='" . $f->data['title'] . "'>" 
-	      . $f->data['title'] . "</a>";
+	$f = new Files_File($args['raUID']);
+	$html = "<a href='/files/dn/" . $f->alias . "' title='" . $f->title . "'>" 
+	      . $f->title . "</a>";
 	return $html;
 }
 

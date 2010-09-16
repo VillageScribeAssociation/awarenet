@@ -1,27 +1,26 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	display a gallery page
+//*	display a gallery page
 //--------------------------------------------------------------------------------------------------
 	
-	if (authHas('gallery', 'show', '') == false) { do403(); }		// check basic permissions
-	if ($request['ref'] == '') { do404(); }							// check ref
-
-	if (raGetOwner($request['ref'], 'gallery') == false) { do404(); }  		// check gallery exists
-	$UID = raFindRedirect('gallery', 'show', 'gallery', $request['ref']); 	// check correct ref
+	//if ($user->authHas('gallery', 'Gallery_Gallery', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }		// check basic permissions
+	if ('' == $req->ref) { $page->do404(); }							// check ref
+	$UID = $aliases->findRedirect('Gallery_Gallery'); 					// check correct ref
 	
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
-	$model = new Gallery($request['ref']);	
+	$model = new Gallery_Gallery($req->ref);	
 
-	$userRa = raGetDefault('users', $model->data['createdBy']);
+	$userRa = $aliases->getDefault('Users_User', $model->createdBy);
 
-	$page->load($installPath . 'modules/gallery/actions/show.page.php');
+	$page->load('modules/gallery/actions/show.page.php');
 	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['userUID'] = $model->data['createdBy'];
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['userUID'] = $model->createdBy;
 	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['galleryRa'] = $model->data['recordAlias'];
-	$page->blockArgs['galleryTitle'] = $model->data['title'];
+	$page->blockArgs['galleryRa'] = $model->alias;
+	$page->blockArgs['galleryTitle'] = $model->title;
 	$page->render();
 
 ?>

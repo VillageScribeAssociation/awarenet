@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find the project's logo/picture (300px) or a blank image
@@ -13,6 +13,8 @@
 //opt: link - link to larger image (yes|no) [string]
 
 function projects_image($args) {
+	global $db;
+
 	global $serverPath;
 	$size = 'width300';
 	$link = 'yes';
@@ -31,7 +33,7 @@ function projects_image($args) {
 	
 	$row = imgGetDefault('projects', $args['raUID']);
 
-	$model = new Project(sqlMarkup($args['raUID']));	
+	$model = new Projects_Project($db->addMarkup($args['raUID']));	
 	    
 	if ($row == false) {
 		// no images found for this project
@@ -39,12 +41,12 @@ function projects_image($args) {
 
 	} else {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
+			return "<a href='/images/show/" . $row['alias'] . "'>" 
 				. "<img src='/images/" . $size . "/" . $imgUID 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
 			return "<img src='/images/" . $size . "/" . $imgUID 
-				. "' border='0' alt='" . $model->data['name'] . "'>";
+				. "' border='0' alt='" . $model->name . "'>";
 		}
 	}	
 }
@@ -52,4 +54,3 @@ function projects_image($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

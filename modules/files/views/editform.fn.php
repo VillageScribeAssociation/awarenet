@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for editing file metadata
@@ -9,12 +9,14 @@
 //opt: return - return to upload dialog [string]
 
 function files_editform($args) {
+	global $theme;
+
 	$return = '';
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('return', $args)) { $return = $args['return']; }
 	
-	$i = new file($args['raUID']);
-	if ($i->data['fileName'] == '') { return '(file not found)'; }
+	$i = new Files_File($args['raUID']);
+	if ($i->fileName == '') { return '(file not found)'; }
 	
 	$labels = $i->extArray();
 	$labels['return'] = $return;
@@ -28,10 +30,9 @@ function files_editform($args) {
 				      . "'>[&lt;&lt; return to upload form ]</a>";
 	}
 	
-	return replaceLabels($labels, loadBlock('modules/files/views/editform.block.php'));
+	return $theme->replaceLabels($labels, $theme->loadBlock('modules/files/views/editform.block.php'));
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

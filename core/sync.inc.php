@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/sync/models/sync.mod.php');
+require_once($installPath . 'modules/sync/models/notice.mod.php');
 require_once($installPath . 'modules/sync/models/download.mod.php');
 
 //-------------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ function syncCreate($source, $type, $data) {
 			//-------------------------------------------------------------------------------------
 			//	create record of data to be synced
 			//-------------------------------------------------------------------------------------
-			$model = new Sync();
+			$model = new Sync_Notice();
 			$model->data['UID'] = $uid;
 			$model->data['source'] = $source;
 			$model->data['type'] = $type;
@@ -254,8 +254,8 @@ function syncRecordDeleted($refTable, $refUID) {
 //returns: dbSchema, see mysql.inc.php [array]
 
 function syncDbSchema() {
-	$model = new Sync();
-	return $model->initDbSchema();
+	$model = new Sync_Notice();
+	return $model->getDbSchema();
 }
 
 //-------------------------------------------------------------------------------------------------

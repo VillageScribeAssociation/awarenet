@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/forums/models/forum.mod.php');
-	require_once($installPath . 'modules/forums/models/forumreply.mod.php');
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/reply.mod.php');
+	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all forums at a specific school (formatted for nav)
@@ -10,17 +10,28 @@
 //arg: school - UID of a school (not recordAlias) [string]
 
 function forums_summarylistnav($args) {
-	if (array_key_exists('school', $args) == false) { return false; }
-	$html = '';
+	global $db;
+	$html = '';		//%	return value [string]
 
-	$sql = "select * from forums "
-		 . "where school='" . sqlMarkup($args['school']) . "' "
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('school', $args)) { return ''; }
+	//TODO: permissions check here
+
+	//----------------------------------------------------------------------------------------------
+	//	load the boards
+	//----------------------------------------------------------------------------------------------
+
+	$sql = "select * from Forums_Board "
+		 . "where school='" . $db->addMarkup($args['school']) . "' "
 		 . "order by weight DESC";
 
-	$result = dbQuery($sql);
-	if (dbNumRows($result) > 0) {
-		while ($row = dbFetchAssoc($result)) { 
-			$row = sqlRMArray($row);
+	$result = $db->query($sql);
+
+	if ($db->numRows($result) > 0) {
+		while ($row = $db->fetchAssoc($result)) { 
+			$row = $db->rmArray($row);
 			$html .= "[[:forums::summarynav::forumUID=" . $row['UID'] . ":]]\n";
 		}	
 
@@ -32,4 +43,3 @@ function forums_summarylistnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

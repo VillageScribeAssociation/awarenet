@@ -8,13 +8,13 @@
 	//	check permissions
 	//---------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }		// only admins can do this
+	if ('admin' != $user->role) { $page->do403(); }		// only admins can do this
 
 	//---------------------------------------------------------------------------------------------
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/admin/actions/svn.page.php');
+	$page->load('modules/admin/actions/svn.page.php');
 	$page->render();
 
 ?>

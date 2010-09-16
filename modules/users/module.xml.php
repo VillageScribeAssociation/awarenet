@@ -8,40 +8,65 @@
     <core>yes</core>
     <installed>no</installed>
     <enabled>yes</enabled>
-    <dbschema>yes</dbschema>
     <search>no</search>
-    <dependency>
-        <depend>geocodes|1.0</depend>
-        <depend>avatar|1.0</depend>
-        <depend>files|1.0</depend>
-        <depend>images|1.0</depend>
-    </dependency>
-    <permissions>
-	<perm>view|%%user.ofGroup%%=student</perm>
-	<perm>view|%%user.ofGroup%%=teacher</perm>
-	<perm>list|%%user.ofGroup%%=user</perm>
-	<perm>list|%%user.ofGroup%%=student</perm>
-	<perm>list|%%user.ofGroup%%=teacher</perm>
-	<perm>summarylist|%%user.ofGroup%%=student</perm>
-	<perm>summarylist|%%user.ofGroup%%=teacher</perm>
-	<perm>summary|%%user.ofGroup%%=student</perm>
-	<perm>summary|%%user.ofGroup%%=teacher</perm>
-	<perm>delete|%%user.ofGroup%%=admin</perm>
-	<perm>new|%%user.ofGroup%%=admin</perm>
-	<perm>edit|%%user.ofGroup%%=admin</perm>
-	<perm>viewprofile|%%user.ofGroup%%=user</perm>
-	<perm>viewprofile|%%user.ofGroup%%=student</perm>
-	<perm>viewprofile|%%user.ofGroup%%=teacher</perm>
-	<perm>comment|%%user.ofGroup%%=user</perm>
-	<perm>comment|%%user.ofGroup%%=student</perm>
-	<perm>comment|%%user.ofGroup%%=teacher</perm>
-	<perm>images|%%user.ofGroup%%=user</perm>
-	<perm>images|%%user.ofGroup%%=student</perm>
-	<perm>images|%%user.ofGroup%%=teacher</perm>
-	<perm>imageupload|%%user.ofGroup%%=user</perm>
-	<perm>imageupload|%%user.ofGroup%%=student</perm>
-	<perm>imageupload|%%user.ofGroup%%=teacher</perm>
-    </permissions>
+    <dependencies>
+        <module>aliases</module>
+        <module>images</module>
+    </dependencies>
+    <models>
+      <model>
+        <name>Users_User</name>
+		<description></description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+          <export>removeasfriend</export>
+          <export>addasfriend</export>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>friend</relationship>
+		  <relationship>classmate</relationship>
+		  <relationship>schoolmate</relationship>
+        </relationships>
+      </model>
+      <model>
+        <name>Users_Role</name>
+		<description>Container for permissions.</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>member</relationship>
+        </relationships>
+      </model>
+    </models>
+    <defaultpermissions>
+		student:p|users|Users_User|viewprofile
+		student:p|users|Users_User|comments-add
+		student:p|users|Users_User|comments-show
+		student:p|users|Users_User|comments-list
+		student:c|users|Users_User|comments-retract|(if)|creator
+		student:p|users|Users_User|show
+		student:c|users|Users_User|edit|(if)|creator
+		student:c|users|Users_User|edit|(if)|self
+		student:c|users|Users_User|editprofile|(if)|self
+		student:p|users|Users_User|viewprofile
+
+		teacher:p|users|Users_User|comment-add
+		teacher:c|users|Users_User|comment-retract|(if)|creator
+		teacher:p|users|Users_User|show
+		teacher:c|users|Users_User|edit|(if)|creator
+		teacher:c|users|Users_User|edit|(if)|self
+		teacher:c|users|Users_User|editprofile|(if)|self
+		student:p|users|Users_User|viewprofile
+    </defaultpermissions>
     <blocks>
     </blocks>
 </module>

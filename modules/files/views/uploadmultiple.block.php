@@ -1,5 +1,5 @@
 <? /*
-<form enctype='multipart/form-data' action='/files/upload/' method='POST'>
+<form enctype='multipart/form-data' action='%%serverPath%%files/upload/' method='POST'>
       <b>File:</b>
       <input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
       <input type='file' name='userfile' size='50' />

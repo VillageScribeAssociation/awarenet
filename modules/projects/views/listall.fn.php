@@ -1,18 +1,19 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all (TODO: pagination, etc)
 //--------------------------------------------------------------------------------------------------
 
 function projects_listall($args) {
-	$sql = "select * from projects order by createdOn DESC";
-	$result = dbQuery($sql);
+	global $db;
+	$sql = "select * from Projects_Project order by createdOn DESC";
+	$result = $db->query($sql);
 	$html = '';
-	while ($row = dbFetchAssoc($result)) {
+	while ($row = $db->fetchAssoc($result)) {
 		$html .= "[[:projects::summary::raUID=" . $row['UID'] . ":]]";
 	}
 	return $html;

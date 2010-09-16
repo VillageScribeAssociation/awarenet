@@ -1,5 +1,5 @@
 <? /*
-<form name='addTestMessage' method='POST' action='/chat/testadd/'>
+<form name='addTestMessage' method='POST' action='%%serverPath%%chat/testadd/'>
 <input type='hidden' name='action' value='addTestMessage' />
 <table noborder>
   <tr>

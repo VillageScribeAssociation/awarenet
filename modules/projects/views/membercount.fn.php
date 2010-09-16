@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	return number of members in project
@@ -10,15 +10,31 @@
 //arg: projectUID - UID pf project to count members for [string]
 
 function projects_membercount($args) {
-	if (authHas('projects', 'view', '') == false) { return false; }
+	global $db, $user;
+	$num = '0';				//% return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 
-	$sql = "select count(UID) as memberCount from projectmembers "
-		 . "where projectUID='" . $args['projectUID'] . "' and role != 'asked'";
+	$model = new Projects_Project($args['raUID']);
 
-	$result = dbQuery($sql);
-	$row = dbFetchAssoc($result);
-	return $row['memberCount'];
+	if (false == $model->loaded) { return ''; }
+
+	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID))
+		{ return ''; }
+
+	$conditions = array();
+	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "role != 'asked'";
+
+	//$sql = "select count(UID) as memberCount from Projects_Membership "
+	//	 . "where projectUID='" . $args['projectUID'] . "' and role != 'asked'";
+
+	$num = $db->countRange('Projects_Membership', $conditions) . '';
+
+	return $num;
 }
 
 //--------------------------------------------------------------------------------------------------

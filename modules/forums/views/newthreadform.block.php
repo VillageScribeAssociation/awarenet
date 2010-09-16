@@ -1,5 +1,5 @@
 <? /*
-<form name='newForumThread' method='POST' action='/forums/newthread/' >
+<form name='newForumThread' method='POST' action='%%serverPath%%forums/newthread/' >
 <input type='hidden' name='action' value='newThread' />
 <input type='hidden' name='forum' value='%%UID%%' />
 <b>Title:</b> <input type='text' name='title' size='40' /><br/>

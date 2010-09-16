@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/calendar/models/calendar.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display upload/view for a single image (eg, user profile picture)
@@ -8,12 +8,13 @@
 //arg: year - show a year [string]
 
 function calendar_listyear($args) {	
+	global $db;
 	//----------------------------------------------------------------------------------------------
 	//	check input
 	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('year', $args) == false) { return false; }
 	if (strlen($args['year']) != 4) { return false; }
-	$c = new Calendar();
+	$c = new Calendar_Entry();
 	$html = '';
 	
 	//----------------------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ function calendar_listyear($args) {
 				$html .= "<tr>\n";
 				$html .= "<td>" . $row['day'] . "</td>\n";
 				$html .= "<td>" . $row['category'] . "</td>\n";
-				$html .= "<td><A href='/calendar/" . $row['recordAlias'] . "'>" 
+				$html .= "<td><A href='/calendar/" . $row['alias'] . "'>" 
 					. $row['title'] . "</a></td>\n";
 				$html .= "</tr>\n";
 			}

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	return thumbnails of gallery images
@@ -10,7 +10,10 @@
 //opt: num - maximum number of thumbs to show (most recent first) (default is no limit) [string]
 
 function gallery_thumbs($args) {
-	$limit = ''; $html = ''; $size = 'thumb';
+	global $db;
+	$limit = '';
+	$html = '';
+	$size = 'thumb';
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
@@ -24,12 +27,12 @@ function gallery_thumbs($args) {
 	//---------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "refModule='gallery'";
-	$conditions[] = "refUID='" . sqlMarkup($args['UID']) . "'";
+	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
 
-	$range = dbLoadRange('images', '*', $conditions, 'weight ASC', $limit, '');
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight ASC', $limit, '');
 
 	foreach($range as $row) {
-		$viewUrl = '%%serverPath%%gallery/image/' . $row['recordAlias'];
+		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];
 		//$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['UID'];
 		//	  . "<img src='" . $thumbUrl . "' title='" . $row['title'] . "' border='0' vspace='2px' hspace='2px' /></a>\n";
 		$html .= "<a href='" . $viewUrl . "'>"

@@ -1,20 +1,28 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	confirm deletion of a group
+//*	confirm deletion of a Gallery_Gallery object
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('gallery', 'edit', '') == false) { do403(); }
-	if (array_key_exists('uid', $request['args']) == false) { do404(); }
-	if (dbRecordExists('gallery', sqlMarkup($request['args']['uid'])) == false) { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------		
+	if (false == array_key_exists('uid', $req->args)) { $page->do404(); }
+
+	$model = new Gallery_Gallery($req->args['uid']);
+	if (false == $model->loaded) { $page->do404('Gallery not found.'); }
+	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'delete', $model->UID))
+		{ $page->do403('You are not authorized to delete this gallery.'); }	
 	
-	$thisRa = raGetDefault('gallery', $request['args']['uid']);
-	
-	$labels = array('UID' => $request['args']['uid'], 'raUID' => $groupRa);
-	
-	$html .= replaceLabels($labels, loadBlock('modules/gallery/views/confirmdelete.block.php'));
-	
-	$_SESSION['sMessage'] .= $html;
-	do302('gallery/' . $thisRa);
+	//----------------------------------------------------------------------------------------------
+	//	make the confirmation block
+	//----------------------------------------------------------------------------------------------		
+	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
+	$block = $theme->loadBlock('modules/gallery/views/confirmdelete.block.php');
+	$html = $theme->replaceLabels($labels, );
+	$session->msg($html, 'warn');
+	$page->do302('gallery/' . $model->alias);
 
 ?>

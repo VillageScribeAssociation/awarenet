@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	show a project record (simple HTML, no page template)
 //--------------------------------------------------------------------------------------------------
@@ -7,18 +9,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	TODO: check permissions here
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'showsimplehtml', 'projects', $request['ref']);
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-	$model = new Project($request['ref']);
+	$model = new Projects_Project($req->ref);
 
 	echo "<html>"
 		 . "<link href='" . $serverPath . "/themes/clockface/css/clockface.css' rel='stylesheet' type='text/css' />"
-		 . "<title>" . $model->data['title'] . "</title><body>"
+		 . "<title>" . $model->title . "</title><body>"
 		 . $model->getSimpleHtml() . "</body></html>";
 
 ?>

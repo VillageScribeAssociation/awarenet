@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/groups/models/group.mod.php');
-	require_once($installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all formatted for navigation bar
@@ -10,34 +10,32 @@
 //opt: sameschool - UID of a group, constrains results to those of the same school [string]
 
 function groups_listallnav($args) {
-	global $user;
-	if ('public' == $user->data['ofGroup']) { return '[[:users::pleaselogin:]]'; }	
+	global $db, $user;
+	$html = '';					//%	return value [string]
+	$conditions = array();		//%	array of conditions to filter groups table by [array]
 
-	$school = ''; $userUID = ''; $sameschool = '';
-	if (array_key_exists('school', $args)) { $school = $args['school']; }
-	if (array_key_exists('sameschool', $args)) { $sameschool = $args['sameschool']; }
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }	
+	if (true == array_key_exists('school', $args)) 
+		{ $conditions[] = "school='" . $db->addMarkup($args['school']) . "'"; }
 
-	$sql = "select * from groups order by name";
-
-	if ($school != '') {
-		$schoolUID = raGetOwner($school, 'schools');
-		$sql = "select * from groups where school='" . $schoolUID . "' order by name";
+	if (true == array_key_exists('sameschool', $args)) {
+		$model = new Groups_Group($sameschool);
+		if (false == $model->loaded) { return ''; }
+		$conditions[] = "school='" . $db->addMarkup($model->school) . "'";
 	}
 
-	if ($sameschool != '') {
-		$tG = new Group($sameschool);
-		$sql = "select * from groups where school='" . $tG->data['school'] . "' order by name";
-	}
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 
-	$result = dbQuery($sql);
-	$html = '';
-	while ($row = dbFetchAssoc($result)) {
-		$html .= "[[:groups::summarynav::groupUID=" . $row['UID'] . ":]]";
-	}
+	$range = $db->loadRange('Groups_Group', '*', $conditions, 'name');
+	foreach ($range as $row) { $html .= "[[:groups::summarynav::groupUID=". $row['UID'] .":]]\n"; }
 	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

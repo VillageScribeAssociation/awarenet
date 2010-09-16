@@ -1,27 +1,28 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	delete a message
+//*	delete a message
 //--------------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	   && ($_POST['action'] == 'deleteMessage') 
-	   && (array_key_exists('UID', $_POST) == true) 
-	   && (dbRecordExists('messages', $_POST['UID']) == true) ) {
+	//----------------------------------------------------------------------------------------------
+	//	check POST vars and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if ('deleteMessage' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $page->do404('Message not specified (UID)'); }
 
-		require_once($installPath . 'modules/messages/models/message.mod.php');
+	$model = new Messages_Message($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Message not found.'); }
+	if ($model->owner != $user->UID)
+		{ $page->do403('Not authorized to delete this message.'); }
 
-		$model = new Message($_POST['UID']);
-		if ($model->data['owner'] != $user->data['UID']) { do404(); }
-
-		//------------------------------------------------------------------------------------------
-		//	delete the message
-		//------------------------------------------------------------------------------------------
-
-		$_SESSION['sMessage'] .= "Deleted message.<br/>\n";
-		$model->delete();
-		do302('messages/inbox/');
-
-	} else { do404(); }
+	//----------------------------------------------------------------------------------------------
+	//	delete the message
+	//----------------------------------------------------------------------------------------------
+	$session->msg("Deleted message.", 'ok');
+	$model->delete();
+	$page->do302('messages/inbox/');
 
 ?>

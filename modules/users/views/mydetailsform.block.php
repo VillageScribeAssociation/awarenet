@@ -1,5 +1,5 @@
 <? /*
-<form name='editMyDetails' method='POST' action='/users/save/' />
+<form name='editMyDetails' method='POST' action='%%serverPath%%users/save/' />
 <input type='hidden' name='action' value='saveUsersRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 <table noborder>

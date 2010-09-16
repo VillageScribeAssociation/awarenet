@@ -1,5 +1,5 @@
 <? /*
-<form name='editforums' method='POST' action='/forums/save/'>
+<form name='editforums' method='POST' action='%%serverPath%%forums/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 

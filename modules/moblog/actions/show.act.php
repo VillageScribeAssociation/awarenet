@@ -1,51 +1,55 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	display a moblog post
+//*	display a moblog post
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	check auth and recordAlias
 	//----------------------------------------------------------------------------------------------
-	//if (authHas('moblog', 'view', '') == false) { do403(''); } // changed to allow public access
-	raFindRedirect('moblog', '', 'moblog', $request['ref']);	
-	require_once($installPath . 'modules/moblog/models/moblog.mod.php');
+	$UID = $aliases->findRedirect('Moblog_Post');	
 
 	//----------------------------------------------------------------------------------------------
-	//	find user who's post this is
+	//	find user whose post this is
 	//----------------------------------------------------------------------------------------------
+	$model = new Moblog_Post($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
+	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', $model->UID)) { $page->do403(''); }
 
-	$model = new Moblog($request['ref']);
-	$thisUser = new User($model->data['createdBy']);
+	$thisUser = new Users_User($model->createdBy);
 
 	//----------------------------------------------------------------------------------------------
 	//	user can create new posts on their own blog
 	//----------------------------------------------------------------------------------------------
 
 	$newPostForm = "[[:moblog::newpostformnav:]]\n";
-	if ($model->data['createdBy'] != $user->data['UID']) { $newPostForm = ''; }
+	if ($model->createdBy != $user->UID) { $newPostForm = ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	increment hit count if not viewed by this user this session
 	//----------------------------------------------------------------------------------------------
-	$viewKey = $model->data['UID'] . '_' . $user->data['UID'];
+	/*
+	$viewKey = $model->UID . '_' . $user->UID;
 	if (array_key_exists('sMoblogView', $_SESSION) == false) { $_SESSION['sMoblogView'] = array(); }
 	if (array_key_exists($viewKey , $_SESSION['sMoblogView']) == false) {
-		$_SESSION['sMoblogView'][$viewKey] = 'viewed';
-		$model->incHitCount();
+		//$_SESSION['sMoblogView'][$viewKey] = 'viewed';
+		//$model->incHitCount();
 	} 
+	*/
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/moblog/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = $model->data['UID'];
-	$page->blockArgs['userUID'] = $model->data['createdBy'];
-	$page->blockArgs['userRa'] = $thisUser->data['recordAlias'];
+	$page->load('modules/moblog/actions/show.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['userUID'] = $model->createdBy;
+	$page->blockArgs['userRa'] = $thisUser->alias;
 	$page->blockArgs['userName'] = $thisUser->getName();
-	$page->blockArgs['postTitle'] = $model->data['title'];
+	$page->blockArgs['postTitle'] = $model->title;
 	$page->blockArgs['newPostForm'] = $newPostForm;
 	$page->render();
 

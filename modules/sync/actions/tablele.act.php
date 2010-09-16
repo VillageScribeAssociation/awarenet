@@ -8,32 +8,31 @@
 	//	check auth
 	//---------------------------------------------------------------------------------------------
 	
-	//if (syncAuthenticate() == false) { doXmlError('authentication not valid'); }
-	
+	//if (false == $sync->authenticate()) { $page->doXmlError('authentication not valid'); }
+	$dba = new KDBAdminDriver();	
+
 	//---------------------------------------------------------------------------------------------
 	//	check and load the table
 	//---------------------------------------------------------------------------------------------
 	
-	if ($request['ref'] == '') { doXmlError('no table specified'); }
+	if ('' == $req->ref) { $page->doXmlError('no table specified'); }
 
-	$tables = dbListTables();
-	if (in_array($request['ref'], $tables) == false) { doXmlError('unknown table'); }
+	$tables = $dba->listTables();
+	if (false == in_array($req->ref, $tables)) { $page->doXmlError('unknown table'); }
 
-	$dbSchema = dbGetSchema($request['ref']);
+	$dbSchema = $dba->getSchema($req->ref);
 	if ( (array_key_exists('UID', $dbSchema['fields']) == false) 
 		|| (array_key_exists('editedOn', $dbSchema['fields']) == false)
 		|| (array_key_exists('editedBy', $dbSchema['fields']) == false) ) 
-		{ doXmlError('table must contain UID, editedBy, editedOn'); }
+		{ $page->doXmlError('table must contain UID, editedBy, editedOn'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	load and export record list 
 	//---------------------------------------------------------------------------------------------
 	
-	$rows = dbLoadRange($request['ref'], 'UID, editedBy, editedOn', '', '', '', '');
+	$rows = $db->loadRange($req->ref, 'UID, editedBy, editedOn', '', '', '', '');
 
-	if ( (array_key_exists('sha1',$request['args']) == true)
-		 && ($request['args']['sha1'] == 'yes') ) {
-
+	if ((true == array_key_exists('sha1',$req->args)) && ('yes' == $req->args['sha1'])) {
 		//-----------------------------------------------------------------------------------------
 		//  send only sha1 hash of list (TODO: think of faster way to make hash)
 		//-----------------------------------------------------------------------------------------

@@ -4,8 +4,8 @@
 //	exports table dbSchemas as php code, for making install script
 //-------------------------------------------------------------------------------------------------
 
-if ($user->data['ofGroup'] != 'admin') { do403(); }
-if (($request['ref'] == '') || (dbTableExists($request['ref']) == false)) { 
+if ('admin' != $user->role) { $page->do403(); }
+if (('' == $req->ref) || ($db->tableExists($req->ref) == false)) { 
 	echo "no table specified";
 	die(); 
 
@@ -14,15 +14,15 @@ if (($request['ref'] == '') || (dbTableExists($request['ref']) == false)) {
 	//	make the code
 	//---------------------------------------------------------------------------------------------
 
-	$dbs = xdbGetSchema($request['ref']);
+	$dbs = xdbGetSchema($req->ref);
 
 	$code = '';
 	$code .= "\t//----------------------------------------------------------------------------------------------\n";
-	$code .= "\t//\t" . $request['ref'] . " table\n";
+	$code .= "\t//\t" . $req->ref . " table\n";
 	$code .= "\t//----------------------------------------------------------------------------------------------\n\n";
 
 	$code .= "\t\$dbSchema = array();\n";
-	$code .= "\t\$dbSchema['table'] = '" . $request['ref'] . "';\n";
+	$code .= "\t\$dbSchema['table'] = '" . $req->ref . "';\n";
 	$code .= "\t\$dbSchema['fields'] = array(\n";
 
 	foreach($dbs['fields'] as $field => $type) {
@@ -44,7 +44,9 @@ if (($request['ref'] == '') || (dbTableExists($request['ref']) == false)) {
 
 
 function xdbGetSchema($tableName) {
-	if (dbTableExists($tableName) == false) { return false; }
+	global $db;
+
+	if ($db->tableExists($tableName) == false) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	create dbSchema array
@@ -55,17 +57,17 @@ function xdbGetSchema($tableName) {
 	//----------------------------------------------------------------------------------------------
 	//	add fields
 	//----------------------------------------------------------------------------------------------
-	$sql = "describe " . sqlMarkup($tableName);
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) 
+	$sql = "describe " . $db->addMarkup($tableName);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) 
 		{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add indices
 	//----------------------------------------------------------------------------------------------
-	$sql = "show indexes from " . sqlMarkup($tableName);
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) 
+	$sql = "show indexes from " . $db->addMarkup($tableName);
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) 
 		{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
 
 	return $dbSchema;

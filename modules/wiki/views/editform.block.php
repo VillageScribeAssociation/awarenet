@@ -1,6 +1,6 @@
 <? /*
 <h1>Edit: %%title%%</h1>
-<form name='editArticle' method='POST' action='/wiki/save/'>
+<form name='editArticle' method='POST' action='%%serverPath%%wiki/save/'>
 <input type='hidden' name='action' value='savePage' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -8,6 +8,9 @@
 <br/>
 <b>Content:</b><br/>
 <textarea name='content' rows='20' cols='75'>%%content%%</textarea><br/>
+<br/>
+<b>Navigation:</b><br/>
+<textarea name='nav' rows='10' cols='75'>%%nav%%</textarea><br/>
 <br/>
 <b>Edit Summary:</b> <input type='text' name='reason' value='' size='50' /><br/>
 <small>Briefly decribe the purpose of this edit, eg 'grammar', 'remove vandalism', 

@@ -1,43 +1,44 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	add a new announcements post
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
-	if (authHas('announcements', 'edit', '') == false) { do403(); }
-	if (array_key_exists('refmodule', $request['args']) == false) { do404(); }
-	if (array_key_exists('refuid', $request['args']) == false) { do404(); }
+//--------------------------------------------------------------------------------------------------
+//*	add a new announcement
+//--------------------------------------------------------------------------------------------------
+	
+	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'new'))
+		{ $page->do403('You are not aothorized to make new announcements.'); }
+	//TODO: add inheritable permission for groups
 
-	require_once($installPath . 'modules/announcements/models/announcement.mod.php');
+	if (false == array_key_exists('refmodule', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('refuid', $req->args)) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to make an announcement for this item
 	//----------------------------------------------------------------------------------------------
-
 	$isauth = false;
-
-	$model = new Announcement($request['ref']);
-	$cb = "[[:". $request['args']['refmodule'] ."::haseditauth::raUID=".  $request['args']['refuid'] .":]]";
-	$result = expandBlocks($cb, '');
+	$model = new Announcements_Announcement($req->ref);
+	$cb = "[[:". $req->args['refmodule'] ."::haseditauth::raUID=".  $req->args['refuid'] .":]]";
+	$result = $theme->expandBlocks($cb, '');
 	if ('yes' == $result) { $isauth = true; }
 
 	//echo "result: $result <br/>\n";
 
-	if ($user->data['ofGroup'] == 'admin') { $isauth = true; }
-	if ($user->data['ofGroup'] == 'teacher') { $isauth = true; }
-	if (false == $isauth) { do403(); die(); }
+	if ('admin' == $user->role) { $isauth = true; }
+	if ('teacher' == $user->role) { $isauth = true; }
+	if (false == $isauth) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	OK then, create it
 	//----------------------------------------------------------------------------------------------
 
-	$model = new Announcement();
-	$model->data['notifications'] = 'init';
-	$model->data['title'] = 'Announcement';
-	$model->data['refModule'] = $request['args']['refmodule'];
-	$model->data['refUID'] = $request['args']['refuid'];
+	$model = new Announcements_Announcement();
+	$model->notifications = 'init';
+	$model->title = 'Announcement';
+	$model->refModule = $req->args['refmodule'];
+	$model->refUID = $req->args['refuid'];
 	$model->save();
 
-	do302('announcements/edit/' . $model->data['UID']);
+	$page->do302('announcements/edit/' . $model->UID);
 
 ?>

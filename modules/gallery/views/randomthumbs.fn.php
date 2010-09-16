@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/gallery/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	return thumbnails of random gallery images
@@ -11,6 +11,7 @@
 //: note the direct use of images table - TODO: work around this
 
 function gallery_randomthumbs($args) {
+		global $db;
 	$limit = ''; $html = ''; $size = 'thumbsm';
 
 	//---------------------------------------------------------------------------------------------
@@ -25,14 +26,14 @@ function gallery_randomthumbs($args) {
 	//---------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "createdBy='" . sqlMarkup($args['userUID']) . "'";
+	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
 	$conditions[] = "refModule='gallery'";
 
-	$range = dbLoadRange('images', '*', $conditions, 'RAND()', $limit, '');
+	$range = $db->loadRange('Images_Image', '*', $conditions, 'RAND()', $limit, '');
 
 	foreach($range as $row) {
-		$viewUrl = '%%serverPath%%gallery/image/' . $row['recordAlias'];
-		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['recordAlias'];
+		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];
+		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
 		$html .= "<a href='" . $viewUrl . "'>"
 			  . "<img src='" . $thumbUrl . "' title='" . $row['title']
 			  . "' border='0' vspace='2px' hspace='2px' /></a>\n";

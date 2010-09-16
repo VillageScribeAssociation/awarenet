@@ -1,35 +1,49 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	show a project record
+//*	show a project
 //--------------------------------------------------------------------------------------------------
 	
 	//----------------------------------------------------------------------------------------------
-	//	TODO: check permissions here
+	//	check references and permissions
 	//----------------------------------------------------------------------------------------------
-	if ($request['ref'] == '') { do404(); }
-	raFindRedirect('projects', 'show', 'projects', $request['ref']);
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	if ('' == $req->ref) { $page->do404(); }
+	$UID = $aliases->findRedirect('Projects_Project');
+
+	//if (false == $user->authHas('projects', 'Projects_Project', 'edit', $UID)) 
+	//	{ $page->do403('You are not authorized to edit this project.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the model and determine if the current user can edit it
 	//----------------------------------------------------------------------------------------------
-	$model = new Project($request['ref']);
-	$members = $model->getMembers();	
-	$editUrl = '';
+	$model = new Projects_Project($req->ref);
+	$members = $model->getMembers();
 
-	if ($model->hasEditAuth($user->data['UID']) == true) 
-		{ $editUrl = $serverPath . 'projects/editabstract/' . $model->data['recordAlias']; }
+	$editUrl = '';
+	$delUrl = '';
+
+	// only members and admins can edit projects
+	if (true == $model->hasEditAuth($user->UID)) 
+		{ $editUrl = $serverPath . 'projects/editabstract/' . $model->alias; }
+
+	// only admins can delete projects
+	if ('admin' == $user->role) { 
+		$ext = $model->extArray();
+		$delUrl = $ext['delUrl'];
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------	
-	$page->load($installPath . 'modules/projects/actions/show.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['UID'] = raGetOwner($request['ref'], 'projects');
-	$page->blockArgs['projectTitle'] = $model->data['title'];
-	$page->blockArgs['projectRa'] = $model->data['recordAlias'];
-	$page->blockArgs['editProjectUrl'] = $editUrl;
+	$page->load('modules/projects/actions/show.page.php');
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $UID;
+	$page->blockArgs['projectTitle'] = $model->title;
+	$page->blockArgs['projectRa'] = $model->alias;
+	$page->blockArgs['editProjectUrl'] = $editUrl;	// TODO: clunky, fix this
+	$page->blockArgs['delProjectUrl'] = $delUrl;
 	$page->render();
 
 ?>

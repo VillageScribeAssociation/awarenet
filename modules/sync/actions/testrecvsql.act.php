@@ -1,36 +1,38 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
+
 //-------------------------------------------------------------------------------------------------
 //	post a spurious sql update to self
 //-------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/sync/models/server.mod.php');
-	require_once($installPath . 'modules/sync/models/sync.mod.php');
+	if ('admin' != $user->role) { $page->do403(); }
 
 	$postUrl = $serverPath . 'sync/recvsql/';
 
-	$ownData = syncGetOwnData();
+	$ownData = $sync->getOwnData();
 
-	$server = new Server($ownData['UID']);
+	$server = new Sync_Server($ownData['UID']);
 
 	$syncTime = time();
 	$syncTimestamp = 'Sync-timestamp: ' . $syncTime;
-	$syncProof = 'Sync-proof: ' . sha1($server->data['password'] . $syncTime);
+	$syncProof = 'Sync-proof: ' . sha1($server->password . $syncTime);
 	$syncSource = 'Sync-source: ' . $ownData['serverurl'];
 	$postHeaders = array($syncTimestamp, $syncProof, $syncSource);
 
-	$uid = createUID();
+	$uid = $kapenta->createUID();
 
 	$data = array(	'UID' => $uid,
 					'refTable' => 'moose',
 					'refUID' => $uid,
 					'aliaslc' => 'test' . $uid,
 					'alias' => 'TEST' . $uid,
-					'editedOn' => mysql_datetime(),
+					'editedOn' => $db->datetime(),
 					'editedBy' => 'test'
 				);
 
-	$xmlData = syncBase64EncodeSql('recordalias', $data);
+	$xmlData = $sync->base64EncodeSql('recordalias', $data);
 
 	$postVars = 'detail=' . urlencode($xmlData);
 
@@ -52,11 +54,11 @@
 
 	$postUrl = $serverPath . 'sync/recvsqldelete/';
 
-	$server = new Server($ownData['UID']);
+	$server = new Sync_Server($ownData['UID']);
 
 	$syncTime = time();
 	$syncTimestamp = 'Sync-timestamp: ' . $syncTime;
-	$syncProof = 'Sync-proof: ' . sha1($server->data['password'] . $syncTime);
+	$syncProof = 'Sync-proof: ' . sha1($server->password . $syncTime);
 	$syncSource = 'Sync-source: ' . $ownData['serverurl'];
 	$postHeaders = array($syncTimestamp, $syncProof, $syncSource);
 

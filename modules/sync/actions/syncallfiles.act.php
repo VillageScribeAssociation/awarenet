@@ -1,29 +1,30 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	download all outstanding files from a peer
+//*	download all outstanding files from a peer
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
 	//	auth
 	//---------------------------------------------------------------------------------------------
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	get a list of all files from the images module and add to download queue
 	//---------------------------------------------------------------------------------------------
-	$list = expandBlocks("[[:images::listallfiles:]]", '');
+	$list = $theme->expandBlocks("[[:images::listallfiles:]]", '');
 	$list = explode("\n", $list);
+
 	foreach($list as $fileName) {	
-		if ( (trim($fileName) != '') && (file_exists($installPath . $fileName) == false) ) {
+		if ( (trim($fileName) != '') && (false == $kapenta->fileExists($fileName)) ) {
 			//-------------------------------------------------------------------------------------
 			// filename is valid and does not exist on this server
 			//-------------------------------------------------------------------------------------
-			syncRequestFile($fileName);
+			$sync->requestFile($fileName);
 			//echo ">> " . $fileName . "<br/>\n";
 		}
 	}
 
-	do302('sync/downloads/');	
+	$page->do302('sync/downloads/');	
 
 ?>

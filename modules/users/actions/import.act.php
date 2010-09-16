@@ -1,10 +1,13 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //	import users from CSV file
 //--------------------------------------------------------------------------------------------------
-
-	require_once($installPath . 'modules/users/models/users.mod.php');
+//TODO: remove this
+	
+	if ('admin' != $user->role) { $page->do403(); }
 
 	echo "<small>\n";
 	echo "<table>";
@@ -35,17 +38,17 @@
 
 		echo "<tr><td>$name</td><td>$grade</td><td>$email</td><td>$username</td><td>$password</td><td>$surname</td><td>$firstname</td></tr>\n";
 
-		$u = new Users();
-		$u->data['UID'] = createUID();
-		$u->data['ofGroup'] = 'import';
-		$u->data['school'] = '176670059110919836';
-		$u->data['grade'] = 'Gd. ' . $grade;
-		$u->data['firstname'] = $firstname;
-		$u->data['surname'] = $surname;
-		$u->data['username'] = $username;
-		$u->data['password'] = sha1($password . $u->data['UID']);
-		$u->data['lang'] = 'en';
-		$u->data['createdBy'] = 'admin';
+		$u = new Users_User();
+		$u->UID = $kapenta->createUID();
+		$u->role = 'import';
+		$u->school = '176670059110919836';
+		$u->grade = 'Gd. ' . $grade;
+		$u->firstname = $firstname;
+		$u->surname = $surname;
+		$u->username = $username;
+		$u->password = sha1($password . $u->UID);
+		$u->lang = 'en';
+		$u->createdBy = 'admin';
 		echo "<tr><td>";
 		echo $u->save();
 		echo "</td></tr>";

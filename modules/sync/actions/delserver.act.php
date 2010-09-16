@@ -1,15 +1,25 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	delete an awareNet server record given its UID
+//*	delete an awareNet server record given its UID
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }						// check user is admin
-	if ($request['ref'] == '') { do404(); }									// check reference sent
-	if (dbRecordExists('servers', $request['ref']) == false) { do404(); }	// check record exists
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); }					
+	if ('' == $req->ref) { $page->do404(); }
+	
+	$model = new Sync_Server($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
 
-	dbDelete('servers', $request['ref']);									// delete the record
-	$_SESSION['sMessage'] .= "Deleted server record " . $request['ref'] . " <br/>\n";
-	do302('sync/listservers/');
+	//----------------------------------------------------------------------------------------------
+	//	delete the server
+	//----------------------------------------------------------------------------------------------
+	$model->delete();
+	$session->msg('Deleted server record ' . $model->servername);
+	$page->do302('sync/listservers/');
 
 ?>

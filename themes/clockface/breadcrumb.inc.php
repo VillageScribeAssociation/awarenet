@@ -12,7 +12,8 @@ function theme_breadcrumb($args) {
 	global $serverPath;
 	global $defaultTheme;
 	global $page;
-	$s = $page->style;
+	global $theme;
+	$s = $theme->style;
 	
 	//----------------------------------------------------------------------------------------------
 	//	read arguments
@@ -28,8 +29,8 @@ function theme_breadcrumb($args) {
 	//	construct fileName
 	//----------------------------------------------------------------------------------------------
 
-	//$fileName = $installPath . 'themes/' . $defaultTheme . '/drawcache/'
-	//		  . 'bc_' . $s['pxxBreadcrumbHeight'] . '_' . mkAlphaNumeric($s['label']) . '.png';
+	$fileName = $installPath . 'themes/' . $defaultTheme . '/drawcache/'
+			  . 'bc_' . $s['pxxBreadcrumbHeight'] . '_' . mkAlphaNumeric($s['label']) . '.png';
 
 	//----------------------------------------------------------------------------------------------
 	//	check if the image already exists

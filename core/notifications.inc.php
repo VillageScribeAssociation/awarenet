@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 //+ TODO: Notifications should now be sent by raising events on notifications module
 
-require_once($installPath . 'modules/notifications/models/notification.mod.php');
-require_once($installPath . 'modules/notifications/models/pagechannel.mod.php');
-require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
+//require_once($installPath . 'modules/notifications/models/notification.mod.php');
+//require_once($installPath . 'modules/notifications/models/pagechannel.mod.php');
+//require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
 
 //==================================================================================================
 //--------------------------------------------------------------------------------------------------
@@ -29,8 +29,8 @@ require_once($installPath . 'modules/notifications/models/pageclient.mod.php');
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyUser($userUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$model = new NotificationQueue($userUID);
-	$model->addNotification($noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
+	global $session;
+	$session->msgAdmin('method deleted: notifyUser, use \$notifications->addUser()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -47,12 +47,8 @@ function notifyUser($userUID, $noticeUID, $from, $fromurl, $title, $content, $ur
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifySchool($schoolUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$sql = "select UID from users where school='" . $schoolUID . "'";
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		notifyUser($row['UID'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-	}
+	global $session;
+	$session->msgAdmin('method deleted: notifySchool, use \$notifications->addSchool()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -69,12 +65,8 @@ function notifySchool($schoolUID, $noticeUID, $from, $fromurl, $title, $content,
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyGroup($groupUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$sql = "select userUID from groupmembers where groupUID='" . $groupUID . "'";
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		notifyUser($row['userUID'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-	}
+	global $session;
+	$session->msgAdmin('method deleted: notifyGroup, use \$notifications->addGroup()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -91,11 +83,8 @@ function notifyGroup($groupUID, $noticeUID, $from, $fromurl, $title, $content, $
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyFriends($userUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$u = new User($userUID);
-	$friends = $u->getFriends();
-	foreach($friends as $UID => $row) {
-		notifyUser($row['friendUID'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-	}
+	global $session;
+	$session->msgAdmin('method deleted: notifyFriends, use \$notifications->addFriend()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -112,14 +101,8 @@ function notifyFriends($userUID, $noticeUID, $from, $fromurl, $title, $content, 
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyProject($projectUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$sql = "select * from projectmembers "
-		 . "where projectUID='" . sqlMarkup($projectUID) . "' and role != 'asked'";
-
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		notifyUser($row['userUID'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-	}
+	global $session;
+	$session->msgAdmin('method deleted: notifyProject, use \$notifications->addProject()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -136,14 +119,9 @@ function notifyProject($projectUID, $noticeUID, $from, $fromurl, $title, $conten
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyProjectAdmins($pUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$sql = "select * from projectmembers "
-		 . "where projectUID='" . sqlMarkup($pUID) . "' and role='admin'";
-
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		notifyUser($row['userUID'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-	}
+	global $session;
+	$msg = 'method deleted: notifyProjectAdmins, use \$notifications->addProjectAdmins()';
+	$session->msgAdmin($msg, 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -161,14 +139,8 @@ function notifyProjectAdmins($pUID, $noticeUID, $from, $fromurl, $title, $conten
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyGrade($schoolUID, $grade, $nUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	$sql = "select * from users"
-		 . " where school='" . sqlMarkup($schoolUID) . "' and grade='" . sqlMarkup($grade) . "'";
-
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($sql)) {
-		$row = sqlRMArray($row);
-		notifyUser($row['UID'], $nUID, $from, $fromurl, $title, $content, $url, $imgUID);		
-	}
+	global $session;
+	$session->msgAdmin('method deleted: notifyGrade, use \$notifications->addSchoolGrade()', 'bug');
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -185,17 +157,8 @@ function notifyGrade($schoolUID, $grade, $nUID, $from, $fromurl, $title, $conten
 //: imgUID this may allow or be replaced by image URL in future to remove dependancy
 
 function notifyThread($threadUID, $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID) {
-	//----------------------------------------------------------------------------------------------
-	//	notify original thread creator
-	//----------------------------------------------------------------------------------------------
-	require_once($installPath . 'modules/forums/models/forumthread.mod.php');
-	$t = new ForumThread($threadUID);
-	notifyUser($t->data['createdBy'], $noticeUID, $from, $fromurl, $title, $content, $url, $imgUID);
-
-	//----------------------------------------------------------------------------------------------
-	//	notify everyone who's replied
-	//----------------------------------------------------------------------------------------------
-	$result = dbQuery("select * from forumreplies where thread='" . sqlMarkup($threadUID) . "'");
+	global $session;
+	$session->msgAdmin('method deleted: notifyThread, use \$notifications object()', 'bug');
 }
 
 //==================================================================================================
@@ -213,6 +176,7 @@ function notifyThread($threadUID, $noticeUID, $from, $fromurl, $title, $content,
 //opt: rebroadcast - pass to peer servers if true [string]
 
 function notifyChannel($channelID, $event, $data, $rebroadcast = true) {
+	/*
 	//----------------------------------------------------------------------------------------------
 	//	send to locally subscribed clients
 	//----------------------------------------------------------------------------------------------
@@ -226,6 +190,7 @@ function notifyChannel($channelID, $event, $data, $rebroadcast = true) {
 	//	broadcast to peer servers
 	//----------------------------------------------------------------------------------------------
 	if ($rebroadcast == true) { syncBroadcastNotification('self', $channelID, $event, $data); }
+	*/
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -235,8 +200,10 @@ function notifyChannel($channelID, $event, $data, $rebroadcast = true) {
 
 function notifySubscribe($channelID) {
 	global $page;
+	/*
 	$model = new PageClient($page->UID);
 	$model->subscribe($channelID);
+	*/
 }
 
 ?>

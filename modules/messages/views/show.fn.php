@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/messages/models/message.mod.php');
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a message
@@ -9,10 +9,12 @@
 //opt: noreply - kill the reply button (yes|no) [string]
 
 function messages_show($args) {
+	global $theme;
+
 	$noreply = 'no';
 	if (array_key_exists('UID', $args) == false) { return false; }
 
-	$model = new Message($args['UID']);
+	$model = new Messages_Message($args['UID']);
 	$ext = $model->extArray();
 
 	$ext['replybutton'] = '';
@@ -25,7 +27,7 @@ function messages_show($args) {
 	if ((array_key_exists('noreply', $args)) && ($args['noreply'] == 'yes')) { $noreply = 'yes'; }
 	if ('yes' == $noreply) { $ext['replybutton'] = ''; }
 
-	$html = replaceLabels($ext, loadBlock('modules/messages/views/show.block.php'));
+	$html = $theme->replaceLabels($ext, $theme->loadBlock('modules/messages/views/show.block.php'));
 
 	return $html;
 }
@@ -34,4 +36,3 @@ function messages_show($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

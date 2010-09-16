@@ -1,49 +1,43 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	display a wiki article
-//--------------------------------------------------------------------------------------------------
-//	If no recordAlias is specified, the 'index' article is shown.  If that does not exist then
-//	one will be created.
+	require_once($kapenta->installPath . 'modules/wiki/models/wiki.mod.php');
 
-	require_once($installPath . 'modules/wiki/models/wiki.mod.php');
-	$raUID = $request['ref'];
+//--------------------------------------------------------------------------------------------------
+//*	display a wiki article
+//--------------------------------------------------------------------------------------------------
+//+	If no recordAlias is specified, the 'index' article is shown.  If that does not exist then
+//+	one will be created.
+
+	
+	$raUID = $req->ref;
 
 	//----------------------------------------------------------------------------------------------
 	//	decide which article to show
 	//----------------------------------------------------------------------------------------------
 
-	if ($request['ref'] == '') {
+	if ('' == $req->ref) {
 		//------------------------------------------------------------------------------------------
 		//	no article specified
 		//------------------------------------------------------------------------------------------
 
-		$raUID = raGetOwner('Index', 'wiki');
-		if ($raUID == false) {
-			$model = new Wiki();
-			$model->mkDefault();
-			$raUID = $model->data['UID'];
-			$model->save();
-		} else { 
-			$raUID = 'Index'; 
-		}
+		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', 'Index');
+		if (false == $raUID) { $raUID = 'Index'; }
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	article has been specified
 		//------------------------------------------------------------------------------------------
-		$raUID = raGetOwner($request['ref'], 'wiki');	// maybe its a recordAlias
-		if ($raUID == false) {							// no? maybe its a UID
+		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', $req->ref);	// maybe its an alias
+		if (false == $raUID) {							// no? maybe its a UID
 
-			if (dbRecordExists('wiki', $request['ref']) == true) {
-				$raUID = $request['ref'];			
+			if ($db->objectExists('Wiki_Article', $req->ref) == true) {
+				$raUID = $req->ref;			
 			} else {
-				$page->load($installPath . 'modules/wiki/actions/notfound.page.php');
+				$page->load('modules/wiki/actions/notfound.page.php');
 				$page->render();
 				die();
 			}
 		}
-
 
 	}
 
@@ -64,15 +58,14 @@
 	//	increment hit count
 	//----------------------------------------------------------------------------------------------
 
-	$newHit = $extArray['hitcount'] + 1;
-	$sql = "update wiki set hitcount='" . $newHit . "' where UID='" . $extArray['UID'] . "'";
-	dbQuery($sql);
+	$newHit = $extArray['viewcount'] + 1;
+	//$sql = "update wiki set viewcount='" . $newHit . "' where UID='" . $extArray['UID'] . "'";
+	//$db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	show it
 	//----------------------------------------------------------------------------------------------
-
-	$page->load($installPath . 'modules/wiki/actions/pdf.page.php');
+	$page->load('modules/wiki/actions/pdf.page.php');
 	$page->blockArgs['raUID'] = $raUID;
 	foreach($extArray as $key => $value) { $page->blockArgs[$key] = $value; }
 	$page->renderPdf();

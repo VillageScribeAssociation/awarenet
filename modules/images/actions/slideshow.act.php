@@ -1,32 +1,39 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	make a slideshow
+//	make a slideshow  //TODO: this should be a block
 //--------------------------------------------------------------------------------------------------
-//TODO: add javascript nav buttons and reload (avoid jumpy iframe)
 
-	if ( (array_key_exists('refmodule', $request['args'])) 
-	   AND (array_key_exists('refuid', $request['args'])) ) {
-	  
-		//------------------------------------------------------------------------------------------
-		//	load all images associated with this record
-		//------------------------------------------------------------------------------------------
-		$show = '';
-		$rows = array();
-		$sql = "select * from images where refModule='" . sqlMarkup($request['args']['refmodule']) 
-			. "' and refUID='" . sqlMarkup($request['args']['refuid']) . "' order by weight";
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+
+	if (false == array_key_exists('refmodule', $req->args))
+		{ $page->do404('module not given', true); }
+
+
+	if (false == array_key_exists('refuid', $req->args))
+		{ $page->do404('UID not given', true); }
+
+	//----------------------------------------------------------------------------------------------
+	//	load all images associated with this record
+	//----------------------------------------------------------------------------------------------
+	$show = '';
+	$rows = array();
+		$sql = "select * from Images_Image where refModule='" . $db->addMarkup($req->args['refmodule']) 
+			. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
 			
-		$result = dbQuery($sql);
+		$result = $db->query($sql);
 		$index = 0;
-		while ($row = dbFetchAssoc($result)) {
-			$row = sqlRMArray($row);
+		while ($row = $db->fetchAssoc($result)) {
+			$row = $db->rmArray($row);
 			if ($show == '') { $show = $row['UID']; }
 			$rows[$row['UID']] = $row;
 			$rows[$row['UID']]['index'] = $index;
 		}
 		
-		if (array_key_exists('show', $request['args'])) 
-			{ $show = sqlMarkup($request['args']['show']); }
+		if (array_key_exists('show', $req->args)) 
+			{ $show = $db->addMarkup($req->args['show']); }
 		
 		//------------------------------------------------------------------------------------------
 		//	show the current image
@@ -34,10 +41,10 @@
 		
 		$imgRow = $rows[$show];
 		$img = "
-		<img src='/images/slide/" . $imgRow['recordAlias'] . "' /><br/>
+		<img src='/images/slide/" . $imgRow['alias'] . "' /><br/>
 		<b>" . $imgRow['title'] . "</b> " . $imgRow['caption'] . "
 		<a href='#' onClick=\"window.parent.location='" . $serverPath . "images/show/" 
-		. $imgRow['recordAlias'] . "'\">[view larger]</a>
+		. $imgRow['alias'] . "'\">[view larger]</a>
 		<br/><br/>
 		";
 		
@@ -47,9 +54,9 @@
 		
 		$nav = '';
 		foreach($rows as $UID => $row) {
-			$thumbUrl = '/images/thumbsm/' . $row['recordAlias'];
-			$navUrl = '/images/slideshow/refModule_' . $request['args']['refmodule'] 
-				. '/refUID_' . $request['args']['refuid'] . '/show_' . $UID . '/';
+			$thumbUrl = '/images/thumbsm/' . $row['alias'];
+			$navUrl = '/images/slideshow/refModule_' . $req->args['refmodule'] 
+				. '/refUID_' . $req->args['refuid'] . '/show_' . $UID . '/';
 				
 			$nav .= "<a href='" . $navUrl . "'><img src='" . $thumbUrl 
 			     . "' border='0' alt='" . $row['title'] . "' /></a>\n";
@@ -57,8 +64,8 @@
 		
 		$html = $img . $nav;
 		
-		$page->load($installPath . 'modules/images/actions/slideshow.page.php');
-		$page->data['content'] = $html;
+		$page->load('modules/images/actions/slideshow.page.php');
+		$page->content = $html;
 		$page->render();
 		
 	}

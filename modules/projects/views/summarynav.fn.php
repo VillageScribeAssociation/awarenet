@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summarise for the nav (300 wide)
@@ -11,6 +11,10 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_summarynav($args) {
+	global $db;
+
+	global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
@@ -23,14 +27,14 @@ function projects_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-	$model = new project(sqlMarkup($args['raUID']));
+	$model = new Projects_Project($db->addMarkup($args['raUID']));
 	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	fill out the block template and return it
 	//----------------------------------------------------------------------------------------------
-	$block = loadBlock('modules/projects/views/summarynav.block.php');
-	$html = replaceLabels($model->extArray(), $block);
+	$block = $theme->loadBlock('modules/projects/views/summarynav.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
 	return $html;
 }
 

@@ -1,5 +1,5 @@
 <? /*
-<form name='downloadfile' method='POST' action='/files/download/'>
+<form name='downloadfile' method='POST' action='%%serverPath%%files/download/'>
 <input type='hidden' name='action' value='downloadfile' />
 <input type='hidden' name='refModule' value='%%refModule%%' />
 <input type='hidden' name='refUID' value='%%refUID%%' />

@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/projects/models/membership.mod.php');
-	require_once($installPath . 'modules/projects/models/projectrevision.mod.php');
-	require_once($installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	form for adding new sections
@@ -12,18 +12,18 @@
 
 function projects_editsectiontable($args) {
 	global $user;
-	if (authHas('projects', 'edit', '') == false) { return false; }
+	if ($user->authHas('projects', 'Projects_Project', 'edit', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';
 
-	$model = new project($args['raUID']);
-	if ($model->isMember($user->data['UID']) == false) { return false; }
+	$model = new Projects_Project(|$args['raUID']);
+	if ($model->isMember($user->UID) == false) { return false; }
 
 	$html = "<table noborder>";
 	foreach($model->sections as $sUID => $section) {
 
-		$rA = $model->data['recordAlias'];
+		$rA = $model->alias;
 
 		$sectionUrl = '/projects/edit/' . $rA . '#s' . $sUID;
 		$editUrl = '/projects/editsection/section_' . $sUID . '/' . $rA;

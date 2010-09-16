@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a set of files associated with something, along with some metadata
@@ -9,6 +9,10 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_filesetdetail($args) {
+	global $db;
+
+	global $theme;
+
 	global $serverPath;
 	
 	//----------------------------------------------------------------------------------------------
@@ -22,40 +26,40 @@ function files_filesetdetail($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the file records and make html
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from files where refModule='" . sqlMarkup($args['refModule']) 
-	     . "' and refUID='" . sqlMarkup($args['refUID']) . "'";
+	$sql = "select * from files where refModule='" . $db->addMarkup($args['refModule']) 
+	     . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
 	
-	$result = dbQuery($sql);	
+	$result = $db->query($sql);	
 
 	$html = '';
-	$block = loadBlock('modules/files/listing.block.php');
+	$block = $theme->loadBlock('modules/files/listing.block.php');
 	
-	while($row = dbFetchAssoc($result)) {
+	while($row = $db->fetchAssoc($result)) {
 		
-		$f = new file();
-		$f->loadArray(sqlRMArray($row));
+		$f = new Files_File();
+		$f->loadArray($db->rmArray($row));
 		
 		$labels = $f->extArray();
 		
-		$labels['editUrl'] = $serverPath . 'files/edit/return_uploadmultiple/' . $f->data['recordAlias'];
+		$labels['editUrl'] = $serverPath . 'files/edit/return_uploadmultiple/' . $f->alias;
 		if (authHas($row['refModule'], 'files', '') == false) {
 		  $labels['editUrl'] = $serverPath . 'files/viewset/return_uploadmultiple/' 
-		                     . $f->data['recordAlias'];
+		                     . $f->alias;
 		}
 		
-		$returnUrl = '/files/uploadmultiple/refModule_' . $i->data['refModule'] 
-			   . '/refUID_' . $f->data['refUID'] . '/';
+		$returnUrl = '/files/uploadmultiple/refModule_' . $i->refModule 
+			   . '/refUID_' . $f->refUID . '/';
 		
 		$labels['deleteForm'] = "
-		<form name='deletefile' method='POST' action='/files/delete/' >
+		<form name='deletefile' method='POST' action='%%serverPath%%files/delete/' >
 		<input type='hidden' name='action' value='deletefile' />
-		<input type='hidden' name='UID' value='" . $f->data['UID'] . "' />
+		<input type='hidden' name='UID' value='" . $f->UID . "' />
 		<input type='hidden' name='return' value='" . $returnUrl . "' />
 		<input type='submit' value='delete' />
 		</form>
 		";
 
-		$html .= replaceLabels($labels, $block);
+		$html .= $theme->replaceLabels($labels, $block);
 	}
 	return $html;
 }
@@ -63,4 +67,3 @@ function files_filesetdetail($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find the school's logo/picture (300px) or a blank image
@@ -12,7 +12,7 @@
 //: deprecated, TODO: remove this and replace blocks with call to images module
 
 function schools_image($args) {
-	global $serverPath;
+	global $db, $user;
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
@@ -28,19 +28,22 @@ function schools_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new School(sqlMarkup($args['raUID']));	
-	$sql = "select * from images where refModule='schools' and refUID='" . $model->data['UID'] 
+	$model = new Schools_School($db->addMarkup($args['raUID']));	
+	if (false == $model->loaded) { return ''; }
+
+	$sql = "select * from Images_Image where refModule='schools' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) {
-		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['recordAlias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $model->data['name'] . "'></a>";
+	$result = $db->query($sql);
+
+	while ($row = $db->fetchAssoc($result)) {
+		if ('yes' == $link) {
+			return "<a href='%%serverPath%%images/show/" . $row['alias'] . "'>" 
+				. "<img src='%%serverPath%%images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $row['recordAlias'] 
-				. "' border='0' alt='" . $p->data['name'] . "'>";
+			return "<img src='%%serverPath%%images/" . $size . "/" . $row['alias'] 
+				. "' border='0' alt='" . $p->name . "'>";
 		}
 	}
 	
@@ -52,7 +55,6 @@ function schools_image($args) {
 
 }
 
-//--------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 ?>
-

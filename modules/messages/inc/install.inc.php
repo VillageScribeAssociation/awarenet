@@ -1,23 +1,73 @@
 <?
 
-//--------------------------------------------------------------------------------------------------
-//	installer for gallery module (creates table)
-//--------------------------------------------------------------------------------------------------
+	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
 
-require_once($installPath . 'modules/messages/models/message.mod.php');
+//--------------------------------------------------------------------------------------------------
+//*	install script for Messages module
+//--------------------------------------------------------------------------------------------------
+//+	reports are human-readable HTML, with script-readable HTML comments
 
-function install_messages_module() {
-	global $installPath;
+//--------------------------------------------------------------------------------------------------
+//|	install the Messages module
+//--------------------------------------------------------------------------------------------------
+//returns: html report or false if not authorized [string][bool]
+
+function messages_install_module() {
+	global $db, $user;
+	if ('admin' != $user->role) { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Messages_Message table
+	//----------------------------------------------------------------------------------------------
+	$model = new Messages_Message();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	import any records from previous static table
+	//----------------------------------------------------------------------------------------------
+	$rename = array();
+	$count = $dba->copyAll('messages', $dbSchema, $rename); 
+	$report .= "<b>moved $count records from 'messages' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	return $report;
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	discover if this module is installed
+//--------------------------------------------------------------------------------------------------
+//:	if installed correctly report will contain HTML comment <!-- installed correctly -->
+//returns: HTML installation status report [string]
+
+function messages_install_status_report() {
 	global $user;
+	if ('admin' != $user->role) { return false; }
 
-	if ($user->data['ofGroup'] != 'admin') { return false; }
+	$dba = new KDBAdminDriver();
+	$report = '';
+	$installNotice = '<!-- table installed correctly -->';
+	$installed = true;
 
 	//----------------------------------------------------------------------------------------------
-	//	main messages table
+	//	ensure the table which stores Message objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Message();
-	$report = $model->install();
+	$model = new Messages_Message();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
 
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
+	if (true == $installed) { $report .= '<!-- module installed correctly -->'; }
 	return $report;
 }
 

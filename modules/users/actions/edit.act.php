@@ -1,15 +1,20 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	edit a user record
+//*	edit a user record
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] != 'admin') { do403(); }
+	//----------------------------------------------------------------------------------------------
+	//	authentication
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); }
 
-
-	$page->load($installPath . 'modules/users/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $request['ref'];
-	$page->blockArgs['userUID'] = raGetOwner($request['ref'], 'users');
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/users/actions/edit.page.php');
+	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['userUID'] = $aliases->getOwner('users', 'Users_User', $req->ref);
 	$page->render();
 
 ?>

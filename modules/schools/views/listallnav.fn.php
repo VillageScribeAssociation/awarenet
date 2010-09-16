@@ -1,18 +1,21 @@
 <?
 
-	require_once($installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list all formatted for nav (300 px wide)
 //--------------------------------------------------------------------------------------------------
 
 function schools_listallnav($args) {
-	$sql = "select * from schools order by name";
-	$result = dbQuery($sql);
+	global $db, $user;
 	$html = '';
-	while ($row = dbFetchAssoc($result)) {
-		$html .= "[[:schools::summarynav::schoolUID=" . $row['UID'] . ":]]";
-	}
+
+	$sql = "select * from Schools_School order by name";
+	$range = $db->loadRange('Schools_School', '*', '', 'name');
+
+	foreach($range as $row) 
+		{ $html .= "[[:schools::summarynav::schoolUID=" . $row['UID'] . ":]]"; }
+
 	return $html;
 }
 
@@ -20,4 +23,3 @@ function schools_listallnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

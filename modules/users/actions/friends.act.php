@@ -1,46 +1,31 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display a users friends ( and their grade?)
+//*	display a users friends ( and their grade?)
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	which users friends?
+	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
+	if ($user->role == 'public') { $page->do403(); }	
 
-	// by default show users own friends
-	$authorised = true;
-	$userUID = $user->data['UID'];
-	$userName = $user->getName;
+	//TODO: finer controls and permissions for profile view (only friends classmates, etc)
 
-	// if a user was specified
-	if ($request['ref'] != '') {
-		$reqUID = raGetOwner($request['ref'], 'users');
-		if ($reqUID != 'false') { 
+	$model = new Users_user();
+	if ('' != $req->ref) { $model->load($req->ref); }	// if a user was specified, try load it
+	else { $model->loadArray($user->toArray()); }		// if not, default to current user
 
-			$userUID = $reqUID; 
-			$userName = expandBlocks('[[:users::name::userUID=' . $userUID . ':]]', '');
-
-			//--------------------------------------------------------------------------------------
-			//	show some other users friends - authorised
-			//--------------------------------------------------------------------------------------
-
-			// TODO: consider this
-			if ($user->data['ofGroup'] == 'public') { $authorised = false; }
-
-		}
-	}
+	if (false == $model->loaded) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
-	//	show the page
+	//	render the page
 	//----------------------------------------------------------------------------------------------
-
-	if ($authorised == false) { do403(); }
-	$page->load($installPath . 'modules/users/actions/friends.page.php');
-	$page->blockArgs['userUID'] = $userUID;
-	$page->blockArgs['userRa'] = $request['ref'];
+	$userName = $model->getName();
+	$page->load('modules/users/actions/friends.page.php');
+	$page->blockArgs['userUID'] = $model->UID;
+	$page->blockArgs['userRa'] = $req->ref;
 	$page->blockArgs['userName'] = $userName;
-	$page->data['title'] = 'awareNet - friends of ' . $userName;
+	$page->title = 'awareNet - friends of ' . $userName;
 	$page->render();
 
 ?>

@@ -7,35 +7,31 @@
 	//---------------------------------------------------------------------------------------------
 	//	authorize
 	//---------------------------------------------------------------------------------------------
-
-	if (syncAuthenticate() == false) { doXmlError('could not authenticate'); }
+	if (false == $sync->authenticate()) { $page->doXmlError('could not authenticate'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	add to database
 	//---------------------------------------------------------------------------------------------
-
-	if (array_key_exists('detail', $_POST) == false) { doXmlError('update not sent'); }
-	if (trim($_POST['detail']) == '') { doXmlError('update is empty'); }
+	if (false == array_key_exists('detail', $_POST)) { $page->doXmlError('update not sent'); }
+	if ('' == trim($_POST['detail'])) { $page->doXmlError('update is empty'); }
 	
-	$data = syncBase64DecodeSql($_POST['detail']);
+	$data = $sync->base64DecodeSql($_POST['detail']);
 
-	logSync("table: " . $data['table'] . "\n");
-	foreach($data['fields'] as $f => $v) { logSync("field: $f value: $v \n"); }
+	$kapenta->logSync("table: " . $data['table'] . "\n");
+	foreach($data['fields'] as $f => $v) { $kapenta->logSync("field: $f value: $v \n"); }
 
-	syncDbSave($data['table'], $data['fields']);
+	$sync->dbSave($data['table'], $data['fields']);
 
 	//---------------------------------------------------------------------------------------------
 	//	pass on to peers
 	//---------------------------------------------------------------------------------------------	
-	
-	$syncHeaders = syncGetHeaders();
+	$syncHeaders = $sync->getHeaders();
 	$source = $syncHeaders['Sync-Source'];
-	syncBroadcastDbUpdate($source, $data['table'], $data['fields']);
+	$sync->broadcastDbUpdate($source, $data['table'], $data['fields']);
 
 	//---------------------------------------------------------------------------------------------
 	//	done
 	//---------------------------------------------------------------------------------------------		
-
 	echo "<ok/>"; flush();
 
 ?>

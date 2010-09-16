@@ -4,14 +4,14 @@
 //	send messages for the current user
 //--------------------------------------------------------------------------------------------------
 
-	require_once($installPath . 'modules/chat/models/chat.mod.php');
-	$queue = new Chat($user->data['UID']);
+	require_once($kapenta->installPath . 'modules/chat/models/chat.mod.php');
+	$queue = new Chat($user->UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	make sure public user cannot chat
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->data['ofGroup'] == 'public') { 
+	if ($user->role == 'public') { 
 		// close all open windows and die
 		setcookie('chatwindows', '');
 		echo " "; flush(); die();
@@ -21,17 +21,17 @@
 	//	update user's lastonline field
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "update users set lastOnline='" . mysql_datetime() . "' "
-		 . "where UID='" . sqlMarkup($user->data['UID']) . "'";
+	$sql = "update Users_User set lastOnline='" . $db->datetime() . "' "
+		 . "where UID='" . $db->addMarkup($user->UID) . "'";
 
-	dbQuery($sql);	
+	$db->query($sql);	
 
 	//----------------------------------------------------------------------------------------------
 	//	get time of last message received by the client
 	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('since', $request['args']) == false) { echo " "; flush(); die(); }
-	$since = floor($request['args']['since']);
+	if (array_key_exists('since', $req->args) == false) { echo " "; flush(); die(); }
+	$since = floor($req->args['since']);
 
 	//----------------------------------------------------------------------------------------------
 	//	send all messages more recent than that

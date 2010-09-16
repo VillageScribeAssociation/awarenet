@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	display a single image at a given size
@@ -44,12 +44,12 @@ function images__widthx($args) {
 
 	if ($caption == 'yes') {
 		//echo "image rauid: " . $args['raUID'] . "<br/>\n";
-		$model = new Image($args['raUID']);
+		$model = new Images_Image($args['raUID']);
 		if (strtolower($align) == 'left') { $align = "style='float: left;'"; }
 		if (strtolower($align) == 'right') { $align = "style='float: right;'"; }
 
 		$html = "<div class='caption' $align>$html<br/><small>"
-			  . $model->data['caption'] . "</small></div>";
+			  . $model->caption . "</small></div>";
 		if ($size == 'width300') 
 			{ $html = str_replace("class='caption'", "class='captionpad'", $html); }
 	}

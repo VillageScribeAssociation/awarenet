@@ -1,48 +1,54 @@
 <?
 
+		require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+		require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	create a new forum thread
+//*	create a new forum thread
 //--------------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('action', $_POST) == true)
-	   && ($_POST['action'] == 'newThread')
-	   && (array_key_exists('forum', $_POST) == true)
-	   && (dbRecordExists('forums', $_POST['forum']) == true) ) {
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and reference
+	//----------------------------------------------------------------------------------------------
 
-		require_once($installPath . 'modules/forums/models/forum.mod.php');
-		require_once($installPath . 'modules/forums/models/forumthread.mod.php');
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
+	if ('newThread' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('forum', $_POST)) { $page->do404('Forum not specified.'); }
 
-		//------------------------------------------------------------------------------------------
-		//	check permissions
-		//------------------------------------------------------------------------------------------
-		// TODO
+	$forum = new Forums_Board($_POST['forum']);
+	if (false == $forum->loaded) { $page->do404('Forum not found.'); }
+	if (false == $user->authHas('forums', 'Forums_Board', 'makethread', $forum->UID)) 
+		{ $page->do403('You cannot create new threads in this forum.'); }
 
-		//------------------------------------------------------------------------------------------
-		//	create thread
-		//------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//	create thread
+	//----------------------------------------------------------------------------------------------
 
-		$threadTitle = clean_string($_POST['title']);
-		if (trim($threadTitle) == '') { $threadTitle = '(No Subject)'; }
+	$threadTitle = '';
+	if (true == array_key_exists('title', $_POST)) { $threadTitle = $utils->cleanString($_POST['title']); }
+	if ('' == trim($threadTitle)) { $threadTitle = '(No Subject)'; }
 
-		$model = new ForumThread();
-		$model->data['forum'] = clean_string($_POST['forum']);
-		$model->data['title'] = $threadTitle;
-		$model->data['content'] = strip_tags($_POST['content']);
-		$model->save();
+	$model = new Forums_Thread();
+	$model->board = $forum->UID;
+	$model->title = $threadTitle;
+	$model->content = strip_tags($_POST['content']);	// TODO: allow some tags 
+	$report = $model->save();
 
-		//------------------------------------------------------------------------------------------
-		//	increment thread count on the forum
-		//------------------------------------------------------------------------------------------
-		$forum = new Forum($model->data['forum']);
-		$forum->data['threads'] += 1;
-		$forum->save();
+	// redirect back to forum if thread was nto created
+	if ('' != $report) {
+		$session->msg("Cound not create thread:<br/>$report", 'bad');
+		$page->do302('forums/' . $forum->alias);
+	}
 
-		//------------------------------------------------------------------------------------------
-		//	redirect back to forum	// TODO: redirect to new thread?
-		//------------------------------------------------------------------------------------------
-		$forumRa = raGetDefault('forums', $_POST['forum']);
-		do302('forums/' . $forumRa);		
+	//----------------------------------------------------------------------------------------------
+	//	increment thread count on the forum
+	//----------------------------------------------------------------------------------------------
+	$forum->threads += 1;
+	$forum->save();
 
-	} else { do403(); }
+	//----------------------------------------------------------------------------------------------
+	//	redirect to new thread
+	//----------------------------------------------------------------------------------------------
+	$page->do302('forums/showthread/' . $model->alias);	
 
 ?>

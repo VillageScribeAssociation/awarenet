@@ -1,29 +1,44 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	images API, no public actions
+//*	images API (DEPRECATED)
 //--------------------------------------------------------------------------------------------------
 
-if ($user->data['ofGroup'] == 'public') { doXmlError('not logged in'); }
+	//----------------------------------------------------------------------------------------------
+	//	check that user is logged in and refmodule, refuid supplied
+	//----------------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------------------
-//	list images 
-//--------------------------------------------------------------------------------------------------
+	if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 
-if ($request['ref'] == 'list') {
-	$sql = "select * from images where 1=1 ";
+	if (false == array_key_exists('refuid', $req->args)) { $page->doXmlError('refUID not given'); }
+	if (false == array_key_exists('refmodule', $req->args)) { $page->doXmlError('module not specified'); }
 
-	if (array_key_exists('refuid', $request['args']) == true) 
-		{ $sql .= " and refUID='" . sqlMarkup($request['args']['refuid']) . "'"; }
+	//----------------------------------------------------------------------------------------------
+	//	list images 
+	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('refmodule', $request['args']) == true) 
-		{ $sql .= " and refModule='" . sqlMarkup($request['args']['refmodule']) . "'"; }
+	if ('list' == $req->ref) {
 
-	$result = dbQuery($sql);
-	echo "<?xml version=\"1.0\"?>\n";
-	echo "<imageset>\n";
-	while ($row = sqlRMArray(dbFetchAssoc($result))) { echo arrayToXml2d($row, 'image', '  '); }
-	echo "</imageset>\n";
-}
+		$conditions = array();
+		if (array_key_exists('refuid', $req->args) == true) 
+			{ $conditions[] = "refUID='" . $db->addMarkup($req->args['refuid']) . "'"; }
+
+		if (array_key_exists('refmodule', $req->args) == true) 
+			{ $conditions[] = "refModule='" . $db->addMarkup($req->args['refmodule']) . "'"; }
+
+		$range = $db->loadRange('Images_Image', '*', $conditions);
+
+		echo "<?xml version=\"1.0\"?>\n";
+		echo "<imageset>\n";	
+
+		foreach ($range as $row) {
+			$model = new Images_Image();
+			$model->loadArray($row);
+			echo $model->toXml('    ');
+		}
+
+		echo "</imageset>\n";
+
+	}
 
 ?>

@@ -8,30 +8,30 @@
 	//	authorize
 	//---------------------------------------------------------------------------------------------
 
-	if (syncAuthenticate() == false) { doXmlError('could not authenticate'); }
+	if (false == $sync->authenticate()) { $page->doXmlError('could not authenticate'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	get fileName (relative URL) and delete it if it exists
 	//---------------------------------------------------------------------------------------------
 
-	if (array_key_exists('detail', $_POST) == false) { doXmlError('notice not sent'); }
+	if (false == array_key_exists('detail', $_POST)) { $page->doXmlError('notice not sent'); }
 
 	$fileName = $_POST['detail'];
 	$fileName = str_replace("/.", 'XXXX', $fileName);	// prevent directory traversal
 
 	// peers may only advise on deletion of files in /data/
-	if (strpos(' ' . $fileName, 'data') == false) { doXmlError('permission denied'); }
+	if (false == strpos(' ' . $fileName, 'data')) { $page->doXmlError('permission denied'); }
 
-	if (file_exists($installPath . $fileName) == true) { unlink($installPath . $fileName); }
+	if (true == file_exists($installPath . $fileName)) { unlink($installPath . $fileName); }
 	
 	//---------------------------------------------------------------------------------------------
 	//	add to deleted items
 	//---------------------------------------------------------------------------------------------
 
 	$model = new DeletedItem();
-	$model->data['refTable'] = 'localfile';
-	$model->data['refUID'] = $fileName;
-	$model->data['timestamp'] = time();
+	$model->refTable = 'localfile';
+	$model->refUID = $fileName;
+	$model->timestamp = time();
 	$model->save();
 
 	//---------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@
 
 	$syncHeaders = syncGetHeaders();
 	$source = $syncHeaders['Sync-source'];
-	syncBroadcastDbDelete($source, $delTable, $delUid)
+	$sync->broadcastDbDelete($source, $delTable, $delUid)
 
 	//---------------------------------------------------------------------------------------------
 	//	done

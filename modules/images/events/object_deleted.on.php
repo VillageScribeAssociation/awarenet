@@ -1,6 +1,6 @@
 <?
 
-require_once($installPath . 'modules/images/models/image.mod.php');
+require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //	fired when a record is deleted
@@ -9,24 +9,24 @@ require_once($installPath . 'modules/images/models/image.mod.php');
 //arg: UID - UID of deleted record
 
 function images__cb_object_deleted($args) {
-	global $user;
-	if (array_key_exists('module', $args) == false) { return false; }
-	if (array_key_exists('UID', $args) == false) { return false; }
+	global $db, $user;
+	if (false == array_key_exists('module', $args)) { return false; }
+	if (false == array_key_exists('UID', $args)) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete any images owned by this record
 	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions = "refUID='" . $db->addMarkup($args['UID']) . "'";
+	$conditions = "refModule='" . $db->addMarkup($args['module']) . "'";
 
-	$conditions = array(	"refUID='" . sqlMarkup($args['UID']) . "'", 
-							"refModule='" . sqlMarkup($args['module']) . "'"	);
+	$range = $db->loadRange('Images_Image', '*', $conditions, '', '', '');
 
-	$rows = dbLoadRange('images', '*', $conditions, '', '', '');
-
-	foreach($rows as $row) {
-		$model = new Image();
+	foreach($range as $row) {
+		$model = new Images_Image();
 		$model->loadArray($row);
 		$model->delete();
-		logSync("images module is deleting record " . $model->data['UID'] . " in response to event<br/>\n");
+		$kapenta->logSync("images module is deleting record " . $model->UID . " in response to event<br/>\n");
 	}
 
 	return true;

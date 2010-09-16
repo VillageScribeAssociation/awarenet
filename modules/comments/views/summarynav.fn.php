@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/comments/models/comment.mod.php');
+	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	summary
@@ -8,10 +8,12 @@
 //arg: UID - UID of a comment [string]
 
 function comments_summarynav($args) {
-	if (authHas('comments', 'view', '') == false) { return ''; }
+	global $theme;
+
+	if ($user->authHas('comments', 'Comment_Comment', 'show', 'TODO:UIDHERE') == false) { return ''; }
 	if (array_key_exists('UID', $args)) {
-		$model = new Comment($args['UID']);
-		$html = replaceLabels($model->extArray(), loadBlock('modules/comments/views/summarynav.block.php'));
+		$model = new Comments_Comment($args['UID']);
+		$html = $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/comments/views/summarynav.block.php'));
 		return $html;
 	}
 }
@@ -19,4 +21,3 @@ function comments_summarynav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

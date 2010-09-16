@@ -5,7 +5,7 @@
       [[:users::avatar::userUID=%%createdBy%%::size=thumbsm::link=no:]]
     </td>
     <td valign='top'>
-      <a href='%%serverPath%%forums/showthread/%%recordAlias%%'>
+      <a href='%%serverPath%%forums/showthread/%%alias%%'>
       %%threadTitle%%</a><br/>
       <small>
         by: [[:users::namelink::userUID=%%createdBy%%:]]

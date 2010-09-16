@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/users/models/friendship.mod.php');
-	require_once($installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	user search results, javascript format
@@ -9,18 +9,23 @@
 //arg: squery - query [string]
 //arg: callback - javascript function on parent window - fn(UID, uHtml, uName, uThumb) {} [string]
 //arg: pageno - page number (To be implemented) [string]
+//TODO: fix this up
 
 function users_searchjs($args) {
+	global $db, $theme;
 	$js = '';
-	if (array_key_exists('squery', $args) == false) { return false; }
-	if (trim($args['squery']) == '') { return false; }
+
+	if (false == array_key_exists('squery', $args)) { return ''; }
+	if ('' == trim($args['squery'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make query (this can be much more efficient)
 	//----------------------------------------------------------------------------------------------
 	$parts = explode(' ', strtolower($args['squery']));
-	$sql = "select UID, concat(firstname, ' ', surname, ' ', username) as qs from users order by firstname, surname";
-	$result = dbQuery($sql);
+	$sql = "select UID, concat(firstname, ' ', surname, ' ', username) as qs "
+		 . "from Users_User order by firstname, surname";
+
+	$result = $db->query($sql);
 	$count = 0;
 
 	$js = "<script src='%%serverPath%%modules/users/js/usersearch.js'></script>\n";
@@ -28,20 +33,20 @@ function users_searchjs($args) {
 	$js .= "<script>\n";
 	$js .= "var userList = new Array();\n";
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
 		$matchRow = true;
 		$qs = ' ' . strtolower($row['qs']);
 
 		foreach($parts as $part) 
 			{ if (($part != '') AND (strpos($qs, $part) == false)) { $matchRow = false; }	}	
 
-		if ($matchRow == true) {
+		if (true == $matchRow) {
 			$uUID = $row['UID'];
-			$uName = expandBlocks("[[:users::name::userUID=". $uUID .":]]", '');
-			$uUrl = "%%serverPath%%users/profile/"  . $row['recordAlias'];
-			$uHtml = expandBlocks("[[:users::summarynav::userUID=". $uUID ."::target=_parent:]]\n", '');
-			$uThumb = expandBlocks("[[:users::avatar::userUID=". $uUID ."::size=thumb90::link=no:]]\n", '');
+			$uName = $theme->expandBlocks("[[:users::name::userUID=". $uUID .":]]", '');
+			$uUrl = "%%serverPath%%users/profile/"  . $row['alias'];
+			$uHtml = $theme->expandBlocks("[[:users::summarynav::userUID=". $uUID ."::target=_parent:]]\n", '');
+			$uThumb = $theme->expandBlocks("[[:users::avatar::userUID=". $uUID ."::size=thumb90::link=no:]]\n", '');
 
 			$js .= "userList[" . $count . "] = new Array('" . jsMarkup($uUID) . "', '" 
 															. jsMarkup($uName) . "', '" 

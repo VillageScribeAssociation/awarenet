@@ -1,24 +1,25 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	show form to create a new message
+//*	show form to create a new message
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send mail
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->data['ofGroup']) { do403(); }
+	if ('public' == $user->role) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	is this to be sent to a specific user, or in response to another message
 	//----------------------------------------------------------------------------------------------
-	$jsrUID = ''; $jsrHtml ='';
+	$jsrUID = '';
+	$jsrHtml ='';
 
-	if  (	(array_key_exists('to', $request['args']) == true) 
-		&& 	(dbRecordExists('users', $request['args']['to']) == true) ) { 
+	if ( (true == array_key_exists('to', $req->args))
+		&& (true == $db->objectExists('Users_User', $req->args['to'])) ) { 
 	
-		$jsrUID = $request['args']['to'];
-		$userBlock = expandBlocks("[[:users::summarynav::userUID=" . $jsrUID . ":]]", '');
+		$jsrUID = $req->args['to'];
+		$userBlock = $theme->expandBlocks("[[:users::summarynav::userUID=" . $jsrUID . ":]]", '');
 
 		$jsrHtml = "<div id='usrd" . $jsrUID . "'>"
 					 . "<table noborder><td><a href='#' onClick=\"mcRemoveRecipient('" . $jsrUID . "')\">"
@@ -32,8 +33,8 @@
 	//	show the form
 	//----------------------------------------------------------------------------------------------
 
-	$page->load($installPath . 'modules/messages/actions/compose.page.php');
-	$page->blockArgs['owner'] = $user->data['UID'];
+	$page->load('modules/messages/actions/compose.page.php');
+	$page->blockArgs['owner'] = $user->UID;
 	$page->blockArgs['toUser'] = $toUser;
 	$page->blockArgs['reMsg'] = $reMsg;
 	$page->blockArgs['subject'] = '';

@@ -1,62 +1,56 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display a users profile
+//*	display a users profile
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('users', 'viewprofile', '') == false) { do403(''); }
-
 	//----------------------------------------------------------------------------------------------
-	//	which profile to show?
+	//	decide which profile to show and check permissions
 	//----------------------------------------------------------------------------------------------
-
 	// if no user specified then show own profile
-	$userRef = $user->data['recordAlias'];
-	$userUID = $user->data['UID'];
-	$userName = $user->getName();
+	if ('' == $req->ref) { $req->ref = $user->alias; }
+	$UID = $aliases->findRedirect('Users_User');
+	$model = new Users_User($UID);
+	if (false == $model->loaded) { $page->do404('no such user'); }
 
+	$userRef = $model->alias;
+	$userUID = $model->UID;
+	$userName = $model->getName();
 
-	// if a specific users profile has been requested
-	if ($request['ref'] != '') { 
-		raFindRedirect('users', 'profile', 'users', $request['ref']);
-		$userRef = $request['ref']; 
-		$userUID = raGetOwner($request['ref'], 'users');
-		$userName = expandBlocks('[[:users::name::userUID=' . $userUID . ':]]', '');
-	}
+	if (false == $user->authHas('users', 'Users_User', 'viewprofile', $UID))
+		{ $page->do403('you cannot view this profile'); }
 
 	//----------------------------------------------------------------------------------------------
-	//	user dependant
+	//	user dependant  //TODO: use $model->extArray() for this
 	//----------------------------------------------------------------------------------------------
+	$page->load('modules/users/actions/profile.page.php');
+	$profilePic = $theme->loadBlock('modules/users/views/profilepic.block.php');
+	$page->blockArgs['chatButton'] = "";
 
-	$page->load($installPath . 'modules/users/actions/profile.page.php');
-
-	if ($userUID == $user->data['UID']) {
-		$page->blockArgs['chatButton'] = "";
-		$editUrl = "%%serverPath%%/users/editprofile/" . $userRef;
+	if ($userUID == $user->UID) {
+		$editUrl = "%%serverPath%%/users/editprofile/" . $model->alias;
 		$editLink = "<a href='" . $editUrl . "'>[change picture]</a><br/>";
-		$profilePic = loadBlock('modules/users/views/profilepic.block.php');
 		$profilePic = str_replace('%%editLink%%', $editLink, $profilePic);
 		$page->blockArgs['profilePicture'] = $profilePic;
 	} else {
-		$page->blockArgs['chatButton'] = loadBlock('modules/users/views/chatbutton.block.php');
-		$profilePic = loadBlock('modules/users/views/profilepic.block.php');
+		$chatBlock = $theme->loadBlock('modules/users/views/chatbutton.block.php');
+		$page->blockArgs['chatButton'] = $chatBlock;
 		$profilePic = str_replace('%%editLink%%', '', $profilePic);
 		$page->blockArgs['profilePicture'] = $profilePic;
 	}
 
 
-	//----------------c------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-
-	$page->blockArgs['userRa'] = $userRef;
-	$page->blockArgs['userUID'] = $userUID;
-	$page->blockArgs['raUID'] = $userRef;
-	$page->blockArgs['UID'] = $userUID;
+	$page->blockArgs['userRa'] = $model->alias;
+	$page->blockArgs['userUID'] = $model->UID;
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['userName'] = $userName;
-	$page->data['title'] = 'awareNet - ' . $userName . ' (profile)';
-	$page->data['jsinit'] .= "msgSubscribe('comments-users-" . $userUID . "', msgh_comments);\n";
-	$page->data['jsinit'] .= "msgh_commentsRefresh();\n";
+	$page->title = 'awareNet - ' . $userName . ' (profile)';
+	$page->jsinit .= "msgSubscribe('comments-users-" . $userUID . "', msgh_comments);\n";
+	$page->jsinit .= "msgh_commentsRefresh();\n";
 	$page->render();
 
 ?>

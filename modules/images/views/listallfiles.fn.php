@@ -1,22 +1,23 @@
 <?
 
-	require_once($installPath . 'modules/images/models/image.mod.php');
-	require_once($installPath . 'modules/images/inc/images__widthx.inc.php');
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/inc/images__widthx.inc.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a single image scaled to fit the slideshow
+//|	list all original image files known to image module
 //--------------------------------------------------------------------------------------------------
-//ofgrup: admin
 
-function images_listallfiles($args) { 
+function images_listallfiles($args) {
+	global $db;
+ 
 	global $user;
-	if ($user->data['ofGroup'] != 'admin') { return ''; }
+	if ('admin' != $user->role) { return ''; }
 	
 	$list = '';
 
-	$sql = "select fileName from images";
-	$result = dbQuery($sql);
-	while ($row = dbFetchAssoc($result)) { $list .= sqlRemoveMarkup($row['fileName']). "\n"; }
+	$sql = "select fileName from Images_Image";
+	$result = $db->query($sql);
+	while ($row = $db->fetchAssoc($result)) { $list .= sqlRemoveMarkup($row['fileName']). "\n"; }
 	return $list;
 }
 

@@ -1,20 +1,30 @@
 <?
 
-	require_once($installPath . 'modules/mods/models/kmodule.mod.php');
+	require_once($kapenta->installPath . 'core/kmodule.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	enable button (perm:manage)
+//|	enable button
 //--------------------------------------------------------------------------------------------------
+//role: admin - only administartors may use this
 //arg: modulename - name of a module [string]
 
 function mods_btndisable($args) {
-	if (array_key_exists('modulename', $args) == false) { return false; }
-	$m = new KModule($args['modulename'] . '');
-	if ($m->enabled == 'no') { return '[disabled]'; } 
-	else { return replaceLabels($m->toArray(), loadBlock('modules/mods/views/btndisable.block.php')); }
+	global $theme, $user;
+	$html = '';				//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check user role and argument
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('modulename', $args)) { return ''; }
+	$module = new KModule($args['modulename'] . '');
+	if (false == $module->loaded) { return ''; }
+	if ('no' == $module->enabled) { return '[disabled]'; } 
+
+	$block = $theme->loadBlock('modules/mods/views/btndisable.block.php');
+	$html = $theme->replaceLabels($model->toArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

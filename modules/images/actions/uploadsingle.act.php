@@ -1,33 +1,57 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	page for uploading a single picture
+//*	page for uploading a single image
 //--------------------------------------------------------------------------------------------------
 //	because images are bound to a specific UID on some other module, we need some arguments
 //	specified in the url:
-//		refModule - the module which needs an image
-//		refUID - UID or a record on that module (not recordAlias, UID)
-//		category - a text label to differentiate between different categories of picture
+//		refModule - the module to which owner object belongs
+//		refModel - type of object which may have an imge
+//		refUID - UID of an object (not and alias)
+//		category - a text label to differentiate between different categories of picture (reserved)
 //
-//	note that the refModule must have 'imageupload' permission for appropriate users/groups
+//	note that the refModule must have 'xxxxxx' permission for appropriate users/groups
+//	TODO: choose a permission, add it
 
+	//----------------------------------------------------------------------------------------------
+	//	control variables
+	//----------------------------------------------------------------------------------------------
 	$refModule = '';
+	$refModel = '';
 	$refUID = '';
 	$category = '';
 
-	if (array_key_exists('refmodule', $request['args'])) 
-		{ $refModule = $request['args']['refmodule']; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('refuid', $request['args'])) 
-		{ $refUID = $request['args']['refuid']; }
+	if (false == array_key_exists('refModule', $req->args))
+		{ $page->do404('module not given', true); }
 
-	if (array_key_exists('category', $request['args'])) 
-		{ $category = $request['args']['category']; }
+	if (false == array_key_exists('refModel', $req->args))
+		{ $page->do404('model not specified', true); }
 
-	if (($refModule == '') OR ($refUID == '')) { echo "refUID or refModule unavailable."; die(); }
+	if (false == array_key_exists('refUID', $req->args))
+		{ $page->do404('UID of owner object not specified', true); }
 
-	$page->load($installPath . 'modules/images/actions/uploadsingle.if.page.php');
+	$refModule = $req->args['refModule'];
+	$refModel = $req->args['refModel'];
+	$refUID = $req->args['refUID'];
+
+	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such module', true); }
+	if (false == $db->tableExists($refModel)) { $page->do404('model not recognized', true); }
+	if (false == $db->objectExists($refModel, $refUID))
+		{ $page->do404('owner object does not exist', true); }
+
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { $page->do403(); }
+	//TODO: check this image permission
+
+	//----------------------------------------------------------------------------------------------
+	//	load and render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/images/actions/uploadsingle.if.page.php');
 	$page->blockArgs['refModule'] = $refModule;
+	$page->blockArgs['refModel'] = $refModel;
 	$page->blockArgs['refUID'] = $refUID;
 	$page->blockArgs['category'] = $category;
 	$page->render();

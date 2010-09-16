@@ -4,15 +4,15 @@
 //	edit a page
 //--------------------------------------------------------------------------------------------------------------
 
-	if ((array_key_exists('module', $request['args'])) AND ($request['ref'] != '')) {
+	if ((array_key_exists('module', $req->args)) AND ('' != $req->ref)) {
 		//----------------------------------------------------------------------------------------------
 		// TODO: more error checking here (directory traversal, etc)
 		//----------------------------------------------------------------------------------------------
-		$fileName = $installPath . 'modules/' . $request['args']['module'] . '/actions/' . $request['ref'];
+		$fileName = $installPath . 'modules/' . $req->args['module'] . '/actions/' . $req->ref;
 		if (file_exists($fileName)) {
-			$page->blockArgs['xmodule'] = $request['args']['module'];
-			$page->blockArgs['xpage'] = $request['ref'];
-			$page->load($installPath . 'modules/pages/actions/edit.page.php');
+			$page->blockArgs['xmodule'] = $req->args['module'];
+			$page->blockArgs['xpage'] = $req->ref;
+			$page->load('modules/pages/actions/edit.page.php');
 			$page->render();
 		}
 	}

@@ -1,5 +1,5 @@
 <? /*
-<form name='editSection' method='POST' action='/projects/save/'>
+<form name='editSection' method='POST' action='%%serverPath%%projects/save/'>
 <input type='hidden' name='action' value='saveSection' />
 <input type='hidden' name='UID' value='%%projectUID%%' />
 <input type='hidden' name='sectionUID' value='%%sectionUID%%' />
@@ -38,6 +38,6 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=projects::refUID=%%projectUID%%:]]
+[[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%projectUID%%:]]
 <br/>UID:%%UID%%<br/>
 */ ?>

@@ -3,7 +3,7 @@
   <tr>
     <td valign='top'>
       <a href='%%viewUrl%%'>
-      [[:groups::image::groupUID=%%UID%%::size=thumbsm::link=no:]]</a>
+      [[:images::default::refModule=groups::refUID=%%UID%%::size=thumbsm::link=no:]]</a>
     </td>
     <td width='10'></td>
     <td valign='top'>

@@ -4,7 +4,7 @@
 //	callbacks allow modules to interact with being necessarily dependant on one another
 //--------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/comments/models/comments.mod.php');
+require_once($kapenta->installPath . 'modules/comments/models/comments.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //	when a record is deleted on another module
@@ -13,6 +13,8 @@ require_once($installPath . 'modules/comments/models/comments.mod.php');
 // * args['UID'] = UID of the record which was deleted
 
 function comments__cb_record_delete($args) {
+	global $db;
+
 	if (array_key_exists('module', $args) == false) { return false; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 
@@ -20,18 +22,18 @@ function comments__cb_record_delete($args) {
 	//	discover if any images belonging this record and delete them
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select UID from comments "
-		 . "where refUID='". sqlMarkup($args['UID']) ."' "
-		 . "and refModule='". sqlMarkup($args['module']) ."'";
+	$sql = "select UID from Comments_Comment "
+		 . "where refUID='". $db->addMarkup($args['UID']) ."' "
+		 . "and refModule='". $db->addMarkup($args['module']) ."'";
 
-	$result = dbQuery($sql);
+	$result = $db->query($sql);
 
-	while ($row = dbFetchAssoc($result)) {
-		$row = sqlRMArray($row);
-		$model = new Comment($row['UID']);
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
+		$model = new Comments_Comment($row['UID']);
 		$userName = "";
-		$_SESSION['sMessage'] .= "Deleted comment posted on " . $model->data['createdOn'] . " by "
-							   . "[[:users::name::" . $model->data['createdBy'] . ":]] <br/>\n";
+		$_SESSION['sMessage'] .= "Deleted comment posted on " . $model->createdOn . " by "
+							   . "[[:users::name::" . $model->createdBy . ":]] <br/>\n";
 
 		$model->delete();
 	}

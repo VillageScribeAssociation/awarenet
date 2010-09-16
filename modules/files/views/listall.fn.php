@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/files/models/file.mod.php');
+	require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	make a list of x files, ordered by date uploaded to system
@@ -10,25 +10,32 @@
 //opt: num - number of files per page [string]
 
 function files_listall($args) {
+	global $db, $page, $theme;
+	$num = 30;							//%	number of items per page [int]
+	$pageNo = 1;						//%	page number, starts at 1 [int]
+	$start = 0;							//%	position in SQL results [int]
+	$html = '';							//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (authHas('files', 'list', '') == false) { return false; }
-	$start = 0; $num = 30; $page = 1;
-	if (array_key_exists('num', $args)) { $num = $args['num']; }
+	if (false == authHas('files', 'Files_File', 'list')) { return false; }
+	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (array_key_exists('page', $args)) { 
-		$page = $args['page']; 
-		$start = ($page - 1) * $num;
+		$pageNo = (int)$args['page']; 
+		$start = ($pageNo - 1) * $num;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load the files
 	//----------------------------------------------------------------------------------------------
-	$list = dbLoadRange('files', '*', '', 'createdOn', $num, $start);
+	$list = $db->loadRange('Files_File', '*', '', 'createdOn', $num, $start);
+	$block = $theme->loadBlock('modules/blog/summary.block.php');
+
 	foreach($list as $UID => $row) {
-		$model = new file();
+		$model = new Files_File();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), loadBlock('modules/blog/summary.block.php'));
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}  
 	return $html;	
 	
@@ -37,4 +44,3 @@ function files_listall($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

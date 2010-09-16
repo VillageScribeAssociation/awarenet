@@ -7,25 +7,84 @@
     <core>no</core>
     <installed>no</installed>
     <enabled>yes</enabled>
-    <dbschema></dbschema>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>new|%%user.ofGroup%%=admin</perm>
-        <perm>new|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>post|%%user.ofGroup%%=student</perm>
-        <perm>post|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <dependencies>
+        <module>aliases</module>
+        <module>images</module>
+    </dependencies>
+    <models>
+      <model>
+        <name>Forums_Board</name>
+		<description>A space in which to create and discuss topics (threads).</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>poster</relationship>
+		  <relationship>moderator</relationship>
+        </relationships>
+      </model>
+      <model>
+        <name>Forums_Thread</name>
+		<description>A thread of discussion on a board.</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>poster</relationship>
+		  <relationship>moderator</relationship>
+        </relationships>
+      </model>
+      <model>
+        <name>Forums_Reply</name>
+		<description>A thread of discussion on a board.</description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <relationships>
+		  <relationship>creator</relationship>
+		  <relationship>poster</relationship>
+		  <relationship>moderator</relationship>
+        </relationships>
+      </model>
+	</models>
+    <defaultpermissions>
+		student:p|forums|Forums_Board|show
+		student:p|forums|Forums_Board|makethread
+		student:p|forums|Forums_Thread|show
+		student:p|forums|Forums_Thread|new
+		student:p|forums|Forums_Reply|show
+		student:p|forums|Forums_Reply|new
+		student:p|forums|Forums_Board|images-list
+		student:p|forums|Forums_Board|images-show
+		student:p|forums|Forums_Board|images-list
+
+		teacher:p|forums|Forums_Board|show
+		teacher:p|forums|Forums_Board|makethread
+		teacher:p|forums|Forums_Thread|show
+		student:p|forums|Forums_Thread|new
+		teacher:p|forums|Forums_Reply|show
+		teacher:p|forums|Forums_Reply|new
+		teacher:p|forums|Forums_Board|images-add
+		teacher:p|forums|Forums_Board|images-show
+		teacher:p|forums|Forums_Board|images-list
+		teacher:c|forums|Forums_Thread|images-add|(if)|creator
+		teacher:p|forums|Forums_Thread|images-show
+		teacher:p|forums|Forums_Thread|images-list
+		teacher:c|forums|Forums_Reply|images-add|(if)|creator
+		teacher:p|forums|Forums_Reply|images-show
+		teacher:p|forums|Forums_Reply|images-list
+    </defaultpermissions>
 </module>
 */ ?>

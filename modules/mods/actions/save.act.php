@@ -4,7 +4,7 @@
 //	action for saving module data
 //--------------------------------------------------------------------------------------------------------------
 
-require_once($installPath . 'modules/mods/models/kmodule.mod.php');
+require_once($kapenta->installPath . 'core/kmodule.class.php');
 
 //--------------------------------------------------------------------------------------------------------------
 //	save any changes to permissions
@@ -33,6 +33,6 @@ require_once($installPath . 'modules/mods/models/kmodule.mod.php');
 
 	authUpdatePermissions();
 	$_SESSION['sMessage'] .= "permissions updated..<br/>\n";
-	do302('mods/permissions/' . $_POST['modulename']);
+	$page->do302('mods/permissions/' . $_POST['modulename']);
 
 ?>

@@ -30,11 +30,11 @@
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>
-	<menu2>[[:projects::menu:]]</menu2>
+	<menu2>[[:projects::menu::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</menu2>
 	<section></section>
 	<subsection></subsection>
 	<breadcrumb>[[:theme::breadcrumb::label=Projects - ::link=/projects/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]projectTitle[`|pc][`|pc]::link=/projects/[`|pc][`|pc]recordAlias[`|pc][`|pc]:]]</breadcrumb>
+[[:theme::breadcrumb::label=[`|pc][`|pc]projectTitle[`|pc][`|pc]::link=/projects/[`|pc][`|pc]projectRa[`|pc][`|pc]:]]</breadcrumb>
 	<jsinit>msgSubscribe([`|sq]comments-projects-[`|pc][`|pc]UID[`|pc][`|pc]-nav[`|sq], msgh[`|us]comments)[`|sc]
 msgh[`|us]commentsRefresh()[`|sc]</jsinit>
 </page>

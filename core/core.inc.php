@@ -22,6 +22,7 @@
 	include 'ktheme.class.php';			// interface to theme
 	include 'ksync.class.php';			// peer-to-peer subsystem
 	include 'knotifications.class.php';	// user notification of events
+	include 'krevisions.class.php';		// object revision history and recycle bin
 	include 'kutils.class.php';			// miscellaneous utilities
 
 	$dbDriver = '';						// dbType is a global from setup.inc.php

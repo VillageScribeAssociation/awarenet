@@ -68,7 +68,7 @@
   </tr>
   <tr>
     <td><b>Group:</b></td>
-    <td>[[:users::selectgroup::default=%%ofGroup%%:]]</td>
+    <td>[[:users::selectgroup::default=%%role%%:]]</td>
   </tr>
   <tr>
     <td></td>

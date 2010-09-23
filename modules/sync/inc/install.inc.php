@@ -40,6 +40,16 @@ function sync_install_module() {
 	//----------------------------------------------------------------------------------------------
 	$model = new Sync_Server();
 	$dbSchema = $model->getDbSchema();
+
+	if (true == $db->tableExists('Sync_Server')) {
+		$extant = $db->getSchema('Sync_Server');
+		if (false == array_key_exists('publickey', $extant['fields'])) {
+			$sql = "ALTER TABLE Sync_Server ADD `publickey` TEXT AFTER `active` ";
+			$db->query($sql);
+			$report .= "Added publickey field to Sync_Server <br/>\n";
+		}
+	}
+
 	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------

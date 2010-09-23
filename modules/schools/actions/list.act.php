@@ -1,11 +1,20 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	list all schools on the system
+//*	list all schools on the system
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('schools', 'Schools_School', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }
+	$pageNo = 1;
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == $user->authHas('schools', 'Schools_School', 'show')) { $page->do403(); }
+
+	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+
 	$page->load('modules/schools/actions/list.page.php');
+	$page->blockArgs['pageNo'] = $pageNo;
 	$page->render();
 
 ?>

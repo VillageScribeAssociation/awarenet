@@ -6,10 +6,10 @@
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::width=570::label=Announcements:]]
 [`|lt]br/[`|gt]
-[[:announcements::list::refModule=groups::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
-[[:announcements::newlink::refModule=groups::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:announcements::list::refModule=groups::refModel=Groups_Group::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
+[[:announcements::newlink::refModule=groups::refModel=Groups_Group::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-([`|pc][`|pc]UID[`|pc][`|pc])</content>
+</content>
 <title>awareNet - [`|pc][`|pc]groupName[`|pc][`|pc] (group)</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=At This School:]]
@@ -29,4 +29,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Groups - ::link=/groups/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]groupName[`|pc][`|pc]::link=/groups/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

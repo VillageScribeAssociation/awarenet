@@ -1,4 +1,5 @@
 <? /*
+<h2>Add Members</h2>
 <form name='addMember' method='POST' action='%%serverPath%%projects/editmembers/%%raUID%%'>
 <input type='hidden' name='action' value='addMember' />
 

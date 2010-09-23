@@ -11,7 +11,7 @@
 //opt: num - number of records per page (default is 4) [string]
 
 function comments_listnavjs($args) {
-	global $db, $theme, $user;
+	global $db, $theme, $user, $utils;
 	$num = 4;		//%	default number of comments per page [int]
 	$html = '';		//%	return value [string]
 	$js = '';		//%	javascript [string]
@@ -55,7 +55,7 @@ function comments_listnavjs($args) {
 			$blockHtml = $theme->replaceLabels($ext, $blockTemplate);
 			$blockHtml = $theme->expandBlocks($blockHtml, '');
 	
-			$js .= base64EncodeJs('b64c' . $ext['UID'], $blockHtml ,false);
+			$js .= $utils->base64EncodeJs('b64c' . $ext['UID'], $blockHtml ,false);
 			$js .= "aryComments.push(new Array(\"". $ext['UID'] ."\", b64c". $ext['UID'] ."));\n\n";
 
 		}  

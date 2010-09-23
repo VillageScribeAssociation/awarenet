@@ -22,13 +22,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
+	//TODO: sanitize description
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
 			case 'name':	$model->name = $utils->cleanString($value); break;
-			case 'description':	$model->description = $utils->cleanString($value); break;
+			case 'description':	$model->description = $value; break;
 			case 'geocode':	$model->geocode = $utils->cleanString($value); break;
 			case 'region':	$model->region = $utils->cleanString($value); break;
 			case 'country':	$model->country = $utils->cleanString($value); break;
+			case 'hidden':	$model->hidden = $utils->cleanString($value); break;
 		}
 	}
 	$report = $model->save();

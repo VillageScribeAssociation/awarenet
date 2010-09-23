@@ -15,6 +15,10 @@
 <title>awareNet - [`|pc][`|pc]threadTitle[`|pc][`|pc]</title>
 <script></script>
 <nav1>
+[[:theme::navtitlebox::label=Original Poster:]]
+[[:users::summarynav::userUID=[`|pc][`|pc]createdBy[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Forum::toggle=divForumStats::hidden=yes:]]
 [`|lt]div id='divForumStats' style='visibility: hidden; display: none;'[`|gt]
 [[:forums::summarynav::forumUID=[`|pc][`|pc]forumUID[`|pc][`|pc]:]]

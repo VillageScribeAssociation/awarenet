@@ -4,24 +4,31 @@
 
 //--------------------------------------------------------------------------------------------------
 //|	return a school's name
-//--------------------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID or schools entry [string]
+//--------------------------------------------------------------------------------------------------
+//arg: raUID - alias or UID of a Schools_School object [string]
 //opt: schoolUID - overrides raUID [string]
 //opt: link - link to this record? [string]
 
 function schools_name($args) {
 	global $db;
 	$link = 'no';
-	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	if (array_key_exists('link', $args) == true) { $link = $args['link']; }
+	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
 	$model = new Schools_School($db->addMarkup($args['raUID']));	
-	if ($link == 'no') {
-		return $model->name;
-	} else {
-		return "<a href='/schools/" . $model->alias . "'>"
-			  . $model->name . "</a>";
-	}
+	if (false == $model->loaded) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	if ('no' == $link) { $html = $model->name; }
+	else { $html = "<a href='%%serverPath%%schools/" . $model->alias . "'>". $model->name ."</a>"; }
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

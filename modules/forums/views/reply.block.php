@@ -1,4 +1,5 @@
 <? /*
+[[:abuse::button::refModule=forums::refModel=Forum_Reply::refUID=%%UID%%:]]
 <table noborder>
   <tr>
     <td valign='top' width='300'>

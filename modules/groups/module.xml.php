@@ -20,7 +20,8 @@
         </permissions>
         <relationships>
 		  <relationship>creator</relationship>
-		  <relationship>member</relationship>
+		  <relationship>groupmember</relationship>
+		  <relationship>groupadmin</relationship>
         </relationships>
       </model>
       <model>
@@ -40,7 +41,19 @@
     </models>
     <defaultpermissions>
 		student:p|groups|Groups_Group|show
+		student:c|groups|Groups_Group|edit|(if)|groupadmin
+		student:c|groups|Groups_Group|edit|(if)|creator
+		student:c|groups|Groups_Group|announcements-add|(if)|groupadmin
+		student:c|groups|Groups_Group|announcements-edit|(if)|groupadmin
+		student:c|groups|Groups_Group|announcements-delete|(if)|groupadmin
+
 		teacher:p|groups|Groups_Group|show
+		teacher:c|groups|Groups_Group|edit|(if)|groupadmin
+		teacher:c|groups|Groups_Group|edit|(if)|creator
+		teacher:p|groups|Groups_Group|new
+		teacher:p|groups|Groups_Group|announcements-add
+		teacher:p|groups|Groups_Group|announcements-edit
+		teacher:p|groups|Groups_Group|announcements-delete
     </defaultpermissions>
 </module>
 */ ?>

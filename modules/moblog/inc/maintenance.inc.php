@@ -6,14 +6,14 @@
 //	maintain the moblog
 //-------------------------------------------------------------------------------------------------
 
-function maintenance_moblog() {
+function moblog_maintenance() {
 	global $db, $theme;
 
 	$recordCount = 0;
 	$errorCount = 0;
 	$fixCount = 0;
 
-	$report = "<h2>Checking recordAliases...</h2>";
+	$report = "<h2>Checking Aliases...</h2>";
 
 	//---------------------------------------------------------------------------------------------
 	//	check that all blog posts are correctly aliased

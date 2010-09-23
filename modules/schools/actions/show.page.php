@@ -7,8 +7,8 @@
 [[:theme::navtitlebox::width=570::label=Announcements::toggle=divAnnouncements:]]
 [`|lt]div id='divAnnouncements'[`|gt]
 [`|lt]br/[`|gt]
-[[:announcements::list::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
-[[:announcements::newlink::refModule=schools::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:announcements::list::refModule=schools::refModel=Schools_School::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
+[[:announcements::newlink::refModule=schools::refModel=Schools_School::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]</content>
 <title>awareNet - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
@@ -28,8 +28,8 @@
 [[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
 [[:groups::listallnav::school=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Blogs At This School:]]
-[[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:theme::navtitlebox::label=Recent Blog Posts:]]
+[[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=5:]]
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Online Now:]]
 [[:users::onlineschoolnav::school=[`|pc][`|pc]UID[`|pc][`|pc]:]]
@@ -43,4 +43,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Schools - ::link=/schools/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]schoolName[`|pc][`|pc]::link=/schools/[`|pc][`|pc]schoolRa[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

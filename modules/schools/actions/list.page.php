@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
-[[:schools::listall:]]</content>
+[[:schools::listall::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]:]]</content>
 <title>awareNet - all schools</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=All schools:]]
@@ -16,4 +16,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Schools - ::link=/schools/:]]
 [[:theme::breadcrumb::label=All::link=/schools/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

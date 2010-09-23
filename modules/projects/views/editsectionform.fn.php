@@ -11,18 +11,27 @@
 //arg: sectionUID - UID of a section [string]
 
 function projects_editsectionform($args) {
-	global $theme;
+	global $theme, $user, $utils;
+	$html = '';				//%	return value [string]
 
-	global $user;
-	if ($user->authHas('projects', 'Projects_Project', 'edit', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	if (array_key_exists('sectionUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	if (false == array_key_exists('sectionUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
-	if ($model->isMember($user->UID) == false) { return false; }
-	if (array_key_exists($args['sectionUID'], $model->sections) == false) { return false; }
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
+	if (false == array_key_exists($args['sectionUID'], $model->sections)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$labels = $model->sectionArray($args['sectionUID']);
-	$labels['contentJs64'] = base64EncodeJs('contentJs64', $labels['content']);
-	return $theme->replaceLabels($labels, $theme->loadBlock('modules/projects/views/editsectionform.block.php'));
+	$labels['contentJs64'] = $utils->base64EncodeJs('contentJs64', $labels['content']);
+	$block = $theme->loadBlock('modules/projects/views/editsectionform.block.php');
+	$html = $theme->replaceLabels($labels, $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

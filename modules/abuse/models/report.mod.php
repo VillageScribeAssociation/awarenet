@@ -34,20 +34,13 @@ class Abuse_Report {
 	//opt: UID - UID of a Report object [string]
 
 	function Abuse_Report($UID = '') {
-		/*
 		global $db;
-		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $UID) { $this->load($UID); }			// try load an object from the database
-		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
-			$this->loadArray($this->data);					// initialize
-		}
-		*/
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = dbBlank($this->dbSchema);			// make new object
+			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
+			$this->loaded = false;
 		}
 	}
 
@@ -58,15 +51,11 @@ class Abuse_Report {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		/*		
 		global $db;
-		$objary = $db->load('Abuse_Report', $UID);
-		if ($objary != false) { $this->loadArray($objary); return true; }
-		return false;
-		*/
-		$objary = dbLoad('Abuse_Report', $UID);
-		if ($objary != false) { $this->loadArray($objary); return true; }
-		return false;
+		$objary = $db->load($UID, $this->dbSchema);
+		if (false == $objary) { return false; }
+		if (false == $this->loadArray($objary)) { return false; }
+		return true;
 	}
 
 
@@ -103,19 +92,11 @@ class Abuse_Report {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		/*
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
-		return '';
-		*/
-
-		$report = $this->verify();
-		if ('' != $report) { return $report; }
-		$check = dbSave($this->toArray(), $this->dbSchema);
-		//if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
 
@@ -138,7 +119,7 @@ class Abuse_Report {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'abuse';
-		$dbSchema['table'] = 'Abuse_Report';
+		$dbSchema['model'] = 'Abuse_Report';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -162,9 +143,9 @@ class Abuse_Report {
 			'refModule' => '10',
 			'refModel' => '10',
 			'refUID' => '10',
-			'createdOn' => '10',
+			'createdOn' => '',
 			'createdBy' => '10',
-			'editedOn' => '10',
+			'editedOn' => '',
 			'editedBy' => '10' );
 
 		//revision history will be kept for these fields
@@ -247,7 +228,7 @@ class Abuse_Report {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $user, $utils;
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -255,7 +236,8 @@ class Abuse_Report {
 		$ext['delUrl'] = '';	$ext['delLink'] = '';
 		$ext['newUrl'] = '';	$ext['newLink'] = '';
 
-		if ('admin' == $user->data['ofGroup']) { $auth = true; }
+		$auth = false;
+		if ('admin' == $user->role) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
@@ -265,7 +247,7 @@ class Abuse_Report {
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if ('admin' == $user->data['ofGroup']) {
+		if ('admin' == $user->role) {
 			$ext['editUrl'] = '%%serverPath%%Abuse/editreport/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['delUrl'] = '%%serverPath%%Abuse/delreport/' . $ext['UID'];
@@ -275,8 +257,7 @@ class Abuse_Report {
 		//------------------------------------------------------------------------------------------
 		//	...
 		//------------------------------------------------------------------------------------------
-
-		$ext['commentHtml'] = stripHtml($ext['comment']);
+		$ext['commentHtml'] = $utils->stripHtml($ext['comment']);
 		$ext['commentHtml'] = str_replace("\n", "<br/>\n", $ext['commentHtml']);
 
 		$ext['notesHtml'] = '';
@@ -288,7 +269,7 @@ class Abuse_Report {
 		//------------------------------------------------------------------------------------------
 		//	javascript
 		//------------------------------------------------------------------------------------------
-		$ext['UIDJsClean'] = mkAlphaNumeric($ext['UID']);
+		$ext['UIDJsClean'] = $utils->makeAlphaNumeric($ext['UID']);
 		return $ext;
 	}
 
@@ -299,14 +280,9 @@ class Abuse_Report {
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		/*
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('abuse', 'Abuse_Report', $this->UID)) { return false; }
-		return true;
-		*/
-		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == dbDelete('Abuse_Report', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -316,11 +292,11 @@ class Abuse_Report {
 	//arg:
 
 	function annotate($userUID, $note) {
-		global $user;
+		global $user, $db;
 		if ('' == trim($note)) { return false; }
 		$this->notes .= "<!-- annotation -->\n"
 			. "<b>" . $user->getNameLink() . "</b>"
-			. " (added: " . mysql_dateTime() . ")<br/>"
+			. " (added: " . $db->datetime() . ")<br/>"
 			. str_replace("\n", "<br/>\n", $note) . "<br/>"
 			. ""
 			. "<hr/>";

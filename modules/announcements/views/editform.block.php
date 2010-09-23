@@ -31,5 +31,5 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=announcements::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=announcements::refModel=Announcements_Announcement::refUID=%%UID%%:]]
 */ ?>

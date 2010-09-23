@@ -9,7 +9,10 @@
 <title>awareNet - my notifications</title>
 <script></script>
 <nav1>[[:users::showfriendrequests::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</nav1>
+[[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+
+[[:abuse::listnav::num=4:]]
+</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>
@@ -20,4 +23,5 @@
 <breadcrumb>[[:theme::breadcrumb::label=People - ::link=/users/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]userName[`|pc][`|pc] - ::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
 [[:theme::breadcrumb::label=My Feed::link=/notifications/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

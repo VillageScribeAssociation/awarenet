@@ -50,6 +50,8 @@
     <defaultpermissions>
 		student:p|users|Users_User|viewprofile
 		student:p|users|Users_User|comments-add
+		student:c|users|Users_User|images-add|(if)|self
+		student:p|users|Users_User|comments-add
 		student:p|users|Users_User|comments-show
 		student:p|users|Users_User|comments-list
 		student:c|users|Users_User|comments-retract|(if)|creator
@@ -59,6 +61,8 @@
 		student:c|users|Users_User|editprofile|(if)|self
 		student:p|users|Users_User|viewprofile
 
+		teacher:p|users|Users_User|comments-add
+		teacher:c|users|Users_User|images-add|(if)|self
 		teacher:p|users|Users_User|comment-add
 		teacher:c|users|Users_User|comment-retract|(if)|creator
 		teacher:p|users|Users_User|show

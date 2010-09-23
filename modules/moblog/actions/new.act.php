@@ -11,7 +11,6 @@
 	if (false == $user->authHas('moblog', 'Moblog_Post', 'new'))
 		{ $page->do403('You are not authorized to create new Posts.'); }
 
-
 	//----------------------------------------------------------------------------------------------
 	//	create the object
 	//----------------------------------------------------------------------------------------------
@@ -34,9 +33,12 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new blog post.<br/>', 'ok');
-		$page->do302('/moblog/edit/' . $model->alias);
+		$page->do302('moblog/edit/' . $model->alias);
 
-	} else { $session->msg('Could not create new Post:<br/>' . $report); }
+	} else {
+		$session->msg('Could not create new Post:<br/>' . $report);
+		$page->do302('moblog/blog/' . $user->alias);
+	}
 
 
 ?>

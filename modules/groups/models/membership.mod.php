@@ -49,7 +49,7 @@ class Groups_Membership {
 
 	function load($UID) {
 		global $db;
-		$objary = $db->load('Groups_Membership', $UID);
+		$objary = $db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -142,7 +142,7 @@ class Groups_Membership {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'groups';
-		$dbSchema['table'] = 'Groups_Membership';
+		$dbSchema['model'] = 'Groups_Membership';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -204,7 +204,7 @@ class Groups_Membership {
 	function delete() {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('groups', 'Groups_Membership', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

@@ -55,7 +55,7 @@ class Projects_Membership {
 
 	function load($UID) {
 		global $db;
-		$objary = $db->load('Projects_Membership', $UID);
+		$objary = $db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -69,16 +69,22 @@ class Projects_Membership {
 
 	function findAndLoad($projectUID, $userUID) {
 		global $db;
-		$sql = "select * from Projects_Membership "
-			 . "where projectUID='" . $db->addMarkup($projectUID) . "' "
-			 . "and userUID='" . $db->addMarkup($userUID) . "'";		//TODO: $db->loadRange
 
-		$result = $db->query($sql);
-		if ($db->numRows($result) > 0) {
-			$this->loadArray($db->rmArray($db->fetchAssoc($result)));
+		//	$sql = "select * from Projects_Membership "
+		//	 . "where projectUID='" . $db->addMarkup($projectUID) . "' "
+		//	 . "and userUID='" . $db->addMarkup($userUID) . "'";		
+
+		$conditions = array();
+		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
+		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+
+		if (count($range) == 0) { return false; }
+		
+		foreach($range as $row) {
+			$this->loadArray($row);
 			return true;
 		}
-		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -145,7 +151,7 @@ class Projects_Membership {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'projects';
-		$dbSchema['table'] = 'Projects_Membership';
+		$dbSchema['model'] = 'Projects_Membership';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -217,7 +223,7 @@ class Projects_Membership {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'Projects_Membership', 'view', $this->UID)) {
+		if (true == $user->authHas('projects', 'Projects_Membership', 'show', $this->UID)) {
 			$ext['viewUrl'] = "TODO";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
@@ -227,7 +233,7 @@ class Projects_Membership {
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'Projects_Membership', 'del', $this->UID)) {
+		if (true == $user->authHas('projects', 'Projects_Membership', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Projects/delmembership/' . $this->UID;
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -244,7 +250,7 @@ class Projects_Membership {
 	function delete() {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('projects', 'Projects_Membership', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

@@ -12,6 +12,16 @@
     <td><b>Country:</b></td>
     <td><input type='text' name='country' value='%%country%%' size='50' /></td>
   </tr>
+  <tr>
+    <td><b>Hidden:</b></td>
+    <td>
+		<select name='hidden'>
+			<option value='%%hidden%%'>%%hidden%%</option>
+			<option value='yes'>yes</option>
+			<option value='no'>no</option>
+		</select>
+	</td>
+  </tr>
 </table>
 <br/>
 <b>Description of this school:</b><br/>

@@ -15,4 +15,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Calendar - ::link=/calendar/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]day[`|pc][`|pc] [`|pc][`|pc]monthName[`|pc][`|pc] [`|pc][`|pc]year[`|pc][`|pc]::link=/calendar/day[`|us][`|pc][`|pc]year[`|pc][`|pc][`|us][`|pc][`|pc]month[`|pc][`|pc][`|us][`|pc][`|pc]day[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

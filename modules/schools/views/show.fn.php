@@ -8,11 +8,23 @@
 //arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_show($args) {
-	global $theme;
+	global $theme, $user;
+	$html = '';					//%	return value [string]
 
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	//TODO: permissions check here
 	$model = new Schools_School($args['raUID']);
-	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/schools/views/show.block.php'));
+	if (false == $model->loaded) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/schools/views/show.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

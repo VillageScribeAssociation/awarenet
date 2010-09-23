@@ -10,11 +10,11 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('Groups_Group');
-	if (false == $user->authHas('groups', 'Groups_Group', 'edit', $UID)) { $page->do403(); }
 
 	$model = new Groups_Group($UID);
-	if (true == $model->hasEditAuth($user->UID)) { $hasauth = true; }
-	if (false == $hasauth) { $page->do403(); }
+	if (false == $model->loaded) { $page->do404('Could not load group.'); }
+	if (true == $user->authHas('groups', 'Groups_Group', 'edit', $model->UID))
+		{ $page->do403('You cannot edit the group.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

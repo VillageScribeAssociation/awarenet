@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/forums/models/board.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	confirm deletion of a Forums_Board object
 //--------------------------------------------------------------------------------------------------
@@ -7,25 +9,25 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('uid', $req->args)) { $page->do404('UID not given.'); }
-	if (false == $db->objectExists('Forums_Board', $req->args['uid'])) 
-		{ $page->do404('Board not found.'); }
+	if (false == array_key_exists('UID', $req->args)) { $page->do404('UID not given.'); }
 
-	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $req->args['uid']))
+	$model = new Forums_Board($req->args['UID']);
+	if (false == $model->loaded) { $page->do404('No such forum.'); }
+
+	if (false == $user->authHas('forums', 'Forums_Board', 'delete', $model->UID))
 		{ $page->do403('You cannot delete this forum (insufficient privilege).'); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the confirmation form
 	//----------------------------------------------------------------------------------------------
-	$thisRa = $aliases->getDefault('Forums_Board', $req->args['uid']);
-	$labels = array('UID' => $req->args['uid'], 'raUID' => $thisRa);
+	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/forums/views/confirmdelete.block.php');
-	$html .= $theme->replaceLabels($labels, $block);	
+	$html = $theme->replaceLabels($labels, $block);
 	$session->msg($html, 'warn');
 
 	//----------------------------------------------------------------------------------------------
 	//	show confirmation for above item to be deleted
 	//----------------------------------------------------------------------------------------------
-	$page->do302('forums/' . $thisRa);
+	$page->do302('forums/' . $model->alias);
 
 ?>

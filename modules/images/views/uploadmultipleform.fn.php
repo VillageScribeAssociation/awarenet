@@ -26,7 +26,7 @@ function images_uploadmultipleform($args) {
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $db->objectExists($refModel, $refUID)) { return '(owner not found)'; }
-	if (false == $user->authHas($refModule, $refModel, 'imageupload', $refUID)) { return ''; }
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form

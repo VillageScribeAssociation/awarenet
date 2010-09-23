@@ -12,26 +12,20 @@
 	//----------------------------------------------------------------------------------------------
 	//	decide which users galleries to show
 	//----------------------------------------------------------------------------------------------
-	$userUID = $user->UID;
-	$userName = $user->getName();
+	if ('' == $req->ref) { $req->ref = $user->alias; }
 
-	if ('' != $req->ref) {
-		$userUID = $aliases->getOwner('Users_User');
-		if (false == $userUID) { $page->do404(); }
-		$userName = $theme->expandBlocks('[[:users::name::userUID=' . $userUID . ':]]', '');
-	}
-
-	$userRa = $aliases->getDefault('users', $userUID);
+	$model = new Users_User($req->ref);
+	if (false == $model->loaded) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
 	$page->load('modules/gallery/actions/list.page.php');		
-	$page->blockArgs['userUID'] = $userUID;								
-	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['userName'] = $userName;
-	$page->title = 'awareNet - galleries by ' . $userName;
+	$page->blockArgs['userUID'] = $model->UID;								
+	$page->blockArgs['userRa'] = $model->alias;
+	$page->blockArgs['userName'] = $model->getName();
+	$page->title = 'awareNet - galleries by ' . $page->blockArgs['userName'];
 	$page->render();													
 
 ?>

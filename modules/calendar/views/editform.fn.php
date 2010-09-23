@@ -8,7 +8,7 @@
 //arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_editform($args) {
-	global $theme, $user;
+	global $theme, $user, $utils;
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ function calendar_editform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['contentJs64'] = base64EncodeJs('contentJs64', $ext['content']);
+	$ext['contentJs64'] = $utils->base64EncodeJs('contentJs64', $ext['content']);
 	$block = $theme->loadBlock('modules/calendar/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 

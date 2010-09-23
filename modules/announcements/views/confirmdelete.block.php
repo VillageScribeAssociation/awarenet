@@ -1,7 +1,6 @@
 <? /*
-[[:theme::navtitlebox::width=570::label=Confirm:]]
-<div class='inlinequote'>
-Confirm: you wish to delete this announcement?<br/><br/>
+<b>Confirm: you wish to delete this announcement?</b><br/>
+<p>Note that this will also delete any objects owned by this announcement - comments, images, tags, etc.</p>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -18,5 +17,4 @@ Confirm: you wish to delete this announcement?<br/><br/>
     </td>
   </tr>
 </table>
-</div>
 */ ?>

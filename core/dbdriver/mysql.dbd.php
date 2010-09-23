@@ -24,14 +24,17 @@ class KDBDriver {
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $host = '';			//_	database host [string]
-	var $user = '';			//_ database user name [string]
-	var $pass = '';			//_	database password [string]
-	var $name = '';			//_ database name [string]
+	var $host = '';				//_	database host [string]
+	var $user = '';				//_ database user name [string]
+	var $pass = '';				//_	database password [string]
+	var $name = '';				//_ database name [string]
 
-	var $cache;				//_	cache of objects loaded from database [array]
-	var $aliases;			//_	cache of alias => object mappings [array]
-	var $cacheSize = 200;	//_	maximum bumber of objects to cache [int]
+	var $cache;					//_	cache of objects loaded from database [array]
+	var $aliases;				//_	cache of alias => object mappings [array]
+	var $cacheSize = 200;		//_	maximum bumber of objects to cache [int]
+
+	var $tables;				//_	set of tables in this database [array]
+	var $tablesLoaded = false;	//_	set to true when list of tables has been loaded [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -51,6 +54,8 @@ class KDBDriver {
 		
 		$this->cache = array();
 		$this->aliases = array();
+
+		$this->tables = array();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -85,7 +90,7 @@ class KDBDriver {
 		$result = @mysql_query($query, $connect);
 		if (false === $result) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
-			$session->msgAdmin('Could not execute database query:', 'bad');
+			$session->msgAdmin($msg, 'bad');
 			return false;
 		}
 
@@ -109,12 +114,14 @@ class KDBDriver {
 	//----------------------------------------------------------------------------------------------
 	//.	load an object given it's type and UID
 	//----------------------------------------------------------------------------------------------
-	//arg: model - module name / database table name [string]
 	//arg: UID - UID of record to load [string]
+	//arg: dbSchema - database table definition [array]
 	//returns: return associative array of field names and values or false on failure [array][bool]
 
-	function load($model, $UID) {
+	function load($UID, $dbSchema) {
 		global $page;
+		$model = $dbSchema['model'];
+		if (false == $this->tableExists($model)) { return false; }
 
 		//------------------------------------------------------------------------------------------
 		//	check the cache for this object
@@ -151,12 +158,14 @@ class KDBDriver {
 	//----------------------------------------------------------------------------------------------
 	//.	load a record from a table supporting recordAliases, return associative array
 	//----------------------------------------------------------------------------------------------
-	//arg: model - model name / database table name [string]
 	//arg: raUID - UID or alias of an object [string]
+	//arg: dbSchema - database table definition [array]
 	//returns: return associative array of field names and values or false on failure [array] [bool]
 
-	function loadAlias($model, $raUID) {
+	function loadAlias($raUID, $dbSchema) {
 		global $page;
+		$model = $dbSchema['model'];
+		if (false == $this->tableExists($model)) { return false; }
 
 		//------------------------------------------------------------------------------------------
 		//	try load from cache by UID
@@ -174,7 +183,7 @@ class KDBDriver {
 		if (true == array_key_exists($cacheKey, $this->aliases)) {
 			$UID = $this->aliases[$cacheKey];
 			$page->logDebug('dbLoad', 'alias hit: ' . $model . '::' . $raUID . ' => ' . $UID . '');
-			return $this->load($model, $UID);
+			return $this->load($UID, $dbSchema);
 		}		
 
 		//------------------------------------------------------------------------------------------
@@ -220,31 +229,36 @@ class KDBDriver {
 	//----------------------------------------------------------------------------------------------
 	//arg: data - serialized object [array]
 	//arg: dbSchema - schema of the database table this record belongs in [array]
+	//opt: setdefaults - if true will automatically modify editedBy, editedOn, etc [bool]
 	//returns: true on success, false on failure [bool]
 
-	function save($data, $dbSchema) {
-		global $user, $session;
+	function save($data, $dbSchema, $setdefaults = true) {
+		global $user, $revisions, $session;
 		if (array_key_exists('UID', $data) == false) { return false; }		// must have a UID
 		if (strlen(trim($data['UID'])) < 4) { return false; }				// and it must be good
+
+		if (false == $this->tableExists($dbSchema['model'])) { return false; }
+		//TODO: check schema and consider auto table installation
 
 		//------------------------------------------------------------------------------------------
 		//	set editedBy, editedOn if present in schema
 		//------------------------------------------------------------------------------------------
-		if (true == array_key_exists('editedBy', $dbSchema['fields'])) 
-			{ $data['editedBy'] = $user->UID; }
-
-		if (true == array_key_exists('editedOn', $dbSchema['fields'])) 
-			{ $data['editedOn'] = $this->datetime(); }
+		if (true == $setdefaults) {
+			if (true == array_key_exists('editedBy', $dbSchema['fields']))
+				{ $data['editedBy'] = $user->UID; }
+			if (true == array_key_exists('editedOn', $dbSchema['fields']))
+				{ $data['editedOn'] = $this->datetime(); }
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	try load previous version of this record
 		//------------------------------------------------------------------------------------------
-		$current = $this->load($dbSchema['table'], $data['UID']);
+		$current = $this->load($data['UID'], $dbSchema);
 
 		//------------------------------------------------------------------------------------------
 		//	replace any previously cached version
 		//------------------------------------------------------------------------------------------
-		$this->cacheStore($dbSchema['table'], $data);
+		$this->cacheStore($dbSchema['model'], $data);
 
 		//------------------------------------------------------------------------------------------
 		//	if no previous version exists, save this one // TODO: consider adding revision here
@@ -260,7 +274,7 @@ class KDBDriver {
 				$newFields[$fName] = $value;
 			}
 
-			$sql = "INSERT INTO " . $dbSchema['table']
+			$sql = "INSERT INTO " . $dbSchema['model']
 				 . " values (" . implode(', ', $newFields) . ");";		// assemble the query
 
 			$result = $this->query($sql);								// run it...
@@ -281,26 +295,27 @@ class KDBDriver {
 		    }
 		}
 
+		if (0 == count($changes)) { return true; }						// nothing to do
+
 		//------------------------------------------------------------------------------------------
 		//	record revisions to any fields for swhich we track changes
 		//------------------------------------------------------------------------------------------
-		if (true == $dirty) {
-			//TODO: this
-			//$sql = "insert into changes ";
+		if ((true == $dirty) && (true == $setdefaults)) {
+			$revisions->storeRevision($changes, $dbSchema);
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	make changed to stored record
+		//	make changes to stored record
 		//------------------------------------------------------------------------------------------
 		foreach($changes as $fName => $fVal) {
 			if (true == array_key_exists($fName, $dbSchema['fields'])) {
 				if (true == $this->quoteType($dbSchema['fields'][$fName]))
 					{ $fVal = "\"" . $fVal . "\""; }
 			}
-			$changes[$fName] = $fName . '=' . $fVal;
+			$changes[$fName] = "`" . $fName . "`" . '=' . $fVal;
 		}
 
-		$sql = "UPDATE " . $dbSchema['table'] 
+		$sql = "UPDATE " . $dbSchema['model'] 
 			 . " SET " . implode(', ', $changes)
 			 . " WHERE UID='" . $this->addMarkup($data['UID']) . "';";
 
@@ -309,7 +324,7 @@ class KDBDriver {
 		$result = $this->query($sql);
 
 		if (false === $result) {
-			$msg = 'could not update record: ' . $dbSchema['table'] . " " . $data['UID'];
+			$msg = 'could not update record: ' . $dbSchema['model'] . " " . $data['UID'];
 			$session->msgAdmin($msg, 'bad');
 			return false;
 		}
@@ -317,7 +332,7 @@ class KDBDriver {
 		//------------------------------------------------------------------------------------------
 		//	pass on to peers, and we're done
 		//------------------------------------------------------------------------------------------
-		//syncBroadcastDbUpdate('self', $dbSchema['table'], $data);
+		//syncBroadcastDbUpdate('self', $dbSchema['model'], $data);
 		return true;
 	}
 
@@ -331,6 +346,10 @@ class KDBDriver {
 	//: this is used where an object should change only locally and changes not sent to peer servers
 
 	function updateQuiet($model, $UID, $field, $value) {	
+		if (false == $this->tableExists($model)) { return false; }
+
+		//TODO: improve this
+
 		$sql = "UPDATE " . $model . " "
 			 . "SET " . $this->addMarkup($field) . "='" . $this->addMarkup($value) . "' "
 			 . "WHERE UID='" . $this->addMarkup($UID) . "'";
@@ -390,44 +409,59 @@ class KDBDriver {
 	//arg: UID - UID of a record [string]
 	//returns: true on success, false on failure [bool]
 
-	function delete($module, $model, $UID) {
-		global $kapenta, $aliases;
+	function delete($UID, $dbSchema) {
+		global $kapenta, $aliases, $revisions;
 		
-		if (true == $this->objectExists($model, $UID)) {
+		$module = $dbSchema['module'];
+		$model = $dbSchema['model'];
 
-			$sql = "DELETE FROM " . $model
-				 . " WHERE UID='" . $this->addMarkup($UID) . "'";
+		// this also checks that table exists:
+		if (false == $this->objectExists($model, $UID)) { return false; }	
+		
+		if ('Users_User' == $model) { return false; }		//	SPECIAL CASE, security
+		if ('Schools_School' == $model) { return false; }	//	SPECIAL CASE, security
 
-			$this->query($sql);
+		//------------------------------------------------------------------------------------------
+		//	copy to recycle bin (unless set to 'no' archive)
+		//------------------------------------------------------------------------------------------
+		if ((false == array_key_exists('archive', $dbSchema)) || ('no' != $dbSchema['archive'])) {
+			$fields = $this->load($UID, $dbSchema);
+			foreach($fields as $name => $value) { $fields[$name] = $this->addMarkup($value); }
+			$revisions->recordDeletion($fields, $dbSchema);
+		}
 
-			//--------------------------------------------------------------------------------------
-			//	remove from cache
-			//--------------------------------------------------------------------------------------
-			$cacheKey = $model . '::' . $UID;
-			if (true == array_key_exists($cacheKey, $this->cache)) {
-				$objAry = $this->load($model, $UID);			
-				unset($this->cache[$cacheKey]);
-				if (true == array_key_exists('alias', $objAry)) { 
-					$aliasKey = $model . '::' . strtolower($objAry['alias']);
-					unset($this->aliases[$aliasKey]); 
-				}
+		//------------------------------------------------------------------------------------------
+		//	remove from original table
+		//------------------------------------------------------------------------------------------
+		$sql = "DELETE FROM " . $model . " WHERE UID='" . $this->addMarkup($UID) . "'";
+		$this->query($sql);
+
+		//------------------------------------------------------------------------------------------
+		//	remove from cache
+		//------------------------------------------------------------------------------------------
+		$cacheKey = $model . '::' . $UID;
+		if (true == array_key_exists($cacheKey, $this->cache)) {
+			$objAry = $this->load($UID, $dbSchema);			
+			unset($this->cache[$cacheKey]);
+			if (true == array_key_exists('alias', $objAry)) { 
+				$aliasKey = $model . '::' . strtolower($objAry['alias']);
+				unset($this->aliases[$aliasKey]); 
 			}
+		}
 
-			//syncRecordDeletion($model, $UID);
+		//syncRecordDeletion($model, $UID);
 
-			//--------------------------------------------------------------------------------------
-			//	delete any aliases this item might have
-			//--------------------------------------------------------------------------------------
-			$aliases->deleteAll($module, $model, $UID);
+		//------------------------------------------------------------------------------------------
+		//	delete any aliases this item might have
+		//------------------------------------------------------------------------------------------
+		$aliases->deleteAll($module, $model, $UID);
 
-			//--------------------------------------------------------------------------------------
-			//	send event to any modules which may need to do something about this
-			//--------------------------------------------------------------------------------------
-			$detail = array('module' => $module, 'model' => $model, 'UID' => $UID);
-			$kapenta->raiseEvent($module, 'object_deleted', $detail);
-			return true;
-
-		} else { return false; }
+		//------------------------------------------------------------------------------------------
+		//	send event to any modules which may need to do something about this
+		//------------------------------------------------------------------------------------------
+		$detail = array('module' => $module, 'model' => $model, 'UID' => $UID);
+		$kapenta->raiseEvent($module, 'object_deleted', $detail);
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -463,24 +497,37 @@ class KDBDriver {
 		//------------------------------------------------------------------------------------------
 		//	not in cache, try database
 		//------------------------------------------------------------------------------------------
-		$result = $this->load($model, $UID);
-		if (false == $result) { return false; }
-		$this->cacheStore($model, $result);		// may as well
+		if (false == $this->tableExists($model)) { return false; }	// prevent SQL injection
+		$sql = "SELECT * FROM $model WHERE UID='" . $this->addMarkup($UID) . "'";		
+		$result = $this->query($sql);
+		if (false === $result) { return false; } 					// bad table name?
+		if (0 == mysql_num_rows($result)) { return false; }			// no such object
+
+		//------------------------------------------------------------------------------------------
+		// object exists, may as well cache it
+		//------------------------------------------------------------------------------------------
+		$row = mysql_fetch_assoc($result);
+		$row = $this->rmArray($row);					
+		$this->cacheStore($model, $row);
 		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	make a list of all tables in database
+	//.	make a list of all tables in database and store in $this->tables
 	//----------------------------------------------------------------------------------------------
 	//returns: array of table names [array]
 
-	function listTables() {
-		global $db;
-		//TODO: cache this
-		$tables = array();
-		$result = $db->query("SHOW TABLES FROM " . $db->name);
-		while ($row = $db->fetchAssoc($result)) { foreach ($row as $table) { $tables[] = $table; } }
-		return $tables;
+	function loadTables() {
+		$this->tables = array();
+
+		$result = $this->query("SHOW TABLES FROM " . $this->name);
+		while ($row = $this->fetchAssoc($result)) {
+			// we don't know the column name in advance, so we do this:
+			foreach ($row as $table) { $this->tables[] = $table; } 
+		}
+
+		$this->tablesLoaded = true;
+		return $this->tables;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -490,13 +537,8 @@ class KDBDriver {
 	//returns: true if there exists a table with the name given, false if not found [bool]
 
 	function tableExists($model) {
-		$sql = "SHOW TABLES FROM " . $this->name;
-		$result = $this->query($sql);
-		if (false === $result) { return false; }
-		while ($row = $this->fetchAssoc($result)) {
-		  foreach ($row as $key => $someTable)
-			{ if ($someTable == $model) { return true; } }
-		}
+		if (false == $this->tablesLoaded) { $this->loadTables(); }
+		if (true == in_array($model, $this->tables)) { return true; }
 		return false;
 	}
 
@@ -542,7 +584,8 @@ class KDBDriver {
 	//returns: array of associative arrays (field -> value) with database markup removed [array]
 
 	function loadRange($model, $fields, $conditions, $by = '', $limit = '', $offset = '') {
-		$retVal = array();		//% return value [array]
+		$retVal = array();												//% return value [array]
+		if (false == $this->tableExists($model)) { return $retVal; }	//	prevents SQL injection
 
 		//------------------------------------------------------------------------------------------
 		//	basic sql query to select all rows in table
@@ -600,6 +643,8 @@ class KDBDriver {
 	//returns: number of records [int]
 
 	function countRange($model, $conditions = '') {
+		if (false == $this->tableExists($model)) { return 0; }		//TODO: throw error?
+
 		//------------------------------------------------------------------------------------------
 		//	basic sql query to count UIDs
 		//------------------------------------------------------------------------------------------
@@ -627,9 +672,71 @@ class KDBDriver {
 	//returns: same array with values unescaped (database markup removed) [string]
 	
 	function datetime($timestamp = false) {
-		if (false == $timestamp) { $timestamp = time(); }
+		if (false === $timestamp) { $timestamp = time(); }
 		$date = gmdate("Y-m-j H:i:s", $timestamp);
 		return $date;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get table schema in Kapenta's dbSchema format (jagged array)
+	//----------------------------------------------------------------------------------------------
+	//:note that nodiff is not generated, as this is not known by the DBMS
+	//arg: tableName - name of a database table / model name [string]
+	//returns: nested array describing database table [array]
+
+	function getSchema($tableName) {
+		if (false == $this->tableExists($tableName)) { return false; }
+
+		//------------------------------------------------------------------------------------------
+		//	create dbSchema array		TODO: not ideal, more error checking here
+		//------------------------------------------------------------------------------------------
+		$parts = explode('_', $tableName);
+
+		$dbSchema = array(
+			'module' => $parts[0],
+			'model' => $tableName,
+			'fields' => array(),
+			'indices' => array(),
+			'nodiff' => array()
+		);
+
+		//------------------------------------------------------------------------------------------
+		//	add fields
+		//------------------------------------------------------------------------------------------
+		$sql = "describe " . $tableName;
+		$result = $this->query($sql);
+		while ($row = $this->fetchAssoc($result)) 
+			{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
+
+		//------------------------------------------------------------------------------------------
+		//	add indices
+		//------------------------------------------------------------------------------------------
+		$sql = "show indexes from " . $tableName;
+		$result = $this->query($sql);
+		while ($row = $this->fetchAssoc($result)) 
+			{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
+
+		return $dbSchema;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	check that a database schema is valid
+	//----------------------------------------------------------------------------------------------
+	//arg: dbSchema - a database table definition [array]
+	//returns: true if valid, false if not [bool]
+
+	function checkSchema($dbSchema) {
+		if (false == is_array($dbSchema)) { return false; }
+		if (false == array_key_exists('module', $dbSchema)) { return false; }
+		if (false == array_key_exists('table', $dbSchema)) { return false; }
+		if (false == array_key_exists('nodiff', $dbSchema)) { return false; }
+		if (false == array_key_exists('fields', $dbSchema)) { return false; }
+
+		if (false == is_array($dbSchema['fields'])) { return false; }
+		if (false == array_key_exists('UID', $dbSchema['fields'])) { return false; }
+
+		//TODO: more checks here (allowed field types, additional items, allowed table names, etc)
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------

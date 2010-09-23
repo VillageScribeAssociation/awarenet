@@ -15,14 +15,15 @@
             <name>Comments_Comment</name>
             <permissions>
                 <permission>retractall</permission>
+                <permission>retract</permission>
                 <permission>showall</permission>
                 <permission>show</permission>
                 <permission>delete</permission>
-                <export>comment-add</export>
-                <export>comment-retract</export>
-                <export>comment-show</export>
-                <export>comment-edit</export>
-                <export>comment-remove</export>
+                <export>comments-add</export>
+                <export>comments-retract</export>
+                <export>comments-show</export>
+                <export>comments-edit</export>
+                <export>comments-remove</export>
             </permissions>
             <relationships>
 			    <relationship>creator</relationship>

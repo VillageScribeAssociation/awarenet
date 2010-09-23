@@ -25,10 +25,13 @@ function admin_runmaintenance($args) {
 	//	include the maintenance script and check that maintenance function exists
 	//---------------------------------------------------------------------------------------------
 	$fileName = 'modules/' . $args['modName'] . '/inc/maintenance.inc.php';
-	if (false == $kapenta->fileExists($fileName)) { return '(no such maintenance script)'; }
+	if (false == $kapenta->fileExists($fileName)) {
+		return '(no such maintenance script: ' . $fileName . ')';
+	}
+
 	require_once($kapenta->installPath . $fileName);
 	
-	$fnName = 'maintenance_' . $args['modName'];
+	$fnName = $args['modName'] . '_maintenance';
 	if (function_exists($fnName) == false) { return '(invalid maintenance script)'; }
 
 	$report = $fnName();

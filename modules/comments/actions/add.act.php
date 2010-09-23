@@ -25,7 +25,7 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: check that model exists
 	if (false == in_array($refModule, $kapenta->listModules())) { $page->do404(); }
-	if (false == $user->authHas($refModule, $refModel, 'comment', $refUID)) { $page->do403(); }
+	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	dont save blank comments

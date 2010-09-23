@@ -9,26 +9,33 @@
 //arg: month - month (mm) 01 to 12 [string]
 
 function calendar_listmonth($args) {
-	global $theme;
+	global $theme, $user, $db;
 
-	global $db;
-	if (array_key_exists('month', $args) == false) { return false; }
-	if (array_key_exists('year', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('month', $args)) { return ''; }
+	if (false == array_key_exists('year', $args)) { return ''; }
 	$year = $db->addMarkup($args['year']);
 	$month = $db->addMarkup($args['month']);
 	$html = '';
-	
-	$c = new Calendar_Entry();
-	$html = $c->drawMonth($month, $year, 'large');
-	$ev = $c->loadMonth($month, $year);
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$model = new Calendar_Entry();
+	$html = $model->drawMonth($month, $year, 'large');
+	$ev = $model->loadMonth($month, $year);
 	
 	$html .= "<br/>[[:theme::navtitlebox::width=570::label=Entries:]]\n";
-	$html .= "<h2>All Calendar Events For " . $c->getMonthName($month) . " $year</h2>";
+	$html .= "<h2>All Calendar Events For " . $model->getMonthName($month) . " $year</h2>";
 	
+	$block = $theme->loadBlock('modules/calendar/views/entry.block.php');
+
 	if (count($ev) > 0) {
 		foreach($ev as $UID => $row) {
-			$c->loadArray($row);
-			$html .= $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/calendar/views/entry.block.php'));
+			$model->loadArray($row);
+			$html .= $theme->replaceLabels($model->extArray(), $block);
 		}
 	} else {
 		$html .= '<p>(no events are recorded for this month)</p>';

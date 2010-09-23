@@ -40,7 +40,7 @@ function comments_addcommentformnav($args) {
 	$labels['refModule'] = $refModule;
 	$labels['refModel'] = $refModel;
 	$labels['refUID'] = $refUID;
-	$labels['return'] = $return;
+	$labels['return'] = $args['return'];
 
 	$block = $theme->loadBlock('modules/comments/views/addcommentnav.block.php');
 	$html = $theme->replaceLabels($labels, $block);

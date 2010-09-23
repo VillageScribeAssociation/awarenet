@@ -6,30 +6,26 @@
 //*	show a group record
 //--------------------------------------------------------------------------------------------------
 
+	$editUrl = '';
+
 	//----------------------------------------------------------------------------------------------
-	//	authentication (no public users)
+	//	check arguments and permissions (no public users)
 	//----------------------------------------------------------------------------------------------
 	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
-
-	//----------------------------------------------------------------------------------------------	
-	//	check reference
-	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('Groups_Group');
 
-	//----------------------------------------------------------------------------------------------	
-	//	load the model
-	//----------------------------------------------------------------------------------------------	
-	$editUrl = '';
 	$model = new Groups_Group($UID);
-	if (true == $model->hasEditAuth($user->UID)) 
+	if (false == $model->loaded) { $page->do404('Could not load group.'); }
+
+	if (true == $user->authHas('groups', 'Groups_Group', 'edit', $model->UID)) 
 		{ $editUrl = '%%serverPath%%groups/edit/' . $model->alias; }
 
 	//----------------------------------------------------------------------------------------------	
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
 	$page->load('modules/groups/actions/show.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['raUID'] = $model->alias;
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['groupName'] = $model->name;
 	$page->blockArgs['editGroupUrl'] = $editUrl;

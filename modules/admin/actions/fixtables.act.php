@@ -28,6 +28,7 @@
 
 	$html = '';
 
+	/*
 	if (true == $db->tableExists('Aliases_Alias')) { $db->query("drop table Aliases_Alias"); }
 	$html .= aliases_install_module();
 	$html .= "<br/>\n";
@@ -97,7 +98,7 @@
 	if (true == $db->tableExists('Users_Friendship')) { $db->query("drop table Users_Friendship"); }
 	$html .= users_install_module();
 	$html .= "<br/>\n";
-	
+	*/
 
 	//----------------------------------------------------------------------------------------------
 	//	patch up 
@@ -136,7 +137,7 @@
 	foreach($rename as $oldname => $newname) {
 		if (true == $db->tableExists($newname)) {
 
-			$dbSchema = $dba->getSchema($newname);
+			$dbSchema = $db->getSchema($newname);
 		
 			$sql = "select * from $newname";
 			$result = $db->query($sql);

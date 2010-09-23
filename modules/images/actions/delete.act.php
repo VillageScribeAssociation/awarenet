@@ -16,8 +16,15 @@
 	if (false == $model->loaded) { $page->do404('Image not found.'); }
 
 	//TODO: add other permissions here?
-	if (false == $user->authHas($model->refModule, $model->refModel, 'images-delete', $model->refUID)) 
-		{ $page->do403('You cannot delete this image.'); }
+	$auth = false;
+
+	if ($user->UID == $model->createdBy) { $auth = true; }
+
+	if (true == $user->authHas($model->refModule, $model->refModel, 'images-remove', $model->refUID)) {
+		$auth = true;
+	}
+
+	if (false == $auth) { $page->do403('You cannot delete this image.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the image

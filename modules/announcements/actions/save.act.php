@@ -27,12 +27,17 @@
 	if (false == $authorised) { $page->do403('You are not authorized to make announcements.'); }
 
 	//----------------------------------------------------------------------------------------------
-	//	save the record
+	//	save the object
 	//----------------------------------------------------------------------------------------------
-	$model->title = $_POST['title'];
-	$model->content = $_POST['content'];
+	$model->title = $utils->cleanString($_POST['title']);
+	$model->content = $_POST['content'];						//TODO: sanitize this
 	$ext = $model->extArray();
-	$model->save();
+	$report = $model->save();
+
+	if ('' != $report) {
+		$session->msg('The announement could not be saved: ' . $report, 'bad');
+		$page->do302('announcements/' . $model->alias);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	prepare notification
@@ -40,7 +45,7 @@
 	//TODO: this shoud be handled by an event	
 
 	$mn = 'Announcements_Announcement';
-	$title = "Announcement: " . $ext['title'],
+	$title = "Announcement: " . $ext['title'];
 	$content = $ext['summary'];
 	$url = $ext['viewUrl'];
 
@@ -53,7 +58,7 @@
 	//	add appropriate users and redirect back
 	//----------------------------------------------------------------------------------------------
 	if ('schools' == $model->refModule) { $notifications->addSchool($nUID, $model->refUID); }
-	if ('groups' == $refModule) { $notifications->addGroup($nUID, $model->refUID); }
+	if ('groups' == $model->refModule) { $notifications->addGroup($nUID, $model->refUID); }
 	$notifications->addUser($nUID, $model->createdBy);	
 	
 	$page->do302('announcements/' . $model->alias); 

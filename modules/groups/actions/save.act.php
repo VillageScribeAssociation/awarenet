@@ -23,13 +23,13 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Groups_Group($UID);
 	if (false == $model->loaded) { $page->do404("Group not found.");}
-
+	//TODO: sanitize description
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
 			case 'school':	$model->school = $utils->cleanString($value); break;
 			case 'name':	$model->name = $utils->cleanString($value); break;
 			case 'type':	$model->type = $utils->cleanString($value); break;
-			case 'description':	$model->description = $utils->cleanString($value); break;
+			case 'description':	$model->description = $value; break;
 		}
 	}
 	$report = $model->save();

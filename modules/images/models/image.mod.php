@@ -74,7 +74,7 @@ class Images_Image {
 
 	function load($raUID = '') {
 		global $db;
-		$objary = $db->loadAlias('Images_Image', $raUID);
+		$objary = $db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -151,7 +151,7 @@ class Images_Image {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'images';
-		$dbSchema['table'] = 'Images_Image';
+		$dbSchema['model'] = 'Images_Image';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -168,7 +168,7 @@ class Images_Image {
 			'transforms' => 'TEXT',
 			'caption' => 'TEXT',
 			'category' => 'VARCHAR(100)',
-			'weight' => 'BIGINT',
+			'weight' => 'BIGINT(20)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -539,7 +539,7 @@ class Images_Image {
 		//	delete the record
 		//-----------------------------------------------------------------------------------------
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('images', 'Images_Image', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 
 		//-----------------------------------------------------------------------------------------

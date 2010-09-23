@@ -9,7 +9,7 @@
 <table noborder>
   <tr><td><b>Licence:</b></td><td>%%licence%%</td></tr>
   <tr><td><b>Attribution:</b></td><td>%%attribName%%</td></tr>
-  <tr><td><b>Source:</b></td><td>%%attribURL%%</td></tr>
+  <tr><td><b>Source:</b></td><td>%%attribUrl%%</td></tr>
 </table>
 </div>
 */ ?>

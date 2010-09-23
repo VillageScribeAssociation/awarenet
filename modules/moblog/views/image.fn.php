@@ -35,23 +35,15 @@ function moblog_image($args) {
 	}
 	
 	$model = new Moblog_Post($args['raUID']);	
-	$sql = "select * from Images_Image where refModule='moblog' and refUID='" . $model->UID 
-	     . "' order by weight";
-	     
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['alias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $row['alias'] 
-				. "' border='0' alt='" . $model->title . "'></a>";
-		} else {
-			return "<img src='/images/" . $size . "/" . $row['alias'] 
-				. "' border='0' alt='" . $model->title . "'>";
-		}
-	}
+	if (false == $model->loaded) { return ''; }
+
+	$block = "[[:images::default::refModule=moblog::refModel=Moblog_Post::refUID=" . $model->UID 
+			. "::size=$size::altUser=" . $model->createdBy . ":]]";
 	
-	// no images found for this group
-	return "[[:images::default::refModule=users::size=" . $size . "::refUID=" . $model->createdBy . ":]]"; 
+	$html = $block;
+	if ($link == 'yes') { $html =  "<a href='/moblog/show/" . $model->alias . "'>$block</a>"; }
+	
+	return $block;
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -8,17 +8,29 @@
     <installed>no</installed>
     <enabled>no</enabled>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=admin</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>upload|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=admin</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <dependencies>
+		<model>aliases</model>
+    </dependencies>
+    <models>
+        <model>
+            <name>Image</name>
+            <description>Object representing user images</description>
+            <permissions>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+                <export>images-add</export>
+                <export>images-edit</export>
+                <export>images-show</export>
+                <export>images-remove</export>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+            </relationships>
+        </model>
+    </models>
+    <defaultpermissions>
+    </defaultpermissions>
 </module>
 */ ?>

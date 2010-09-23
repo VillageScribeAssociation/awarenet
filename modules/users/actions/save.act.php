@@ -25,6 +25,7 @@ if ((true == array_key_exists('action', $_POST))
 		if (false == $model->loaded) { $page->do404("Could not load User $UID");}
 		foreach($_POST as $field => $value) {
 			switch(strtolower($field)) {
+				case 'ogGroup':		$model->role = $utils->cleanString($value); 		break;
 				case 'role':		$model->role = $utils->cleanString($value); 		break;
 				case 'school':		$model->school = $utils->cleanString($value); 		break;
 				case 'grade':		$model->grade = $utils->cleanString($value); 		break;
@@ -41,7 +42,7 @@ if ((true == array_key_exists('action', $_POST))
 		else { $session->msg($report, 'bad'); }
 
 		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-		$page->do302('/users/list/');
+		$page->do302('users/list/');
 	}
 
 	//----------------------------------------------------------------------------------------------

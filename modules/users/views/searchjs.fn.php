@@ -12,7 +12,7 @@
 //TODO: fix this up
 
 function users_searchjs($args) {
-	global $db, $theme;
+	global $db, $theme, $utils;
 	$js = '';
 
 	if (false == array_key_exists('squery', $args)) { return ''; }
@@ -48,11 +48,11 @@ function users_searchjs($args) {
 			$uHtml = $theme->expandBlocks("[[:users::summarynav::userUID=". $uUID ."::target=_parent:]]\n", '');
 			$uThumb = $theme->expandBlocks("[[:users::avatar::userUID=". $uUID ."::size=thumb90::link=no:]]\n", '');
 
-			$js .= "userList[" . $count . "] = new Array('" . jsMarkup($uUID) . "', '" 
-															. jsMarkup($uName) . "', '" 
-															. jsMarkup($uUrl) . "', '" 
-															. jsMarkup($uThumb) . "', '" 
-															. jsMarkup($uHtml) . "');\n";
+			$js .= "userList[" . $count . "] = new Array('" . $utils->jsMarkup($uUID) . "', '" 
+															. $utils->jsMarkup($uName) . "', '" 
+															. $utils->jsMarkup($uUrl) . "', '" 
+															. $utils->jsMarkup($uThumb) . "', '" 
+															. $utils->jsMarkup($uHtml) . "');\n";
 
 			$count++;
 		}

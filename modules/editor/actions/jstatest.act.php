@@ -4,6 +4,8 @@
 //	test of javascript testarea loader
 //-------------------------------------------------------------------------------------------------
 
+	if ('admin' != $user->role) { $page->do403(); }
+
 	$text = "ギリシア神話によれば、人間に養蜂を教えたのはアリスタイオスである。蜂蜜と人類の関わりは古く、スペインのアラニア洞窟で発見された約1万年前の壁画に蜂の巣から蜜を取る女性の姿が描かれている。メソポタミア文明の象形文字にも蜂蜜に関することがらが記載され、古代エジプトの壁画に養蜂の様子がえがかれている。また、蜂蜜はこのような歴史から世界最古の甘味料ともいわれている。
 
 古代ギリシアの哲学者・アリストテレスは著書『動物誌』にて、養蜂について記述している。そこではミツバチが集める蜜は花の分泌物ではなく、花の中にたまった露であると述べている。
@@ -20,7 +22,7 @@
 	echo "<textarea id='taContent' rows='30' cols='80'></textarea>\n";
 	echo "<script src='" . $serverPath . "core/utils.js'></script>\n";
 	echo "<script>\n";
-	echo base64EncodeJs('content', $text);
+	echo $utils->base64EncodeJs('content', $text);
 	echo "base64_loadTextArea('taContent', content);\n";
 	echo "</script>\n";
 

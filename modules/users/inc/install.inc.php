@@ -4,6 +4,7 @@
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/role.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	install script for Users module
@@ -34,6 +35,13 @@ function users_install_module() {
 	$rename = array();
 	$count = $dba->copyAll('friendships', $dbSchema, $rename); 
 	$report .= "<b>moved $count records from 'friendships' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Users_Login table
+	//----------------------------------------------------------------------------------------------
+	$model = new Users_Login();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Users_Role table
@@ -91,6 +99,16 @@ function users_install_status_report() {
 	//	ensure the table which stores Role objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Users_Role();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Login objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Users_Login();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

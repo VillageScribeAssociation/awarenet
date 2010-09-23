@@ -5,8 +5,8 @@
 [[:announcements::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Comments::width=570:]]
-[[:comments::list::refModule=announcements::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:comments::addcommentform::refModule=announcements::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=announcements/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[[:comments::list::refModule=announcements::refModel=Announcements_Announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:comments::addcommentform::refModule=announcements::refModel=Announcements_Announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=announcements/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 </content>
 <title>awareNet - [`|pc][`|pc]announcementTitle[`|pc][`|pc] (announcement)</title>
 <script></script>

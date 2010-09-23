@@ -36,7 +36,7 @@ function images_uploadsingle($args) {
 	if (false == $db->tableExists($refModel)) { return ''; }
 	if (false == $db->objectExists($refModel, $refUID)) { return ''; }
 
-	if (false == $user->authHas($refModule, $refModel, 'imageupload', $refUID)) { return ''; }
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 	//TODO: check permission for uploading images
 
 	if (true == array_key_exists('category', $args)) { $category = $args['category']; }

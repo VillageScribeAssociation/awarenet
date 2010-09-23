@@ -22,15 +22,16 @@ function groups_listallnav($args) {
 		{ $conditions[] = "school='" . $db->addMarkup($args['school']) . "'"; }
 
 	if (true == array_key_exists('sameschool', $args)) {
-		$model = new Groups_Group($sameschool);
+		$model = new Groups_Group($args['sameschool']);
 		if (false == $model->loaded) { return ''; }
 		$conditions[] = "school='" . $db->addMarkup($model->school) . "'";
 	}
 
+	//TODO: permissions check here
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-
 	$range = $db->loadRange('Groups_Group', '*', $conditions, 'name');
 	foreach ($range as $row) { $html .= "[[:groups::summarynav::groupUID=". $row['UID'] .":]]\n"; }
 	return $html;

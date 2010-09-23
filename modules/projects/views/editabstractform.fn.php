@@ -10,16 +10,25 @@
 //arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_editabstractform($args) {
-	global $theme;
+	global $theme, $user, $utils;
+	$html = '';				//%	return value [string]
 
-	global $user;
-	if ($user->authHas('projects', 'Projects_Project', 'edit', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
-	if ($model->isMember($user->UID) == false) { return false; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
+	//if (false == $model->isMember($user->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['abstractJs64'] = base64EncodeJs('abstractJs64', $ext['abstract']);
-	return $theme->replaceLabels($ext, $theme->loadBlock('modules/projects/views/editabstractform.block.php'));
+	$ext['abstractJs64'] = $utils->base64EncodeJs('abstractJs64', $ext['abstract']);
+	$block = $theme->loadBlock('modules/projects/views/editabstractform.block.php');
+	$html = $theme->replaceLabels($ext, $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

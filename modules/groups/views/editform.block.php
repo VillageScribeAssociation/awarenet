@@ -46,5 +46,5 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=groups::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=groups::refModel=Groups_Group::refUID=%%UID%%:]]
 */ ?>

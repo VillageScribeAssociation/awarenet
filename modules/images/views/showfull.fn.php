@@ -8,19 +8,23 @@
 //arg: raUID - recordAlias or UID of image record [string]
 
 function images_showfull($args) {
-	global $db;
+	global $db, $theme;
 
-	global $theme;
-
-	if (array_key_exists('raUID', $args) == false) { return ''; }
-	if ($db->objectExists('images', $args['raUID']) == false) { return ''; }
-	$i = new Images_Image($args['raUID']);
-	if ($i->fileName == '') { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	if (false == $db->objectExists('Images_Image', $args['raUID'])) { return ''; }
+	$model = new Images_Image($args['raUID']);
+	if (false == $model->loaded) { return false; }
+	if ($model->fileName == '') { return false; }
 	
-	$labels = $i->extArray();
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/images/views/showfull.block.php'));
-	
-	
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$labels = $model->extArray();
+	$block = $theme->loadBlock('modules/images/views/showfull.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	
 	return $html;
 }

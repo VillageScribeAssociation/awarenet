@@ -6,12 +6,12 @@
 
 [[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddCommentForm::hidden=yes:]]
 [`|lt]div id=[`|sq]divAddCommentForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:comments::addcommentformjs::refModule=gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]::return=/gallery/image/[`|pc][`|pc]imageRa[`|pc][`|pc]:]]
+[[:comments::addcommentform::refModule=gallery::refModel=Gallery_Gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]::return=/gallery/image/[`|pc][`|pc]imageRa[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Comments::width=570:]]
-[[:comments::listjs::refModule=gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+[[:comments::list::refModule=gallery:refModel=Gallery_Gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
 	<title>awareNet - [`|pc][`|pc]imageTitle[`|pc][`|pc] (image)</title>
 	<script></script>

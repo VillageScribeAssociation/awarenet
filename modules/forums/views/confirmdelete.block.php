@@ -1,7 +1,6 @@
 <? /*
-[[:theme::navtitlebox::width=570::label=Confirm:]]
-<div class='inlinequote'>
-Confirm: you wish to delete this record?<br/><br/>
+<b>Confirm: you wish to delete this board?</b><br/>
+<p>Note that all threads, replies, images, tags and other attached objects will also be deleted.</p>
 <table noborder>
   <tr>
     <td valign='top'>

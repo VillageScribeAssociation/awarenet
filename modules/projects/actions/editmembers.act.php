@@ -10,9 +10,10 @@
 	//	check reference and load project
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Projects_Project');
+	//$UID = $aliases->findRedirect('Projects_Project');
 
 	$model = new Projects_Project($req->ref);
+	if (false == $model->loaded) { $page->do404('Unkonwn project.', true); }
 	$members = $model->getMembers();
 
 	//----------------------------------------------------------------------------------------------
@@ -21,11 +22,11 @@
 	$admin = false;
 	if ('admin' == $user->role) { $admin = true; }
 
-	foreach($members as $userUID => $role) 
-		{ if (($userUID == $user->UID) AND ($role == 'admin')) { $admin = true; } }
+	foreach($members as $userUID => $urole) 
+		{ if (($userUID == $user->UID) AND ($urole == 'admin')) { $admin = true; } }
 
-	if ($admin == false) 
-		{ $page->do403("You cannot administer memberships of this project.<br/>\n", true); }
+	//if ($admin == false) 
+	//	{ $page->do403("You cannot administer memberships of this project.<br/>\n", true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	accept HTTP POSTs to add new members
@@ -40,8 +41,8 @@
 	//----------------------------------------------------------------------------------------------
 	// eg /projects/editmembers/removemember_8237146489/Some-Project
 
-	if ( (true == array_key_exists('removemember', $req->args))
-		AND (true == $db->objectExists('Users_User', $req->args['removemember'])) ) {
+	if (true == array_key_exists('removemember', $req->args)) {
+		//AND (true == $db->objectExists('Users_User', $req->args['removemember'])) ) {
 		$model->removeMember($req->args['removemember']);
 		$session->msg("Removed member from " . $model->title . ".", 'ok');
 	}

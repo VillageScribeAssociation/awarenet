@@ -9,6 +9,8 @@
 
 function gallery_showchildren($args) {
 	global $db;
+	return '';		// nested galleries not enabled on awareNet
+
 	$html = "<h2>Read More</h2>\n";
 
 	if (false == array_key_exists('UID', $args)) { return ''; }

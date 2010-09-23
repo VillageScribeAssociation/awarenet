@@ -26,8 +26,8 @@ function moblog_schoolrecentnav($args) {
 	//	get recent posts from this school
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions = "school='". $db->addMarkup($args['schoolUID']) ."'";
-	$conditions = "published='yes'";
+	$conditions[] = "school='". $db->addMarkup($args['schoolUID']) ."'";
+	$conditions[] = "published='yes'";
 
 	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn', $num);
 	if (0 == count($range)) { return ''; }

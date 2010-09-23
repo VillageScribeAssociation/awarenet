@@ -23,8 +23,6 @@ class UserLogin {
 
 	function UserLogin($userUID = '') {
 		global $db, $kapenta;
-
-		global $serverPath;
 		$this->dbSchema = $this->getDbSchema();
 		$this->data = $db->makeBlank($this->dbSchema);
 		$this->UID = $kapenta->createUID();
@@ -40,7 +38,7 @@ class UserLogin {
 	//arg: userUID - UID of a user [string]
 
 	function load($userUID) {
-	global $db;
+		global $db;
 
 		$sql = "select * from Users_Login where userUID='" . $db->addMarkup($userUID) . "'";
 		$result = $db->query($sql);
@@ -57,6 +55,7 @@ class UserLogin {
 	//.	load an object provided as an associative array
 	//----------------------------------------------------------------------------------------------
 	//arg: ary - associative array of fields and values [array]
+	//TODO: change to standard design pattern
 	
 	function loadArray($ary) { $this->data = $ary; }
 
@@ -91,7 +90,7 @@ class UserLogin {
 
 	function initDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'Users_Login';
+		$dbSchema['model'] = 'Users_Login';
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',
 			'userUID' => 'VARCHAR(255)',

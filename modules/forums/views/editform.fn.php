@@ -10,14 +10,24 @@
 //arg: raUID - recordAlias or UID or forums entry [string]
 
 function forums_editform($args) {
-	global $theme;
+	global $theme, $user, $utils;
 
-	if ($user->authHas('forums', 'Forums_Board', 'edit', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Forums_Board($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['descriptionJs64'] = base64EncodeJs('descriptionJs64', $ext['description']);
-	return $theme->replaceLabels($ext, $theme->loadBlock('modules/forums/views/editform.block.php'));
+	$ext['descriptionJs64'] = $utils->base64EncodeJs('descriptionJs64', $ext['description']);
+	$block = $theme->loadBlock('modules/forums/views/editform.block.php');
+	$html = $theme->replaceLabels($ext, $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

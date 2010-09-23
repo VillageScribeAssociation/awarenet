@@ -17,11 +17,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be site admin or forum moderator)
 	//----------------------------------------------------------------------------------------------
-	$auth = false;
-	if ('admin' == $user->role) { $auth = true; }
-	foreach($model->moderators as $modUID) { if ($modUID == $user->UID) { $auth = true; } }
+	//$auth = false;
+	//if ('admin' == $user->role) { $auth = true; }
+	//foreach($model->moderators as $modUID) { if ($modUID == $user->UID) { $auth = true; } }
 	// possibly more to come here...
-	if ($auth == false) { $page->do404(); }
+	//if ($auth == false) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

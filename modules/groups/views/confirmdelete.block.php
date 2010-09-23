@@ -1,7 +1,6 @@
 <? /*
-[[:theme::navtitlebox::width=570::label=Confirm:]]
-<div class='inlinequote'>
-Confirm: you wish to delete this record?<br/><br/>
+<b>Confirm: you wish to delete this group?</b><br/>
+<p>Note that all content belonging to this group will also be deleted (announcements, images, etc).</p>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -18,5 +17,4 @@ Confirm: you wish to delete this record?<br/><br/>
     </td>
   </tr>
 </table>
-</div>
 */ ?>

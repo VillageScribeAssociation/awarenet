@@ -16,18 +16,22 @@
 	if ('' == $req->ref) { $page->doXmlError('record not specified unspecified'); }
 	if (false == array_key_exists('table', $req->args)) { $page->doXmlError('table unspecified'); }
 
-	$getTable = $req->args['table'];
-	$getUid = $req->ref;
+	$tableName = str_replace('-us-', '_', $req->args['table']);
+	$tables = $db->loadTables();
+	foreach($tables as $table) { if (strtolower($table) == $tableName) { $tableName = $table; }	}
+	if (false == in_array($tableName, $tables)) { $page->doXmlError('unknown table: '.$tableName); }
 
-	$tables = $db->listTables();
-	if (false == in_array($getTable, $tables)) { $page->doXmlError('no such table'); }
-	if (fase == $db->objectExists($getTable, $getUid)) { $page->doXmlError('no such record'); }
+	$getUid = $req->ref;
+	
+	if (false == $db->objectExists($tableName, $getUid)) { $page->doXmlError('no such record'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	load and return the record
 	//---------------------------------------------------------------------------------------------
-	$data = $db->load($getTable, $getUid);
-	$xml = $sync->base64EncodeSql($getTable, $data);
+	$dbSchema = $db->getSchema($tableName);
+
+	$data = $db->load($getUid, $dbSchema);
+	$xml = $sync->base64EncodeSql($tableName, $data);
 	echo $xml;
 
 ?>

@@ -7,7 +7,7 @@
 
 [[:theme::navtitlebox::label=Add Wall Post::width=570::toggle=divWallAddComment::hidden=yes:]]
 [`|lt]div id='divWallAddComment' style='visibility: hidden; display: none;'[`|gt]
-[[:comments::addcommentformjs::refModule=users::refModel=Users_User::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
+[[:comments::addcommentform::refModule=users::refModel=Users_User::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

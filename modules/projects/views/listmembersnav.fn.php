@@ -13,6 +13,7 @@
 function projects_listmembersnav($args) {
 	global $user;
 	$editmode = 'no';
+	$isAdmin = false;
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -25,19 +26,22 @@ function projects_listmembersnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 
-	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { 
+		return ''; 
+	}
+
+	if (true == $user->authHas('projects', 'Projects_Project', 'administer', $model->UID)) { 
+		$isAdmin = true; 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$isAdmin = false;
 	$members = $model->getMembers();
-	foreach($members as $userUID => $role) 
-		{ if (('admin' == $role) || ('admin' == $user->role)) { $isAdmin = true; } }
 
-	foreach($members as $userUID => $role) {
+	foreach($members as $userUID => $urole) {
 		$html .= "[[:users::summarynav::userUID=" . $userUID 
-			   . "::extra=(" . $role . ")::target=_parent:]]\n";
+			   . "::extra=(" . $urole . ")::target=_parent:]]\n";
 
 		if ( (true == $isAdmin) && ($userUID != $user->UID) && ('yes' == $editmode) ) {
 			$rmUrl = "%%serverPath%%projects/editmembers/removemember_". $userUID ."/". $model->UID;

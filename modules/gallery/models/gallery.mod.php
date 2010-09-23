@@ -37,6 +37,7 @@ class Gallery_Gallery {
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Gallery ' . $this->UID;
+			$this->imagecount = 0;
 			$this->loaded = false;
 		}
 	}
@@ -49,7 +50,7 @@ class Gallery_Gallery {
 
 	function load($raUID) {
 		global $db;
-		$objary = $db->loadAlias('Gallery_Gallery', $raUID);
+		$objary = $db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -112,14 +113,14 @@ class Gallery_Gallery {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'gallery';
-		$dbSchema['table'] = 'Gallery_Gallery';
+		$dbSchema['model'] = 'Gallery_Gallery';
 
 		//table columns
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(33)',
 			'title' => 'VARCHAR(255)',
 			'description' => 'TEXT',
-			'imagecount' => 'BIGINT',
+			'imagecount' => 'BIGINT(20)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -130,7 +131,7 @@ class Gallery_Gallery {
 		$dbSchema['indices'] = array(
 			'UID' => '10',
 			'title' => '10',
-			'imagecount' => '10',
+			'imagecount' => '',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -264,7 +265,7 @@ class Gallery_Gallery {
 	function delete() {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('gallery', 'Gallery_Gallery', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

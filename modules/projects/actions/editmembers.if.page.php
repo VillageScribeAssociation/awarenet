@@ -1,7 +1,7 @@
 <? /*
 <page>
 	<template>iframe.template.php</template>
-	<content>[`|lt]h2[`|gt]Add Members[`|lt]/h2[`|gt]
+	<content>
 [[:projects::addmemberform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
 [`|lt]h2[`|gt]Current Members[`|lt]/h2[`|gt]

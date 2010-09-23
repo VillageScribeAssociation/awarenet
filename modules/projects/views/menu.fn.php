@@ -7,6 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	menu for projects, no arguments
 //--------------------------------------------------------------------------------------------------
+//opt: projectUID - UID of a Projects_Projects object [string]
 
 function projects_menu($args) {
 	global $user, $theme;
@@ -17,7 +18,20 @@ function projects_menu($args) {
 	$labels['viewCurrentProject'] = '';		// ...
 	$labels['delCurrentProject'] = '';		// ...
 
-	if ($user->authHas('projects', 'Projects_Project', 'edit', 'TODO:UIDHERE')) {
+	//----------------------------------------------------------------------------------------------
+	//	check is projectUID has been provided and user has edit permission
+	//----------------------------------------------------------------------------------------------
+	$editAuth = false;
+	if (true == array_key_exists('projectUID', $args)) { 
+		$model = new Projects_Project($args['projectUID']);
+		if (true == $model->loaded) {
+			if ($user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) {
+				$editAuth = true;
+			}
+		}
+	}
+
+	if (true == $editAuth) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Create New Project::link=/projects/new/:]]';
 		$labels['editCurrentProject'] = '';
 		$labels['viewCurrentProject'] = '';
@@ -44,7 +58,8 @@ function projects_menu($args) {
 
 	} else { $labels['newEntry'] = ''; }
 	
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/projects/views/menu.block.php'));
+	$block = $theme->loadBlock('modules/projects/views/menu.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;	
 }
 

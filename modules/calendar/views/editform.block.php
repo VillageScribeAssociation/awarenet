@@ -69,6 +69,6 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=calendar::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=calendar::refModel=Calendar_Entry::refUID=%%UID%%:]]
 <br/>UID:%%UID%%<br/>
 */ ?>

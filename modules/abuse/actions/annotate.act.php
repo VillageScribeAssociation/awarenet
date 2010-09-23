@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->data['ofGroup']) { $page->do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $page->do404(); }
 	if ('annotateReport' != $_POST['action']) { $page->do404('Action not supported.'); }

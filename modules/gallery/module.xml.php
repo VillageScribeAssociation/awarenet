@@ -30,11 +30,20 @@
     <defaultpermissions>
 		student:p|gallery|Gallery_Gallery|new
 		student:p|gallery|Gallery_Gallery|show
+		student:p|gallery|Gallery_Gallery|images-show
 		student:p|gallery|Gallery_Gallery|edit|(if)|creator
+		student:p|gallery|Gallery_Gallery|images-add|(if)|creator
+		student:p|gallery|Gallery_Gallery|images-remove|(if)|creator
+		student:p|gallery|Gallery_Gallery|images-edit|(if)|creator
 		student:p|gallery|Gallery_Gallery|delete|(if)|creator
+
 		teacher:p|gallery|Gallery_Gallery|new
 		teacher:p|gallery|Gallery_Gallery|show
+		teacher:p|gallery|Gallery_Gallery|images-show
 		teacher:p|gallery|Gallery_Gallery|edit|(if)|creator
+		teacher:p|gallery|Gallery_Gallery|images-add|(if)|creator
+		teacher:p|gallery|Gallery_Gallery|images-remove|(if)|creator
+		teacher:p|gallery|Gallery_Gallery|images-edit|(if)|creator
 		teacher:p|gallery|Gallery_Gallery|delete|(if)|creator
     </defaultpermissions></module>
 */ ?>

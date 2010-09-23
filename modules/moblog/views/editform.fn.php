@@ -9,7 +9,7 @@
 //arg: raUID - recordAlias or UID of post to edit [string]
 
 function moblog_editform($args) {
-	global $theme, $user;
+	global $theme, $user, $utils;
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ function moblog_editform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['contentJs64'] = base64EncodeJs('contentJs64', $ext['content']);
+	$ext['contentJs64'] = $utils->base64EncodeJs('contentJs64', $ext['content']);
 	$block = $theme->loadBlock('modules/moblog/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 

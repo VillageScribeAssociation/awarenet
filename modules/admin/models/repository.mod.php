@@ -66,14 +66,15 @@ class CodeRepository {
 		$lines = explode("\n", $raw);
 		foreach($lines as $line) {
 			$cols = explode("\t", $line);
-			$item = array(
-				'uid' => $cols[0],
-				'hash' => $cols[1],
-				'type' => $cols[2],
-				'relfile' => $cols[3]
-			);
-
-			$rlist[$item['uid']] = $item;
+			if (count($cols) > 3) {
+				$item = array(
+					'uid' => $cols[0],
+					'hash' => $cols[1],
+					'type' => $cols[2],
+					'relfile' => $cols[3]
+				);
+				$rlist[$item['uid']] = $item;
+			}
 		}
 		return $rlist;
 	}

@@ -29,7 +29,7 @@ function images_install_module() {
 	//----------------------------------------------------------------------------------------------
 	//	import any records from previous images table
 	//----------------------------------------------------------------------------------------------
-	$rename = array();
+	$rename = array('record');
 	$count = $dba->copyAll('images', $dbSchema, $rename); 
 	$report .= "<b>moved $count records from 'images' table.</b><br/>";
 

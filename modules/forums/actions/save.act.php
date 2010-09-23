@@ -24,7 +24,7 @@
 
 	$report = $model->save();
 
-	if ('' == $report) { $session->msg('Saved changes to forum: ' . $model->name, 'ok'); }
+	if ('' == $report) { $session->msg('Saved changes to forum: ' . $model->title, 'ok'); }
 	else { $session->msg('Could not save changes:<br/>' . $report, 'bad'); }
 	$page->do302('forums/' . $model->alias);			
 

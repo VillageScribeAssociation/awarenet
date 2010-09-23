@@ -18,9 +18,10 @@
 <banner></banner>
 <head></head>
 <menu1>[[:home::menu:]]</menu1>
-<menu2>[[:projects::menu:]]</menu2>
+<menu2>[[:projects::menu::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</menu2>
 <section></section>
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Projects - ::link=/projects/:]]
 [[:theme::breadcrumb::label=Edit Abstract::link=/projects/editabstract/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

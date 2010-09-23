@@ -1,18 +1,26 @@
 <?
 
-for ($i = 0; $i < 20; $i++) {
-	echo "USE antest" . $i . ";<br/>\n";
-	echo "CREATE TABLE sync (
-  UID varchar(30),<br/>\n
-  source varchar(30),<br/>\n
-  type varchar(50),<br/>\n
-  data text,<br/>\n
-  peer varchar(30),<br/>\n
-  status varchar(30),<br/>\n
-  received varchar(30),<br/>\n
-  timestamp varchar(20),<br/>\n
-  KEY idxsyncUID (UID(10))<br/>\n
-);<br/>\n";
-}
+//--------------------------------------------------------------------------------------------------
+//	testing sync->bas64DecodeSql();
+//--------------------------------------------------------------------------------------------------
+
+$xml = "<update>
+	<table>Aliases_Alias</table>
+	<fields>
+		<UID>MTg4OTgwNDMyMDEzOTk0NzY1</UID>
+		<refModule>aW1hZ2Vz</refModule>
+		<refModel>SW1hZ2VzX0ltYWdl</refModel>
+		<refUID>ODU0MTgyMDcyMTYyMTc5ODk5</refUID>
+		<aliaslc>MzAxNjIzNDUxNC0wNmJjNmY0YTY2LWIuanBn</aliaslc>
+		<alias>MzAxNjIzNDUxNC0wNmJjNmY0YTY2LWIuanBn</alias>
+		<createdOn>MjAxMC0wOC0wMiAwMjozNjo0MA==</createdOn>
+		<createdBy></createdBy>
+		<editedOn>MjAxMC0wOC0wMiAwMjozNjo1Ng==</editedOn>
+		<editedBy>YWRtaW4=</editedBy>
+	</fields>
+</update>";
+
+	$data = $sync->base64DecodeSql($xml);
+	print_r($data);
 
 ?>

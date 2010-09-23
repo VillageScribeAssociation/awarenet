@@ -9,24 +9,44 @@
     <enabled>yes</enabled>
     <dbschema></dbschema>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>edit|%%user.ofGroup%%=admin</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>view|%%user.ofGroup%%=student</perm>
-        <perm>view|%%user.ofGroup%%=teacher</perm>
-        <perm>new|%%user.ofGroup%%=student</perm>
-        <perm>new|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>comment|%%user.ofGroup%%=student</perm>
-        <perm>comment|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <dependencies>
+		<module>images</module>
+		<module>alias</module>
+    </dependencies>
+    <models>
+        <model>
+            <name>Entry</name>
+            <description></description>
+            <permissions>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+            </relationships>
+        </model>
+    </models>
+    <defaultpermissions>
+		student:p|calendar|Calendar_Entry|new
+		student:p|calendar|Calendar_Entry|show
+		student:p|calendar|Calendar_Entry|images-show
+		student:c|calendar|Calendar_Entry|edit|(if)|creator
+		student:c|calendar|Calendar_Entry|delete|(if)|creator
+		student:c|calendar|Calendar_Entry|images-add|(if)|creator
+		student:c|calendar|Calendar_Entry|images-edit|(if)|creator
+		student:c|calendar|Calendar_Entry|images-remove|(if)|creator
+
+		teacher:p|calendar|Calendar_Entry|new
+		teacher:p|calendar|Calendar_Entry|show
+		teacher:p|calendar|Calendar_Entry|images-show
+		teacher:c|calendar|Calendar_Entry|edit|(if)|creator
+		teacher:c|calendar|Calendar_Entry|delete|(if)|creator
+		teacher:c|calendar|Calendar_Entry|images-add|(if)|creator
+		teacher:c|calendar|Calendar_Entry|images-edit|(if)|creator
+		teacher:c|calendar|Calendar_Entry|images-remove|(if)|creator
+    </defaultpermissions>
+
 </module>
 */ ?>

@@ -26,7 +26,7 @@
 	if (false == $db->objectExists($refModel, $refUID))
 		{ $page->do404('Owner object does not exist.', false); }
 
-	if (false == $user->authHas($refModule, $refModel, 'imageupload', $refUID))
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID))
 		{ $page->do403('You are not authorized to add images to this object.', true); }
 	
 	//TODO: check this permission name

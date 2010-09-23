@@ -12,15 +12,15 @@
 function announcements_newlink($args) {
 	global $user;
 
-	if (false == array_key_exists('refModule', $args)) { return ''; }
-	if (false == array_key_exists('refModel', $args)) { return ''; }
-	if (false == array_key_exists('refUID', $args)) { return ''; }
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
 
 	$refModule = $args['refModule'];
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'addannouncement', $refUID)) { return ''; }
+	if (false == $user->authHas($refModule, $refModel, 'add-announcement', $refUID)) { return ''; }
 
 	$html = "<a href='/announcements/new/"
 			 . "refModule_" . $refModule . "/"

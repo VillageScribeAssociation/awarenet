@@ -11,15 +11,16 @@ function gallery_navlist($args) {
 	global $db, $theme, $user;
 	$html = '';
 
-	if (array_key_exists('userUID', $args) == false) { return false; }
+	if (false == array_key_exists('userUID', $args)) { return ''; }
 
 	//$sql = "select * from gallery "
 	//	 . "where parent='root' and createdBy='" . $db->addMarkup($args['userUID']) . "' "
-	//	 . "order by title"; 
+	//	 . "order by title";
+
+	// TODO: input and permissions checks here
 
 	$conditions = array();
 	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
-	$conditions[] = "parent='root'";
 
 	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, 'title');
 	
@@ -41,4 +42,3 @@ function gallery_navlist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

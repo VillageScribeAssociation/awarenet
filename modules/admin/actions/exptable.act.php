@@ -22,7 +22,7 @@ if (('' == $req->ref) || ($db->tableExists($req->ref) == false)) {
 	$code .= "\t//----------------------------------------------------------------------------------------------\n\n";
 
 	$code .= "\t\$dbSchema = array();\n";
-	$code .= "\t\$dbSchema['table'] = '" . $req->ref . "';\n";
+	$code .= "\t\$dbSchema['model'] = '" . $req->ref . "';\n";
 	$code .= "\t\$dbSchema['fields'] = array(\n";
 
 	foreach($dbs['fields'] as $field => $type) {

@@ -8,7 +8,7 @@
 
 function announcements_menu($args) {
 	global $theme;
-	$html = $theme->loadBlock('modules/announcements/menu.block.php')
+	$html = $theme->loadBlock('modules/announcements/menu.block.php');
 	return $html;
 }
 

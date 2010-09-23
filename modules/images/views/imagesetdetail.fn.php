@@ -6,26 +6,36 @@
 //|	display a set of images associated with something, along with some metadata
 //--------------------------------------------------------------------------------------------------
 //arg: refModule - module to list on [string]
+//arg: refModel - type of object which own images [string]
 //arg: refUID - UID of item which owns images [string]
 
 function images_imagesetdetail($args) {
-	global $user, $db, $theme;
+	global $kapenta, $user, $db, $theme;
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $args)) { return ''; }
-	if (false == array_key_exists('refUID', $args)) { return ''; }
-	if (false == $user->authHas($args['refModule'], 'images', $args['refUID'])) { return ''; }
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
+
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
+
+	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
+	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner)'; }
+
+	if (false == $user->authHas($refModule, $refModel, 'images-show', $refUID)) { return ''; }
 	//TODO: check the permission, work out naming convention for inheritance
 
 	//----------------------------------------------------------------------------------------------
 	//	load images from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 
 	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
 	//     . "' and refUID='" . $db->addMarkup($args['refUID']) . "' order by floor(weight)";

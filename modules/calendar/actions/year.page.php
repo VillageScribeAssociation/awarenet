@@ -22,4 +22,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Calendar - ::link=/calendar/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]year[`|pc][`|pc]::link=/calendar/year[`|us][`|pc][`|pc]year[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

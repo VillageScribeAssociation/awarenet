@@ -9,7 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }			// consider redirecting to ./default/
+	if ('' == $req->ref) {  
+		$session->msg('No entry specified.');
+		$page->do302('calendar/');
+	}
+
 	$UID = $aliases->findRedirect('Calendar_Entry');
 	$model = new Calendar_Entry($req->ref);
 	if (false == $model->loaded) { $page->do404('No such calendar entry.'); }

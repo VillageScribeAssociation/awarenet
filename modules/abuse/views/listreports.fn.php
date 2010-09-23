@@ -1,6 +1,6 @@
 <?
 
-	require_once($installPath . 'modules/abuse/models/report.mod.php');
+	require_once($kapenta->installPath . 'modules/abuse/models/report.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	list abuse reports
@@ -8,24 +8,32 @@
 //arg: pageNo - page number to show (int) [string]
 
 function abuse_listreports($args) {
-	global $user;
-	if ('admin' != $user->data['ofGroup']) { return ''; }
+	global $user, $db, $theme;
 	$html = '';		//% return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check argumentss and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { return ''; }
+	//TODO: permissions check here to allow moderator role
 
 	//----------------------------------------------------------------------------------------------
 	//	load the reports
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions = "status='open'";
-	$range = dbLoadRange('Abuse_Report', '*', $conditions);
+	$range = $db->loadRange('Abuse_Report', '*', $conditions);
 
-	$model = new Abuse_Report();
-	$block = loadBlock('modules/abuse/views/summary.block.php');
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/abuse/views/summary.block.php');
+	//TODO: paginate this
 
 	foreach($range as $row) {
+		$model = new Abuse_Report();
 		$model->loadArray($row);
-		$html .= replaceLabels($model->extArray(), $block);
-
+		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
 	return $html;
 }

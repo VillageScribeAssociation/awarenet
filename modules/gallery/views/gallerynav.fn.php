@@ -10,7 +10,7 @@
 //opt: size - image size (thumb90, thumbsm, width300, etc) [string]
 
 function gallery_gallerynav($args) {
-	global $db;
+	global $db, $user, $utils;
 	$html = '';					//%	return value [string]
 	$size = 'thumbsm';
 
@@ -42,9 +42,9 @@ function gallery_gallerynav($args) {
 
 	foreach ($range as $row) {
 		if ($row['UID'] == $args['imageUID']) { $currIdx = $idx; }
-		$jsUID = jsMarkup($row['UID']);
-		$jsTitle = jsMarkup($row['title']);
-		$jsRA = jsMarkup($row['alias']);
+		$jsUID = $utils->jsMarkup($row['UID']);
+		$jsTitle = $utils->jsMarkup($row['title']);
+		$jsRA = $utils->jsMarkup($row['alias']);
 		$js .= "galThumbs[$idx] = new Array('". $jsUID ."','". $jsTitle ."', '" . $jsRA . "');\n";
 		$idx++;
 	}

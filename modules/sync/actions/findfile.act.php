@@ -10,7 +10,7 @@
 	//	load the download record and set status to 'searching'
 	//---------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->doXmlError('Download not specified.'); }
-	if (false == $db->objectExists('downloads', $req->ref)) { $page->doXmlError('no such download'); }	
+	if (false == $db->objectExists('Sync_Download', $req->ref)) { $page->doXmlError('no such download'); }	
 
 	$model = new Sync_Download($req->ref);
 	if ($model->status != 'wait') { $page->doXmlError('busy'); }

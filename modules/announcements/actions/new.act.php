@@ -5,40 +5,37 @@
 //--------------------------------------------------------------------------------------------------
 //*	add a new announcement
 //--------------------------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------------------
+	//	check request args and user permissions
+	//----------------------------------------------------------------------------------------------
 	
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'new'))
+	if (false == array_key_exists('refModule', $req->args)) { $page->do404('refModule not given'); }
+	if (false == array_key_exists('refModel', $req->args)) { $page->do404('refModel not given'); }
+	if (false == array_key_exists('refUID', $req->args)) { $page->do404('refUID not given.'); }
+
+	$refModule = $req->args['refModule'];
+	$refModel = $req->args['refModel'];
+	$refUID = $req->args['refUID'];
+
+	if (false == $kapenta->moduleExists($refModule)) { $page->do404('Unkonwn module.'); }
+	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('Unkonwn module.'); }
+
+	if (false == $user->authHas($refModule, $refModel, 'announcements-add', $refUID))
 		{ $page->do403('You are not aothorized to make new announcements.'); }
-	//TODO: add inheritable permission for groups
-
-	if (false == array_key_exists('refmodule', $req->args)) { $page->do404(); }
-	if (false == array_key_exists('refuid', $req->args)) { $page->do404(); }
-
-	//----------------------------------------------------------------------------------------------
-	//	check user is authorised to make an announcement for this item
-	//----------------------------------------------------------------------------------------------
-	$isauth = false;
-	$model = new Announcements_Announcement($req->ref);
-	$cb = "[[:". $req->args['refmodule'] ."::haseditauth::raUID=".  $req->args['refuid'] .":]]";
-	$result = $theme->expandBlocks($cb, '');
-	if ('yes' == $result) { $isauth = true; }
-
-	//echo "result: $result <br/>\n";
-
-	if ('admin' == $user->role) { $isauth = true; }
-	if ('teacher' == $user->role) { $isauth = true; }
-	if (false == $isauth) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	OK then, create it
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Announcements_Announcement();
-	$model->notifications = 'init';
-	$model->title = 'Announcement';
-	$model->refModule = $req->args['refmodule'];
-	$model->refUID = $req->args['refuid'];
+	$model->title = 'Announcement ' . $kapenta->createUID();
+	$model->refModule = $refModule;
+	$model->refModel = $refModel;
+	$model->refUID = $refUID;
 	$model->save();
 
+	$session->msg('New announcement created.  Please complete the following form:', 'ok');
 	$page->do302('announcements/edit/' . $model->UID);
 
 ?>

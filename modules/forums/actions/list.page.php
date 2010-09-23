@@ -5,9 +5,7 @@
 [[:forums::summarylistall:]]</content>
 <title>awareNet - forums</title>
 <script></script>
-<nav1>[[:theme::navtitlebox::label=Stats:]]
-(stats go here)
-[`|lt]br/[`|gt]
+<nav1>
 [[:theme::navtitlebox::label=Most Active Discussions:]]
 [[:forums::busiestthreads::num=6:]]
 [`|lt]br/[`|gt]

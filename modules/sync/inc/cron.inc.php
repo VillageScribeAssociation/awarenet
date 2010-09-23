@@ -6,10 +6,17 @@
 //-------------------------------------------------------------------------------------------------
 //*	periodic maintenance of sync
 //-------------------------------------------------------------------------------------------------
-//TODO: this can be much tidier
 
-function sync_cron() {
+//--------------------------------------------------------------------------------------------------
+//|	hourly cron
+//--------------------------------------------------------------------------------------------------
+//returns: HTML report of any actions taken [string]
+
+function sync_cron_hourly() {
 	global $db, $req, $kapenta;
+	$report = '<h2>users_cron_tenmins<h2>\n';
+
+	/*
 
 	//---------------------------------------------------------------------------------------------
 	//	clear dead wood from downloads table
@@ -51,6 +58,9 @@ function sync_cron() {
 	$shellCmd = "rm " . $installPath . "data/temp/*.sync";	//TODO: fix this, remove shell_exec
 	shell_exec($shellCmd);
 
+	*/
+
+	return $report;
 }
 
 ?>

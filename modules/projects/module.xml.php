@@ -8,29 +8,82 @@
     <installed>no</installed>
     <enabled>no</enabled>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>view|%%user.ofGroup%%=student</perm>
-        <perm>view|%%user.ofGroup%%=teacher</perm>
-        <perm>list|%%user.ofGroup%%=student</perm>
-        <perm>list|%%user.ofGroup%%=teacher</perm>
-        <perm>summarylist|%%user.ofGroup%%=student</perm>
-        <perm>summarylist|%%user.ofGroup%%=teacher</perm>
-        <perm>summary|%%user.ofGroup%%=student</perm>
-        <perm>summary|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>comment|%%user.ofGroup%%=student</perm>
-        <perm>comment|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <dependencies>
+		<module>aliases</module>
+		<module>images</module>
+		<module>comments</module>
+    </dependencies>
+    <models>
+        <model>
+            <name>Membership</name>
+            <description>Relationship object associating a user with a project</description>
+            <permissions>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+            </relationships>
+        </model>
+        <model>
+            <name>Project</name>
+            <description>object for representing user projects</description>
+            <permissions>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+                <relationship>projectmember</relationship>
+                <relationship>projectadmin</relationship>
+            </relationships>
+        </model>
+        <model>
+            <name>Revision</name>
+            <description>stores a previous version of a project</description>
+            <permissions>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+                <relationship>projectmember</relationship>
+                <relationship>projectadmin</relationship>
+            </relationships>
+        </model>
+
+    </models>
+    <defaultpermissions>
+		student:p|projects|Projects_Project|new
+		student:p|projects|Projects_Project|show
+		student:p|projects|Projects_Project|comments-add
+		student:p|projects|Projects_Project|comments-show
+		student:p|projects|Projects_Project|images-show
+		student:c|projects|Projects_Project|images-remove|(if)|projectadmin
+		student:c|projects|Projects_Project|administer|(if)|projectadmin
+		student:c|projects|Projects_Project|edit|(if)|projectmember
+		student:c|projects|Projects_Project|edit|(if)|projectadmin
+		student:c|projects|Projects_Project|images-add|(if)|projectmember
+		student:c|projects|Projects_Project|images-add|(if)|projectadmin
+		student:c|projects|Projects_Project|edit|(if)|projectadmin
+
+		teacher:p|projects|Projects_Project|new
+		teacher:p|projects|Projects_Project|show
+		teacher:p|projects|Projects_Project|comments-add
+		teacher:p|projects|Projects_Project|comments-show
+		teacher:p|projects|Projects_Project|images-show
+		teacher:c|projects|Projects_Project|images-remove|(if)|projectadmin
+		teacher:c|projects|Projects_Project|administer|(if)|projectadmin
+		teacher:c|projects|Projects_Project|edit|(if)|projectmember
+		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
+		teacher:c|projects|Projects_Project|images-add|(if)|projectmember
+		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
+    </defaultpermissions>
 </module>
 */ ?>

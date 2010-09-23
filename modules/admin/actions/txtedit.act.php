@@ -13,19 +13,19 @@
 	//	handle submissions
 	//---------------------------------------------------------------------------------------------
 
-	if ((array_key_exists('action', $_POST) == true) && ($_POST['action'] == 'saveFile')) {
-		$fileName = $installPath . stripslashes($_POST['fileName']);
+	if ((true == array_key_exists('action', $_POST)) && ('saveFile' == $_POST['action'])) {
+		$fileName = stripslashes($_POST['fileName']);
 		$fileName = str_replace('..', '', $fileName);
 		$fileName = str_replace('//', '/', $fileName);
 		$contents = stripslashes($_POST['fileContents']);
-		filePutContents($fileName, $contents, 'w+');
+		$kapenta->filePutContents($fileName, $contents, false, false);
 	}
 
 	//---------------------------------------------------------------------------------------------
 	//	working directory
 	//---------------------------------------------------------------------------------------------
 	$browsePath = '';
-	if (array_key_exists('path', $req->args) == true) {
+	if (true == array_key_exists('path', $req->args)) {
 		$browsePath = 'path_' . $req->args['path'];
 	}
 
@@ -34,9 +34,9 @@
 	//---------------------------------------------------------------------------------------------
 
 	$editFile = '';
-	if (array_key_exists('file', $req->args) == true) { 
+	if (true == array_key_exists('file', $req->args)) { 
 		$editFile = base64_decode($req->args['file']);	
-		if (file_exists($installPath . $editFile) == false) { 
+		if (false == $kapenta->fileExists($editFile)) { 
 			$_SESSION['sMessage'] .= "file '" . $editFile . "' does not exist.<br/>\n";
 			$editFile = ''; 
 		}
@@ -52,8 +52,8 @@
 		$editorFormAction =  $serverPath . 'admin/txtedit/file_' . base64_encode($editFile) 
 						  . '/' . $browsePath;
 		
-		$raw = implode(file($installPath . $editFile));
-		$rawJs = base64EncodeJs('contentJs', $raw, false);
+		$raw = $kapenta->fileGetContents($editFile);	// TODO: use $kapenta
+		$rawJs = $utils->base64EncodeJs('contentJs', $raw, false);
 
 		$editorForm = "<form name='editTxtFile' method='POST' action='" . $editorFormAction . "'>
 			<input type='hidden' name='action' value='saveFile' />

@@ -61,7 +61,7 @@
 	}
 
 	//TODO: chck this permission name
-	if (false == $user->authHas($refModule, $refModel, 'addimages', $refUID)) {
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) {
 		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
 		$session->msg('You are not authorised to add images to this item.', 'bad');
 		$page->do302($returnUrl);

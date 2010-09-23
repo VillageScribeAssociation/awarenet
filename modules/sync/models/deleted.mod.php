@@ -37,7 +37,7 @@ class DeletedItem {
 	function load($UID) {
 		global $db;
 
-		$ary = $db->load('delitems', $UID, 'true');
+		$ary = $db->load($UID, $this->dbSchema);
 		if (false == $ary) { return false; }
 		$this->data = $ary;
 		return true;
@@ -86,7 +86,7 @@ class DeletedItem {
 
 	function initDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'delitems';
+		$dbSchema['model'] = 'delitems';
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',
 			'refTable' => 'VARCHAR(50)',

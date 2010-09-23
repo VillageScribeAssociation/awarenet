@@ -54,7 +54,7 @@ class Messages_Message {
 
 	function load($UID) {
 		global $db;
-		$objary = $db->load('Messages_Message', $UID);
+		$objary = $db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -120,7 +120,8 @@ class Messages_Message {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'messages';
-		$dbSchema['table'] = 'Messages_Message';
+		$dbSchema['model'] = 'Messages_Message';
+		$dbSchema['archive'] = 'yes';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -256,7 +257,7 @@ class Messages_Message {
 	function delete() {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete('messages', 'Messages_Message', $this->UID)) { return false; }
+		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

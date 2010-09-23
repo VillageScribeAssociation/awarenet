@@ -36,6 +36,7 @@
 	$page->blockArgs['forumTitle'] = $forum->title;
 	$page->blockArgs['threadRa'] = $thread->alias;
 	$page->blockArgs['threadTitle'] = $thread->title;
+	$page->blockArgs['createdBy'] = $thread->createdBy;
 	$page->render();
 
 ?>

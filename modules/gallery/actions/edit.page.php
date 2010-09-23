@@ -7,7 +7,7 @@
 [[:gallery::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
 [[:theme::navtitlebox::width=570::label=Images:]]
-[[:images::uploadmultiple::refModule=gallery::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
+[[:images::uploadmultiple::refModule=gallery::refModel=Gallery_Gallery::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 <title>awareNet - edit gallery</title>
 <script></script>
 <nav1></nav1>

@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------	
 	if ('' == $req->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('Announcements_Announcement');
-	$model = new Announcements_Annoucement($req->ref);
+	$model = new Announcements_Announcement($req->ref);
 	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $UID)) 
 		{ $page->do403(); }
 
@@ -29,7 +29,7 @@
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['refUID'] = $model->refUID;
 	$page->blockArgs['refModule'] = $model->refModule;
-	$page->blockArgs['announceLink'] = $aaLink;
+	$page->blockArgs['announceLink'] = $ownerName;
 	$page->blockArgs['announcementOwner'] = $ownerName;
 	$page->blockArgs['announcementTitle'] = $model->title;
 	$page->render();

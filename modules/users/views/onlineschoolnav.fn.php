@@ -18,8 +18,9 @@ function users_onlineschoolnav($args) {
 
 	if (array_key_exists('school', $args) == false) { return false; }
 	// TODO this needs fixing
-	$sql = "select * from Users_User "
-		 . "where (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(lastOnline)) < 7300 "
+	$sql = "select Users_User.UID, firstname, surname, grade, alias from Users_Login, Users_User "
+		 . "where Users_User.school='" . $db->addMarkup($args['school']) . "' "
+		 . "and Users_User.UID=Users_Login.userUID "
 		 . "order by firstname";
 
 	$result = $db->query($sql);
@@ -27,7 +28,7 @@ function users_onlineschoolnav($args) {
 		$row = $db->rmArray($row);
 		$html .= "<a href='/users/profile/" . $row['alias'] . "'>"
 			  . $row['firstname'] . ' ' . $row['surname'] . "</a> "
-			  . "<small>(" . $row['grade'] . ") " . $row['timeDiff'] . "</small><br/>";	
+			  . "<small>(" . $row['grade'] . ")</small><br/>";	
 	}
 
 	return $html;

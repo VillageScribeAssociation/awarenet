@@ -44,38 +44,67 @@ class KDBAdminDriver {
 	//returns: true on success, false on failure [bool]
 
 	function createTable($dbSchema) {
-		global $user, $db;
+		global $user, $db, $session;
 		//------------------------------------------------------------------------------------------
 		//	checks
 		//------------------------------------------------------------------------------------------
 		//if ('admin' != $user->role) { return false; }						// admins only
-		if ($db->tableExists($dbSchema['table']) == true) { return false; }	// table already exists
+		if (true == $db->tableExists($dbSchema['model'])) { return false; }	// table already exists
+		$table = $dbSchema['model'];
 
 		//------------------------------------------------------------------------------------------
 		//	create the table
 		//------------------------------------------------------------------------------------------
 		$fields = array();
 		foreach($dbSchema['fields'] as $fName => $fType) { $fields[] = '  '. $fName .' '. $fType; }
-		$sql = "CREATE TABLE " . $dbSchema['table'] . " (\n" . implode(",\n", $fields) . ");\n";
+		$sql = "CREATE TABLE " . $table . " (\n" . implode(",\n", $fields) . ");\n";
 		$db->query($sql);
 
-		if (false == $db->tableExists($dbSchema['table'])) { return false; }	// check it worked
+		$db->loadTables();
+		if (false == $db->tableExists($table)) { return false; }	// check it worked
 
 		//------------------------------------------------------------------------------------------
 		//	create indices
-		//----------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		foreach($dbSchema['indices'] as $idxField => $idxSize) {
-			$idxName = 'idx' . $dbSchema['table'] . $idxField;
-			if ($idxSize == '') {
-				$sql = "CREATE INDEX $idxName ON " . $dbSchema['table'] . " (" . $idxField . ");";
-			} else {
-				$sql = "CREATE INDEX $idxName ON " . $dbSchema['table'] . " (" . $idxField . "(10));";
-			}
+			$idxName = 'idx' . $table . $idxField;
+			$sql = "CREATE INDEX $idxName ON $table ($idxField($idxSize));";
+			if ('' == $idxSize) { $sql = "CREATE INDEX $idxName ON $table ($idxField);"; }
 			$db->query($sql);
-			//TODO: check indices were created correctly
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check that indices were created correctly
+		//------------------------------------------------------------------------------------------
+		$indexes = $this->getIndexes($dbSchema['model']);
+		if (false === $indexes) { return false; }
+		foreach($dbSchema['indices'] as $idxField => $idxSize) {
+			$idxName = 'idx' . $dbSchema['model'] . $idxField;
+			$found = false;
+			foreach($indexes as $index) {
+				if ($index['Key_name'] == $idxName) { $found = true; }
+			}
+			if (false == $found) { $session->msgAdmin('Could not make index: ' . $idxName, 'bad'); }
 		}
 
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get a list of indexes on a table
+	//----------------------------------------------------------------------------------------------
+	//arg: tableName - name of a table in the default database [string]
+	//returns: array of index data, or false on failure [array][bool]
+
+	function getIndexes($tableName) {
+		global $db;		
+		$indexes = array();		//	return value [array]
+		if (false == $db->tableExists($tableName)) { return false; }
+
+		$sql = "SHOW INDEXES FROM " . $tableName;
+		$result = $db->query($sql);
+		while($row = $db->fetchAssoc($result)) { $indexes[] = $row;	}
+		return $indexes;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -91,11 +120,11 @@ class KDBAdminDriver {
 		$count = 0;			//%	return value, number of records copied [int]
 
 		if (false == $db->tableExists($fromTable)) { return false; }
-		if (false == $db->tableExists($toSchema['table'])) { return false; }		
+		if (false == $db->tableExists($toSchema['model'])) { return false; }		
 
 		$range = $db->loadRange($fromTable, '*', '');
 		foreach($range as $row) {
-			if (false == $db->objectExists($toSchema['table'], $row['UID'])) {
+			if (false == $db->objectExists($toSchema['model'], $row['UID'])) {
 				$newObj = array();
 
 				// default values
@@ -135,46 +164,6 @@ class KDBAdminDriver {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	get table schema in Kapenta's dbSchema format (jagged array)
-	//----------------------------------------------------------------------------------------------
-	//:note that nodiff is not generated, as this is not known by the DBMS
-	//arg: tableName - name of a database table / model name [string]
-	//returns: nested array describing database table [array]
-
-	function getSchema($tableName) {
-		global $db;
-		if (false == $db->tableExists($tableName)) { return false; }
-
-		//------------------------------------------------------------------------------------------
-		//	create dbSchema array
-		//------------------------------------------------------------------------------------------
-		$dbSchema = array(
-			'table' => $tableName,
-			'fields' => array(),
-			'indices' => array(),
-			'nodiff' => array()
-		);
-
-		//------------------------------------------------------------------------------------------
-		//	add fields
-		//------------------------------------------------------------------------------------------
-		$sql = "describe " . $tableName;
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) 
-			{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
-
-		//------------------------------------------------------------------------------------------
-		//	add indices
-		//------------------------------------------------------------------------------------------
-		$sql = "show indexes from " . $tableName;
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) 
-			{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
-
-		return $dbSchema;
-	}
-
-	//----------------------------------------------------------------------------------------------
 	//.	return a dbSchema array as html
 	//----------------------------------------------------------------------------------------------
 	//: this is mostly for debugging and administrative display
@@ -184,7 +173,7 @@ class KDBAdminDriver {
 	function schemaToHtml($dbSchema, $title = '') {
 		global $theme;
 
-		if ('' == $title) { $title = $dbSchema['table'] . " (dbSchema)"; }		// default title
+		if ('' == $title) { $title = $dbSchema['model'] . " (dbSchema)"; }		// default title
 		$html = "<h2>" . $title . "</h2>\n";
 		$rows = array(array('Field', 'Type', 'Index'));
 		foreach($dbSchema['fields'] as $field => $type) {
@@ -211,7 +200,7 @@ class KDBAdminDriver {
 	//: note that tables may have different names
 
 	function compareSchema($dbSchema1, $dbSchema2) {
-		if ($dbSchema1['table'] != $dbSchema2['table']) { return false; }
+		if ($dbSchema1['model'] != $dbSchema2['model']) { return false; }
 		$tStr1 = ''; $tStr2 = '';
 
 		//------------------------------------------------------------------------------------------
@@ -248,7 +237,7 @@ class KDBAdminDriver {
 	//returns: true on success, false if it fails [bool]
 
 	function recreateTable($tableName, $dbSchema) {
-		global $kapenta, $db, $user;
+		global $kapenta, $db, $user, $session;
 		if ($user->role != 'admin') { return false; }	// only admins can do this
 
 		//------------------------------------------------------------------------------------------
@@ -257,16 +246,20 @@ class KDBAdminDriver {
 
 		$tmpSchema = array(
 			'module' => '',
-			'table' => 'tmp_' . $tableName . '_' . $kapenta->createUID(),
+			'model' => 'tmp_' . $tableName . '_' . $kapenta->createUID(),
 			'fields' => array(),
-			'indices' => array()
+			'indices' => array(),
+			'archive' => 'no'
 		);
 
 		foreach($dbSchema['fields'] as $fName => $fType) { $tmpSchema['fields'][$fName] = $fType; }
 		foreach($dbSchema['fields'] as $fName => $size) { $tmpSchema['nodiff'][] = $fName; }
 
-		$check = $this->createTable($dbSchema);
-		if (false == $check) { return false; }
+		$check = $this->createTable($tmpSchema);
+		if (false == $check) { 
+			$session->msgAdmin("Could not create temp table: " . $tmpSchema['model'], 'bad');
+			return false;
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	copy all records into temp table
@@ -279,20 +272,29 @@ class KDBAdminDriver {
 		//------------------------------------------------------------------------------------------
 		//	delete the original table and its indices
 		//------------------------------------------------------------------------------------------
-		$sql = "show indexes from " . $tableName;
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) 
-			{ $db->query("DROP INDEX " . $row['Key_name'] . " ON " . $tableName); }
+		$indexes = $this->getIndexes($tableName);
+		if ($indexes != false) {
+			foreach($indexes as $row) { 
+				$db->query("DROP INDEX " . $row['Key_name'] . " ON " . $tableName); 
+			}
+		}
 
 		$db->query('DROP TABLE ' . $tableName);
+		$db->loadTables();
 
 		//------------------------------------------------------------------------------------------
 		//	create new table with indices and copy all records from temporary table
 		//------------------------------------------------------------------------------------------
 		$this->createTable($dbSchema);
-		$sql = "select * from " . $tmpSchema['table'];
+		$sql = "select * from " . $tmpSchema['model'];
 		$result = $db->query($sql);
 		while ($row = $db->fetchAssoc($result)) { $db->save($db->rmArray($row), $dbSchema); }
+
+		//------------------------------------------------------------------------------------------
+		//	delete the temp table
+		//------------------------------------------------------------------------------------------
+		//$db->query('DROP TABLE ' . $tmpSchema['model']);
+		//$db->loadTables();
 
 		return true;
 	}
@@ -312,7 +314,7 @@ class KDBAdminDriver {
 			$report .= "[*] Database table '$tableName' is not installed.<br/>\n";
 		} else {
 			$report .= "[*] Database table '$tableName' exists.<br/>\n";
-			$liveSchema = $this->getSchema($tableName);
+			$liveSchema = $db->getSchema($tableName);
 			if (false == $this->compareSchema($dbSchema, $liveSchema)) {
 				$report .= "[*] Table '$tableName' exists but does not match schema.<br/>\n";
 			} else {
@@ -333,11 +335,11 @@ class KDBAdminDriver {
 		if ('admin' != $user->role) { return false; }	// only admins can do this
 		$report = '';
 
-		if ($db->tableExists($dbSchema['table']) == false) {	
+		if ($db->tableExists($dbSchema['model']) == false) {	
 			//--------------------------------------------------------------------------------------
 			//	no such table, create it
 			//--------------------------------------------------------------------------------------
-			$report .= "Creating " . $dbSchema['table'] . " table and indices... ";
+			$report .= "Creating " . $dbSchema['model'] . " table and indices... ";
 			$check = $this->createTable($dbSchema);	
 			if (true == $check) { $report .= "<span class='ajaxmsg'>done</span><br/>\n"; }
 			else { $report .= "<span class='ajaxerror'>failed</span><br/>\n"; }
@@ -346,13 +348,13 @@ class KDBAdminDriver {
 			//--------------------------------------------------------------------------------------
 			//	table exists, check if its up to date
 			//--------------------------------------------------------------------------------------
-			$report .= $dbSchema['table'] . " table already exists...";	
-			$extantSchema = $this->getSchema($dbSchema['table']);	// get specifics of extant table
+			$report .= $dbSchema['model'] . " table already exists...";	
+			$extantSchema = $db->getSchema($dbSchema['model']);	// get specifics of extant table
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == true) {
 				$report .= "<span class='ajaxmsg'>all correct</span><br/>";
 			} else {
-				$check = $this->recreateTable($dbSchema['table'], $dbSchema);
+				$check = $this->recreateTable($dbSchema['model'], $dbSchema);
 				if (true == $check) { 
 					$report .= "<span class='ajaxmsg'>updated to new schema</span><br/>";
 				} else {
@@ -377,18 +379,18 @@ class KDBAdminDriver {
 		$installed = true;
 		$report = '';
 
-		if ($db->tableExists($dbSchema['table']) == true) {
+		if ($db->tableExists($dbSchema['model']) == true) {
 			//--------------------------------------------------------------------------------------
 			//	table present
 			//--------------------------------------------------------------------------------------
-			$extantSchema = $this->getSchema($dbSchema['table']);
+			$extantSchema = $db->getSchema($dbSchema['model']);
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == false) {
 				//----------------------------------------------------------------------------------
 				// table schemas DO NOT match (fail)
 				//----------------------------------------------------------------------------------
 				$installed = false;		
-				$report .= "<p>A '" . $dbSchema['table'] . "' table exists, but does not match "
+				$report .= "<p>A '" . $dbSchema['model'] . "' table exists, but does not match "
 					. "object's schema.</p>\n"
 					. "<b>Object Schema:</b><br/>\n"
 					. $this->schemaToHtml($dbSchema) . "<br/>\n"
@@ -399,7 +401,7 @@ class KDBAdminDriver {
 				//----------------------------------------------------------------------------------
 				// table schemas match
 				//----------------------------------------------------------------------------------
-				$report .= "<p>'" . $dbSchema['table'] . "' table exists, "
+				$report .= "<p>'" . $dbSchema['model'] . "' table exists, "
 					. "matches object schema.</p>\n"
 					. "<b>Database Table:</b><br/>\n"
 					. $this->schemaToHtml($dbSchema) . "<br/>\n";
@@ -411,7 +413,7 @@ class KDBAdminDriver {
 			//	table missing (fail)
 			//--------------------------------------------------------------------------------------
 			$installed = false;
-			$report .= "<p>'" . $dbSchema['table'] . "' table does not exist in the database.</p>\n"
+			$report .= "<p>'" . $dbSchema['model'] . "' table does not exist in the database.</p>\n"
 				. "<b>Object Schema:</b><br/>\n" . $this->schemaToHtml($dbSchema) . "<br/>\n";
 		}
 	

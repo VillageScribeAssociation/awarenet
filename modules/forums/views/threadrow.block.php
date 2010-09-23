@@ -11,9 +11,9 @@
   <td valign='top'>
     By: [[:users::namelink::userUID=%%createdBy%%:]]<br/>
     <small>
-      Created On: %%createdOn%%<br/>
-      Replies: %%replies%%<br/>
+		%%userSchoolLink%% %%userGrade%%
     </small>
   </td>
 </tr>
+
 */ ?>

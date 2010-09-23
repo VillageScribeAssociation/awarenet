@@ -18,7 +18,7 @@
 	//	create project
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project();
-	$model->title = 'New Project ' . $projectUID;
+	$model->title = 'New Project ' . $model->UID;
 
 	if (true == array_key_exists('title', $_POST)) {
 		$title = $utils->cleanString($_POST['title']);
@@ -34,7 +34,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	create membership for current user
 	//----------------------------------------------------------------------------------------------
-	$model->addMember($user->UID, 'admin')
+	$model->addMember($user->UID, 'admin');
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect to edit page

@@ -1,7 +1,5 @@
 <? /*
-[[:theme::navtitlebox::width=570::label=Confirm:]]
-<div class='inlinequote'>
-Confirm: you wish to delete this blog post?<br/><br/>
+<b>Confirm: you wish to delete this blog post?</b><br/>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -18,5 +16,4 @@ Confirm: you wish to delete this blog post?<br/><br/>
     </td>
   </tr>
 </table>
-</div>
 */ ?>

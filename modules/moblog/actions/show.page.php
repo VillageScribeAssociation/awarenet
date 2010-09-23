@@ -8,13 +8,13 @@
 
 [[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddBlogComment::hidden=yes:]]
 [`|lt]div id=[`|sq]divAddBlogComment[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:comments::addcommentformjs::refModule=moblog::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=moblog/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[[:comments::addcommentform::refModule=moblog::refModel=Moblog_Post::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=moblog/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Comments::width=570::toggle=divMoblogComments:]]
 [`|lt]div id='divMoblogComments'[`|gt]
-[[:comments::listjs::refModule=moblog::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:comments::list::refModule=moblog::refModel=Moblog_Post::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

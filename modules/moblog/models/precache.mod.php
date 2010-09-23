@@ -29,9 +29,10 @@ class Moblog_Precache {
 	//arg: refUID - UID [string]
 
 	function MoblogPreCache($refTable, $refUID) {
-	global $db;
+		global $db;
 
-		if ($db->objectExists($refTable, $refUID) == false) { return false; }	
+		if (false == $db->objectExists($refTable, $refUID)) { return false; }	
+		$this->dbSchema = $this->getDbSchema();
 		$UID = $this->preCacheExists($refTable, $refUID);
 
 		if (false == $UID) {
@@ -40,7 +41,6 @@ class Moblog_Precache {
 			//--------------------------------------------------------------------------------------
 			global $user;
 			$this->preCache = array();
-			$this->dbSchema = $this->getDbSchema();
 			$this->data = $db->makeBlank($this->dbSchema);
 			$this->refTable = $refTable;
 			$this->refUID = $refUID;
@@ -60,9 +60,8 @@ class Moblog_Precache {
 	//arg: UID - UID of a prcache object [string]
 
 	function load($UID) {
-	global $db;
-
-		$ary = $db->load('moblogprecache', $UID);
+		global $db;
+		$ary = $db->load($UID, $this->dbSchema);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -82,7 +81,7 @@ class Moblog_Precache {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-	global $db;
+		global $db;
 
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
@@ -99,7 +98,7 @@ class Moblog_Precache {
 	//returns: precache object UID or false if none found [string][bool]
 
 	function preCacheExists($refTable, $refUID) {
-	global $db;
+		global $db;
 
 		$sql = "select UID from moblogprecache "
 			 . "where refTable='" . $db->addMarkup($userUID) . "' "
@@ -134,7 +133,7 @@ class Moblog_Precache {
 
 	function initDbSchema() {
 		$dbSchema = array();
-		$dbSchema['table'] = 'moblogprecache';
+		$dbSchema['model'] = 'moblogprecache';
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(30)',
 			'refTable' => 'VARCHAR(30)',
@@ -174,7 +173,7 @@ class Moblog_Precache {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
-	global $db;
+		global $db;
 
 		$report = "<h3>Installing Moblog Precache</h3>\n";
 

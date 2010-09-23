@@ -44,12 +44,14 @@
 	//----------------------------------------------------------------------------------------------
 	if (true == $model->linkExists($friendUID, $user->UID)) { 
 
-	$recip = new Users_Friendship();
-	$recip->loadFriend($friendUID, $user->UID);
-	$recip->status = 'confirmed';
-	$recip->save();
+		$recip = new Users_Friendship();
+		$recip->loadFriend($friendUID, $user->UID);
+		$recip->status = 'confirmed';
+		$recip->save();
 
-	$fStatus = 'confirmed'; 
+		$fStatus = 'confirmed'; 
+
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	send notification to other party
@@ -121,7 +123,7 @@
 	//------------------------------------------------------------------------------------------
 
 	if ('unconfirmed' == $fStatus) { $session->msg('You have made a friend request.', 'ok'); }
-	else { $session->msg('You have confirmed a friend request from ' . $friendName, 'ok');
+	else { $session->msg('You have confirmed a friend request from ' . $friendName, 'ok'); }
 
 	$page->do302($retLink);
 

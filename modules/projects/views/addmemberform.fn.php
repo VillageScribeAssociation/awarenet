@@ -11,12 +11,28 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_addmemberform($args) {
-	global $theme;
+	global $theme, $user;
+	$html = '';		//%	return value [string]
+	
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 
-	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	$model = new Projects_Project($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'administer', $model->UID)) {
+		return '';	// no permission
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$labels = array('raUID' => $args['raUID']);	
-	return $theme->replaceLabels($labels, $theme->loadBlock('modules/projects/views/addmemberform.block.php'));
+	$block = $theme->loadBlock('modules/projects/views/addmemberform.block.php');
+	$html = $theme->replaceLabels($labels, $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

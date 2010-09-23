@@ -33,6 +33,8 @@
     <defaultpermissions>
 		student:p|announcements|Announcements_Announcement|show
 		student:p|announcements|Announcements_Announcement|list
+		student:c|announcements|Announcements_Announcement|edit|(if)|creator
+
 		teacher:p|announcements|Announcements_Announcement|announcement-add
 		teacher:c|announcements|Announcements_Announcement|announcement-edit|(if)|creator
 		teacher:c|announcements|Announcements_Announcement|announcement-delete|(if)|creator

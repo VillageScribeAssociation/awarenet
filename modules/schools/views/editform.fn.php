@@ -8,7 +8,7 @@
 //arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_editform($args) {
-	global $theme, $user;
+	global $theme, $user, $utils;
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ function schools_editform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['descriptionJs64'] = base64EncodeJs('descriptionJs64', $ext['description']);
+	$ext['descriptionJs64'] = $utils->base64EncodeJs('descriptionJs64', $ext['description']);
 	$block = $theme->loadBlock('modules/schools/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 

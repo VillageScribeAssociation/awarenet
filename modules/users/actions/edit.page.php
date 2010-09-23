@@ -17,4 +17,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Users - ::link=/users/:]]
 [[:theme::breadcrumb::label=Edit::link=/users/edit/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

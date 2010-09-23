@@ -1,5 +1,5 @@
 <? /*
-<select name='ofGroup'>
+<select name='%%varname%%'>
   <option value='%%default%%'>%%default%%</option>
   <option value='public'>public</public>
   <option value='user'>user</option>

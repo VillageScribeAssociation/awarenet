@@ -10,19 +10,19 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $request['ref']) {
+	if ('' == $req->ref) {
 		$session->msg("Abuse report not speicified (UID).", 'bad'); 
 		$page->do302('abuse/'); 
 	}
 
-	if (false == $db->objectExists('Abuse_Report', $req->ref) { $page->do404(); }
+	$model = new Abuse_Report($req->ref);
+	if (false == $model->loaded) { $page->do404('Report not found.'); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-
 	$page->load('modules/abuse/actions/show.page.php');
-	$page->blockArgs['UID'] = $request['ref'];
+	$page->blockArgs['UID'] = $req->ref;
 	$page->render();
 
 ?>

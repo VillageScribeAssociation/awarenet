@@ -16,9 +16,9 @@
 		{ $page->do404('reference model not specified'); }
 	if (false == array_key_exists('refUID', $_POST))
 		{ $page->do404('reference object UID not specified'); }
-	if (false == $kapenta->moduleExists($_POST['module']))
+	if (false == $kapenta->moduleExists($_POST['refModule']))
 		{ $page->do404('specified module does not exist'); }
-	if (false == $db->objectExists($_POST['model'], $_POST['UID']))
+	if (false == $db->objectExists($_POST['refModel'], $_POST['refUID']))
 		{ $page->do404('specified owner does not exist in database'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -45,8 +45,8 @@
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$msg = "[[:theme::navtitlebox::label=Thank You:]]<p>Report Submitted.</p><br/>\n";
-		$session->msg($msg, 'ok')
+		$msg = "Report Submitted.<br/>Thank you for letting us know.\n";
+		$session->msg($msg, 'ok');
 		$page->do302($model->fromurl);
 	} else {
 		$session->msg('Could not create new Report:<br/>' . $report, 'bad');

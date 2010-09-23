@@ -24,12 +24,14 @@
 	$model = new Calendar_Entry($UID);
 	if (false == $model->loaded) { $page->do404("could not load Entry $UID");}
 
+	//TODO: error checking /sanitation here
+
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
 			case 'title':	$model->title = $utils->cleanString($value); break;
 			case 'category':	$model->category = $utils->cleanString($value); break;
 			case 'venue':	$model->venue = $utils->cleanString($value); break;
-			case 'content':	$model->content = $utils->cleanString($value); break;
+			case 'content':	$model->content = $value; break;
 			case 'year':	$model->year = $utils->cleanString($value); break;
 			case 'month':	$model->month = $utils->cleanString($value); break;
 			case 'day':	$model->day = $utils->cleanString($value); break;

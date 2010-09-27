@@ -1,8 +1,12 @@
 <?
 
+		require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
+
 //--------------------------------------------------------------------------------------------------
-//	list all events for a given day, month or year
+//*	list all events for a given day, month or year
 //--------------------------------------------------------------------------------------------------
+//TODO: replace this with three different actions for listing dats, months and years
+//TODO: set cache/spider/robots controls for listings without entries to index/store
 
 	//----------------------------------------------------------------------------------------------
 	//	authentication (disallow public access)
@@ -28,8 +32,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ($scope == '') {
-		require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
-		$c = new Calendar_Entry();
+		$model = new Calendar_Entry();
 	
 		$page->load('modules/calendar/actions/month.page.php');
 		$page->blockArgs['year'] = date('Y');
@@ -58,11 +61,9 @@
 	if ($scope == 'month') {
 		$bits = explode('_', $period);
 		if (count($bits) == 2) {
-		
-			require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
-		
+			
 			$c = new Calendar_Entry();
-			$monthName = $c->getMonthName($bits[1]);
+			$monthName = $model->getMonthName($bits[1]);
 			if ($monthName == false) { $page->do404(); }
 		
 			$page->load('modules/calendar/actions/month.page.php');
@@ -81,12 +82,10 @@
 	if ($scope == 'day') {
 		$bits = explode('_', $period);
 		if (count($bits) == 3) {
-		
-			require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
-		
-			$c = new Calendar_Entry();
-			$monthName = $c->getMonthName($bits[1]);
-			if ($monthName == false) { $page->do404(); }
+	
+			$model = new Calendar_Entry();
+			$monthName = $model->getMonthName($bits[1]);
+			if (false == $monthName) { $page->do404(); }
 		
 			$page->load('modules/calendar/actions/day.page.php');
 			$page->blockArgs['year'] = $db->addMarkup($bits[0]);

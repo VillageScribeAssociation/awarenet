@@ -4,5 +4,5 @@
 <br/>
 %%content%%<br/>
 %%editLink%%<br/>
-[[:images::minigal::refModule=calendar::refUID=%%UID%%:]]
+[[:images::minigal::refModule=calendar::refModel=Calendar_Entry::refUID=%%UID%%:]]
 */ ?>

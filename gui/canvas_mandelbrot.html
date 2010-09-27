@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<head>
+<title>:: kapenta :: whiteboard test ::</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<link href='http://mothsorchid.com/gui/css/default.css' rel='stylesheet' type='text/css' />
+
+<style type='text/css'> .style1 {font-size: 9px} </style>
+<script language='javascript'>
+
+	var jsServerPath = 'http://awarenet.co.za/';
+
+	//----------------------------------------------------------------------------------------------
+	//	this is a 'hello world'
+	//----------------------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------------------
+	//	initialise page
+	//----------------------------------------------------------------------------------------------
+
+	var unit = 400;
+
+	var swidth = 800;
+	var sheight = 800;
+
+	function guiInit() {
+		drawMandelbrot(0);
+	}
+
+	//zn+1 = zn2 + c
+	function drawMandelbrot(i) {
+		if (i > swidth) { return false; }
+		for (j = 0; j < sheight; j++) {
+			x0 = (i - (swidth * 0.65)) / (swidth / 3.2);
+			y0 = (j - (sheight / 2)) / (sheight / 3.2);
+
+			//x0 = (i - (swidth * 3 / 4)) / (swidth / 1);
+			//y0 = (j - (sheight / 4)) / (sheight / 1);
+
+			x = 0;
+			y = 0;
+			iteration = 0;
+			maxIteration = 4 * 255;
+
+			while ( (((y*y) + (x*x)) <= 4) && (iteration < maxIteration) ) {
+				xtemp = (x * x) - (y * y) + x0;
+				y = (2 * x * y) + y0;
+    			x = xtemp;
+			    iteration = iteration + 1;
+			}
+
+			//shade = Math.log(iteration) * 4;
+			//shade = shade * shade;
+			//if (shade > 255) { shade = 255; }
+			//shade = Math.floor(shade);
+
+			shade = (iteration % 255) * 5.678;
+			if (shade > 255) { shade = 255; }
+			shade = Math.floor(shade);
+
+			fillStyle = "rgb(" + shade + ", " + shade + ", " + shade + ")";
+			if (iteration == maxIteration) {
+				fillStyle = "rgb(10, 10, 10)";
+   			} 
+
+			p = Math.sqrt(((x0 - 0.25) * (x0 - 0.25)) + (y0 * y0));
+			p = p - (2 * p * p) + 0.25;
+			if (x0 < p) {
+				//fillStyle = "rgb(255, 255, 10)";
+			}
+
+			if ((((x0 + 1)*(x0 + 1)) + (y0*y0)) < (1 / 16)) {
+				//fillStyle = "rgb(255, 10, 10)";
+			}
+
+			drawPoint(j, i, fillStyle);
+
+		}
+		next = (i + 1);
+		window.setTimeout('drawMandelbrot(' + next + ');', 1);	// do events
+	}
+
+	function drawPoint(x, y, fillStyle) {
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+		ctx.fillStyle = fillStyle;  	
+		ctx.fillRect(x, y, 2, 2);
+	}
+
+
+</script>
+</head>
+
+<body onLoad="guiInit();" onResize="desktopResize();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+
+<canvas id='c1' width='1200' height='1200' onClick='drawMandelbrot();' ></canvas>
+
+</body>
+</html>

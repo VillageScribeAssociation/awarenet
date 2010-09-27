@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<head>
+<title>:: kapenta :: whiteboard test ::</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<link href='http://mothsorchid.com/gui/css/default.css' rel='stylesheet' type='text/css' />
+
+<style type='text/css'> .style1 {font-size: 9px} </style>
+<script language='javascript'>
+
+	var jsServerPath = 'http://awarenet.co.za/';
+
+	//----------------------------------------------------------------------------------------------
+	//	this is a 'hello world'
+	//----------------------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------------------
+	//	initialise page
+	//----------------------------------------------------------------------------------------------
+
+	var unit = 200;
+
+	var swidth = 1000;
+	var sheight = 800;
+
+	var origin = Array(0, 0, 0);
+	var observer = Array(0, 0, 5);
+
+	var points = Array();
+	points[0] = Array(1, 1, 1, 0, 0, 0);		// front four corners
+	points[1] = Array(1, -1, 1, 0, 0, 0);
+	points[2] = Array(-1, -1, 1, 0, 0, 0);
+	points[3] = Array(-1, 1, 1, 0, 0, 0);
+	points[4] = Array(1, 1, -1, 0, 0, 0);	// back four corners
+	points[5] = Array(1, -1, -1, 0, 0, 0);
+	points[6] = Array(-1, -1, -1, 0, 0, 0);
+	points[7] = Array(-1, 1, -1, 0, 0, 0);
+
+	var edges = Array();
+	edges[0] = Array(0, 1);			// front four
+	edges[1] = Array(1, 2);
+	edges[2] = Array(2, 3);
+	edges[3] = Array(3, 0);
+	edges[4] = Array(4, 5);			// back four
+	edges[5] = Array(5, 6);
+	edges[6] = Array(6, 7);
+	edges[7] = Array(7, 4);
+	edges[8] = Array(0, 4);			// sides
+	edges[9] = Array(1, 5);
+	edges[10] = Array(2, 6);
+	edges[11] = Array(3, 7);
+
+
+	function guiInit() {
+		drawBox();
+	}
+
+	function drawBox() {
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+
+		//ctx.fillRect(0, 0, 1000, 800);
+
+		// calculate screen positions and sizes
+		for (i = 0; i < points.length; i++) {
+			//drawPoint(points[i][0], points[i][1], points[i][2]);
+
+			// distance to the point along the z axis
+			depth = observer[2] + (points[i][2] * -1.0);	
+
+			points[i][3] = ((points[i][0] / depth) * unit) + (swidth / 2);
+			points[i][4] = ((points[i][1] / depth) * unit) + (sheight / 2);
+			points[i][5] = ((0.2 / depth) * unit);
+
+		}
+
+		drawPoints();
+
+	}
+
+	function drawPoints() {
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+		ctx.fillStyle = "rgba(100, 100, 100, 0.5)";  	
+
+		for (i = 0; i < points.length; i++) {
+			//alert('here');
+			ctx.beginPath();
+			ctx.arc(points[i][3], points[i][4], points[i][5], 0, (Math.PI * 2), false)
+			ctx.fill();
+		}
+
+		for (i = 0; i < edges.length; i++) {
+			//alert('here');
+			ei = edges[i];
+			ctx.beginPath();
+			ctx.moveTo(points[ei[0]][3], points[ei[0]][4]);
+			ctx.lineTo(points[ei[1]][3], points[ei[1]][4]);
+			ctx.stroke();
+		}
+
+	}
+
+	function fader() {
+		if (fadecount < 1) { return false; }
+
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+
+		ctx.fillStyle = "rgba(255, 255, 255, 0.01)";  	
+		ctx.fillRect(0, 0, 1000, 800);		
+
+		window.setTimeout('fader();', 300);
+		fadecount--;
+	}
+	
+// action script
+/*
+center = {x:0, y:0, z:0};
+function rotateZ (x1, y1, center, dAngle)
+{
+    var dy = y1-center.y;
+    var dx = x1-center.x;
+    var orgAngle = Math.atan2(dy, dx);
+    var hypo = Math.sqrt(dy*dy+dx*dx);
+    var newAngle = orgAngle+dAngle*(Math.PI/180);
+    var xx = hypo*Math.cos(newAngle)+center.x;
+    var yy = hypo*Math.sin(newAngle)+center.y;
+    var pt = {x:xx, y:yy};
+    return pt;
+}
+
+The above equation is a rotation in 2D plane. It is useful when we do rotation in 2D. It also can be applied to 3D plane. Well, we need to extend this function a little. We need batch rotate a bunch of points data. In this case, we need rotate 8 points data. So, I would call it 8 times. Also, we need the rotation along Y or X axis. The equation is simply difference of x,y,z.
+
+function groupRotateZ (pointArray, dAngle)
+{
+  for (k = 0; k < pointArray.length; k++)
+	{
+        var pt = rotateZ(pointArray[k].x, pointArray[k].y, _root.center, dAngle);
+        pointArray[k].x = pt.x;
+        pointArray[k].y = pt.y;
+  }
+}
+
+function groupRotateY (pointArray, dAngle)
+{
+  for (k = 0; k < pointArray.length; k++)
+	{
+        var pt = rotateZ(pointArray[k].z, pointArray[k].x, _root.center, dAngle);
+        pointArray[k].z = pt.x;
+        pointArray[k].x = pt.y;
+  }
+}
+
+function groupRotateX (pointArray, dAngle)
+{
+  for (k = 0; k < pointArray.length; k++)
+	{
+        var pt = rotateZ(pointArray[k].z, pointArray[k].y, _root.center, dAngle);
+        pointArray[k].z = pt.x;
+        pointArray[k].y = pt.y;
+  }
+}
+
+*/
+
+
+</script>
+</head>
+
+<body onLoad="guiInit();" onResize="desktopResize();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+
+<canvas id='c1' width='1000' height='800' onClick='drawBox();' ></canvas>
+
+</body>
+</html>

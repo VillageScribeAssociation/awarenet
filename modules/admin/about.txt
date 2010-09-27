@@ -1,0 +1,5 @@
+<? /*
+
+The admin module provides acces to the administrative and maintenance features of the core and of other modules, as well as downloading and installing updates from the central repository.
+
+*/ ?>

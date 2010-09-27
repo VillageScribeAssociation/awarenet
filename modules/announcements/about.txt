@@ -1,0 +1,9 @@
+<? /*
+
+The announcements module provides a system to store and publicize announcements made by schools and groups.  Announcements are treated simmilarly to blog posts, but are produced by a group or organization rather than an individual user and the permissions by which they are created and maintained are tied to officers of a group, and not individuals per se.  That is, a role within the group or school carries announcement permissions with it.  Like blog posts, announcements may have comments, images, etc and are collected chronologically.
+
+Notifications are sent to school or group members when announcements are made or revised and should show up in member's feeds.  Archives of announcements are kept indefinitely unless deleted.
+
+Possible future changes include a tagging system and private RSS/Atom feeds.
+
+*/ ?>

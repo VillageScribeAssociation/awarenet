@@ -10,9 +10,20 @@
 function calendar_show($args) {
 	global $theme;
 
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$c = new Calendar_Entry($args['raUID']);
-	return $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/calendar/views/show.block.php'));
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+	$model = new Calendar_Entry($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	//TODO: permissions check here
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/calendar/views/show.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

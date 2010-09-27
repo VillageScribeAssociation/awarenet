@@ -1,0 +1,380 @@
+<html>
+<head>
+  <title>HTML parser/filter</title>
+
+  <script language='Javascript'>
+
+	function parseTest() {
+		theTa = document.getElementById('taHtml');
+		theDiv = document.getElementById('divOutput');
+		khk = new KHtmlCleaner(theTa.value);
+		output = khk.output;
+		alert(output);
+		theDiv.innerHTML = output;		
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	log a message (debugging)
+	//---------------------------------------------------------------------------------------------
+	function htmlLog(msg) {
+		var logDiv = document.getElementById('divLog');
+		logDiv.innerHTML = logDiv.innerHTML + msg + "<br>\n";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	object to clean html of unwanted tags, attributes, javascript, etc
+	//----------------------------------------------------------------------------------------------
+
+	function KHtmlCleaner(html) {
+
+		//------------------------------------------------------------------------------------------
+		//	member variables
+		//------------------------------------------------------------------------------------------
+
+		this.output = '';				//_ clean html [string]
+		this.tagType = '';				//_	type of tag currently being processed [string]
+		this.hangingEq = false;			//_	if the last token was an equals sign [bool]
+		this.selfClose = false;			//_	if this is a self-closing tag [bool]
+		this.tagAtName = new Array();	//_	attributes of current tag [array]
+		this.tagAtVal = new Array();	//_	attribute values of current tag [array]
+
+		//------------------------------------------------------------------------------------------
+		//	configuration
+		//------------------------------------------------------------------------------------------
+
+		this.allowTags = new Array(
+			'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'b', 'i', 'u', 'ul', 'ol', 'li', 'table',
+			'tbody', 'th', 'td', 'tr', 'span', 'small'
+		);
+
+		//------------------------------------------------------------------------------------------
+		//.	parse raw string for html tags
+		//------------------------------------------------------------------------------------------
+
+		this.parseTags = function() {
+
+			//--------------------------------------------------------------------------------------
+			//	working variables
+			//--------------------------------------------------------------------------------------
+			var thisChar = '';				//%	current char being examined [string]
+			var nextChar = '';				//%	next char to be examined, if any [string]
+			var thisHtmlCharNo = 0;			//%	char position we're scanning from [int]
+			var buffer = '';				//%	piece of the document being worked on [string]
+			var mode = 'outside';			//%	state of state machine [string]
+	
+			//--------------------------------------------------------------------------------------
+			//	consider each character in source HTML
+			//--------------------------------------------------------------------------------------
+
+			for (thisHtmlCharNo = 0; thisHtmlCharNo < html.length; thisHtmlCharNo++) {
+				thisChar = html.substr(thisHtmlCharNo, 1);				// current char
+				nextChar = '';
+				if ((thisHtmlCharNo + 1) < html.length) { 				
+					nextChar = html.substr(thisHtmlCharNo + 1, 1);		// next char, if any
+				}
+
+				//----------------------------------------------------------------------------------
+				// change states (only pay attention to opening of tags if not already in one)
+				//----------------------------------------------------------------------------------
+				switch (mode) {
+					case 'outside':
+						//--------------------------------------------------------------------------
+						//	not inside an html tag change state when we encounter '<'
+						//--------------------------------------------------------------------------
+						if ('<' == thisChar) {						// start of a tag
+							this.throwToken(buffer, 'outside');		// throw anything in buffer
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// change mode
+							thisHtmlCharNo--;						// reprocess this in tag mode
+
+						} else {
+							switch (thisChar) {						// disallow quotes
+								case "'":	thisChar = "&apos;";	break;
+								case "\"":	thisChar = "&quot;";	break;
+							}
+							buffer = buffer + thisChar;				// add current char to buffer
+						}
+						break;
+
+					case 'tag':
+						//--------------------------------------------------------------------------
+						//	inside an html tag, look for whitespace, tokens, strings and '>'
+						//--------------------------------------------------------------------------
+						switch(thisChar) {
+							case ' ':	this.throwToken(' ', 'ws');		break;	// throw whitespace
+							case "\t":	this.throwToken("\t", 'ws');	break;	// ...
+							case "\n":	this.throwToken("\n", 'ws');	break;
+							case "\r":	this.throwToken("\r", 'ws');	break;
+							case '<':	this.throwToken("<", 'start');	break;	// throw control
+							case '=':	this.throwToken("=", 'equals');	break;	// chars
+
+							case '/':
+								if ('>' == nextChar) {				// end of self closing tag
+									this.throwToken(thisChar + nextChar, 'endsc');
+									thisHtmlCharNo++;				// skip the next char									
+
+								} else {							// start of token
+									mode = 'token';					// change to token mode
+									thisHtmlCharNo--;				// reprocess this in token mode
+								}
+								break;
+
+							case '>':								// end of this tag
+								this.throwToken(">", 'end');		// throw it
+								mode = 'outside';					// change mode
+								break;							
+
+							case "'":
+								mode = 'sq';						// change mode
+								thisHtmlCharNo--;					// reprocess this in sq mode
+								break;
+
+							case "\"":
+								mode = 'dq';						// change mode
+								thisHtmlCharNo--;					// reprocess this in dq mode
+								break;
+
+							default:
+								mode = 'token';						// change to token mode
+								thisHtmlCharNo--;					// reprocess this in token mode
+								break;
+
+						}
+						break;	// .................................................................
+
+					case 'sq':
+						//--------------------------------------------------------------------------
+						//	inside a single quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("'" == thisChar) && ("'" != buffer)) {	// end of sq string
+							this.throwToken(buffer, 'sq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'sq':
+						//--------------------------------------------------------------------------
+						//	inside a single quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("'" == thisChar) && ("'" != buffer)) {	// end of sq string
+							this.throwToken(buffer, 'sq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'dq':
+						//--------------------------------------------------------------------------
+						//	inside a double quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("\"" == thisChar) && ("\"" != buffer)) {	// end of dq string
+							this.throwToken(buffer, 'dq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'token':
+						//--------------------------------------------------------------------------
+						//	inside a tag name, attrib name or unquoted value
+						//--------------------------------------------------------------------------
+						endOfToken = false;
+						switch (thisChar) {
+							case '=':	endOfToken = true; break;
+							case ' ':	endOfToken = true; break;
+							case "\t":	endOfToken = true; break;
+							case "\n":	endOfToken = true; break;
+							case "\r":	endOfToken = true; break;
+							case ">":	endOfToken = true; break;
+							case '/':	if ('>' == nextChar) { endOfToken = true; }	break;
+						}
+
+						if (true == endOfToken) {
+							this.throwToken(buffer, 'token');		// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// go back to tag mode
+							thisHtmlCharNo--;						// reprocess this in tag mode
+
+						} else { buffer = buffer + thisChar; }		// still within token
+
+						break;	// .................................................................
+
+				}
+
+			} // end for each char
+
+			//--------------------------------------------------------------------------------------
+			//	throw whatever is left in the buffer, assume it's outside
+			//--------------------------------------------------------------------------------------
+			this.throwToken(buffer, 'outside');
+
+		} // end this.parseTags
+
+		//------------------------------------------------------------------------------------------
+		//.	catch thrown tokens and evaluate
+		//------------------------------------------------------------------------------------------
+		this.throwToken = function (tkVal, tkType) {
+			htmlLog("token: " + tkVal + " type: " + tkType + "<br>\n");
+			switch(tkType) {
+				case 'outside':											// not an html tag part
+					this.output = this.output + tkVal;		
+					break;	// .....................................................................
+
+				case 'start':
+					this.tagType = '';									// clear all working vars
+					this.hangingEq = false;		
+					this.selfClose = false;
+					this.tagAtName = new Array();	
+					this.tagAtVal = new Array();
+					break;
+
+				case 'equals':											// separates k,v pairs
+					this.hangingEq = true;
+					break;	// .....................................................................
+
+				case 'token':
+					if ('' == this.tagType) { this.tagType = tkVal; }	// this is the tag name
+					else {												// this is attrib or value
+						if (true == this.hangingEq) {				
+							tagAtIdx = (this.tagAtVal.length - 1);		// last to be added
+							this.tagAtVal[tagAtIdx]	= tkVal;			// this is an attrib value 
+							this.hangingEq = false;						// no longer hanging
+
+						} else {
+							tagAtIdx = this.tagAtVal.length;
+							tkVal = tkVal.toLowerCase();				// lowercase is tidier
+							this.tagAtName[tagAtIdx] = tkVal;			// this is an attrib name
+							this.tagAtVal[tagAtIdx] = '';				// set blank value
+						}
+					}
+					break;	// .....................................................................
+
+				case 'sq':												// single quoted string
+					if (true == this.hangingEq) {
+						tagAtIdx = (this.tagAtVal.length - 1);			// last to be added
+						this.tagAtVal[tagAtIdx]	= tkVal;				// this is an attrib value 
+						this.hangingEq = false;							// no longer hanging
+					}	
+					break;	// .....................................................................
+
+				case 'dq':												// single quoted string
+					if (true == this.hangingEq) {
+						tagAtIdx = (this.tagAtVal.length - 1);			// last to be added
+						this.tagAtVal[tagAtIdx]	= tkVal;				// this is an attrib value 
+						this.hangingEq = false;							// no longer hanging
+					}	
+					break;	// .....................................................................
+
+				case 'endsc':
+					this.selfClose = true;
+					this.addTag();
+					break;	// .....................................................................
+
+				case 'end':
+					this.addTag();
+					break;	// .....................................................................
+
+			}
+		} // end this.throwToken
+
+		//------------------------------------------------------------------------------------------
+		//.	finished with current tag, redact and add it to output
+		//------------------------------------------------------------------------------------------
+
+		this.addTag = function() {
+			var allowed = false;						//%	if this tag is allowed [bool]
+			var tnLower = this.tagType.toLowerCase();	//%	for comparison below [string]
+			var tagStr = '<' + this.tagType + ' ';		//%	redacted/rebuilt HTML tag [string]
+
+			for (var i = 0; i < this.allowTags.length; i++) 
+				{ if (this.allowTags[i] == tnLower) { allowed = true; }	}
+
+			if (false == allowed) { return false; }
+
+			for (var i = 0; i < this.tagAtName.length; i++) { 
+				var atName =  this.tagAtName[i];					//%	attributre name [string]
+				var atVal =  this.tagAtVal[i];						//%	attribute value [string]
+
+				if (true == this.allowAttrib(tnLower, atName)) {	// If this attrib is allowed
+					tagStr = tagStr + atName;						// add attribute name.
+					if ('' != atVal) {								// If there is a value
+						if ('style' == atName) {					// and this is a 'style' attrib
+							var cStyle = this.cleanStyle(atVal);	// clean the value
+							tagStr = tagStr + '=' + cleanStyle;		// before adding it.
+
+						} else { tagStr = tagStr + '=' + atVal;	}	// not 'style', just add it
+
+					} else { tagStr = tagStr + ' '; }				// no value, leave a space
+
+				}	
+			}
+			
+			this.output = this.output + tagStr;						// we're done, add to output
+		} // end this.addTag
+
+		//------------------------------------------------------------------------------------------
+		//.	discover if an attribute is allowed
+		//------------------------------------------------------------------------------------------
+		//arg: tagType - eg, 'img', 'table', 'html' [string]
+		//arg: tagType - eg, 'img', 'table', 'html' [string]
+		//returns: true is it's allowed, false if not [bool]
+
+		this.allowAttrib = function(tagType, attribute) {
+			tagType = tagType.toLowerCase();
+			attribute = attribute.toLowerCase();
+			if ('class' == attribute) { return true; }	// any tag may have any class
+
+			//--------------------------------------------------------------------------------------
+			//	some tags may have specific attributes, eg: a -> href, img -> src
+			//--------------------------------------------------------------------------------------
+			switch (tagType) {
+				case 'span':
+					switch (attribute) {
+						case 'style': return true;
+					}
+					break; // ......................................................................
+
+				case 'a':
+					switch (attribute) {
+						case 'href': return true;
+					}
+					break; // ......................................................................
+
+				case 'img':
+					switch (attribute) {
+						case 'src': return true;
+						case 'border': return true;
+						case 'alt': return true;
+						case 'style': return true;
+					}
+					break; // ......................................................................
+
+			}
+
+			return false;
+		} // end this.allowAttrib
+
+
+		this.parseTags(html);
+
+	} // end class KHtmlCleaner
+
+  </script>
+
+</head>
+
+<body>
+
+<textarea id='taHtml' rows='10' cols='80'></textarea><br/>
+<input type='button' onClick='parseTest();' value='parse test &gt;&gt;' />
+<div id='divOutput'></div>
+<br/>
+<div id='divLog'></div>
+
+</body>
+
+</html>

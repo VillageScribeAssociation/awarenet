@@ -1,0 +1,5 @@
+<? /*
+
+This is an experimental module for creating a caching graphs and charts.  It is not currently in use, and will likely be merged with the theme.
+
+*/ ?>

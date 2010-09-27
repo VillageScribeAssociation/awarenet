@@ -1,0 +1,5 @@
+<? /*
+
+The calendar modules provides a collborative, public calendar for awareNet, in the spirit of a school or community event calendar.  Since the focus of awareNet is on enabling social interactions and group collaboration it does not double as a personal, private calendar.  The calendar may be viewed at various timescales - showing all details of all events on a given day, summarizing months or years worth of events and grouping events into categories.
+
+*/ ?>

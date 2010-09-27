@@ -1,0 +1,72 @@
+Module XML files define:
+
+ - module metadata
+   - name
+   - version number
+   - revision number
+   - description
+   - dependancies on other modules
+   - enabled (yes|no)
+   - search (yes|no)
+
+ - objects (models) provided by a module
+   - permissions which may be granted on objects
+   - relationships objects may have to users
+
+Example module file (users)
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<module>
+    <modulename>users</modulename>
+    <version>1.0</version>
+    <revision>0</revision>
+    <description>For managing users, roles, login, profiles, friendships, etc.</description>
+    <installed>no</installed>
+    <enabled>yes</enabled>
+    <search>no</search>
+    <dependencies>
+	  <dependency module="aliases" minVersion='1.0' />
+    </dependencies>
+    <models>
+      <model>
+        <name>Users_User</name>
+        <description></description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <userrelationships>
+          <userrel>creator</userrel>
+          <userrel>friend</userrel>
+        </userrelationships>
+      </model>
+      <model>
+        <name>Users_Friendship</name>
+        <description></description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <userrelationships>
+          <userrel>creator</userrel>
+        </userrelationships>
+      </model>
+      <model>
+        <name>Users_Role</name>
+        <description></description>
+        <permissions>
+          <permission>new</permission>
+          <permission>show</permission>
+          <permission>edit</permission>
+          <permission>delete</permission>
+        </permissions>
+        <userrelationships>
+          <userrel>creator</userrel>
+        </userrelationships>
+      </model>
+    </models>
+</module>

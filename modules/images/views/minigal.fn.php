@@ -9,20 +9,31 @@
 //arg: refUID - UID of item this owns images [string]
 
 function images_minigal($args) {
-	global $serverPath;
+	global $kapenta, $user, $db;
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	$authArgs = array('UID' => $args['refUID']);
+	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
+	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
+	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
+
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
+
+	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
+	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner object)'; }
+
+	//TODO: permissions check here
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form
 	//----------------------------------------------------------------------------------------------
-	$src = $serverPath . 'images/minigal/refModule_' . $args['refModule'] 
-	     . '/refUID_' . $args['refUID'] . '/';
+	$src = $kapenta->serverPath . 'images/minigal'
+		 . '/refModule_' . $refModule
+		 . '/refModel_' . $refModel  
+	     . '/refUID_' . $refUID . '/';
 	     
 	$html = "<iframe name='miniGalley" . $args['refUID'] . "' src='" . $src 
 		. "' width='570' height='200' frameborder='no' ></iframe>\n";	

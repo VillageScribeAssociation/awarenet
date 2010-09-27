@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<head>
+<title>:: kapenta :: whiteboard test ::</title>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<link href='http://mothsorchid.com/gui/css/default.css' rel='stylesheet' type='text/css' />
+
+<style type='text/css'> .style1 {font-size: 9px} </style>
+<script language='javascript'>
+
+	var jsServerPath = 'http://awarenet.co.za/';
+
+	//----------------------------------------------------------------------------------------------
+	//	this is a 'hello world'
+	//----------------------------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------------------------
+	//	initialise page
+	//----------------------------------------------------------------------------------------------
+
+	var xpos = 0;
+	var fadecount = 0;
+
+	function guiInit() {
+		draw();
+	}
+
+	function draw() {
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+		var points = Array();
+
+		//ctx.fillRect(0, 0, 800, 600);
+
+		for (i = 0; i < 30; i++) {
+			points[i] = Array();
+			points[i]['x'] = (Math.random() * 800) + 100;
+			points[i]['y'] = (Math.random() * 600) + 100;
+		}
+
+		for (i = 0; i < 30; i++) {		
+			for (j = 0; j < 30; j++) {
+				ipoint = points[i];
+				jpoint = points[j];
+
+				connect = (Math.random() * 10)
+
+				if (connect >= 9) {
+
+					ctx.strokeStyle = "rgba(100, 100, 200, 0.3)";  	
+
+					ctx.beginPath();
+					ctx.moveTo(ipoint['x'], ipoint['y']);
+					ctx.lineTo(jpoint['x'], jpoint['y']);
+					ctx.stroke();
+
+				}
+
+			}
+		}
+
+		for (i = 0; i < 30; i++) {		
+			ctx.fillStyle = "rgba(100, 100, 100, 0.5)";  	
+			ctx.beginPath();
+			ctx.arc(points[i]['x'], points[i]['y'], 10 + (Math.random() * 20), 0, (Math.PI * 2), false)
+			ctx.fill();
+		}
+
+		//fadecount += 50;
+		//fader();
+
+	}
+
+
+	function fader() {
+		if (fadecount < 1) { return false; }
+
+		var canvas = document.getElementById("c1");
+		var ctx = canvas.getContext("2d");
+
+		ctx.fillStyle = "rgba(255, 255, 255, 0.01)";  	
+		ctx.fillRect(0, 0, 1000, 800);		
+
+		window.setTimeout('fader();', 300);
+		fadecount--;
+	}
+	
+</script>
+</head>
+
+<body onLoad="guiInit();" onResize="desktopResize();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
+
+<canvas id='c1' width='1000' height='800' onClick='draw();' ></canvas>
+
+</body>
+</html>

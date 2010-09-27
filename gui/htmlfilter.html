@@ -1,0 +1,398 @@
+<html>
+<head>
+  <title>HTML parser/filter</title>
+
+  <script language='Javascript'>
+
+	function parseTest() {
+		theTa = document.getElementById('taHtml');
+		theDiv = document.getElementById('divOutput');
+		output = htmlParseClean(theTa.value);
+		alert(output);
+		theDiv.innerHTML = output;		
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	simple state machine for parsing HTML
+	//---------------------------------------------------------------------------------------------
+
+	function htmlParseClean(html) {
+
+		//-----------------------------------------------------------------------------------------
+		//working variables
+		//-----------------------------------------------------------------------------------------
+		var parseOutput = '';
+		var thisChar = '';
+		var lastChar1 = '';
+		var lastChar2 = '';
+		var thisTag = '';
+		var thisLit = '';
+
+		//-----------------------------------------------------------------------------------------
+		// states
+		//-----------------------------------------------------------------------------------------
+		var inTag = false;
+		var inDQLit = false;
+		var inSQLit = false;
+
+		//-----------------------------------------------------------------------------------------
+		//	consider each character in source HTML
+		//-----------------------------------------------------------------------------------------
+
+		for (thisHtmlCharNo = 0; thisHtmlCharNo < html.length; thisHtmlCharNo++) {
+			thisChar = html.substr(thisHtmlCharNo, 1);
+
+			//-------------------------------------------------------------------------------------
+			// change states (only pay attention to opening of tags if not already in one)
+			//-------------------------------------------------------------------------------------
+			
+			if ((true == inTag) || ('<' == thisChar)) {
+
+				switch (thisChar) {
+
+					case '<':	// open tag if not already in one
+						if (false == inTag) { 
+							//thisChar = '&lt;';
+							inTag = true; 
+							inDQLit = false;
+							inSQLit = false;
+						}
+						break;
+
+					case '>':	// close tag if not in a quoted literal
+						if ((true == inTag) && (false == inDQLit) && (false == inSQLit)) { 
+							thisTag = thisTag + thisChar;
+							thisTag = htmlParseTag(thisTag);	// throw for further processing
+
+							parseOutput = parseOutput + "<span style='color: red;'>" + thisTag + "</span>";
+
+							inTag = false; 		// no longer in a tag
+
+							thisChar = '';		// already added to tag
+							thisTag = '';		// already added to output
+							thisType = '';		// will also be cleared on opening of new tag
+						}
+						break;
+
+					case "'":	// open or close SQ literal if not already in DQ literal
+						if ((true == inTag) && (false == inDQLit)) {
+							if (false == inSQLit) { 
+								// beginning of single quoted literal
+								inSQLit = true; 
+							} else {
+								// end of single quoted literal
+								thisTag = thisTag + thisLit + thisChar;
+								thisLit = '';	// clear lit buffer
+								thisChar = '';	// already added
+								inSQLit = false; 
+							}
+						}
+						break;
+
+					case "\"":	// open or close DQ literal if not already in SQ literal
+						if ((true == inTag) && (false == inSQLit)) {
+							if (false == inDQLit) { 
+								// beginning of double quoted literal
+								inDQLit = true; 
+							} else {
+								// end of single quoted literal
+								thisTag = thisTag + thisLit + thisChar;
+								thisLit = '';	// clear lit buffer
+								thisChar = '';	// already added
+								inDQLit = false; 
+							}
+						}
+						break;
+
+				} // end switch
+			} // end if in tag or opening one
+
+			//-------------------------------------------------------------------------------------
+			// add current char to appropriate buffer
+			//-------------------------------------------------------------------------------------
+			if (false == inTag) {
+				// not in an HTML tag
+				parseOutput = parseOutput + thisChar;				
+
+			} else {
+				// in an HTML tag
+				if ((false == inSQLit) && (false == inDQLit)) {
+					// not in a quoted literal
+					thisTag = thisTag + thisChar;
+
+				} else {
+					// in a quoted literal
+					thisLit = thisLit + thisChar;
+				}				
+			}
+
+		} // end for each
+
+		return parseOutput;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	parse an individual HTML tag
+	//---------------------------------------------------------------------------------------------
+
+	function htmlParseTag(htmlTag) {
+		parseTagOutput = '';
+
+		// working variables
+		var thisTagName = '';
+		var lastTagChar = '';
+		var lastTagLine = '';
+		var thisAttrib = '';
+
+		// states
+		var inTagName = true;
+		var inTagAttrib = false;
+		var inTagValue = false;
+		var inTagSQLit = false;
+		var inTagDQLit = false;
+
+		//-----------------------------------------------------------------------------------------
+		//	break each part of the tag onto its own line
+		//-----------------------------------------------------------------------------------------
+		for (thisHtmlTagCharNo = 0; thisHtmlTagCharNo < htmlTag.length; thisHtmlTagCharNo++) {
+			thisTagChar = htmlTag.substr(thisHtmlTagCharNo, 1);
+
+			//-------------------------------------------------------------------------------------	
+			// if not in a literal, treat all whitespace or control chars as [[**whitespace**]]
+			//-------------------------------------------------------------------------------------
+			if ((false == inTagSQLit) && (false == inTagDQLit)) {
+				// not in a lteral
+				if (	(' ' == thisTagChar) || ("\t" == thisTagChar) || 
+						("\n" == thisTagChar) || ("\n" == thisTagChar) || 
+						('<' == thisTagChar) || (">" == thisTagChar) ) { 
+					thisTagChar = "[[**whitespace**]]"; 
+				}
+	
+				// separate attribs and values
+				if ("=" == thisTagChar) { 
+					thisTagChar = "[[**whitespace**]]=[[**whitespace**]]"; 
+				}
+
+				// separate forwardslash
+				if ("/" == thisTagChar) { 
+					thisTagChar = "[[**whitespace**]]/[[**whitespace**]]"; 
+				}
+
+			} 
+
+			//don't double up whitespace
+			if (("[[**whitespace**]]" == thisTagChar) && (thisTagChar == lastTagChar)) { 
+				thisTagChar = '';
+			}
+
+			//-------------------------------------------------------------------------------------
+			// open or close SQ literal if not already in DQ literal
+			//-------------------------------------------------------------------------------------
+			if (("'" == thisTagChar) && (false == inTagDQLit)) {
+				if (false == inTagSQLit) { inTagSQLit = true; } else { inTagSQLit = false; }
+			}
+
+			//-------------------------------------------------------------------------------------
+			// open or close DQ literal if not already in SQ literal
+			//-------------------------------------------------------------------------------------
+			if (("\"" == thisTagChar) && (false == inTagSQLit)) {
+				if (false == inTagDQLit) { inTagDQLit = true; } else { inTagDQLit = false; }
+			}
+
+			parseTagOutput = parseTagOutput + thisTagChar;
+			lastTagChar = thisTagChar;
+
+		} // end for each character
+
+		//-----------------------------------------------------------------------------------------
+		//	parse lines
+		//-----------------------------------------------------------------------------------------
+		tagLines = parseTagOutput.split("[[**whitespace**]]");
+		parseTagOutput = '';
+		for (tagLineNo = 0; tagLineNo < tagLines.length; tagLineNo++) {
+			thisTagLine = tagLines[tagLineNo];
+			if ('' != thisTagLine) {
+				// remove this
+				//htmlLog("tag line:" + tagLines[tagLineNo]);
+
+				if ("/" == thisTagLine) { 
+					htmlLog("adding:" + tagLines[tagLineNo]);
+					parseTagOutput = parseTagOutput + "/"; 
+				}
+
+				if (('' == thisTagName) && ('/' != thisTagLine)) { 
+					//-----------------------------------------------------------------------------
+					// first word is always tag name (a, img, table, etc)
+					//-----------------------------------------------------------------------------
+					thisTagName = thisTagLine.toLowerCase();
+					if (false == htmlTagIsAllowed(thisTagName)) {
+						htmlLog("tag name found: " + thisTagName + " (not allowed)");
+						return '';
+					} else {
+						htmlLog("tag name found: " + thisTagName + " (allowed)");
+						parseTagOutput = parseTagOutput + thisTagName;
+					}
+
+				} else {
+					//-----------------------------------------------------------------------------
+					// should be an attribute, value or the equal sign
+					//-----------------------------------------------------------------------------
+					if ('=' == lastTagLine) {
+						// this is a value
+						if ('banned' == thisAttrib) {
+							// don't add it
+						} else {
+							if ('class' == thisAttrib) {
+								if (false == htmlClassIsAllowed(thisTagLine)) { thisTagLine = "''"; }
+							}
+
+							if ('style' == thisAttrib) {
+								thisTagLine = htmlEnforceStyle(thisTagLine);
+							}
+
+							parseTagOutput = parseTagOutput + '=' + thisTagLine;
+						}
+
+					} else {
+						if (('=' == thisTagLine) || ('/' == thisTagLine)) {
+							// this can be ignored
+
+						} else {
+							// this is an attribute
+							thisAttrib = thisTagLine.toLowerCase();
+							if (false == htmlAttributeIsAllowed(thisTagName, thisAttrib)) {
+								thisAttrib = 'banned';
+							} else {
+								parseTagOutput = parseTagOutput + ' ' + thisAttrib;
+							}
+							
+						}
+					}
+
+				}
+
+				lastTagLine = thisTagLine;
+			} // end if not blank
+		} // end for each tag line
+
+		return "<span style='color: red;'>&lt;" + parseTagOutput + "&gt;</span>";
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	discover if an html tag is allowed //TODO: this is an ugly hack, make it efficient
+	//---------------------------------------------------------------------------------------------
+	function htmlTagIsAllowed(tagName) {
+		//alert(tagName);
+		allowedTags = 'a|h1|h2|h3|h4|h5|p|br|b|i|u|ul|ol|li|table|tbody|th|td|tr|span|small';
+		atags = allowedTags.split('|');
+		for (tagNo = 0; tagNo < atags.length; tagNo++) { 
+			if (tagName == atags[tagNo]) { return true; } 
+		}
+		return false;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	discover if an html attribute is allowed 
+	//---------------------------------------------------------------------------------------------
+
+	function htmlAttributeIsAllowed(tagName, attribute) {
+		if (attribute == 'class') { return true; }	// any tag may have any class
+
+		//-----------------------------------------------------------------------------------------
+		//	some tags may have specific attributes, eg: a -> href, img -> src
+		//-----------------------------------------------------------------------------------------
+		switch (tagName) {
+			case 'span':
+				switch (attribute) {
+					case 'style': return true;
+				}
+
+			case 'a':
+				switch (attribute) {
+					case 'href': return true;
+				}
+
+			case 'img':
+				switch (attribute) {
+					case 'src': return true;
+					case 'border': return true;
+					case 'alt': return true;
+					case 'style': return true;
+				}
+
+		}
+
+		return false;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	disallow Mso, apple, etc classes //TODO: improve this
+	//---------------------------------------------------------------------------------------------
+
+	function htmlClassIsAllowed(className) {
+		className = className.replace("'", "");
+		className = className.replace("\"", "");
+		if (className.substr(0, 3) == 'Mso') { return false; }
+		if (className.substr(0, 5) == 'apple') { return false; }
+		return true;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	classes which are allowed
+	//---------------------------------------------------------------------------------------------
+
+	function htmlEnforceStyle(styleDef) {
+		var newStyleDef = '';
+		var styleIsAllowed = false;
+		styleDef = styleDef.replace("'", "");
+		styleDef = styleDef.replace("\"", "");
+		styleDef = styleDef.replace(/&quot;/g, "'");
+		//TODO: trim(styleDef)
+
+		styleLines = styleDef.split(";");
+		for (thisStyleLineNo = 0; thisStyleLineNo < styleLines.length; thisStyleLineNo++) {
+			thisStyleLine = styleLines[thisStyleLineNo];			
+			parts = thisStyleLine.split(":");
+			styleIsAllowed = false;
+			styleParamName = parts[0];
+			styleParamName.toLowerCase();
+
+			switch(styleParamName) {
+				case 'color': 		styleIsAllowed = true; break;
+				case 'font-size':	styleIsAllowed = true; break;
+			}
+
+			if (true == styleIsAllowed) {
+				htmlLog("styleLine: " + thisStyleLine + " (OK)");	
+				newStyleDef = newStyleDef + thisStyleLine + "; "
+			} else {
+				htmlLog("styleLine: " + thisStyleLine + " (not allowed)");			
+			}
+		}
+
+		return "\"" + newStyleDef + "\"";
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	log a message (debugging)
+	//---------------------------------------------------------------------------------------------
+	function htmlLog(msg) {
+		//var logDiv = document.getElementById('divLog');
+		//logDiv.innerHTML = logDiv.innerHTML + msg + "<br/>\n";
+	}
+
+  </script>
+
+</head>
+
+<body>
+
+<textarea id='taHtml' rows='10' cols='80'></textarea><br/>
+<input type='button' onClick='parseTest();' value='parse test &gt;&gt;' />
+<div id='divOutput'></div>
+<br/>
+<div id='divLog'></div>
+
+</body>
+
+</html>

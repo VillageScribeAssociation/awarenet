@@ -55,8 +55,9 @@ class Messages_Message {
 	function load($UID) {
 		global $db;
 		$objary = $db->load($UID, $this->dbSchema);
-		if ($objary != false) { $this->loadArray($objary); return true; }
-		return false;
+		if (false === $objary) { return false; }
+		if (false == $this->loadArray($objary)) { return false; }
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------

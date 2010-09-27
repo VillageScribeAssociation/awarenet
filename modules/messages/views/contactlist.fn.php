@@ -29,8 +29,10 @@ function messages_contactlist($args) {
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		$extra = "<a href='/messages/compose/to_" . $row['toUID'] . "'>[send message]</a>";
-		$html .= "[[:users::summarynav::userUID=" . $row['toUID'] . "::extra=" . $extra . ":]]";
+		if ('' != $row['toUID']) {
+			$extra = "<a href='/messages/compose/to_" . $row['toUID'] . "'>[send message]</a>";
+			$html .= "[[:users::summarynav::userUID=" . $row['toUID'] . "::extra=" . $extra . ":]]";
+		}
 	}
 	return $html;
 }

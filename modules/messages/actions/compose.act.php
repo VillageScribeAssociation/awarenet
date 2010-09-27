@@ -14,6 +14,8 @@
 	//----------------------------------------------------------------------------------------------
 	$jsrUID = '';
 	$jsrHtml ='';
+	$toUser = '';
+	$reMsg = '';
 
 	if ( (true == array_key_exists('to', $req->args))
 		&& (true == $db->objectExists('Users_User', $req->args['to'])) ) { 

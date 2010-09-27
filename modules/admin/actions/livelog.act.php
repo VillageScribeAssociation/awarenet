@@ -13,7 +13,7 @@
 	//	render page
 	//---------------------------------------------------------------------------------------------
 	$page->load('modules/admin/actions/livelog.page.php');
-	$page->data['jsinit'] .= "\n\t\tmsgSubscribe('admin-syspagelogsimple', msgh_sysPageLog);\n";
+	$page->jsinit .= "\n\t\tmsgSubscribe('admin-syspagelogsimple', msgh_sysPageLog);\n";
 	$page->render();
 
 ?>

@@ -15,8 +15,10 @@
 	//	is this to be sent to a specific user, or in response to another message
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('re', $req->args)) { $page->do404('message not specified'); }
-	$model = new Messages_Message($req->args['re']);
-	if ($model->owner != $user->UID) { $page->do403(); }	// not your message
+	$msgUID = str_replace('?', '', $req->args['re']);		// TODO: better removal of querystring
+	$model = new Messages_Message($msgUID);		
+	if (false == $model->loaded) { $page->do404('Message not found'); }
+	if ($model->owner != $user->UID) { $page->do403('not owner of message'); }	// not your message
 
 	$jsrUID = $model->fromUID;
 

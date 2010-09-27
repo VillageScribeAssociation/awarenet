@@ -26,11 +26,13 @@
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
-[[:groups::listallnav::school=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[[:groups::listallnav::school=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Recent Blog Posts:]]
 [[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=5:]]
 [`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Online Now:]]
 [[:users::onlineschoolnav::school=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</nav1>

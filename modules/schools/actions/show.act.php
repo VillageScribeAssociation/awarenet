@@ -31,6 +31,7 @@
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['schoolName'] = $model->name;
 	$page->blockArgs['schoolRa'] = $model->alias;
+	$page->blockArgs['schoolUID'] = $model->UID;
 	$page->render();
 
 ?>

@@ -44,7 +44,7 @@
 		$model->owner = $toUID;
 		$model->folder = 'inbox';
 		$model->fromUID = $user->UID;
-		$model->data['toUID'] = $toUID;
+		$model->toUID = $toUID;
 		$model->cc = implode('|', $cc);
 		$model->title = $subject;
 		$model->content = $_POST['content'];

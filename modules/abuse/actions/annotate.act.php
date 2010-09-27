@@ -24,9 +24,20 @@
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	annotate redirect back to the issue
+	//	annotate
 	//----------------------------------------------------------------------------------------------
-	$model->annotate($user->data['UID'], $_POST['comment']);
+	//TODO: sanitize
+	$comment = $_POST['comment'];
+	$model->annotate($user->UID, $comment);
+
+	//----------------------------------------------------------------------------------------------
+	//	notify other admins and redirect back to abuse report
+	//----------------------------------------------------------------------------------------------
+	$title = "Abuse report annotated by " . $user->getName();
+	$url = '/abuse/show/' . $model->UID;
+	$nUID = $notifications->create('abuse', 'Abuse_Report', $model->UID, $title, $comment, $url);
+	$notifications->addAdmins($nUID);
+
 	$page->do302('abuse/show/' . $model->UID);
 
 ?>

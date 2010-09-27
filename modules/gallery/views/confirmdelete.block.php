@@ -11,7 +11,7 @@
     </form>
     </td>
     <td valign='top'>
-    <form name='confirmDelete' method='POST' action='%%serverPath%%gallery/%%raUID%%/'>
+    <form name='cancelDelete' method='POST' action='%%serverPath%%gallery/%%raUID%%/'>
     <input type='submit' value='No: Cancel' />
     </form>
     </td>

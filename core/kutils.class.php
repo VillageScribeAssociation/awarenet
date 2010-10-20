@@ -164,18 +164,9 @@ class KUtils {
 	//returns: result of HTTP GET request, false if no cURL [string]
 
 	function curlGet($url, $password = '') {
-		global $hostInterface;
-		global $proxyEnabled;
-		global $proxyAddress;
-		global $proxyUser;
-		global $proxyPass;
-		global $proxyPort;
+		global $kapenta;
 	
-		if (function_exists('curl_init') == false) { return false; }	// is cURL installed?
-
-		//temporary DNS failure
-		$url = str_replace('http://www.kapenta.co.uk', 'http://89.145.97.133', $url);
-		$url = str_replace('http://kapenta.co.uk', 'http://89.145.97.133', $url);
+		if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
 
 		//------------------------------------------------------------------------------------------
 		//	create baisc cURL HTTP GET request
@@ -183,24 +174,21 @@ class KUtils {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
+		if ('' != $kapenta->hostInterface) 
+			{ curl_setopt($ch, CURLOPT_INTERFACE, $kapenta->hostInterface); }
 
 		//------------------------------------------------------------------------------------------
 		//	use HTTP proxy if enabled
 		//------------------------------------------------------------------------------------------
-		if ($proxyEnabled == 'yes') {
-			$credentials = $proxyUser . ':' . $proxyPass;
-			curl_setopt($ch, CURLOPT_PROXY, $proxyAddress);
-			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyPort);
+		if ('yes' == $kapenta->proxyEnabled) {
+			$credentials = $kapenta->proxyUser . ':' . $kapenta->proxyPass;
+			curl_setopt($ch, CURLOPT_PROXY, $kapenta->proxyAddress);
+			curl_setopt($ch, CURLOPT_PROXYPORT, $kapenta->proxyPort);
 			curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 			if (trim($credentials) != ':') {
 				curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $credentials);
 			}
-		}
-
-		if (strpos($url, '89.145.97.133') != false) { 
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Host: www.kapenta.co.uk'));
 		}
 
 		//------------------------------------------------------------------------------------------

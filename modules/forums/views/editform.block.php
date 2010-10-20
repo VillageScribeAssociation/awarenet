@@ -10,7 +10,13 @@
   </tr>
   <tr>
     <td><b>School:</b></td>
-    <td>[[:schools::select::varname=school::default=%%school%%:]]</td>
+    <td>
+		[[:schools::select::varname=school::default=%%school%%:]] &nbsp;
+	    <b>Weight:</b>
+	    <input type='text' name='weight' value='%%weight%%' size='4' />
+	</td>
+  </tr>
+  <tr>
   </tr>
 </table>
 <br/>

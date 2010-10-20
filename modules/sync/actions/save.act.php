@@ -18,7 +18,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	load and update the Sync_Server object
 	//----------------------------------------------------------------------------------------------
-	$model = new Sync_Server($UID);
+	$model = new Sync_Server($_POST['UID']);
 	if (false == $model->loaded) { $page->do404("could not load Server $UID");}
 
 	foreach($_POST as $field => $value) {
@@ -36,7 +36,7 @@
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) { $session->msg('Saved changes to server.', 'ok'); }
-	else { $session->msg('Could not save Server:<br/>' . $report, 'bad');
+	else { $session->msg('Could not save Server:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
 	else { $page->do302('/sync/show/' . $model->UID); }

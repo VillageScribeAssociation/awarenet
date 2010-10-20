@@ -24,6 +24,8 @@
 	$editUrl = '';
 	$delUrl = '';
 
+	/*
+
 	// only members and admins can edit projects
 	if (true == $model->hasEditAuth($user->UID)) 
 		{ $editUrl = $serverPath . 'projects/editabstract/' . $model->alias; }
@@ -33,6 +35,8 @@
 		$ext = $model->extArray();
 		$delUrl = $ext['delUrl'];
 	}
+	
+	*/
 
 	//----------------------------------------------------------------------------------------------
 	//	render page
@@ -42,8 +46,8 @@
 	$page->blockArgs['UID'] = $UID;
 	$page->blockArgs['projectTitle'] = $model->title;
 	$page->blockArgs['projectRa'] = $model->alias;
-	$page->blockArgs['editProjectUrl'] = $editUrl;	// TODO: clunky, fix this
-	$page->blockArgs['delProjectUrl'] = $delUrl;
+	//$page->blockArgs['editProjectUrl'] = $editUrl;	// TODO: clunky, fix this
+	//$page->blockArgs['delProjectUrl'] = $delUrl;
 	$page->render();
 
 ?>

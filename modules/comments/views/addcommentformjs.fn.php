@@ -36,6 +36,7 @@ function comments_addcommentformjs($args) {
 	$labels = array();
 	$labels['invitation'] = $invitation;
 	$labels['refModule'] = $args['refModule'];
+	$labels['refModel'] = $args['refModel'];
 	$labels['refUID'] = $args['refUID'];
 	$labels['return'] = $args['return'];
 

@@ -30,7 +30,7 @@
 	//	load and export record list 
 	//---------------------------------------------------------------------------------------------
 	
-	$range = $db->loadRange($tableName, 'UID, editedBy, editedOn', '', '', '', '');
+	$range = $db->loadRange($tableName, 'UID, editedOn', '');
 
 	if ((true == array_key_exists('sha1',$req->args)) && ('yes' == $req->args['sha1'])) {
 		//-----------------------------------------------------------------------------------------

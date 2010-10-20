@@ -5,16 +5,39 @@
 //--------------------------------------------------------------------------------------------------
 //|	summary
 //--------------------------------------------------------------------------------------------------
+//args: raUID - alias or UID of an Announcements_Announcement object [string]
+//opt: UID - overrides raUID [string]
 
 function announcements_summary($args) {
-	global $theme;
+	global $theme, $user, $page;
+	$html = '';		//%	return value [string]
 
-	if ($user->authHas('announcements', 'Announcements_Announcement', 'show', 'TODO:UIDHERE') == false) { return ''; }
-	if (array_key_exists('UID', $args)) {
-		$model = new announcements($args['UID']);
-		$html = $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/announcements/views/summary.block.php'));
-		return $html;
-	}
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+
+	$model = new Announcements_Announcement($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $model->UID))
+		{ return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$labels = $model->extArray();
+	$labels['rawblock64'] = base64_encode($args['rawblock']);
+	$block = $theme->loadBlock('modules/announcements/views/summary.block.php');
+	$html = $theme->replaceLabels($labels, $block);
+
+	//----------------------------------------------------------------------------------------------
+	//	set AJAX triggers
+	//----------------------------------------------------------------------------------------------
+	$channel = 'announcement-' . $model->UID;
+	$page->setTrigger('announcements', $channel, $args['rawblock']);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

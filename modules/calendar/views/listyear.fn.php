@@ -9,23 +9,25 @@
 
 function calendar_listyear($args) {	
 	global $db;
+	$html = '';
+
 	//----------------------------------------------------------------------------------------------
 	//	check input
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('year', $args) == false) { return false; }
+	if (false == array_key_exists('year', $args)) { return ''; }
 	if (strlen($args['year']) != 4) { return false; }
-	$c = new Calendar_Entry();
-	$html = '';
+	$model = new Calendar_Entry();
+	//TODO: permissions check here
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the listing
 	//----------------------------------------------------------------------------------------------
 	for($i = 1; $i <= 12; $i++) {
-		$monthName = $c->getMonthName($i);
+		$monthName = $model->getMonthName($i);
 		$html .= "<h2><a class='black' href='/calendar/month_" .  $args['year'] . "_" 
-		      . $c->twoDigits($i) . "'>$monthName " . $args['year'] . "</a></h2>";
+		      . $model->twoDigits($i) . "'>$monthName " . $args['year'] . "</a></h2>";
 		      
-		$events = $c->loadMonth($i, $args['year']);
+		$events = $model->loadMonth($i, $args['year']);
 		if (count($events) > 0) {
 			$html .= "<table noborder>\n";
 			$html .= "<tr>\n";

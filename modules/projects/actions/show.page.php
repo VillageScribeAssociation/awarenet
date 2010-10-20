@@ -23,9 +23,25 @@
 [[:comments::listnav::refModule=projects::refModel=Projects_Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Tags (this project)::toggle=divTagsNav:]]
+[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
+[[:tags::cloud::url=projects/tag/::refModule=projects::refModel=Projects_Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Their Other Projects:]]
 [[:projects::listsamembersanav::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</nav1>
+[`|lt]br/[`|gt]
+
+
+[[:theme::navtitlebox::label=Tags (all projects)::toggle=divTagsAllNav:]]
+[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
+[[:tags::modelcloud::refModule=projects::refModel=Projects_Project:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
+</nav1>
 	<nav2></nav2>
 	<banner></banner>
 	<head></head>

@@ -60,6 +60,8 @@
 
     </models>
     <defaultpermissions>
+		student:p|projects|Projects_Project|show
+
 		student:p|projects|Projects_Project|new
 		student:p|projects|Projects_Project|show
 		student:p|projects|Projects_Project|comments-add
@@ -69,9 +71,11 @@
 		student:c|projects|Projects_Project|administer|(if)|projectadmin
 		student:c|projects|Projects_Project|edit|(if)|projectmember
 		student:c|projects|Projects_Project|edit|(if)|projectadmin
+		student:c|projects|Projects_Project|tags-manage|(if)|projectmember
 		student:c|projects|Projects_Project|images-add|(if)|projectmember
 		student:c|projects|Projects_Project|images-add|(if)|projectadmin
 		student:c|projects|Projects_Project|edit|(if)|projectadmin
+		student:p|projects|Projects_Revision|show
 
 		teacher:p|projects|Projects_Project|new
 		teacher:p|projects|Projects_Project|show
@@ -82,8 +86,11 @@
 		teacher:c|projects|Projects_Project|administer|(if)|projectadmin
 		teacher:c|projects|Projects_Project|edit|(if)|projectmember
 		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
+		teacher:c|projects|Projects_Project|tags-manage|(if)|projectmember
 		teacher:c|projects|Projects_Project|images-add|(if)|projectmember
+		teacher:c|projects|Projects_Project|images-add|(if)|projectadmin
 		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
+		teacher:p|projects|Projects_Revision|show
     </defaultpermissions>
 </module>
 */ ?>

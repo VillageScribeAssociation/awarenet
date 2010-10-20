@@ -9,7 +9,10 @@
 [[:theme::navtitlebox::width=570::label=Moderators:]]</content>
 <title>awareNet - edit forum</title>
 <script></script>
-<nav1></nav1>
+<nav1>
+[[:theme::navtitlebox::label=Forum Weights:]]
+[[:forums::listlinksnav:]]
+</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>

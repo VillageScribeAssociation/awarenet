@@ -16,8 +16,8 @@ class CodeRepository {
 	var $doorUrl = '';		// location to post objects to [string]
 	var $key = '';			// authorises post  [string]
 
-	var $exemptions;	// array of locations which are not uploaded/updated [array]
-	var $skipped;		// list of local files which will not be uploaded [array]
+	var $exemptions;		// array of locations which are not uploaded/updated [array]
+	var $skipped;			// list of local files which will not be uploaded [array]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -55,6 +55,19 @@ class CodeRepository {
 	function clearExemptions() { $this->exemptions = array(); }
 
 	//----------------------------------------------------------------------------------------------
+	//.	is file an exception which should not be updated for security reasons (eg, install.php)
+	//----------------------------------------------------------------------------------------------
+	//arg: relFile - file location relative to installPath [string]
+	//returns: true if file is exempt, false if not [bool]
+
+	function isExempt($relFile) {
+		foreach($this->exemptions as $find) {
+			if (strpos(' ' . $relFile, $find) != false) { return true; }
+		}
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	download repository list and convert into an array
 	//----------------------------------------------------------------------------------------------
 	//returns: array of file metadata - uid, hash, type and relfile [array]
@@ -86,13 +99,13 @@ class CodeRepository {
 	//,	any exemptions should be set up before this is called
 
 	function getLocalList($repositoryList) {
-		global $installPath;
+		global $kapenta;
 		$localList = array();
 		
 		//------------------------------------------------------------------------------------------
 		//	list all files and folders from local installPath
 		//------------------------------------------------------------------------------------------
-		$raw = shell_exec("find $installPath");
+		$raw = shell_exec("find " . $kapenta->installPath);		//TODO: platform independant
 		$lines = explode("\n", $raw);
 
 		foreach($lines as $line) {
@@ -101,7 +114,7 @@ class CodeRepository {
 			//--------------------------------------------------------------------------------------
 			$skip = false;
 			if (trim($line) == '') { $skip = true; }						// must not be blank	
-			$line = str_replace($installPath, '/', $line);					// relative position
+			$line = str_replace($kapenta->installPath, '/', $line);				// relative position
 			$fileName = basename($line);									// get filename
 
 			foreach($this->exemptions as $find) {							// search for exemptions
@@ -227,16 +240,13 @@ class CodeRepository {
 	//arg: hash - sha1 file hash [string]
 
 	function storeFile($path, $type, $hash) {
-	global $db;
-
-		global $installPath;
-	
+		global $kapenta, $db;
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
 
 		//------------------------------------------------------------------------------------------
 		//	load the file
 		//------------------------------------------------------------------------------------------
-		$raw = implode(file($installPath . $path));
+		$raw = implode(file($kapenta->installPath . $path));
 		$dirname = str_replace("\\", '', dirname($path)) . '/';
 		$description = '(automatically uploaded ' . $db->datetime() . ')';
 		$isbinary = 'no';
@@ -291,8 +301,8 @@ class CodeRepository {
 	//returns: sha1 hash of a file or path [string]
 
 	function getFileHash($relFile) {
-		global $installPath;
-		$absFile = str_replace('//', '/', $installPath . $relFile);
+		global $kapenta;
+		$absFile = str_replace('//', '/', $kapenta->installPath . $relFile);
 		if (is_dir($absFile) == true) { return sha1($relFile); } 
 		else { return sha1(implode(file($absFile))); }
 	}

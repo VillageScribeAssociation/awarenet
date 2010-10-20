@@ -10,21 +10,23 @@ class Revisions_Deleted {
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $data;				//_	currently loaded database record [array]
-	var $dbSchema;			//_	database table definition [array]
-	var $loaded = false;	//_	set to true when an object has been loaded [bool]
+	var $data;						//_	currently loaded database record [array]
+	var $dbSchema;					//_	database table definition [array]
+	var $loaded = false;			//_	set to true when an object has been loaded [bool]
 
-	var $UID;				//_ unique identifier of this object [string]
-	var $refModule;			//_ module to which the deleted item originally belonged [string]
-	var $refModel;			//_ type of deleted object [string]
-	var $refUID;			//_ unique identifier of deleted object [string]
-	var $content;			//_ member variables of deleted object (xml) [string]
-	var $createdOn;			//_ datetime [string]
-	var $createdBy;			//_ ref:Users_User [string]
-	var $editedOn;			//_ datetime [string]
-	var $editedBy;			//_ ref:Users_User [string]
+	var $UID;						//_ unique identifier of this object [string]
+	var $refModule;					//_ module to which the deleted item belonged [string]
+	var $refModel;					//_ type of deleted object [string]
+	var $refUID;					//_ unique identifier of deleted object [string]
+	var $content;					//_ member variables of deleted object (xml) [string]
+	var $status;					//_ deleted, restored or purged [string]
+	var $createdOn;					//_ datetime [string]
+	var $createdBy;					//_ ref:Users_User [string]
+	var $editedOn;					//_ datetime [string]
+	var $editedBy;					//_ ref:Users_User [string]
 
-	var $fields;			//_	associative [array]
+	var $fields;					//_	associative [array]
+	var $fieldsLoaded = false;		//_	set to true when fields have been expanded from XML [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -38,6 +40,7 @@ class Revisions_Deleted {
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
+			$this->status = 'deleted';
 			$this->loaded = false;
 		}
 	}
@@ -70,6 +73,7 @@ class Revisions_Deleted {
 		$this->refModel = $ary['refModel'];
 		$this->refUID = $ary['refUID'];
 		$this->content = $ary['content'];
+		$this->status = $ary['status'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -124,6 +128,7 @@ class Revisions_Deleted {
 			'refModel' => 'TEXT',
 			'refUID' => 'VARCHAR(33)',
 			'content' => 'TEXT',
+			'status' => 'VARCHAR(10)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -158,6 +163,7 @@ class Revisions_Deleted {
 			'refModel' => $this->refModel,
 			'refUID' => $this->refUID,
 			'content' => $this->collapseFields($this->fields),
+			'status' => $this->status,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -182,6 +188,7 @@ class Revisions_Deleted {
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
 			. $indent . "    <refUID>" . $this->refUID . "</refUID>\n"
 			. $indent . "    <content>" . $this->content . "</content>\n"
+			. $indent . "    <status>" . $this->status . "</status>\n"
 			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
@@ -259,6 +266,7 @@ class Revisions_Deleted {
 		$doc = new KXmlDocument($xml);
 		$fields = $doc->getChildren2d(1);						//% 1 is always root node [array]
 		foreach($fields as $key => $value) { $fields[$key] = base64_decode($value); }
+		$this->fieldsLoaded = true;
 		return $fields;
 	}
 

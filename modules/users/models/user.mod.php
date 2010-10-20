@@ -159,7 +159,7 @@ class Users_User {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('users', 'Users_User', $this->UID, $this->role);
+		$this->alias = $aliases->create('users', 'Users_User', $this->UID, $this->username);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -296,9 +296,9 @@ class Users_User {
 		//if (false == $user->authHas('users', 'Users_User', 'show', '') == false) 
 		//	{ echo "no permission to view users.<br/>"; }
 
-		if ( (true == $user->authHas('users', 'Users_User', 'view', $this->UID)) 
+		if ( (true == $user->authHas('users', 'Users_User', 'show', $this->UID)) 
 			OR ($user->UID == $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%users/' . $this->alias;
+			$ary['viewUrl'] = '%%serverPath%%users/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[profile]</a>"; 
 		}
 
@@ -367,7 +367,6 @@ class Users_User {
 	//==============================================================================================
 	//	AUTHENTICATION AND PERMISSIONS
 	//==============================================================================================
-
 
 	//----------------------------------------------------------------------------------------------
 	//.	check if the current user has a permission on a specified object

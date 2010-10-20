@@ -1,5 +1,5 @@
 <? /*
-<div class='inlinequote'>
+<div class='inlinequote' id='blockAnnouncements%%UID%%'>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -16,5 +16,6 @@
     </td>
   </tr>
 </table>
+<!-- REGISTERBLOCK:blockAnnouncements%%UID%%:%%rawblock64%% -->
 </div>
 */ ?>

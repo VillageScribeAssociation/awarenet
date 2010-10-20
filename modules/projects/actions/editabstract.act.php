@@ -28,7 +28,7 @@
 	$page->load('modules/projects/actions/editabstract.page.php');
 	$page->blockArgs['raUID'] = $model->alias;
 	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
+	//$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
 	$page->render();
 
 ?>

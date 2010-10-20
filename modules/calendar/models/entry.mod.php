@@ -421,6 +421,8 @@ class Calendar_Entry {
 		global $db;
 		$retVal = array();
 
+		if (1 == strlen(trim($month))) { $month = '0' . $month; }
+
 		$conditions = array();
 		$conditions[] = "year='" . $db->addMarkup($year) . "'";
 		$conditions[] = "month='" . $db->addMarkup($month) . "'";

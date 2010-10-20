@@ -20,6 +20,8 @@ class Sync_Server {
 	var $password;			//_ varchar(50) [string]
 	var $direction;			//_ varchar(30) [string]
 	var $active;			//_ varchar(10) [string]
+	var $lastsync;			//_ varchar(22) [string]
+	var $publickey;			//_ TEXT [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -33,11 +35,11 @@ class Sync_Server {
 	function Sync_Server($UID = '') {
 		global $db;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $UID) { $this->load($UID); }			// try load an object from the database
+		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
-			$this->servername = 'New Server ' . $this->UID;		// set default servername
+			$this->servername = 'New Server ' . $this->UID;	// set default servername
 			$this->loaded = false;
 		}
 	}
@@ -71,6 +73,8 @@ class Sync_Server {
 		$this->password = $ary['password'];
 		$this->direction = $ary['direction'];
 		$this->active = $ary['active'];
+		$this->lastsync = $ary['lastsync'];
+		$this->publickey = $ary['publickey'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -124,6 +128,7 @@ class Sync_Server {
 			'password' => 'VARCHAR(50)',
 			'direction' => 'VARCHAR(30)',
 			'active' => 'VARCHAR(10)',
+			'lastsync' => 'VARCHAR(22)',
 			'publickey' => 'TEXT',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -158,6 +163,8 @@ class Sync_Server {
 			'password' => $this->password,
 			'direction' => $this->direction,
 			'active' => $this->active,
+			'lastsync' => $this->lastsync,
+			'publickey' => $this->publickey,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -187,12 +194,12 @@ class Sync_Server {
 		//------------------------------------------------------------------------------------------
 
 		if (true == $user->authHas('sync', 'Sync_Server', 'view', $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%sync/server/' . $this->alias;
+			$ary['viewUrl'] = '%%serverPath%%sync/server/' . $this->UID;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
 		if (true == $user->authHas('sync', 'Sync_Server', 'edit', $this->UID)) {
-			$ary['editUrl'] =  '%%serverPath%%sync/editserver/' . $this->alias;
+			$ary['editUrl'] =  '%%serverPath%%sync/editserver/' . $this->UID;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 

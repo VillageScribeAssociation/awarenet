@@ -14,7 +14,25 @@
 
 function sync_cron_hourly() {
 	global $db, $req, $kapenta;
-	$report = '<h2>users_cron_tenmins<h2>\n';
+	$report = '<h2>users_cron_hourly<h2>\n';
+
+	//---------------------------------------------------------------------------------------------
+	//	delete all failed sync notices more than a day old
+	//---------------------------------------------------------------------------------------------
+
+	$sql = "select * from Sync_Notice where status='failed'";
+	$result = $db->query($sql);
+	$now = time();
+
+	while ($row = $db->fetchAssoc($result)) {
+		$row = $db->rmArray($row);
+		$tsDiff = $now - strtotime($row['createdOn']);
+		if ($tsDiff > (60 * 60 * 24)) { 					// more than 24 hours old?
+			$model = new Sync_Notice();						// instantiate as object
+			$model->loadArray($row);						// ....
+			$model->delete();								// and delete
+		}
+	}	
 
 	/*
 

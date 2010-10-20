@@ -12,7 +12,7 @@ function schools_listallnav($args) {
 	$html = '';
 
 	//$sql = "select * from Schools_School order by name";
-	$conditions = array("hidden='no'");
+	$conditions = array("(hidden='no' OR hidden='')");
 
 	if ((true == array_key_exists('hidden', $args)) && ('yes' == $args['hidden']))
 		{ $conditions = ''; }

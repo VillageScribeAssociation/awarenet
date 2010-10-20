@@ -17,6 +17,7 @@
 	//*	create the object
 	//----------------------------------------------------------------------------------------------
 	$model = new Users_User();
+	$model->UID = $kapenta->createUID();
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
 			case 'role':	$model->role = $utils->cleanString($value); break;
@@ -27,10 +28,10 @@
 			case 'username':	$model->username = $utils->cleanString($value); break;
 			case 'password':	$model->password = sha1($value . $model->UID); break;
 			case 'lang':	$model->lang = $utils->cleanString($value); break;
-			case 'profile':	$model->profile = $utils->cleanString($value); break;
-			case 'permissions':	$model->permissions = $utils->cleanString($value); break;
-			case 'lastonline':	$model->lastonline = $utils->cleanString($value); break;
-			case 'alias':	$model->alias = $utils->cleanString($value); break;
+			//case 'profile':	$model->profile = $utils->cleanString($value); break;
+			//case 'permissions':	$model->permissions = $utils->cleanString($value); break;
+			//case 'lastonline':	$model->lastonline = $utils->cleanString($value); break;
+			//case 'alias':	$model->alias = $utils->cleanString($value); break;
 		}
 	}
 	$report = $model->save();
@@ -39,8 +40,8 @@
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('New User: ' . $model->getNameLink() . '<br/>', 'ok');
-		$page->do302('/users/' . $model->alias);
+		$session->msg('Created new user: ' . $model->getNameLink() . '<br/>', 'ok');
+		$page->do302('users/profile/' . $model->alias);
 	} else {
 		$session->msg('Could not create new User:<br/>' . $report);
 	}

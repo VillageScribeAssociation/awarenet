@@ -359,7 +359,7 @@ class Projects_Project {
 	}
 
 	//==============================================================================================
-	//	REVISIONS
+	//	SECTIONS
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
@@ -405,6 +405,8 @@ class Projects_Project {
 			$this->sections[$section['UID']] = $section;
 			//TODO: use KXmlDocument to fill array
 		}
+	
+		$this->sectionsLoaded = true;
 		return count($this->sections);		
 	}
 
@@ -580,13 +582,16 @@ class Projects_Project {
 	//----------------------------------------------------------------------------------------------
 	//.	save a revision
 	//----------------------------------------------------------------------------------------------
+	//returns: empty string on succes, html report on failure [string]
 
 	function saveRevision() {
 		$revision = new Projects_Revision();
-		$revision->refUID = $this->UID;
-		$revision->type = 'newsection';
-		$revision->content = $this->getSimpleHtml();
-		$revision->save();
+		$revision->projectUID = $this->UID;
+		$revision->title = $this->title;
+		$revision->abstract = $this->abstract;
+		$revision->content = $this->collapseSections();
+		$report = $revision->save();
+		return $report;
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -16,8 +16,8 @@ function projects_requestsjoinnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 
 	$model = new Projects_Project($args['raUID']);	
 	if (false == $model->loaded) { return ''; }
@@ -27,14 +27,23 @@ function projects_requestsjoinnav($args) {
 	//	{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
+	//	load prospective memebrs from the database
+	//----------------------------------------------------------------------------------------------
+
+	$conditions = array();
+	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "role='asked'";
+	
+	$range = $db->loadRange('Projects_Membership', '*', $conditions);
+
+	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	$pm = $model->getProspectiveMembers();
-	if (0 == count($pm)) { return ''; }			// nothing to show
+	if (0 == count($range)) { return ''; }			// nothing to show
 
 	$html .= "[[:theme::navtitlebox::label=Have Asked To Join:]]\n";
-	foreach($pm as $userUID => $role) {
+	foreach($range as $row) {
 		$addUrl = "%%serverPath%%projects/acceptmember/" . $row['UID'];
 		$html .= "[[:users::summarynav::userUID=" . $row['userUID'] . ":]]\n"
 			   . "<a href='$addUrl'>[add as project member >> ]</a><hr/>\n";

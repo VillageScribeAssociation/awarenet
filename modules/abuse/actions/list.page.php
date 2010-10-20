@@ -14,7 +14,7 @@
 <banner></banner>
 <head></head>
 <menu1>[[:home::menu:]]</menu1>
-<menu2>[[:forums::menu:]]</menu2>
+<menu2>[[:abuse::menu:]]</menu2>
 <section></section>
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Admin - ::link=/admin/:]]

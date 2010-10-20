@@ -36,8 +36,11 @@
     </td>
  </tr>
 </table>
+<br/>
 
-<h2>Images</h2>
+[[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
+<div id='divEditImages'>
 [[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%projectUID%%:]]
-<br/>UID:%%UID%%<br/>
+</div>
+<br/>
 */ ?>

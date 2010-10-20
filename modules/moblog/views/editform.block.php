@@ -42,4 +42,5 @@
 <div id='divBlogImages'>
 [[:images::uploadmultiple::refModule=moblog::refModel=Moblog_Post::refUID=%%UID%%:]]
 </div>
+<br/>
 */ ?>

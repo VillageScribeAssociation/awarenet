@@ -8,14 +8,17 @@
 //arg: refModule - module to list on [string]
 //arg: refModel - type of object which own images [string]
 //arg: refUID - UID of item which owns images [string]
+//opt: tags - display block tags instead of draggable buttons (yes|no) [string]
 
 function images_imagesetdetail($args) {
 	global $kapenta, $user, $db, $theme;
 	$html = '';					//%	return value [string]
+	$tags = false;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
+	if ((true == array_key_exists('tags', $args)) && ('yes' == $args['tags'])) { $tags = true; }
 	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
@@ -53,12 +56,15 @@ function images_imagesetdetail($args) {
 		$model->loadArray($row);
 		
 		$labels = $model->extArray();
-		
+
+		$labels['tags'] = '';
+		$labels['imgblocks'] = '';
+
 		$labels['thumbUrl'] = '%%serverPath%%images/thumb/' . $row['alias'];
 		$labels['editUrl'] = '%%serverPath%%images/edit/return_uploadmultiple/'. $row['alias'];
 
 		//TODO: tidy this
-		if (false == $user->authHas($model->refModule, $model->refModel, 'images', $model->refUID)) {
+		if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID)) {
 			$labels['editUrl'] = '%%serverPath%%images/viewset/return_uploadmultiple/'
 							   . $model->alias; 
 		}
@@ -69,6 +75,25 @@ function images_imagesetdetail($args) {
 			   . '/refModel_' . $model->refModel
 			   . '/refUID_' . $model->refUID . '/';
 		
+		if (true == $tags) {
+			$labels['tags'] = "
+			<small>
+			To use this image, copy one of the following tags into your text.<br/>
+	        <b>Tag:</b> [&#91;:images::thumb::imageUID=" . $model->UID . ":&#93;]<br/>
+	        <b>Tag:</b> [&#91;:images::width300::imageUID=". $model->UID .":&#93;]<br/>
+	        <b>Tag:</b> [&#91;:images::width570::imageUID=". $model->UID .":&#93;]<br/>	
+			</small>
+			";
+		} else {
+			$labels['imgblocks'] = "
+			<small>To use this image, drag one of the buttons below into your text:</small><br/>
+			[[:theme::button::label=thumbnail::alt=images|raUID=" . $model->UID . "|size=thumb|:]]
+			[[:theme::button::label=width300::alt=images|raUID=" . $model->UID . "|size=width300|:]]
+			[[:theme::button::label=width570::alt=images|raUID=" . $model->UID . "|size=widtheditor|:]]
+			<br/>
+			";
+		}
+
 		$labels['deleteForm'] = "
 		<form name='deleteImage' method='POST' action='%%serverPath%%images/delete/' >
 		<input type='hidden' name='action' value='deleteImage' />

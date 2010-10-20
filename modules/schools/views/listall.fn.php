@@ -42,18 +42,18 @@ function schools_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count and load list items
 	//----------------------------------------------------------------------------------------------
-	$conditions = array();									//% to filter list by [array:string]
+	$conditions = array();										//% to filter list by [array:string]
 	if (false == $showhidden) { $conditions[] = "hidden='no'"; }
 	//add any further conditions here
 
-	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
+	$start = (($pageNo - 1) * $pageSize);						//% list ordinal of first item [int]	
 	$total = $db->countRange('Schools_School', $conditions);	//% total number of items [int]
-	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
+	$totalPages = ceil($total / $pageSize);						//% number of pages [int]
 
 	$range = $db->loadRange('Schools_School', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
-		$html = "<div class='inlinequote'>no Roles yet added</div><br/>\n";
+		$html = "<div class='inlinequote'>No schools yet added</div><br/>\n";
 		return $html;
 	}
 

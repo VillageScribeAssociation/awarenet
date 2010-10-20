@@ -9,7 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that user is authorized to create new forums
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('forums', 'Forums_Board', 'new')) { $page->do403(); }
+	//if (false == $user->authHas('forums', 'Forums_Board', 'new')) { $page->do403(); }
+	if ('admin' != $user->role) { $page->do403('Only administrators can create new boards.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make a new board and redirect to edit form (TODO: use stanard generated code here)

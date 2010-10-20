@@ -42,7 +42,7 @@
 	else { $session->msg('Could not save School:<br/>' . $report); }
 
 	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('/schools/' . $model->alias); }
+	else { $page->do302('schools/' . $model->alias); }
 
 	$page->do302('schools/' . $model->alias);
 		

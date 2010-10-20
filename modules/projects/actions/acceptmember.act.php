@@ -1,6 +1,6 @@
 <?
 	
-	require_once($kapenta->installPath . 'modules/projects/models/memebrship.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
@@ -14,14 +14,14 @@
 	//	load the request and the project it pertains to
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Membership($req->ref);	
-	if (false ==  $model->loaded) { $page->do404(); }			// no membership request
-	$project = new Projects_Project($membership['projectUID']);
-	if (false ==  $project->loaded) { $page->do404(); }			// no project
+	if (false == $model->loaded) { $page->do404('Unknown request.'); }		// no membership request
+	$project = new Projects_Project($model->projectUID);
+	if (false ==  $project->loaded) { $page->do404('No such project.'); }	// no project
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure that current user is admin of project, or a sysadmin
 	//----------------------------------------------------------------------------------------------
-	if ((false = $project->isAdmin($user->UID)) && ('admin' != $user->role)) { $page->do403(); }
+	if ((false == $project->isAdmin($user->UID)) && ('admin' != $user->role)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, notify current members of new addition
@@ -56,11 +56,21 @@
 
 	*/
 
+	$refUID = $project->UID;
+	$newName = $theme->expandBlocks('[[:users::namelink::userUID=' . $model->userUID . ':]]', '');
+	$title = $newName . " is now a member of project '" . $project->title . "'";
+	$content = "Request to join was accepted by " . $user->getNameLink();
+	$url = '%%serverPath%%projects/' . $project->alias;
+
+	$nUID = $notifications->create('projects', 'Projects_Project', $refUID, $title, $content, $url);
+
+	$notifications->addProject($nUID, $project->UID);
+
 	//----------------------------------------------------------------------------------------------
 	//	return to project page
 	//----------------------------------------------------------------------------------------------
-	$nameBlock = '[[:users::namelink::useruID=' . $model->userUID . ':]]';
-	$session->msg("You have added $nameBlock as a new member of this project.";
+	$nameBlock = '[[:users::namelink::userUID=' . $model->userUID . ':]]';
+	$session->msg("You have added $nameBlock as a new member of this project.", 'ok');
 	$page->do302('projects/' . $project->alias);
 
 ?>

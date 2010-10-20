@@ -35,6 +35,7 @@ class Images_Image {
 	var $attribName;		//_ varchar(255) [string]
 	var $attribUrl;			//_ varchar(255) [string]
 	var $fileName;			//_ varchar(255) [string]
+	var $hash;				//_	SHA1 varchar(50) [string]
 	var $format;			//_ varchar(30) [string]
 	var $transforms;		//_ plaintext [string]
 	var $caption;			//_ plaintext [string]
@@ -45,7 +46,6 @@ class Images_Image {
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
 	var $alias;				//_ alias [string]
-
 	var $img;				// image handle
 
 	//----------------------------------------------------------------------------------------------
@@ -63,6 +63,7 @@ class Images_Image {
 			$this->title = 'New Image ' . $this->UID;		// set default title
 			$this->transforms = array();					// no transforms yet
 			$this->weight = 10000;							// end of list (corrected on save())
+			$this->hash = '';
 			$this->loaded = false;
 		}
 	}
@@ -97,6 +98,7 @@ class Images_Image {
 		$this->attribName = $ary['attribName'];
 		$this->attribUrl = $ary['attribUrl'];
 		$this->fileName = $ary['fileName'];
+		$this->hash = $ary['hash'];
 		$this->format = $ary['format'];
 		$this->transforms = $this->expandTransforms($ary['transforms']);
 		$this->caption = $ary['caption'];
@@ -140,6 +142,9 @@ class Images_Image {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		if ('' == $this->refModule) { $report .= "No refModule.<br/>\n"; }
+		if ('' == $this->refModel) { $report .= "No refModel.<br/>\n"; }
+		if ('' == $this->refUID) { $report .= "No refUID.<br/>\n"; }
 		return $report;
 	}
 
@@ -164,6 +169,7 @@ class Images_Image {
 			'attribName' => 'VARCHAR(255)',
 			'attribUrl' => 'VARCHAR(255)',
 			'fileName' => 'VARCHAR(255)',
+			'hash' => 'VARCHAR(50)',
 			'format' => 'VARCHAR(30)',
 			'transforms' => 'TEXT',
 			'caption' => 'TEXT',
@@ -212,6 +218,7 @@ class Images_Image {
 			'attribName' => $this->attribName,
 			'attribUrl' => $this->attribUrl,
 			'fileName' => $this->fileName,
+			'hash' => $this->hash,
 			'format' => $this->format,
 			'transforms' => $this->collapseTransforms($this->transforms),
 			'caption' => $this->caption,
@@ -223,6 +230,8 @@ class Images_Image {
 			'editedBy' => $this->editedBy,
 			'alias' => $this->alias
 		);
+
+		if ('' == $serialize['hash']) { $serialize['hash'] = $this->getHash(); }
 		return $serialize;
 	}
 
@@ -249,6 +258,7 @@ class Images_Image {
 			. $indent . "    <attribName>" . $this->attribName . "</attribName>\n"
 			. $indent . "    <attribUrl>" . $this->attribUrl . "</attribUrl>\n"
 			. $indent . "    <fileName>" . $this->fileName . "</fileName>\n"
+			. $indent . "    <hash>" . $this->hash . "</hash>\n"
 			. $indent . "    <format>" . $this->format . "</format>\n"
 			. $indent . "    <transforms>" . $this->transforms . "</transforms>\n"
 			. $indent . "    <caption>" . $this->caption . "</caption>\n"
@@ -289,12 +299,12 @@ class Images_Image {
 		}
 
 		if (true == $user->authHas('images', 'Images_Image', 'edit', $this->UID)) {
-			$ext['editUrl'] = '%~%serverPath%~%Images/editimage/' . $ext['alias'];
+			$ext['editUrl'] = '%~%serverPath%~%images/edit/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
 		if (true == $user->authHas('images', 'Images_Image', 'delete', $this->UID)) {
-			$ext['delUrl'] = '%~%serverPath%~%Images/delimage/' . $ext['alias'];
+			$ext['delUrl'] = '%~%serverPath%~%images/delimage/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
 
@@ -342,11 +352,26 @@ class Images_Image {
 	//returns: location of transformed file if it exists, false if not [string][bool]
 
 	function hasTrasform($transName) {
-		global $installPath;
-		if (array_key_exists($transName, $this->transforms) == false) { return false; }
-		if (file_exists($installPath . $this->transforms[$transName])) { 
+		global $kapenta;
+		if (false == array_key_exists($transName, $this->transforms)) { return false; }
+		if ($kapenta->fileExists($this->transforms[$transName])) { 
 			return $this->transforms[$transName];
 		}
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get sha1 hash of image file (if any)
+	//----------------------------------------------------------------------------------------------
+	//returns: SHA1 hash of image file, null string if none [string]
+
+	function getHash() {
+		global $kapenta;
+		if ('' == $this->fileName) { return ''; }
+		if (false == $kapenta->fileExists($this->fileName)) { return ''; }
+		$hash = sha1_file($kapenta->installPath . $this->fileName);
+		if (false === $hash) { return ''; }
+		return $hash;
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -28,6 +28,10 @@
 
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID))
 		{ $page->do403('You are not authorized to add images to this object.', true); }
+
+	$tags = 'no';
+	if ((true == array_key_exists('tags', $req->args)) && ('yes' == $req->args['tags']))
+		{ $tags = 'yes'; }
 	
 	//TODO: check this permission name
 	/*
@@ -47,6 +51,7 @@
 	$page->blockArgs['refModule'] = $refModule;
 	$page->blockArgs['refModel'] = $refModel;
 	$page->blockArgs['refUID'] = $refUID;
+	$page->blockArgs['tags'] = $tags;
 	$page->render();
 			
 ?>

@@ -5,10 +5,10 @@
 [[:home::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
 [`|lt]h2[`|gt]Images[`|lt]/h2[`|gt]
-[[:images::uploadmultiple::refModule=home::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:images::uploadmultiple::refModule=home::refModel=Home_Static::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
 [`|lt]h2[`|gt]files[`|lt]/h2[`|gt]
-[[:files::uploadmultiple::refModule=home::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
+[[:files::uploadmultiple::refModule=home::refModel=Home_Static::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 <title>awareNet - edit static page</title>
 <script></script>
 <nav1>[[:admin::subnav:]]</nav1>

@@ -117,10 +117,8 @@ class Home_Static {
 
 	function verify() {
 		$verify = '';
-		$d = $this->data;
 
-		if (strlen($d['UID']) < 5) 
-			{ $verify .= "UID not present.\n"; }
+		if (strlen($this->UID) < 5) { $verify .= "UID not present.\n"; }
 
 		return $verify;
 	}

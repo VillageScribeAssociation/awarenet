@@ -13,18 +13,19 @@ function imgSend($size) {
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
 	
-	if ('' == $req->ref) { $page->do404(); }
-	$i = new Images_Image($req->ref);
-	if ('' == $i->fileName) { $page->do404(); }
+	if ('' == $req->ref) { $page->do404('Image not specified.'); }
+	$model = new Images_Image($req->ref);
+	if (false == $model->loaded) { $page->do404('Image not found'); }
+	if ('' == $model->fileName) { $page->do404('File missing.'); }
 	
-	$lmDate = date(DATE_RFC1123, strtotime($i->createdOn));
+	$lmDate = date(DATE_RFC1123, strtotime($model->createdOn));
 
 	//----------------------------------------------------------------------------------------------
 	//	check for If-Modified-Since header
 	//----------------------------------------------------------------------------------------------
 
-	if ( (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) == true)
-	   || (array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER) == true) ) {
+	if ( (true == array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER))
+	   || (true == array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)) ) {
 
 		header('Last-Modified: ' . $lmDate);
 		header("ETag: \"" . md5($lmDate . $size) . "\"");
@@ -37,8 +38,8 @@ function imgSend($size) {
 	//----------------------------------------------------------------------------------------------
 	//	create the thumbnail if it does not exist
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists($size, $i->transforms) == false) {
-		$exists = $i->loadImage();
+	if (array_key_exists($size, $model->transforms) == false) {
+		$exists = $model->loadImage();
 		$thumbFile = '';
 		if (true == $exists) {
 			//-------------------------------------------------------------------------------------
@@ -46,32 +47,32 @@ function imgSend($size) {
 			//-------------------------------------------------------------------------------------
 			$thumb = 0;
 			switch($size) {
-				case 'thumb':		$thumb = $i->scaleToBox(100, 100);	break;
-				case 'thumbsm':		$thumb = $i->scaleToBox(50, 50);	break;
-				case 'thumb90':		$thumb = $i->scaleToBox(90, 90);	break;
-				case 'width100':	$thumb = $i->scaleToWidth(100);		break;
-				case 'width145':	$thumb = $i->scaleToWidth(145);		break;
-				case 'width190':	$thumb = $i->scaleToWidth(190);		break;
-				case 'width200':	$thumb = $i->scaleToWidth(200);		break;
-				case 'width290':	$thumb = $i->scaleToWidth(290);		break;
-				case 'width300':	$thumb = $i->scaleToWidth(300);		break;
-				case 'width560':	$thumb = $i->scaleToWidth(560);		break;
-				case 'width570':	$thumb = $i->scaleToWidth(570);		break;
-				case 'widtheditor':	$thumb = $i->scaleToWidth(530);		break;
-				case 'slide':		$thumb = $i->scaleToBox(560, 300);	break;
+				case 'thumb':		$thumb = $model->scaleToBox(100, 100);	break;
+				case 'thumbsm':		$thumb = $model->scaleToBox(50, 50);	break;
+				case 'thumb90':		$thumb = $model->scaleToBox(90, 90);	break;
+				case 'width100':	$thumb = $model->scaleToWidth(100);		break;
+				case 'width145':	$thumb = $model->scaleToWidth(145);		break;
+				case 'width190':	$thumb = $model->scaleToWidth(190);		break;
+				case 'width200':	$thumb = $model->scaleToWidth(200);		break;
+				case 'width290':	$thumb = $model->scaleToWidth(290);		break;
+				case 'width300':	$thumb = $model->scaleToWidth(300);		break;
+				case 'width560':	$thumb = $model->scaleToWidth(560);		break;
+				case 'width570':	$thumb = $model->scaleToWidth(570);		break;
+				case 'widtheditor':	$thumb = $model->scaleToWidth(530);		break;
+				case 'slide':		$thumb = $model->scaleToBox(560, 300);	break;
 				default: $page->do404();
 			}
 
-			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $i->fileName);
-			$i->transforms[$size] = $thumbFile;
-			$i->save();
+			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $model->fileName);
+			$model->transforms[$size] = $thumbFile;
+			$model->save();
 			imagejpeg($thumb, $kapenta->installPath . $thumbFile, 95);
 	
 		} else {
 			//-------------------------------------------------------------------------------------
 			//	full sized image does not exist on this peer
 			//-------------------------------------------------------------------------------------
-			$sync->requestFile($i->fileName);
+			$sync->requestFile($model->fileName);
 		}
 
 		if (true == $exists) { 
@@ -90,7 +91,7 @@ function imgSend($size) {
 		//	return the transform
 		//------------------------------------------------------------------------------------------
 
-		if (file_exists($$kapenta->installPath . $i->transforms[$size]) == true) {
+		if (file_exists($$kapenta->installPath . $model->transforms[$size]) == true) {
 			//-------------------------------------------------------------------------------------
 			//	file exists on this peer
 			//-------------------------------------------------------------------------------------
@@ -98,13 +99,13 @@ function imgSend($size) {
 			header('Last-Modified: ' . $lmDate);
 			header("ETag: \"" . md5($lmDate . $size) . "\"");
 			header('Cache-Control: max-age=3600');
-			readfile($kapenta->installPath . $i->transforms[$size]);
+			readfile($kapenta->installPath . $model->transforms[$size]);
 
 		} else {
 			//-------------------------------------------------------------------------------------
 			//	file does not exist on this peer, find it
 			//-------------------------------------------------------------------------------------
-			//$sync->requestFile($i->transforms[$size]);	//TODO: re-add this with sync object
+			//$sync->requestFile($model->transforms[$size]);	//TODO: re-add this with sync object
 			$page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/loading'. $size .'.jpg');
 
 		}

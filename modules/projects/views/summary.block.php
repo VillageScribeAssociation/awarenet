@@ -9,8 +9,8 @@
     <td valign='top'>
       <h3><a class='black' href='/projects/%%alias%%'>%%projectTitle%%</a></h3>
       by: %%byline%% <br/>
-      %%summary%% %%viewLink%%
-      %%editLink%%
+      %%summary%% %%viewLink%%  %%editLink%%<br/>	
+	  [[:tags::listflat::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]<br/>
     </td>
   </tr>
 </table>

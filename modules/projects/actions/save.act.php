@@ -57,13 +57,19 @@
 		//------------------------------------------------------------------------------------------	
 		//	note the revision
 		//------------------------------------------------------------------------------------------
-		if ($model->abstract != $_POST['abstract']) { $model->saveRevision(); }
+		if ($model->abstract != $_POST['abstract']) { 
+			$report = $model->saveRevision();
+			if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
+			else { $session->msg('Revision not saved.', 'bad'); }
+		}
 
 		//------------------------------------------------------------------------------------------	
 		//	save the record
 		//------------------------------------------------------------------------------------------
 		$model->abstract = $_POST['abstract'];
-		$model->save();
+		$report = $model->save();
+		if ('' == $report) { $session->msg('Saved changes to abstract.', 'ok'); }
+		else { $session->msg('Could not save changes to abstract.', 'bad'); }		
 		
 		$page->do302('projects/edit/' . $model->alias);
 	}
@@ -80,7 +86,11 @@
 		$weight = $model->getMaxWeight() + 1;
 		$model->addSection($sectionTitle, $weight);
 		$_SESSION['sMessage'] .= "Added new section $sectionTitle<br/>\n";
-		$model->saveRevision();
+
+		$report = $model->saveRevision();
+		if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
+		else { $session->msg('Revision not saved.', 'bad'); }
+
 		$page->do302('projects/editindex/' . $model->alias);
 	}
 
@@ -112,7 +122,11 @@
 		//	save revision (if changed)
 		//------------------------------------------------------------------------------------------
 		$newVersion = $model->getSimpleHtml();
-		if ($newVersion != $oldVersion) { $model->saveRevision(); }
+		if ($newVersion != $oldVersion) {
+			$report = $model->saveRevision();
+			if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
+			else { $session->msg('Revision not saved.', 'bad'); }
+		}
 		
 		$page->do302('projects/editsection/section_' . $_POST['sectionUID'] .  '/' . $model->alias);
 	}

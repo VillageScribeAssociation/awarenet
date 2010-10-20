@@ -44,11 +44,13 @@ class Forums_Board {
 
 	function Forums_Board($raUID = '') {
 		global $db;
-		$this->dbSchema = $this->getDbSchema();		// initialise table schema
-		if ('' != $raUID) { $this->load($raUID); }	// try load an object from the database
-		if (false == $this->loaded) {			// check if we did
+		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
+		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
-			$this->loadArray($this->data);			// initialize
+			$this->loadArray($this->data);					// initialize
+			$this->title = 'New Forum ' . $this->UID;		// default title
+			$this->description = '(describe your forum here)';	// hmmm...
 			$this->loaded = false;
 		}
 	}
@@ -80,7 +82,7 @@ class Forums_Board {
 		$this->school = $ary['school'];
 		$this->title = $ary['title'];
 		$this->description = $ary['description'];
-		$this->weight = $ary['weight'];
+		$this->weight = (int)$ary['weight'];
 		$this->threads = $ary['threads'];
 		$this->replies = $ary['replies'];
 		$this->createdOn = $ary['createdOn'];
@@ -172,7 +174,7 @@ class Forums_Board {
 			'school' => $this->school,
 			'title' => $this->title,
 			'description' => $this->description,
-			'weight' => $this->weight,
+			'weight' => (int)$this->weight . '',
 			'threads' => $this->threads,
 			'replies' => $this->replies,
 			'createdOn' => $this->createdOn,

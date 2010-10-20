@@ -10,10 +10,7 @@
 //opt: format - format of list to return (xml|csv|html), default xml [string]
 
 function images_listfiles($args) {
-	global $db;
- 
-	global $user;
-	global $installPath;
+	global $db, $user, $kapenta;
 
 	$status = 'all';
 	$format = 'xml';
@@ -23,8 +20,8 @@ function images_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('status', $args) == true) { $status = $args['status']; }
-	if (array_key_exists('format', $args) == true) { $format = $args['format']; }
+	if (true == array_key_exists('status', $args)) { $status = $args['status']; }
+	if (true == array_key_exists('format', $args)) { $format = $args['format']; }
 	//if ('admin' != $user->role) { return ''; } // TODO: sync auth
 	
 	//---------------------------------------------------------------------------------------------
@@ -73,8 +70,9 @@ function images_listfiles($args) {
 				//---------------------------------------------------------------------------------
 				foreach($files as $file) {
 					$list .= "<file>\n";
-					$list .= "  <reftable>images</reftable>\n";
-					$list .= "  <refuid>" . $file[0] . "</refuid>\n";
+					$list .= "  <refModule>images</refModule>\n";
+					$list .= "  <refModel>Images_Image</refModel>\n";
+					$list .= "  <refUID>" . $file[0] . "</refUID>\n";
 					$list .= "  <location>" . $file[1] . "</location>\n"; 
 					$list .= "</file>\n";
 				}
@@ -85,7 +83,7 @@ function images_listfiles($args) {
 				//	return file list in CSV format
 				//---------------------------------------------------------------------------------
 				foreach($files as $file) {
-					$list .= "images, " . $file[0] . ", " . $file[1] . "\n";
+					$list .= "images, Images_Image, " . $file[0] . ", " . $file[1] . "\n";
 				}
 				break;
 

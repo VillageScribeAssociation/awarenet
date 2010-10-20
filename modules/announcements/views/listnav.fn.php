@@ -10,7 +10,7 @@
 //opt: num - number of records per page (default is 10) [string]
 
 function announcements_listnav($args) {
-	global $db, $theme, $user;
+	global $db, $theme, $user, $page;
 	$num = 10;						//%	number of items per page [int]
 	$html = '';						//%	return value [html]
 
@@ -50,6 +50,17 @@ function announcements_listnav($args) {
 			$html .= $theme->replaceLabels($model->extArray(), $block);
 		}  
 	} else { $html .= "(no announcements at present)"; }
+
+	//----------------------------------------------------------------------------------------------
+	//	set AJAX triggers
+	//----------------------------------------------------------------------------------------------
+	$page->setTrigger('announcements', 'announcement-any', $args['rawblock']);
+
+	$rawBlock64 = base64_encode($args['rawblock']);
+	$html = "<div id='blockAnnouncementsLN'>\n"
+			. $html
+		    . "<!-- REGISTERBLOCK:blockAnnouncementsLN:" . $rawBlock64 . " -->"
+			. "</div>\n";
 
 	return $html;
 }

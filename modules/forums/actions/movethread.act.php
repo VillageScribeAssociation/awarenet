@@ -59,7 +59,7 @@
 		$model->board = $_POST['forum'];
 		$model->save();
 
-		$_SESSION['sMessage'] .= "Thread moved: " . $model->title . "<br/>\n";
+		$session->msg("Thread moved: " . $model->title, 'ok');
 		$page->do302('forums/showthread/' . $model->alias); 
 
 	} else {

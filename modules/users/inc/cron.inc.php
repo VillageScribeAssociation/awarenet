@@ -13,7 +13,7 @@
 
 function users_cron_tenmins() {
 	global $db;
-	$report = "<h2>users_cron_tenmins<h2>\n";	//%	return value [string]
+	$report = "<h2>users_cron_tenmins</h2>\n";	//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	remove userlogin records if user has not been seen online for awhile

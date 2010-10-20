@@ -3,7 +3,10 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=Edit Blog Post::width=570:]]
 
-[[:moblog::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
+[[:moblog::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+
+[[:tags::edittags::refModule=moblog::refModel=Moblog[`|us]Post::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+</content>
 <title>awareNet - edit blog post - [`|pc][`|pc]postTitle[`|pc][`|pc]</title>
 <script></script>
 <nav1></nav1>

@@ -22,7 +22,8 @@
 	//	show the edit page
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/moblog/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['postUID'] = $model->UID;
 	$page->blockArgs['postTitle'] = $model->title;
 	$page->blockArgs['userRa'] = $user->alias;

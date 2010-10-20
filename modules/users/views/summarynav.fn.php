@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	short summary of user record formatted or the nav bar (300px wide)
 //--------------------------------------------------------------------------------------------------
-//arg: UID - UID of record to summarise [string]
+//arg: UID - UID of a Users_User object, also takes aliases now [string]
 //opt: userUID - overrides UID [string]
 //opt: extra - add something to this summary [string]
 //opt: target - a URL or _parent, for iFrames [string]
@@ -21,6 +21,7 @@ function users_summarynav($args) {
 	if (false == array_key_exists('UID', $args)) { return '(no uid)'; }
 
 	$model = new Users_User($args['UID']);
+	if (false == $model->loaded) { return '(not found)'; }
 	if (false == $user->authHas('users', 'Users_User', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

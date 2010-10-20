@@ -7,16 +7,9 @@
     <td valign='top'>
         <b>%%title%%</b><br/>
 		<a href='%%editUrl%%'>[edit caption, licence, etc]</a><br/>
-		<small>To use this image, drag one of the buttons below into your text:</small><br/>
-		[[:theme::button::label=thumbnail::alt=images|raUID=%%UID%%|size=thumb|:]]
-		[[:theme::button::label=width300::alt=images|raUID=%%UID%%|size=width300|:]]
-		[[:theme::button::label=width570::alt=images|raUID=%%UID%%|size=widtheditor|:]]
+		%%imgblocks%%
+		%%tags%%
 		<br/>
-		<!-- 
-        <b>Tag:</b> &#91;&#91;:images::thumb::imageUID=%%UID%%:&#93;&#93;<br/>
-        <b>Tag:</b> &#91;&#91;:images::width300::imageUID=%%UID%%:&#93;&#93;<br/>
-        <b>Tag:</b> &#91;&#91;:images::width570::imageUID=%%UID%%:&#93;&#93;<br/>
-		-->
 		weight: %%weight%%
         <small><b>caption:</b> %%caption%%</small><br/>
 		</small>

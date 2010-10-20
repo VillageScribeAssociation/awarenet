@@ -63,15 +63,15 @@
 	$imgRow = $rows[$show];
 	$attrib = '';
 	if ($imgRow['attribName'] != '') {
-		$attrib = sqlRemoveMarkup($imgRow['attribName']);
+		$attrib = $db->removeMarkup($imgRow['attribName']);
 		if ($imgRow['attribURL'] != '') {
-			$attrib = "<a href='" . sqlRemoveMarkup($imgRow['attribURL']) . "'>$attrib</a>";
+			$attrib = "<a href='" . $db->removeMarkup($imgRow['attribURL']) . "'>$attrib</a>";
 		}
 	}
 		
 	$img = "
 	<img src='/images/width560/" . $imgRow['alias'] . "' /><br/>
-	<b>" . $imgRow['title'] . "</b> " . sqlRemoveMarkup($imgRow['caption']) . "
+	<b>" . $imgRow['title'] . "</b> " . $db->removeMarkup($imgRow['caption']) . "
 	<a href='#' onClick=\"window.parent.location='" . $serverPath . "images/full/" 
 	. $imgRow['alias'] . "'\">[view larger]</a>
 	<br/>

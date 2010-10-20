@@ -13,9 +13,16 @@
 [`|lt]br/[`|gt]</content>
 <title>awareNet - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
 <script></script>
-<nav1>[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools:]]
-[`|lt]div id='divAllSchools'[`|gt]
-[[:schools::listallnav:]]
+<nav1>
+[[:theme::navtitlebox::label=All School Categories::toggle=divTags:]]
+[`|lt]div id='divTags'[`|gt]
+[[:tags::modelcloud::refModule=schools::refModel=Schools_School:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools::hidden=yes:]]
+[`|lt]div id='divAllSchools' style='visibility: hidden; display: none;'[`|gt]
+[[:schools::listalllinksnav:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

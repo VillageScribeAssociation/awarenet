@@ -1,16 +1,18 @@
 <? /*
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html>
 <head>
 <title>%%title%%</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <link href='%%serverPath%%themes/%%defaultTheme%%/css/clockface.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%themes/%%defaultTheme%%/css/windows.css' rel='stylesheet' type='text/css' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>
 
 <script src='%%serverPath%%core/utils.js'></script>
-<script src='%%serverPath%%modules/notifications/js/pagecheck.js'></script>
-<script src='%%serverPath%%modules/chat/js/chat.js'></script>
+<script src='%%serverPath%%modules/live/js/live.js'></script>
+<script src='%%serverPath%%modules/live/js/windows.js'></script>
 
 %%head%%
 
@@ -29,8 +31,17 @@
 
 	function kPageInit() {
 		%%jsinit%%
-		msgPump();
-		if (true == awareNetChat) { chatInit(); }
+
+		//------------------------------------------------------------------------------------------
+		//	create global objects
+		//------------------------------------------------------------------------------------------
+		klive = new Live_Pump(jsPageUID, jsServerPath);			// create the message pump
+		klive.start();											// start the message pump
+
+		kwindowmanager = new Live_WindowManager();
+		kmouse = new Live_Mouse();
+
+		//if (true == awareNetChat) { chatInit(); }
 
 		// set checks for form completion, TODO: try to avoid this closure
 		window.onbeforeunload = function() {
@@ -50,6 +61,7 @@
 
 <body onLoad="kPageInit();" > 
 <center>
+<div id='msgDiv'></div>
 <table class='tableborder' cellspacing='0' cellpadding='0' height='100%' class='table_main' >
 
   <tr>
@@ -124,7 +136,6 @@
 	<td width='40'></td>
   </tr>	
 </table>
-<div id='msgDiv'></div>
 <div id='pumpDiv' name='xPump'></div>
 <br/>
 <br/><br/>

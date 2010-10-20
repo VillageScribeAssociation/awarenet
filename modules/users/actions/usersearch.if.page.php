@@ -20,4 +20,5 @@
 <menu2></menu2>
 <section></section>
 <subsection></subsection>
-</page>\n*/ ?>
+</page>
+*/ ?>

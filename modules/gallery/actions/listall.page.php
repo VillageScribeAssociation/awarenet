@@ -27,6 +27,6 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Galleries - ::link=/gallery/:]]
 [[:theme::breadcrumb::label=all - ::link=/gallery/listall/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]orderLabel[`|pc][`|pc]::link=/gallery/list/orderBy_[`|pc][`|pc]orderBy[`|pc][`|pc]:]]</breadcrumb>
+[[:theme::breadcrumb::label=[`|pc][`|pc]orderLabel[`|pc][`|pc]::link=/gallery/listall/orderBy_[`|pc][`|pc]orderBy[`|pc][`|pc]:]]</breadcrumb>
 </page>
 */ ?>

@@ -13,6 +13,13 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
+[[:theme::navtitlebox::label=Tags::toggle=divTagCloud:]]
+[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
+[[:tags::modelcloud::refModule=moblog::refModel=Moblog_Post:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+[`|lt]br/[`|gt]
+
 [[:theme::navtitlebox::label=Recent Posts::toggle=divMoblogRecent::hidden=yes:]]
 [`|lt]div id=[`|sq]divMoblogRecent[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 [[:moblog::listrecentnav:]]
@@ -23,6 +30,8 @@
 [`|lt]div id=[`|sq]divMoblogPopular[`|sq][`|gt]
 [[:moblog::listpopularnav:]]
 [`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+
 [`|lt]br/[`|gt]</nav1>
 	<nav2></nav2>
 	<banner></banner>

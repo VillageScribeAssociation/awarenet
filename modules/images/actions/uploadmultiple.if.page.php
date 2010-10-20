@@ -1,12 +1,12 @@
 <? /*
 <page>
 	<template>iframe.template.php</template>
-	<content>[[:images::imagesetdetail::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]
+	<content>[[:images::imagesetdetail::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::tags=[`|pc][`|pc]tags[`|pc][`|pc]:]]
 [`|lt]h3[`|gt]Upload Image[`|lt]/h3[`|gt]
-[[:images::uploadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]
+[[:images::uploadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::tags=[`|pc][`|pc]tags[`|pc][`|pc]:]]
 
 [`|lt]h3[`|gt]Download Image[`|lt]/h3[`|gt]
-[[:images::downloadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]</content>
+[[:images::downloadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::tags=[`|pc][`|pc]tags[`|pc][`|pc]:]]</content>
 	<title>upload multiple images</title>
 	<script></script>
 	<nav1></nav1>

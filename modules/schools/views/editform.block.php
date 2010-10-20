@@ -43,7 +43,11 @@
    </td>
  </tr>
 </table>
+<br/>
 
-<h2>Images</h2>
+[[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
+<div id='divEditImages'>
 [[:images::uploadmultiple::refModule=schools::refModel=Schools_School::refUID=%%UID%%:]]
+</div>
+<br/>
 */ ?>

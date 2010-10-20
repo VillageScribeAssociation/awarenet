@@ -1,11 +1,12 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/admin/models/repository.mod.php');
+
 //-------------------------------------------------------------------------------------------------
-//	uploading local installation from repository on kapenta.org.uk
+//*	update local installation from repository on kapenta.org.uk
 //-------------------------------------------------------------------------------------------------
 
 	if ('admin' != $user->role) { $page->do403(); }
-	require_once($kapenta->installPath . 'modules/admin/models/repository.mod.php');
 
 	//---------------------------------------------------------------------------------------------
 	//	set up repository access
@@ -18,13 +19,14 @@
 
 	$repository->addExemption("setup.inc.php");				// dynamically generated on install
 	$repository->addExemption("install.php");				// security risk
+	$repository->addExemption("___install.php");			// security risk
 	$repository->addExemption("ainstall.php");				// security risk
 	$repository->addExemption("phpinfo.php");				// security risk
-	$repository->addExemption("todo.txt");				// security risk
+	$repository->addExemption("todo.txt");					// security risk
 	$repository->addExemption("uploader/");					// this module (CONTAINS KEY)
 	$repository->addExemption("install/");					// defunct
 	$repository->addExemption(".svn");						// sybversion files and directories
-	//$repository->addExemption("data/log/");					// logs
+	//$repository->addExemption("data/log/");				// logs
 	$repository->addExemption("/chan/");					// not part of awareNet
 	$repository->addExemption('svnadd.sh');					// development SVN script
 	$repository->addExemption('svndelete.sh');				// development SVN script
@@ -54,7 +56,7 @@
 		$absFile = str_replace('//', '/', $installPath . $item['relfile']);
 		if (file_exists($absFile) == false) {
 			echo "[*] $absFile is missing.<br/>\n";
-			if ('/install.php' != $item['relfile']) { downloadFileFromRepository($item); }
+			if (false == $repository->isExempt($item['relFile'])) { downloadFileFromRepository($item); }
 		}
 	}
 
@@ -84,14 +86,16 @@
 		if (strpos(' ' . $fileName, '.') == false) { $skip = true; }	// filename must contain .
 
 		// search for exemptions
-		$exempt = $repository->getExemptions();
-		foreach ($exempt as $find) { if (strpos(' ' . $line, $find) != false) { $skip = true; } }
+		foreach ($repository->exemptions as $find) {
+			if (strpos(' ' . $line, $find) != false) { $skip = true; }
+			//echo "[i] Skipping: $line (security exemption) <br/>\n";
+		}
 
 		//-----------------------------------------------------------------------------------------
 		//	compare hash with local file
 		//-----------------------------------------------------------------------------------------
 
-		if (($skip == false) && (filesize($installPath . $line) < 10000000)) {
+		if ((false == $skip) && (filesize($installPath . $line) < 10000000)) {
 			$itemUID = ''; 
 			$sha1 = sha1(implode(file($installPath . $line)));
 

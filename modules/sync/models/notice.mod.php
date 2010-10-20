@@ -32,6 +32,7 @@ class Sync_Notice {
 	var $ndata;				//_ text [string]
 	var $peer;				//_ varchar(33) [string]
 	var $status;			//_ varchar(30) [string]
+	var $failures;			//_ VARCHAR(10) [int]
 	var $received;			//_ varchar(30) [string]
 	var $timestamp;			//_ varchar(30) [string]
 	var $createdOn;			//_ datetime [string]
@@ -53,6 +54,7 @@ class Sync_Notice {
 			$this->loadArray($this->data);					// initialize
 			$this->received = time();						// set receipt time
 			$this->timestamp = time();						// set creation time
+			$this->failures = 0;
 			$this->loaded = false;
 		}
 	}
@@ -85,6 +87,7 @@ class Sync_Notice {
 		$this->ndata = $ary['ndata'];
 		$this->peer = $ary['peer'];
 		$this->status = $ary['status'];
+		$this->failures = (int)$ary['failures'];
 		$this->received = $ary['received'];
 		$this->timestamp = $ary['timestamp'];
 		$this->createdOn = $ary['createdOn'];
@@ -102,11 +105,19 @@ class Sync_Notice {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db, $aliases, $kapenta;
+		$kapenta->logSync("Sync_Notification::save()<br/>");
 		$report = $this->verify();
-		if ('' != $report) { return $report; }
+		if ('' != $report) {
+			$kapenta->logSync("Sync_Notification::save() FAILED $report <br/>");
+			return $report;
+		}
 		$check = $db->save($this->toArray(), $this->dbSchema);
-		if (false == $check) { return "Database error.<br/>\n"; }
+		if (false == $check) {
+			$kapenta->logSync("Sync_Notification::save() FAILED Database Error <br/>");
+			return "Database error.<br/>\n";
+		}
+		$kapenta->logSync("Sync_Notification::save() FINISHED<br/>");
 		return '';
 	}
 
@@ -118,6 +129,10 @@ class Sync_Notice {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
+		//$peer = new Sync_Server($this->peer);
+		//if (false == $peer->loaded) { $report .= "No such peer."; }
+
 		return $report;
 	}
 
@@ -140,6 +155,7 @@ class Sync_Notice {
 			'ndata' => 'TEXT',
 			'peer' => 'VARCHAR(33)',
 			'status' => 'VARCHAR(30)',
+			'failures' => 'VARCHAR(10)',
 			'received' => 'VARCHAR(30)',
 			'timestamp' => 'VARCHAR(30)',
 			'createdOn' => 'DATETIME',
@@ -164,6 +180,7 @@ class Sync_Notice {
 			'ndata',
 			'peer',
 			'status',
+			'failures',
 			'received',
 			'timestamp',
 			'createdOn',
@@ -189,6 +206,7 @@ class Sync_Notice {
 			'ndata' => $this->ndata,
 			'peer' => $this->peer,
 			'status' => $this->status,
+			'failures' => $this->failures . '',
 			'received' => $this->received,
 			'timestamp' => $this->timestamp,
 			'createdOn' => $this->createdOn,

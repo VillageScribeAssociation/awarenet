@@ -40,8 +40,11 @@
    </td>
  </tr>
 </table>
-
-<h2>Images</h2>
+<br/>
+[[:theme::navtitlebox::label=Images::toggle=divAbsImages:]]
+<div id='divAbsImages'>
 [[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]
-<br/>UID:%%UID%%<br/>
+<br/>
+</div>
+<br/>
 */ ?>

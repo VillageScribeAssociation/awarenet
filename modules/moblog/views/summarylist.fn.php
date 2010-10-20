@@ -10,7 +10,7 @@
 //opt: num - number of records per page (default is 30) [string]
 
 function moblog_summarylist($args) {
-	global $page, $db, $user, $theme;
+	global $page, $db, $user, $theme, $page;
 	$start = 0;
 	$num = 30;
 	$pageNo = 1;
@@ -53,7 +53,13 @@ function moblog_summarylist($args) {
 	foreach($range as $UID => $row) {
 		$model = new Moblog_Post();
 		$model->loadArray($row);
-		$html .= $theme->replaceLabels($model->extArray(), $block);
+		$labels = $model->extArray();
+		$labels['rawblock64'] = base64_encode('[[:moblog::summary::UID=' . $row['UID'] . ':]]');
+
+		$html .= $theme->replaceLabels($labels, $block);
+
+		$channel = 'post-' . $model->UID;
+		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
 	$html = $pagination . $html . $pagination;

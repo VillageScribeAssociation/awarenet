@@ -107,6 +107,7 @@ class Schools_School {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		if ('' == $this->hidden) { $this->hidden = 'no'; }
 		return $report;
 	}
 

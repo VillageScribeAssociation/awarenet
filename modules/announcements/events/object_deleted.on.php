@@ -1,9 +1,9 @@
 <?
 
-require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
+	require_once($kapenta->installPath . 'modules/announcements/models/announcement.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when an object is deleted
+//|	fired when an object is deleted
 //-------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted object [string]
 //arg: model - type of deleted object [string]

@@ -25,17 +25,17 @@
 		switch(strtolower($field)) {
 			case 'title':		$model->title = $utils->cleanString($value); break;
 			case 'template':	$model->template = $utils->cleanString($value); break;
-			case 'content':		$model->content = $utils->cleanString($value); break;
-			case 'nav1':		$model->nav1 = $utils->cleanString($value); break;
-			case 'nav2':		$model->nav2 = $utils->cleanString($value); break;
-			case 'script':		$model->script = $utils->cleanString($value); break;
-			case 'jsinit':		$model->jsinit = $utils->cleanString($value); break;
+			case 'content':		$model->content = $value; break;
+			case 'nav1':		$model->nav1 = $value; break;
+			case 'nav2':		$model->nav2 = $value; break;
+			case 'script':		$model->script = $value; break;
+			case 'jsinit':		$model->jsinit = $value; break;
 			case 'banner':		$model->banner = $utils->cleanString($value); break;
-			case 'menu1':		$model->menu1 = $utils->cleanString($value); break;
-			case 'menu2':		$model->menu2 = $utils->cleanString($value); break;
-			case 'breadcrumb':	$model->breadcrumb = $utils->cleanString($value); break;
-			case 'section':		$model->section = $utils->cleanString($value); break;
-			case 'subsection':	$model->subsection = $utils->cleanString($value); break;
+			case 'menu1':		$model->menu1 = $value; break;
+			case 'menu2':		$model->menu2 = $value; break;
+			case 'breadcrumb':	$model->breadcrumb = $value; break;
+			case 'section':		$model->section = $value; break;
+			case 'subsection':	$model->subsection = $value; break;
 		}
 	}
 

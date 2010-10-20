@@ -122,7 +122,16 @@ td.title {
 	-moz-border-radius: 0px 0px 0px 0px;
 }
 
-span .mychat {
+span.mychat {
 	color: #365a10;
 	font-size: 12px;	
+}
+
+/* chat windows --------------------------------------------------------------------------------- */
+
+div.cwtext {
+	height: 250px;
+	width: 200px;
+	overflow: auto;
+	text-align: left;
 }

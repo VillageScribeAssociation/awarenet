@@ -37,6 +37,7 @@ class Wiki_Article {
 	var $nav;				//_ text [string]
 	var $locked;			//_ varchar(30) [string]
 	var $namespace;			//_ varchar(30) [string]
+	var $talkFor;			//_ ref:Wiki_Article [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -58,12 +59,15 @@ class Wiki_Article {
 	function Wiki_Article($raUID = '') {
 		global $db;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+		$this->wikicode = new WikiCode();
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did	
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Article ' . $this->UID;		// set default title
-			$this->locked = 'user';					// TODO - make this a setting
+			$this->namespace = 'article';					// default namespace
+			$this->locked = 'user';							// TODO - make this a setting
+			$this->loaded = false;
 		}
 	}
 
@@ -96,12 +100,16 @@ class Wiki_Article {
 		$this->nav = $ary['nav'];
 		$this->locked = $ary['locked'];
 		$this->namespace = $ary['namespace'];
+		$this->talkFor = $ary['talkFor'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
+
+		$this->wikicode->source = $this->content;
+
 		return true;
 	}
 
@@ -151,6 +159,7 @@ class Wiki_Article {
 			'nav' => 'TEXT',
 			'locked' => 'VARCHAR(30)',
 			'namespace' => 'VARCHAR(33)',
+			'talkFor' => 'VARCHAR(33)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -197,6 +206,7 @@ class Wiki_Article {
 			'nav' => $this->nav,
 			'locked' => $this->locked,
 			'namespace' => $this->namespace,
+			'talkFor' => $this->talkFor,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -251,7 +261,8 @@ class Wiki_Article {
 		//	sanitize content for editing
 		//------------------------------------------------------------------------------------------
 
-		//$ary['content'] = str_replace('[[:', '[[%%delme%%:', $this->wikicode->source);
+		$ary['contentSafe'] = str_replace('[[:', '[[%%delme%%:', $ary['content']);
+		$ary['navSafe'] = str_replace('[[:', '[[%%delme%%:', $ary['nav']);
 
 		//------------------------------------------------------------------------------------------
 		//	strandardise date format to previous website
@@ -273,13 +284,15 @@ class Wiki_Article {
 		$ary['interlingua'] = '';	// TODO
 		$ary['seealso'] = '';		// TODO
 		$ary['references'] = '';	// TODO
-	
+
+
+
 		if (count($this->expanded) == true) {
 			$ary['contents'] = $this->wikicode->contents;
 			$ary['contentHtml'] = $theme->expandBlocks($this->wikicode->html, '');
 			$ary['infobox'] = $this->wikicode->infobox;
-			$ary['talkContents'] = $this->talk->contents;
-			$ary['talkHtml'] = $this->talk->html;
+			//$ary['talkContents'] = $this->talk->contents;	// TODO - stabilize
+			//$ary['talkHtml'] = $this->talk->html;
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -345,6 +358,22 @@ class Wiki_Article {
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//. discover if this article has a talk page
+	//----------------------------------------------------------------------------------------------
+	//arg: articleUID - UID of a Wiki_Article object [string]
+	//returns: UID of talk page, or null string on failure [string]
+
+	function getTalk($articleUID) {
+		global $db;
+		$conditions = array("talkFor='" . $db->addMarkup($articleUID) . "'");
+		$range = $db->loadRange('Wiki_Article', '*', $conditions, 'createdOn', '1');
+		if (0 == count($range)) { return ''; }
+		foreach($range as $row) { return $row['UID']; }
+		return false;	// unreachable?
+	}
+
 
 }
 

@@ -9,72 +9,74 @@
 //--------------------------------------------------------------------------------------------------
 //opt: page - page number (default is 1) [string]
 //opt: num - number of entries to show per page (default is 30) [string]
+//opt: namespace - namespace to list from, default is 'article' [string]
+//TODO: this could stand some TLC
 
 function wiki_listall($args) {
-	global $db;
+	global $db, $user, $theme;
 
-	global $page;
+	$pageno = 1;
+	$num = 30;
+	$total = 0;
+	$numPages = 0;
+	$start = 0;
 
-	$pageno = 1; $num = 30; $total = 0; $numPages = 0; $start = 0;
-	if (array_key_exists('pageno', $args) == true) { $pageno = $args['pageno']; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+	$namespace = 'article';
 	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('pageno', $args)) { $pageno = (int)$args['pageno']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	//TODO: permissions check, other namespaces, argument checks
 
 	//----------------------------------------------------------------------------------------------
 	//	count all wiki articles
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numarticles from Wiki_Article";
-	$result = $db->query($sql);
-	$row = $db->fetchAssoc($result);
-	$total = $row['numarticles'];
-	$numPages = ceil($total / $num);
+	$conditions = array();
+	$conditions[] = "namespace='" . $namespace . "'";
+
+	$totalItems = $db->countRange('Wiki_Article', $conditions);
+	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
-	//	load records
+	//	load a page worth of articles
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$sql = "select * from Wiki_Article order by title ASC limit $start, $num";
-	$result = $db->query($sql);
+	$range = $db->loadRange('Wiki_Article', '*', $conditions, 'title', $num, $start);
+
+	//$sql = "select * from Wiki_Article order by title ASC limit $start, $num";
 
 	//----------------------------------------------------------------------------------------------
 	//	make table
 	//----------------------------------------------------------------------------------------------
-	$table = "<table class='scaffold'>";
-	$table .= "\t<tr>\n"
-			. "\t\t<td class='title'>Article</td>\n"
-			. "\t\t<td class='title'>[x]</td>\n"
-			. "\t\t<td class='title'>[x]</td>\n"
-			. "\t\t<td class='title'>Content</td>\n" 
-			. "\t\t<td class='title'>Talk</td>" 
-			. "\t\t<td class='title'>Hitcount</td>\n" 
-			. "\t</tr>";
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$table = array();
+	$table[] = array('Article', '[x]', '[x]' );	// 'Content', 'Talk', 'Hitcount'
+
+	foreach ($range as $row) {
 		$ra = $row['alias'];
-
 		$alink = "<a href='%%serverPath%%wiki/". $ra ."'>". $row['title'] ."</a>";
 		$talk = "<a href='%%serverPath%%wiki/talk/". $ra ."'>[discuss]</a>";
 		$hist = "<a href='%%serverPath%%wiki/history/". $ra ."'>[history]</a>";
 
-		$table .= "\t<tr>"
-				. "\t\t<td>" . $alink . "</td>\n"
-				. "\t\t<td><small>" . $talk . "</small></td>\n"
-				. "\t\t<td><small>" . $hist . "</small></td>\n"
-				. "\t\t<td><small>" . strlen($row['content']) . " bytes</small></td>\n"
-				. "\t\t<td><small>" . strlen($row['talk']) . " bytes</small></td>\n"
-				. "\t\t<td>" . $row['viewcount'] . "</td>"
-				. "\t</tr>";
+		$table[] = array($alink, $talk, $hist);
 	}
-	$table .= "</table>\n";
+
+	//TODO: stabilize talk
+//				. "\t\t<td><small>" . strlen($row['content']) . " bytes</small></td>\n"
+//				. "\t\t<td><small>" . strlen($row['talk']) . " bytes</small></td>\n"
+//				. "\t\t<td>" . $row['viewcount'] . "</td>"
+
 
 	//----------------------------------------------------------------------------------------------
 	//	add pagination
 	//----------------------------------------------------------------------------------------------
 
 	$plink = "%%serverPath%%wiki/list/";
-	$html = "[[:theme::pagination::page=". $pageNo ."::total=". $numPages ."::link=". $plink .":]]\n";
-	$html = $html . $table . $html;
+	$pagination = "[[:theme::pagination::page=$pageno::total=$totalPages::link=$plink:]]\n";
+	$html = $pagination . $theme->arrayToHtmlTable($table, true, true) . $pagination;
 
 	return $html;
 }

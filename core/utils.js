@@ -40,6 +40,16 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
+//-------------------------------------------------------------------------------------------------
+//	create a long random number
+//-------------------------------------------------------------------------------------------------
+
+function createUID() {
+	var theUID = '';
+	for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
+	return theUID;
+}
 //-------------------------------------------------------------------------------------------------
 //	base64 encode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------
@@ -630,4 +640,13 @@ function formCheckShowAll() {
 		checkStr = checkStr + i + ' => ' + parts[0] + ' | ' + parts[1] + "\n";
 	}		
 	alert(checkStr);
+}
+
+//--------------------------------------------------------------------------------------------------
+//  for debugging, can remove this in production
+//--------------------------------------------------------------------------------------------------
+
+function logDebug(msg) {
+	var divDebug = document.getElementById('debugger');
+	divDebug.innerHTML = divDebug.innerHTML + msg + "<br/>\n";
 }

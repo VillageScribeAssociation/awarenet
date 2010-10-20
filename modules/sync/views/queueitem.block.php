@@ -34,7 +34,9 @@
   </tr>
 </table>
 <hr/>
-<b>Data:</b><br/>
-%%datahtml%%
+<b>Data:</b><br/><br/>
+%%dataHtml%%
+<br/>
+<hr/>
 
 */ ?>

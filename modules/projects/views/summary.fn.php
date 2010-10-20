@@ -7,14 +7,28 @@
 //--------------------------------------------------------------------------------------------------
 //|	summarise
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID or projects entry [string]
+//arg: raUID - alias or UID of a Projects_Project object [string]
+//opt: projectUID - overrides raUID if present [string]
 
 function projects_summary($args) {
-	global $db, $theme;
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	global $db, $theme, $user;
+	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($db->addMarkup($args['raUID']));	
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/projects/views/summary.block.php');
-	return $theme->replaceLabels($model->extArray(), $block);
+	$html = $theme->replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -10,24 +10,24 @@ class Wiki_Revision {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;				//_	currently loaded database record [array]
-	var $dbSchema;			//_	database table definition [array]
-	var $loaded;			//_	set to true when an object has been loaded [bool]
+	var $data;							//_	currently loaded database record [array]
+	var $dbSchema;						//_	database table definition [array]
+	var $loaded;						//_	set to true when an object has been loaded [bool]
 
-	var $UID;				//_ UID [string]
-	var $articleUID;		//_ varchar(33) [string]
-	var $title;				//_ title [string]
-	var $content;			//_ text [string]
-	var $nav;				//_ text [string]
-	var $locked;			//_ varchar(30) [string]
-	var $namespace;			//_ title [string]
-	var $createdOn;			//_ datetime [string]
-	var $createdBy;			//_ ref:Users_User [string]
-	var $editedOn;			//_ datetime [string]
-	var $editedBy;			//_ ref:Users_User [string]
+	var $UID;							//_ UID [string]
+	var $articleUID;					//_ varchar(33) [string]
+	var $title;							//_ title [string]
+	var $content;						//_ text [string]
+	var $nav;							//_ text [string]
+	var $locked;						//_ varchar(30) [string]
+	var $namespace;						//_ (article|talk|template|category|etc) [string]
+	var $createdOn;						//_ datetime [string]
+	var $createdBy;						//_ ref:Users_User [string]
+	var $editedOn;						//_ datetime [string]
+	var $editedBy;						//_ ref:Users_User [string]
 
-	var $allRevisions;		// php enclosed wikicode [array]
-
+	var $allRevisions;					//_ nested array of UID, editedOn, editedBy, reason [array]
+	var $allRevisionsLoaded = false;	//_	set to true when above is loaded [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -42,7 +42,7 @@ class Wiki_Revision {
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
-			$this->namespace = 'New Revision ' . $this->UID;		// set default namespace
+			$this->namespace = 'article';					// set default namespace
 			$this->loaded = false;
 		}
 	}
@@ -181,16 +181,16 @@ class Wiki_Revision {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		$ary = $this->data;
+		global $user, $theme;
+		$ary = $this->toArray();
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if ($user->authHas('wiki', 'Wiki_Article', 'show', $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%wiki/' . $ary['alias'];
-			$ary['viewLink'] = "<a href='%%serverPath%%wiki/" . $ary['alias'] . "'>"
-					 . "[read on &gt;&gt;]</a>"; 
+		if ($user->authHas('wiki', 'Wiki_Revision', 'show', $this->UID)) { 
+			$ary['viewUrl'] = '%%serverPath%%wiki/showrevision/' . $ary['UID'];
+			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[show revision &gt;&gt;]</a>"; 
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -223,17 +223,13 @@ class Wiki_Revision {
 	//returns: UID of previous revision, false if not found [string][bool]
 
 	function getPreviousUID() {
-		foreach($this->allRevisions as $key => $row) {	// for each revision
-			if ($row['UID'] == $this->UID) {	// if this one is found
-
-				if ($key > 0) {
-					$prev = $this->allRevisions[($key - 1)];
-					return $prev['UID'];
-				} else {
-					return false;	// this is the first revision
-				}
-			}
+		$last = false;
+		if (false == $this->allRevisionsLoaded) { $this->getAllRevisions(); }
+		foreach($this->allRevisions as $key => $row) {				// for each revision
+			if ($row['UID'] == $this->UID) { return $last; }		// if this one is found
+			$last = $row['UID'];
 		}
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -242,43 +238,34 @@ class Wiki_Revision {
 	//returns: UID of next revision, false if not found [string][bool]
 
 	function getNextUID() {
-		foreach($this->allRevisions as $key => $row) {	// for each revision
-			if ($row['UID'] == $this->UID) {	// if this one is found
-
-				if ($key != (count($this->allRevisions) - 1)) {
-					$next = $this->allRevisions[($key + 1)];
-					return $next['UID'];
-				} else {
-					return false;	// this is the latest revision
-				}
-
-			}
+		$next = false;
+		if (false == $this->allRevisionsLoaded) { $this->getAllRevisions(); }
+		foreach($this->allRevisions as $key => $row) {			// for each revision
+			if (true == $next) { return $row['UID']; }			// last one matches this
+			if ($row['UID'] == $this->UID) { $next = true; }	// if this one is found
 		}
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	find all revisions to this wiki article or talk page, make list at $this->allRevisions
 	//----------------------------------------------------------------------------------------------
+	//; note that we only load UID, editedBy, editedOn and reason as there may hudnreds of edits
+	//TODO: this can be more standard and kapenta-ish
 
 	function getAllRevisions() {
-	global $db;
-
-		if ('' == $this->refUID) { return false; }
+		global $db;
 		$this->allRevisions = array();
+		if ('' == $this->articleUID) { return false; }
 
-	$conditions = array();
-	$conditions[] = "articleUID='" . $db->addMarkup($this->articleUID) . "' AND '". $db->addMarkup($this->type) ."' ";
-	$this->allRevisions[] = $db->loadRange('Wiki_Revision', 'UID, articleUID, type, reason, editedBy, editedOn', $conditions, 'editedOn DESC');
-/*	
-		//TODO: use $db->loadRange
-		$sql = "select UID, articleUID, type, reason, editedBy, editedOn from Wiki_Revision "
-			 . "where articleUID='" . $this->articleUID . "' "
-			 . "and type='" . $this->type . "' "
-			 . "order by editedOn";	// least to most recent  - TODO $db->loadRange(...)
+		$conditions = array();
+		$conditions[] = "articleUID='" . $db->addMarkup($this->articleUID) . "'";
 
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) { $this->allRevisions[] = $db->rmArray($row); }
-*/
+		$fields = 'UID, reason, editedBy, editedOn';
+
+		$range = $db->loadRange('Wiki_Revision', $fields, $conditions, 'editedOn ASC');
+		foreach($range as $row) { $this->allRevisions[] = $row; }
+		$this->allRevisionsLoaded = true;
 		return true;
 	}
 

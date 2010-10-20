@@ -49,6 +49,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Wiki_Article($raUID);
+	if ('talk' == $model->namespace) { $page->do302('wiki/talk/' . $model->talkFor); }
 	$model->expandWikiCode();
 
 	$extArray = $model->extArray();	

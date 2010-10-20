@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::label=All Users::width=570:]]
-[[:users::summarylist:::num=30:]]
+[[:users::summarylist::pageNo=%%pageNo%%::num=30:]]
 [`|lt]br/[`|gt]</content>
 <title>awareNet - all users</title>
 <script></script>
@@ -17,4 +17,5 @@
 <menu2>[[:admin::menu:]]</menu2>
 <section></section>
 <subsection></subsection>
-</page>\n*/ ?>
+</page>
+*/ ?>

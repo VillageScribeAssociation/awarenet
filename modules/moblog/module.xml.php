@@ -26,6 +26,9 @@
       </model>
     </models>
     <defaultpermissions>
+		public:p|moblog|Moblog_Post|show
+
+		student:p|moblog|Moblog_Post|new
 		student:p|moblog|Moblog_Post|show
 		student:p|moblog|Moblog_Post|list
 		student:p|moblog|Moblog_Post|comments-add
@@ -35,8 +38,10 @@
 		student:c|moblog|Moblog_Post|images-add|(if)|creator
 		student:c|moblog|Moblog_Post|images-remove|(if)|creator
 		student:c|moblog|Moblog_Post|images-edit|(if)|creator
+		student:c|moblog|Moblog_Post|tags-manage|(if)|creator
 		student:c|moblog|Moblog_Post|delete|(if)|creator
 
+		teacher:p|moblog|Moblog_Post|new
 		teacher:p|moblog|Moblog_Post|show
 		teacher:p|moblog|Moblog_Post|list
 		teacher:p|moblog|Moblog_Post|comments-add
@@ -46,6 +51,7 @@
 		teacher:c|moblog|Moblog_Post|images-add|(if)|creator
 		teacher:c|moblog|Moblog_Post|images-remove|(if)|creator
 		teacher:c|moblog|Moblog_Post|images-edit|(if)|creator
+		teacher:c|moblog|Moblog_Post|tags-manage|(if)|creator
 		teacher:c|moblog|Moblog_Post|delete|(if)|creator
     </defaultpermissions>
 </module>

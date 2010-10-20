@@ -34,7 +34,7 @@ function sync_synclist($args) {
 		   . "<td class='title'>[x]</td><td class='title'>[x]</td></tr>\n";
 
 	foreach ($range as $row) {
-		$fullLink = "<a href='%%serverPath%%sync/syncwith/" . $row['UID'] . "'>[sync all]</a>";
+		$fullLink = "<a href='%%serverPath%%sync/syncallfiles/" . $row['UID'] . "'>[sync all files]</a>";
 		$dbLink = "<a href='%%serverPath%%sync/syncwith/" . $row['UID'] . "'>[sync database only]</a>";
 
 		$html .= "\t<tr>\n"

@@ -8,12 +8,34 @@
 //arg: raUID - recordAlias or UID of post to edit [string]
 
 function announcements_show($args) {
-	global $theme;
+	global $theme, $user, $page;
+	$html = '';		//%	return value [string]
 
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Announcements_Announcement($args['raUID']);
-	if ($model->UID == '') { return false; }
-	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/announcements/views/show.block.php'));
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $model->UID))
+		{ return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$labels = $model->extArray();
+	$labels['rawblock64'] = base64_encode($args['rawblock']);
+
+	$block = $theme->loadBlock('modules/announcements/views/show.block.php');
+	$html = $theme->replaceLabels($labels, $block);
+
+	//----------------------------------------------------------------------------------------------
+	//	set AJAX triggers
+	//----------------------------------------------------------------------------------------------
+	$channel = 'announcement-' . $model->UID;
+	$page->setTrigger('announcements', $channel, $args['rawblock']);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

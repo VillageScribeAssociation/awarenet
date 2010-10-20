@@ -62,7 +62,7 @@
 		$bits = explode('_', $period);
 		if (count($bits) == 2) {
 			
-			$c = new Calendar_Entry();
+			$model = new Calendar_Entry();
 			$monthName = $model->getMonthName($bits[1]);
 			if ($monthName == false) { $page->do404(); }
 		

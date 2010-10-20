@@ -20,6 +20,7 @@ class KSystem {
 	var $defaultTheme;	//_	default theme [string]
 	var $useBlockCache;	//_	use the block cache? [bool]
 
+	var $hostInterface;	//_	ip address to use when opening sockets [string]
 	var $proxyEnabled;	//_ use a web proxy [bool]
 	var	$proxyAddress;	//_	proxy address (IP or domain name) [string]
 	var	$proxyPort;		//_	port number [integer]
@@ -54,7 +55,7 @@ class KSystem {
 		global $defaultModule, $defaultTheme, $useBlockCache;
 		global $rsaKeySize, $rsaPublicKey, $rsaPrivateKey;
 		global $logLevel;
-		global $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass;
+		global $hostInterface, $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass;
 
 		$this->installPath = $installPath;		
 		$this->serverPath = $serverPath;
@@ -65,6 +66,7 @@ class KSystem {
 		$this->useBlockCache = $useBlockCache;
 		$this->logLevel = (int)$logLevel;
 
+		$this->hostInterface = $hostInterface;
 		$this->proxyEnabled = $proxyEnabled;
 		$this->proxyAddress = $proxyAddress;
 		$this->proxyPort = $proxyPort;
@@ -475,6 +477,7 @@ class KSystem {
 	//returns: reserved [array]
 
 	function raiseEvent($module, $event, $args) {
+		global $kapenta, $session, $user, $page, $theme, $req, $revisions;
 		if (('*' == $module) || ('' == $module)) {
 			//--------------------------------------------------------------------------------------
 			//	sends event to all modules
@@ -675,12 +678,29 @@ class KSystem {
 		return $result;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	log live activity
+	//----------------------------------------------------------------------------------------------
+	//arg: msg - message to log [string]
+	//: this is overused due to development, needs to be trimmed out of a lot of places now
+	//: that the sync module is pretty stable.
+
+	function logLive($msg) {
+		global $db;
+		$fileName = 'data/log/' . date("y-m-d") . '-live.log.php';
+		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
+		$msg = "\n" . $msg;
+		$result = false;
+		//$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
+		return $result;
+	}
+
 	//==============================================================================================
 	//	processes
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	// 	start a process in background (*nix only)
+	//.	start a process in background (*nix only)
 	//----------------------------------------------------------------------------------------------
 	//:	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
 	//:	TODO: find equivalent for windows
@@ -701,7 +721,7 @@ class KSystem {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//|	discover if a process is running
+	//.	discover if a process is running
 	//----------------------------------------------------------------------------------------------
 	//:	source: http://nsaunders.wordpress.com/2007/01/12/running-a-background-process-in-php/
 	//: *Nix only, might work on windows with Cygwin or GNU tools, probably won't work in safe mode
@@ -711,6 +731,49 @@ class KSystem {
 	function procIsRunning($PID) {
 		exec("ps $PID", $ProcessState);
 		return(count($ProcessState) >= 2);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	clean up the temp directory
+	//----------------------------------------------------------------------------------------------
+	//:	files stored in the temp directory should begin with a timestamp and then a hyphen.
+	//:	files older than one hour are deleted.	
+	//returns: html report [string]
+
+	function procCleanTemp() {
+		$report = '';			//%	return value [string]
+		if (false == $this->fileExists('data/temp/')) { return false; }
+		$d = dir($this->installPath . 'data/temp/');
+		
+		while (false !== ($entry = $d->read())) {
+			$isFile = true;
+			if ('.' == $entry) { $isFile = false; }
+			if ('..' == $entry) { $isFile = false; }
+			// TODO: check for directories
+
+			if (true == $isFile) {
+				$report .= "temp file: " . $entry . "<br/>\n";
+				if (false === strpos($entry, '-')) {
+					$report .= "misnamed file: " . $entry . " (no hyphen, removed)<br/>\n";
+					unlink($this->installPath . 'data/temp/' . $entry);
+
+				} else {
+					//----------------------------------------------------------------------------------	
+					// look for old files
+					//----------------------------------------------------------------------------------
+					$parts = explode('-', $entry, 2);
+					$timestamp = (int)$parts[0];
+					$hourago = time() - (3600);		// TODO: make this a setting, remove literal
+					if ($timestamp < $hourago) { 
+						$report .= "old file: " . $entry . " (removed)<br/>\n";
+						unlink($this->installPath . 'data/temp/' . $entry);
+					}
+
+				} // end if has hyphen
+			} // end if is file
+		} // end while
+
+		return $report;
 	}
 
 }

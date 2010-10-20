@@ -106,6 +106,7 @@ class Forums_Thread {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		$this->updateReplies();
 		return $report;
 	}
 
@@ -228,6 +229,7 @@ class Forums_Thread {
 
 		$ary['longdate'] = date('jS F, Y', strtotime($ary['createdOn']));
 		$ary['titleUpper'] = strtoupper($ary['title']);
+		$ary['replies'] = (int)$ary['replies'];
 
 		//------------------------------------------------------------------------------------------
 		//	redundant - namespace issue
@@ -268,6 +270,16 @@ class Forums_Thread {
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. update the 'replies' field on this thread
+	//----------------------------------------------------------------------------------------------
+
+	function updateReplies() {
+		global $db;
+		$conditions = array("thread='" . $db->addMarkup($this->UID) . "'");
+		$this->replies = (int)$db->countRange('Forums_Reply', $conditions);
 	}
 
 }

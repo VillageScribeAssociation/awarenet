@@ -32,11 +32,11 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('New Article<br/>', 'ok');
-		$page->do302('/wiki/edit/' . $model->alias);
+		$session->msg('Created New Article<br/>', 'ok');
+		$page->do302('wiki/edit/' . $model->alias);
 	} else {
 		$session->msg('Could not create new Article:<br/>' . $report, 'bad');
-		$page->do302('/wiki/');
+		$page->do302('wiki/');
 	}
 
 

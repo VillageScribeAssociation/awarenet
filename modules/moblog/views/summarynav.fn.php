@@ -21,7 +21,7 @@ function moblog_summarynav($args) {
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
 	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', $model->UID)) { return ''; }
-
+	
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------

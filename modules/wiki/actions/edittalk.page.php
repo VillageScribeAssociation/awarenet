@@ -18,7 +18,7 @@
 <banner></banner>
 <head></head>
 <menu1>[[:home::menu:]]</menu1>
-<menu2>[[:wiki::menu::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::type=talk:]]</menu2>
+<menu2>[[:wiki::menu::raUID=[`|pc][`|pc]parentUID[`|pc][`|pc]::type=talk:]]</menu2>
 <section></section>
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Wiki - ::link=/wiki/:]]

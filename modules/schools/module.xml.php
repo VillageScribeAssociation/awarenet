@@ -28,8 +28,11 @@
 		public:p|schools|Schools_School|show
 		student:p|schools|Schools_School|show
 		student:c|schools|Schools_School|edit|(if)|creator
+		student:p|schools|Schools_School|announcements-show
+
 		teacher:p|schools|Schools_School|show
 		teacher:c|schools|Schools_School|edit|(if)|creator
+		teacher:p|schools|Schools_School|announcements-show
     </defaultpermissions>
 </module>
 */ ?>

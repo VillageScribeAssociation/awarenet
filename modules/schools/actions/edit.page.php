@@ -3,8 +3,10 @@
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Schools:]]
 [`|lt]h1[`|gt]Edit school Record[`|lt]/h1[`|gt]
-[[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-<title>awareNet - edit shool</title>
+[[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[[:tags::edittags::refModule=schools::refModel=Schools[`|us]School::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
+</content>
+<title>awareNet - edit school</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Groups:]]
 [[:groups::newgroupform::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</nav1>

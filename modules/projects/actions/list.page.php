@@ -12,8 +12,18 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=More:]]
-[[:projects::listprojectsnav::num=20:]]</nav1>
+[[:theme::navtitlebox::label=Project Categories::toggle=divProjectTags:]]
+[`|lt]div id='divProjectTags'[`|gt]
+[[:tags::modelcloud::refModule=projects::refModel=Projects_Project:]]
+[`|lt]/div[`|gt]
+[`|lt]br/[`|gt]
+[`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Most Active::toggle=divActiveProjects:]]
+[`|lt]div id='divActiveProjects'[`|gt]
+[[:projects::mostactivenav::num=10:]]
+[`|lt]/div[`|gt]
+</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>

@@ -1,6 +1,6 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/groups/models/groups.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
 	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------

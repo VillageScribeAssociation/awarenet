@@ -8,6 +8,7 @@
 <nav1>[[:theme::navtitlebox::label=Sections:]]
 [[:projects::editindexnav::raUID=[`|pc][`|pc]projectUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
+[`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Project Members:]]
 [[:projects::editmembersnav::raUID=[`|pc][`|pc]projectUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]

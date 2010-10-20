@@ -1,6 +1,8 @@
 <?
 
 	require_once($installPath . 'modules/sync/models/download.mod.php');
+	require_once($installPath . 'modules/sync/models/server.mod.php');
+	require_once($installPath . 'modules/sync/models/notice.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	synchronize content and broadcast events between servers
@@ -42,13 +44,17 @@ class KSync {
 		$this->proxyPass = $kapenta->proxyPass;
 
 		$this->ignoreTables = array(
-			'Sync_Notices',
-			'Deleted',
+			'Sync_Notice',
 			'chat',
 			'download',
 			'Sync_Download',
 			'Sync_Message',
-			'Sync_Servers'
+			'Sync_Server',
+			'Live_Mailbox',
+			'Live_Chat',
+			'Live_Trigger',
+			'Users_Session',
+			'Users_Login'
 		);
 
 		$this->ignoreChannels = array('admin-syspagelog', 'admin-syspagelogsimple');	
@@ -78,7 +84,7 @@ class KSync {
 		$peers = array();
 		$conditions = array("active='active'");	
 
-		$range = $db->loadRange('servers', '*', $conditions, '', '', '');
+		$range = $db->loadRange('Sync_Server', '*', $conditions, '', '', '');
 		if (false == $range) { return false; }
 
 		foreach($range as $peer) {
@@ -106,10 +112,10 @@ class KSync {
 		$uid = $kapenta->createUID();
 	
 		if (true == $this->useLog) 
-			{ logSync("syncCreate, source: $source type: $type data:\n$data\n)\n");	}
+			{ $kapenta->logSync("syncCreate, source: $source type: $type data:\n$data\n)\n");	}
 
 		foreach($this->peers as $peer) {
-			if ($peer['serverurl'] != $source) {
+			if (($peer['serverurl'] != $source) && ('self' != $peer['direction'])) {
 				//----------------------------------------------------------------------------------
 				//	create record of data to be synced
 				//----------------------------------------------------------------------------------
@@ -117,29 +123,34 @@ class KSync {
 				$model->UID = $uid;
 				$model->source = $source;
 				$model->type = $type;
-				$model->data = $data;
+				$model->ndata = $data;
 				$model->peer = $peer['UID'];
 				$model->status = 'new';
 				$model->save();
 
 				if (true == $this->useLog) {
 					$msg = "created sync item: $uid type: $type for: " . $peer['serverurl'] . "<br/>\n";
-					logSync($msg);
+					$kapenta->logSync($msg);
 				}
 
 				//----------------------------------------------------------------------------------
 				//	fork off a new process to action this
 				//----------------------------------------------------------------------------------
 				$model->UID;
-				$od = $installPath . 'data/temp/' . time() . '-' . $uid . '.sync';
-				$url = $serverPath . 'sync/send/' . $uid;
+				$od = $kapenta->installPath . 'data/temp/' . time() . '-' . $uid . '.sync';
+				$url = $kapenta->serverPath . 'sync/send/' . $uid;
 				$shellCmd = "wget --output-document=" . $od . " $url";
 				$kapenta->procExecBackground($shellCmd);
+				$kapenta->procCleanTemp();
 
-				if (true == $this->useLog) { logSync("executing sync item: $shellCmd <br/>\n"); }
+				if (true == $this->useLog) {
+					$kapenta->logSync("executing sync item: $shellCmd <br/>\n");
+				}
 
 				} else { 
-					if (true == $this->useLog) { logSync("not sending back to source $source\n"); }
+					if (true == $this->useLog) {
+						$kapenta->logSync("not sending back to source $source\n");
+					}
 				} 
 			}
 		}
@@ -152,13 +163,21 @@ class KSync {
 	//arg: record - XML with base64 encoded values [string]
 
 	function broadcastDbUpdate($source, $table, $record) {
+		global $kapenta;
+
 		if (true == in_array($table, $this->ignoreTables)) {
-			if (true == $this->useLog)
-				{ logSync("ignoring database update, table: $table <br/>\n"); }
+			if (true == $this->useLog) {
+				$msg = "ignoring database update, table: $table <br/>\n";
+				$kapenta->logSync($msg);
+			}
 			return false;
 		}
 
-		if (true == $this->useLog) { logSync("received database update, table: $table <br/>\n"); }
+		if (true == $this->useLog) {
+			$msg = "received database update, table: $table <br/>\n";
+			$kapenta->logSync($msg);
+		}
+
 		$data = $this->base64EncodeSql($table, $record);
 		return $this->create($source, 'dbUpdate', $data);
 	}
@@ -171,14 +190,17 @@ class KSync {
 	//arg: UID - UID of the record being deleted
 
 	function broadcastDbDelete($source, $table, $UID) {
+		global $kapenta;
 		if (in_array($table, $this->ignoreTables) == true) {
-			if (true == $this->useLog) 
-				{ logSync("ignoring database update, table: $table <br/>\n"); }
+			if (true == $this->useLog) {
+				$kapenta->logSync("ignoring database update, table: $table <br/>\n");
+			}
 			return false;	
 		}
 
-		if (true == $this->useLog) 
-			{ logSync("received notice of record deleteion, table: $table uid: $UID <br/>\n"); }
+		if (true == $this->useLog) {
+			$kapenta->logSync("received notice of record deleteion, table: $table uid: $UID <br/>\n");
+		}
 
 		$data = "<deletion><table>$table</table><uid>$UID</uid></deletion>";
 		return $this->create($source, 'dbDelete', $data);	
@@ -271,27 +293,8 @@ class KSync {
 	}
 	*/
 
-	/*	TODO: replace with $revisions object, or a method on $kapenta
 	//----------------------------------------------------------------------------------------------
-	//.	check if a record has been deleted
-	//----------------------------------------------------------------------------------------------
-	//arg: refTable - table which contained(s) deleted record [string]
-	//arg: refUID - UID of deleted record [string]
-	//returns: [bool]
-
-	function syncRecordDeleted($refTable, $refUID) {
-		$sql = "select * from delitems "
-			 . "where refUID='" . sqlMarkup($refUID) . "' "
-			 . "and refTable='" . $refUID . "'";
-
-		$result = $db->query($sql);
-		if (dbNumRows($result) > 0) { return true; }
-		return false;	
-	}
-	*/
-
-	//----------------------------------------------------------------------------------------------
-	//.	get schema of sync table
+	//.	get schema of sync table	DEPRECATED TODO: remove this
 	//----------------------------------------------------------------------------------------------
 	//:	note that this also exists in /modules/sync/sync.mod.php, copy any changes there
 	//returns: dbSchema, see mysql.inc.php [array]
@@ -333,7 +336,7 @@ class KSync {
 	function base64DecodeSql($xml) {
 		global $kapenta;
 		$data = array();				//% return value [array]
-		$data['model'] = '';
+		$data['table'] = '';
 		$data['fields'] = array();
 
 		$doc = new KXmlDocument($xml);
@@ -342,7 +345,7 @@ class KSync {
 		$children = $doc->getChildren(1);	// get children of root node [array]
 		foreach($children as $childId) {
 			$entity = $doc->getEntity($childId);
-			if ('table' == $entity['type']) { $data['model'] = $entity['value']; }
+			if ('table' == $entity['type']) { $data['table'] = $entity['value']; }
 			if ('fields' == $entity['type']) {
 				$fields = $doc->getChildren($childId);	// children of 'fields' entity
 				foreach($fields as $fieldId) {
@@ -366,6 +369,7 @@ class KSync {
 	//returns: true if credentials sent in header by current browser request check out [bool]
 
 	function authenticate() {
+		global $kapenta;
 		$headers = $this->getHeaders();
 
 		if (array_key_exists('Sync-Timestamp', $headers) == false) { return false; }
@@ -382,7 +386,7 @@ class KSync {
 		if ($hash != $headers['Sync-Proof']) { return false; }
 
 		// all seems in order
-		if (true == $this->useLog) { logSync("Authenticated: $hash\n"); }
+		if (true == $this->useLog) { $kapenta->logSync("Authenticated: $hash\n"); }
 		return true;
 	}	
 
@@ -416,20 +420,78 @@ class KSync {
 	//: TODO: do easy on indices and use SQL update rather than delete/insert
 
 	function dbSave($tableName, $data) {
-		global $kapenta, $db;
+		global $kapenta, $db, $revisions;
+
+		$kapenta->logSync("ksync::dbSave($tableName, " . $data['UID'] . " [objAry])<br/>");
+
 		if (false == is_array($data)) {
 			echo "Invalid data sent to \$sync->dbSave()<br/>\n"; 
 			return false; 
 		}
-		if (false == array_key_exists('UID', $data)) { return false; }	
+
+		if (true == in_array($tableName, $this->ignoreTables)) { return false; }
+		if (false == array_key_exists('UID', $data)) { return false; }
+		if (false == array_key_exists('editedOn', $data)) { return false; }		
 		if (strlen(trim($data['UID'])) < 4) { return false; }
+		if (false == $db->tableExists($tableName)) { return false; }
 
 		if (true == $this->useLog) 
 			{ $kapenta->logSync("saving record " . $data['UID'] . " to table $tableName \n"); }
 
 		$dbSchema = $db->getSchema($tableName);
 
-		$db->save($data, $dbSchema, false);
+		//------------------------------------------------------------------------------------------
+		//	if this is a notice that something was deleted, delete it
+		//------------------------------------------------------------------------------------------
+		
+		if ('Revisions_Deleted' == $tableName) {
+			$kapenta->logSync("Received Deletion Notice: $tableName status: " . $data['status'] . "<br/>");
+			if ('deleted' == $data['status']) {
+				$rmTable = $data['refModel'];
+				$rmUID = $data['refUID'];
+				$kapenta->logSync("Received Deletion Notice: $rmTable $rmUID<br/>");
+				if (true == $db->objectExists($rmTable, $rmUID)) {
+					$kapenta->logSync("Acting on Deletion Notice: $rmTable $rmUID<br/>");
+					$sql = "delete from $rmTable where UID='" . $rmUID . "'";
+					$kapenta->logSync("Executing: $sql<br/>");
+					$db->query($sql);
+				}
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	if existing object is newer or the same age, then ignore
+		//------------------------------------------------------------------------------------------
+		if (true == $db->objectExists($tableName, $data['UID'])) {
+			$objAry = $db->load($data['UID'], $dbSchema);
+			if (strtotime($objAry['editedOn']) >= strtotime($data['editedOn'])) { 
+				$kapenta->logSync("Ignoring redundant notice: $tableName ". $data['UID'] ."<br/>");
+				return false; 
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	perform a quiet update
+		//------------------------------------------------------------------------------------------
+		if (true == $revisions->isDeleted($tableName, $data['UID'])) { return false; }
+		$db->save($data, $dbSchema, false, false, false);
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	delete something (silently) from the databse
+	//----------------------------------------------------------------------------------------------
+	//arg: table - name of a database table [string]
+	//arg:UID - UID of an object stored in table [string]
+	//returns: true on success, false on failure [bool]
+
+	function dbDelete($table, $UID) {
+		global $db;
+		if (false == $db->objectExists($table, $UID)) { return false; }
+		if (false == $db->tableExists($table)) { return false; }
+		$sql = "delete from " . $table . " where UID='" . $UID . "'";
+		$check = $db->query($sql);
+		if (false == $check) { return false; }
 		return true;
 	}
 
@@ -552,7 +614,7 @@ class KSync {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	request a file, search on peers and download it if found 
+	//.	request a file, search on peers and download it if found  (DEPRECATED)
 	//----------------------------------------------------------------------------------------------
 	//arg: fileName - relative to installPath [string]
 	//returns: true if requested, distinct from request being filled [bool]
@@ -579,15 +641,83 @@ class KSync {
 			if (true == $this->useLog) 
 				{ logSync("creating new process for download: " . $model->UID . " \n"); }
 
-			$od = $kapenta->installPath . 'data/temp/' . $kapenta->createUID() . '.sync';
+			$od = $kapenta->installPath .'data/temp/'. time() .'-'. $kapenta->createUID() .'.sync';
 			$findUrl = $serverPath . 'sync/findfile/' . $model->UID;
 			$cmd = 'wget --output-document=' . $od . ' ' . $findUrl;
 			$kapenta->procExecBackground($cmd);
+			$kapenta->procCleanTemp();
 
 		} else { 
 			if ($this->useLog) { logSync("server busy, queing download: " . $model->UID . " \n"); }
 		}
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get list of objects and when they were last edited
+	//----------------------------------------------------------------------------------------------
+	//arg: peerUID - UID of a Sync_Server [string]
+	//arg: model - name of an object type/table [string]
+	//returns: array structure [array]
+	//;
+	//;  return value is a nested array structure:
+	//;		'total' => total number of objects known to peer [int]
+	//;		'dirty' => total number of objects this peer should update [int]
+	//;		'update' => array of UIDs [array]
+	//;
+	//TODO: save to a file and stream from it to avoid potential memory issues at scale
+
+	function getTableLe($peerUID, $model) {
+		global $db, $revisions;
+		$retVal = array();					//%	return value [array]
+		$retVal['total'] = 0;
+		$retVal['dirty'] = 0;
+		$retVal['update'] = array();
+
+		//------------------------------------------------------------------------------------------
+		// get local database schema
+		//------------------------------------------------------------------------------------------
+		if (false == $db->tableExists($model)) { return false; }
+		$localSchema = $db->getSchema($model);
+
+		//------------------------------------------------------------------------------------------
+		// get list from peer server
+		//------------------------------------------------------------------------------------------
+		$peer = new Sync_Server($peerUID);
+		$leUrl = $peer->serverurl . 'sync/tablele/' . str_replace('_', '-us-', $model);
+		$retVal['url'] = $leUrl;
+		$raw = $this->curlGet($leUrl, $peer->password);
+		$lines = explode("\n", $raw);
+
+		//------------------------------------------------------------------------------------------
+		// make array of objects which need updating
+		//------------------------------------------------------------------------------------------
+
+		foreach($lines as $line) {
+			if (('' != $line) && (false != strpos($line, '|'))) { 
+				$dirty = true;
+				$retVal['total']++;
+				$parts = explode('|', $line, 2);
+				$xUID = $parts[0];
+				$xEditedOn = $parts[1];
+
+				// don't fetch a new copy if object is deleted
+				if (true == $revisions->isDeleted($model, $xUID)) { $dirty = false; }
+
+				// don't fetch a new copy if local copy is not older than remote copy
+				if (true == $db->objectExists($model, $xUID)) { 
+					$objAry = $db->load($xUID, $localSchema);
+					if (strtotime($objAry['editedOn']) >= strtotime($xEditedOn)) { $dirty = false; }
+				}
+
+				if (true == $dirty) {
+					$retVal['update'][] = $xUID;
+					$retVal['dirty']++;
+				}
+			}
+		}
+
+		return $retVal;
 	}
 
 }

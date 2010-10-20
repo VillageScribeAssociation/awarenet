@@ -1,5 +1,5 @@
 <? /*
-<form name='changeUserPass' method='POST' action='%%serverPath%%users/save/'>
+<form name='changeUserPass' method='POST' action='%%serverPath%%users/changepassword/'>
 <input type='hidden' name='action' value='changeUserPass' />
 <input type='hidden' name='UID' value='%%UID%%' />
 <table noborder>

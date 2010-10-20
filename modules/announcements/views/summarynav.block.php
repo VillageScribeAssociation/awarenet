@@ -1,4 +1,5 @@
 <? /*
+<div id='blockAnnouncementsNav%%UID%%'>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -14,4 +15,6 @@
     </td>
   </tr>
 </table>
+</div>
+<!-- REGISTERBLOCK:blockAnnouncements%%UID%%:%%rawblock64%% -->
 */ ?>

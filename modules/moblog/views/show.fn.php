@@ -9,7 +9,7 @@
 //arg: raUID - recordAlias or UID of a post [string]
 
 function moblog_show($args) {
-	global $theme, $user;
+	global $theme, $user, $page;
 	$html = '';				//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -23,8 +23,18 @@ function moblog_show($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
+	$labels = $model->extArray();
+	$labels['rawblock64'] = base64_encode($args['rawblock']);
+
 	$block = $theme->loadBlock('modules/moblog/views/show.block.php');
-	$html = $theme->replaceLabels($model->extArray(), $block);
+	$html = $theme->replaceLabels($labels, $block);
+
+	//----------------------------------------------------------------------------------------------
+	//	set AJAX triggers
+	//----------------------------------------------------------------------------------------------
+	$channel = 'post-' . $model->UID;
+	$page->setTrigger('moblog', $channel, $args['rawblock']);
+
 	return $html;
 }
 

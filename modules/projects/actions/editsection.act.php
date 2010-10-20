@@ -32,7 +32,7 @@
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['projectUID'] = $model->UID;
 	$page->blockArgs['sectionUID'] = $sectionUID;
-	$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
+//	$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
 	$page->render();
 
 ?>

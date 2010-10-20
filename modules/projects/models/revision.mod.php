@@ -176,6 +176,7 @@ class Projects_Revision {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
+		global $user;
 		$ary = $this->toArray();
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
 

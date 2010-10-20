@@ -20,4 +20,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Calendar - ::link=/calendar/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]calendarTitle[`|pc][`|pc]::link=/calendar/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

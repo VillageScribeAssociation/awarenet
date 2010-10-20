@@ -1,28 +1,24 @@
 <? /*
 <table class='wireframe' width='300px'>
   <tr>
-    <td><small><b>Title:</b></small></td>
-    <td><small>%%title%%</small></td>
+    <td class='title'><b>Title:</b></td>
+    <td class='wireframe'>%%title%%</td>
   </tr>
   <tr>
-    <td><small><b>UID:</b></small></td>
-    <td><small>%%UID%%</small></td>
+    <td class='title'><b>UID:</b></td>
+    <td class='wireframe'>%%UID%%</td>
   </tr>
   <tr>
-    <td><small><b>Created On:</b></small></td>
-    <td><small>%%createdOn%%</small></td>
+    <td class='title'><b>Created On:</b></td>
+    <td class='wireframe'>%%createdOn%%</td>
   </tr>
   <tr>
-    <td><small><b>Created By:</b></small></td>
-    <td><small>[[:users::fullname::raUID=%%createdBy%%:]]</small></td>
+    <td class='title'><b>Created By:</b></td>
+    <td class='wireframe'>[[:users::namelink::raUID=%%createdBy%%:]]</td>
   </tr>
   <tr>
-    <td><small><b>Least Edit On:</b></small></td>
-    <td><small>%%editedOn%%</small></td>
-  </tr>
-  <tr>
-    <td><small><b>Last Edit By:</b></small></td>
-    <td><small>[[:users::fullname::userUID=%%editedBy%%:]]</small></td>
+    <td class='title'><b>Revisions:</b></td>
+    <td class='wireframe'>%%totalRevisions%%</td>
   </tr>
 
 </table>

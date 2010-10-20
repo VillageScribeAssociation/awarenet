@@ -23,7 +23,7 @@ class WikiCode {
 	var $infobox = '';			// html [string]
 
 	var $expanded = false;		// is set to true when item is fully expanded [bool]
-	var $trasclude = true;		// controls whether transclusions and expanded or ignored [bool]
+	var $transclude = true;		// controls whether transclusions and expanded or ignored [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//.	expand wiki text
@@ -51,7 +51,41 @@ class WikiCode {
 		$currSection['html'] = '';
 		$currSection['subsections'] = array();	// format of [anchor] => [subsectionTitle]
 
+		$sIndex = 0;	//% level 2 section index [int]
+		$ssIndex = 0;	//% level 3 section index [int]
+		$sssIndex = 0;	//% level 4 section index [int]
+		$ssssIndex = 0;	//% level 5 section index [int]
+
 		foreach($lines as $line) {
+
+			//--------------------------------------------------------------------------------------
+			// check for l5 subsections
+			//--------------------------------------------------------------------------------------
+
+			if (substr($line, 0, 5) == '=====') { 
+				$line = str_replace('=====', '', $line);
+				$ssAnchor = 'l5-' . $currSection['a'] . '-' . $aliases->stringToAlias($line);
+				$currSection['subsections'][$ssAnchor] = $line;
+				$ssssIndex++;
+				$line = $sIndex . '.' . $ssIndex . '.' . $sssIndex . '.' . $ssssIndex . ' ' . $line;
+				$currSection['content'] .= "<h4><i><a name='" . $ssAnchor . "'>$line</a></i></h4>\n\n";
+				$line = '';  // done with this line
+			}
+
+			//--------------------------------------------------------------------------------------
+			// check for l4 subsections
+			//--------------------------------------------------------------------------------------
+
+			if (substr($line, 0, 4) == '====') { 
+				$line = str_replace('====', '', $line);
+				$ssAnchor = 'l4-' . $currSection['a'] . '-' . $aliases->stringToAlias($line);
+				$currSection['subsections'][$ssAnchor] = $line;
+				$sssIndex++;
+				$ssssIndex = 0;
+				$line = $sIndex . '.' . $ssIndex . '.' . $sssIndex . ' ' . $line;
+				$currSection['content'] .= "<h4><a name='" . $ssAnchor . "'>$line</a></h4>\n\n";
+				$line = '';  // done with this line
+			}
 
 			//--------------------------------------------------------------------------------------
 			// check for subsections
@@ -59,8 +93,12 @@ class WikiCode {
 
 			if (substr($line, 0, 3) == '===') { 
 				$line = str_replace('===', '', $line);
-				$ssAnchor = $currSection['a'] . '-' . $aliases->stringToAlias($line);
+				$ssAnchor = 'l3-' . $currSection['a'] . '-' . $aliases->stringToAlias($line);
 				$currSection['subsections'][$ssAnchor] = $line;
+				$ssIndex++;
+				$sssIndex = 0;
+				$ssssIndex = 0;
+				$line = $sIndex . '.' . $ssIndex . ' ' . $line;
 				$currSection['content'] .= "<h3><a name='" . $ssAnchor . "'>$line</a></h3>\n\n";
 				$line = '';  // done with this line
 			}
@@ -76,8 +114,14 @@ class WikiCode {
 
 				$currSection = array();
 				$currSection['title'] = $line;
+				$currSection['content'] = '';
 				$currSection['a'] = $aliases->stringToAlias($line);
 				$currSection['subsections'] = array();
+				$sIndex++;
+				$ssIndex = 0;
+				$sssIndex = 0;
+				$ssssIndex = 0;
+				$line = $sIndex . ' ' . $line;
 				$currSection['html'] = "<h2><a name='". $currSection['a'] ."'>$line</a></h2>\n\n";
 				$line = '';  // done with this line
 			}
@@ -217,7 +261,7 @@ class WikiCode {
 			if (trim($section['title']) != '') {
 
 				// open contents section
-				if ('' == $this->contents) {
+				if ($this->contents == '') {
 					$this->contents = "<div class='inlinequote'>\n<h1>Contents</h1>\n";
 				}
 
@@ -226,13 +270,41 @@ class WikiCode {
 								 . $index . ' ' . $section['title'] ."</a><br/>\n";
 
 				// add subsection title links to contents
-				$ssIndex = 0;
+				$ssIndex = 0;	// level 3
+				$sssIndex = 0;	// level 4
+				$ssssIndex = 0;	// level 5
 				foreach($section['subsections'] as $ssa => $ssTitle) {
+						//echo "ssa: $ssa BECOMES ($ssTitle)<br/>\n";
+						if ('l3' == substr($ssa, 0, 2)) {
 						$ssIndex++;
+						$sssIndex = 0;
+						$ssssIndex = 0;
 						$this->contents .= "&nbsp;&nbsp;&nbsp;&nbsp;"
 										 . "<a href='#" . $ssa . "'>" 
 										 . $index . '.' . $ssIndex . ' ' . $ssTitle 
 										 . "</a><br/>\n";
+
+						}
+						if ('l4' == substr($ssa, 0, 2)) {
+						$sssIndex++;
+						$ssssIndex = 0;
+						$this->contents .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+										 . "<a href='#" . $ssa . "'>" 
+										 . $index . '.' . $ssIndex .  '.' . $sssIndex . ' '
+										 . $ssTitle 
+										 . "</a><br/>\n";
+
+						}
+						if ('l5' == substr($ssa, 0, 2)) {
+						$ssssIndex++;
+						$this->contents .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+										 . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#" . $ssa . "'>" 
+										 . $index . '.' . $ssIndex .  '.' . $sssIndex . '.'
+										 . $ssssIndex  . ' ' . $ssTitle 
+										 . "</a><br/>\n";
+						}
+
+
 				}
 			}
 
@@ -243,7 +315,7 @@ class WikiCode {
 		}
 
 		// close contents section
-		if ('' != $this->contents) { $this->contents .= "<br/></div>\n"; }
+		if ($this->contents != '') { $this->contents .= "<br/></div>\n"; }
 
 		// add TOC to article below first section
 		$this->html = str_replace('%%wikitoc%%', $this->contents, $this->html);
@@ -330,7 +402,7 @@ class WikiCode {
 			//--------------------------------------------------------------------------------------
 			// internal link
 			//--------------------------------------------------------------------------------------
-			$type = ''; $hash;
+			$type = ''; $hash = '';
 
 			//--------------------------------------------------------------------------------------
 			// decide which type of internal link

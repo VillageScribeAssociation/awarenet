@@ -1,5 +1,8 @@
 <?
 
+	require_once($installPath . 'modules/live/models/mailbox.mod.php');
+	require_once($installPath . 'modules/live/models/trigger.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object for reading, writing and rendering pages and other response documents
 //--------------------------------------------------------------------------------------------------
@@ -288,6 +291,10 @@ class KPage {
 		}
 	}
 
+	//==============================================================================================
+	//	errors and redirects
+	//==============================================================================================
+
 	//----------------------------------------------------------------------------------------------
 	//.	redirect browser (and search engines) to latest alias for a record
 	//----------------------------------------------------------------------------------------------
@@ -376,6 +383,50 @@ class KPage {
 		echo "<error>$msg</error>\n";
 		$session->store();		// store session state
 		die();
+	}
+
+	//==============================================================================================
+	//	AJAX (live) support
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	create a trigger for this page
+	//----------------------------------------------------------------------------------------------	
+	//arg: module - name of a kapenta module [string]
+	//arg: name - name of trigger / channel [string]
+	//arg: block - block to refresh when tripped [string]
+	//return: true on success, false on failure [bool]
+
+	function setTrigger($module, $channel, $block) {
+		$model = new Live_Trigger();
+		$model->pageUID = $this->UID;
+		$model->module = $module;
+		$model->channel = $channel;
+		$model->block = $block;
+		$report = $model->save();
+		if ('' == $report) { return true; }
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	fire a trigger on any pages listening for it
+	//----------------------------------------------------------------------------------------------	
+	//arg: module - module which provides block [string]
+	//arg: channel - name of channel on which there is a message [string]
+
+	function doTrigger($module, $channel) {
+		global $db;
+
+		$conditions = array();
+		$conditions[] = "module='" . $db->addMarkup($module) . "'";
+		$conditions[] = "channel='" . $db->addMarkup($channel) . "'";
+
+		$range = $db->loadRange('Live_Trigger', '*', $conditions);
+		foreach($range as $row) {
+			$model = new Live_Trigger();
+			$model->loadArray($row);
+			$model->send();
+		}
 	}
 
 	//==============================================================================================

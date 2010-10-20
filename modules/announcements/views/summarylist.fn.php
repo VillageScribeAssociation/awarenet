@@ -34,10 +34,20 @@ function announcements_summarylist($args) {
 	$block = $theme->loadBlock('modules/announcements/views/summary.block.php');
 
 	foreach($range as $UID => $row) {
-		$model = new Announcements_Announcement();
-		$model->loadArray($row);
-		$html .= $theme->replaceLabels($model->extArray(), $block);
+		$html .= '[[:announcements::summary::UID=' . $row['UID'] . ':]]';
+		//$model = new Announcements_Announcement();			// removed, but consider
+		//$model->loadArray($row);								// doing it this way for efficiency
+		//$labels = $model->extArray();
+		//$labels['rawblock64'] = base64_encode($rawBlock);
+		//$html .= $theme->replaceLabels($labels, $block);
 	}  
+
+	$UID = $kapenta->createUID();
+	$rawblock64 = base64_encode($args['rawblock']);
+	$html = "<div id='blockAnnouncementsSL" . $UID . "'>\n"
+		  . $html;
+		  . "</div>"
+		  . "<! REGISTERBLOCK:blockAnnouncementsSL" . $UID . ":" . $rawblock64 . " -->\n"
 
 	return $html;
 }

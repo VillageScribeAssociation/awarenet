@@ -27,7 +27,7 @@ function announcements_relationships($refModel, $UID, $relationship, $userUID) {
 	//	relationships of Announcements_Announcement object
 	//----------------------------------------------------------------------------------------------
 	if ('Announcements_Announcement' == $refModel) {
-		$model = new Comments_Comment($UID);				// try load the object
+		$model = new Announcements_Announcement($UID);		// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
 		//TODO: other relationships here

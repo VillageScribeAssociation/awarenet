@@ -1,6 +1,9 @@
 <? /*
 [[:theme::submenu::label=Recent Projects::link=/projects/:]]
-%%editCurrentProject%%
-%%viewCurrentProject%%
-%%delCurrentProject%%
+[[:theme::submenu::label=|::link=/projects/:]]
+%%viewProject%%
+%%editProject%%
+%%viewHistory%%
+%%delProject%%
+
 */ ?>

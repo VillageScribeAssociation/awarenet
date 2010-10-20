@@ -1155,4 +1155,641 @@ function enableDesignMode(areaName){
 		self.status = "Error in setting designMode property on attempt number "
 			+ area.designModeRetryCount + ".  Retrying.";
 
-		if (area.designModeRetryCount <= 10) {
+		if (area.designModeRetryCount <= 10) { t = setTimeout(exp,100); }
+		else {
+			self.status = areaName + " failed to initialize properly";
+			throw e;
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------------------------
+//	
+//--------------------------------------------------------------------------------------------------
+//:	this is set by HyperTextArea._renderRTE via a timeout
+
+function onHyperTextAreaLoad(areaName) {
+	self.status = "attempting to set designMode property";
+	area = HyperTextArea.getArea(areaName);							// get HyperTextArea given name
+	area.cpWindow = frames['cp' + areaName].window;					// iframe window
+	
+	//allows the area to determine what form it belongs to
+	area.form = document.getElementById("hdn" + areaName).form;		// hdn = hidden?
+	
+	//attaches to the forms submit handler only once
+	formAlreadyStored = false;
+	for(i=0;i<HyperTextArea.forms.length;i++){
+		if(area.form == HyperTextArea.forms[i]){
+			formAlreadyStored = true;
+			break;
+		}
+	}
+	if(!formAlreadyStored){
+		onSubmitFunc = area.form.onsubmit;
+		area.form.onsubmit = function(){
+			HyperTextArea.updateAllAreas();
+			if(onSubmitFunc){
+				onSubmitFunc();
+			}
+		}
+		HyperTextArea.forms[HyperTextArea.forms.length] = area.form;
+	}
+	area.setContent(area.html)
+	if (document.all) {						// checking for IE?
+		cp = frames["cp" + areaName];
+		cp.document.write(getPaletteAsString());
+	} else {
+		cp = document.getElementById("cp"+areaName);
+		d = cp.contentDocument;
+		d.open();
+		d.write(getPaletteAsString());
+		d.close()
+	}
+	enableDesignMode(areaName);
+	area.setContent(area.html)
+}
+
+
+//-------------------------------------------------------------------------------------------------
+//	get editor source, given a node from the editor
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function getEditorDocument(someNode) {
+	if (9 == someNode.nodeType) {
+		return someNode;
+	} else {
+		return getEditorDocument(someNode.parentNode);
+	}
+}
+
+//-------------------------------------------------------------------------------------------------
+//	replace buttons with the images they represent
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function replaceImageButtons(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
+
+	for (i = 0; i < imgs.length; i++) {				// look for instructions in button alt
+		img = imgs[i];
+		if ((img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
+			// get plugin details from alt
+			var args = img.alt.split('|');
+			var plugin = args[0];
+
+			//-------------------------------------------------------------------------------------
+			//	replace button with image
+			//-------------------------------------------------------------------------------------
+			if (plugin == 'images') {
+				var size = '';
+				var raUID = '';
+
+				// get image details
+				for (j = 1; j < args.length; j++) {
+					if (args[j].indexOf('=') > 0) {
+						parts = args[j].split('=');
+						switch(parts[0]) {
+							case 'raUID': 	raUID = parts[1];	break;
+							case 'size': 	size = parts[1];	break;
+						}
+					}
+				}
+
+				// set image src and alt
+				var newSrc = jsServerPath + 'images/' + size + '/' + raUID;
+				img.src = newSrc;
+				img.alt = 'imageexpanded|raUID=' + raUID + '|size=' + size + '|';
+
+			}
+		}
+	}	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	remove images added incorrectly (they won't have an alt beginning with 'imageexpanded')
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function removeSimpleImages(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');
+	var srcStr = '';
+	for (var i in imgs) {
+		var img = imgs[i];
+		if (img != undefined) {
+			if ((img.alt == undefined) || (img.alt == null) || (img.alt == '')) {
+				// no alt
+				if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
+			} else {
+				// alt must begin imageexpanded or some other plugin name
+				var rmThis = true;
+				if ((img.alt.length > 13) && (img.alt.substring(0, 14) == 'imageexpanded|')) { rmThis = false; }
+				if (true == rmThis) {
+					if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
+				}
+			}
+		} // end if img undefined
+	} // end for
+}
+
+//-------------------------------------------------------------------------------------------------
+//	replace images with blocks before saving
+//	kapenta only! - remove if you're not using this to manage block insertions
+//-------------------------------------------------------------------------------------------------
+
+function replaceImagesWithBlocks(oRTE) {
+	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
+	for (var i in imgs) {							// look for instructions in button alt
+		img = imgs[i];
+		if ((img != undefined) && (img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
+			// get plugin details from alt
+			var args = img.alt.split('|');
+			var plugin = args[0];
+
+			//-------------------------------------------------------------------------------------
+			//	replace image with block tag
+			//-------------------------------------------------------------------------------------
+			if (plugin == 'imageexpanded') {
+				var size = '';
+				var raUID = '';
+
+				// get image details
+				for (j = 1; j < args.length; j++) {
+					if (args[j].indexOf('=') > 0) {
+						parts = args[j].split('=');
+						switch(parts[0]) {
+							case 'raUID': 	raUID = parts[1];	break;
+							case 'size': 	size = parts[1];	break;
+						}
+					}
+				}
+
+				// replace DOM image node with text node
+				if (size == 'widtheditor') { size = 'width570'; }
+				var block = '[[:images::' + size + '::raUID=' + raUID + ':]]';
+				var txtNode = oRTE.createTextNode(block);
+				img.parentNode.replaceChild(txtNode, img);
+
+			} 
+		}
+	}	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	find all blocks in a piece of text/html
+//-------------------------------------------------------------------------------------------------
+
+function editorProcessBlocks(html) {
+	var blocks = editorFindBlocks(html);
+	for (var i in blocks) {
+		var block = blocks[i];
+		cblock = block.replace(/\[\[:/g, '');	// remove wrapper
+		cblock = cblock.replace(/:\]\]/g, '');
+
+		var args = cblock.split('::');
+
+		switch(args[0]) {
+			case 'images':
+				if ( (args[1] == 'slideshow') || 
+					 (args[1] == 'swapbutton') ||
+					 (args[1] == 'thumb') ||  
+					 (args[1] == 'default') ) {
+					// leave it be (block as editable text)
+				} else {
+					// replace with actual image tag
+					var imgtag = editorMkImageFromBlock(args);
+					html = editorReplaceAll(html, block, imgtag);
+					break;
+				}
+		}
+	}
+
+	return html;
+}
+
+//-------------------------------------------------------------------------------------------------
+//	ugly, but better than screwing with RegEx
+//-------------------------------------------------------------------------------------------------
+
+function editorReplaceAll(html, find, repl) {
+	if (find.length < 3) { return html; }
+	while (html.indexOf(find) >= 0) {
+		var startPos = html.indexOf(find);
+		var strBefore = html.substring(0, startPos);
+		var strAfter = html.substring((startPos + find.length), html.length);
+		html = strBefore + repl + strAfter;
+	}
+	return html;	
+}
+
+//-------------------------------------------------------------------------------------------------
+//	make an html image tage from an image block tag
+//-------------------------------------------------------------------------------------------------
+
+function editorMkImageFromBlock(args) {
+	var imgtag = '';
+	var size = args[1];
+	var raUID = '';
+
+	//---------------------------------------------------------------------------------------------
+	//	get any arguments (at present only UID) TODO: add arguments for caption, etc
+	//---------------------------------------------------------------------------------------------
+	for(var i in args) {
+		var arg = args[i];
+		if (arg.indexOf('=') > 0) {
+			var parts = arg.split('=');
+			switch(parts[0]) {
+				case 'raUID':		raUID = parts[1]; 	break;
+				case 'imageUID':	raUID = parts[1]; 	break;
+			}
+		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	assemble into HTML, alt property allows image to be converted back to block tag
+	//---------------------------------------------------------------------------------------------
+	if ('width570' == size) { size = 'widtheditor'; }
+	var src = jsServerPath + 'images/' + size + '/' + raUID;
+	var alt = 'imageexpanded|size=' + size + '|raUID=' + raUID + '|';
+	imgtag = "<img class='im" + size + "' src='" + src + "' border='0' alt='" + alt + "' blockTag='[[:blocktag:]]' />";
+	return imgtag;
+}
+
+//-------------------------------------------------------------------------------------------------
+//	find all blocks in a piece of text/html
+//-------------------------------------------------------------------------------------------------
+
+function editorFindBlocks(html) {
+	var blocks = new Array();
+
+	html = html.replace(/\r/g, '');				// strip newlines
+	html = html.replace(/\n/g, '');
+	html = html.replace(/\[\[:/g, "\n[[:");		// place blocks on their own line
+	html = html.replace(/:\]\]/g, ":]]\n");
+
+	var lines = html.split("\n");				// for each line which might be a block
+	var idx = 0;
+
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i];						
+		if (line.length > 8) {
+			//--------------------------------------------------------------------------------------
+			//	if this line begins with [[:: and ends with ::]]
+			//--------------------------------------------------------------------------------------
+			if ((line.substring(0, 3) == '[[:') && (line.substring((line.length - 3), line.length) == ':]]')) {
+				blocks[idx] = line;
+				idx++;
+			}
+
+	  }
+	}
+	
+	return blocks;
+}
+
+//-------------------------------------------------------------------------------------------------
+// end of kapenta specific functions
+//-------------------------------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------------------------
+	//	log a message (debugging)
+	//---------------------------------------------------------------------------------------------
+	function htmlLog(msg) {
+		var logDiv = document.getElementById('divLog');
+		logDiv.innerHTML = logDiv.innerHTML + msg + "<br>\n";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	object to clean html of unwanted tags, attributes, javascript, etc
+	//----------------------------------------------------------------------------------------------
+
+	function KHtmlCleaner() {
+
+		//------------------------------------------------------------------------------------------
+		//	member variables
+		//------------------------------------------------------------------------------------------
+
+		this.output = '';				//_ clean html [string]
+		this.tagType = '';				//_	type of tag currently being processed [string]
+		this.hangingEq = false;			//_	if the last token was an equals sign [bool]
+		this.selfClose = false;			//_	if this is a self-closing tag [bool]
+		this.tagAtName = new Array();	//_	attributes of current tag [array]
+		this.tagAtVal = new Array();	//_	attribute values of current tag [array]
+
+		//------------------------------------------------------------------------------------------
+		//	configuration
+		//------------------------------------------------------------------------------------------
+
+		this.allowTags = new Array(
+			'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'p', 'br', 'b', 'i', 'u', 'ul', 'ol', 'li', 'table',
+			'tbody', 'th', 'td', 'tr', 'span', 'small'
+		);
+
+		//------------------------------------------------------------------------------------------
+		//.	parse raw string for html tags
+		//------------------------------------------------------------------------------------------
+
+		this.parseTags = function() {
+
+			//--------------------------------------------------------------------------------------
+			//	working variables
+			//--------------------------------------------------------------------------------------
+			var thisChar = '';				//%	current char being examined [string]
+			var nextChar = '';				//%	next char to be examined, if any [string]
+			var thisHtmlCharNo = 0;			//%	char position we're scanning from [int]
+			var buffer = '';				//%	piece of the document being worked on [string]
+			var mode = 'outside';			//%	state of state machine [string]
+	
+			//--------------------------------------------------------------------------------------
+			//	consider each character in source HTML
+			//--------------------------------------------------------------------------------------
+
+			for (thisHtmlCharNo = 0; thisHtmlCharNo < html.length; thisHtmlCharNo++) {
+				thisChar = html.substr(thisHtmlCharNo, 1);				// current char
+				nextChar = '';
+				if ((thisHtmlCharNo + 1) < html.length) { 				
+					nextChar = html.substr(thisHtmlCharNo + 1, 1);		// next char, if any
+				}
+
+				//----------------------------------------------------------------------------------
+				// change states (only pay attention to opening of tags if not already in one)
+				//----------------------------------------------------------------------------------
+				switch (mode) {
+					case 'outside':
+						//--------------------------------------------------------------------------
+						//	not inside an html tag change state when we encounter '<'
+						//--------------------------------------------------------------------------
+						if ('<' == thisChar) {						// start of a tag
+							this.throwToken(buffer, 'outside');		// throw anything in buffer
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// change mode
+							thisHtmlCharNo--;						// reprocess this in tag mode
+
+						} else {
+							switch (thisChar) {						// disallow quotes
+								case "'":	thisChar = "&apos;";	break;
+								case "\"":	thisChar = "&quot;";	break;
+							}
+							buffer = buffer + thisChar;				// add current char to buffer
+						}
+						break;
+
+					case 'tag':
+						//--------------------------------------------------------------------------
+						//	inside an html tag, look for whitespace, tokens, strings and '>'
+						//--------------------------------------------------------------------------
+						switch(thisChar) {
+							case ' ':	this.throwToken(' ', 'ws');		break;	// throw whitespace
+							case "\t":	this.throwToken("\t", 'ws');	break;	// ...
+							case "\n":	this.throwToken("\n", 'ws');	break;
+							case "\r":	this.throwToken("\r", 'ws');	break;
+							case '<':	this.throwtoken("<", 'start');	break;	// throw control
+							case '=':	this.throwtoken("=", 'equals');	break;	// chars
+
+							case '/':
+								if ('>' == nextChar) {				// end of self closing tag
+									this.throwToken(thisChar + nextChar, 'endsc');
+									thisHtmlCharNo++;				// skip the next char									
+
+								} else {							// start of token
+									mode = 'token';					// change to token mode
+									thisHtmlCharNo--;				// reprocess this in token mode
+								}
+								break;
+
+							case '>':								// end of this tag
+								this.throwtoken(">", 'end');		// throw it
+								mode = 'outside';					// change mode
+								break;							
+
+							case "'":
+								mode = 'sq';						// change mode
+								thisHtmlCharNo--;					// reprocess this in sq mode
+								break;
+
+							case "\"":
+								mode = 'dq';						// change mode
+								thisHtmlCharNo--;					// reprocess this in dq mode
+								break;
+
+							default:
+								mode = 'token';						// change to token mode
+								thisHtmlCharNo--;					// reprocess this in token mode
+								break;
+
+						}
+						break;	// .................................................................
+
+					case 'sq':
+						//--------------------------------------------------------------------------
+						//	inside a single quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("'" == thisChar) && ("'" != buffer)) {	// end of sq string
+							this.throwToken(buffer, 'sq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'sq':
+						//--------------------------------------------------------------------------
+						//	inside a single quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("'" == thisChar) && ("'" != buffer)) {	// end of sq string
+							this.throwToken(buffer, 'sq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'dq':
+						//--------------------------------------------------------------------------
+						//	inside a double quoted string
+						//--------------------------------------------------------------------------
+						buffer = buffer + thisChar;					// add current char to buffer
+						if (("\"" == thisChar) && ("\"" != buffer)) {	// end of dq string
+							this.throwToken(buffer, 'dq');			// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// and change mode back to tag
+						}
+						break;	// .................................................................
+
+					case 'token':
+						//--------------------------------------------------------------------------
+						//	inside a tag name, attrib name or unquoted value
+						//--------------------------------------------------------------------------
+						endOfToken = false;
+						switch (thisChar) {
+							case '=':	endOfToken = true; break;
+							case ' ':	endOfToken = true; break;
+							case "\t":	endOfToken = true; break;
+							case "\n":	endOfToken = true; break;
+							case "\r":	endOfToken = true; break;
+							case ">":	endOfToken = true; break;
+							case '/':	if ('>' == nextChar) { endOfToken = true; }	break;
+						}
+
+						if (true == endOfToken) {
+							this.throwToken(buffer, 'token');		// throw it
+							buffer = '';							// clear the buffer
+							mode = 'tag';							// go back to tag mode
+							thisHtmlCharNo--;						// reprocess this in tag mode
+
+						} else { buffer = buffer + thisChar; }		// still within token
+
+						break;	// .................................................................
+
+				}
+
+			} // end for each char
+
+		} // end this.parseTags
+
+		//------------------------------------------------------------------------------------------
+		//.	catch thrown tokens and evaluate
+		//------------------------------------------------------------------------------------------
+		this.throwToken = function (tkVal, tkType) {
+			logDebug("token: " + tkVal + " type: " + tkType + "<br>\n");
+			switch(tkType) {
+				case 'outside':											// not an html tag part
+					this.output = this.output + tkVal;		
+					break;	// .....................................................................
+
+				case 'start':
+					this.tagType = '';									// clear all working vars
+					this.hangingEq = false;		
+					this.selfClose = false;
+					this.tagAtName = new Array();	
+					this.tagAtVal = new Array();
+					break;
+
+				case 'equals':											// separates k,v pairs
+					this.hangingEq = true;
+					break;	// .....................................................................
+
+				case 'token':
+					if ('' == this.tagType) { this.tagType = tkVal; }	// this is the tag name
+					else {												// this is attrib or value
+						if (true == this.hangingEq) {				
+							tagAtIdx = (this.tagAtVal.length - 1);		// last to be added
+							this.tagAtVal[tagAtIdx]	= tkVal;			// this is an attrib value 
+							this.hangingEq = false;						// no longer hanging
+
+						} else {
+							tagAtIdx = this.tagAtVal.length;
+							tkVal = tkVal.toLowerCase();				// lowercase is tidier
+							this.tagAtName[tagAtIdx] = tkVal;			// this is an attrib name
+							this.tagAtVal[tagAtIdx] = '';				// set blank value
+						}
+					}
+					break;	// .....................................................................
+
+				case 'sq':												// single quoted string
+					if (true == this.hangingEq) {
+						tagAtIdx = (this.tagAtVal.length - 1);			// last to be added
+						this.tagAtVal[tagAtIdx]	= tkVal;				// this is an attrib value 
+						this.hangingEq = false;							// no longer hanging
+					}	
+					break;	// .....................................................................
+
+				case 'dq':												// single quoted string
+					if (true == this.hangingEq) {
+						tagAtIdx = (this.tagAtVal.length - 1);			// last to be added
+						this.tagAtVal[tagAtIdx]	= tkVal;				// this is an attrib value 
+						this.hangingEq = false;							// no longer hanging
+					}	
+					break;	// .....................................................................
+
+				case 'endsc':
+					this.selfClose = true;
+					this.addTag();
+					break;
+
+				case 'end':
+					this.addTag();
+					break;	// .....................................................................
+
+			}
+		} // end this.throwToken
+
+		//------------------------------------------------------------------------------------------
+		//.	finished with current tag, redact and add it to output
+		//------------------------------------------------------------------------------------------
+
+		this.addTag = function() {
+			var allowed = false;						//%	if this tag is allowed [bool]
+			var tnLower = this.tagType.toLowerCase();	//%	for comparison below [string]
+			var tagStr = '<' + this.tagType + ' ';		//%	redacted/rebuilt HTML tag [string]
+
+			for (var i = 0; i < this.allowTags.length; i++) 
+				{ if (this.allowTags[i] == tnLower) { allowed = true; }	}
+
+			if (false == allowed) { return false; }
+
+			for (var i = 0; i < this.tagAtName.length; i++) { 
+				var atName =  this.tagAtName[i];					//%	attributre name [string]
+				var atVal =  this.tagAtVal[i];						//%	attribute value [string]
+
+				if (true == this.allowAttrib(tnLower, atName)) {	// If this attrib is allowed
+					tagStr = tagStr + atName;						// add attribute name.
+					if ('' != atVal) {								// If there is a value
+						if ('style' == atName) {					// and this is a 'style' attrib
+							var cStyle = this.cleanStyle(atVal);	// clean the value
+							tagStr = tagStr + '=' + cleanStyle;		// before adding it.
+
+						} else { tagStr = tagStr + '=' + atVal;	}	// not 'style', just add it
+
+					} else { tagStr = tagStr + ' '; }				// no value, leave a space
+
+				}	
+			}
+			
+			this.output = this.output + tagStr;						// we're done, add to output
+		} // end this.addTag
+
+		//------------------------------------------------------------------------------------------
+		//.	discover if an attribute is allowed
+		//------------------------------------------------------------------------------------------
+		//arg: tagType - eg, 'img', 'table', 'html' [string]
+		//arg: tagType - eg, 'img', 'table', 'html' [string]
+		//returns: true is it's allowed, false if not [bool]
+
+		this.allowAttrib = function(tagType, attribute) {
+			tagType = tagType.toLowerCase();
+			attribute = attribute.toLowerCase();
+			if ('class' == attribute) { return true; }	// any tag may have any class
+
+			//--------------------------------------------------------------------------------------
+			//	some tags may have specific attributes, eg: a -> href, img -> src
+			//--------------------------------------------------------------------------------------
+			switch (tagType) {
+				case 'span':
+					switch (attribute) {
+						case 'style': return true;
+					}
+					break; // ......................................................................
+
+				case 'a':
+					switch (attribute) {
+						case 'href': return true;
+					}
+					break; // ......................................................................
+
+				case 'img':
+					switch (attribute) {
+						case 'src': return true;
+						case 'border': return true;
+						case 'alt': return true;
+						case 'style': return true;
+					}
+					break; // ......................................................................
+
+			}
+
+			return false;
+		} // end this.allowAttrib
+
+	} // end class KHtmlCleaner
+

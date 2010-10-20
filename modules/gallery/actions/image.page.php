@@ -11,7 +11,7 @@
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Comments::width=570:]]
-[[:comments::list::refModule=gallery:refModel=Gallery_Gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+[[:comments::list::refModule=gallery::refModel=Gallery_Gallery::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
 	<title>awareNet - [`|pc][`|pc]imageTitle[`|pc][`|pc] (image)</title>
 	<script></script>

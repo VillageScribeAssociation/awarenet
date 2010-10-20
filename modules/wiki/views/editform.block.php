@@ -7,10 +7,10 @@
 <b>Title:</b> <input type='text' name='title' value='%%title%%' size='50' /><br/>
 <br/>
 <b>Content:</b><br/>
-<textarea name='content' rows='20' cols='75'>%%content%%</textarea><br/>
+<textarea name='content' rows='20' cols='75'>%%contentSafe%%</textarea><br/>
 <br/>
 <b>Navigation:</b><br/>
-<textarea name='nav' rows='10' cols='75'>%%nav%%</textarea><br/>
+<textarea name='nav' rows='10' cols='75'>%%navSafe%%</textarea><br/>
 <br/>
 <b>Edit Summary:</b> <input type='text' name='reason' value='' size='50' /><br/>
 <small>Briefly decribe the purpose of this edit, eg 'grammar', 'remove vandalism', 

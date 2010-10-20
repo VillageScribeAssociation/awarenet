@@ -18,4 +18,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
 [[:theme::breadcrumb::label=Console::link=/admin/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

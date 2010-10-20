@@ -58,25 +58,36 @@ class KRevisions {
 	//returns: true on success, false on failure [bool]
 
 	function recordDeletion($fields, $dbSchema) {
-		global $db;
-		if (false == $db->checkSchema($dbSchema)) { return false; }
+		global $db, $session;
+
+		if (false == $db->checkSchema($dbSchema)) { 
+			$session->msgAdmin('revisions->recordDeletion() BAD SCHEMA', 'bad');
+			return false;
+		}
 
 		// check whether objects of this type are not archived
-		if ((true == array_key_exists('archive', $dbSchema)) && ('no' == $dbSchema['archive'])) 
-			{ return false; }
+		if ((true == array_key_exists('archive', $dbSchema)) && ('no' == $dbSchema['archive'])) {
+			$session->msgAdmin('revisions->recordDeletion() NO ARCHIVE', 'bad');
+			return false;
+		}
 
 		// check whether objects has already been deleted
-		if (true == $this->isDeleted($dbSchema['model'], $dbSchema['fields']['UID']))
-			{ return false; }
+		if (true == $this->isDeleted($dbSchema['model'], $dbSchema['fields']['UID'])) {
+			$session->msgAdmin('revisions->recordDeletion() ALREADY DELETED', 'bad');
+			return false;
+		}
 
 		$model = new Revisions_Deleted();
 		$model->refModule = $dbSchema['module'];
 		$model->refModel = $dbSchema['model'];
-		$model->refUID = $dbSchema['fields']['UID'];
-		$model->fields = $changes;
+		$model->refUID = $fields['UID'];
+		$model->fields = $fields;
 		$report = $model->save();
 
-		if ('' != $report) { return false; }
+		if ('' != $report) { 
+			$session->msgAdmin('revisions->recordDeletion() COULD NOT SAVE:' . $report, 'bad');
+			return false;
+		}
 		return true;
 	}
 

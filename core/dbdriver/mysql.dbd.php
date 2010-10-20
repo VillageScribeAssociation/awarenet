@@ -206,6 +206,30 @@ class KDBDriver {
 			return $retVal;
 		}
 
+		//------------------------------------------------------------------------------------------
+		//	not found in table, try other aliases
+		//------------------------------------------------------------------------------------------
+		if (true == $this->tableExists('Aliases_Alias')) {
+			$sql = "SELECT * FROM Aliases_Alias "
+				 . "WHERE refModel='" . $this->addMarkup($model) . "' "
+				 . "AND aliaslc='" . $this->addMarkup(strtolower($raUID)) . "'";
+
+			$result = $this->query($sql);
+			if (false === $result) { return false; }								// query failed
+			
+			while ($row = $this->fetchAssoc($result)) {								// try all 
+				if (false == array_key_exists('refUID', $row)) { return false; }
+				$refUID = $this->removeMarkup($row['refUID']);
+				if (true == $this->objectExists($model, $refUID)) {
+					return $this->load($refUID, $dbSchema);
+				}
+			}
+
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	out of options
+		//------------------------------------------------------------------------------------------
 		$page->logDebug('dbLoad', 'no such object: ' . $model . '::' . $raUID);
 		return false;
 	}
@@ -230,10 +254,12 @@ class KDBDriver {
 	//arg: data - serialized object [array]
 	//arg: dbSchema - schema of the database table this record belongs in [array]
 	//opt: setdefaults - if true will automatically modify editedBy, editedOn, etc [bool]
+	//opt: broadcast - if true, then pass to other peers [bool]
+	//opt: revision - if true, then keep any revision data [bool]
 	//returns: true on success, false on failure [bool]
 
-	function save($data, $dbSchema, $setdefaults = true) {
-		global $user, $revisions, $session;
+	function save($data, $dbSchema, $setdefaults = true, $broadcast = true, $revision = true) {
+		global $user, $revisions, $sync, $session, $kapenta;
 		if (array_key_exists('UID', $data) == false) { return false; }		// must have a UID
 		if (strlen(trim($data['UID'])) < 4) { return false; }				// and it must be good
 
@@ -278,6 +304,23 @@ class KDBDriver {
 				 . " values (" . implode(', ', $newFields) . ");";		// assemble the query
 
 			$result = $this->query($sql);								// run it...
+
+			//--------------------------------------------------------------------------------------
+			//	allow other modules to respond to this event	//TODO: consider expanding args
+			//--------------------------------------------------------------------------------------
+			$args = array(
+				'module' => $dbSchema['module'],
+				'model' => $dbSchema['model'],
+				'UID' => $data['UID'],
+				'data' => $data
+			);
+
+			$kapenta->raiseEvent('*', 'object_updated', $args);
+
+			//--------------------------------------------------------------------------------------
+			//	broadcast to peers
+			//--------------------------------------------------------------------------------------
+			if (true == $broadcast) { $sync->broadcastDbUpdate('self', $dbSchema['model'], $data); }
 			if (false === $result) { return false; }					// could not save
 			return true;												// OK, saved
 		}
@@ -291,7 +334,9 @@ class KDBDriver {
 		foreach($current as $fName => $fVal) {
 		    if ((true == array_key_exists($fName, $data)) && ($fVal != $data[$fName])) {	
 				$changes[$fName] = $this->addMarkup($data[$fName]); 	//	this field has changed
-				if (false == array_key_exists($fName, $dbSchema['nodiff'])) { $dirty = true; }
+				if (true == is_array($dbSchema['nodiff'])) { 
+					if (false == array_key_exists($fName, $dbSchema['nodiff'])) { $dirty = true; }
+				}
 		    }
 		}
 
@@ -300,7 +345,7 @@ class KDBDriver {
 		//------------------------------------------------------------------------------------------
 		//	record revisions to any fields for swhich we track changes
 		//------------------------------------------------------------------------------------------
-		if ((true == $dirty) && (true == $setdefaults)) {
+		if ((true == $revision) && (true == $dirty) && (true == $setdefaults)) {
 			$revisions->storeRevision($changes, $dbSchema);
 		}
 
@@ -330,9 +375,21 @@ class KDBDriver {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	pass on to peers, and we're done
+		//	allow other modules to respond to this event	//TODO: consider expanding args
+		//------------------------------------------------------------------------------------------		
+		$args = array(
+			'module' => $dbSchema['module'],
+			'model' => $dbSchema['model'],
+			'UID' => $data['UID'],
+			'data' => $data
+		);
+
+		$kapenta->raiseEvent('*', 'object_updated', $args);
+
 		//------------------------------------------------------------------------------------------
-		//syncBroadcastDbUpdate('self', $dbSchema['model'], $data);
+		//	pass on to peers, and we're done
+		//------------------------------------------------------------------------------------------		
+		if (true == $broadcast) { $sync->broadcastDbUpdate('self', $dbSchema['model'], $data); }
 		return true;
 	}
 
@@ -355,6 +412,7 @@ class KDBDriver {
 			 . "WHERE UID='" . $this->addMarkup($UID) . "'";
 
 		//TODO: update cache
+		//TODO: process triggers
 
 		$this->query($sql);
 	}
@@ -728,7 +786,7 @@ class KDBDriver {
 	function checkSchema($dbSchema) {
 		if (false == is_array($dbSchema)) { return false; }
 		if (false == array_key_exists('module', $dbSchema)) { return false; }
-		if (false == array_key_exists('table', $dbSchema)) { return false; }
+		if (false == array_key_exists('model', $dbSchema)) { return false; }
 		if (false == array_key_exists('nodiff', $dbSchema)) { return false; }
 		if (false == array_key_exists('fields', $dbSchema)) { return false; }
 

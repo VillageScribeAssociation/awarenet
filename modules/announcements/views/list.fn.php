@@ -57,9 +57,12 @@ function announcements_list($args) {
 	if (0 == count($range)) { return "(no announcements at present)"; }
 
 	foreach ($range as $row) {
-		$model = new Announcements_Announcement();
-		$model->loadArray($row);
-		$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
+		$html .= "[[:announcements::summary::UID=" . $row['UID'] . ":]]\n";
+
+		//NOTE: the following was removd for brevity, consider re-adding for efficiency sake
+		//$model = new Announcements_Announcement();
+		//$model->loadArray($row);
+		//$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
 	}  
 
 	return $html;

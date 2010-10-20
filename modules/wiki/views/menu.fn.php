@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	menu for wiki, no arguments
 //--------------------------------------------------------------------------------------------------
-//opt: raUID - recordAlias or UID or wiki entry, or 'no' if no edit link [string]
+//opt: raUID - alias or UID of a Wiki_Aricle object, or 'no' if no edit link [string]
 //opt: type - may be 'content' (default) or 'talk', requires raUID [string]
 
 function wiki_menu($args) {
@@ -24,7 +24,16 @@ function wiki_menu($args) {
 	$labels['history'] = '';
 
 	$model = new Wiki_Article($args['raUID']);
-	if (false == $model->loaded) { return ''; }
+	if (false == $model->loaded) { 
+		$menu = "[[:theme::submenu::label=Front Page::link=/wiki/:]]\n"
+			  . "[[:theme::submenu::label=All::link=/wiki/list/:]]\n"
+			  . "[[:theme::submenu::label=Markup::link=/wiki/wikicode/:]]\n";
+
+		if (true == $user->authHas('wiki', 'Wiki_Article', 'new', $model->UID)) {	
+			$menu .= "[[:theme::submenu::label=New Article::link=/wiki/new/:]]\n";
+		}
+		return $menu;
+	}
 
 	if (true == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) {
 		$labels['newarticle'] = '[[:theme::submenu::label=New Article::link=/wiki/new/:]]';
@@ -50,7 +59,7 @@ function wiki_menu($args) {
 				$labels['editthis'] = "[[:theme::submenu::label=Edit This Page::"
 									. "link=%%serverPath%%wiki/edittalk/" . $model->alias . ":]]"; }
 		}
-	} 
+	}
 	
 	$block = $theme->loadBlock('modules/wiki/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

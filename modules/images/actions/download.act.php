@@ -14,12 +14,14 @@
 	$refUID = '';
 	$return = 'uploadmultiple';
 	$URL = '';
+	$tags = 'no';
 
 	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
 	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
 	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
 	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
 	if (true == array_key_exists('URL', $_POST)) { $URL = $_POST['URL']; }
+	if ((true == array_key_exists('tags', $_POST)) && ('yes' == $_POST['tags'])) { $tags = 'yes'; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	security and validation
@@ -39,14 +41,16 @@
 			$returnUrl = 'images/uploadmultiple/'
 				. 'refModule_' . $refModule . '/'
 				. 'refModel_' . $refModel . '/'
-				. 'refUID_' . $refUID . '/';
+				. 'refUID_' . $refUID . '/'
+				. 'tags_' . $tags . '/';
 			break;
 
 		case 'uploadsingle':
 			$returnUrl = 'images/uploadsingle/'
 				. 'refModule_' . $refModule . '/'
 				. 'refModel_' . $refModel . '/'
-				. 'refUID_' . $refUID . '/';
+				. 'refUID_' . $refUID . '/'
+				. 'tags_' . $tags . '/';
 			break;
 
 		case 'xml':

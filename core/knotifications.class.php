@@ -177,16 +177,16 @@ class KNotifications {
 	function addProject($notificationUID, $projectUID) {
 		global $db;		
 
-		$sql = "select * from Projects_Membership"
-			 . " where UID='" . $db->addMarkup($projectUID) . "'"
-			 . " and (role='admin' OR role='member')";
+		//$sql = "select * from Projects_Membership"
+		//	 . " where projectUID='" . $db->addMarkup($projectUID) . "'"
+		//	 . " and (role='admin' OR role='member')";
 
-		$result = $db->query($sql);
+		$conditions = array();
+		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
+		$conditions[] = "(role='admin' OR role='member')";
 
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['userUID']);
-		}		
+		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }		
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -198,16 +198,16 @@ class KNotifications {
 	function addProjectAdmins($notificationUID, $projectUID) {
 		global $db;		
 
-		$sql = "select * from Projects_Membership"
-			 . " where UID='" . $db->addMarkup($projectUID) . "'"
-			 . " and role='admin'";
+		// $sql = "select * from Projects_Membership"
+		//	 . " where UID='" . $db->addMarkup($projectUID) . "'"
+		//	 . " and role='admin'";
 
-		$result = $db->query($sql);
+		$conditions = array();
+		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
+		$conditions[] = "role='admin'";
 
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['userUID']);
-		}
+		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }
 	}
 
 	//----------------------------------------------------------------------------------------------

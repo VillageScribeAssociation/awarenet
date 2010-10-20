@@ -133,8 +133,11 @@ class KTheme {
 		$length = (int)$length;
 		$html = $this->stripBlocks($html);								// remove blocks
 		$html = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $html);		// remove HTML
+
+		$srch = array('<', '>', '&nbsp;');
+		$repl = array('&lt;', '&gt;', ' ');
+
 		$html = substr($html, 0, $length) . '...';						// cut down to length
-		$html = htmlentities($html);
 		return $html;
 	}
 
@@ -165,7 +168,7 @@ class KTheme {
 		} else {
 			$msg = "api file does not exist: " . $apiFile;
 			$kapenta->logErr('blocks', 'runBlock', $msg);
-			$session->msgAdmin("api file does not exist: " . $apiFile);
+			//$session->msgAdmin("api file does not exist: " . $apiFile);
 
 		}	
 		return '';
@@ -231,6 +234,7 @@ class KTheme {
 		global $page, $session;
 		$ba = array();
 
+		$original = trim($block);
 		$block = str_replace("[[:", '', $block);
 		$block = str_replace(":]]", '', $block);
 		$parts = explode('::', $block);
@@ -272,6 +276,8 @@ class KTheme {
 
 		} else { return false; }
 
+		$ba['args']['rawblock'] = $original;						// spacial magic block argument
+		//$ba['args']['rawblock64'] = base64_encode($original);		// ...
 		return $ba;
 	}
 
@@ -347,6 +353,32 @@ class KTheme {
 				$html .= "\t</tr>\n"; 
 			}
 			$html .= "</table>";
+		}
+
+		return $html;
+	}
+
+	//==============================================================================================
+	//	TAGS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	convert a set of tags from array to HTML representation
+	//----------------------------------------------------------------------------------------------
+	//arg: tags - 2d array of name, weight, link [array]
+	//note: we don't show tags with weight/magnitude less than 1
+
+	function makeTagCloud($tags) {
+		$html = '';		//%	return value
+		$max = 1; 
+		$min = 1;	
+
+		foreach($tags as $tag) { if ($tag['weight'] > $max) { $max = $tag['weight']; } }
+
+		foreach($tags as $tag) {
+			$size = floor((5 / $max) * $tag['weight']);
+			$html .= "<a href='" . $tag['link'] . "' style='color: #444444;'>"
+				   . "<font size='" . $size . "'>" . $tag['name'] . "</font></a>\n";
 		}
 
 		return $html;

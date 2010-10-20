@@ -9,10 +9,30 @@
 
 function moblog_schoolstatsnav($args) {
 	global $db, $user, $theme, $aliases;
+	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check permissions and arguments
+	//----------------------------------------------------------------------------------------------
+	//TODO: add permissions and arguments
+
+	//----------------------------------------------------------------------------------------------
+	//	load states from database	//TODO: precache this
+	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('schools', 'Schools_School', 'show')) { return ''; }
 
-	$sql = "select count(UID) as postCount, school from Moblog_Post group by school";
+	$sql = "SELECT count(UID) AS postCount, school "
+		 . "FROM Moblog_Post "
+		 . "GROUP BY school "
+		 . "ORDER BY postCount DESC";
+
+	//echo $sql;
+
 	$result = $db->query($sql);
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$aryTable = array();
 	$aryTable[] = array('School', 'Posts');
 
@@ -26,6 +46,12 @@ function moblog_schoolstatsnav($args) {
 			$schoolName = $theme->expandBlocks($nameBlock, '');
 			$schoolUrl = "%%serverPath%%moblog/school/" . $schoolRa;
 			$schoolLink = "<a href='" . $schoolUrl . "'>$schoolName</a>";
+
+			if ($schoolUID == $user->school) {
+				$schoolLink = "<b>" . $schoolLink . "</b>";
+				$row['postCount'] = "<b>" . $row['postCount'] . "</b>";
+			}
+
 			$aryTable[] = array($schoolLink, $row['postCount']);
 		}
 	}

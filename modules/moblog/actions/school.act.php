@@ -14,7 +14,7 @@
 	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { $page->do403(); }
 
 	if ('' != $req->ref) {
-		$model->load($req->ref)
+		$model->load($req->ref);
 		if (false  == $model->loaded) { $page->do404(); }
 
 	} else { $model->load($user->school); }

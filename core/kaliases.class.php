@@ -274,7 +274,15 @@ class KAliases {
 	//returns: default alias of object, or false on error [string][bool]
 
 	function getDefault($model, $UID) {
-		global $db;
+		global $db, $session;
+
+		//------------------------------------------------------------------------------------------
+		//	check that model is a valid table
+		//------------------------------------------------------------------------------------------
+		if (false == $db->tableExists($model)) { 
+			$session->msgAdmin('No such table:' . $model, 'bad');
+			return false;
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	try load the object from the database

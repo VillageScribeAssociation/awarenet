@@ -154,14 +154,13 @@
 	//------------------------------------------------------------------------------------------
 	//	send 'images_added' event to module whose record owns this image
 	//------------------------------------------------------------------------------------------
-	/*	
+
 	$args = array(	'refModule' => $refModule, 
 					'refUID' => $refUID, 
 					'imageUID' => $ext['UID'], 
 					'imageTitle' => $ext['title']    );
 
-	eventSendSingle($refModule, 'images_added', $args);
-	*/	// TODO: this
+	$kapenta->raiseEvent('*', 'images_added', $args);
 
 	//----------------------------------------------------------------------------------------------
 	//	return xml or redirect back 

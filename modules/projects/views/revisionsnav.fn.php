@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
 //--------------------------------------------------------------------------------------------------
-//arg: UID - UID or recordAlias of a project [string]
+//arg: UID - UID or alias of a project [string]
 //opt: projectUID - overrides raUID [string]
 
 function projects_revisionsnav($args) {

@@ -63,6 +63,7 @@ class KNotifications {
 
 	function addUser($notificationUID, $userUID) {
 		$model = new Notifications_UserIndex();
+		if (true == $model->exists($notificationUID, $userUID)) { return true; }	// already added
 		$model->notificationUID = $notificationUID;
 		$model->userUID = $userUID;
 		$report = $model->save();

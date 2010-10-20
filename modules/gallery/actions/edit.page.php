@@ -5,6 +5,7 @@
 [`|lt]h1[`|gt]Edit Gallery[`|lt]/h1[`|gt]
 
 [[:gallery::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::width=570::label=Images:]]
 [[:images::uploadmultiple::refModule=gallery::refModel=Gallery_Gallery::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>

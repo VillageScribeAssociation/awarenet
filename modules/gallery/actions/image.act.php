@@ -13,12 +13,14 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('Images_Image');
 	$model = new Images_Image($UID);
+	if (false == $model->loaded) { $page->do404('Image not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load models
 	//----------------------------------------------------------------------------------------------
 	$userRa = $aliases->getDefault('Users_User', $model->createdBy);
 	$gallery = new Gallery_Gallery($model->refUID);
+	//if (false == $gallery->loaded) { $page->do404('Gallery not found.'); } TODO
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

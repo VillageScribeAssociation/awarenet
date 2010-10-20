@@ -27,7 +27,11 @@
 [`|lt]br/[`|gt]
 [[:theme::navtitlebox::label=Galleries:]]
 [[:gallery::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</nav1>
+[`|lt]br/[`|gt]
+
+[[:gallery::movetogallery::imageUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+
+</nav1>
 	<nav2></nav2>
 	<banner></banner>
 	<head></head>

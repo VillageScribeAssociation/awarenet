@@ -30,8 +30,14 @@
 	foreach($model->profile as $field => $value) {
 		if (true == array_key_exists($field, $_POST)) {
 			$newVal = htmlentities($_POST[$field]);
-			if (($model->profile[$field] != $newVal) && ('' != trim($newVal)))
-				{ $diff .= "<b>$field:</b> " . $newVal . "<br/>\n"; }
+			if (($model->profile[$field] != $newVal) && ('' != trim($newVal))) {
+				$confidential = false;
+
+				if ('tel' == $field) { $confidential = true; }
+				if ('email' == $field) { $confidential = true; }
+
+				if (false == $confidential) { $diff .= "<b>$field:</b> " . $newVal . "<br/>\n"; }
+			}
 
 			//--------------------------------------------------------------------------------------
 			// birthyear is a special case, check it's a 4 digit number

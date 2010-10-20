@@ -178,14 +178,28 @@ class Projects_Revision {
 	function extArray() {
 		global $user;
 		$ary = $this->toArray();
+
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
+
+		//------------------------------------------------------------------------------------------
+		//	load as project and convert to HTML
+		//------------------------------------------------------------------------------------------		
+
+		$model = new Projects_Project($ary['projectUID']);
+
+		$ary['alias'] = $model->alias;
+		$ary['status'] = $model->status;
+		$ary['finishedOn'] = $model->finishedOn;
+
+		$model->loadArray($ary);
+		$ary = $model->extArray();
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 		if (true == $user->authHas('projects', 'Projects_Revision', 'show', $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%projects/' . $ary['alias'];
-			$ary['viewLink'] = "<a href='%%serverPath%%projects/" . $ary['alias'] . "'>"
+			$ary['viewUrl'] = '%%serverPath%%projects/showrevision/' . $ary['UID'];
+			$ary['viewLink'] = "<a href='%%serverPath%%projects/showrevision/" . $ary['UID'] . "'>"
 					 . "[read on &gt;&gt;]</a>"; 
 		}	// TODO: action to view a single revision
 

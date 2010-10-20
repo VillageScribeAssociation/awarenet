@@ -118,19 +118,24 @@
 	$model->attribURL = $URL;
 	//NOTE: weight is set by $model->save()
 	$ext = $model->extArray();
-	$model->save();
-	$session->msg("Downloaded image: $URL", 'ok');
+	$report = $model->save();
+	if ('' == $report) { $session->msg('Downloaded image: ' . $URL, 'ok'); }
+	else { $session->msg('Could not save image: ' . $URL, 'bad'); }
 
 	//------------------------------------------------------------------------------------------
-	//	send 'images_added' event to module whose record owns this image TODO
+	//	send 'images_added' event to all modules
 	//------------------------------------------------------------------------------------------
 	
-	//$args = array(	'refModule' => $refModule, 
-	//				'refUID' => $refUID, 
-	//				'imageUID' => $ext['UID'], 
-	//				'imageTitle' => $ext['title']    );
-	//
-	//eventSendSingle($refModule, 'images_added', $args);
+	if ('' == $report) {
+		$args = array(	'refModule' => $refModule, 
+						'refUID' => $refUID, 
+						'imageUID' => $ext['UID'], 
+						'imageTitle' => $ext['title']
+    	);
+	
+		$kapenta->raiseEvent('*', 'images_added', $args);			// send to all modules
+		//$kapenta->raiseEvent($refModule, 'images_added', $args);	// send to owner module
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back 

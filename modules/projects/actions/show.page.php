@@ -24,6 +24,8 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
+[[:projects::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1::label=Last Edit:]]
+
 [[:theme::navtitlebox::label=Tags (this project)::toggle=divTagsNav:]]
 [`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
 [[:tags::cloud::url=projects/tag/::refModule=projects::refModel=Projects_Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]

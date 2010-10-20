@@ -103,6 +103,10 @@ class Users_User {
 			$this->role = 'public';							// set default role
 			$this->firstname = 'public';
 			$this->firstname = 'user';
+			$this->createdOn = $db->datetime();
+			$this->createdBy = 'public';
+			$this->editedOn = $db->datetime();
+			$this->editedBy = 'public';
 		}
 	}
 

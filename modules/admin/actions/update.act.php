@@ -26,6 +26,8 @@
 	$repository->addExemption("uploader/");					// this module (CONTAINS KEY)
 	$repository->addExemption("install/");					// defunct
 	$repository->addExemption(".svn");						// sybversion files and directories
+	$repository->addExemption("some.txt");					// ?
+	$repository->addExemption("GlobalFunctions.txt");		// ?
 	//$repository->addExemption("data/log/");				// logs
 	$repository->addExemption("/chan/");					// not part of awareNet
 	$repository->addExemption('svnadd.sh');					// development SVN script

@@ -196,6 +196,9 @@ class Images_Image {
 		//revision history will be kept for these fields
 		$dbSchema['nodiff'] = array(
 			'UID',
+			'hash',
+			'editedOn',
+			'editedBy',
 			'weight' );
 
 		return $dbSchema;

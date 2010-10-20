@@ -1,6 +1,6 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/projects/models/revision.act.php');
+	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	display a project revision

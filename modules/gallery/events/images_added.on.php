@@ -11,7 +11,7 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 //arg: imageTitle - text/html of comment
 
 function gallery__cb_images_added($args) {
-	global $db, $user;
+	global $db, $user, $notifications;
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('imageUID', $args)) { return false; }
@@ -29,14 +29,31 @@ function gallery__cb_images_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	send notification to friends
 	//----------------------------------------------------------------------------------------------
-	/* TODO: add notification back
 	$ext = $model->extArray();
+	$url = $ext['viewUrl'];
+	$link = "<a href='" . $url . "'>" . $model->title . "</a>";
+	$title = $user->getNameLink() . ' added a new image.';
+	$refUID = $model->UID;
+	$content = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
+			 . "[[:images::width300::raUID=" . $args['imageUID'] . "::link=no:]]"
+			 . "<br/>[ view image &gt;&gt; ]</a><br/>"
+			 . "<a href='" . $url . "'>[ view gallery &gt;&gt; ]</a>";
+
+	$nUID = $notifications->create('gallery', 'Gallery_Gallery', $refUID, $title, $content, $url);
+
+	$notifications->addUser($nUID, $user->UID);
+	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+
+	/* TODO: add notification back
+
 	$link = "<a href='" . $ext['viewUrl'] . "/'>" . $ext['title'].  '</a>';
-	$title = $user->getNameLink() . ' added a new image to their gallery: ' . $link;
+
 	$url = $ext['viewUrl'];
 	$imgUID = '';
 
-	$content = "<a href='/images/show/" . $args['imageUID'] . "'>[ view image >> ]</a>";
+
 
 	$title = $user->getNameLink() . ' added a new image to their gallery: ' . $link;
 

@@ -97,7 +97,7 @@ class Projects_Project {
 
 	function loadArray($ary) {
 		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		//if (false == $db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->title = $ary['title'];
 		$this->abstract = $ary['abstract'];
@@ -158,7 +158,7 @@ class Projects_Project {
 		$dbSchema = array();
 		$dbSchema['module'] = 'projects';
 		$dbSchema['model'] = 'Projects_Project';
-		$dbSchema['archive'] = 'no';
+		$dbSchema['archive'] = 'yes';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -184,7 +184,19 @@ class Projects_Project {
 			'alias' => '10' );
 
 		//revision history will be kept for these fields
-		$dbSchema['nodiff'] = array();
+		$dbSchema['nodiff'] = array(
+			'UID',
+			'title',
+			'abstract',
+			'content',
+			'status',
+			'finishedOn',
+			'createdOn',
+			'createdBy',
+			'editedOn',
+			'editedBy',
+			'alias'
+		);
 
 		return $dbSchema;
 		

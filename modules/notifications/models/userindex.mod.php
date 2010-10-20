@@ -236,6 +236,23 @@ class Notifications_UserIndex {
 		return true;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//. discover if a userindex exists
+	//----------------------------------------------------------------------------------------------
+	//returns: true on if exists, false if not [bool]
+
+	function exists($notificationUID, $userUID) {
+		global $db;
+
+		$conditions = array();
+		$conditions[] = "notificationUID='" . $db->addMarkup($notificationUID) . "'";	
+		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";	
+
+		$num = $db->countRange('Notifications_UserIndex', $conditions);
+		if ($num > 0) { return true; }
+		return false;
+	}
+
 }
 
 ?>

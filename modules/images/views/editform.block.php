@@ -2,6 +2,9 @@
 <form name='editImage' method='POST' action='%%serverPath%%images/save/' >
 <input type='hidden' name='action' value='saveImage' />
 <input type='hidden' name='UID' value='%%UID%%' />
+<input type='hidden' name='refModule' value='%%refModule%%' />
+<input type='hidden' name='refModel' value='%%refModel%%' />
+<input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 
 <table noborder>

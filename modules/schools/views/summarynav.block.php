@@ -8,7 +8,7 @@
     <td width='10'></td>
     <td valign='top'>
       <b><a class='black' href='/schools/%%alias%%'>%%name%%</a></b><br/>
-      %%country%% %%viewLink%%
+      %%location%% %%viewLink%%
       %%editLink%%
     </td>
   </tr>

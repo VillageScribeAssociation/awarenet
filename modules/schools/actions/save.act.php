@@ -31,6 +31,7 @@
 			case 'region':	$model->region = $utils->cleanString($value); break;
 			case 'country':	$model->country = $utils->cleanString($value); break;
 			case 'hidden':	$model->hidden = $utils->cleanString($value); break;
+			case 'type':	$model->type = $utils->cleanString($value); break;
 		}
 	}
 	$report = $model->save();

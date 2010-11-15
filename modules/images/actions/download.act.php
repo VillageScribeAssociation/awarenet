@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	page for downloading images and associating them with records
+//*	downloads images and associating them with other objects
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -74,9 +74,9 @@
 
 	$raw = '';
 	if ($proxyEnabled == 'yes') {
-		$raw = curlGet($URL, '');			// use HTTP proxy
+		$raw = $utils->curlGet($URL, '');			// use HTTP proxy
 	} else {
-		$raw = @implode(file($URL));		// use file wrapper
+		$raw = @implode(file($URL));				// use file wrapper
 	}
 
 	if (false == $raw) { 

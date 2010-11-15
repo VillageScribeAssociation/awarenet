@@ -120,7 +120,7 @@ class Wiki_Revision {
 		$dbSchema = array();
 		$dbSchema['module'] = 'wiki';
 		$dbSchema['model'] = 'Wiki_Revision';
-		$dbSchema['archive'] = 'no';
+		$dbSchema['archive'] = 'yes';
 
 
 		//table columns
@@ -131,7 +131,7 @@ class Wiki_Revision {
 			'nav' => 'VARCHAR(255)',
 			'locked' => 'VARCHAR(30)',
 			'namespace' => 'VARCHAR(255)',
-			'articleUID' => 'VARCHAR(33)',// changed from TEXT
+			'articleUID' => 'VARCHAR(33)',
 			'reason' => 'TEXT',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -146,8 +146,21 @@ class Wiki_Revision {
 			'editedOn' => '',
 			'editedBy' => '10' );
 
-		//revision history will be kept for these fields
-		$dbSchema['nodiff'] = array();
+		//revision history will not be kept for any fields (this object *IS* the revision history)
+		$dbSchema['nodiff'] = array(
+			'UID',
+			'title',
+			'content',
+			'nav',
+			'locked',
+			'namespace',
+			'articleUID',
+			'reason',
+			'createdOn',
+			'createdBy',
+			'editedOn',
+			'editedBy'
+		);
 
 		return $dbSchema;		
 	}

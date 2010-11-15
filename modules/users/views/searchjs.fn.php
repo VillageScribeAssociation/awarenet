@@ -22,8 +22,10 @@ function users_searchjs($args) {
 	//	make query (this can be much more efficient)
 	//----------------------------------------------------------------------------------------------
 	$parts = explode(' ', strtolower($args['squery']));
-	$sql = "select UID, alias, concat(firstname, ' ', surname, ' ', username) as qs "
-		 . "from Users_User order by firstname, surname";
+	$sql = "SELECT UID, alias, concat(firstname, ' ', surname, ' ', username) as qs "
+		 . "FROM Users_User "
+		 . "WHERE role != 'banned' "
+		 . "ORDER BY firstname, surname";
 
 	$result = $db->query($sql);
 	$count = 0;

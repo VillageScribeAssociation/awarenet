@@ -13,6 +13,7 @@
 <script src='%%serverPath%%core/utils.js'></script>
 <script src='%%serverPath%%modules/live/js/live.js'></script>
 <script src='%%serverPath%%modules/live/js/windows.js'></script>
+<script src='%%serverPath%%modules/live/js/chat.js'></script>
 
 %%head%%
 
@@ -24,6 +25,8 @@
 	var jsPageUID = '%%pageInstanceUID%%';
 	var jsUserUID = '%%jsUserUID%%';
 	var formChecks = new Array();
+
+	var kchatclient = 0;
 
 	//----------------------------------------------------------------------------------------------
 	//	initialise page
@@ -41,7 +44,7 @@
 		kwindowmanager = new Live_WindowManager();
 		kmouse = new Live_Mouse();
 
-		//if (true == awareNetChat) { chatInit(); }
+		if (true == awareNetChat) { kchatclient = new Live_ChatClient(); }
 
 		// set checks for form completion, TODO: try to avoid this closure
 		window.onbeforeunload = function() {

@@ -20,6 +20,7 @@ class Schools_School {
 	var $geocode;			//_ varchar(255) [string]
 	var $region;			//_ varchar(255) [string]
 	var $country;			//_ varchar(255) [string]
+	var $type;				//_ varchar(255) [string]
 	var $hidden;			//_ controls whether this school shows up in lists varchar(3) [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
@@ -73,6 +74,7 @@ class Schools_School {
 		$this->geocode = $ary['geocode'];
 		$this->region = $ary['region'];
 		$this->country = $ary['country'];
+		$this->type = $ary['type'];
 		$this->hidden = $ary['hidden'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
@@ -129,6 +131,7 @@ class Schools_School {
 			'geocode' => 'VARCHAR(255)',
 			'region' => 'VARCHAR(255)',
 			'country' => 'VARCHAR(255)',
+			'type' => 'VARCHAR(255)',
 			'hidden' => 'VARCHAR(3)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -166,6 +169,7 @@ class Schools_School {
 			'geocode' => $this->geocode,
 			'region' => $this->region,
 			'country' => $this->country,
+			'type' => $this->type,
 			'hidden' => $this->hidden,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
@@ -212,6 +216,16 @@ class Schools_School {
 		if (true == $user->authHas('schools', 'Schools_School', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%schools/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new school]</a>"; 
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	location
+		//------------------------------------------------------------------------------------------
+
+		$ary['location'] = 'unknown';
+		if ('' != trim($ary['country'])) { $ary['location'] = $ary['country']; }
+		if ('' != trim($ary['region'])) { 
+			$ary['location'] = $ary['region'] . ',' . $ary['location']; 
 		}
 
 		//------------------------------------------------------------------------------------------

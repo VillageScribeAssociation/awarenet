@@ -13,6 +13,14 @@
     <td><input type='text' name='country' value='%%country%%' size='50' /></td>
   </tr>
   <tr>
+    <td><b>Region:</b></td>
+    <td><input type='text' name='region' value='%%region%%' size='50' /></td>
+  </tr>
+  <tr>
+    <td><b>Type:</b></td>
+    <td>[[:schools::selecttype::default=%%type%%::varname=type:]]</td>
+  </tr>
+  <tr>
     <td><b>Hidden:</b></td>
     <td>
 		<select name='hidden'>

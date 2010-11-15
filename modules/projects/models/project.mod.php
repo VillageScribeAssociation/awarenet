@@ -286,6 +286,9 @@ class Projects_Project {
 		//	abstract 
 		//------------------------------------------------------------------------------------------
 
+		$ary['createdOnLong'] = date('F nS Y', strtotime($ary['createdOn']));
+		$ary['editedOnLong'] = date('F nS Y', strtotime($ary['editedOn']));		
+
 		$ary['abstractHtml'] = str_replace(">\n", ">", $ary['abstract']);
 		$ary['abstractHtml'] = str_replace("\n", "<br/>\n", $ary['abstractHtml']);
 	

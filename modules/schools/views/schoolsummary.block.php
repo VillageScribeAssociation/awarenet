@@ -10,6 +10,7 @@
     <td valign='top'>
       <h3><a class='black' href='/schools/%%alias%%'>%%name%%</a></h3>
       %%summary%% <br/>
+	  <b>Location:</b> %%location%%<br/>
 	  [[:tags::listflat::refModule=schools::refModel=Schools_School::refUID=%%UID%%:]]<br/>
       %%viewLink%% %%editLink%% <br/>
     </td>

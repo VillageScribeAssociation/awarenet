@@ -69,6 +69,8 @@
 //--------------------------------------------------------------------------------------------------
 //	kapenta environment is set up, load the action requested by the user and pass control
 //--------------------------------------------------------------------------------------------------
+	$actionFile = $installPath . 'modules/'. $req->module . '/actions/' . $req->action . '.act.php';
+	if (false == file_exists($actionFile)) { $page->do404('Unkown action'); }
 
 	include $installPath . 'modules/'. $req->module . '/actions/' . $req->action . '.act.php';
 

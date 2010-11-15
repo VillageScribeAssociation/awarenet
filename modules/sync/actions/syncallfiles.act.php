@@ -46,7 +46,7 @@
 				$allOk = true;
 
 				if ('' == $raw) { $allOk = false; }
-				if ((true == $allOk) && (false === @imagecreatefromstring($raw))) { $allOk = false; }
+				//if ((true == $allOk) && (false === @imagecreatefromstring($raw))) { $allOk = false; }
 
 				if (true == $allOk) {
 					$kapenta->filePutContents($fileName, $raw, true);

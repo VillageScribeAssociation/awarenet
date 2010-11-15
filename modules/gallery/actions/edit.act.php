@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-
-	if ($user->authHas('gallery', 'Gallery_Gallery', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }		// basic permissions
 	if ('' == $req->ref) { $page->do404(); }								// check for ref
 	$UID = $aliases->findRedirect('Gallery_Gallery'); 						// check correct ref
 
 	$model = new Gallery_Gallery($UID);
 	if (false == $model->loaded)  { $page->do404('Gallery not found'); }
+	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'edit', $model->UID)) 
+		{ $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be admin or own gallery to edit)
@@ -25,7 +25,7 @@
 	if ('admin' == $user->role) { $auth = true; }
 	if ($user->UID == $model->createdBy) { $auth = true; }
 	// possibly more to come here...
-	if ($auth == false) { $page->do403(); }
+	if (false == $auth) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

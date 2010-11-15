@@ -25,7 +25,7 @@
 	$model = new Images_Image($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('No such image', true); }
 
-	if (false == $user->authHas($model->refModule, $model->refModel, 'edit', $UID))
+	if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
 		{ $page->do403('You are not authorized to edit this Image.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -34,12 +34,12 @@
 		
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'title':	$model->title = $utils->cleanString($value); break;
-			case 'licence':	$model->licence = $utils->cleanString($value); break;
-			case 'attribname':	$model->attribName = $utils->cleanString($value); break;
-			case 'attriburl':	$model->attribUrl = $utils->cleanString($value); break;
-			case 'caption':	$model->caption = $utils->cleanString($value); break;
-			case 'category':	$model->category = $utils->cleanString($value); break;
+			case 'title':		$model->title = $utils->cleanString($value);		break;
+			case 'licence':		$model->licence = $utils->cleanString($value);		break;
+			case 'attribname':	$model->attribName = $utils->cleanString($value); 	break;
+			case 'attriburl':	$model->attribUrl = $utils->cleanString($value); 	break;
+			case 'caption':		$model->caption = $utils->cleanString($value); 		break;
+			case 'category':	$model->category = $utils->cleanString($value); 	break;
 		}
 	}
 
@@ -52,17 +52,17 @@
 
 	switch(strtolower($return)) {
 		case 'uploadmultiple':
-			$returnUrl = '%%serverPath%%images/uploadmultiple/'
-				. 'refModule_' . $model->refModule
-				. 'refModel_' . $model->refModel
-				. 'refUID_' . $model->refUID . '/';
+			$returnUrl = 'images/uploadmultiple'
+				. '/refModule_' . $model->refModule
+				. '/refModel_' . $model->refModel
+				. '/refUID_' . $model->refUID . '/';
 			break;
 
 		case 'uploadsingle':
-			$returnUrl = '%%serverPath%%images/uploadsingle/'
-				. 'refModule_' . $model->refModule
-				. 'refModel_' . $model->refModel
-				. 'refUID_' . $model->refUID . '/';
+			$returnUrl = 'images/uploadsingle'
+				. '/refModule_' . $model->refModule
+				. '/refModel_' . $model->refModel
+				. '/refUID_' . $model->refUID . '/';
 			break;
 
 		default:
@@ -70,6 +70,6 @@
 			break;
 	}
 		
-	$page->do302($retUrl);
+	$page->do302($returnUrl);
 
 ?>

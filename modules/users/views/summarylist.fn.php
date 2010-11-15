@@ -29,7 +29,10 @@ function users_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count users
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("role != 'public'");		// we don't show public users
+	$conditions = array();
+	$conditions[] = "role != 'public'";			// we don't show public users
+	$conditions[] = "role != 'banned'";			// we don't show banned users (for now)
+	$conditions[] = "role != 'inactive'";		// we don't show inactive users (for now)
 
 	$totalItems = $db->countRange('Users_User', $conditions);
 	$totalPages = ceil($totalItems / $num);

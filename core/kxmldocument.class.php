@@ -448,6 +448,8 @@ class KXmlDocument {
 			return substr($this->raw, $entity['start'], $entity['length']);
 		} else {
 			if ('single' == $entity['category']) { return ''; }		// self closing tag, no contents
+			if (false == array_key_exists('vstart', $entity)) { return ''; } 	// error condition
+			if (false == array_key_exists('vlength', $entity)) { return ''; } 	// TODO: log this
 			return substr($this->raw, $entity['vstart'], $entity['vlength']);
 		}
 	}

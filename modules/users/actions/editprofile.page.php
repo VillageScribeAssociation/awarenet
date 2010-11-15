@@ -8,7 +8,7 @@
 <script></script>
 <nav1>[[:theme::navtitlebox::label=My Picture:]]
 [`|lt]iframe name=[`|sq]myPicture[`|sq] id=[`|sq]ifMyPicture[`|sq]
-  src=[`|sq]/images/uploadsingle/refModule[`|us]users/refModel[`|us]Users[`|us]User/refUID[`|us][`|pc][`|pc]UID[`|pc][`|pc]/category[`|us]profile/[`|sq]
+  src=[`|sq]%%serverPath%%images/uploadsingle/refModule[`|us]users/refModel[`|us]Users[`|us]User/refUID[`|us][`|pc][`|pc]UID[`|pc][`|pc]/category[`|us]profile/[`|sq]
   width=[`|sq]300[`|sq] height=[`|sq]400[`|sq] frameborder=[`|sq]0[`|sq] [`|gt][`|lt]/iframe[`|gt]
 
 [[:theme::navtitlebox::label=Info:]]

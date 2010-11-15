@@ -8,11 +8,13 @@
     <td width='10'></td>
     <td valign='top'>
       <h3><a class='black' href='/projects/%%alias%%'>%%projectTitle%%</a></h3>
-      <b>By:</b> %%byline%% <br/>
-      %%summary%% %%viewLink%%  %%editLink%%<br/>	
-	  [[:tags::listflat::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]<br/>
-	  <b>Started:</b> %%createdOn%%<br/>
-	  <b>Last Update:</b> %%editedOn%% 
+      %%summary%% %%viewLink%%  %%editLink%%<br/>
+	  <div class='inlinequote'>
+      	<b>By:</b> %%byline%% <br/>
+	  	[[:tags::listflat::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]<br/>
+	  	<b>Started:</b> %%createdOnLong%%<br/>
+	  	<b>Last Update:</b> %%editedOnLong%% 
+	  </small>
     </td>
   </tr>
 </table>

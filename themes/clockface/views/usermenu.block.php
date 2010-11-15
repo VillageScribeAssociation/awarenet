@@ -20,6 +20,7 @@
 					<a href='%%serverPath%%projects/' class='menu'>Projects</a><small>&nbsp</small>
 					<a href='%%serverPath%%schools/myschool/' class='menu'>School</a><small>&nbsp</small>
 					<a href='%%serverPath%%gallery/supergallery/' class='menu'>Pictures</a><small>&nbsp</small>
+					<a href='%%serverPath%%videos/listallgalleries/' class='menu'>Video</a><small>&nbsp</small>
 					<a href='%%serverPath%%calendar/' class='menu'>Calendar</a><small>&nbsp</small>
 					<a href='%%serverPath%%moblog/' class='menu'>Uberblog</a><small>&nbsp</small>
 					<a href='%%serverPath%%forums/' class='menu'>Forums</a><small>&nbsp</small>

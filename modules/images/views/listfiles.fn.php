@@ -42,7 +42,7 @@ function images_listfiles($args) {
 			$files[] = $currFile;
 
 		} else {
-			if (file_exists($installPath . $row['fileName']) == true) {
+			if (true == file_exists($kapenta->installPath . $row['fileName'])) {
 				//---------------------------------------------------------------------------------
 				// only files present on this peer
 				//---------------------------------------------------------------------------------

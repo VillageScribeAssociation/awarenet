@@ -505,12 +505,7 @@ class KSync {
 
 	function curlGet($url, $password) {
 		//TODO: use these as member variables taken from $kapenta
-		global $hostInterface;
-		global $proxyEnabled;
-		global $proxyAddress;
-		global $proxyPort;
-		global $proxyUser;
-		global $proxyPass;
+		global $kapenta;
 
 		$ownData = $this->getOwnData();
 		if (false == $ownData) { return false; }
@@ -530,15 +525,17 @@ class KSync {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
+		if ('' != $kapenta->hostInterface) {
+			curl_setopt($ch, CURLOPT_INTERFACE, $kapenta->hostInterface); 
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	use HTTP proxy if enabled
 		//------------------------------------------------------------------------------------------
-		if ($proxyEnabled == 'yes') {
-			$credentials = $proxyUser . ':' . $proxyPass;
-			curl_setopt($ch, CURLOPT_PROXY, $proxyAddress);
-			curl_setopt($ch, CURLOPT_PROXYPORT, $proxyPort);
+		if ('yes' == $kapenta->proxyEnabled) {
+			$credentials = $kapenta->proxyUser . ':' . $kapenta->proxyPass;
+			curl_setopt($ch, CURLOPT_PROXY, $kapenta->proxyAddress);
+			curl_setopt($ch, CURLOPT_PROXYPORT, $kapenta->proxyPort);
 			curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
 			if (trim($credentials) != ':') {
 				curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
@@ -564,7 +561,6 @@ class KSync {
 
 	function curlPost($url, $password, $postVars) {
 		global $kapenta;
-		global $hostInterface;
 
 		//------------------------------------------------------------------------------------------
 		//	load/create data about this peer
@@ -590,7 +586,9 @@ class KSync {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $postHeaders);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		if ('' != $hostInterface) { curl_setopt($ch, CURLOPT_INTERFACE, $hostInterface); }
+		if ('' != $kapenta->hostInterface) {
+			curl_setopt($ch, CURLOPT_INTERFACE, $kapenta->hostInterface);
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	use HTTP proxy if enabled

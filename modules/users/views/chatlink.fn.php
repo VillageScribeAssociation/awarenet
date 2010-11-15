@@ -17,7 +17,7 @@ function users_chatlink($args) {
 		//-----------------------------------------------------------------------------------------
 		// user is logged in to at least one awareNet server
 		//-----------------------------------------------------------------------------------------
-		$html .= "<a href='#' onClick=\"chatStart('" . $args['userUID'] . "');\">[chat]</a>";
+		$html .= "<a href='#' onClick=\"kchatclient.createDiscussion('" . $args['userUID'] . "');\">[chat]</a>";
 		//$html .= '[online]';
 		
 	} else {

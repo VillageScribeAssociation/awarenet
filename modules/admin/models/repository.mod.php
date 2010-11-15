@@ -331,6 +331,7 @@ class CodeRepository {
 			'.page.php' => 'page', 
 			'.block.php' => 'block',
 			'.xml.php' => 'xml',
+			'.swf' => 'swf',
 			'.php' => 'php' );
 
 		foreach($types as $ext => $type) {

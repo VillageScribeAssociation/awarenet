@@ -1,66 +1,64 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	object representing schools
+//*	Records individual contact particulars for an entity (eg, phone numbers, email addresses, etc)
 //--------------------------------------------------------------------------------------------------
 
-class Schools_School {
+class Contact_Detail {
 
 	//----------------------------------------------------------------------------------------------
-	//	member variables (as retieved from database)
+	//member variables
 	//----------------------------------------------------------------------------------------------
 
 	var $data;				//_	currently loaded database record [array]
 	var $dbSchema;			//_	database table definition [array]
-	var $loaded;			//_	set to true when an object has been loaded [bool]
+	var $loaded = false;	//_	set to true when an object has been loaded [bool]
 
 	var $UID;				//_ UID [string]
-	var $name;				//_ title [string]
-	var $description;		//_ wyswyg [string]
-	var $geocode;			//_ varchar(255) [string]
-	var $region;			//_ varchar(255) [string]
-	var $country;			//_ varchar(255) [string]
-	var $type;				//_ varchar(255) [string]
-	var $hidden;			//_ controls whether this school shows up in lists varchar(3) [string]
+	var $refModule;			//_ module [string]
+	var $refModel;			//_ model [string]
+	var $refUID;			//_ ref:*_* [string]
+	var $type;				//_ varchar(50) [string]
+	var $description;		//_ varchar(255) [string]
+	var $value;				//_ text [string]
+	var $isDefault;			//_ eg, default email address (yes|no) [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
-	var $alias;				//_ alias [string]
 
 	//----------------------------------------------------------------------------------------------
-	//. constructor	ALTER TABLE Schools_School CHANGE `show` `hidden` VARCHAR(3)
+	//. constructor
 	//----------------------------------------------------------------------------------------------
-	//opt: raUID - UID or alias of a School object [string]
+	//opt: UID - UID of a Detail object [string]
 
-	function Schools_School($raUID = '') {
+	function Contact_Detail($UID = '') {
 		global $db;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
+		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
-			$this->name = 'New School ' . $this->UID;		// set default name
-			$this->hidden = 'yes';							// do not show by default
 			$this->loaded = false;
 		}
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//. load an object from the database given its UID or an alias
+	//. load an object from the database given its UID
 	//----------------------------------------------------------------------------------------------
-	//arg: raUID - UID or alias of a School object [string]
+	//arg: UID - UID of a Detail object [string]
 	//returns: true on success, false on failure [bool]
 
-	function load($raUID) {
+	function load($UID) {
 		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		$objary = $db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
 
+
 	//----------------------------------------------------------------------------------------------
-	//. load School object serialized as an associative array
+	//. load Detail object serialized as an associative array
 	//----------------------------------------------------------------------------------------------
 	//arg: ary - associative array of members and values [array]
 	//returns: true on success, false on failure [bool]
@@ -69,18 +67,17 @@ class Schools_School {
 		global $db;
 		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
-		$this->name = $ary['name'];
-		$this->description = $ary['description'];
-		$this->geocode = $ary['geocode'];
-		$this->region = $ary['region'];
-		$this->country = $ary['country'];
+		$this->refModule = $ary['refModule'];
+		$this->refModel = $ary['refModel'];
+		$this->refUID = $ary['refUID'];
 		$this->type = $ary['type'];
-		$this->hidden = $ary['hidden'];
+		$this->description = $ary['description'];
+		$this->value = $ary['value'];
+		$this->isDefault = $ary['isDefault'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
-		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
 	}
@@ -95,7 +92,6 @@ class Schools_School {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('schools', 'Schools_School', $this->UID, $this->name);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -109,7 +105,6 @@ class Schools_School {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
-		if ('' == $this->hidden) { $this->hidden = 'no'; }
 		return $report;
 	}
 
@@ -120,41 +115,47 @@ class Schools_School {
 
 	function getDbSchema() {
 		$dbSchema = array();
-		$dbSchema['module'] = 'schools';
-		$dbSchema['model'] = 'Schools_School';
+		$dbSchema['module'] = 'contact';
+		$dbSchema['model'] = 'Contact_Detail';
+		$dbSchema['archive'] = 'yes';
 
 		//table columns
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(33)',
-			'name' => 'VARCHAR(255)',
-			'description' => 'MEDIUMTEXT',
-			'geocode' => 'VARCHAR(255)',
-			'region' => 'VARCHAR(255)',
-			'country' => 'VARCHAR(255)',
-			'type' => 'VARCHAR(255)',
-			'hidden' => 'VARCHAR(3)',
+			'refModule' => 'TEXT',
+			'refModel' => 'TEXT',
+			'refUID' => 'VARCHAR(33)',
+			'type' => 'VARCHAR(50)',
+			'description' => 'VARCHAR(255)',
+			'value' => 'TEXT',
+			'isDefault' => 'VARCHAR(3)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)',
-			'alias' => 'VARCHAR(255)' );
+			'editedBy' => 'VARCHAR(33)' );
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
 			'UID' => '10',
+			'refModule' => '10',
+			'refModel' => '10',
+			'refUID' => '10',
+			'type' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
-			'editedBy' => '10',
-			'alias' => '10' );
+			'editedBy' => '10' );
 
 		//revision history will be kept for these fields
-		$dbSchema['nodiff'] = array();
+		$dbSchema['nodiff'] = array(
+			'type',
+			'description',
+			'value',
+			'isDefault' );
 
 		return $dbSchema;
 		
 	}
-
 
 	//----------------------------------------------------------------------------------------------
 	//. serialize this object to an array
@@ -164,81 +165,113 @@ class Schools_School {
 	function toArray() {
 		$serialize = array(
 			'UID' => $this->UID,
-			'name' => $this->name,
-			'description' => $this->description,
-			'geocode' => $this->geocode,
-			'region' => $this->region,
-			'country' => $this->country,
+			'refModule' => $this->refModule,
+			'refModel' => $this->refModel,
+			'refUID' => $this->refUID,
 			'type' => $this->type,
-			'hidden' => $this->hidden,
+			'description' => $this->description,
+			'value' => $this->value,
+			'isDefault' => $this->isDefault,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy,
-			'alias' => $this->alias
+			'editedBy' => $this->editedBy
 		);
 		return $serialize;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	make an extended array of all data a view will need
+	//. serialize this object to xml
 	//----------------------------------------------------------------------------------------------
-	//returns: extended array of member variables and metadata [array]
+	//arg: xmlDec - include xml declaration? [bool]
+	//arg: indent - string with which to indent lines [bool]
+	//returns: xml serialization of this object [string]
+
+	function toXml($xmlDec = false, $indent = '') {
+		//NOTE: any members which are not XML clean should be marked up before sending
+
+		$xml = $indent . "<kobject type='Contact_Detail'>\n"
+			. $indent . "    <UID>" . $this->UID . "</UID>\n"
+			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
+			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
+			. $indent . "    <refUID>" . $this->refUID . "</refUID>\n"
+			. $indent . "    <type>" . $this->type . "</type>\n"
+			. $indent . "    <description>" . $this->description . "</description>\n"
+			. $indent . "    <value>" . $this->value . "</value>\n"
+			. $indent . "    <isDefault>" . $this->isDefault . "</isDefault>\n"
+			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
+			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
+			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
+			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "</kobject>\n";
+
+		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}
+		return $xml;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. make an extended array of data views may need
+	//----------------------------------------------------------------------------------------------
+	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $theme;
-		$ary = $this->toArray();
+		global $kapenta, $user, $utils, $theme;
+		$ext = $this->toArray();		//% extended array of properties [array:string]
 
-		$ary['editUrl'] = '';		$ary['editLink'] = '';
-		$ary['viewUrl'] = '';		$ary['viewLink'] = '';
-		$ary['delUrl'] = '';		$ary['delLink'] = '';
-		$ary['newUrl'] = '';		$ary['newLink'] = '';
+		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
+		$ext['editUrl'] = '';	$ext['editLink'] = '';
+		$ext['delUrl'] = '';	$ext['delLink'] = '';
+		$ext['newUrl'] = '';	$ext['newLink'] = '';
+		$ext['ifUrl'] = '';
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-
-		if (true == $user->authHas('schools', 'Schools_School', 'show', $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%schools/' . $this->alias;
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
+		if (true == $user->authHas('contact', 'Contact_Detail', 'show', $this->UID)) {
+			$ext['viewUrl'] = '%%serverPath%%contact/showdetail/' . $ext['UID'];
+			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('schools', 'Schools_School', 'edit', $this->UID)) {
-			$ary['editUrl'] =  '%%serverPath%%schools/edit/' . $this->alias;
-			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
+		if (true == $user->authHas('contact', 'Contact_Detail', 'edit', 'edit', $this->UID)) {
+			$ext['editUrl'] = '%%serverPath%%contact/edit/' . $ext['UID'];
+			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('schools', 'Schools_School', 'edit', $this->UID)) {
-			$ary['delUrl'] =  '%%serverPath%%schools/confirmdelete/UID_' . $this->UID . '/';
-			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
+		if (true == $user->authHas('contact', 'Contact_Detail', 'edit', 'delete', $this->UID)) {
+			$ext['delUrl'] = '%%serverPath%%contact/delete/' . $ext['UID'];
+			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
-		
-		if (true == $user->authHas('schools', 'Schools_School', 'new', $this->UID)) { 
-			$ary['newUrl'] = "%%serverPath%%schools/new/"; 
-			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new school]</a>"; 
+
+		$ext['ifUrl'] = 'contact/show'
+			 . '/refModule_' . $ext['refModule']
+			 . '/refModel_' . $ext['refModel']
+			 . '/refUID_' . $ext['refUID'] . '/';
+
+		//------------------------------------------------------------------------------------------
+		//	convert links, etc
+		//------------------------------------------------------------------------------------------
+		$ext['extValue'] = str_replace("\n", "<br/>\n", $ext['value']);
+		switch($ext['type']) {
+			case 'web page':	
+					$ext['extValue'] = ''
+						 . "<a href='". $ext['value'] ."' target='". $kapenta->createUID() ."'>"
+						 . $ext['value'] . "</a>";
+					break;
+
+			case 'email address':
+					$ext['extValue'] = ''
+						 . "<a href='mailto:" . $ext['value'] . "'>" 
+						 . $ext['value'] . "</a>";
+					break;
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	location
+		//	javascript
 		//------------------------------------------------------------------------------------------
-
-		$ary['location'] = 'unknown';
-		if ('' != trim($ary['country'])) { $ary['location'] = $ary['country']; }
-		if ('' != trim($ary['region'])) { 
-			$ary['location'] = $ary['region'] . ', ' . $ary['location']; 
-		}
-
-		//------------------------------------------------------------------------------------------
-		//	summary 
-		//------------------------------------------------------------------------------------------
-		//$ary['contentHtml'] = str_replace(">\n", ">", trim($ary['description']));
-		//$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['contentHtml']);
-		$ary['summary'] = $theme->makeSummary($ary['description']);
-	
-		return $ary;
+		$ext['UIDJsClean'] = $utils->makeAlphaNumeric($ext['UID']);
+		return $ext;
 	}
 
-	
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
@@ -247,9 +280,6 @@ class Schools_School {
 
 	function delete() {
 		global $db;
-
-		//TODO: check that there are no students at this school before deleting
-
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;

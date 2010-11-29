@@ -19,12 +19,18 @@
 	$orderLabel = '';
 
 	if (array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
-	if (array_key_exists('orderby', $req->args)) { $orderBy = $req->args['orderby']; }
+	if (array_key_exists('orderby', $req->args)) { 
 
-	switch($orderBy) {
-		case 'createdOn':	$orderLabel = 'by creation date';	break;
-		case 'title':		$orderLabel = 'by title';			break;
-		case 'imagecount':	$orderLabel = 'by image count';		break;
+		$orderBy = $req->args['orderby']; 
+
+		switch($orderBy) {
+			case 'createdOn':	$orderLabel = 'by creation date';	break;
+			case 'title':		$orderLabel = 'by title';			break;
+			case 'imagecount':	$orderLabel = 'by image count';		break;
+			case 'ownerName':	$orderLabel = 'by owner';			break;
+			case 'schoolName':	$orderLabel = 'by school';			break;
+			default: 			$orderBy = 'createdOn';				break;	// prevent HTML inject
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------

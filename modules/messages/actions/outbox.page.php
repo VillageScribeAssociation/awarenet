@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Outbox:]]
-[[:messages::folder::folder=outbox::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
+[[:messages::folder::folder=outbox::orderBy=%%orderBy%%::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
 <title>awareNet - sent items</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Folders:]]
@@ -22,4 +22,5 @@
 <breadcrumb>[[:theme::breadcrumb::label=People - ::link=/users/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]userName[`|pc][`|pc] - ::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
 [[:theme::breadcrumb::label=Outbox::link=/messages/outbox/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

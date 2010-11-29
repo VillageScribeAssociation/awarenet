@@ -50,7 +50,7 @@ function videos_summarylist($args) {
 	//	render html
 	//---------------------------------------------------------------------------------------------
 
-	$linkBase = '%%serverPath%%videos/listall/orderby_';
+	$linkBase = '%%serverPath%%videos/listallgalleries/orderby_';
 	$pagination = "[[:theme::pagination::page=" . $pageNo 
 				 . "::total=" . $numPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
 

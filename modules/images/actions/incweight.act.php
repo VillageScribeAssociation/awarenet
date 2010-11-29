@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//	increment the weight of an image
+//*	increment the weight of an image
 //--------------------------------------------------------------------------------------------------
 
 	$return = 'uploadmultiple';

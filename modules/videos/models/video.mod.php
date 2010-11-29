@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/videos/inc/videoset.class.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	Represents a single uploaded flash or MP4 video.
 //--------------------------------------------------------------------------------------------------
@@ -114,6 +116,11 @@ class Videos_Video {
 		$this->alias = $aliases->create('videos', 'Videos_Video', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
+
+		// update video weights
+		$set = new Videos_Videoset($this->refModule, $this->refModel, $this->UID);
+		$set->checkWeights();
+
 		return '';
 	}
 
@@ -230,7 +237,7 @@ class Videos_Video {
 	//. serialize this object to xml
 	//----------------------------------------------------------------------------------------------
 	//arg: xmlDec - include xml declaration? [bool]
-	//arg: indent - string with which to indent lines [bool]
+	//arg: indent - string with which to indent lines [string]
 	//returns: xml serialization of this object [string]
 
 	function toXml($xmlDec = false, $indent = '') {
@@ -307,7 +314,7 @@ class Videos_Video {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $db->delete(...) will raise an object_deleted event on success
 	//returns: true on success, false on failure [bool]
 
 	function delete() {

@@ -2,7 +2,7 @@
 <page>
 <template>twocol-rightnav.template.php</template>
 <content>[[:theme::navtitlebox::width=570::label=Inbox:]]
-[[:messages::folder::folder=inbox::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
+[[:messages::folder::folder=inbox::orderBy=%%orderBy%%::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
 <title>awareNet - inbox</title>
 <script></script>
 <nav1>[[:theme::navtitlebox::label=Folders:]]

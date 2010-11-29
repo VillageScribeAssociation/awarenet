@@ -655,6 +655,19 @@ class Users_User {
 
 	function getNameLink() { return "<a href='". $this->getUrl() ."'>". $this->getName() ."</a>"; }
 
+	//----------------------------------------------------------------------------------------------
+	//.	get the name of the corrent user's school
+	//----------------------------------------------------------------------------------------------
+	//returns: name of user's school [string]
+
+	function getSchoolName() { 
+		global $theme;
+		$schoolNameBlock = '[[:schools::name::schoolUID=' . $this->school . ':]]';
+		$schoolName = $theme->expandBlocks($schoolNameBlock, '');
+		return $schoolName;	
+	}
+
+
 }
 
 ?>

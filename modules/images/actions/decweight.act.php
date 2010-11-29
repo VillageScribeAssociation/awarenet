@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//	increment the weight of an image
+//*	decrement the weight of an image
 //--------------------------------------------------------------------------------------------------
 
 	$return = 'uploadmultiple';
@@ -29,10 +29,10 @@
 	//	redirect back
 	//------------------------------------------------------------------------------------------
 
-	$returnUrl = 'images-/uploadmultiple'
+	$returnUrl = 'images/uploadmultiple'
 		. '/refModule_' . $model->refModule
 		. '/refModel_' . $model->refModel
-		. '/refUID_' . $model->refUID . '/';
+		. '/refUID_' . $model->refUID . '/';	// redundant, remove?
 
 
 	switch(strtolower($return)) {

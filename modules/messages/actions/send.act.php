@@ -40,11 +40,16 @@
 		$subject = $utils->cleanString($_POST['subject']);
 		if ('' == trim($subject)) { $subject = '(no subject)'; }
 
+		$toNameBlock = '[[:users::name::userUID=' . $toUID . ':]]';
+		$toName = $theme->expandBlocks($toNameBlock, '');
+
 		$model = new Messages_Message();
 		$model->owner = $toUID;
 		$model->folder = 'inbox';
 		$model->fromUID = $user->UID;
+		$model->fromName = $user->getName();
 		$model->toUID = $toUID;
+		$model->toName = $toName;
 		$model->cc = implode('|', $cc);
 		$model->title = $subject;
 		$model->content = $_POST['content'];

@@ -30,7 +30,7 @@ function admin_listmodulesnav($args) {
 
 		$labels['modulename'] = $modName;
 		$labels['report'] = ''; //$report;
-		$labels['status'] = "<span class='ajaxerror'>:-(</span>";
+		$labels['status'] = "<span class='ajaxinactive'>:-(</span>";
 
 		if (strpos($report, "<!-- installed correctly -->") != false) 
 			{ $labels['status'] = "<span class='ajaxmsg'>:-)</span>"; }

@@ -14,7 +14,6 @@
 		//------------------------------------------------------------------------------------------
 		//	authenticate the user
 		//------------------------------------------------------------------------------------------
-
 		$username = $db->addMarkup($_POST['user']);
 		$password = $db->addMarkup($_POST['pass']);
 
@@ -55,6 +54,8 @@
 					if (true == array_key_exists('redirect', $_POST)) { 
 						$page->do302($_POST['redirect']); 				// retry action after login
 					} else {
+						$user->lastOnline = $db->datetime();
+						$user->save();
 						$page->do302('notifications/'); 				// default landing page
 					}
 

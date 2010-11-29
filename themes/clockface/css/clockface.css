@@ -178,6 +178,12 @@ span.ajaxwarn {
 	padding-left: 10px;
 }
 
+span.ajaxinactive {
+	background-color: #aaaaaa;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
 image.infobutton {
 	position: relative; 
 	top: 3px;

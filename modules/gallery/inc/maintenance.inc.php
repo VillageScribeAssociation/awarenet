@@ -47,6 +47,36 @@ function gallery_maintenance() {
 			$fixCount++;
 		}
 
+		//-----------------------------------------------------------------------------------------
+		//	make sure this gallery has an owner name
+		//-----------------------------------------------------------------------------------------
+		if ('' == $row['ownerName']) {
+			$ownerNameBlock = '[[:users::name::userUID=' . $row['createdBy'] . ':]]';
+			$ownerName = $theme->expandBlocks($ownerNameBlock, '');
+
+			$model = new Gallery_Gallery();
+			$model->loadArray($row);
+			$model->ownerName = $ownerName;
+			$model->save();
+			$errorCount++;
+			$fixCount++;			
+		}
+
+
+		//-----------------------------------------------------------------------------------------
+		//	make sure this gallery has a school name
+		//-----------------------------------------------------------------------------------------
+		if ('' == $row['schoolName']) {
+			$schoolNameBlock = '[[:users::schoolname::link=no::userUID=' . $row['createdBy'] . ':]]';
+			$schoolName = $theme->expandBlocks($schoolNameBlock, '');
+			$model = new Gallery_Gallery();
+			$model->loadArray($row);
+			$model->schoolName = $schoolName;
+			$model->save();
+			$errorCount++;
+			$fixCount++;			
+		}
+
 		$recordCount++;
 	}
 

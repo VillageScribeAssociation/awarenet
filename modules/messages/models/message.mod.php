@@ -18,7 +18,9 @@ class Messages_Message {
 	var $owner;				//_ varchar(33) [string]
 	var $folder;			//_ varchar(33) [string]
 	var $fromUID;			//_ varchar(33) [string]
+	var $fromName;			//_	varchar(255) [string]
 	var $toUID;				//_ varchar(33) [string]
+	var $toName;			//_	varchar(255) [string]
 	var $cc;				//_ text [string]
 	var $title;				//_ title [string]
 	var $content;			//_ wyswyg [string]
@@ -73,7 +75,9 @@ class Messages_Message {
 		$this->owner = $ary['owner'];
 		$this->folder = $ary['folder'];
 		$this->fromUID = $ary['fromUID'];
+		$this->fromName = $ary['fromName'];
 		$this->toUID = $ary['toUID'];
+		$this->toName = $ary['toName'];
 		$this->cc = $ary['cc'];
 		$this->title = $ary['title'];
 		$this->content = $ary['content'];
@@ -130,7 +134,9 @@ class Messages_Message {
 			'owner' => 'VARCHAR(33)',
 			'folder' => 'VARCHAR(33)',
 			'fromUID' => 'VARCHAR(33)',
+			'fromName' => 'VARCHAR(255)',
 			'toUID' => 'VARCHAR(33)',
+			'toName' => 'VARCHAR(255)',
 			'cc' => 'TEXT',
 			'title' => 'VARCHAR(255)',
 			're' => 'VARCHAR(33)',
@@ -167,7 +173,9 @@ class Messages_Message {
 			'owner' => $this->owner,
 			'folder' => $this->folder,
 			'fromUID' => $this->fromUID,
+			'fromName' => $this->fromName,
 			'toUID' => $this->toUID,
+			'toName' => $this->toName,
 			'cc' => $this->cc,
 			'title' => $this->title,
 			'content' => $this->content,

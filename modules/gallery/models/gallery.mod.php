@@ -18,6 +18,8 @@ class Gallery_Gallery {
 	var $title;				//_ title [string]
 	var $description;		//_ wyswyg [string]
 	var $imagecount;		//_ bigint [string]
+	var $ownerName;			//_ name of user who created this gallery [string]
+	var $schoolName;		//_ for sorting [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -30,7 +32,7 @@ class Gallery_Gallery {
 	//opt: raUID - UID or alias of a Gallery object [string]
 
 	function Gallery_Gallery($raUID = '') {
-		global $db;
+		global $db, $user, $theme;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
@@ -38,6 +40,8 @@ class Gallery_Gallery {
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Gallery ' . $this->UID;
 			$this->imagecount = 0;
+			$this->ownerName = $user->getName();			// for listing by creator
+			$this->schoolName = $user->getSchoolName();		// for listing by school
 			$this->loaded = false;
 		}
 	}
@@ -69,6 +73,8 @@ class Gallery_Gallery {
 		$this->title = $ary['title'];
 		$this->description = $ary['description'];
 		$this->imagecount = $ary['imagecount'];
+		$this->ownerName = $ary['ownerName'];
+		$this->schoolName = $ary['schoolName'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -121,6 +127,8 @@ class Gallery_Gallery {
 			'title' => 'VARCHAR(255)',
 			'description' => 'TEXT',
 			'imagecount' => 'BIGINT(20)',
+			'ownerName' => 'VARCHAR(255)',
+			'schoolName' => 'VARCHAR(255)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -132,6 +140,8 @@ class Gallery_Gallery {
 			'UID' => '10',
 			'title' => '10',
 			'imagecount' => '',
+			'ownerName' => '10',
+			'schoolName' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -156,6 +166,8 @@ class Gallery_Gallery {
 			'title' => $this->title,
 			'description' => $this->description,
 			'imagecount' => $this->imagecount,
+			'ownerName' => $this->ownerName,
+			'schoolName' => $this->schoolName,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,

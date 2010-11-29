@@ -20,7 +20,7 @@ class Images_ImageSet {
 	var $refUID;			//_	UID of object which owns images [string]
 
 	//----------------------------------------------------------------------------------------------
-	//.	constructor (loads ass images belonging to some object)
+	//.	constructor (loads all images belonging to some object)
 	//----------------------------------------------------------------------------------------------
 	//arg: refModule - a kapenta module [string]
 	//arg: refModel - type of object which owns images [string]

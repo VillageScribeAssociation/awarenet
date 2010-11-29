@@ -14,7 +14,7 @@
 	$cron = new KCron();
 	$report = $cron->run();
 
-	$fileName = 'data/cronlog.html';
+	$fileName = 'data/log/' . date("y-m-d") . "-cron.log.php";
 	$kapenta->filePutContents($fileName, $report, false, false, 'a+');
 
 	//----------------------------------------------------------------------------------------------

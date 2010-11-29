@@ -33,7 +33,9 @@ function gallery_summarylist($args) {
 		case 'editedOn':	$ad = 'DESC';	break;
 		case 'title':		$ad = 'ASC';	break;
 		case 'imagecount':	$ad = 'DESC';	break;
-		default:			return ''; // no such sortable column
+		case 'ownerName':	$ad = 'ASC';	break;
+		case 'schoolName':	$ad = 'ASC';	break;
+		default: $orderBy = 'createdOn';	break;	// prevent SQL injection
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -57,6 +59,8 @@ function gallery_summarylist($args) {
 	$orderLinks = "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
 				. "&nbsp;&nbsp; list by: "
 				. "<a href='" . $linkBase . "title'>[title]</a> "
+				. "<a href='" . $linkBase . "ownerName'>[creator]</a> "
+				. "<a href='" . $linkBase . "schoolName'>[school]</a> "
 				. "<a href='" . $linkBase . "imagecount'>[number of images]</a> "
 				. "<a href='" . $linkBase . "createdOn'>[creation date]</a>"
 				. "</td></tr></table><hr/>";

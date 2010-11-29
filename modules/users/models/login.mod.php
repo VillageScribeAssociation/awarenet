@@ -21,6 +21,7 @@ class Users_Login {
 	var $serverUrl;			//_ varchar(255) [string]
 	var $logintime;			//_ datetime [string]
 	var $lastseen;			//_ datetime [string]
+	var $status;			//_ datetime [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -104,6 +105,7 @@ class Users_Login {
 		$this->serverUrl = $ary['serverUrl'];
 		$this->logintime = $ary['logintime'];
 		$this->lastseen = $ary['lastseen'];
+		$this->status = $ary['status'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -157,6 +159,7 @@ class Users_Login {
 			'serverUrl' => 'VARCHAR(255)',
 			'logintime' => 'DATETIME',
 			'lastseen' => 'DATETIME',
+			'status' => 'DATETIME',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -173,10 +176,17 @@ class Users_Login {
 
 		//revision history will be kept for these fields
 		$dbSchema['nodiff'] = array(
+			'UID',
 			'userUID',
 			'serverUrl',
 			'logintime',
-			'lastseen' );
+			'lastseen',
+			'status',
+			'createdOn',
+			'createdBy',
+			'editedOn',
+			'editedBy'
+		);
 
 		return $dbSchema;
 		
@@ -194,6 +204,7 @@ class Users_Login {
 			'serverUrl' => $this->serverUrl,
 			'logintime' => $this->logintime,
 			'lastseen' => $this->lastseen,
+			'status' => $this->status,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -228,6 +239,7 @@ class Users_Login {
 			. $indent . "    <serverUrl>" . $this->serverUrl . "</serverUrl>\n"
 			. $indent . "    <logintime>" . $this->logintime . "</logintime>\n"
 			. $indent . "    <lastseen>" . $this->lastseen . "</lastseen>\n"
+			. $indent . "    <status>" . $this->status . "</status>\n"
 			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"

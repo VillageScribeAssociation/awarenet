@@ -16,8 +16,6 @@
 [[:theme::navtitlebox::label=My Video Galleries:]]
 [[:videos::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Unsorted Images:]]
-[[:videos::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=30:]]</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>

@@ -22,7 +22,7 @@
 
 [[:theme::navtitlebox::label=All Schools::toggle=divAllSchools::hidden=yes:]]
 [`|lt]div id='divAllSchools' style='visibility: hidden; display: none;'[`|gt]
-[[:schools::listalllinksnav:]]
+[[:schools::geographicnav:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 

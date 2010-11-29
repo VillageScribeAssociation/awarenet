@@ -32,7 +32,7 @@ function videos_navlist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
+	$block = $theme->loadBlock('modules/videos/views/summarynav.block.php');
 
 	if (count($range) > 0) {
 		foreach ($range as $row) {
@@ -40,6 +40,7 @@ function videos_navlist($args) {
 			$model->loadArray($row);
 			$labels = $model->extArray();
 			$labels['galleryUID'] = $row['UID'];
+			$labels['userLink'] = '[[:users::namelink::userUID=' . $model->createdBy . ':]]';
 			$html .= $theme->replaceLabels($labels, $block);
 		}
 

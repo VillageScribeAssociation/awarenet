@@ -12,6 +12,7 @@
 <title>awareNet - [`|pc][`|pc]badgeName[`|pc][`|pc] (badge)</title>
 <script></script>
 <nav1>
+[[:badges::listallnav:]]
 </nav1>
 <nav2></nav2>
 <banner></banner>
@@ -22,4 +23,5 @@
 <subsection></subsection>
 <breadcrumb>[[:theme::breadcrumb::label=Badges - ::link=/badges/:]]
 [[:theme::breadcrumb::label=[`|pc][`|pc]badgeName[`|pc][`|pc]::link=/badges/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+*/ ?>

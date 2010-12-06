@@ -54,14 +54,17 @@ function badges_listbadges($args) {
 	//	make the table
 	//----------------------------------------------------------------------------------------------
 	$table = array();										//% 2d [array]
-	$titleRow = array();									//% add column names here [array:string]
+	$titleRow = array('Img', 'Name');						//% add column names here [array:string]
 	$table[] = $titleRow;
+
+	$imgOpts = "::refModule=badges::refModel=Badges_Badge::size=thumb::link=no";
 
 	$model = new Badges_Badge();
 	foreach($range as $item) {
 		$model->loadArray($item);
 		$ext = $model->extArray();
-		$row = array();										//% add columns here [array:string]
+		$imgBlock = '[[:images::default' . $imgOpts . '::refUID=' . $ext['UID'] . ':]]';
+		$row = array($imgBlock, $ext['nameLink']);			//% add columns here [array:string]
 		$table[] = $row;
 	}
 

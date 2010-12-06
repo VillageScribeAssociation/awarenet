@@ -10,8 +10,7 @@
 //opt: badgeUID - UID of a Badges_Badge object, overrides raUID [string]
 
 function badges_editbadge($args) {
-	global $user, $theme;
-
+	global $user, $theme, $utils;
 	$html = '';					//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -32,10 +31,12 @@ function badges_editbadge($args) {
 	//	load the block
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/badges/views/editbadge.block.php');
-	$labels = $model->extArray();
+	$ext = $model->extArray();
+	$ext['descriptionJs64'] = $utils->base64EncodeJs('descriptionJs64', $ext['description']);
+	$ext['descriptionJsVar64'] = 'descriptionJs64';
 	// ^ add any labels, block args, etc here
 
-	$html = $theme->replaceLabels($labels, $block);
+	$html = $theme->replaceLabels($ext, $block);
 
 	return $html;
 }

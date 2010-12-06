@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/badges/models/userindex.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	A placeholder object for the badge itself.
 //--------------------------------------------------------------------------------------------------
@@ -10,18 +12,18 @@ class Badges_Badge {
 	//member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			//_	currently loaded database record [array]
+	var $data;				//_	currently loaded database record [array]
 	var $dbSchema;			//_	database table definition [array]
-	var $loaded = false;		//_	set to true when an object has been loaded [bool]
+	var $loaded = false;	//_	set to true when an object has been loaded [bool]
 
-	var $UID;			//_ UID [string]
-	var $name;			//_ title [string]
-	var $description;			//_ wyswyg [string]
+	var $UID;				//_ UID [string]
+	var $name;				//_ title [string]
+	var $description;		//_ wyswyg [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
-	var $alias;			//_ alias [string]
+	var $alias;				//_ alias [string]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -205,6 +207,7 @@ class Badges_Badge {
 		if (true == $user->authHas('badges', 'Badges_Badge', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Badges/show/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
+			$ext['nameLink'] = "<a href='" . $ext['viewUrl'] . "'>" . $ext['name'] . "</a>";
 		}
 
 		if (true == $user->authHas('badges', 'Badges_Badge', 'edit', 'edit', $this->UID)) {
@@ -238,6 +241,47 @@ class Badges_Badge {
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
+	}
+
+	//==============================================================================================
+	//	UserIndex methods
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//. award this badge to a user
+	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a Users_User object [string]
+	//returns: empty string on success, error message on failure [string]
+
+	function awardTo($userUID) {
+		global $db;		
+		if (false == $db->objectExists('Users_User', $userUID)) { return 'Unkown user.'; }
+		if (true == $this->hasAward($userUID)) { return 'Badge already awarded.'; }
+
+		$model = new Badges_UserIndex();
+		$model->badgeUID = $this->UID;
+		$model->userUID = $userUID;
+		$report = $model->save();
+
+		return $report;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. discover if a user has been awarded this badge
+	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a Users_User object [string]
+	//returns: true on success, false on failure [bool]	
+
+	function hasAward($userUID) {
+		global $db;
+
+		$conditions = array();
+		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+		$conditions[] = "badgeUID='" . $db->addMarkup($this->UID) . "'";
+
+		$range = $db->loadRange('Badges_Userindex', '*', $conditions);
+		if (count($range) > 0) { return true; }
+		return false;
 	}
 
 }

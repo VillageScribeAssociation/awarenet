@@ -2,6 +2,7 @@
 
 	require_once($kapenta->installPath . 'modules/sync/models/download.mod.php');
 	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/inc/sync.inc.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	periodic maintenance of sync
@@ -77,6 +78,31 @@ function sync_cron_hourly() {
 	shell_exec($shellCmd);
 
 	*/
+
+	return $report;
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	daily cron
+//--------------------------------------------------------------------------------------------------
+//returns: HTML report of any actions taken [string]
+
+function sync_cron_daily() {
+	global $db, $req, $kapenta;
+	$report = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	sync with all upstream and downstream hosts
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "active='active'";
+	$conditions[] = "(direction='upstream' OR direction='downstream')";
+
+	$range = $db->loadRange('Sync_Server', '*', $conditions);
+	foreach($range as $row) {
+		$report .= sync_entireDatabase($row['UID']);
+		$report .= sync_allFiles($row['UID']);
+	}
 
 	return $report;
 }

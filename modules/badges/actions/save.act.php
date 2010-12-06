@@ -21,6 +21,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
+
 	$model = new Badges_Badge($UID);
 	if (false == $model->loaded) { $page->do404("could not load Badge $UID");}
 	//TODO: sanitize description

@@ -1,6 +1,6 @@
 <? /*
 
-<form name='editBadge%%UIDJsClean%%' method='POST' action='%%serverPath%%badges/save/'>
+<form name='editBadge' method='POST' action='%%serverPath%%badges/save/'>
     <input type='hidden' name='action' value='saveBadge' />
     <input type='hidden' name='UID' value='%%UID%%' />
     <table noborder='noboder'>
@@ -12,10 +12,11 @@
 <b>description:</b><br/>
 %%descriptionJs64%%
 [[:editor::base64::jsvar=%%descriptionJsVar64%%::name=description:]]<br/>
-</form>
+
 <table noborder>
   <tr>
-    <td><input type='button' value='Save' onClick='document.editBadge%%UIDJsClean%%.submit()'></td>
+    <td><input type='submit' value='Save' />
+</form></td>
     <td>
       <form name='cancelBadge%%UIDJsClean%%' method='GET' action='%%serverPath%%badges/show/%%UID%%'>
         <input type='hidden' name='action' value='deleteBadge' />

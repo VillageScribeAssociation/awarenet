@@ -28,6 +28,8 @@
 <nav1>[`|pc][`|pc]profilePicture[`|pc][`|pc]
 [`|pc][`|pc]chatButton[`|pc][`|pc]
 
+[[:badges::awarded::userUID=%%UID%%:]]
+
 [[:theme::navtitlebox::label=Groups::toggle=divUserGroups:]]
 [`|lt]div id='divUserGroups'[`|gt]
 [[:groups::listusergroupsnav::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
@@ -40,7 +42,9 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:users::friendrequestprofilenav::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</nav1>
+[[:users::friendrequestprofilenav::userUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:badges::award::userUID=%%UID%%:]]
+</nav1>
 <nav2></nav2>
 <banner></banner>
 <head></head>

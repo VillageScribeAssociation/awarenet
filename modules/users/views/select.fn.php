@@ -24,7 +24,7 @@ function users_select($args) {
 	$html = "<select name='" . $varname . "'>\n";
 
 	$sql = "select UID, firstname, surname, username, alias "	// TODO: $db->loadRange _
-		 . "from Users_User order by firstname, surname";
+		 . "from users_user order by firstname, surname";
 
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {

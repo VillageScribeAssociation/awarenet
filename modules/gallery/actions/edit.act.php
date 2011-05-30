@@ -10,11 +10,11 @@
 	//	load the model
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }								// check for ref
-	$UID = $aliases->findRedirect('Gallery_Gallery'); 						// check correct ref
+	$UID = $aliases->findRedirect('gallery_gallery'); 						// check correct ref
 
 	$model = new Gallery_Gallery($UID);
 	if (false == $model->loaded)  { $page->do404('Gallery not found'); }
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'edit', $model->UID)) 
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) 
 		{ $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------

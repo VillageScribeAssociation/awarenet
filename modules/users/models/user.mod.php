@@ -45,9 +45,9 @@
 //+	TODO: make profile expansion explicit, current method is wasteful, parses XML that is 
 //+	almost never used.
 
-require_once($installPath . 'modules/users/models/login.mod.php');
-require_once($installPath . 'modules/users/models/friendship.mod.php');
-require_once($installPath . 'modules/schools/models/school.mod.php');	// move to this module?
+require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
+require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 class Users_User {
 
@@ -163,7 +163,7 @@ class Users_User {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('users', 'Users_User', $this->UID, $this->username);
+		$this->alias = $aliases->create('users', 'users_user', $this->UID, $this->username);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -193,7 +193,7 @@ class Users_User {
 		if (strlen($this->password) < 6) 
 			{ $report .= "Please enter a password (6 characters or more).\n"; }
 
-		if (false == $db->objectExists('Schools_School', $this->school)) 
+		if (false == $db->objectExists('schools_school', $this->school)) 
 			{ $report .= "Please select a school for this user.\n"; }
 
 		return $report;
@@ -207,7 +207,7 @@ class Users_User {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'users';
-		$dbSchema['model'] = 'Users_User';
+		$dbSchema['model'] = 'users_user';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -297,16 +297,16 @@ class Users_User {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		//if (false == $user->authHas('users', 'Users_User', 'show', '') == false) 
+		//if (false == $user->authHas('users', 'users_user', 'show', '') == false) 
 		//	{ echo "no permission to view users.<br/>"; }
 
-		if ( (true == $user->authHas('users', 'Users_User', 'show', $this->UID)) 
+		if ( (true == $user->authHas('users', 'users_user', 'show', $this->UID)) 
 			OR ($user->UID == $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%users/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[profile]</a>"; 
 		}
 
-		if ( (true == $user->authHas('user', 'Users_User', 'edit', $this->UID)) 
+		if ( (true == $user->authHas('user', 'users_user', 'edit', $this->UID)) 
 			OR ($user->UID == $this->UID) ) {
 			$ary['editUrl'] =  '%%serverPath%%users/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
@@ -315,12 +315,12 @@ class Users_User {
 		}
 
 		// to ponder - should users be able to delete their profile?
-		if (true == $user->authHas('users', 'Users_User', 'delete', $this->UID)) { 
+		if (true == $user->authHas('users', 'users_user', 'delete', $this->UID)) { 
 			$ary['delUrl'] =  '%%serverPath%%users/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('users', 'Users_User', 'new', $this->UID)) { 
+		if (true == $user->authHas('users', 'users_user', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%users/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[new user]</a>"; 
 		}
@@ -581,7 +581,7 @@ class Users_User {
 		$conditions = array();
 		$conditions[] = "school='" . $db->addMarkup($this->school) . "'";
 		$conditions[] = "grade='" . $db->addMarkup($this->grade) . "'";
-		$range = $db->loadRange('Users_User', '*', $conditions, 'surname, firstname');
+		$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 
@@ -600,7 +600,7 @@ class Users_User {
 		$conditions = array();
 		$conditions[] = "userUID='" . $db->addMarkup($this->UID) . "'";
 		$conditions[] = "status='confirmed'";
-		$range = $db->loadRange('Users_Friendship', '*', $conditions, 'surname, firstname');
+		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 
@@ -613,7 +613,7 @@ class Users_User {
 		$conditions = array();
 		$conditions[] = "friendUID='" . $db->addMarkup($this->UID) . "'";
 		$conditions[] = "status='unconfirmed'";
-		$range = $db->loadRange('Users_Friendship', '*', $conditions, 'surname, firstname');
+		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 
@@ -626,7 +626,7 @@ class Users_User {
 		$conditions = array();
 		$conditions[] = "userUID='" . $db->addMarkup($this->UID) . "'";
 		$conditions[] = "status='unconfirmed'";
-		$range = $db->loadRange('Users_Friendship', '*', $conditions, 'surname, firstname');
+		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 
@@ -666,7 +666,6 @@ class Users_User {
 		$schoolName = $theme->expandBlocks($schoolNameBlock, '');
 		return $schoolName;	
 	}
-
 
 }
 

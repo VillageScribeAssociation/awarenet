@@ -43,7 +43,7 @@
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------
-	//	authorised, notify new member that they are now on the project
+	//	authorised, notify new member that they are now on the project //TODO: handle with event
 	//----------------------------------------------------------------------------------------------
 	/*
 	$fromUrl = '%%serverPath%%users/profile/' . $user->alias;
@@ -62,7 +62,9 @@
 	$content = "Request to join was accepted by " . $user->getNameLink();
 	$url = '%%serverPath%%projects/' . $project->alias;
 
-	$nUID = $notifications->create('projects', 'Projects_Project', $refUID, $title, $content, $url);
+	$nUID = $notifications->create(
+		'projects', 'projects_project', $refUID, 'projects_memberaccepted', $title, $content, $url
+	);
 
 	$notifications->addProject($nUID, $project->UID);
 

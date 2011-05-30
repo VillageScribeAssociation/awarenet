@@ -8,7 +8,7 @@
 	//	check user role and arguments
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403('Please log in to view user listings.'); }
-	//if (false == $user->authHas('users', 'Users_User', 'list')) { $page->do403(''); }
+	//if (false == $user->authHas('users', 'users_user', 'list')) { $page->do403(''); }
 
 	$pageNo = 1;
 	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }

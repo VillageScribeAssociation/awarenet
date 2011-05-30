@@ -24,9 +24,9 @@ function projects_listsamembersanav($args) {
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('projectUID', $args)) { $args['UID'] = $args['projectUID'];}	
 	if (false == array_key_exists('UID', $args)) { return '';}	
-	//if (false == $user->authHas('projects', 'Projects_Project', 'show', $args['UID'])){return '';}
+	//if (false == $user->authHas('projects', 'projects_project', 'show', $args['UID'])){return '';}
 	if (true == array_key_exists('limit', $args)) { $limit = (int)$args['limit']; }
-	if (false == $db->objectExists('Projects_Project', $args['UID'])) { return ''; }
+	if (false == $db->objectExists('projects_project', $args['UID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get all members of this project
@@ -34,7 +34,7 @@ function projects_listsamembersanav($args) {
 	$conditions = array();
 	$conditions[] = "projectUID='" . $db->addMarkup($args['UID']) . "'"; // members of this project
 	$conditions[] = "(role='admin' OR role='member')";				// only those who are confirmed
-	$membersRange = $db->loadRange('Projects_Membership', '*', $conditions, '', '', '');
+	$membersRange = $db->loadRange('projects_membership', '*', $conditions, '', '', '');
 
 	//----------------------------------------------------------------------------------------------
 	//	get all projects belonging to these members, and count overlap of members
@@ -45,7 +45,7 @@ function projects_listsamembersanav($args) {
 		$conditions[] = "userUID='" . $member['userUID'] . "'";				// same member
 		$conditions[] = "projectUID!='" . $db->addMarkup($args['UID']) . "'";// but not this project
 		$conditions[] = "(role='admin' OR role='member')";					// only confirmed
-		$projectsRange = $db->loadRange('Projects_Membership', '*', $conditions, '', '', '');
+		$projectsRange = $db->loadRange('projects_membership', '*', $conditions, '', '', '');
 
 		//------------------------------------------------------------------------------------------
 		//	collect project UIDs in an array, counting the number of times they show up

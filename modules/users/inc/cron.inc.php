@@ -19,7 +19,7 @@ function users_cron_tenmins() {
 	//	remove userlogin records if user has not been seen online for awhile
 	//----------------------------------------------------------------------------------------------
 	$expTime = time() - 600;	// TODO: make this a configurable setting
-	$sql = "select * from Users_Login where lastseen < '" . $db->datetime($expTime) . "'";
+	$sql = "select * from users_login where lastseen < '" . $db->datetime($expTime) . "'";
 	$result = $db->query($sql);
 
 	if (0 == $db->numRows($result)) { $report .= "(no inactive sessions)"; }
@@ -34,6 +34,12 @@ function users_cron_tenmins() {
 		}
 		$report .= "Removed $count inactive sessions.<br/>";
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	post and retrieve a list of active logins from the central server
+	//----------------------------------------------------------------------------------------------
+
+	
 
 	//----------------------------------------------------------------------------------------------
 	//	done

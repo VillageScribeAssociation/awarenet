@@ -17,7 +17,7 @@ function schools_listallnav($args) {
 	if ((true == array_key_exists('hidden', $args)) && ('yes' == $args['hidden']))
 		{ $conditions = ''; }
 
-	$range = $db->loadRange('Schools_School', '*', $conditions, 'name');
+	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
 
 	foreach($range as $row) 
 		{ $html .= "[[:schools::summarynav::schoolUID=" . $row['UID'] . ":]]"; }

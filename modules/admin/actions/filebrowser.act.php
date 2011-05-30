@@ -13,9 +13,9 @@
 	//	get path (if present)
 	//---------------------------------------------------------------------------------------------
 	
-	$browsePath = $installPath;
+	$browsePath = $kapenta->installPath;
 	if (array_key_exists('path', $req->args) == true) { 
-		$browsePath = $installPath . base64_decode($req->args['path']);
+		$browsePath = $kapenta->installPath . base64_decode($req->args['path']);
 		$browsePath = str_replace('//', '/', $browsePath);
 		$browsePath = str_replace('..', '.', $browsePath);
 	}
@@ -28,12 +28,12 @@
 	$discard = array_pop($dirs);
 	$parentDir = implode("/", $dirs);
 	$parentLink = '';
-	if (($browsePath == $installPath) OR ($parentDir . '/' == $installPath)) {
+	if (($browsePath == $kapenta->installPath) OR ($parentDir . '/' == $kapenta->installPath)) {
 		// in docRoot, or parent is docroot
 		$parentUrl = "%%serverPath%%admin/filebrowser/";
 		$parentLink = "<a href='" . $parentUrl . "'>[ &lt;&lt; parent directory ]</a>";
 	} else {
-		$parentDir = str_replace($installPath, '', $parentDir);			
+		$parentDir = str_replace($kapenta->installPath, '', $parentDir);			
 		$parentUrl = "%%serverPath%%admin/filebrowser/path_" . base64_encode($parentDir);
 		$parentLink = "<a href='" . $parentUrl . "'>[ &lt;&lt; parent directory ]</a>";
 	}
@@ -52,7 +52,7 @@
 			//-------------------------------------------------------------------------------------
 			//	directories
 			//-------------------------------------------------------------------------------------
-			$relPath = str_replace($installPath , '', $browsePath . '/' . $line);
+			$relPath = str_replace($kapenta->installPath , '', $browsePath . '/' . $line);
 			$dirUrl = "admin/filebrowser/path_" . base64_encode($relPath);
 			$line = "<a href='%%serverPath%%" . $dirUrl . "'>$line</a>";
 			$showThis = true;
@@ -65,10 +65,10 @@
 			foreach($allow as $ext) 
 				{ if (strpos(strtolower(' ' . $line), $ext) == true) { $showThis = true; } }
 
-			$relFile = str_replace($installPath , '', $browsePath . '/' . $line);
-			$relPath = str_replace($installPath , '', dirname($browsePath . '/' . $line));
+			$relFile = str_replace($kapenta->installPath , '', $browsePath . '/' . $line);
+			$relPath = str_replace($kapenta->installPath , '', dirname($browsePath . '/' . $line));
 		
-			if ($relPath . '/' == $installPath) {
+			if ($relPath . '/' == $kapenta->installPath) {
 				$editUrl = 'admin/txtedit/file_' . base64_encode($relFile);
 			} else {
 				$editUrl = 'admin/txtedit/file_' . base64_encode($relFile) 
@@ -91,7 +91,7 @@
 	//---------------------------------------------------------------------------------------------
 
 	$page->load('modules/admin/actions/filebrowser.page.php');
-	$page->blockArgs['filePath'] = '~/' . str_replace($installPath, '', $browsePath);
+	$page->blockArgs['filePath'] = '~/' . str_replace($kapenta->installPath, '', $browsePath);
 	$page->blockArgs['fileList'] = $fileList;
 	$page->blockArgs['parentLink'] = $parentLink;
 	$page->render();

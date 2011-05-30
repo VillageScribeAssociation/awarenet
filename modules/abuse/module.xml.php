@@ -27,8 +27,8 @@
       </model>
     </models>
     <defaultpermissions>
-		student:p|abuse|Abuse_Report|new
-		teacher:p|abuse|Abuse_Report|new
+		student:p|abuse|abuse_report|new
+		teacher:p|abuse|abuse_report|new
     </defaultpermissions>
 </module>
 */ ?>

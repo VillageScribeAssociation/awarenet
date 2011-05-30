@@ -23,7 +23,7 @@ function forums_summarylistnav($args) {
 	//	load the boards
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from Forums_Board "
+	$sql = "select * from forums_board "
 		 . "where school='" . $db->addMarkup($args['school']) . "' "
 		 . "order by weight DESC";
 

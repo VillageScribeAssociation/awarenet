@@ -26,7 +26,7 @@ function projects_listuserprojectsnav($args) {
 	$conditions[] = "userUID='" . $db->addMarkup($args['userUID']) . "'";	// this user
 	$conditions[] = "(role='admin' OR role='member')";						// only confirmed
 
-	$range = $db->loadRange('Projects_Membership', '*', $conditions, 'joined');
+	$range = $db->loadRange('projects_membership', '*', $conditions, 'joined');
 
 	foreach($range as $row) 
 		{ $html .= "[[:projects::summarynav::projectUID=" . $row['projectUID'] . ":]]\n"; }

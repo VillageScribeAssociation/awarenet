@@ -19,7 +19,7 @@ function projects_select($args) {
 	if (array_key_exists('default', $args)) { $default = $args['default']; }
 	$html = '';
 	
-	$sql = "select * from Projects_Project order by name";
+	$sql = "select * from projects_project order by name";
 	$result = $db->query($sql);
 	$html .= "<select name='" . $varname . "'>\n";
 	while ($row = $db->fetchAssoc($result)) {

@@ -15,7 +15,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Moblog_Post($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('Post not found.'); }
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'delete', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'delete', $model->UID)) { $page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	delete it

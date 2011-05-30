@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function announcements_menunewpost($args) { 
-	if ($user->authHas('announcements', 'Announcements_Announcement', 'edit', 'TODO:UIDHERE') == true) {
+	if ($user->authHas('announcements', 'announcements_announcement', 'edit', 'TODO:UIDHERE') == true) {
 		return '[[:theme::submenu::label=New Post::link=/announcements/new/:]]';
 	}
 }

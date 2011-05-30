@@ -14,7 +14,7 @@
 	$model = new Schools_School($req->args['uid']);
 	if (false == $model->loaded) { $page->do404('School not found.'); }
 
-	if (false == $user->authHas('schools', 'Schools_School', 'delete', $model->UID))
+	if (false == $user->authHas('schools', 'schools_school', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this school.'); }
 
 	//----------------------------------------------------------------------------------------------

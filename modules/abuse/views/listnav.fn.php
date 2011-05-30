@@ -24,7 +24,7 @@ function abuse_listnav($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "status='open'";
-	$range = $db->loadRange('Abuse_Report', '*', $conditions, 'createdOn', $num);
+	$range = $db->loadRange('abuse_report', '*', $conditions, 'createdOn', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

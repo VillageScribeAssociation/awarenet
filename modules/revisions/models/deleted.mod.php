@@ -118,7 +118,7 @@ class Revisions_Deleted {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'revisions';
-		$dbSchema['model'] = 'Revisions_Deleted';
+		$dbSchema['model'] = 'revisions_deleted';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -182,7 +182,7 @@ class Revisions_Deleted {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Revisions_Deleted'>\n"
+		$xml = $indent . "<kobject type='revisions_deleted'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
@@ -216,17 +216,17 @@ class Revisions_Deleted {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('revisions', 'Revisions_Deleted', 'show', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_deleted', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Revisions/showdeleted/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'Revisions_Deleted', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_deleted', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Revisions/editdeleted/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'Revisions_Deleted', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_deleted', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Revisions/deldeleted/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

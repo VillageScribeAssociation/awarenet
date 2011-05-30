@@ -31,7 +31,7 @@ function images_randomuids($args) {
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 
-	$range = $db->loadRange('Images_Image', 'UID', $conditions, 'RAND()', $limit, '');
+	$range = $db->loadRange('images_image', 'UID', $conditions, 'RAND()', $limit, '');
 	//---------------------------------------------------------------------------------------------
 	//	return as string
 	//---------------------------------------------------------------------------------------------

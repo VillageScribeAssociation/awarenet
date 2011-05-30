@@ -13,7 +13,7 @@ function chat_showallqueues($args) {
 	if ('admin' != $user->role) { return false; }
 
 	$html = '';
-	$sql = "select * from Users_User order by surname, firstname";
+	$sql = "select * from users_user order by surname, firstname";
 
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {

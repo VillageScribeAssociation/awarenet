@@ -24,7 +24,7 @@ function files_fileset($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the file records and make html
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from Files_File where refModule='" . $db->addMarkup($args['refModule']) 
+	$sql = "select * from files_file where refModule='" . $db->addMarkup($args['refModule']) 
 	     . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
 	
 	//TODO: $db->loadRange
@@ -32,10 +32,10 @@ function files_fileset($args) {
 	$result = $db->query($sql);
 	while($row = $db->fetchAssoc($result)) {
 		
-		$imgUrl = $serverPath . 'files/thumb/' . $row['alias'];
-		$editURL = $serverPath . 'files/edit/return_uploadmultiple/' . $row['alias'];
+		$imgUrl = '%%serverPath%%files/thumb/' . $row['alias'];
+		$editURL = '%%serverPath%%files/edit/return_uploadmultiple/' . $row['alias'];
 		//if (authHas($row['refModule'], 'files', '') == false) {
-		//	$editURL = $serverPath . 'files/viewset/return_uploadmultiple/' . $recordAlias;
+		//	$editURL = '%%serverPath%%files/viewset/return_uploadmultiple/' . $recordAlias;
 		//}
 		
 		$html .= "<a href='" . $editURL . "'>" 

@@ -19,10 +19,10 @@
 	$dbSchema = $model->getDbSchema();
 
 	$db->createTable($dbSchema);
-	if (true == $db->tableExists('Abuse_Report')) {	
+	if (true == $db->tableExists('abuse_report')) {	
 		echo "Abuse report module installed.<br/>\n"; 
 	} else {
-		echo "Could not create table 'Abuse_Report'.<br/>\n";
+		echo "Could not create table 'abuse_report'.<br/>\n";
 	}
 
 ?>

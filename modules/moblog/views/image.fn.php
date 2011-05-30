@@ -37,7 +37,7 @@ function moblog_image($args) {
 	$model = new Moblog_Post($args['raUID']);	
 	if (false == $model->loaded) { return ''; }
 
-	$block = "[[:images::default::refModule=moblog::refModel=Moblog_Post::refUID=" . $model->UID 
+	$block = "[[:images::default::refModule=moblog::refModel=moblog_post::refUID=" . $model->UID 
 			. "::size=$size::altUser=" . $model->createdBy . ":]]";
 	
 	$html = $block;

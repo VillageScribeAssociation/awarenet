@@ -43,7 +43,7 @@ function images_imagesetdetail($args) {
 	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
 	//     . "' and refUID='" . $db->addMarkup($args['refUID']) . "' order by floor(weight)";
 	
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'floor(weight)');
+	$range = $db->loadRange('images_image', '*', $conditions, 'floor(weight)');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

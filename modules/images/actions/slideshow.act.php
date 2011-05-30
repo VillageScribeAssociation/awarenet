@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	make a slideshow  //TODO: this is very old code, replace wiuth standard page/block templates
+//*	make a slideshow  //TODO: this is very old code, replace with standard page/block templates
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@
 	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";  
 	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($req->args['refmodule']) 
 	//		. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
@@ -55,7 +55,7 @@
 	$img = "
 		<img src='/images/slide/" . $imgRow['alias'] . "' /><br/>
 		<b>" . $imgRow['title'] . "</b> " . $imgRow['caption'] . "
-		<a href='#' onClick=\"window.parent.location='" . $serverPath . "images/show/" 
+		<a href='#' onClick=\"window.parent.location='%%serverPath%%images/show/" 
 		. $imgRow['alias'] . "'\">[view larger]</a>
 		<br/><br/>
 		";

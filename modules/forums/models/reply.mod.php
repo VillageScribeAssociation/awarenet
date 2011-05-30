@@ -108,7 +108,7 @@ class Forums_Reply {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'forums';
-		$dbSchema['model'] = 'Forums_Reply';
+		$dbSchema['model'] = 'forums_reply';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -189,7 +189,7 @@ class Forums_Reply {
 		//	links
 		//------------------------------------------------------------------------------------------
 		//TODO: replay
-		if ($user->authHas('forums', 'Forums_Reply', 'show', $this->UID)) { 
+		if ($user->authHas('forums', 'forums_reply', 'show', $this->UID)) { 
 		//	$ary['viewUrl'] = '%%serverPath%%forums/replies/' . $ary['alias'];
 		//	$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}

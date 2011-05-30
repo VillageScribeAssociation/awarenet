@@ -14,7 +14,7 @@
 		$page->do302('calendar/');
 	}
 
-	$UID = $aliases->findRedirect('Calendar_Entry');
+	$UID = $aliases->findRedirect('calendar_entry');
 	$model = new Calendar_Entry($req->ref);
 	if (false == $model->loaded) { $page->do404('No such calendar entry.'); }
 

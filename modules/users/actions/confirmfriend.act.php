@@ -12,7 +12,7 @@
 	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
 	if ('confirmFriendReq' != $_POST['action']) { $page->do404('Action not supported.'); }
 	if (false == array_key_exists('friendUID', $_POST)) { $page->do404('No friendUID sent.'); }
-	if (false == $db->objectExists('Users_User', $_POST['friendUID']))
+	if (false == $db->objectExists('users_user', $_POST['friendUID']))
 		{ $page->do404('Friend UID not found.'); }
 
 	//----------------------------------------------------------------------------------------------

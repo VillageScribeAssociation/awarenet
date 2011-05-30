@@ -3,11 +3,11 @@
 
 <page>
 	<template>twocol-rightnav.template.php</template>
-	<title>awareNet - edit project abstract</title>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit project abstract</title>
 	<content>[[:theme::navtitlebox::width=570::label=Edit Abstract:]]
 [[:projects::editabstractform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
-[[:tags::edittags::refModule=projects::refModel=Projects[`|us]Project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
+[[:tags::edittags::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</content>
 	<nav1>[[:theme::navtitlebox::label=Sections:]]
 [[:projects::editindexnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]

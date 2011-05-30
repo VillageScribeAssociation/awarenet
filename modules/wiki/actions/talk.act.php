@@ -13,11 +13,11 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); } 
-	$UID = $aliases->findRedirect('Wiki_Article');
+	$UID = $aliases->findRedirect('wiki_article');
 
 	$model = new Wiki_Article($UID);
 	if (false == $model->loaded) { $page->do404('Could not load parent article.'); }
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'show', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $page->do403(); }
 
 	if ('talk' == $model->namespace) { $page->do302('wiki/talk/' . $model->talkFor); }
 

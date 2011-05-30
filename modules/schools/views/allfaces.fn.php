@@ -18,7 +18,7 @@ function schools_allfaces($args) {
 	$model = new Schools_School($db->addMarkup($args['raUID']));
 	if (false == $model->loaded) { return ''; }
 
-	$sql = "select * from Images_Image where refModule='schools' and refUID='" . $model->UID 
+	$sql = "select * from images_image where refModule='schools' and refUID='" . $model->UID 
 	     . "' order by weight";
 	
 	//TODO: $db->loadRange

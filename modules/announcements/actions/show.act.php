@@ -10,9 +10,9 @@
 	//	get name of announcement owner
 	//----------------------------------------------------------------------------------------------	
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Announcements_Announcement');
+	$UID = $aliases->findRedirect('announcements_announcement');
 	$model = new Announcements_Announcement($req->ref);
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $UID)) 
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'show', $UID)) 
 		{ $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------

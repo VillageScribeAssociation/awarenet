@@ -32,7 +32,7 @@ function groups_image($args) {
 	$model = new Groups_Group($db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
 
-	$sql = "select * from Images_Image where refModule='groups' and refUID='" . $model->UID 
+	$sql = "select * from images_image where refModule='groups' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
 	$result = $db->query($sql);
@@ -43,7 +43,7 @@ function groups_image($args) {
 				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
 			return "<img src='/images/" . $size . "/" . $row['alias'] 
-				. "' border='0' alt='" . $p->name . "'>";
+				. "' border='0' alt='" . $model->name . "'>";
 		}
 	}
 	

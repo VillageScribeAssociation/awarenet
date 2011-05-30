@@ -41,13 +41,13 @@
         </model>
     </models>
     <defaultpermissions>
-		student:p|badges|Badges_Badge|show
+		student:p|badges|badges_badge|show
 
-		teacher:p|badges|Badges_Badge|new
-		teacher:p|badges|Badges_Badge|edit
-		teacher:p|badges|Badges_Badge|show
-		teacher:p|badges|Badges_Badge|award
-		teacher:p|badges|Badges_Badge|revoke
+		teacher:p|badges|badges_badge|new
+		teacher:p|badges|badges_badge|edit
+		teacher:p|badges|badges_badge|show
+		teacher:p|badges|badges_badge|award
+		teacher:p|badges|badges_badge|revoke
     </defaultpermissions>
     <blocks>
     </blocks>

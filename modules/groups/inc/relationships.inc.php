@@ -27,7 +27,7 @@ function users_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of User object
 	//----------------------------------------------------------------------------------------------
-	if ('Groups_Group' == $refModel) {
+	if ('groups_group' == $refModel) {
 		$model = new Groups_Group($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

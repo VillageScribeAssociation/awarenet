@@ -17,7 +17,7 @@ function sync_downloadlist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load downloads from the database
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from Sync_Download order by status";
+	$sql = "select * from sync_download order by status";
 	$result = $db->query($sql);
 
 	if ($db->numRows($result) > 0) {

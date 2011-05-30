@@ -125,7 +125,7 @@ class Messages_Message {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'messages';
-		$dbSchema['model'] = 'Messages_Message';
+		$dbSchema['model'] = 'messages_message';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -215,7 +215,7 @@ class Messages_Message {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('messages', 'Messages_Message', 'show', $this->UID)) { 
+		if (true == $user->authHas('messages', 'messages_message', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%messages/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[see all threads &gt;&gt;]</a>"; 
 		}

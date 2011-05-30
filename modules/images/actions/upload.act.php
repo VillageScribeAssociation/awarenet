@@ -127,7 +127,7 @@
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 	
-		$range = $db->loadRange('Images_Image', '*', $conditions);
+		$range = $db->loadRange('images_image', '*', $conditions);
 		foreach ($range as $row) {
 			$oldImg = new Images_Image($row['UID']);
 			$oldImg->delete();
@@ -155,10 +155,13 @@
 	//	send 'images_added' event to module whose record owns this image
 	//------------------------------------------------------------------------------------------
 
-	$args = array(	'refModule' => $refModule, 
-					'refUID' => $refUID, 
-					'imageUID' => $ext['UID'], 
-					'imageTitle' => $ext['title']    );
+	$args = array(	
+		'refModule' => $refModule, 
+		'refModel' => $refModel, 
+		'refUID' => $refUID, 
+		'imageUID' => $ext['UID'], 
+		'imageTitle' => $ext['title']    
+	);
 
 	$kapenta->raiseEvent('*', 'images_added', $args);
 

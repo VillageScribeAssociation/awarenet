@@ -18,10 +18,12 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	this.UID = jsPageUID;				//_	Unique identifier of this page [string]
 	this.serverPath = jsServerPath;		//_	URL of a kapenta installation [string]
 
-	this.divs = Array();				//_	map of div names to block tags [array]
-	this.blocks = Array();				//_	map of block tags to block content [array]
+	this.divs = Array();				//_	map of div names to block tags [array:string]
+	this.blocks = Array();				//_	map of block tags to block content [array:string]
 
 	this.lastChatMessage = '0';			//_	time when last chat message was created [string]
+
+	this.loadColor = '#b1d27e';			//_	div backgrounds set to this while loading [string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	start the pump
@@ -96,7 +98,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				switch (route) {
 					case 'block':
 						//alert('recieved block update instruction: ' + base64_decode(msg));
-						this.updateBlock(base64_decode(msg));
+						this.updateBlockFromServer(base64_decode(msg));
 						break;	//..................................................................
 
 					case 'chat':
@@ -113,6 +115,64 @@ function Live_Pump(jsPageUID, jsServerPath) {
 			}
 		}
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	bind div to a block (ie, bind the content of a div to server-side view)
+	//----------------------------------------------------------------------------------------------
+	//arg: divId - element ID to bind to a view [string]
+	//arg: blockTag - base64 encoded block tag [string]
+	//arg: B64 - set to true if the block tag is base64 encoded [bool]
+
+	this.bindDivToBlock = function(divId, blockTag, B64) {
+		var found = false;
+		if (true == B64) { blockTag = base64_decode(blockTag); }
+		this.log('[i] binding div: ' + divId + ' to block ' + blockTag);
+
+		//	replace any existing binding to a block tag
+		for (var idx in this.divs) {
+			if (divId == this.divs[idx].divId) { 
+				this.divs[idx].blockTag = blockTag; 
+				found = true; 
+			} 
+		}
+
+		// no prior binding, register the div
+		if (false == found) { this.divs[this.divs.length] = new Live_DivMap(divId, blockTag); }
+
+		// set div content
+		this.setDivContent(divId, blockTag);				
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the content of a div to
+	//----------------------------------------------------------------------------------------------
+	//arg: divId - html element ID, host have innerHTML [string]
+	//arg: blockTag - a block tag [string]
+	//returns: true on success, false on failure [bool]
+
+	this.setDivContent = function(divId, blockTag) {	
+		var theDiv = document.getElementById(divId);
+		this.log('[i] setting div content: ' + divId + ' to block ' + blockTag);
+		//TODO: check here
+
+		//------------------------------------------------------------------------------------------
+		//	look for existing content for div
+		//------------------------------------------------------------------------------------------
+		for (var idx in this.blocks) {
+			if (blockTag == this.blocks[idx].tag) {
+				theDiv.innerHTML = this.blocks[idx].content;
+				this.log('[i] found block in cache: ' + divId + ' to block ' + blockTag);
+				return true;
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	content not cached; try download it from server
+		//------------------------------------------------------------------------------------------
+		this.log('[i] block found not found in cache, loading from server: ' + blockTag);
+		this.updateBlockFromServer(blockTag);
+	}
+
 
 	//----------------------------------------------------------------------------------------------
 	//.	go through a piece of HTML and action all 'register block' comments
@@ -133,68 +193,127 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				var parts = line.split(':');
 
 				//note: base64_decode as from phpJs
-				newDiv = new Live_DivMap(parts[1], base64_decode(parts[2]));
+				var newDiv = new Live_DivMap(parts[1], base64_decode(parts[2]));
 				this.divs[this.divs.length] = newDiv;
 			}
 		}
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	set load color/effect to all divs bound to a given view
+	//----------------------------------------------------------------------------------------------
+	//arg: blockTag - a block tag [string]
+	//returns: number of divs [int]
+
+	this.setLoadColor= function (blockTag) {
+		var divCount = 0;				//%	number of divs bound to this block [int]
+
+		for (var idx in this.divs) {
+			if (blockTag == this.divs[idx].blockTag) {
+				var theDiv = document.getElementById(this.divs[idx].divId);
+				//TODO: check theDiv exists/is correct
+				this.divs[idx].bgColor = theDiv.style.backgroundColor;
+				theDiv.style.backgroundColor = this.loadColor;
+				divCount++;
+			}
+		}
+
+		return divCount;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	update a block on the page
 	//----------------------------------------------------------------------------------------------
-	//arg: block64 - base64 encoded block tag [string]	
+	//arg: blockTag - base64 encoded block tag [string]	
 	//returns: true on success, false on failure [bool]
 
-	this.updateBlock = function(blockTag) {
-		divId = this.getDivId(blockTag);
-
-		// if there is no such div registered, then we have nowhere to put the updated content
-		if (false == divId) { return false; }
-
+	this.updateBlockFromServer = function(blockTag) {
+		this.log('getting block/view from server: ' + blockTag);
 		//------------------------------------------------------------------------------------------
-		//	set/throb div background color
+		//	set throbber effect
 		//------------------------------------------------------------------------------------------
-		var theDiv = document.getElementById(divId);
-		var oldBgColor = theDiv.style.backgroundColor;
-		theDiv.style.backgroundColor = '#b1d27e';
+		if (0 == this.setLoadColor(blockTag)) { 
+			// if no div is bound to this view (block tag) we have nothing to do
+			this.log('no registered divs for this block: ' + blockTag);
+			return false; 
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	download new content from server
 		//------------------------------------------------------------------------------------------
 		var block64 = base64_encode(blockTag);
 		var params = 'b=' + escape(block64);
-		//alert('sending: ' + params);
+		this.log('sending: ' + params);
 
 		var req = new XMLHttpRequest();  
 		req.open('POST', this.serverPath + 'live/getblock/', true);  
 		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		//req.setRequestHeader('Content-length', params.length);
 		req.setRequestHeader('Connection', 'close'); 
-		req.replaceDivId = divId;
-		req.newDivBgColor = oldBgColor;
+		//req.replaceDivId = divId;			
+		//req.newDivBgColor = oldBgColor;
+		req.blockTag = blockTag;
 		req.onreadystatechange = function (aEvt) {  
 			klive.log('[i] Downloading updated content: ' + req.status);
 			if ((4 == req.readyState) && (200 == req.status))  {
 				//----------------------------------------------------------------------------------
 				//	update the page
 				//----------------------------------------------------------------------------------
+				klive.log('[i] setting block content: ' + req.blockTag);
+				klive.setBlockContent(req.blockTag, req.responseText);
+
 				//: hat tip to Stack Overflow :3
 				//:	http://stackoverflow.com/questions/1700870/how-do-i-do-outerhtml-in-firefox/
 
+				/*
 				var xDiv = document.getElementById(this.replaceDivId);
 				var s = req.responseText
 		        var r = xDiv.ownerDocument.createRange();  
 		        r.setStartBefore(xDiv);  
 		        var df = r.createContextualFragment(s);  
 		        xDiv.parentNode.replaceChild(df, xDiv);  
-
 				xDiv.style.backgroundColor = this.newDivBgColor;
+				*/
+
 			}
 		}
 
 		req.send(params);
 
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set block content
+	//----------------------------------------------------------------------------------------------
+	//arg: blockTag - block tag, uniquely identifies a view [string]
+	//arg: content - text/html [string]	
+
+	this.setBlockContent = function(blockTag, content) {
+		var found = false;
+
+		// try update cache
+		for (var idx in this.blocks) {		
+			if (blockTag == this.blocks[idx].tag) { 
+				this.blocks[idx].content = content;
+				found = true;
+			}
+		}		
+
+		// add to cache if new block
+		if (false == found) { this.blocks[this.blocks.length] = new Live_Block(blockTag, content); }
+
+		// update any divs bound to this block
+		for (var idx in this.divs) {
+			if (blockTag == this.divs[idx].blockTag) {
+				var theDiv = document.getElementById(this.divs[idx].divId);
+				//TODO: check the div was found
+				theDiv.innerHTML = content;
+				if ('' != this.divs[idx].bgColor) {
+					theDiv.style.backgroundColor = this.divs[idx].bgColor;
+				}
+			}
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -219,6 +338,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 
 	this.log = function(msg) {
 		var theDiv = document.getElementById('pumpDiv');
+		theDiv.align = 'left';
 		if (theDiv.innerHTML.length > 4000) { this.clearLog(); }
 		//theDiv.innerHTML = theDiv.innerHTML + msg + "<br/>\n"
 	}
@@ -255,6 +375,7 @@ function Live_Block(blockTag, blockContent) {
 function Live_DivMap(divId, blockTag) {
 	this.divId = divId;
 	this.blockTag = blockTag;
+	this.bgColor = '';
 	klive.log('Mapping block ' + blockTag + ' to div ' + divId);
 }
 

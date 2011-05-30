@@ -395,7 +395,6 @@ class KTheme {
 	//returns: theme stylesheet as associative array, or false on failure [array][bool]
 
 	function readStyle() {
-		global $installPath;
 		$xmlFile = 'themes/' . $this->name . '/style.xml.php';
 		$xmlDoc = new KXmlDocument($xmlFile, true);
 		if (false == $xmlDoc->loaded) { return false; }

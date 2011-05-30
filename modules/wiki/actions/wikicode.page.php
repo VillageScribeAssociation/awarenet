@@ -1,7 +1,10 @@
-<? /*
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
+
 <page>
-<template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::width=570::label=Wikicode Help:]]
+	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - wikicode help</title>
+	<content>[[:theme::navtitlebox::width=570::label=Wikicode Help:]]
 [`|lt]div class=[`|sq]indent[`|sq][`|gt]
 [`|lt]h1[`|gt]How to Use Wikicode[`|lt]/h1[`|gt]
 
@@ -96,16 +99,18 @@ A. [`|lt]a href=[`|sq]http://www.i3g.hs-heilbronn.de/attach/Ver[`|pc]C3[`|pc]B6f
 [`|lt]br/[`|gt]
 
 [`|lt]/div[`|gt]</content>
-<title>awareNet - wikicode help</title>
-<script></script>
-<nav1></nav1>
-<nav2></nav2>
-<banner></banner>
-<head></head>
-<menu1>[[:home::menu:]]</menu1>
-<menu2>[[:wiki::menu::raUID=no:]]</menu2>
-<section></section>
-<subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=Wiki - ::link=/wiki/:]]
+	<nav1></nav1>
+	<nav2></nav2>
+	<script></script>
+	<jsinit></jsinit>
+	<banner></banner>
+	<head></head>
+	<menu1>[[:home::menu:]]</menu1>
+	<menu2>[[:wiki::menu::raUID=no:]]</menu2>
+	<section></section>
+	<subsection></subsection>
+	<breadcrumb>[[:theme::breadcrumb::label=Wiki - ::link=/wiki/:]]
 [[:theme::breadcrumb::label=WikiCode Reference::link=/wiki/wikicode/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+
+*/ ?>

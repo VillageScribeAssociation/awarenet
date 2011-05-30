@@ -3,7 +3,7 @@
 
 <page>
 	<template>twocol-rightnav.template.php</template>
-	<title>:: awareNet :: Videos :: test ::</title>
+	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: Videos :: test ::</title>
 	<content>[[:theme::navtitlebox::label=Test Flash Video:]]
 
 [`|lt]script src=[`|dq][`|pc][`|pc]serverPath[`|pc][`|pc]modules/videos/flash/flowplayer-3.2.4.min.js[`|dq][`|gt][`|lt]/script[`|gt]

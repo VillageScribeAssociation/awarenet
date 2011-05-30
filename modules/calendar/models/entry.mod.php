@@ -111,7 +111,7 @@ class Calendar_Entry {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('calendar', 'Calendar_Entry', $this->UID, $this->title);
+		$this->alias = $aliases->create('calendar', 'calendar_entry', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -137,7 +137,7 @@ class Calendar_Entry {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'calendar';
-		$dbSchema['model'] = 'Calendar_Entry';
+		$dbSchema['model'] = 'calendar_entry';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -228,27 +228,29 @@ class Calendar_Entry {
 		$ary['delLink'] = '';
 		$ary['newUrl'] = '';
 		$ary['newLink'] = '';
+		$ary['nameLink'] = '';
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('calendar', 'Calendar_Entry', 'show', $this->UID)) {
+		if (true == $user->authHas('calendar', 'calendar_entry', 'show', $this->UID)) {
 			$ary['viewUrl'] = '%%serverPath%%calendar/' . $ary['alias'];
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
+			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
+			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
-		if (true == $user->authHas('calendar', 'Calendar_Entry', 'edit', $this->UID)) {
+		if (true == $user->authHas('calendar', 'calendar_entry', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%calendar/edit/' . $ary['alias'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('calendar', 'Calendar_Entry', 'delete', $this->UID)) {
+		if (true == $user->authHas('calendar', 'calendar_entry', 'delete', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%calendar/confirmdelete/UID_'. $this->UID .'/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('calendar', 'Calendar_Entry', 'new', $this->UID)) {
+		if (true == $user->authHas('calendar', 'calendar_entry', 'new', $this->UID)) {
 			$ary['newUrl'] = "%%serverPath%%calendar/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new coin]</a>"; 
 		}
@@ -260,8 +262,17 @@ class Calendar_Entry {
 		$ary['summary'] = $theme->makeSummary($ary['content'], 300);
 
 		$ary['contentJs'] = $ary['content'];
-		$ary['contectJs'] = str_replace("'", '--squote--', $ary['contentJs']);
+		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
 		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
+
+		$ary['userLink'] = '<b>Created By:</b> [[:users::namelink::raUID=' . $ary['createdBy'] . ':]]';
+		$ary['venueString'] = '<b>Venue:</b> ' . $ary['venue'];
+		$ary['eventStartString'] = '<b>Starting:</b> ' . $ary['eventStart'];
+		$ary['eventEndString'] = '<b>Ending:</b> ' . $ary['eventEnd'];
+
+		if ('' == trim($ary['venue'])) { $ary['venueString'] = ' '; }
+		if ('00:00' == trim($ary['eventStart'])) { $ary['eventStartString'] = ' '; }
+		if ('00:00' == trim($ary['eventEnd'])) { $ary['eventEndString'] = ' '; }
 
 		return $ary;
 	}
@@ -276,7 +287,7 @@ class Calendar_Entry {
 	//returns: html [string]
 	
 	function drawMonthTable($month, $year, $days, $size) {		
-		global $serverPath;
+		global $kapenta;
 		$index = 0; $skip = 0; $blocks = array();
 		$numDays = $this->daysInMonth($month, $year);
 		$firstDay = $this->firstDayOfMonth($month, $year);
@@ -307,8 +318,8 @@ class Calendar_Entry {
 		
 		foreach($days as $dayNum => $day) {
 			if (false == array_key_exists('label', $day)) { $day['label'] = ''; }
-			$dayLink = "onClick=\"window.location='" . $serverPath . "calendar/day_" . $year . "_" 
-						. $month . "_" . $dayNum . "'\"";
+			$dayLink = "onClick=\"window.location='" . $kapenta->serverPath . "calendar/"
+					 . "day_" . $year . "_" . $month . "_" . $dayNum . "'\"";
 
 			if ($size == 'large') {
 			  $blocks[] = "<td bgcolor='" . $day['bgcolor'] . "' width='80' valign='top' $dayLink>" 
@@ -428,7 +439,7 @@ class Calendar_Entry {
 		$conditions[] = "month='" . $db->addMarkup($month) . "'";
 		$conditions[] = "published='yes'";
 
-		$range = $db->loadRange('Calendar_Entry', '*', $conditions, 'year, month, day, eventStart');
+		$range = $db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
 
 		// $sql = "select * from Calendar_Entry where year='". $db->addMarkup($year) ."' and month=" 
 		//     . $db->addMarkup($month) . " and published='yes' order by year, month, day, eventStart";
@@ -457,7 +468,7 @@ class Calendar_Entry {
 		$conditions[] = "day='" . $db->addMarkup($day) . "'";
 		$conditions[] = "published='yes'";
 
-		$range = $db->loadRange('Calendar_Entry', '*', $conditions, 'year, month, day, eventStart');
+		$range = $db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
 
 		// $sql = "select * from Calendar_Entry where year='". $db->addMarkup($year) ."' and month=" 
 		//   . $db->addMarkup($month) . " and day=" . $db->addMarkup($day) . " and published='yes' " 
@@ -544,7 +555,7 @@ class Calendar_Entry {
 	
 		$by = "year, month, day, eventStart";
 		
-		$range = $db->loadRange('Calendar_Entry', '*', $conditions, $by, (int)$num, '');
+		$range = $db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
 
 		foreach($range as $row) { $retVal[$row['UID']] = $db->rmArray($row); }
 		return $retVal;
@@ -573,7 +584,7 @@ class Calendar_Entry {
 		//     . date('m') . " and day >= " . date('j') . " and published='yes' " 
 		//     . "order by year, month, day, eventStart limit $num";
 	
-		$range = $db->loadRange('Calendar_Entry', '*', $conditions, $by, (int)$num, '');
+		$range = $db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
 
 		foreach($range as $row) { $retVal[$row['UID']] = $db->rmArray($row); }
 		return $retVal;

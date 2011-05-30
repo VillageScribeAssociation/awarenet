@@ -3,7 +3,7 @@
 
 <page>
 	<template>twocol-rightnav.template.php</template>
-	<title>awareNet - wiki - [`|pc][`|pc]articleTitle[`|pc][`|pc]</title>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - wiki - [`|pc][`|pc]articleTitle[`|pc][`|pc]</title>
 	<content>[[:theme::navtitlebox::width=570::label=Wiki:]]
 [`|lt]h1[`|gt][`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 [`|pc][`|pc]contentHtml[`|pc][`|pc]</content>

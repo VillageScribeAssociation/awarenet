@@ -46,7 +46,7 @@ function gallery_summarylist($args) {
 	$numPages = ceil($numRows / $pageSize);
 	$startRow = $pageSize * ($pageNo - 1);
 
-	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
 
 	//---------------------------------------------------------------------------------------------
 	//	render html

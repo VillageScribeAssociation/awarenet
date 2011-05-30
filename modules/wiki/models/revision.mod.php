@@ -119,7 +119,7 @@ class Wiki_Revision {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'wiki';
-		$dbSchema['model'] = 'Wiki_Revision';
+		$dbSchema['model'] = 'wiki_revision';
 		$dbSchema['archive'] = 'yes';
 
 
@@ -201,7 +201,7 @@ class Wiki_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if ($user->authHas('wiki', 'Wiki_Revision', 'show', $this->UID)) { 
+		if ($user->authHas('wiki', 'wiki_revision', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%wiki/showrevision/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[show revision &gt;&gt;]</a>"; 
 		}
@@ -276,7 +276,7 @@ class Wiki_Revision {
 
 		$fields = 'UID, reason, editedBy, editedOn';
 
-		$range = $db->loadRange('Wiki_Revision', $fields, $conditions, 'editedOn ASC');
+		$range = $db->loadRange('wiki_revision', $fields, $conditions, 'editedOn ASC');
 		foreach($range as $row) { $this->allRevisions[] = $row; }
 		$this->allRevisionsLoaded = true;
 		return true;

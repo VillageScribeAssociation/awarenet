@@ -28,7 +28,7 @@ function videos_maintenance() {
 	$errors[] = array('UID', 'title', 'error');
 	$model = new Videos_Gallery();
 	$dbSchema = $model->getDbSchema();
-	$sql = "select * from Videos_Gallery";
+	$sql = "select * from videos_gallery";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -39,7 +39,7 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	checking alias
 		//------------------------------------------------------------------------------------------
-		$defaultAlias = $aliases->getDefault('Videos_Gallery', $objAry['UID']);
+		$defaultAlias = $aliases->getDefault('videos_gallery', $objAry['UID']);
 		if ((false == $defaultAlias) || ($defaultAlias != $model->alias)) {
 			$saved = $model->save();		// should reset alias
 			$errors[] = array($model->UID, $model->title, 'non defualt alias');
@@ -49,15 +49,15 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 
@@ -77,7 +77,7 @@ function videos_maintenance() {
 	$errors[] = array('UID', 'title', 'error');
 	$model = new Videos_Video();
 	$dbSchema = $model->getDbSchema();
-	$sql = "select * from Videos_Video";
+	$sql = "select * from videos_video";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -88,7 +88,7 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	checking alias
 		//------------------------------------------------------------------------------------------
-		$defaultAlias = $aliases->getDefault('Videos_Video', $objAry['UID']);
+		$defaultAlias = $aliases->getDefault('videos_video', $objAry['UID']);
 		if ((false == $defaultAlias) || ($defaultAlias != $model->alias)) {
 			$saved = $model->save();		// should reset alias
 			$errors[] = array($model->UID, $model->title, 'non defualt alias');
@@ -104,15 +104,15 @@ function videos_maintenance() {
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 

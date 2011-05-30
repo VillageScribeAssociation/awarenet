@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function moblog_menunewpost($args) { 
-	if ($user->authHas('moblog', 'Moblog_Post', 'edit', 'TODO:UIDHERE') == true) {
+	if ($user->authHas('moblog', 'moblog_post', 'edit', 'TODO:UIDHERE') == true) {
 		return '[[:theme::submenu::label=New Post::link=/moblog/new/:]]';
 	}
 }

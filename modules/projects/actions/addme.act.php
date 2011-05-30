@@ -37,7 +37,7 @@
 	$report = $model->save();
 					
 	//----------------------------------------------------------------------------------------------
-	//	notify admins of request, cc to user making it
+	//	notify admins of request, cc to user making it  //TODO: handle with event
 	//----------------------------------------------------------------------------------------------
 
 	$project = new Projects_Project($_POST['UID']);
@@ -51,7 +51,10 @@
 	if (true == array_key_exists('message', $_POST)) 
 		{ $content = "message attached: " . stripslashes($utils->cleanString($_POST['message'])); }
 
-	$nUID = $notifications->create('projects', 'Projects_Project', $project->UID, $title, $content, $url);
+	$nUID = $notifications->create(
+		'projects', 'projects_project', $project->UID, 'projects_newmemberadded', 
+		$title, $content, $url
+	);
 
 	$notifications->addProjectAdmins($nUID, $project->UID);
 	$notifications->addUser($nUID, $user->UID);

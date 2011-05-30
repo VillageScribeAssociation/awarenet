@@ -47,7 +47,7 @@
 
 			$conditions = array();
 			$conditions[] = "role='admin'";
-			$range = $db->loadRange('Users_User', '*', $conditions, '', '', '');
+			$range = $db->loadRange('users_user', '*', $conditions, '', '', '');
 
 			foreach($range as $row) {
 				//---------------------------------------------------------------------------------

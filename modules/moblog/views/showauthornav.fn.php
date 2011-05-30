@@ -21,13 +21,13 @@ function moblog_showauthornav($args) {
 
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$userUID = $model->createdBy;
-	$userRa = $aliases->getDefault('Users_User', $userUID);
+	$userRa = $aliases->getDefault('users_user', $userUID);
 
 	$html = "<a href='/moblog/blog/" . $userRa . "'>";
 	$html .= "[[:images::default::refUID=" . $userUID . "::size=width300::link=no:]]</a>\n";

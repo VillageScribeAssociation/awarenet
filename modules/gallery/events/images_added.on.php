@@ -11,7 +11,7 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 //arg: imageTitle - text/html of comment
 
 function gallery__cb_images_added($args) {
-	global $db, $user, $notifications;
+	global $db, $user, $notifications, $theme;
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('imageUID', $args)) { return false; }
@@ -27,41 +27,68 @@ function gallery__cb_images_added($args) {
 	$model->updateImageCount();
 
 	//----------------------------------------------------------------------------------------------
-	//	send notification to friends
+	//	discover if notification has been sent by this object today
 	//----------------------------------------------------------------------------------------------
-	$ext = $model->extArray();
-	$url = $ext['viewUrl'];
-	$link = "<a href='" . $url . "'>" . $model->title . "</a>";
-	$title = $user->getNameLink() . ' added a new image.';
-	$refUID = $model->UID;
-	$content = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
+	$block = '[[:notifications::notifiedtoday' 
+		. '::refModule=gallery'
+		. '::refModel=gallery_gallery'
+		. '::refUID=' . $args['refUID']
+		. '::refEvent=images_added'
+		. ':]]';
+
+	$recentUID = $theme->expandBlocks($block, '');
+
+	//----------------------------------------------------------------------------------------------
+	//	create notification and send to friends
+	//----------------------------------------------------------------------------------------------
+	if ('' == $recentUID) {
+		$ext = $model->extArray();
+		$url = $ext['viewUrl'];
+		$link = "<a href='" . $url . "'>" . $model->title . "</a>";
+		$title = $user->getNameLink() . ' added a new image.';
+		$refUID = $model->UID;
+		$content = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
 			 . "[[:images::width300::raUID=" . $args['imageUID'] . "::link=no:]]"
-			 . "<br/>[ view image &gt;&gt; ]</a><br/>"
-			 . "<a href='" . $url . "'>[ view gallery &gt;&gt; ]</a>";
+			 . "</a>\n<!-- more images -->"
+			 . "<br/><a href='" . $url . "'>[ view gallery &gt;&gt; ]</a>";
 
-	$nUID = $notifications->create('gallery', 'Gallery_Gallery', $refUID, $title, $content, $url);
+		$nUID = $notifications->create(
+			'gallery', 'gallery_gallery', $refUID, 'images_added', $title, $content, $url
+		);
 
-	$notifications->addUser($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
-	$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+		$notifications->addUser($nUID, $user->UID);
+		$notifications->addFriends($nUID, $user->UID);
+		$notifications->addFriends($nUID, $user->UID);
+		$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+	}
 
-	/* TODO: add notification back
+	//----------------------------------------------------------------------------------------------
+	//	update existing notification
+	//----------------------------------------------------------------------------------------------
+	if ('' != $recentUID) {
+		$content = $notifications->getContent($recentUID);
+		$content = str_replace('width300', 'width100', $content);
 
-	$link = "<a href='" . $ext['viewUrl'] . "/'>" . $ext['title'].  '</a>';
-
-	$url = $ext['viewUrl'];
-	$imgUID = '';
+		$newImg = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
+			. "[[:images::width100::raUID=" . $args['imageUID'] . "::link=no:]]</a>\n";
 
 
+		// temp fix
+		if (false == strpos($content, '<!-- more images -->')) 
+			{ $content = str_replace(":]]</a>", ":]]</a><!-- more images -->", $content); }
 
-	$title = $user->getNameLink() . ' added a new image to their gallery: ' . $link;
+		$content = str_replace('<!-- more images -->', $newImg . '<!-- more images -->', $content);
 
-	notifyFriends($args['refUID'], $args['imageUID'], 
-				  $user->getName(), $user->getUrl(),
-				  $title, $content, $url, $args['imageUID'] );
-	*/
+		$ext = $model->extArray();
+		$title = $ext['userLink'] .' added new images to their gallery '. $ext['titleLink'] .'.';
 
+		$notifications->setContent($recentUID, $content);
+		$notifications->setTitle($recentUID, $title);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	done
+	//----------------------------------------------------------------------------------------------
 	return true;
 }
 

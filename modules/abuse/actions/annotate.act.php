@@ -35,7 +35,9 @@
 	//----------------------------------------------------------------------------------------------
 	$title = "Abuse report annotated by " . $user->getName();
 	$url = '/abuse/show/' . $model->UID;
-	$nUID = $notifications->create('abuse', 'Abuse_Report', $model->UID, $title, $comment, $url);
+	$nUID = $notifications->create(
+		'abuse', 'abuse_report', $model->UID, 'abuse_annotated', $title, $comment, $url
+	);
 	$notifications->addAdmins($nUID);
 
 	$page->do302('abuse/show/' . $model->UID);

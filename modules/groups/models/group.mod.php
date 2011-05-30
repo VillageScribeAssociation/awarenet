@@ -95,7 +95,7 @@ class Groups_Group {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('groups', 'Groups_Group', $this->UID, $this->name);
+		$this->alias = $aliases->create('groups', 'groups_group', $this->UID, $this->name);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -120,7 +120,7 @@ class Groups_Group {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'groups';
-		$dbSchema['model'] = 'Groups_Group';
+		$dbSchema['model'] = 'groups_group';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -193,22 +193,22 @@ class Groups_Group {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('groups', 'Groups_Group', 'view', $this->UID)) { 
+		if (true == $user->authHas('groups', 'groups_group', 'view', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%groups/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('groups', 'Groups_Group', 'edit', $this->UID)) {
+		if (true == $user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%groups/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('groups', 'Groups_Group', 'edit', $this->UID)) {
+		if (true == $user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%groups/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('groups', 'Groups_Group', 'new', $this->UID)) { 
+		if (true == $user->authHas('groups', 'groups_group', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%groups/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new group]</a>"; 
 		}
@@ -264,7 +264,7 @@ class Groups_Group {
 
 	function getMembers() {
 		global $db;
-		if (false == $db->tableExists('Groups_Membership')) { return array(); }
+		if (false == $db->tableExists('groups_membership')) { return array(); }
 
 		//$sql = "select Groups_Membership.* from Groups_Membership, users "
 		//	 . "where Groups_Membership.groupUID='" . $this->UID . "' "
@@ -272,8 +272,8 @@ class Groups_Group {
 		//	 . "order by users.firstname";
 
 		$conditions = array();
-		$conditions[] = "Groups_Membership.groupUID='" . $db->addMarkup($this->UID) . "'";
-		$range = $db->loadRange('Groups_Membership', '*', $conditions);
+		$conditions[] = "groups_membership.groupUID='" . $db->addMarkup($this->UID) . "'";
+		$range = $db->loadRange('groups_membership', '*', $conditions);
 
 		return $range;
 	}
@@ -323,7 +323,7 @@ class Groups_Group {
 	function hasEditAuth($userUID) {
 		global $session;
 		//TODO: user permission set
-		$session->msgAdmin('deprecated: Groups_Group::authHas() => Users_User::authHas()', 'bug');
+		//$session->msgAdmin('deprecated: groups_group::authHas() => users_user::authHas()', 'bug');
 		$model = new Users_User($userUID);
 		if ($model->role == 'admin') { return true; }
 		if ($model->role == 'teacher') { return true; }

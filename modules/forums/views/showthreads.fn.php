@@ -31,14 +31,14 @@ function forums_showthreads($args) {
 	//	count all threads on this forum
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("board='" . $model->UID . "'");
-	$totalItems = $db->countRange('Forums_Thread', $conditions);
+	$totalItems = $db->countRange('forums_thread', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$range = $db->loadRange('Forums_Thread', '*', $conditions, 'updated DESC', $num, $start);
+	$range = $db->loadRange('forums_thread', '*', $conditions, 'updated DESC', $num, $start);
 
 	//$sql = "select * from Forums_Thread where forum='" . $fUID . "' order by updated DESC " . $limit;	
 	$rowBlock = $theme->loadBlock('modules/forums/views/threadrow.block.php');

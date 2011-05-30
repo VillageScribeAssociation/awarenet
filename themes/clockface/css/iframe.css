@@ -19,6 +19,13 @@ a h2 {
 	color: #303030;
 }
 
+hr {
+	border-top: 1px dashed #527d26;
+	color: #fff;
+	background-color: #fff;
+	height: 1px;
+}
+
 /* top menu ------------------------------------------------------------------------------------- */
 
 img.menu1 {

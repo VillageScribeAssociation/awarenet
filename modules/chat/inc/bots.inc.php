@@ -1,17 +1,18 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	code for interfacing with chatbots
+//*	code for interfacing with chatbots
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-//	get a list of bots installed on the system
+//|	get a list of bots installed on the system
 //--------------------------------------------------------------------------------------------------
+//returns: list of chat bots [array]
 
 function chatBotsList() {
-	global $installPath;
+	global $kapenta;
 	$retVal = array();
-	$shellCmd = 'ls ' . $installPath . 'modules/chat/bots/';
+	$shellCmd = 'ls ' . $kapenta->installPath . 'modules/chat/bots/';
 	$list = shell_exec($shellCmd);
 
 	$lines = explode("\n", $list);
@@ -30,7 +31,7 @@ function chatBotsList() {
 //--------------------------------------------------------------------------------------------------
 
 function chatBotsProcess($msg, $recipient) {
-	global $installPath;
+	global $kapenta;
 	$retVal = array();
 	$retVal['sender'] = $msg;
 	$retVal['recipient'] = $msg;
@@ -72,7 +73,7 @@ function chatBotsProcess($msg, $recipient) {
 					//	a bot has been named, let its help() function handle this
 					//------------------------------------------------------------------------------
 
-					$includeFile = $installPath . 'modules/chat/bots/'
+					$includeFile = $kapenta->installPath . 'modules/chat/bots/'
 								 . $about . '/' . $about . '.bot.php';
 
 					include $includeFile;
@@ -102,7 +103,7 @@ function chatBotsProcess($msg, $recipient) {
 			//--------------------------------------------------------------------------------------
 			if (in_array(strtolower($botCmd), $botList) == true) {
 				
-				$includeFile = $installPath . 'modules/chat/bots/'
+				$includeFile = $kapenta->installPath . 'modules/chat/bots/'
 							 . $botCmd . '/' . $botCmd . '.bot.php';
 
 				require_once($includeFile);

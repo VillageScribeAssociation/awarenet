@@ -10,11 +10,11 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }							// check ref
-	$UID = $aliases->findRedirect('Files_Folder'); 						// check correct ref
+	$UID = $aliases->findRedirect('files_folder'); 						// check correct ref
 
 	$model = new folder($req->ref);	
 	if (false == $model->loaded) { $page->do404('no such folder'); }
-	if (false == $user->authHas('files', 'Files_Folder', 'show', $model->UID)) { $page->do403(); }		
+	if (false == $user->authHas('files', 'files_folder', 'show', $model->UID)) { $page->do403(); }		
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

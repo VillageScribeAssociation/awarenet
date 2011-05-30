@@ -4,7 +4,7 @@
 //	add a new announcements post
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('announcements', 'Announcements_Announcement', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('announcements', 'announcements_announcement', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 	if (array_key_exists('refmodule', $req->args) == false) { $page->do403(); }
 	if (array_key_exists('refuid', $req->args) == false) { $page->do403(); }
 

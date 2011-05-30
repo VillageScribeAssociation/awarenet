@@ -16,7 +16,7 @@ function moblog_listpopularnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { return ''; }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
 	//----------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ function moblog_listpopularnav($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "published='yes'";
-	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'viewcount DESC', $num);
+	$range = $db->loadRange('moblog_post', '*', $conditions, 'viewcount DESC', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block and return

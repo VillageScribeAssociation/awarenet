@@ -15,14 +15,14 @@ function groups_listusergroupsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('groups', 'Groups_Group', 'list')) { return ''; }
+	if (false == $user->authHas('groups', 'groups_group', 'list')) { return ''; }
 	if (false == array_key_exists('userUID', $args)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the user's groups (if any)
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("userUID='" . $db->addMarkup($args['userUID']) . "'");
-	$range = $db->loadRange('Groups_Membership', '*', $conditions, "admin='yes'");
+	$range = $db->loadRange('groups_membership', '*', $conditions, "admin='yes'");
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

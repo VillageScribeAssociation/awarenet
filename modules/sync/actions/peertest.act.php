@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	peer connectivity test, used by peers to check whether they have correct details or not
+//*	peer connectivity test, used by peers to check whether they have correct details or not
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -14,6 +14,6 @@
 	//	OK, this server is online
 	//---------------------------------------------------------------------------------------------
 	
-	echo "<ok>" . $serverPath . "</ok>";
+	echo "<ok>" . $kapenta->serverPath . "</ok>";
 
 ?>

@@ -10,9 +10,9 @@
 	//	check references and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Projects_Project');
+	$UID = $aliases->findRedirect('projects_project');
 
-	//if (false == $user->authHas('projects', 'Projects_Project', 'edit', $UID)) 
+	//if (false == $user->authHas('projects', 'projects_project', 'edit', $UID)) 
 	//	{ $page->do403('You are not authorized to edit this project.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 
 	// only members and admins can edit projects
 	if (true == $model->hasEditAuth($user->UID)) 
-		{ $editUrl = $serverPath . 'projects/editabstract/' . $model->alias; }
+		{ $editUrl = $kapenta->serverPath . 'projects/editabstract/' . $model->alias; }
 
 	// only admins can delete projects
 	if ('admin' == $user->role) { 

@@ -16,7 +16,7 @@
 	$model = new Home_Static($_POST['UID']);
 
 	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('home', 'Home_Static', 'edit', $_POST['UID'])) { $page->do403(); }
+	if (false == $user->authHas('home', 'home_static', 'edit', $_POST['UID'])) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save changes to static page

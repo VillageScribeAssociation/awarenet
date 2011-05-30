@@ -1,6 +1,6 @@
 <? /*
 
-<script src="http://awarenet.co.za/modules/videos/js/flowplayer-3.2.4.min.js"></script>
+<script src="%%serverPath%%modules/videos/js/flowplayer-3.2.4.min.js"></script>
 
 <a
 	href="%%serverPath%%%%fileName%%"

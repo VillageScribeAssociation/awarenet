@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('users', 'Users_Role', 'edit', $UID))
+	if (false == $user->authHas('users', 'users_role', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Role.'); }
 
 	//----------------------------------------------------------------------------------------------

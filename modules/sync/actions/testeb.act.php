@@ -8,8 +8,12 @@
 
 	for ($i = 0; $i < 10; $i++) {
 
-		$od = $installPath . 'data/temp/' . $kapents->createUID() . '.jpg';
-		$slowCmd = "wget --output-document=$od http://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Portrait_Of_A_Baboon.jpg/785px-Portrait_Of_A_Baboon.jpg";
+		$od = $kapenta->installPath . 'data/temp/' . $kapents->createUID() . '.jpg';
+
+		$url = "http://upload.wikimedia.org/wikipedia/commons/thumb/9/96/"
+			 . "Portrait_Of_A_Baboon.jpg/785px-Portrait_Of_A_Baboon.jpg"
+
+		$slowCmd = "wget --output-document=$od $url";
 
 		echo time() . "<br/>\n"; flush();
 		$kapenta->procExecBackground($slowCmd);

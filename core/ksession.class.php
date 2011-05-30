@@ -86,7 +86,7 @@ class KSession {
 
 	function msgAdmin($message, $icon = 'info') {
 		global $user;
-		if ('admin' != $user->role) { return false; }
+		if ((true == isset($user)) && ('admin' != $user->role)) { return false; }
 		$this->msg($message, $icon);
 	}
 

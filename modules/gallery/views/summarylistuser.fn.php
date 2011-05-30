@@ -21,7 +21,7 @@ function gallery_summarylistuser($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
-	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, 'title DESC');
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'title DESC');
 
 	//$sql = "select * from Gallery_Gallery "
 	//	 . "where parent='root' and createdBy='" . $db->addMarkup($args['userUID']) . "' "

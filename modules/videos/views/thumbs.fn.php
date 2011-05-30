@@ -29,14 +29,14 @@ function videos_thumbs($args) {
 	$conditions[] = "refModule='videos'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
 
-	$range = $db->loadRange('Videos_Video', '*', $conditions, 'weight ASC', $limit, '');
+	$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC', $limit, '');
 
 	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%videos/play/' . $row['alias'];
 		//$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['UID'];
 		//	  . "<img src='" . $thumbUrl . "' title='" . $row['title'] . "' border='0' vspace='2px' hspace='2px' /></a>\n";
 		$html .= "<a href='" . $viewUrl . "'>"
-			   . "[[:images::default::size=thumb::refModule=videos::refModel=Videos_Video"
+			   . "[[:images::default::size=thumb::refModule=videos::refModel=videos_video"
 				 . "::refUID=" . $row['UID'] . "::pad=2::link=no:]]"
 			   . "</a>\n";
 	}

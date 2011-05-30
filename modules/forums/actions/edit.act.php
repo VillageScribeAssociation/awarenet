@@ -13,7 +13,7 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$model = new Forums_Board($req->ref);
 	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID)) { $page->do403(); }
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be site admin or forum moderator)
 	//----------------------------------------------------------------------------------------------

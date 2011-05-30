@@ -17,7 +17,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ( (true == array_key_exists('toUser', $_POST))
-		 AND (true == $db->objectExists('Users_User', $_POST['toUser']))
+		 AND (true == $db->objectExists('users_user', $_POST['toUser']))
 		 AND (true == array_key_exists('content', $_POST))
 		) {
 

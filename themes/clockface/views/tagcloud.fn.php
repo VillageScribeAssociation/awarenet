@@ -8,7 +8,7 @@
 
 function theme_tagcloud($args) {
 	if (false == array_key_exists('data', $args)) { return '(no tag data)'; }
-	global $serverPath;
+	global $kapenta;
 	$html = '';
 
 	$data = unserialize(base64_decode($args['data']));
@@ -21,8 +21,8 @@ function theme_tagcloud($args) {
 	}
 
 	foreach($data as $UID => $triple) {
-		$size = floor((5 / $maxWeight) * $triple['weight']);
-		$html .= "<a href='" . $serverPath . $triple['link'] . "' style='color: #444444;'>"
+		$size = floor((5 / $maxWeight) * $triple['weight']) + 0.5;
+		$html .= "<a href='" . $kapenta->serverPath . $triple['link'] . "' style='color: #444444;'>"
 			 	. "<font size='" . $size . "'>" . $triple['label'] . "</font></a>\n";
 	}
 

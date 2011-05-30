@@ -11,7 +11,7 @@ if ('public' == $user->role) { $page->doXmlError('not logged in'); }
 //--------------------------------------------------------------------------------------------------
 
 if ('myrecords' == $req->ref) {
-	$sql = "select * from Moblog_Post where createdBy='" . $db->addMarkup($user->UID) . "' order by title";
+	$sql = "select * from moblog_post where createdBy='" . $db->addMarkup($user->UID) . "' order by title";
 	$result = $db->query($sql);
 	
 	echo "<?xml version=\"1.0\"?>\n";

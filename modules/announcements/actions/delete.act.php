@@ -15,7 +15,7 @@
 		{ $page->do404('Announcement not specified (UID).'); }
     
 	$model = new Announcements_Announcement($_POST['UID']);
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'delete', $model->UID))
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'delete', $model->UID))
 		{ $page->do403('You are not authorzed to delete this announcement.'); }
 
 	//----------------------------------------------------------------------------------------------

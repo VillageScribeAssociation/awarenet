@@ -1,5 +1,0 @@
-<? /*
-
-The folders module provides a heirarchy of parent objects to which files can be attached, to allow users to organize and manage files they're sharing.  Folders are to files as galleries are to images, a container object with its own metadata, used for organizing and displaying sets of files and providing a permissions framework for them.
-
-*/ ?>

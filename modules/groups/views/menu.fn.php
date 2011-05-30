@@ -17,7 +17,7 @@ function groups_menu($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$labels['newEntry'] = '';
-	if (true == $user->authHas('groups', 'Groups_Group', 'edit')) 
+	if (true == $user->authHas('groups', 'groups_group', 'edit')) 
 		{ $labels['newEntry'] = '[[:theme::submenu::label=Add Group::link=/groups/new/:]]';	}
 
 	$labels['editCurrentGroup'] = '';

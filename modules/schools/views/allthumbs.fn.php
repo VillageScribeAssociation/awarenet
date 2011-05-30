@@ -20,7 +20,7 @@ function schools_allthumbs($args) {
 	//	load images from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refModule='schools'");
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 	//$sql = "select * from Images_Image where refModule='schools' order by weight";
 
 	//----------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ function schools_allthumbs($args) {
 	if (0 == count($range)) { return ''; }
 
 	foreach ($range as $row) {
-		$thisRa = $aliases->getDefault('Schools_School', $row['refUID']);
+		$thisRa = $aliases->getDefault('schools_school', $row['refUID']);
 		$alt = str_replace('-', ' ', $thisRa);
 		$html .= "<a href='%%serverPath%%schools/show/" . $thisRa . "'>" 
 				. "<img src='/images/thumb90/" . $row['alias'] 

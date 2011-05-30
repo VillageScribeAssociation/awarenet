@@ -57,7 +57,7 @@
 	else { $session->msg('Could not update profile: ' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
-	//	send notification to users and their friends
+	//	send notification to users and their friends //TODO: handle with event
 	//----------------------------------------------------------------------------------------------
 	if ('' != trim($diff)) {
 		$title = $model->getName() . "'s profile has changed.";
@@ -65,7 +65,9 @@
 			{ $title = $user->getName() . " has updated their profile.";	}
 
 		$url = '/users/profile/'  . $user->UID;
-		$nUID = $notifications->create('users', 'Users_User', $model->UID, $title, $diff, $url);
+		$nUID = $notifications->create(
+			'users', 'users_user', $model->UID, 'users_editprofile', $title, $diff, $url
+		);
 		$notifications->addUser($nUID, $model->UID);
 		$notifications->addFriends($nUID, $model->UID);
 	}

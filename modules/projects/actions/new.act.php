@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('projects', 'Projects_Project', 'new')) 
+	if (false == $user->authHas('projects', 'projects_project', 'new')) 
 		{ $page->do403('you are not authorized to create new projects'); }
 
 	if ('public' == $user->role) { $page->do403('Only registered users can create projects.'); }

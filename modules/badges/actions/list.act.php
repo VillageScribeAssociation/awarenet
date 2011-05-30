@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('badges', 'Badges_Badge', 'show'))
+	if (false == $user->authHas('badges', 'badges_badge', 'show'))
 		{ $page->do403('You are not authorized to see the list of badges.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]

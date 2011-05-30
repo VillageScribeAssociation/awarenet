@@ -14,8 +14,8 @@ function users_namelink($args) {
 	global $user;
 
 	$target = '';
-	if (array_key_exists('userUID', $args) == true) { $args['raUID'] = $args['userUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
+	if (false == array_key_exists('raUID', $args)) { return false; }
 	$html = '';
 
 	if ('public' == $user->role) { 

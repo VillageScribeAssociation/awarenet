@@ -1,4 +1,4 @@
-<?
+<?php
 
 //--------------------------------------------------------------------------------------------------
 //		 _                          _                                _    
@@ -10,21 +10,28 @@
 //                                                                           	Version 2.0 Beta
 //--------------------------------------------------------------------------------------------------
 
+	
+//--------------------------------------------------------------------------------------------------
+//	initialize the registry and system object
+//--------------------------------------------------------------------------------------------------
+
+	include 'core/kregistry.class.php';
+	include 'core/ksystem.class.php';
+
+	$registry = new KRegistry();					//	settings registry
+	$kapenta = new KSystem();						//	kapenta core
+
+	$request_uri = array_key_exists('q', $_GET) ? $_GET['q'] : '';
+
 //--------------------------------------------------------------------------------------------------
 //	include the kapenta core functions (database access, templating system, etc)
 //--------------------------------------------------------------------------------------------------
-	
-	include 'setup.inc.php';
-	include $installPath . 'core/core.inc.php';
-	
-//--------------------------------------------------------------------------------------------------
-//	important global objects
-//--------------------------------------------------------------------------------------------------
 
-	$kapenta = new KSystem();						//	object for interacting with core
+	include 'core/core.inc.php';
+
 	$session = new KSession();						//	current user session
 	$db = new KDBDriver();							//	database wrapper
-	$req = new KRequest($_SERVER['REQUEST_URI']);	//	interpret HTTP request
+	$req = new KRequest($request_uri);				//	interpret HTTP request
 	$theme = new KTheme($kapenta->defaultTheme);	//	the current theme
 	$page = new KPage();							//	document to be returned
 	$aliases = new KAliases();						//	handles object aliases
@@ -50,7 +57,7 @@
 			$userlogin->userUID = $user->UID;
 			$userlogin->save();
 		}
-		$userlogin->updateLastSeen();				//	record that this user is still active
+		//$userlogin->updateLastSeen();				//	record that this user is still active
 	}
 
 //--------------------------------------------------------------------------------------------------
@@ -69,9 +76,13 @@
 //--------------------------------------------------------------------------------------------------
 //	kapenta environment is set up, load the action requested by the user and pass control
 //--------------------------------------------------------------------------------------------------
-	$actionFile = $installPath . 'modules/'. $req->module . '/actions/' . $req->action . '.act.php';
+
+	$actionFile = $kapenta->installPath
+			 . 'modules/' . $req->module
+			 . '/actions/' . $req->action . '.act.php';
+
 	if (false == file_exists($actionFile)) { $page->do404('Unkown action'); }
 
-	include $installPath . 'modules/'. $req->module . '/actions/' . $req->action . '.act.php';
+	include $actionFile;
 
 ?>

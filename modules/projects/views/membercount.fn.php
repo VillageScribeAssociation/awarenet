@@ -22,7 +22,7 @@ function projects_membercount($args) {
 
 	if (false == $model->loaded) { return ''; }
 
-	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID))
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID))
 		{ return ''; }
 
 	$conditions = array();
@@ -32,7 +32,7 @@ function projects_membercount($args) {
 	//$sql = "select count(UID) as memberCount from Projects_Membership "
 	//	 . "where projectUID='" . $args['projectUID'] . "' and role != 'asked'";
 
-	$num = $db->countRange('Projects_Membership', $conditions) . '';
+	$num = $db->countRange('projects_membership', $conditions) . '';
 
 	return $num;
 }

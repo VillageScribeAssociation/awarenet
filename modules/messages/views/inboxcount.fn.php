@@ -19,7 +19,7 @@ function messages_inboxcount($args) {
 	$conditions[] = "status='unread'";
 	$conditions[] = "owner='" . $db->addMarkup($user->UID) . "'";
 
-	$newMessages = $db->countRange('Messages_Message', $conditions);
+	$newMessages = $db->countRange('messages_message', $conditions);
 
 	return $newMessages;
 

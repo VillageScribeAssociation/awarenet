@@ -11,7 +11,7 @@ function gallery_menu($args) {
 	$labels = array();
 
 	$labels['newEntry'] = '[[:theme::submenu::label=Create New Gallery::link=/gallery/new/:]]';
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'edit')) { $labels['newEntry'] = ''; }
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit')) { $labels['newEntry'] = ''; }
 	
 	$block = $theme->loadBlock('modules/gallery/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

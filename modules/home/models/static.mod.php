@@ -105,7 +105,7 @@ class Home_Static {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('home', 'Home_Static', $this->UID, $this->title);
+		$this->alias = $aliases->create('home', 'home_static', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 	}
@@ -131,7 +131,7 @@ class Home_Static {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'home';
-		$dbSchema['model'] = 'Home_Static';
+		$dbSchema['model'] = 'home_static';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -225,22 +225,22 @@ class Home_Static {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('home', 'Home_Static', 'show', $this->UID)) { 
+		if ($user->authHas('home', 'home_static', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%home/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>"; 
 		}
 
-		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) {
+		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%home/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) { 
+		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) { 
 				$ary['newUrl'] = "%%serverPath%%home/new/"; 
 				$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[new]</a>";
 		}
 		
-		if ($user->authHas('home', 'Home_Static', 'edit', $this->UID)) {
+		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%home/confirmdelete/' . $this->alias;
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
@@ -254,6 +254,47 @@ class Home_Static {
 		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
 
 		return $ary;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. perform maintenance tasks on this object
+	//----------------------------------------------------------------------------------------------
+	//returns: array of HTML notes on any action taken [array:string:html]
+
+	function maintain() {
+		global $aliases;
+		$notes = array();
+
+		// article must have a title
+		if ('' == $this->title) { 
+			$this->title = 'Static page ' . $this->UID; 
+			$this->save();
+			$notes[] = "Set null title of static page to " . $this->title
+					 . ".<!-- error --><!-- fixed -->";
+		}
+
+		// article must have at least one alias
+		$als = $aliases->getAll('home', 'home_static', $this->UID);
+		if (0 == count($als)) {
+			$this->save();
+			$als = $aliases->getAll('home', 'home_static', $this->UID);
+			if (0 == count($als)) {
+				$notes[] = "Could not create alias.<!-- error -->";
+			} else { 
+				$notes[] = "Re-saved to create alias " . $this->alias 
+						 . ".<!-- error --><!-- fixed -->";
+			}
+		}
+
+		// check that the default alias is in the list
+		$foundAlias = false;
+		foreach($als as $alias) { if ($alias == $this->alias) { $foundAlias = true; } }
+		if (false == $foundAlias) {
+			$this->save();
+			$notes[] = "Re-saved to correct alias.<!-- error --><!-- fixed -->";
+		}
+
+		return $notes;
 	}
 
 	//----------------------------------------------------------------------------------------------

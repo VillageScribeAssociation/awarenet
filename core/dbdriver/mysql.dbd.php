@@ -45,16 +45,15 @@ class KDBDriver {
 	//opt: dbName - database name, default is 'kapenta' [string]
 
 	function KDBDriver() {
-		global $dbHost, $dbUser, $dbPass, $dbName;		// perhaps get these from $kapenta
+		global $registry;			// perhaps get these from $kapenta
 
-		$this->host = $dbHost;
-		$this->user = $dbUser;
-		$this->pass = $dbPass;
-		$this->name = $dbName;
+		$this->host = $registry->get('kapenta.db.host');
+		$this->user = $registry->get('kapenta.db.user');
+		$this->pass = $registry->get('kapenta.db.password');
+		$this->name = $registry->get('kapenta.db.name');
 		
 		$this->cache = array();
 		$this->aliases = array();
-
 		$this->tables = array();
 	}
 
@@ -120,7 +119,7 @@ class KDBDriver {
 
 	function load($UID, $dbSchema) {
 		global $page;
-		$model = $dbSchema['model'];
+		$model = strtolower($dbSchema['model']);
 		if (false == $this->tableExists($model)) { return false; }
 
 		//------------------------------------------------------------------------------------------
@@ -164,7 +163,7 @@ class KDBDriver {
 
 	function loadAlias($raUID, $dbSchema) {
 		global $page;
-		$model = $dbSchema['model'];
+		$model = strtolower($dbSchema['model']);
 		if (false == $this->tableExists($model)) { return false; }
 
 		//------------------------------------------------------------------------------------------
@@ -209,8 +208,8 @@ class KDBDriver {
 		//------------------------------------------------------------------------------------------
 		//	not found in table, try other aliases
 		//------------------------------------------------------------------------------------------
-		if (true == $this->tableExists('Aliases_Alias')) {
-			$sql = "SELECT * FROM Aliases_Alias "
+		if (true == $this->tableExists('aliases_alias')) {
+			$sql = "SELECT * FROM aliases_alias "
 				 . "WHERE refModel='" . $this->addMarkup($model) . "' "
 				 . "AND aliaslc='" . $this->addMarkup(strtolower($raUID)) . "'";
 
@@ -262,6 +261,8 @@ class KDBDriver {
 		global $user, $revisions, $sync, $session, $kapenta;
 		if (array_key_exists('UID', $data) == false) { return false; }		// must have a UID
 		if (strlen(trim($data['UID'])) < 4) { return false; }				// and it must be good
+
+		$dbSchema['model'] = strtolower($dbSchema['model']);				// temporary
 
 		if (false == $this->tableExists($dbSchema['model'])) { return false; }
 		//TODO: check schema and consider auto table installation
@@ -389,6 +390,9 @@ class KDBDriver {
 		//------------------------------------------------------------------------------------------
 		//	pass on to peers, and we're done
 		//------------------------------------------------------------------------------------------		
+		if ((true == array_key_exists('shared', $data)) && ('no' == $data['shared'])) {
+			$broadcast = false; 
+		}
 		if (true == $broadcast) { $sync->broadcastDbUpdate('self', $dbSchema['model'], $data); }
 		return true;
 	}
@@ -403,6 +407,7 @@ class KDBDriver {
 	//: this is used where an object should change only locally and changes not sent to peer servers
 
 	function updateQuiet($model, $UID, $field, $value) {	
+		$model = strtolower($model);									// temporary
 		if (false == $this->tableExists($model)) { return false; }
 
 		//TODO: improve this
@@ -471,13 +476,13 @@ class KDBDriver {
 		global $kapenta, $aliases, $revisions;
 		
 		$module = $dbSchema['module'];
-		$model = $dbSchema['model'];
+		$model = strtolower($dbSchema['model']);			// TODO: remove strtolower when safe
 
 		// this also checks that table exists:
 		if (false == $this->objectExists($model, $UID)) { return false; }	
 		
-		if ('Users_User' == $model) { return false; }		//	SPECIAL CASE, security
-		if ('Schools_School' == $model) { return false; }	//	SPECIAL CASE, security
+		if ('users_user' == $model) { return false; }		//	SPECIAL CASE, security
+		if ('schools_school' == $model) { return false; }	//	SPECIAL CASE, security
 
 		//------------------------------------------------------------------------------------------
 		//	copy to recycle bin (unless set to 'no' archive)
@@ -546,6 +551,8 @@ class KDBDriver {
 	//returns: true if record exists in the given table, false if not found [bool]
 
 	function objectExists($model, $UID) {
+		$model = strtolower($model);								// temporary
+
 		//------------------------------------------------------------------------------------------
 		//	if we already have this object in the cache, assume it exists
 		//------------------------------------------------------------------------------------------
@@ -622,6 +629,7 @@ class KDBDriver {
 			if ($fieldName == 'editedBy') { $blank[$fieldName] = $user->UID; }
 			if ($fieldName == 'editedOn') { $blank[$fieldName] = $this->datetime(); }
 			if ($fieldName == 'createdOn') { $blank[$fieldName] = $this->datetime(); }
+			if ($fieldName == 'revision') { $blank[$fieldName] = 0; }
 		}
 		return $blank;
 	}
@@ -701,6 +709,7 @@ class KDBDriver {
 	//returns: number of records [int]
 
 	function countRange($model, $conditions = '') {
+		$model = strtolower($model);								// temporary
 		if (false == $this->tableExists($model)) { return 0; }		//TODO: throw error?
 
 		//------------------------------------------------------------------------------------------
@@ -730,19 +739,26 @@ class KDBDriver {
 	//returns: same array with values unescaped (database markup removed) [string]
 	
 	function datetime($timestamp = false) {
-		if (false === $timestamp) { $timestamp = time(); }
-		$date = gmdate("Y-m-j H:i:s", $timestamp);
+		global $registry;
+		if (false === $timestamp) { 
+			$timestamp = time(); 
+			$adjust = (int)$registry->get('kapenta.timedelta');
+			if (0 != $adjust) { $timestamp = $timestamp + $adjust; }
+		}
+		$date = gmdate("Y-m-d H:i:s", $timestamp);
 		return $date;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	get table schema in Kapenta's dbSchema format (jagged array)
+	//.	get table schema in Kapenta's dbSchema format (jagged array)	// DEPRECATED
 	//----------------------------------------------------------------------------------------------
 	//:note that nodiff is not generated, as this is not known by the DBMS
 	//arg: tableName - name of a database table / model name [string]
 	//returns: nested array describing database table [array]
+	//TODO: remove this in favor of KSchema object
 
 	function getSchema($tableName) {
+		$tableName = strtolower($tableName);		// temporary
 		if (false == $this->tableExists($tableName)) { return false; }
 
 		//------------------------------------------------------------------------------------------
@@ -778,10 +794,11 @@ class KDBDriver {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	check that a database schema is valid
+	//.	check that a database schema is valid	// DEPRECATED, TODO: remove
 	//----------------------------------------------------------------------------------------------
 	//arg: dbSchema - a database table definition [array]
 	//returns: true if valid, false if not [bool]
+	//TODO: replace calls to this with KDBSchema->checkSchema
 
 	function checkSchema($dbSchema) {
 		if (false == is_array($dbSchema)) { return false; }

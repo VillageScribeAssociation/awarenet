@@ -18,9 +18,9 @@ function users_onlineschoolnav($args) {
 
 	if (array_key_exists('school', $args) == false) { return false; }
 	// TODO this needs fixing
-	$sql = "select Users_User.UID, firstname, surname, grade, alias from Users_Login, Users_User "
-		 . "where Users_User.school='" . $db->addMarkup($args['school']) . "' "
-		 . "and Users_User.UID=Users_Login.userUID "
+	$sql = "select users_user.UID, firstname, surname, grade, alias from users_login, users_user "
+		 . "where users_user.school='" . $db->addMarkup($args['school']) . "' "
+		 . "and users_user.UID=users_login.userUID "
 		 . "order by firstname";
 
 	$result = $db->query($sql);

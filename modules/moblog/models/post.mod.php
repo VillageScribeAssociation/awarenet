@@ -103,7 +103,7 @@ class Moblog_Post {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('moblog', 'Moblog_Post', $this->UID, $this->title);
+		$this->alias = $aliases->create('moblog', 'moblog_post', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -129,7 +129,7 @@ class Moblog_Post {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'moblog';
-		$dbSchema['model'] = 'Moblog_Post';
+		$dbSchema['model'] = 'moblog_post';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -201,6 +201,7 @@ class Moblog_Post {
 		$ary['newLink'] = '';
 		$ary['delUrl'] = '';
 		$ary['delLink'] = '';
+		$ary['nameLink'] = $ary['title'];
 
 		//------------------------------------------------------------------------------------------
 		//	authorisation
@@ -215,9 +216,10 @@ class Moblog_Post {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('moblog', 'Moblog_Post', 'show', $this->UID)) { 
+		if (true == $user->authHas('moblog', 'moblog_post', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%moblog/' . $this->alias;
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>"; 
+			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>";
+			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
 		if ($editAuth) {
@@ -277,6 +279,9 @@ class Moblog_Post {
 		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['content']);
 		$ary['contentHtml'] = str_replace('{fold}', '', $ary['contentHtml']);
 
+		$ary['createdOnLong'] = date('F jS Y h:i', strtotime($ary['createdOn']));
+		$ary['editedOnLong'] = date('F jS Y h:i', strtotime($ary['editedOn']));		
+
 		//------------------------------------------------------------------------------------------
 		//	marked up for wyswyg editor
 		//------------------------------------------------------------------------------------------
@@ -288,6 +293,51 @@ class Moblog_Post {
 		//------------------------------------------------------------------------------------------
 
 		return $ary;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. perform maintenance tasks on this object
+	//----------------------------------------------------------------------------------------------
+	//returns: array of HTML notes on any action taken [array:string:html]
+
+	function maintain() {
+		global $aliases;
+		$notes = array();
+
+		// article must have a title
+		if ('' == $this->title) { 
+			$this->title = 'Untitled Blog Post ' . $this->UID; 
+			$this->save();
+			$notes[] = "Set null title of static page to " . $this->title
+					 . ".<!-- error --><!-- fixed -->";
+		}
+
+		// article must have at least one alias
+		$als = $aliases->getAll('moblog', 'moblog_post', $this->UID);
+		if (0 == count($als)) {
+			$this->save();
+			$als = $aliases->getAll('moblog', 'moblog_post', $this->UID);
+			if (0 == count($als)) {
+				$notes[] = "Could not create alias.<!-- error -->";
+			} else { 
+				$notes[] = "Re-saved to create alias " . $this->alias 
+						 . ".<!-- error --><!-- fixed -->";
+			}
+		}
+
+		// check that the default alias is in the list
+		$foundAlias = false;
+
+		foreach($als as $alias) { 
+			if (strtolower($alias) == strtolower($this->alias)) { $foundAlias = true; } 
+		}
+
+		if (false == $foundAlias) {
+			$this->save();
+			$notes[] = "Re-saved to correct alias.<!-- error --><!-- fixed -->";
+		}
+
+		return $notes;
 	}
 
 	//----------------------------------------------------------------------------------------------

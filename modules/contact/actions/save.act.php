@@ -15,7 +15,7 @@
 	$model = new Contact_Detail($_POST['UID']);
 	if (false == $model->loaded) { $page->do404("could not load Detail $UID");}
 
-	if (false == $user->authHas('contact', 'Contact_Detail', 'edit', $model->UID))
+	if (false == $user->authHas('contact', 'contact_detail', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this Detail.'); }
 
 	//----------------------------------------------------------------------------------------------

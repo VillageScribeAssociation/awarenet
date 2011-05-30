@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'Users_Role', 'new'))
+	if (false == $user->authHas('users', 'users_role', 'new'))
 		{ $page->do403('You are not authorized to create new Roles.'); }
 
 

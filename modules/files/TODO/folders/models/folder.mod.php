@@ -171,7 +171,7 @@ class Folder {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('files', 'Files_Folder', 'show', $this->UID)) { 
+		if (true == $user->authHas('files', 'files_folder', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%folders/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}

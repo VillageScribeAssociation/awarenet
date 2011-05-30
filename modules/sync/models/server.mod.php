@@ -117,7 +117,7 @@ class Sync_Server {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'sync';
-		$dbSchema['model'] = 'Sync_Server';
+		$dbSchema['model'] = 'sync_server';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -193,17 +193,17 @@ class Sync_Server {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('sync', 'Sync_Server', 'view', $this->UID)) { 
+		if (true == $user->authHas('sync', 'sync_server', 'view', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%sync/server/' . $this->UID;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('sync', 'Sync_Server', 'edit', $this->UID)) {
+		if (true == $user->authHas('sync', 'sync_server', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%sync/editserver/' . $this->UID;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('sync', 'Sync_Server', 'edit', $this->UID)) {
+		if (true == $user->authHas('sync', 'sync_server', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%sync/delserver/' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}

@@ -32,7 +32,7 @@ function images_listuids($args) {
 	$conditions = array();
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$range = $db->loadRange('Images_Image', 'UID', $conditions, 'weight', '', $limit);
+	$range = $db->loadRange('images_image', 'UID', $conditions, 'weight', '', $limit);
 
 	//---------------------------------------------------------------------------------------------
 	//	return as string

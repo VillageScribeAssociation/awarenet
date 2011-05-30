@@ -56,7 +56,7 @@
 			{ $report .= "[*] Please add your first name.<br/>\n"; }	
 
 		// check if user is already registered
-		$sql = "select * from Users_User"
+		$sql = "select * from users_user"
 			 . " where lower(username)='" . $db->addMarkup($formvars['username']) ."'";
 
 		$result = $db->query($sql);
@@ -67,7 +67,7 @@
 		}	
 
 		// check that school exists
-		if (false == $db->objectExists('Schools_School', $formvars['school'])) 
+		if (false == $db->objectExists('schools_school', $formvars['school'])) 
 			{ $report .= "[*] Please choose a school from the list.<br/>\n"; }	
 
 		if ('' == $report) {

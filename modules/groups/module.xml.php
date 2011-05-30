@@ -10,7 +10,7 @@
     <search>no</search>
 	<models>
       <model>
-        <name>Groups_Group</name>
+        <name>groups_group</name>
 		<description>Represents a group of users, such as societies, associations, clubs, etc.</description>
         <permissions>
           <permission>new</permission>
@@ -40,20 +40,20 @@
       </model>
     </models>
     <defaultpermissions>
-		student:p|groups|Groups_Group|show
-		student:c|groups|Groups_Group|edit|(if)|groupadmin
-		student:c|groups|Groups_Group|edit|(if)|creator
-		student:c|groups|Groups_Group|announcements-add|(if)|groupadmin
-		student:c|groups|Groups_Group|announcements-edit|(if)|groupadmin
-		student:c|groups|Groups_Group|announcements-delete|(if)|groupadmin
+		student:p|groups|groups_group|show
+		student:c|groups|groups_group|edit|(if)|groupadmin
+		student:c|groups|groups_group|edit|(if)|creator
+		student:c|groups|groups_group|announcements-add|(if)|groupadmin
+		student:c|groups|groups_group|announcements-edit|(if)|groupadmin
+		student:c|groups|groups_group|announcements-delete|(if)|groupadmin
 
-		teacher:p|groups|Groups_Group|show
-		teacher:c|groups|Groups_Group|edit|(if)|groupadmin
-		teacher:c|groups|Groups_Group|edit|(if)|creator
-		teacher:p|groups|Groups_Group|new
-		teacher:p|groups|Groups_Group|announcements-add
-		teacher:p|groups|Groups_Group|announcements-edit
-		teacher:p|groups|Groups_Group|announcements-delete
+		teacher:p|groups|groups_group|show
+		teacher:c|groups|groups_group|edit|(if)|groupadmin
+		teacher:c|groups|groups_group|edit|(if)|creator
+		teacher:p|groups|groups_group|new
+		teacher:p|groups|groups_group|announcements-add
+		teacher:p|groups|groups_group|announcements-edit
+		teacher:p|groups|groups_group|announcements-delete
     </defaultpermissions>
 </module>
 */ ?>

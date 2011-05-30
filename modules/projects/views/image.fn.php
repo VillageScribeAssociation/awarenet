@@ -14,8 +14,6 @@
 
 function projects_image($args) {
 	global $db;
-
-	global $serverPath;
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
@@ -37,15 +35,15 @@ function projects_image($args) {
 	    
 	if ($row == false) {
 		// no images found for this project
-		return "<img src='/themes/clockface/unavailable/" . $size . ".jpg' border='0'>"; 
+		return "<img src='%%serverPath%%themes/%%defaultTheme%%/unavailable/" . $size . ".jpg' border='0'>"; 
 
 	} else {
 		if ($link == 'yes') {
-			return "<a href='/images/show/" . $row['alias'] . "'>" 
-				. "<img src='/images/" . $size . "/" . $imgUID 
+			return "<a href='%%serverPath%%images/show/" . $row['alias'] . "'>" 
+				. "<img src='%%serverPath%%images/" . $size . "/" . $imgUID 
 				. "' border='0' alt='" . $model->name . "'></a>";
 		} else {
-			return "<img src='/images/" . $size . "/" . $imgUID 
+			return "<img src='%%serverPath%%images/" . $size . "/" . $imgUID 
 				. "' border='0' alt='" . $model->name . "'>";
 		}
 	}	

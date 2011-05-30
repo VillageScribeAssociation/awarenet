@@ -1,11 +1,12 @@
-<? /*
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
+
 <page>
 	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - everyone</title>
 	<content>[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
 
-[[:moblog::summarylist::page=%%pageno%%::num=10:]]</content>
-	<title>awareNet - blogs - everyone</title>
-	<script></script>
+[[:moblog::summarylist::page=[`|pc][`|pc]pageno[`|pc][`|pc]::num=10:]]</content>
 	<nav1>
 [[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
 [`|lt]div id=[`|sq]divSchoolStats[`|sq][`|gt]
@@ -15,7 +16,7 @@
 
 [[:theme::navtitlebox::label=Tags::toggle=divTagCloud:]]
 [`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
-[[:tags::modelcloud::refModule=moblog::refModel=Moblog_Post:]]
+[[:tags::modelcloud::refModule=moblog::refModel=moblog[`|us]post:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 [`|lt]br/[`|gt]
@@ -34,6 +35,8 @@
 
 [`|lt]br/[`|gt]</nav1>
 	<nav2></nav2>
+	<script></script>
+	<jsinit></jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>
@@ -42,6 +45,6 @@
 	<subsection></subsection>
 	<breadcrumb>[[:theme::breadcrumb::label=Uberblog - ::link=/moblog/:]]
 [[:theme::breadcrumb::label=Recent Posts::link=/moblog/:]]</breadcrumb>
-	<jsinit></jsinit>
 </page>
+
 */ ?>

@@ -11,7 +11,7 @@
       %%summary%% %%viewLink%%  %%editLink%%<br/>
 	  <div class='inlinequote'>
       	<b>By:</b> %%byline%% <br/>
-	  	[[:tags::listflat::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]<br/>
+	  	[[:tags::listflat::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]<br/>
 	  	<b>Started:</b> %%createdOnLong%%<br/>
 	  	<b>Last Update:</b> %%editedOnLong%% 
 	  </small>

@@ -20,7 +20,7 @@ function moblog_schoolrecentnav($args) {
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('schoolUID', $args)) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	//if (false == $db->objectExists('Schools_School', $args['schoolUID'])) { return ''; }
+	//if (false == $db->objectExists('schools_school', $args['schoolUID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get recent posts from this school
@@ -29,7 +29,7 @@ function moblog_schoolrecentnav($args) {
 	$conditions[] = "school='". $db->addMarkup($args['schoolUID']) ."'";
 	$conditions[] = "published='yes'";
 
-	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn', $num);
+	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
 	if (0 == count($range)) { return ''; }
 
 	//$sql = "select UID from moblog " 

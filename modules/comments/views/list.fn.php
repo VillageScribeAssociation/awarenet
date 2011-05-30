@@ -44,7 +44,7 @@ function comments_list($args) {
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('Comments_Comment', '*', $conditions, 'createdOn DESC', $num);
+	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num);
 
 	//$sql = "select * from Comments_Comment "
 	//	 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "

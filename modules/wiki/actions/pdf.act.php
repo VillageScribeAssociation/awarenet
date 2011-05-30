@@ -20,17 +20,17 @@
 		//	no article specified
 		//------------------------------------------------------------------------------------------
 
-		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', 'Index');
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', 'Index');
 		if (false == $raUID) { $raUID = 'Index'; }
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	article has been specified
 		//------------------------------------------------------------------------------------------
-		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', $req->ref);	// maybe its an alias
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', $req->ref);	// maybe its an alias
 		if (false == $raUID) {							// no? maybe its a UID
 
-			if ($db->objectExists('Wiki_Article', $req->ref) == true) {
+			if ($db->objectExists('wiki_article', $req->ref) == true) {
 				$raUID = $req->ref;			
 			} else {
 				$page->load('modules/wiki/actions/notfound.page.php');

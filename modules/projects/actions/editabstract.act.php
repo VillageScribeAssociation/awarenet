@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Projects_Project');
+	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this projects abstract
@@ -28,7 +28,7 @@
 	$page->load('modules/projects/actions/editabstract.page.php');
 	$page->blockArgs['raUID'] = $model->alias;
 	$page->blockArgs['UID'] = $model->UID;
-	//$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
+	//$page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
 	$page->render();
 
 ?>

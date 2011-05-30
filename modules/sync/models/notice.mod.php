@@ -144,7 +144,7 @@ class Sync_Notice {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'sync';
-		$dbSchema['model'] = 'Sync_Notice';
+		$dbSchema['model'] = 'sync_notice';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -234,17 +234,17 @@ class Sync_Notice {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('sync', 'Sync_Notice', 'view', $ext['UID'])) {
+		if (true == $user->authHas('sync', 'sync_notice', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = 'TODO: this';
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('sync', 'Sync_Notice', 'edit', $ext['UID'])) {
+		if (true == $user->authHas('sync', 'sync_notice', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%~%serverPath%~%Sync/editnotice/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('sync', 'Sync_Notice', 'delete', $ext['UID'])) {
+		if (true == $user->authHas('sync', 'sync_notice', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%~%serverPath%~%Sync/delnotice/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

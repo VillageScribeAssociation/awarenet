@@ -16,13 +16,13 @@ function moblog_listrecentnav($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', '')) { return ''; }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', '')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load items from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("published='yes'");	
-	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn DESC', $num);
+	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
 
 	//$sql = "select * from moblog"
 	//	 . " where published='yes'"

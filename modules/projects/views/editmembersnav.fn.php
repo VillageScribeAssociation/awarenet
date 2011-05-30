@@ -21,7 +21,7 @@ function projects_editmembersnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

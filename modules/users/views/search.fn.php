@@ -6,45 +6,54 @@
 //--------------------------------------------------------------------------------------------------
 //|	user search results  // TODO: pagination, fix this up
 //--------------------------------------------------------------------------------------------------
-//arg: fsearch - query [string]
+//arg: q - query [string]
+//opt: b64 - set to 'yes' if q is base64 encoded (yes|no) [string]
+//opt: mode - adds additional options to search results (friend) [string]
 //opt: pageno - page number (not yet implemented) [string]
 
 function users_search($args) {
-	global $db;
+	global $db, $user, $theme;
 	$html = '';		//%	return value [string]
-
-	if (false == array_key_exists('fsearch', $args)) { return ''; }
-	if ('' == trim($args['fsearch'])) { return ''; }
+	$query = '';	//%	search terms [string]
+	$num = 10;
+	$start = 0;
+	$pageno = 1;
 
 	//----------------------------------------------------------------------------------------------
-	//	make query (this can be much more efficient)
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	$parts = explode(' ', strtolower($args['fsearch']));
-	$sql = "select UID, concat(firstname, ' ', surname, ' ', username) as qs from Users_User";
-	$result = $db->query($sql);
-	$count = 0;
+	if ('public' == $user->role) { return "[[:users:plaselogin:]]"; }
+	if (false == array_key_exists('q', $args)) { return ''; }
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
-		$matchRow = true;
-		$qs = strtolower($row['qs']);
-
-		foreach($parts as $part) {
-		  if (($part != '') AND (strpos(' ' . $qs, $part) == false)) { $matchRow = false; }
-		}	
-
-		if ($matchRow == true) {
-			$friendUrl = '%%serverPath%%users/find/add_' . $row['UID'];
-			$html .= "[[:users::summarynav::userUID=" . $row['UID'] . "::target=main:]]\n";
-			$html .= "<a href='" . $friendUrl . "'>[add as friend >> ]</a><br/><hr/>\n";
-			$count++;
-		}
-	}
+	$query = trim($args['q']);
 	
-	if ('' == $html) { 
-		$html .= "<br/><b>no search results for: " . $args['fsearch'] . "</b><br/>\n";
-	} else {
-		$html = "<br/><b>$count results</b><br/>\n" . $html;
+	if (true == array_key_exists('b64', $args)) { $query = trim(base64_decode($query)); }
+
+	$query = $theme->stripBlocks($query);
+	if ('' == trim($query)) { return ''; }
+	if (1 == strlen($query)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	query database
+	//----------------------------------------------------------------------------------------------
+	$parts = explode(' ', strtolower($query));
+	$qsField = "concat(firstname, ' ', surname, ' ', username)";
+
+	$conditions = array();
+	foreach($parts as $part) {
+		if ('' != $part) { $conditions[] = "LOCATE('". $db->addMarkup($part) ."', $qsField) > 0"; }
+	}
+
+	$totalItems = $db->countRange('users_user', $conditions);
+	$range = $db->loadRange('users_user', "UID, $qsField as qs", $conditions, 'surname', $num, $start);
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$html .= "<small><b>$totalItems users match your query.</b></small><br/>";
+
+	foreach($range as $item) {
+		$html .= "[[:users::summarynav::userUID=" . $item['UID'] . ":]]\n";
 	}
 
 	return $html;

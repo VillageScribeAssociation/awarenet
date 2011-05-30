@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	for editing text files on the server
+//*	for editing text files on the server
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -98,8 +98,10 @@
 	$editorForm = '';
 	if ($editFile != '') {
 
-		$editorFormAction =  $serverPath . 'admin/txtedit/file_' . base64_encode($editFile) 
-						  . '/' . $browsePath;
+		$editorFormAction = $kapenta->serverPath 
+			 . 'admin/txtedit/'
+			 . '/file_' . base64_encode($editFile) 
+			 . '/' . $browsePath;
 		
 		$raw = $kapenta->fileGetContents($editFile);	// TODO: use $kapenta
 		$rawJs = $utils->base64EncodeJs('contentJs', $raw, false);

@@ -15,7 +15,7 @@ function wiki_editform($args) {
 
 	$model = new Wiki_Article($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { return ''; }
 
 	$block = $theme->loadBlock('modules/wiki/views/editform.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);

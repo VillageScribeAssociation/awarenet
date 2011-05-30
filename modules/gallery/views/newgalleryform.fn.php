@@ -8,7 +8,7 @@
 
 function gallery_newgalleryform($args) {
 	global $user, $theme;
-	if ($user->authHas('gallery', 'Gallery_Gallery', 'new') == false) { return ''; }
+	if ($user->authHas('gallery', 'gallery_gallery', 'new') == false) { return ''; }
 	$block = $theme->loadBlock('modules/gallery/views/newgalleryform.block.php');
 	return $block;
 }

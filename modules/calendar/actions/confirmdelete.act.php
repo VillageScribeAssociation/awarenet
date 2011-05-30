@@ -14,7 +14,7 @@
 
 	$model = new Calendar_Entry($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }
-	if (false == $user->authHas('calendar', 'Calendar_Entry', 'delete', $model->UID))
+	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------

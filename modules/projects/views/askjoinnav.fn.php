@@ -21,7 +21,7 @@ function projects_askjoinnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	determine if user is a member of project already

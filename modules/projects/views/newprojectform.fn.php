@@ -6,7 +6,7 @@
 
 function projects_newprojectform($args) {
 	global $theme, $user;
-	if (false == $user->authHas('projects', 'Projects_Project', 'new')) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'new')) { return ''; }
 	$block = $theme->loadBlock('modules/projects/views/newprojectform.block.php');
 	return $block;
 }

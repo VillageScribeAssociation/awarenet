@@ -5,10 +5,9 @@
 //-------------------------------------------------------------------------------------------------
 
 function admin_svnadd($args) {
-	global $user;
-	global $installPath;
+	global $user, $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	//if ('admin' != $user->role) { return false; }
 
 	//---------------------------------------------------------------------------------------------
 	//	define which files should not be tracked by SVN
@@ -19,11 +18,14 @@ function admin_svnadd($args) {
 						'data/images/',
 						'data/files/',
 						'data/log/',
-						'data/temp/',
+						'data/',
+						'core/removed/',
+						'/TODO/',
 						'.log.php',
 						'svnadd.sh',
 						'svndelete.sh',
 						'/drawcache/',
+						'.kreg',
 						'~',
 						'.svn',
 						'install/',
@@ -37,11 +39,11 @@ function admin_svnadd($args) {
 	$svnfiles = '';
 	$skipfiles = '';
 
-	$raw = shell_exec("find $installPath");
+	$raw = shell_exec("find " . $kapenta->installPath);
 	$lines = explode("\n", $raw);
 	foreach($lines as $line) {		
 		$skip = false;
-		$relLine = str_replace($installPath, '', $line);
+		$relLine = str_replace($kapenta->installPath, '', $line);
 		foreach($exemptions as $ex) { if (strpos(' ' . $line, $ex) != false) { $skip = true; } }
 		if (trim($relLine) == '') { $skip = true; }
 		if (false == $skip) { 
@@ -56,7 +58,7 @@ function admin_svnadd($args) {
 	//---------------------------------------------------------------------------------------------
 	//	save to svnadd installPath
 	//---------------------------------------------------------------------------------------------
-	$scriptFile = $installPath . 'svnadd.sh';
+	$scriptFile = $kapenta->installPath . 'svnadd.sh';
 	$fh = fopen($scriptFile, 'w+');
 	fwrite($fh, $svnfiles);
 	fclose($fh);
@@ -69,7 +71,7 @@ function admin_svnadd($args) {
 	//---------------------------------------------------------------------------------------------
 	//	make explicit list of files which should not be tacked by svn
 	//---------------------------------------------------------------------------------------------
-	$scriptFile = $installPath . 'svndelete.sh';
+	$scriptFile = $kapenta->installPath . 'svndelete.sh';
 	$fh = fopen($scriptFile, 'w+');
 	fwrite($fh, $skipfiles);
 	fclose($fh);

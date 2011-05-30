@@ -150,46 +150,9 @@ class CodeRepository {
 				$localList[] = $newItem;
 			}
 
-//			if ($skip == false) {
-//				$itemUID = ''; 
-//				$sha1 = sha1(implode(file($installPath . $line)));
-//
-//				//----------------------------------------------------------------------------------
-//				//	compare to repository
-//				//----------------------------------------------------------------------------------
-//				foreach($rList as $rUID => $item) 
-//					{ if ($item['relfile'] == $line) { $itemUID = $rUID; } }
-//
-//				if ($itemUID == false) {
-//					//------------------------------------------------------------------------------
-//					//	is not in repository, add it
-//					//------------------------------------------------------------------------------
-//					echo "[>] adding $line to repository (new file)<br/>\n"; flush();
-//					storeNewFile($postfile, $line, $respoitorykey);
-//
-//				} else {
-//					if ($sha1 != $rList[$itemUID]['sha1']) {
-//						//--------------------------------------------------------------------------
-//						//	is different to version in repository, update it
-//						//--------------------------------------------------------------------------
-//
-//					} else {
-//						//--------------------------------------------------------------------------
-//						//	files match
-//						//--------------------------------------------------------------------------
-//					}
-//
-//				}	// end if itemUID == false		
-//	
-//			} else { $skipList[] = $line; }
-
 		} // end foreach line
 
-//		echo "<h1>Skipped Files</h1>\n";
-//		foreach ($skipList as $path) { echo $path . "<br/>\n"; }
-
 		return $localList;
-
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -235,7 +198,7 @@ class CodeRepository {
 	//----------------------------------------------------------------------------------------------
 	//.	save a new file to the repository
 	//----------------------------------------------------------------------------------------------
-	//arg: path - relative to $installPath [string]
+	//arg: path - relative to $kapenta->installPath [string]
 	//arg: type - file type [string]
 	//arg: hash - sha1 file hash [string]
 
@@ -297,7 +260,7 @@ class CodeRepository {
 	//.	get the sha1 hash of a file or folder
 	//----------------------------------------------------------------------------------------------
 	//, give location relative to installPath
-	//arg: relFile - file location relative to $installPath [string]
+	//arg: relFile - file location relative to $kapenta->installPath [string]
 	//returns: sha1 hash of a file or path [string]
 
 	function getFileHash($relFile) {

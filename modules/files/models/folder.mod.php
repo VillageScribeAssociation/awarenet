@@ -94,7 +94,7 @@ class Files_Folder {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('files', 'Files_Folder', $this->UID, $this->title);
+		$this->alias = $aliases->create('files', 'files_folder', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -119,7 +119,7 @@ class Files_Folder {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'files';
-		$dbSchema['model'] = 'Files_Folder';
+		$dbSchema['model'] = 'files_folder';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -202,7 +202,7 @@ class Files_Folder {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('files', 'Files_Folder', 'show', $this->UID)) { 
+		if ($user->authHas('files', 'files_folder', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%folders/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
@@ -283,7 +283,7 @@ class Files_Folder {
 
 		$this->children = array();
 
-		$sql = "select * from Files_Folder where parent='" . $this->UID . "' order by title";
+		$sql = "select * from files_folder where parent='" . $this->UID . "' order by title";
 
 		$result = $db->query($sql);
 		while ($row = $db->fetchAssoc($result)) {
@@ -310,7 +310,7 @@ class Files_Folder {
 
 		$this->files = array();
 
-		$sql = "select * from Files_File "
+		$sql = "select * from files_file "
 			 . "where refModule='files' and refUID='" . $this->UID . "' "
 			 . "order by title";
 

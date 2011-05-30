@@ -55,7 +55,7 @@ class Chat {
 	function load($userUID) {
 		global $kapenta, $db;
 
-		$sql = "select * from Chat_Discussion where chat.user='" . $db->addMarkup(trim($userUID)) . "'";
+		$sql = "select * from chat_discussion where chat.user='" . $db->addMarkup(trim($userUID)) . "'";
 		$result = $db->query($sql);
 
 		while ($row = $db->fetchAssoc($result)) {
@@ -102,7 +102,7 @@ class Chat {
 	function update() {
 	global $db;
 
-		$sql = "update Chat_Discussion set queue='" . $db->addMarkup($this->queue) . "'"
+		$sql = "update chat_discussion set queue='" . $db->addMarkup($this->queue) . "'"
 			 . " where chat.user='" . $db->addMarkup($this->user) . "'";
 
 		$db->query($sql);

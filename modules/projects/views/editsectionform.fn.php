@@ -21,7 +21,7 @@ function projects_editsectionform($args) {
 	if (false == array_key_exists('sectionUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 	if (false == array_key_exists($args['sectionUID'], $model->sections)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

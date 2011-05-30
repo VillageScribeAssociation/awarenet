@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	recieve notice from peer that a file has been deleted
+//*	recieve notice from peer that a file has been deleted
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -22,7 +22,9 @@
 	// peers may only advise on deletion of files in /data/
 	if (false == strpos(' ' . $fileName, 'data')) { $page->doXmlError('permission denied'); }
 
-	if (true == file_exists($installPath . $fileName)) { unlink($installPath . $fileName); }
+	if (true == file_exists($kapenta->installPath . $fileName)) { 
+		unlink($kapenta->installPath . $fileName); 
+	}
 	
 	//---------------------------------------------------------------------------------------------
 	//	add to deleted items

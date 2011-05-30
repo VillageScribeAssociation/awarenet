@@ -22,7 +22,7 @@ function users_summarynav($args) {
 
 	$model = new Users_User($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }
-	if (false == $user->authHas('users', 'Users_User', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('users', 'users_user', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

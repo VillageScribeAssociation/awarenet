@@ -13,7 +13,7 @@
 	echo "<table>";
 	echo "<tr><td>name---------------------------------------</td><td>grade</td><td>email</td><td>username</td><td>password</td><td>surname</td><td>firstname</td></tr>\n";
 
-	$raw = implode(file($installPath . 'interest.csv'));
+	$raw = implode(file($kapenta->installPath . 'interest.csv'));
 	$lines = explode("\n", $raw);
 	foreach ($lines as $line) {
 	  if (strlen($line) > 3) {

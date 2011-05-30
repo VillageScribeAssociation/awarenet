@@ -11,9 +11,7 @@
 //opt: commentUID - overrides raUID [string]
 
 function comments_image($args) {
-	global $db;
-
-	global $serverPath;
+	global $db, $kapenta;
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('commentUID', $args)) { $args['raUID'] = $args['commentUID']; }
@@ -30,7 +28,7 @@ function comments_image($args) {
 	}
 	
 	$model = new comment($db->addMarkup($args['raUID']));	
-	$sql = "select * from Images_Image where refModule='comments' and refUID='" . $model->UID 
+	$sql = "select * from images_image where refModule='comments' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
 	$result = $db->query($sql);
@@ -46,7 +44,7 @@ function comments_image($args) {
 	}
 	
 	// no images found for this group
-	return "<img src='/themes/clockface/images/info.png' border='0'>"; 
+	return "<img src='%%serverPath%%themes/%%defaultTheme%%/images/info.png' border='0'>"; 
 }
 
 

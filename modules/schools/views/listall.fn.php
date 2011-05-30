@@ -22,7 +22,7 @@ function schools_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'Schools_School', 'show')) { return ''; }
+	if (false == $user->authHas('schools', 'schools_school', 'show')) { return ''; }
 
 	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }
@@ -47,10 +47,10 @@ function schools_listall($args) {
 	//add any further conditions here
 
 	$start = (($pageNo - 1) * $pageSize);						//% list ordinal of first item [int]	
-	$total = $db->countRange('Schools_School', $conditions);	//% total number of items [int]
+	$total = $db->countRange('schools_school', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);						//% number of pages [int]
 
-	$range = $db->loadRange('Schools_School', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $db->loadRange('schools_school', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>No schools yet added</div><br/>\n";

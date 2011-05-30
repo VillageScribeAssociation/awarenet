@@ -24,16 +24,21 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars
 	//----------------------------------------------------------------------------------------------
-	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
-	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
-	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
+	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule not given', true); }
+	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel not given', true); }
+	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID not given', true); }
+
+	$refModule = $_POST['refModule'];
+	$refModel = $_POST['refModel'];
+	$refUID = $_POST['refUID'];
+
 	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
-	
+
 	//----------------------------------------------------------------------------------------------
 	//	security and validation
 	//----------------------------------------------------------------------------------------------
 	if (('' == $refUID) OR ('' == $refModule)) { $msg = "(missing arguments to file download)"; }
-	if (('' == $msg) AND (false == $user->authHas($refModule, $refModel, 'files', $refUID)))
+	if (('' == $msg) AND (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)))
 		{ $msg = "(not authorised)";  }
 
 	//----------------------------------------------------------------------------------------------
@@ -68,7 +73,7 @@
 		$model->title = $fName;
 		$model->storeFile($raw);
 		$model->licence = 'unknown';
-		$model->attribURL = $URL;
+		$model->attribURL = '';
 		$model->weight = '0';
 		$model->save();
 		$msg = "Uploaded file: $srcName <br/>\n";
@@ -85,7 +90,7 @@
 		$retUrl = 'files/uploadmultiple'
 			 . '/refModule_' . $refModule
 			 . '/refModel_' . $refModel
-			 . '/refUID_' . $refUID . '/'
+			 . '/refUID_' . $refUID . '/';
 
 		$page->do302($retUrl);
 	}

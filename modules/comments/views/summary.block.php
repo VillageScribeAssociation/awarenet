@@ -8,7 +8,7 @@
     </td>
     <td width='10'></td>
     <td valign='top'>
-	  [[:abuse::button::refModule=comments::refModel=Comments_Comment::refUID=%%UID%%:]]
+	  [[:abuse::button::refModule=comments::refModel=comments_comment::refUID=%%UID%%:]]
       <a name='comment%%UID%%'></a>
       <b>%%userLink%% said:</b><br/>
       %%comment%%<br/>

@@ -34,7 +34,7 @@ function moblog_listrecentsamenav($args) {
 	$conditions[] = "createdBy='" . $db->addMarkup($model->createdBy) . "'";
 	$conditions[] = "(published='yes' or createdBy='" . $db->addMarkup($user->UID) . "')";
 
-	$range = $db->loadRange('Moblog_Post', '*', $conditions, "createdOn DESC", $num); 
+	$range = $db->loadRange('moblog_post', '*', $conditions, "createdOn DESC", $num); 
 
 	//$sql = "select * from moblog"
 	//	 . " where createdBy='" . $model->createdBy . "'"

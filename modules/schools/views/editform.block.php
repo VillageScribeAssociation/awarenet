@@ -30,6 +30,16 @@
 		</select>
 	</td>
   </tr>
+  <tr>
+    <td><b>Notify:</b></td>
+    <td>
+		<select name='notifyAll'>
+			<option value='%%notifyAll%%'>%%notifyAll%%</option>
+			<option value='members'>Announcements sent to members only (members)</option>
+			<option value='global'>Announcements sent to all users (global)</option>
+		</select>
+	</td>
+  </tr>
 </table>
 <br/>
 <b>Description of this school:</b><br/>
@@ -55,7 +65,7 @@
 
 [[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
 <div id='divEditImages'>
-[[:images::uploadmultiple::refModule=schools::refModel=Schools_School::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=schools::refModel=schools_school::refUID=%%UID%%:]]
 </div>
 <br/>
 */ ?>

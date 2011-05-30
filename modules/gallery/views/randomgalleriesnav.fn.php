@@ -21,7 +21,7 @@ function gallery_randomgalleriesnav($args) {
 	//	load x random galleries from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');
-	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, 'RAND()', $num);
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'RAND()', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

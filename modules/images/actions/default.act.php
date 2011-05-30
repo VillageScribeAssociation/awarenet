@@ -1,13 +1,13 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display an image, or the entire gallery of all images
+//*	display an image, or the entire gallery of all images
 //--------------------------------------------------------------------------------------------------
 
 	if ('' == $req->ref) {
-		include $installPath . 'modules/images/actions/showall.act.php';
+		include $kapenta->installPath . 'modules/images/actions/showall.act.php';
 	} else {
-		include $installPath . 'modules/images/actions/show.act.php';
+		include $kapenta->installPath . 'modules/images/actions/show.act.php';
 	}
 
 ?>

@@ -8,7 +8,7 @@
 	// check basic permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('videos', 'Videos_Gallery', 'show')) { $page->do403(); }	
+	if (false == $user->authHas('videos', 'videos_gallery', 'show')) { $page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	get order and page

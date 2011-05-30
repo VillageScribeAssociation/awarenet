@@ -16,7 +16,7 @@ function images_count($args) {
 	if (false == array_key_exists('refModule', $args)) { return ''; }
 
 	//TODO: $db->countRange
-	$sql = "SELECT count(UID) as countImages FROM Images_Image "
+	$sql = "SELECT count(UID) as countImages FROM images_image "
 		 . "WHERE refUID='" . $db->addMarkup($args['refUID']) . "' "
 		 . "AND refModule='" . $db->addMarkup($args['refModule']) . "'";
 

@@ -13,11 +13,11 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$model = new Wiki_Revision($req->ref);
 	if (false == $model->loaded) {$page->do404(); }
-	if (false == $user->authHas('wiki', 'Wiki_Revision', 'show', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { $page->do403(); }
 
 	$article = new Wiki_Article($model->articleUID);
 	if (false == $article->loaded) {$page->do404(); };
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'show', $article->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $article->UID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page

@@ -10,11 +10,11 @@ class Badges_UserIndex {
 	//member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			//_	currently loaded database record [array]
+	var $data;				//_	currently loaded database record [array]
 	var $dbSchema;			//_	database table definition [array]
-	var $loaded = false;		//_	set to true when an object has been loaded [bool]
+	var $loaded = false;	//_	set to true when an object has been loaded [bool]
 
-	var $UID;			//_ UID [string]
+	var $UID;				//_ UID [string]
 	var $userUID;			//_ ref:Users_User [string]
 	var $badgeUID;			//_ ref:Badges_Badge [string]
 	var $createdOn;			//_ datetime [string]
@@ -106,7 +106,7 @@ class Badges_UserIndex {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'badges';
-		$dbSchema['model'] = 'Badges_UserIndex';
+		$dbSchema['model'] = 'badges_userindex';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -197,17 +197,17 @@ class Badges_UserIndex {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('badges', 'Badges_UserIndex', 'show', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_userindex', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Badges/showuserindex/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('badges', 'Badges_UserIndex', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_userindex', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Badges/edituserindex/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('badges', 'Badges_UserIndex', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_userindex', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Badges/deluserindex/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

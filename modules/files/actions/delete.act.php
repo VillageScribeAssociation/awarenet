@@ -20,7 +20,7 @@
 		if (true == $user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
 			{ $authorized = true; }
 
-		if (true == $user->authHas('files', 'Files_File', 'deleteall')) { $authorized = true; }
+		if (true == $user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
 
 		if (false == $authorized) { $page->do403(); }
 
@@ -28,7 +28,7 @@
 
 		// dangerous, consider replacing this with something else
 		if (array_key_exists('HTTP_REFERER', $_SERVER)) {
-			$return = str_replace($serverPath, '', $_SERVER['HTTP_REFERER']);
+			$return = str_replace($kapenta->serverPath, '', $_SERVER['HTTP_REFERER']);
 			$page->do302($return);
 		}
 
@@ -50,7 +50,7 @@
 		if (true == $user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
 			{ $authorized = true; }
 
-		if (true == $user->authHas('files', 'Files_File', 'deleteall')) { $authorized = true; }
+		if (true == $user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
 
 		if (false == $authorized) { $page->do403(); }
 

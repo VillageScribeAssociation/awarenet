@@ -13,7 +13,7 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', ''))
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', ''))
 		{ $page->do403('You are not authorized to view blog posts.'); }
 
 	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }

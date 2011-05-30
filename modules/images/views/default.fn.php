@@ -41,10 +41,10 @@ function images_default($args) {
 	//	find default (lowest weight image), if any
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refUID='" . $db->addMarkup($args['refUID']) . "'");
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight ASC', '1');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', '1');
 
 	if (0 == count($range)) {
-		if (('' == $altUser) || (false == $db->objectExists('Users_User', $altUser))) {
+		if (('' == $altUser) || (false == $db->objectExists('users_user', $altUser))) {
 			//--------------------------------------------------------------------------------------
 			// no images found for this item
 			//--------------------------------------------------------------------------------------

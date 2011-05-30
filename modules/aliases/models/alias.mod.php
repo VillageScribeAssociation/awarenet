@@ -112,7 +112,7 @@ class Aliases_Alias {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'aliases';
-		$dbSchema['model'] = 'Aliases_Alias';
+		$dbSchema['model'] = 'aliases_alias';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -183,12 +183,12 @@ class Aliases_Alias {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('aliases', 'Aliases_Alias', 'show', $ext['UID'])) {
+		if (true == $user->authHas('aliases', 'aliases_alias', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%alias/showalias/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more >gt; ]</a>";
 		}
 
-		if (true == $user->authHas('aliases', 'Aliases_Alias', 'edit', $ext['UID'])) {
+		if (true == $user->authHas('aliases', 'aliases_alias', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%alias/editalias/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}

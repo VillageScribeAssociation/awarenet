@@ -23,12 +23,12 @@ function forums_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'error');
 
-	$sql = "SELECT * from Forums_Board";
+	$sql = "SELECT * from forums_board";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		$raAll = $aliases->getAll('forums', 'Forums_Board', $row['UID']);
+		$raAll = $aliases->getAll('forums', 'forums_board', $row['UID']);
 
 		//------------------------------------------------------------------------------------------
 		//	check alias
@@ -91,12 +91,12 @@ function forums_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'error');
 
-	$sql = "SELECT * from Forums_Thread";
+	$sql = "SELECT * from forums_thread";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		$raAll = $aliases->getAll('forums', 'Forums_Thread', $row['UID']);
+		$raAll = $aliases->getAll('forums', 'forums_thread', $row['UID']);
 
 		//------------------------------------------------------------------------------------------
 		//	check thread aliases
@@ -119,7 +119,7 @@ function forums_maintenance() {
 		//	check reply counts
 		//------------------------------------------------------------------------------------------
 		$conditions = array("thread='" . $db->addMarkup($row['UID']) . "'");
-		$numReplies = $db->countRange('Forums_Reply', $conditions);
+		$numReplies = $db->countRange('forums_reply', $conditions);
 
 		if ($numReplies != (int)$row['replies']) { 
 				$model = new Forums_Thread($row['UID']);

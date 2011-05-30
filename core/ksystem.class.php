@@ -51,32 +51,75 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 
 	function KSystem() {
+		global $registry;
+
 		global $installPath, $serverPath, $websiteName;
 		global $defaultModule, $defaultTheme, $useBlockCache;
 		global $rsaKeySize, $rsaPublicKey, $rsaPrivateKey;
 		global $logLevel;
 		global $hostInterface, $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass;
 
-		$this->installPath = $installPath;		
-		$this->serverPath = $serverPath;
+		//-----------------------------------------------------------------------------------------
+		//	get site config from the registry
+		//-----------------------------------------------------------------------------------------
 
-		$this->websiteName = $websiteName;
-		$this->defaultModule = $defaultModule;
-		$this->defaultTheme = $defaultTheme;
-		$this->useBlockCache = $useBlockCache;
-		$this->logLevel = (int)$logLevel;
+		$this->installPath = $registry->get('kapenta.installpath');		
+		$this->serverPath = $registry->get('kapenta.serverpath');
 
-		$this->hostInterface = $hostInterface;
-		$this->proxyEnabled = $proxyEnabled;
-		$this->proxyAddress = $proxyAddress;
-		$this->proxyPort = $proxyPort;
-		$this->proxyUser = $proxyUser;
-		$this->proxyPass = $proxyPass;
+		$this->websiteName = $registry->get('kapenta.sitename');
+		$this->defaultModule = $registry->get('kapenta.modules.default');
+		$this->defaultTheme = $registry->get('kapenta.themes.default');
+		$this->useBlockCache = $registry->get('kapenta.blockcache.enabled');
+		$this->logLevel = (int)$registry->get('kapenta.loglevel');
 
-		$this->rsaKeySize = (int)$rsaKeySize;
-		$this->rsaPublicKey = $rsaPublicKey;
-		$this->rsaPrivate = $rsaPrivateKey;
+		//-----------------------------------------------------------------------------------------
+		//	guess any missing values
+		//-----------------------------------------------------------------------------------------
+		if ('' == $this->installPath) { 
+			$this->installPath = $_SERVER['DOCUMENT_ROOT'];
+			$registry->set('kapenta.installpath', $this->installPath); 
+		}
 
+		if ('' == $this->serverPath) { 
+			$this->serverPath = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+			$registry->set('kapenta.serverpath', $this->serverPath); 
+		}
+
+		if ('' == $this->websiteName) { 
+			$this->websiteName = 'awareNet';
+			$registry->set('kapenta.sitename', $this->websiteName); 
+		}
+
+		if ('' == $this->defaultTheme) { 
+			$this->defaultTheme = 'clockface';
+			$registry->set('kapenta.themes.default', $this->defaultTheme); 
+		}
+
+		if ('' == $this->defaultModule) { 
+			$this->defaultModule = 'home';
+			$registry->set('kapenta.modules.default', $this->defaultModule); 
+		}
+
+		//-----------------------------------------------------------------------------------------
+		//	set up interface (optional config)
+		//-----------------------------------------------------------------------------------------
+		$this->hostInterface = $registry->get('kapenta.network.interface');
+		$this->proxyEnabled = $registry->get('kapenta.proxy.enabled');
+		$this->proxyAddress = $registry->get('kapenta.proxy.address');
+		$this->proxyPort = $registry->get('kapenta.proxy.port');
+		$this->proxyUser = $registry->get('kapenta.proxy.user');
+		$this->proxyPass = $registry->get('kapenta.proxy.password');;
+
+		//-----------------------------------------------------------------------------------------
+		//	set up encryption (TODO)
+		//-----------------------------------------------------------------------------------------
+		$this->rsaKeySize = (int)$registry->get('kapenta.rsa.keysize');
+		$this->rsaPublicKey = $registry->get('kapenta.rsa.publickey');
+		$this->rsaPrivate = $registry->get('kapenta.rsa.privatekey');
+
+		//-----------------------------------------------------------------------------------------
+		//	set up module and theme arrays
+		//-----------------------------------------------------------------------------------------
 		$this->modules = array();
 		$this->modulesLoaded = false;
 		$this->themes = array();
@@ -94,19 +137,18 @@ class KSystem {
 	//returns: array of modules [array]
 
 	function listModules() {
-		global $installPath;
 		$modList = array();		// return value [array]
 
 		if (false == $this->modulesLoaded) {
 			//--------------------------------------------------------------------------------------
 			//	modules list has not yet been created, create it and cache for future reuse
 			//--------------------------------------------------------------------------------------
-			$d = dir($installPath . 'modules/');
+			$d = dir($this->installPath . 'modules/');
 			while (false !== ($entry = $d->read())) {
 			  if (($entry != '.') AND ($entry != '..') AND ($entry != '.svn')) {
 				$newMod = array();
 				$newMod['name'] = strtolower($entry);
-				$newMod['abs'] = strtolower($installPath . 'modules/' . $newMod['name'] . '/');
+				$newMod['abs'] = strtolower($this->installPath .'modules/'. $newMod['name'] .'/');
 				$newMod['actions'] = array();
 				$newMod['pages'] = array();
 				$newMod['views'] = array();
@@ -175,21 +217,26 @@ class KSystem {
 	//.	list files of a particular extension (usually .act.php, .view.php, .block.php)
 	//----------------------------------------------------------------------------------------------
 	//arg: path - path relative to installPath [string]
-	//arg: ext - file extension	to list, eg '.block.php' [string]
+	//opt: ext - file extension	to list, eg '.block.php' [string]
 
-	function listFiles($path, $ext) {
+	function listFiles($path, $ext = '') {
 		$fileList = array();
 
 		$path = str_replace('%%installPath%%', '', $path);
 		$path = str_replace($this->installPath, '', $path);
 		$extLen = strlen($ext);
+		if (false == file_exists($this->installPath . $path)) { return array(); }
 		$d = dir($this->installPath . $path);
 
 		while (false !== ($entry = $d->read())) {
 		  	$entryLen = strlen($entry);
-		  	if ( ($entryLen > ($extLen + 1)) AND
-			     (substr($entry, $entryLen - $extLen) == $ext)) 
-				{ $fileList[] = strtolower($entry); }
+			if ('' != $ext) {
+		  		if ( ($entryLen > ($extLen + 1)) AND
+			    	 (substr($entry, $entryLen - $extLen) == $ext)) 
+						{ $fileList[] = strtolower($entry); }
+			} else {
+				$fileList[] = $entry;
+			}	
 		}
 
 		sort($fileList);
@@ -428,6 +475,72 @@ class KSystem {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	list the contents of a directory, excluding subdirectories
+	//----------------------------------------------------------------------------------------------
+	//arg: dir - directory path relative to $kapenta->installPath [string]
+	//opt: ext - filter to this file extension, case insensitive [string]
+	//opt: onlySubDirs - only returns subdirectories if true [bool]
+	//returns: array of file paths relative to installPath [array:string]
+
+	function fileList($dir, $ext = '', $onlySubDirs = false) {
+		$list = array();									//%	return value [array:string]
+
+		if (('' == $dir) || ('/' != substr($dir, strlen($dir) - 1))) { $dir = $dir . '/'; }
+		$fullPath = $this->installPath . $dir;				//%	relative to root [string]
+		$dir = $this->fileCheckName($fullPath);
+		$ext = strtolower($ext);
+		$extLen = strlen($ext);								//%	length of ext, if any [int]
+
+		$d = dir($fullPath);								//%	directory [object:directory]
+		$continue = true;									//%	loop control [bool]
+		while (true == $continue) {
+			$entry = $d->read();
+			$ok = true;
+
+			if (false == $entry) { 
+				$ok = false;
+				$continue = false;
+			}
+
+			if ((true == $ok) && (('.' == $entry) || ('..' == $entry))) { $ok = false; }
+
+			if (true == $ok) {
+				$isDir = is_dir($fullPath . $entry);
+				if (true == $isDir) { $entry = $entry . '/'; }
+				if ($isDir != $onlySubDirs) { $ok = false; }
+			} 
+
+			if ((true == $ok) && ('' != $ext) && (strlen($entry) >= $extLen)) {
+				$entryLen = strlen($entry);									//%	[int]
+				$match = strtolower(substr($entry, $entryLen - $extLen));	//%	[string]
+				if ($ext != $match) { $ok = false; }
+			}
+
+			if (true == $ok) { $list[] = $dir . $entry; }
+		}
+
+		return $list;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	search for files with a given extension, optionally in some subdirectory
+	//----------------------------------------------------------------------------------------------
+	//opt: dir - starting directory [string]
+	//opt: ext - file extension, eg '.block.php' [string]
+	//;	not very efficient, could be improved
+
+	function fileSearch($dir = '', $ext = '') {
+		$list = $this->fileList($dir, $ext, false);			//%	return value [array:string]
+		$subDirs = $this->fileList($dir, '', true);
+		//echo "<pre>\n"; print_r($subDirs); echo "</pre><br/>\n";
+		foreach ($subDirs as $subDir) {
+			$more = $this->fileSearch($subDir, $ext);
+			foreach($more as $item) { $list[] = $item; }
+		}
+		return $list;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//|	determines if a file/dir exists and is readable + writeable
 	//----------------------------------------------------------------------------------------------
 	//arg: fileName - relative to installPath [string]
@@ -559,7 +672,7 @@ class KSystem {
 			{ $referer = $_SERVER['HTTP_REFERER']; }
 
 		$entry = "<entry>\n"
-			. "\t<timstamp>" . time() . "</timestamp>\n"
+			. "\t<timestamp>" . time() . "</timestamp>\n"
 			. "\t<mysqltime>" . $db->datetime() . "</mysqltime>\n"
 			. "\t<user>" . $user->username . "</user>\n"
 			. "\t<remotehost>" . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</remotehost>\n"
@@ -585,10 +698,9 @@ class KSystem {
 	//arg: fileName - relative to installPath [string]
 
 	function makeEmptyLog($fileName) {
-		//TODO: remove this literal (bad style)
+		//TODO: fix this to work without setup.inc.php
 		$defaultLog = "<?\n" 
-					. "\tinclude '../../setup.inc.php';\n"
-					. "\tinclude \$installPath . 'core/core.inc.php';\n"
+					. "\tinclude '../../index.php';\n"
 					. "\tlogErr('log', 'eventLog', 'direct access by browser');\n"
 					. "\tdo404();\n"
 					. "?>\n\n";
@@ -693,6 +805,83 @@ class KSystem {
 		$result = false;
 		//$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
 		return $result;
+	}
+
+	//==============================================================================================
+	//	web shell
+	//==============================================================================================
+	
+	//----------------------------------------------------------------------------------------------
+	//.	check if a shell command is implemented (basic, only checks for file)
+	//----------------------------------------------------------------------------------------------
+	//arg: canonical - full name of command, eg live.clear [string]
+	//returns: true if command exists, false if not [bool]
+
+	function shellCmdExists($canonical) {
+		if (false == strpos($canonical, '.')) { return false; }		
+		$parts = explode('.', $canonical, 2);
+		$module = $parts[0];
+		$method = $parts[1];
+
+		$fileName = 'modules/' . $module . '/shell/' . $method . '.cmd.php';
+
+		if (true == $this->fileExists($fileName)) { return true; }
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	check if a shell command is implemented (basic, only checks for file)
+	//----------------------------------------------------------------------------------------------
+	//arg: canonical - full name of command, eg live.clear [string]
+	//arg: args - arguments array [array:string]
+	//returns: html command report [string]
+
+	function shellExecCmd($canonical, $args) {
+		global $kapenta, $theme, $user, $db, $session, $req,
+				$page, $aliases, $notifications, $utils, $sync;		// make available to command
+
+		if (false == $this->shellCmdExists($canonical)) { return 'Command not recognized'; }		
+		$parts = explode('.', $canonical, 2);
+		$module = $parts[0];
+		$method = $parts[1];
+
+		$fileName = 'modules/' . $module . '/shell/' . $method . '.cmd.php';
+		require_once($fileName);
+
+		$functionName = $module . '_WebShell_' . $method;
+		if (false == function_exists($functionName)) { return 'Function not implemented.'; }
+	
+		return $functionName($args);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	display built-in help for a web shell command
+	//----------------------------------------------------------------------------------------------
+	//arg: canonical - canonical name of a web shell command (module.method) [string]
+	//arg: short - display short form help [bool]
+	//returns: manpage [string:html]
+
+	function shellCmdHelp($canonical, $short) {
+		global $kapenta, $theme, $user, $db, $session, $req,
+				$page, $aliases, $notifications, $utils, $sync;		// make available to command
+
+		if (false == $this->shellCmdExists($canonical)) { 
+			return "<span style='ajaxwarn'>Command not recognized.</span>"; 
+		}
+		
+		$parts = explode('.', $canonical, 2);
+		$module = $parts[0];
+		$method = $parts[1];
+
+		$fileName = 'modules/' . $module . '/shell/' . $method . '.cmd.php';
+		require_once($fileName);
+
+		$functionName = $module . '_WebShell_' . $method . '_help';
+		if (false == function_exists($functionName)) { 
+			return "<span class='ajaxwarn'>Help function not implemented.</span>"; 
+		}
+
+		return $functionName($short);
 	}
 
 	//==============================================================================================

@@ -23,7 +23,7 @@ function projects_requestsjoinnav($args) {
 	if (false == $model->loaded) { return ''; }
 
 	if ((false == $model->isAdmin($user->UID)) && ('admin' != $user->role)) { return ''; }
-	//if (false == $user->authHas('projects', 'Projects_Project', 'administer', $model->UID))
+	//if (false == $user->authHas('projects', 'projects_project', 'administer', $model->UID))
 	//	{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ function projects_requestsjoinnav($args) {
 	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
 	$conditions[] = "role='asked'";
 	
-	$range = $db->loadRange('Projects_Membership', '*', $conditions);
+	$range = $db->loadRange('projects_membership', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

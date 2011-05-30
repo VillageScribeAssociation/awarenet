@@ -1,7 +1,7 @@
 <? 
 
 //--------------------------------------------------------------------------------------------------
-//	aliases are SEO-friendly strings used to identify objects
+//*	aliases are SEO-friendly strings used to identify objects
 //--------------------------------------------------------------------------------------------------
 //
 //	All objects are identified by their UID.  Additionally, objects may have multiple aliases.
@@ -20,7 +20,7 @@
 //	Note: this is called by save() methods on objects which have an alias field, returns the value 
 //	for that field.  $plainText is a title field or the like from which an alias is derived.
 
-require_once($installPath . 'modules/aliases/models/alias.mod.php');
+require_once($kapenta->installPath . 'modules/aliases/models/alias.mod.php');
 
 class KAliases {
 
@@ -104,7 +104,7 @@ class KAliases {
 	//returns: UID of object owning the alias given, or it 404s [string]
 
 	function findRedirect($model) {
-		global $kapenta, $req, $page, $db;
+		global $kapenta, $req, $page, $db, $session;
 		$safeAlias = strtolower($db->addMarkup($req->ref));	
 
 		//------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ class KAliases {
 		$conditions = array();
 		$conditions[] = "(aliaslc='" . $safeAlias . "' OR refUID='" . $safeAlias . "')";
 		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-		$range = $db->loadRange('Aliases_Alias', '*', $conditions);
+		$range = $db->loadRange('aliases_alias', '*', $conditions);
 
 		if (count($range) > 0) {
 			//--------------------------------------------------------------------------------------
@@ -127,6 +127,7 @@ class KAliases {
 				//----------------------------------------------------------------------------------
 				//	default alias was used, return the UID and we're done
 				//----------------------------------------------------------------------------------
+				//$session->msg("findRedirect default: ". $found['refUID'] . "<br/>\n");
 				return $found['refUID'];
 
 			} else {
@@ -254,7 +255,7 @@ class KAliases {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$range = $db->loadRange('Aliases_Alias', '*', $conditions);
+		$range = $db->loadRange('aliases_alias', '*', $conditions);
 
 		foreach($range as $row) {	
 			$model = new Aliases_Alias();
@@ -318,7 +319,7 @@ class KAliases {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "aliaslc='" . $db->addMarkup($alias) . "'";
-		$range = $db->loadRange('Aliases_Alias', '*', $conditions);
+		$range = $db->loadRange('aliases_alias', '*', $conditions);
 
 		if (count($range) > 0) { 
 			//--------------------------------------------------------------------------------------
@@ -346,7 +347,7 @@ class KAliases {
 	//arg: refModule - module name [string]
 	//arg: refModel - model name [string]
 	//arg: refUID - UID of the object which owns aliases [string]
-	//returns: array of aliases owned by this object [array]
+	//returns: array of aliases owned by this object, key is UID, value is alias [array]
 
 	function getAll($refModule, $refModel, $refUID) {
 		global $db;
@@ -356,7 +357,7 @@ class KAliases {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$range = $db->loadRange('Aliases_Alias', '*', $conditions);
+		$range = $db->loadRange('aliases_alias', '*', $conditions);
 
 		foreach($range as $record) { $als[$record['UID']] = $record['alias']; }
 		return $als;

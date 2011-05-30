@@ -23,7 +23,7 @@ function messages_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count all messages
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as allMsgs from Messages_Message "
+	$sql = "select count(UID) as allMsgs from messages_message "
 		 . "where owner='" . $owner . "' and folder='" . $folder . "'";
 
 	$result = $db->query($sql);
@@ -35,7 +35,7 @@ function messages_summarynav($args) {
 	//	count unread messages
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select count(UID) as allMsgs from Messages_Message "
+	$sql = "select count(UID) as allMsgs from messages_message "
 		 . "where owner='" . $owner . "' and folder='" . $folder . "' and status='unread'";
 
 	$result = $db->query($sql);

@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('contact', 'Contact_Detail', 'new'))
+	if (false == $user->authHas('contact', 'contact_detail', 'new'))
 		{ $page->do403('You are not authorized to create new Details.'); }
 	if (false == array_key_exists('refModule', $_POST))
 		{ $page->do404('reference module not specified', true); }

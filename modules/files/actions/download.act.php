@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	control variables
 	//----------------------------------------------------------------------------------------------
-	$refModule = ''; 
-	$refModel = '';
-	$refUID = '';
+	$refModule = ''; 			//%	name of a kapenta module [string]
+	$refModel = '';				//%	type of object which will own the file [string]
+	$refUID = '';				//%	UID of object which will own the file [string]
 	$return = '';
-	$URL = '';
+	$URL = '';					//%	location of file on the web [string]
 
 	$msg = '';
 	$raw = '';
@@ -24,12 +24,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars
 	//----------------------------------------------------------------------------------------------
-	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
-	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
-	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
+	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule not given', true); }
+	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel not given', true); }
+	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID not given', true); }
+	if (false == array_key_exists('URL', $_POST)) { $page->do404('URL not given', true); }
+
+	$refModule = $_POST['refModule'];
+	$refModel = $_POST['refModel'];
+	$refUID = $_POST['refUID'];
+	$URL = $_POST['URL'];
+
 	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
-	if (true == array_key_exists('URL', $_POST)) { $URL = $_POST['URL']; }
-	
+
 	//----------------------------------------------------------------------------------------------
 	//	security and validation
 	//----------------------------------------------------------------------------------------------
@@ -44,6 +50,7 @@
 	//	download the file
 	//----------------------------------------------------------------------------------------------
 	//echo "downloading URL: $URL <br/>\n"; flush();
+	//TODO: use cURL if available
 	if ('' == $msg) {
 		$raw = implode(file($URL));
 		if (false == $raw) { $msg = "file could not be downloaded, check the URL?"; }
@@ -61,32 +68,31 @@
 	//	create file record and save file
 	//----------------------------------------------------------------------------------------------
 	if ('' == $msg) {
-		echo "saving record<br/>\n";
+		//echo "saving record<br/>\n";
 		$model = new Files_File();
 		$model->refModule = $refModule;
-		$model->refModule = $refModel;
+		$model->refModel = $refModel;
 		$model->refUID = $refUID;
 		$model->title = $fName;
 		$model->storeFile($raw);
 		$model->licence = 'unknown';
-		$model->attribURL = $URL;
+		$model->attribUrl = $URL;
 		$model->weight = '0';
-		$model->save();
-		$msg = "Downloaded file: $URL <br/>\n";
+		$report = $model->save();
+		if ('' == $report) { $msg = "Downloaded file: $URL <br/>\n"; }
+		else { $session->msg('Could not store file object.'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back 
 	//----------------------------------------------------------------------------------------------
 	
-	//echo "message: " . $msg . "<br/>\n";
-	
 	$session->msg($msg);
 	if ('uploadmultiple' == $return) { 
 		$retURL = 'files/uploadmultiple'
 			 . '/refModule_' . $refModule 
 			 . '/refModel_' . $refModel 
-			 . '/refUID_' . $refUID . '/'
+			 . '/refUID_' . $refUID . '/';
 
 		$page->do302($retURL);
 	}

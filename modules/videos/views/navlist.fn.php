@@ -27,7 +27,7 @@ function videos_navlist($args) {
 	//	   . "WHERE createdBy='" . $db->addMarkup($args['userUID']) . "' "
 	//	   . "ORDER BY title";
 
-	$range = $db->loadRange('Videos_Gallery', '*', $conditions, 'title');
+	$range = $db->loadRange('videos_gallery', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

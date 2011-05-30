@@ -10,7 +10,7 @@
     <search>no</search>
 	<models>
       <model>
-        <name>Schools_Schools</name>
+        <name>schools_schools</name>
 		<description>Represents schools.</description>
         <permissions>
           <permission>new</permission>
@@ -25,14 +25,14 @@
       </model>
     </models>
     <defaultpermissions>
-		public:p|schools|Schools_School|show
-		student:p|schools|Schools_School|show
-		student:c|schools|Schools_School|edit|(if)|creator
-		student:p|schools|Schools_School|announcements-show
+		public:p|schools|schools_school|show
+		student:p|schools|schools_school|show
+		student:c|schools|schools_school|edit|(if)|creator
+		student:p|schools|schools_school|announcements-show
 
-		teacher:p|schools|Schools_School|show
-		teacher:c|schools|Schools_School|edit|(if)|creator
-		teacher:p|schools|Schools_School|announcements-show
+		teacher:p|schools|schools_school|show
+		teacher:c|schools|schools_school|edit|(if)|creator
+		teacher:p|schools|schools_school|announcements-show
     </defaultpermissions>
 </module>
 */ ?>

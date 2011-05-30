@@ -103,6 +103,7 @@ function HyperTextArea (name, html, width, height, resourcePath, styleSheetUrl, 
 		//	);
 		this.addControl(new Spacer());
 		//this.addControl(new Button("insertImage","images/post_button_image.gif","Insert Image","addImage"));
+		this.addControl(new Button("insertHorizontalRule","images/post_button_hr.gif","Insert Horizontal Rule","addHr"));
 		this.addControl(new TextFormatButton("link","Create Link","images/post_button_hyperlink.gif","createlink"));
 		//this.addControl(new Button("insertTable","images/post_button_table.gif","Insert Table","insertTableDialog"));
 
@@ -609,6 +610,28 @@ function HyperTextArea (name, html, width, height, resourcePath, styleSheetUrl, 
 		oRTE.document.execCommand(this.command, false, color);
 		oRTE.focus();
 		document.getElementById('cp' + this.name).style.visibility = "hidden";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	insert an hr into the rich text editor (oRTE)
+	//----------------------------------------------------------------------------------------------
+
+	this.addHr = function(){
+		var oRTE;											//%	iframe's document window [object]
+		HyperTextArea.activeArea = this;
+
+		//------------------------------------------------------------------------------------------
+		//	set oRTE to be the iframe's document object
+		//------------------------------------------------------------------------------------------
+		if (document.all) {	oRTE = frames[this.name]; }
+		else { oRTE = document.getElementById(this.name).contentWindow;	}
+
+		//------------------------------------------------------------------------------------------
+		//	have the browser insert the image
+		//------------------------------------------------------------------------------------------
+		oRTE.focus();
+		oRTE.document.execCommand('InsertHorizontalRule', false, 0);
+		oRTE.focus();
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -1,32 +1,43 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
-
 //--------------------------------------------------------------------------------------------------
 //|	select box for choosing a user's group (sensitive information, only available to admins)
 //--------------------------------------------------------------------------------------------------
-//arg: default - group the user is currently in, set to 'public' if blank [string]
+//opt: default - group the user is currently in, set to 'public' if blank [string]
 //opt: varname - html form element name, default is role [string]
+//TODO: remove selectgroup.block.php from repository
+//TODO: change name to 'selectrole.fn.php'
 
 function users_selectgroup($args) {
 	global $theme, $user;
-	$varname = 'role';
-	$html = '';
-	
+	$varname = 'role';			//%	form element name [string]
+	$default = 'student';		//%	default option [string]
+	$html = '';					//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { return false; }
-	if (false == array_key_exists('default', $args)) { return ''; }
-	if ('' == $args['default']) { $args['default'] == 'public'; }
+	if (true == array_key_exists('default', $args)) { $default = $args['default']; }
+
+	//----------------------------------------------------------------------------------------------
+	//	get list of roles from database
+	//----------------------------------------------------------------------------------------------
+	//TODO: this
+
+	$roles = array('student', 'teacher', 'admin', 'banned');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$labels = array('default' => $args['default'], 'varname' => $varname);
-	$block = $theme->loadBlock('modules/users/views/selectgroup.block.php');
-	$html = $theme->replaceLabels($labels, $block);
+	$html = "<select name='$varname'>\n";
+	foreach($roles as $role) {
+		$selected = '';
+		if ($role == $default) { $selected = " selected='selected'"; }
+		$html .= "\t<option value='$role'$selected>$role</option>\n";
+	}
+	$html .= "</select>\n";
+
 	return $html;
 }
 

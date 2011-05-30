@@ -110,7 +110,7 @@ class Live_Trigger {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'live';
-		$dbSchema['model'] = 'Live_Trigger';
+		$dbSchema['model'] = 'live_trigger';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -181,7 +181,7 @@ class Live_Trigger {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Live_Trigger'>\n"
+		$xml = $indent . "<kobject type='live_trigger'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <pageUID>" . $this->pageUID . "</pageUID>\n"
 			. $indent . "    <module>" . $this->module . "</module>\n"
@@ -214,17 +214,17 @@ class Live_Trigger {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'Live_Trigger', 'show', $this->UID)) {
+		if (true == $user->authHas('live', 'live_trigger', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showtrigger/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Trigger', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('live', 'live_trigger', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/edittrigger/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Trigger', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('live', 'live_trigger', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/deltrigger/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

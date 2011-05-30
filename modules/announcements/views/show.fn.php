@@ -17,7 +17,7 @@ function announcements_show($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Announcements_Announcement($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show', $model->UID))
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'show', $model->UID))
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

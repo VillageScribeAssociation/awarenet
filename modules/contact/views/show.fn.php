@@ -8,11 +8,12 @@
 //arg: refModule - name of a kapenta module [string]
 //arg: refModel - type of object which may have contact details [string]
 //arg: refUID - UID of object which may have contact details [string]
-
+//opt: label - label to place above table, default is 'Contact' [string]
 
 function contact_show($args) {
 	global $db, $user, $theme;
 	$html = '';						//%	return value [string]
+	$label = 'Contact';				//%	label to place above table of contact details [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -27,6 +28,8 @@ function contact_show($args) {
 
 	if (false == $user->authHas($refModule, $refModel, 'contacts-edit', $refUID)) { return '403'; }
 
+	if (true == array_key_exists('label', $args)) { $label = $args['label']; }
+
 	//----------------------------------------------------------------------------------------------
 	//	load any contact details from database
 	//----------------------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ function contact_show($args) {
 	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('Contact_Detail', '*', $conditions);
+	$range = $db->loadRange('contact_detail', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -47,7 +50,7 @@ function contact_show($args) {
 
 	if (0 == count($range)) { $html = ""; }
 	else {
-		$html .= "<b>Contact:</b><br/>";
+		$html .= "<b>" . $label . ":</b><br/>";
 
 		$table = array();
 		$table[] = array('Description', 'Contact');

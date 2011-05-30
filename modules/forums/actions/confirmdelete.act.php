@@ -14,7 +14,7 @@
 	$model = new Forums_Board($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('No such forum.'); }
 
-	if (false == $user->authHas('forums', 'Forums_Board', 'delete', $model->UID))
+	if (false == $user->authHas('forums', 'forums_board', 'delete', $model->UID))
 		{ $page->do403('You cannot delete this forum (insufficient privilege).'); }
 	
 	//----------------------------------------------------------------------------------------------

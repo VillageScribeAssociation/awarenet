@@ -13,7 +13,7 @@
 	if ('' == $req->ref) {$page->do302('static/list/'); }
 	$model = new Home_Static($req->ref);
 	if (false == $model->loaded) { $page->do404('Static page not found.'); }
-	if (false == $user->authHas('home', 'Home_Static', 'edit', $model->UID))
+	if (false == $user->authHas('home', 'home_static', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to delete this page.'); }
 
 	//----------------------------------------------------------------------------------------------

@@ -26,6 +26,7 @@
 		//------------------------------------------------------------------------------------------
 		$page->load('modules/files/actions/fileset.if.page.php');
 		$page->blockArgs['refModule'] = $refModule;
+		$page->blockArgs['refModel'] = $refModel;
 		$page->blockArgs['refUID'] = $refUID;
 		$page->render();
 		
@@ -35,6 +36,7 @@
 		//------------------------------------------------------------------------------------------
 		$page->load('modules/files/actions/uploadmultiple.if.page.php');
 		$page->blockArgs['refModule'] = $refModule;
+		$page->blockArgs['refModel'] = $refModel;
 		$page->blockArgs['refUID'] = $refUID;
 		$page->render();
 			

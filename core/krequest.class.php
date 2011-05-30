@@ -23,10 +23,10 @@ class KRequest {
 	//----------------------------------------------------------------------------------------------
 
 	function KRequest($raw) {
-		global $defaultModule;
+		global $registry;
 
 		$this->raw = $raw;											// store for future reference
-		$this->module = $defaultModule;								// see setup.inc.php
+		$this->module = $registry->get('kapenta.modules.default');	// see setup.inc.php
 		$this->action = 'default';									// they should all have one
 		$this->ref = '';
 

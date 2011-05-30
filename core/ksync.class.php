@@ -1,8 +1,8 @@
 <?
 
-	require_once($installPath . 'modules/sync/models/download.mod.php');
-	require_once($installPath . 'modules/sync/models/server.mod.php');
-	require_once($installPath . 'modules/sync/models/notice.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/download.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/server.mod.php');
+	require_once($kapenta->installPath . 'modules/sync/models/notice.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	synchronize content and broadcast events between servers
@@ -44,17 +44,18 @@ class KSync {
 		$this->proxyPass = $kapenta->proxyPass;
 
 		$this->ignoreTables = array(
-			'Sync_Notice',
+			'sync_notice',
 			'chat',
 			'download',
-			'Sync_Download',
-			'Sync_Message',
-			'Sync_Server',
-			'Live_Mailbox',
-			'Live_Chat',
-			'Live_Trigger',
-			'Users_Session',
-			'Users_Login'
+			'sync_download',
+			'sync_message',
+			'sync_server',
+			'live_mailbox',
+			'live_chat',
+			'live_trigger',
+			'users_session',
+			'users_login',
+			'wiki_mwimport'
 		);
 
 		$this->ignoreChannels = array('admin-syspagelog', 'admin-syspagelogsimple');	
@@ -84,7 +85,7 @@ class KSync {
 		$peers = array();
 		$conditions = array("active='active'");	
 
-		$range = $db->loadRange('Sync_Server', '*', $conditions, '', '', '');
+		$range = $db->loadRange('sync_server', '*', $conditions, '', '', '');
 		if (false == $range) { return false; }
 
 		foreach($range as $peer) {
@@ -444,7 +445,7 @@ class KSync {
 		//	if this is a notice that something was deleted, delete it
 		//------------------------------------------------------------------------------------------
 		
-		if ('Revisions_Deleted' == $tableName) {
+		if ('revisions_deleted' == $tableName) {
 			$kapenta->logSync("Received Deletion Notice: $tableName status: " . $data['status'] . "<br/>");
 			if ('deleted' == $data['status']) {
 				$rmTable = $data['refModel'];
@@ -640,7 +641,7 @@ class KSync {
 				{ logSync("creating new process for download: " . $model->UID . " \n"); }
 
 			$od = $kapenta->installPath .'data/temp/'. time() .'-'. $kapenta->createUID() .'.sync';
-			$findUrl = $serverPath . 'sync/findfile/' . $model->UID;
+			$findUrl = $kapenta->serverPath . 'sync/findfile/' . $model->UID;
 			$cmd = 'wget --output-document=' . $od . ' ' . $findUrl;
 			$kapenta->procExecBackground($cmd);
 			$kapenta->procCleanTemp();

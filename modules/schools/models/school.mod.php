@@ -22,6 +22,8 @@ class Schools_School {
 	var $country;			//_ varchar(255) [string]
 	var $type;				//_ varchar(255) [string]
 	var $hidden;			//_ controls whether this school shows up in lists varchar(3) [string]
+	var $lastBump;			//_	records when grades were last rolled around to a new year [string]
+	var $notifyAll;			//_	controls whether announcements are sent to all users or not [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -76,6 +78,8 @@ class Schools_School {
 		$this->country = $ary['country'];
 		$this->type = $ary['type'];
 		$this->hidden = $ary['hidden'];
+		$this->lastBump = $ary['lastBump'];
+		$this->notifyAll = $ary['notifyAll'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -95,7 +99,7 @@ class Schools_School {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('schools', 'Schools_School', $this->UID, $this->name);
+		$this->alias = $aliases->create('schools', 'schools_school', $this->UID, $this->name);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -121,7 +125,7 @@ class Schools_School {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'schools';
-		$dbSchema['model'] = 'Schools_School';
+		$dbSchema['model'] = 'schools_school';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -133,6 +137,8 @@ class Schools_School {
 			'country' => 'VARCHAR(255)',
 			'type' => 'VARCHAR(255)',
 			'hidden' => 'VARCHAR(3)',
+			'lastBump' => 'DATETIME',
+			'notifyAll' => 'VARCHAR(10)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -171,6 +177,8 @@ class Schools_School {
 			'country' => $this->country,
 			'type' => $this->type,
 			'hidden' => $this->hidden,
+			'lastBump' => $this->lastBump,
+			'notifyAll' => $this->notifyAll,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -198,24 +206,34 @@ class Schools_School {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('schools', 'Schools_School', 'show', $this->UID)) { 
+		if (true == $user->authHas('schools', 'schools_school', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%schools/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('schools', 'Schools_School', 'edit', $this->UID)) {
+		if (true == $user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%schools/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('schools', 'Schools_School', 'edit', $this->UID)) {
+		if (true == $user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%schools/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('schools', 'Schools_School', 'new', $this->UID)) { 
+		if (true == $user->authHas('schools', 'schools_school', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%schools/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new school]</a>"; 
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	title / type
+		//------------------------------------------------------------------------------------------
+		//see: http://code.google.com/p/awarenet/issues/detail?id=101 #29
+
+		$ary['titleType'] = $ary['name'];
+		if (false == strpos(strtolower($ary['type']), 'school')) {
+			$ary['titleType'] = $ary['name']. ' (' . $ary['type'] . ')';
 		}
 
 		//------------------------------------------------------------------------------------------

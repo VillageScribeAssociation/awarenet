@@ -10,7 +10,7 @@
 
 function notifications_show($args) {
 	global $user, $theme;
-	$html = '';		//%	return value [string]
+	$html = '';							//%	return value [string]
 	
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -22,7 +22,7 @@ function notifications_show($args) {
 
 	$model = new Notifications_Notification($args['UID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('notifications', 'Notifications_Notification', 'show', $model->UID)) 
+	if (false == $user->authHas('notifications', 'notifications_notification', 'show', $model->UID)) 
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

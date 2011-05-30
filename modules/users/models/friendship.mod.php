@@ -59,7 +59,7 @@ class Users_Friendship {
 		$conditions[] = "friendUID='" . $db->addMarkup($friendUID) . "'";
 		//$conditions[] = "status='confirmed'";
 
-		$range = $db->loadRange('Users_Friendship', '*', $conditions, '', '', '');
+		$range = $db->loadRange('users_friendship', '*', $conditions, '', '', '');
 
 		if (count($range) > 0) { 
 			$this->loadArray(array_pop($range)); 
@@ -139,7 +139,7 @@ class Users_Friendship {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'users';
-		$dbSchema['model'] = 'Users_Friendship';
+		$dbSchema['model'] = 'users_friendship';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -248,7 +248,7 @@ class Users_Friendship {
 		global $db;
 		$retVal = array();
 		$cond = array("userUID='" . $db->addMarkup($userUID) . "'", "status='confirmed'");
-		$range = $db->loadRange('Users_Friendship', '*', $cond, 'createdOn DESC', '', '');
+		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
 
 		foreach($range as $row) { $retVal[$row['friendUID']] = $row['relationship']; }
 		return $retVal;
@@ -266,7 +266,7 @@ class Users_Friendship {
 
 		// load unconfirmed (ie, friend requests)
 		$cond = array("userUID='" . $db->addMarkup($userUID) . "'", "status='unconfirmed'");
-		$range = $db->loadRange('Users_Friendship', '*', $cond, 'createdOn DESC', '', '');
+		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
 
 		// make into simple array and return
 		foreach($range as $row) { $retVal[$row['friendUID']] = $row['relationship']; }
@@ -284,7 +284,7 @@ class Users_Friendship {
 		$retVal = array();
 		// load unconfirmed (ie, friend requests)
 		$cond = array("friendUID='" . $db->addMarkup($userUID) . "'", "status='unconfirmed'");
-		$range = $db->loadRange('Users_Friendship', '*', $cond, 'createdOn DESC', '', '');
+		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
 		// make into simple array
 		foreach($range as $row) { $retVal[$row['userUID']] = $row['relationship']; }
 		return $retVal;
@@ -322,7 +322,7 @@ class Users_Friendship {
 		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
 		$conditions[] = "friendUID='" . $db->addMarkup($friendUID) . "'";
 
-		$result = $db->loadRange('Users_Friendship', '*', $conditions, '', '', '');
+		$result = $db->loadRange('users_friendship', '*', $conditions, '', '', '');
 		if (count($result) > 0) { return true; }
 		return false;
 	}	

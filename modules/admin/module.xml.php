@@ -13,7 +13,6 @@
     <dependency>
     </dependency>
     <permissions>
-	<perm>administer|%%user.ofGroup%%=admin</perm>
     </permissions>
     <blocks>
     </blocks>

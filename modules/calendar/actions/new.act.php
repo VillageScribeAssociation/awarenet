@@ -6,7 +6,7 @@
 //*	add a new calendar entry
 //--------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('calendar', 'Calendar_Entry', 'new')) { $page->do403(); }
+	if (false == $user->authHas('calendar', 'calendar_entry', 'new')) { $page->do403(); }
 
 	$model = new Calendar_Entry();
 	$model->save();

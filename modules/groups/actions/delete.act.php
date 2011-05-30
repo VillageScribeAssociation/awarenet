@@ -14,7 +14,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('Group not specified (UID).'); }
     
 	$model = new Groups_Group($_POST['UID']);
-	if (false == $user->authHas('groups', 'Groups_Group', 'delete', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('groups', 'groups_group', 'delete', $model->UID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the group and redirect

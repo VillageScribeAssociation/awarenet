@@ -30,7 +30,7 @@ function notifications_maintenance() {
 	$errors[] = array('UID', 'title', 'error');
 	$model = new Notifications_Notification();
 	$dbSchema = $model->getDbSchema();
-	$sql .= "select * from Notifications_Notification";
+	$sql .= "select * from notifications_notification";
 	$handle .= $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -47,21 +47,21 @@ function notifications_maintenance() {
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Images_Image', $model->imageUID)) {
+		if (false == $db->objectExists('images_image', $model->imageUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Images_Image
-			$errors[] = array($model->UID, $model->title, 'invalid reference (imageUID:Images_Image)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (imageUID:images_image)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 
@@ -81,7 +81,7 @@ function notifications_maintenance() {
 	$errors[] = array('UID', 'UID', 'error');
 	$model = new Notifications_UserIndex();
 	$dbSchema = $model->getDbSchema();
-	$sql .= "select * from Notifications_UserIndex";
+	$sql .= "select * from notifications_userindex";
 	$handle .= $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -92,27 +92,27 @@ function notifications_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $model->userUID)) {
+		if (false == $db->objectExists('users_user', $model->userUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (userUID:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (userUID:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Notifications_Notification', $model->notificationUID)) {
+		if (false == $db->objectExists('notifications_notification', $model->notificationUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Notifications_Notification
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (notificationUID:Notifications_Notification)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (notificationUID:notifications_notification)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 

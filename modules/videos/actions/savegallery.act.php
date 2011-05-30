@@ -16,7 +16,7 @@
 	$UID = $_POST['UID'];
 	$model = new Videos_Gallery($UID);
 	if (false == $model->loaded) { $page->do404("Could not load gallery.");}
-	if (false == $user->authHas('videos', 'Videos_Gallery', 'edit', $model->UID))
+	if (false == $user->authHas('videos', 'videos_gallery', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this gallery.'); }
 
 	//----------------------------------------------------------------------------------------------

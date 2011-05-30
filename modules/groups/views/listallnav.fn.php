@@ -32,7 +32,7 @@ function groups_listallnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Groups_Group', '*', $conditions, 'name');
+	$range = $db->loadRange('groups_group', '*', $conditions, 'name');
 	foreach ($range as $row) { $html .= "[[:groups::summarynav::groupUID=". $row['UID'] .":]]\n"; }
 	return $html;
 }

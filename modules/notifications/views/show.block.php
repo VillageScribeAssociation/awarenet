@@ -9,7 +9,10 @@
     <td valign='top'>
       <a href='%%refUrl%%'>%%title%%</a><br/>
 	  %%content%%<br/>
-	  <small>Sent on %%createdOnLong%% by [[:users::namelink::userUID=%%createdBy%%:]]<br/><br/></small>
+	  <small>
+		Sent on %%createdOnLong%% by [[:users::namelink::userUID=%%createdBy%%:]] 
+		<a href='%%serverPath%%notifications/hide/%%userIndexUID%%'>[hide]</a>
+	  </small>
     </td>
   </tr>
 </table>

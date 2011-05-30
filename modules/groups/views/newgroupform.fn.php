@@ -15,7 +15,7 @@ function groups_newgroupform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('groups', 'Groups_Group', 'new')) { return ''; }
+	if (false == $user->authHas('groups', 'groups_group', 'new')) { return ''; }
 	if (false == array_key_exists('schoolUID', $args)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

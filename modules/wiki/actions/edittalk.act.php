@@ -10,10 +10,10 @@
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }			// check for ref
-	$UID = $aliases->findRedirect('Wiki_Article');		// check correct ref
+	$UID = $aliases->findRedirect('wiki_article');		// check correct ref
 
 	$model = new Wiki_Article($UID);
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	// create talk page if it does not exist

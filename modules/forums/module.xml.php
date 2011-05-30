@@ -14,7 +14,7 @@
     </dependencies>
     <models>
       <model>
-        <name>Forums_Board</name>
+        <name>forums_board</name>
 		<description>A space in which to create and discuss topics (threads).</description>
         <permissions>
           <permission>new</permission>
@@ -29,7 +29,7 @@
         </relationships>
       </model>
       <model>
-        <name>Forums_Thread</name>
+        <name>forums_thread</name>
 		<description>A thread of discussion on a board.</description>
         <permissions>
           <permission>new</permission>
@@ -44,7 +44,7 @@
         </relationships>
       </model>
       <model>
-        <name>Forums_Reply</name>
+        <name>forums_reply</name>
 		<description>A thread of discussion on a board.</description>
         <permissions>
           <permission>new</permission>
@@ -60,31 +60,31 @@
       </model>
 	</models>
     <defaultpermissions>
-		student:p|forums|Forums_Board|show
-		student:p|forums|Forums_Board|makethread
-		student:p|forums|Forums_Thread|show
-		student:p|forums|Forums_Thread|new
-		student:p|forums|Forums_Reply|show
-		student:p|forums|Forums_Reply|new
-		student:p|forums|Forums_Board|images-list
-		student:p|forums|Forums_Board|images-show
-		student:p|forums|Forums_Board|images-list
+		student:p|forums|forums_board|show
+		student:p|forums|forums_board|makethread
+		student:p|forums|forums_thread|show
+		student:p|forums|forums_thread|new
+		student:p|forums|forums_reply|show
+		student:p|forums|forums_reply|new
+		student:p|forums|forums_board|images-list
+		student:p|forums|forums_board|images-show
+		student:p|forums|forums_board|images-list
 
-		teacher:p|forums|Forums_Board|show
-		teacher:p|forums|Forums_Board|makethread
-		teacher:p|forums|Forums_Thread|show
-		student:p|forums|Forums_Thread|new
-		teacher:p|forums|Forums_Reply|show
-		teacher:p|forums|Forums_Reply|new
-		teacher:p|forums|Forums_Board|images-add
-		teacher:p|forums|Forums_Board|images-show
-		teacher:p|forums|Forums_Board|images-list
-		teacher:c|forums|Forums_Thread|images-add|(if)|creator
-		teacher:p|forums|Forums_Thread|images-show
-		teacher:p|forums|Forums_Thread|images-list
-		teacher:c|forums|Forums_Reply|images-add|(if)|creator
-		teacher:p|forums|Forums_Reply|images-show
-		teacher:p|forums|Forums_Reply|images-list
+		teacher:p|forums|forums_board|show
+		teacher:p|forums|forums_board|makethread
+		teacher:p|forums|forums_thread|show
+		student:p|forums|forums_thread|new
+		teacher:p|forums|forums_reply|show
+		teacher:p|forums|forums_reply|new
+		teacher:p|forums|forums_board|images-add
+		teacher:p|forums|forums_board|images-show
+		teacher:p|forums|forums_board|images-list
+		teacher:c|forums|forums_thread|images-add|(if)|creator
+		teacher:p|forums|forums_thread|images-show
+		teacher:p|forums|forums_thread|images-list
+		teacher:c|forums|forums_reply|images-add|(if)|creator
+		teacher:p|forums|forums_reply|images-show
+		teacher:p|forums|forums_reply|images-list
     </defaultpermissions>
 </module>
 */ ?>

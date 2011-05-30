@@ -19,7 +19,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	go through image table looking for dead references
 	//---------------------------------------------------------------------------------------------
-	$sql = "select UID, refUID, refModule, title from Images_Image";
+	$sql = "select UID, refUID, refModule, title from images_image";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
@@ -49,7 +49,7 @@
 					$match = $db->fetchAssoc($try);
 					echo "found matching UID: " . $match['UID'] . " ~ " . $row['refUID'] . "<br/>\n";
 
-					$sql = "update Images_Image set refUID='" . $match['UID'] . "' where UID='" . $row['UID'] . "'";
+					$sql = "update images_image set refUID='" . $match['UID'] . "' where UID='" . $row['UID'] . "'";
 					$db->query($sql);
 					echo $sql . "<br/>\n";
 

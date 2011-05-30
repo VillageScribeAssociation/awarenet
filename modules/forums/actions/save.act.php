@@ -14,7 +14,7 @@
 
 	$model = new Forums_Board($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('Board not found.'); }
-	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID))
+	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID))
 		{ $page->do403('You are not authorised to edit this board.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -29,14 +29,17 @@
 			case 'weight':			$model->weight = (int)$value; 							break;
 
 			case 'school':
-				if (true == $db->objectExists('Schools_School', $value)) { $model->school = $value;}
+				if (true == $db->objectExists('schools_school', $value)) { $model->school = $value;}
 				break;
 		}
 	}
 	$report = $model->save();
 
-	if ('' == $report) { $session->msg('Saved changes to forum: ' . $model->title, 'ok'); }
-	else { $session->msg('Could not save changes:<br/>' . $report, 'bad'); }
+	if ('' == $report) { 
+		$session->msg('Saved changes to forum: ' . $model->title, 'ok'); 
+	} else { 
+		$session->msg('Could not save changes:<br/>' . $report, 'bad'); 
+	}
 	$page->do302('forums/' . $model->alias);			
 
 	//----------------------------------------------------------------------------------------------

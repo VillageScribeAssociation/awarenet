@@ -22,6 +22,11 @@ function videos_player($args) {
 	if (false == $model->loaded) { return ''; }
 	//TODO: permissions check here
 
+	if ('mp3' == $model->format) { 
+		$block = "[[:videos::playeraudio::raUID=" . $model->UID . ":]]";
+		return $block;
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------

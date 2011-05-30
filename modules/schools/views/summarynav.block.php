@@ -7,7 +7,7 @@
     </td>
     <td width='10'></td>
     <td valign='top'>
-      <b><a class='black' href='/schools/%%alias%%'>%%name%%</a></b><br/>
+      <b><a class='black' href='/schools/%%alias%%'>%%titleType%%</a></b><br/>
       %%location%% %%viewLink%%
       %%editLink%%
     </td>

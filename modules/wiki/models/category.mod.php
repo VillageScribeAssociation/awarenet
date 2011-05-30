@@ -87,7 +87,7 @@ class Wiki_Category {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('wiki', 'Wiki_Category', $this->UID, $this->title);
+		$this->alias = $aliases->create('wiki', 'wiki_category', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -112,7 +112,7 @@ class Wiki_Category {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'wiki';
-		$dbSchema['model'] = 'Wiki_Category';
+		$dbSchema['model'] = 'wiki_category';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -174,7 +174,7 @@ class Wiki_Category {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Wiki_Category'>\n"
+		$xml = $indent . "<kobject type='wiki_category'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <title>" . $this->title . "</title>\n"
 			. $indent . "    <description><![CDATA[" . $this->description . "]]></description>\n"
@@ -207,17 +207,17 @@ class Wiki_Category {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('wiki', 'Wiki_Category', 'show', $this->UID)) {
+		if (true == $user->authHas('wiki', 'wiki_category', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Wiki/showcategory/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'Wiki_Category', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('wiki', 'wiki_category', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Wiki/editcategory/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'Wiki_Category', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('wiki', 'wiki_category', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Wiki/delcategory/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

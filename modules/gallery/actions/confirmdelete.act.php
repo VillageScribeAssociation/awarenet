@@ -13,7 +13,7 @@
 
 	$model = new Gallery_Gallery($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('Gallery not found.'); }
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'delete', $model->UID))
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this gallery.'); }	
 	
 	//----------------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 	//	load the friendship and check identity/permissions
 	//---------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	if (false == $db->objectExists('Users_User', $req->ref)) { $page->do404(); }
+	if (false == $db->objectExists('users_user', $req->ref)) { $page->do404(); }
 
 	$friendUID = $req->ref;
 	$model = new Users_Friendship();

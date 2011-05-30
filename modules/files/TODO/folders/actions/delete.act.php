@@ -4,7 +4,7 @@
 //	delete a record
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'Files_Folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 
 	if ( (array_key_exists('action', $_POST)) 
 	  AND ($_POST['action'] == 'deleteRecord') 

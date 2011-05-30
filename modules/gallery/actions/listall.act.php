@@ -8,7 +8,7 @@
 	// check basic permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'show')) { $page->do403(); }	
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	get order and page

@@ -103,7 +103,7 @@ class Files_File {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('files', 'Files_File', $this->UID, $this->title);
+		$this->alias = $aliases->create('files', 'files_file', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -128,7 +128,7 @@ class Files_File {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'files';
-		$dbSchema['model'] = 'Files_File';
+		$dbSchema['model'] = 'files_file';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -187,7 +187,7 @@ class Files_File {
 			'attribUrl' => $this->attribUrl,
 			'fileName' => $this->fileName,
 			'format' => $this->format,
-			'transforms' => $this->transforms,
+			'transforms' => implode("\n", $this->transforms),
 			'caption' => $this->caption,
 			'weight' => $this->weight,
 			'createdOn' => $this->createdOn,
@@ -221,17 +221,17 @@ class Files_File {
 		//	links
 		//----------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('files', 'Files_File', 'view', $this->UID)) { 
+		if (true == $user->authHas('files', 'files_file', 'view', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%files/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('files', 'Files_File', 'edit', $this->UID)) { 
+		if (true == $user->authHas('files', 'files_file', 'edit', $this->UID)) { 
 			$ary['editUrl'] =  '%%serverPath%%files/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('files', 'Files_File', 'delete', $this->UID)) { 
+		if (true == $user->authHas('files', 'files_file', 'delete', $this->UID)) { 
 			$ary['delUrl'] =  '%%serverPath%%files/delete/rmfile_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
@@ -239,8 +239,8 @@ class Files_File {
 		$ary['dnUrl'] = "%%serverPath%%files/dn/" . $this->alias;
 		$ary['dnLink'] = "<a href='" . $ary['dnUrl'] . "'>[download]</a>";
 		
-		$ary['thumbUrl'] = '/themes/clockface/images/arrow_down.jpg';
-		
+		$ary['thumbUrl'] = '%%serverPath%%/themes/%%defaultTheme%%/icons/arrow_down.png';
+	
 		return $ary;
 	}
 
@@ -269,9 +269,9 @@ class Files_File {
 	//returns: location of transform if it exists, false if it does not [string][bool]
 
 	function hasTrasform($transName) {
-		global $installPath;
+		global $kapenta;
 		if (array_key_exists($transName, $this->transforms) == false) { return false; }
-		if (file_exists($installPath . $this->transforms[$transName])) { 
+		if (true == $kapenta->fileExists($this->transforms[$transName])) { 
 			return $this->transforms[$transName];
 		}
 	}
@@ -296,7 +296,7 @@ class Files_File {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 
-		$range = $db->loadRange('Files_File', '*', $conditions);
+		$range = $db->loadRange('files_file', '*', $conditions);
 
 		foreach ($range as $row) { 
 			$this->load($row['UID']); 
@@ -312,12 +312,13 @@ class Files_File {
 	//arg: str - file contents [string]
 
 	function storeFile($str) {
-		global $installPath;
+		global $kapenta;
+		//TODO: use $kapenta to make the directories, write content, etc
 		
 		//----------------------------------------------------------------------------------------------
 		//	ensure directory exists
 		//----------------------------------------------------------------------------------------------
-		$baseDir = $installPath . 'data/files/';
+		$baseDir = $kapenta->installPath . 'data/files/';
 		$baseDir .= substr($this->UID, 0, 1) . '/';
 		@mkdir($baseDir);
 		$baseDir .= substr($this->UID, 1, 1) . '/';
@@ -335,7 +336,7 @@ class Files_File {
 		fwrite($fh, $str);
 		fclose($fh);
 		
-		$this->fileName = str_replace($installPath, '', $fileName);
+		$this->fileName = str_replace($kapenta->installPath, '', $fileName);
 		$this->format = 'xxx';
 	}
 
@@ -353,7 +354,7 @@ class Files_File {
 		unlink($kapenta->installPath . $this->fileName);
 
 		foreach($this->transforms as $transName => $fileName) {
-			$fileName = $installPath . $fileName;
+			$fileName = $kapenta->installPath . $fileName;
 			unlink($fileName);						//TODO: $kapenta should do this
 		}
 

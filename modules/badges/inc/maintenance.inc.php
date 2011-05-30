@@ -28,7 +28,7 @@ function badges_maintenance() {
 	$errors[] = array('UID', 'name', 'error');
 	$model = new Badges_Badge();
 	$dbSchema = $model->getDbSchema();
-	$sql = "select * from Badges_Badge";
+	$sql = "select * from badges_badge";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -39,7 +39,7 @@ function badges_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	checking alias
 		//------------------------------------------------------------------------------------------
-		$defaultAlias = $aliases->getDefault('Badges_Badge', $objAry['UID']);
+		$defaultAlias = $aliases->getDefault('badges_badge', $objAry['UID']);
 		if ((false == $defaultAlias) || ($defaultAlias != $model->alias)) {
 			$saved = $model->save();		// should reset alias
 			$errors[] = array($model->UID, $model->name, 'non defualt alias');
@@ -49,15 +49,15 @@ function badges_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->name, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->name, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->name, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->name, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 
@@ -77,7 +77,7 @@ function badges_maintenance() {
 	$errors[] = array('UID', 'UID', 'error');
 	$model = new Badges_UserIndex();
 	$dbSchema = $model->getDbSchema();
-	$sql = "select * from Badges_UserIndex";
+	$sql = "select * from badges_userindex";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
@@ -88,27 +88,27 @@ function badges_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $model->userUID)) {
+		if (false == $db->objectExists('users_user', $model->userUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (userUID:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (userUID:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Badges_Badge', $model->badgeUID)) {
+		if (false == $db->objectExists('badges_badge', $model->badgeUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Badges_Badge
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (badgeUID:Badges_Badge)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (badgeUID:badges_badge)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
-			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:Users_User)');
+			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
 

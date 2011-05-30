@@ -36,13 +36,16 @@ function diffAddHtmlNl($html) {
 //--------------------------------------------------------------------------------------------------
 
 function diff($txt1, $txt2) {
-	global $installPath;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------	
 	//	save txt pair to disk
 	//----------------------------------------------------------------------------------------------
-	$file1 = $installPath . 'modules/projects/difftemp/1.txt';  writefile($file1, $txt1);
-	$file2 = $installPath . 'modules/projects/difftemp/2.txt';  writefile($file2, $txt2);
+	$file1 = $kapenta->installPath . 'modules/projects/difftemp/1.txt';
+	writefile($file1, $txt1);
+
+	$file2 = $kapenta->installPath . 'modules/projects/difftemp/2.txt';  
+	writefile($file2, $txt2);
 
 	//----------------------------------------------------------------------------------------------	
 	//	run the diff

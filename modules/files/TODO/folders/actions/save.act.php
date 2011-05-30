@@ -4,7 +4,7 @@
 //	save a folder entry
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'Files_Folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 	if (array_key_exists('UID', $_POST) == false) { $page->do404(); }
 	if ($db->objectExists('folders', $_POST['UID']) == false) { $page->do404(); }
 

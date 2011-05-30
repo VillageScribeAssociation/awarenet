@@ -10,7 +10,7 @@
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Wiki_Article');
+	$UID = $aliases->findRedirect('wiki_article');
 	$model = new Wiki_Article($UID);
 	if (false == $model->loaded) { $page->do404('no such wiki article'); }
 

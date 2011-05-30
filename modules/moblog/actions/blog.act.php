@@ -10,7 +10,7 @@
 
 	$model = new Users_User();
 
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { $page->do403(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
 	//TODO: more advanced permisions for blog - tie to profile
 
 	if ('' != $req->ref) {

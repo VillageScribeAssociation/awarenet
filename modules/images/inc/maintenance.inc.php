@@ -21,7 +21,7 @@ function images_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'error');
 
-	$sql = "select * from Images_Image";
+	$sql = "select * from images_image";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {

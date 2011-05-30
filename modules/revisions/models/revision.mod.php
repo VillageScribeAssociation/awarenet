@@ -126,7 +126,7 @@ class Revisions_Revision {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'revisions';
-		$dbSchema['model'] = 'Revisions_Revision';
+		$dbSchema['model'] = 'revisions_revision';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -190,7 +190,7 @@ class Revisions_Revision {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Revisions_Revision'>\n"
+		$xml = $indent . "<kobject type='revisions_revision'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
@@ -223,17 +223,17 @@ class Revisions_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('revisions', 'Revisions_Revision', 'show', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_revision', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Revisions/showrevision/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'Revisions_Revision', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_revision', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Revisions/editrevision/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'Revisions_Revision', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('revisions', 'revisions_revision', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Revisions/delrevision/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

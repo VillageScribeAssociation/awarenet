@@ -14,7 +14,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('Gallery not specified (UID).'); }
     
 	$model = new Gallery_Gallery($_POST['UID']);
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'delete', $model->UID))
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
 		{ $page->do403('You are not authorzed to delete this gallery.'); }
 
 	//----------------------------------------------------------------------------------------------

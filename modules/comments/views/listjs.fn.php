@@ -26,7 +26,7 @@ function comments_listjs($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from Comments_Comment "
+	$sql = "select * from comments_comment "
 		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
 		 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
 		 . "order by createdOn DESC";

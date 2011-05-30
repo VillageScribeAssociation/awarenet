@@ -26,7 +26,7 @@ function wiki_historynav($args) {
 
 	$model = new Wiki_Article($args['UID']);
 	if (false == $model->loaded) { return '(no such article)'; }
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
 	//TODO: more permission options
 
 	if ($num < 1) { $num = 1; }
@@ -40,24 +40,17 @@ function wiki_historynav($args) {
 	$conditions[] = "articleUID='" . $db->addMarkup($model->UID) . "'";
 	//TODO: add any other conditions here (namespace, etc)
 
-	$totalItems = $db->countRange('Wiki_Revision', $conditions);
+	$totalItems = $db->countRange('wiki_revision', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	if ($pageNo > $totalPages) { $pageNo = $totalPages; }
 	$start = (($pageNo - 1) * $num);
-
-	//$sql = "select count(UID) as revcount "
-	//	 . "from Wiki_Revisions where refUID='" . sqlMarkup($args['UID']) . "'";
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results from the database and make the block
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('Wiki_Revision', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $db->loadRange('wiki_revision', '*', $conditions, 'editedOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/wiki/views/revisionsummarynav.block.php');
-
-	//	$sql = "select * from Wiki_Revisions "
-	//		 . "where refUID='" . sqlMarkup($args['UID']) . "' "
-	//		 . "order by editedOn DESC limit $num";
 
 	foreach ($range as $row) {
 		$model = new Wiki_Revision();

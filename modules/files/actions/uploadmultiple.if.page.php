@@ -3,7 +3,7 @@
 	<template>iframe.template.php</template>
 	<content>[[:files::filesetdetail::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]
 [`|lt]h3[`|gt]Upload file[`|lt]/h3[`|gt]
-[[:files::uploadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]
+[[:files::uploadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=%%refModel%%::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]
 
 [`|lt]h3[`|gt]Download file[`|lt]/h3[`|gt]
 [[:files::downloadmultipleform::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]:]]</content>

@@ -22,7 +22,7 @@ function gallery_navlist($args) {
 	$conditions = array();
 	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
 
-	$range = $db->loadRange('Gallery_Gallery', '*', $conditions, 'title');
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'title');
 	
 	$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
 

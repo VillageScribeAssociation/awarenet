@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('aliases', 'Aliases_Alias', 'new'))
+	if (false == $user->authHas('aliases', 'aliases_alias', 'new'))
 		{ $page->do403('You are not authorized to create new aliases.'); }
 
 	if (false == array_key_exists('module', $_POST))

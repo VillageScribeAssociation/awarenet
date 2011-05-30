@@ -6,7 +6,7 @@
 //*	add a new group
 //--------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('groups', 'Groups_Group', 'new', '')) 
+	if (false == $user->authHas('groups', 'groups_group', 'new', '')) 
 		{ $page->do403('You are not authorized to create new groups.'); }
 
 	$model = new Groups_Group();

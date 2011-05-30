@@ -40,7 +40,7 @@
 <br/>
 [[:theme::navtitlebox::label=Images::toggle=divBlogImages:]]
 <div id='divBlogImages'>
-[[:images::uploadmultiple::refModule=moblog::refModel=Moblog_Post::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=moblog::refModel=moblog_post::refUID=%%UID%%:]]
 </div>
 <br/>
 */ ?>

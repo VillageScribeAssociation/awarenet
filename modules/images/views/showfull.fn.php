@@ -14,7 +14,7 @@ function images_showfull($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('raUID', $args)) { return ''; }
-	if (false == $db->objectExists('Images_Image', $args['raUID'])) { return ''; }
+	if (false == $db->objectExists('images_image', $args['raUID'])) { return ''; }
 	$model = new Images_Image($args['raUID']);
 	if (false == $model->loaded) { return false; }
 	if ($model->fileName == '') { return false; }

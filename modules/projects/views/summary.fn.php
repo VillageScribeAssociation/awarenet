@@ -21,7 +21,7 @@ function projects_summary($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

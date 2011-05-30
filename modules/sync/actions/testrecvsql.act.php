@@ -9,7 +9,7 @@
 
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$postUrl = $serverPath . 'sync/recvsql/';
+	$postUrl = $kapenta->serverPath . 'sync/recvsql/';
 
 	$ownData = $sync->getOwnData();
 
@@ -52,7 +52,7 @@
 //	and delete it again
 //-------------------------------------------------------------------------------------------------
 
-	$postUrl = $serverPath . 'sync/recvsqldelete/';
+	$postUrl = $kapenta->serverPath . 'sync/recvsqldelete/';
 
 	$server = new Sync_Server($ownData['UID']);
 

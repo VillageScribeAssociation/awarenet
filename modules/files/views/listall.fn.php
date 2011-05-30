@@ -19,7 +19,7 @@ function files_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == authHas('files', 'Files_File', 'list')) { return false; }
+	if (false == authHas('files', 'files_file', 'list')) { return false; }
 	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (array_key_exists('page', $args)) { 
 		$pageNo = (int)$args['page']; 
@@ -29,7 +29,7 @@ function files_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the files
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('Files_File', '*', '', 'createdOn', $num, $start);
+	$list = $db->loadRange('files_file', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/blog/summary.block.php');
 
 	foreach($list as $UID => $row) {

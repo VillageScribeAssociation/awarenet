@@ -15,7 +15,7 @@
 
 	$model = new Forums_Thread($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('Thread not found.'); }
-	if (false == $user->authHas('forums', 'Forums_Thread', 'delete', $model->UID)) 
+	if (false == $user->authHas('forums', 'forums_thread', 'delete', $model->UID)) 
 		{ $page->do403('You are not permitted to delete this thread.'); }
 
 	//----------------------------------------------------------------------------------------------

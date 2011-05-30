@@ -41,7 +41,7 @@ function theme_breadcrumb($args) {
 		//	img file does not exist, make it
 		//------------------------------------------------------------------------------------------
 		//$height = $s['pxxBreadcrumbHeight'];
-		//$fontFile = $installPath . 'data/fonts/' . $s['fonBreadcrumb'];
+		//$fontFile = $kapenta->installPath . 'data/fonts/' . $s['fonBreadcrumb'];
 		//$fontSize = $s['fnsBreadcrumb'];
 		//$fontX = $s['pxxBreadcrumbFonX'];
 		//$fontY = $s['pxxBreadcrumbFonY'];
@@ -67,7 +67,7 @@ function theme_breadcrumb($args) {
 	//------------------------------------------------------------------------------------------------------
 	//	make html snippet 
 	//------------------------------------------------------------------------------------------------------
-	//$boxUrl = str_replace($installPath, $serverPath, $fileName);
+	//$boxUrl = str_replace($kapenta->installPath, $kapenta->serverPath, $fileName);
 	//$out = "<img src='" . $boxUrl . "' border='0' alt='" . $s['label'] . "'>";
 	//$out = "<a href='" . $s['link'] . "'>" . $out . "</a>";
 	$html = "<a href='" . $s['link'] . "' style='color: #4e4e4e;'><b>" . $s['label'] . "</b></a>";

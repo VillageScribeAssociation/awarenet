@@ -19,7 +19,7 @@ function moblog_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { return ''; }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) 
@@ -36,7 +36,7 @@ function moblog_summarylist($args) {
 	if (true == array_key_exists('schoolUID', $args)) 
 		{ $conditions[] = "school='" . $db->addMarkup($args['schoolUID']) . "'"; }
 
-	$totalItems = $db->countRange('Moblog_Post', $conditions);
+	$totalItems = $db->countRange('moblog_post', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	$link = '%%serverPath%%moblog/';
@@ -46,7 +46,7 @@ function moblog_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Moblog_Post', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	$block = $theme->loadBlock('modules/moblog/views/summary.block.php');
 

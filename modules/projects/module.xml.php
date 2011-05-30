@@ -60,37 +60,37 @@
 
     </models>
     <defaultpermissions>
-		student:p|projects|Projects_Project|show
+		student:p|projects|projects_project|show
 
-		student:p|projects|Projects_Project|new
-		student:p|projects|Projects_Project|show
-		student:p|projects|Projects_Project|comments-add
-		student:p|projects|Projects_Project|comments-show
-		student:p|projects|Projects_Project|images-show
-		student:c|projects|Projects_Project|images-remove|(if)|projectadmin
-		student:c|projects|Projects_Project|administer|(if)|projectadmin
-		student:c|projects|Projects_Project|edit|(if)|projectmember
-		student:c|projects|Projects_Project|edit|(if)|projectadmin
-		student:c|projects|Projects_Project|tags-manage|(if)|projectmember
-		student:c|projects|Projects_Project|images-add|(if)|projectmember
-		student:c|projects|Projects_Project|images-add|(if)|projectadmin
-		student:c|projects|Projects_Project|edit|(if)|projectadmin
-		student:p|projects|Projects_Revision|show
+		student:p|projects|projects_project|new
+		student:p|projects|projects_project|show
+		student:p|projects|projects_project|comments-add
+		student:p|projects|projects_project|comments-show
+		student:p|projects|projects_project|images-show
+		student:c|projects|projects_project|images-remove|(if)|projectadmin
+		student:c|projects|projects_project|administer|(if)|projectadmin
+		student:c|projects|projects_project|edit|(if)|projectmember
+		student:c|projects|projects_project|edit|(if)|projectadmin
+		student:c|projects|projects_project|tags-manage|(if)|projectmember
+		student:c|projects|projects_project|images-add|(if)|projectmember
+		student:c|projects|projects_project|images-add|(if)|projectadmin
+		student:c|projects|projects_project|edit|(if)|projectadmin
+		student:p|projects|projects_revision|show
 
-		teacher:p|projects|Projects_Project|new
-		teacher:p|projects|Projects_Project|show
-		teacher:p|projects|Projects_Project|comments-add
-		teacher:p|projects|Projects_Project|comments-show
-		teacher:p|projects|Projects_Project|images-show
-		teacher:c|projects|Projects_Project|images-remove|(if)|projectadmin
-		teacher:c|projects|Projects_Project|administer|(if)|projectadmin
-		teacher:c|projects|Projects_Project|edit|(if)|projectmember
-		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
-		teacher:c|projects|Projects_Project|tags-manage|(if)|projectmember
-		teacher:c|projects|Projects_Project|images-add|(if)|projectmember
-		teacher:c|projects|Projects_Project|images-add|(if)|projectadmin
-		teacher:c|projects|Projects_Project|edit|(if)|projectadmin
-		teacher:p|projects|Projects_Revision|show
+		teacher:p|projects|projects_project|new
+		teacher:p|projects|projects_project|show
+		teacher:p|projects|projects_project|comments-add
+		teacher:p|projects|projects_project|comments-show
+		teacher:p|projects|projects_project|images-show
+		teacher:c|projects|projects_project|images-remove|(if)|projectadmin
+		teacher:c|projects|projects_project|administer|(if)|projectadmin
+		teacher:c|projects|projects_project|edit|(if)|projectmember
+		teacher:c|projects|projects_project|edit|(if)|projectadmin
+		teacher:c|projects|projects_project|tags-manage|(if)|projectmember
+		teacher:c|projects|projects_project|images-add|(if)|projectmember
+		teacher:c|projects|projects_project|images-add|(if)|projectadmin
+		teacher:c|projects|projects_project|edit|(if)|projectadmin
+		teacher:p|projects|projects_revision|show
     </defaultpermissions>
 </module>
 */ ?>

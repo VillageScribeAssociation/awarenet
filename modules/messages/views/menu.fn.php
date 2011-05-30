@@ -15,7 +15,7 @@ function messages_menu($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	$labels['newEntry'] = '';
-	if ($user->authHas('messages', 'Messages_Message', 'send')) 
+	if ($user->authHas('messages', 'messages_message', 'send')) 
 		{ $labels['newEntry'] = '[[:theme::submenu::label=Compose::link=/messages/compose/:]]'; } 
 
 	//----------------------------------------------------------------------------------------------

@@ -97,7 +97,7 @@ class Announcements_Announcement {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('announcements', 'Announcements_Announcement', $this->UID, $this->UID);
+		$this->alias = $aliases->create('announcements', 'announcements_announcement', $this->UID, $this->UID);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -125,7 +125,7 @@ class Announcements_Announcement {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'announcements';
-		$dbSchema['model'] = 'Announcements_Announcement';
+		$dbSchema['model'] = 'announcements_announcement';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -206,22 +206,22 @@ class Announcements_Announcement {
 
 		//$hasEditAuth = $this->hasEditAuth($user->UID);
 
-		if (true == $user->authHas('announcements', 'Announcements_Announcement', 'show', $this->UID)) { 
+		if (true == $user->authHas('announcements', 'announcements_announcement', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%announcements/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('announcements', 'Announcements_Announcement', 'edit', $this->UID)) {
+		if (true == $user->authHas('announcements', 'announcements_announcement', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%announcements/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('announcements', 'Announcements_Announcement', 'delete', $this->UID)) {
+		if (true == $user->authHas('announcements', 'announcements_announcement', 'delete', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%announcements/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('announcements', 'Announcements_Announcement', 'new')) { 
+		if (true == $user->authHas('announcements', 'announcements_announcement', 'new')) { 
 			$ary['newUrl'] = "%%serverPath%%announcements/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new announcement]</a>"; 
 		}

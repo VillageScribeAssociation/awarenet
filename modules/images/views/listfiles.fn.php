@@ -29,7 +29,7 @@ function images_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 
 	//TODO: consider dbLoadRange (possible memory issue)
-	$sql = "select UID, fileName from Images_Image";
+	$sql = "select UID, fileName from images_image";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) { 
 		$row = $db->rmArray($row);
@@ -71,7 +71,7 @@ function images_listfiles($args) {
 				foreach($files as $file) {
 					$list .= "<file>\n";
 					$list .= "  <refModule>images</refModule>\n";
-					$list .= "  <refModel>Images_Image</refModel>\n";
+					$list .= "  <refModel>images_image</refModel>\n";
 					$list .= "  <refUID>" . $file[0] . "</refUID>\n";
 					$list .= "  <location>" . $file[1] . "</location>\n"; 
 					$list .= "</file>\n";
@@ -83,7 +83,7 @@ function images_listfiles($args) {
 				//	return file list in CSV format
 				//---------------------------------------------------------------------------------
 				foreach($files as $file) {
-					$list .= "images, Images_Image, " . $file[0] . ", " . $file[1] . "\n";
+					$list .= "images, images_image, " . $file[0] . ", " . $file[1] . "\n";
 				}
 				break;
 

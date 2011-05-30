@@ -13,7 +13,7 @@
 		//------------------------------------------------------------------------------------------
 
 		$rows = array();
-		$sql = "select * from Files_File where refModule='" . $db->addMarkup($req->args['refmodule']) 
+		$sql = "select * from files_file where refModule='" . $db->addMarkup($req->args['refmodule']) 
 			. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
 			
 		//TODO: $db->loadRange

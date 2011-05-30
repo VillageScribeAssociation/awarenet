@@ -12,7 +12,7 @@
 
 function projects_editsectiontable($args) {
 	global $user;
-	if ($user->authHas('projects', 'Projects_Project', 'edit', 'TODO:UIDHERE') == false) { return false; }
+	if ($user->authHas('projects', 'projects_project', 'edit', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';

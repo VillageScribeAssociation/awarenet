@@ -13,7 +13,7 @@
 
 	$model = new Moblog_Post($req->args['UID']);
 
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID))
+	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to delete this blog post.'); }
 	
 	//----------------------------------------------------------------------------------------------

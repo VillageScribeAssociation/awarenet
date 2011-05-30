@@ -14,7 +14,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('Entry not specified (UID)'); }
 	  
 	$model = new Calendar_Entry($_POST['UID']);
-	if (false == $user->authHas('calendar', 'Calendar_Entry', 'delete', $model->UID))
+	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
 		{ $page->do403(); }	  
 
 	//----------------------------------------------------------------------------------------------

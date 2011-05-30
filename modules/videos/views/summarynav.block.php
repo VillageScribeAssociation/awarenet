@@ -3,7 +3,7 @@
   <tr>
     <td valign='top'>
       <a href='%%serverPath%%videos/showgallery/%%alias%%'>
-      [[:images::randomimages::refModule=videos::refModule=Videos_Gallery::refUID=%%galleryUID%%::size=thumbsm::limit=1::link=no:]]</a>
+      [[:videos::gallerythumb::size=thumbsm::galleryUID=%%UID%%:]]</a>
     </td>
 	<td width='10px'></td>
     <td valign='top'>

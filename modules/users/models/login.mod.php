@@ -18,7 +18,8 @@ class Users_Login {
 
 	var $UID;				//_ UID [string]
 	var $userUID;			//_ ref:Users_User [string]
-	var $serverUrl;			//_ varchar(255) [string]
+	var $serverUID;			//_ varchar(255) [string]
+	var $serverName;		//_ varchar(255) [string]
 	var $logintime;			//_ datetime [string]
 	var $lastseen;			//_ datetime [string]
 	var $status;			//_ datetime [string]
@@ -26,6 +27,8 @@ class Users_Login {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ share this object with other instances (yes|no) [string]
+	var $revision;			//_ bigint [string]
 
 	var $maxAge = 300;		// maximum age of user login session, in seconds [int]
 
@@ -47,7 +50,7 @@ class Users_Login {
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
-			$this->serverUrl = $kapenta->serverPath;		// ...user was here
+			$this->serverUID = $kapenta->serverPath;		// ...user was here
 			$this->logintime = $db->datetime();				// ...at this time
 			$this->lastseen = $db->datetime();				// ...
 			$this->loaded = false;
@@ -76,9 +79,9 @@ class Users_Login {
 		global $db;
 
 		$conditions = array("userUID='" . $db->addMarkup($userUID) . "'");
-		$range = $db->loadRange('Users_Login', '*', $conditions);
+		$range = $db->loadRange('users_login', '*', $conditions);
 
-		//$sql = "select * from Users_Login where userUID='" . $db->addMarkup($userUID) . "'";
+		//$sql = "select * from users_login where userUID='" . $db->addMarkup($userUID) . "'";
 
 		if (false === $range) { return false; }
 		if (0 == count($range)) { return false; }
@@ -102,7 +105,7 @@ class Users_Login {
 		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->userUID = $ary['userUID'];
-		$this->serverUrl = $ary['serverUrl'];
+		$this->serverUID = $ary['serverUID'];
 		$this->logintime = $ary['logintime'];
 		$this->lastseen = $ary['lastseen'];
 		$this->status = $ary['status'];
@@ -110,6 +113,8 @@ class Users_Login {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
+		$this->revision = $ary['revision'];
 		$this->loaded = true;
 		return true;
 	}
@@ -149,21 +154,25 @@ class Users_Login {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'users';
-		$dbSchema['model'] = 'Users_Login';
+		$dbSchema['model'] = 'users_login';
 		$dbSchema['archive'] = 'no';			// do not keep revision history or deleted records
 
 		//table columns
 		$dbSchema['fields'] = array(
 			'UID' => 'VARCHAR(33)',
 			'userUID' => 'VARCHAR(33)',
-			'serverUrl' => 'VARCHAR(255)',
+			'serverUID' => 'VARCHAR(255)',
+			'serverName' => 'VARCHAR(255)',
 			'logintime' => 'DATETIME',
 			'lastseen' => 'DATETIME',
 			'status' => 'DATETIME',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
+			'revision' => 'BIGINT(20)' 
+		);
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -178,7 +187,8 @@ class Users_Login {
 		$dbSchema['nodiff'] = array(
 			'UID',
 			'userUID',
-			'serverUrl',
+			'serverUID',
+			'serverName',
 			'logintime',
 			'lastseen',
 			'status',
@@ -201,14 +211,17 @@ class Users_Login {
 		$serialize = array(
 			'UID' => $this->UID,
 			'userUID' => $this->userUID,
-			'serverUrl' => $this->serverUrl,
+			'serverUID' => $this->serverUID,
+			'serverName' => $this->serverName,
 			'logintime' => $this->logintime,
 			'lastseen' => $this->lastseen,
 			'status' => $this->status,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => $this->shared,
+			'revision' => $this->revision
 		);
 		return $serialize;
 	}
@@ -233,10 +246,11 @@ class Users_Login {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Users_Login'>\n"
+		$xml = $indent . "<kobject type='users_login'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <userUID>" . $this->userUID . "</userUID>\n"
-			. $indent . "    <serverUrl>" . $this->serverUrl . "</serverUrl>\n"
+			. $indent . "    <serverUID>" . $this->serverUID . "</serverUID>\n"
+			. $indent . "    <serverName>" . $this->serverUID . "</serverName>\n"
 			. $indent . "    <logintime>" . $this->logintime . "</logintime>\n"
 			. $indent . "    <lastseen>" . $this->lastseen . "</lastseen>\n"
 			. $indent . "    <status>" . $this->status . "</status>\n"
@@ -244,6 +258,8 @@ class Users_Login {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
+			. $indent . "    <revision>" . $this->revision . "</revision>\n"
 			. $indent . "</kobject>\n";
 
 		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}
@@ -260,40 +276,12 @@ class Users_Login {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	clear old entries from the Users_Login table	//TODO: move to cron
-	//----------------------------------------------------------------------------------------------
-
-	function clearOldEntries() {
-		global $db, $serverPath;
-		$range = $db->loadRange('Users_Login', '*', '', '', '', '');
-		foreach($range as $row) {
-			if (($row['serverUrl'] == $serverPath) && (time() > ($row['lastseen'] + $this->maxAge)))
-				{ $db->delete('users', 'Users_Login', $row['UID']); }
-		}
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	discover if there is already an entry for this user
-	//----------------------------------------------------------------------------------------------
-	//arg: userUID - UID of a user [string]
-	//returns: true if there is a record of a current session, otherwise false [bool]
-
-	function inList($userUID) {
-		global $db;
-
-		$sql = "select * from Users_Login where userUID='" . $db->addMarkup($userUID) . "'";
-		$result = $db->query($sql);
-		if ($db->numRows($result) > 0) { return true; }
-		return false;
-	}
-
-	//----------------------------------------------------------------------------------------------
 	//.	update lastseen to current time
 	//----------------------------------------------------------------------------------------------
 
-	function updateLastSeen() {
+	function updateLastSeen($userUID) {
 		global $db;
-		$db->updateQuiet('Users_Login', $this->UID, 'lastseen', $db->datetime());
+		$db->updateQuiet('users_login', $this->UID, 'lastseen', $db->datetime());
 	}
 	
 }

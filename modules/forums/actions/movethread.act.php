@@ -31,7 +31,7 @@
 		$msg = 'No forum specified.';
 		$allOk = false;
 	} else {
-		if (false == $db->objectExists('Forums_Board', $_POST['forum'])) {
+		if (false == $db->objectExists('forums_board', $_POST['forum'])) {
 			$msg = 'Forum not found.';
 			$allOk = false;
 		}
@@ -41,7 +41,7 @@
 		$msg = 'No thread specified.';
 		$allOk = false;
 	} else {
-		if (false == $db->objectExists('Forums_Thread', $_POST['thread'])) {
+		if (false == $db->objectExists('forums_thread', $_POST['thread'])) {
 			$msg = 'Thread not found.';
 			$allOk = false;
 		}

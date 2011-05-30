@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'new'))
+	if (false == $user->authHas('wiki', 'wiki_article', 'new'))
 		{ $page->do403('You are not authorized to create new Articles.'); }
 
 

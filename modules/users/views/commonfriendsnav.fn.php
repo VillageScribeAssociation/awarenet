@@ -22,7 +22,7 @@ function users_commonfriendsnav($args) {
 	if (count($common) > 0) {
 		$html .= "[[:theme::navtitlebox::label=Friends In Common:]]";
 		foreach ($common as $userUID) {
-			$userRa = $aliases->getDefault('Users_User', $userUID);	// clunky, TODO: improve
+			$userRa = $aliases->getDefault('users_user', $userUID);	// clunky, TODO: improve
 			$html .= "<a href='/users/profile/" . $userRa . "'>" 
 					. "[[:users::avatar::userUID=" . $userUID . "::size=thumbsm:]]</a>\n";
 		}

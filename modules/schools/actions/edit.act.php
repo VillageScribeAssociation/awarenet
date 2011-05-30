@@ -10,8 +10,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	$UID = $aliases->findRedirect('Schools_School');
-	if (false == $user->authHas('schools', 'Schools_School', 'edit', $UID))
+	$UID = $aliases->findRedirect('schools_school');
+	if (false == $user->authHas('schools', 'schools_school', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Schools.'); }
 
 	if ('' == $req->ref) { $page->do404(); }

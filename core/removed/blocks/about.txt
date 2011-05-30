@@ -1,5 +1,0 @@
-<? /*
-
-The blocks module allows administrators to view and edit block templates - snippets of HTML into which variables are substituted to create views (HTML rederings of objects in some context).  The goal is to allow the layout of blocks to be changed without modifying the PHP code which generates the view.  This allows flexibility in web design without requiring artists and web designers to read or edit PHP, and is important because automated updates of the view code (*.fn.php) would otherwise undo changes made in customizing the appearance of websites.
-
-*/ ?>

@@ -1,5 +1,5 @@
 <? /*
-<div class='indent'>
+
 <form name='editGallery' method='POST' action='%%serverPath%%/gallery/save/'>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
@@ -29,5 +29,5 @@
    </td>
  </tr>
 </table>
-</div>
+
 */ ?>

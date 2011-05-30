@@ -18,7 +18,7 @@ function users__cb_comments_added($refUID, $commentUID, $comment) {
 	if (false == array_key_exists('comment', $args)) { return false; }
 
 	if ($args['refModule'] != 'users') { return false; }
-	if (false == $db->objectExists('Users_User', $args['refUID'])) { return false; }
+	if (false == $db->objectExists('users_user', $args['refUID'])) { return false; }
 	
 	$model = new Users_User($args['refUID']);
 	$creator = new Users_User($model->createdBy);

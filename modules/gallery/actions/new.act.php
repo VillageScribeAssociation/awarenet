@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //TODO: replace with standard generated code
 
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'new')) { $page->do403(); }
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'new')) { $page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
 	if ('createGallery' != $_POST['action']) { $page->do404('Action not supported.'); }

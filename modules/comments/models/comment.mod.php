@@ -115,7 +115,7 @@ class Comments_Comment {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'comments';
-		$dbSchema['model'] = 'Comments_Comment';
+		$dbSchema['model'] = 'comments_comment';
 
 		//table columns
 		$dbSchema['fields'] = array(

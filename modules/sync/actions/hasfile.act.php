@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/sync/models/download.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	discover if this peer has a file
+//*	discover if this peer has a file
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -23,12 +23,12 @@
 
 	$fileName = str_replace('/.', 'XXXX' , $fileName);
 	
-	if (true == file_exists($installPath . $fileName)) {
+	if (true == file_exists($kapenta->installPath . $fileName)) {
 		//-----------------------------------------------------------------------------------------
 		//	file exists on this server
 		//-----------------------------------------------------------------------------------------
 		echo "<?xml version=\"1.0\"?>\n";
-		$hash = sha1(implode(file($installPath . $fileName)));
+		$hash = sha1(implode(file($kapenta->installPath . $fileName)));
 		echo "<result>$hash</result>";
 
 	} else {
@@ -45,8 +45,8 @@
 			//-------------------------------------------------------------------------------------
 			//	look for this file on peers, download if found
 			//-------------------------------------------------------------------------------------
-			$url = $serverPath . 'sync/findfile/' . $model->UID;
-			$od = $installPath . 'data/temp/' . $kapenta->createUID() . '.sync';
+			$url = $kapenta->serverPath . 'sync/findfile/' . $model->UID;
+			$od = $kapenta->installPath . 'data/temp/' . $kapenta->createUID() . '.sync';
 			$kapenta->procExecBackground("wget --output-document=" . $od . " $url");
 
 		} else {

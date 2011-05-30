@@ -26,7 +26,7 @@ function comments_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Comments_Comment object
 	//----------------------------------------------------------------------------------------------
-	if ('Comments_Comment' == $refModel) {
+	if ('comments_comment' == $refModel) {
 		$model = new Comments_Comment($UID);				// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

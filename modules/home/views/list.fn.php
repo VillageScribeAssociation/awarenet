@@ -18,7 +18,7 @@ function home_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'Home_Static', 'show', '')) { return ''; }
+	if (false == $user->authHas('home', 'home_static', 'show', '')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) { 
 		$pageNo = (int)$args['page']; 
@@ -28,11 +28,11 @@ function home_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('Home_Static', '*', '', 'title', $num, $start);
+	$list = $db->loadRange('home_static', '*', '', 'title', $num, $start);
 	
 	//TODO: use $theme->arrayToHtmlTable();
 	$html = "<table noborder>\n";
-	if ($user->authHas('home', 'Home_Static', 'edit')) {
+	if ($user->authHas('home', 'home_static', 'edit')) {
 		$html .= "<tr><td class='title'>UID</td><td class='title'>Page</td></tr>";
 	} else {
 		$html .= "<tr><td class='title'>UID</td><td class='title'>Page</td>" 

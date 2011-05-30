@@ -9,24 +9,23 @@
 
 function editor_add($args) {
 	global $page;
-	global $serverPath;
 	$width = 568;
 	$height = 400;
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('name', $args) == false) { return ''; }
-	if (array_key_exists('width', $args) == true) { $width = $args['width']; }
-	if (array_key_exists('height', $args) == true) { $height = $args['height']; }
+	if (false == array_key_exists('name', $args)) { return '(field name not given)'; }
+	if (true == array_key_exists('width', $args)) { $width = $args['width']; }
+	if (true == array_key_exists('height', $args)) { $height = $args['height']; }
 
-	if (is_numeric($width) == false) { return ''; }
-	if (is_numeric($height) == false) { return ''; }
+	if (false == is_numeric($width)) { return ''; }
+	if (false == is_numeric($height)) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	make the script block
 	//---------------------------------------------------------------------------------------------
-	$jsFile = $serverPath . '/modules/editor/HyperTextArea.js';
+	$jsFile = '%%serverPath%%modules/editor/HyperTextArea.js';
 	$editorJs = "<script language='JavaScript' src='" . $jsFile . "'></script>\n";
 
 	$html = $editorJs

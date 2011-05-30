@@ -12,7 +12,7 @@ function groups_listall($args) {
 	global $db;
 	$html = '';
 
-	$sql = "select * from Groups_Group";
+	$sql = "select * from groups_group";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) 

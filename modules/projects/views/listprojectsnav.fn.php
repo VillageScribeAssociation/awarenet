@@ -22,7 +22,7 @@ function projects_listprojectsnav($args) {
 
 	//$sql = "select * from Projects_Project order by createdOn DESC limit " . $db->addMarkup($num);
 
-	$range = $db->loadRange('Projects_Project', '*', '', 'createdOn DESC', $db->addMarkup($num));
+	$range = $db->loadRange('projects_project', '*', '', 'createdOn DESC', $db->addMarkup($num));
 
 	$block = $theme->loadBlock('modules/projects/views/summarynav.block.php');
 

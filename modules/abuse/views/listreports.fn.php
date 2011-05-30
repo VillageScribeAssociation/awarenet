@@ -22,7 +22,7 @@ function abuse_listreports($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions = "status='open'";
-	$range = $db->loadRange('Abuse_Report', '*', $conditions);
+	$range = $db->loadRange('abuse_report', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

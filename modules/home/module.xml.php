@@ -31,9 +31,9 @@
       </model>
     </models>
     <defaultpermissions>
-		public:p|home|Home_Static|show
-		student:p|home|Home_Static|show
-		teacher:p|home|Home_Static|show
+		public:p|home|home_static|show
+		student:p|home|home_static|show
+		teacher:p|home|home_static|show
     </defaultpermissions>
     <blocks>
     </blocks>

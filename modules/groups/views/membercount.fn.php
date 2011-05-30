@@ -21,7 +21,7 @@ function groups_membercount($args) {
 
 	$model = new Groups_Group($args['raUID']);
 
-	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return false; }
+	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return false; }
 
 	$memberCount = '' . count($model->members);
 

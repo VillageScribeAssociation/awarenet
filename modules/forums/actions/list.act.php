@@ -4,7 +4,7 @@
 //	list all galleries in root
 //--------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('forums', 'Forums_Board', 'show')) { $page->do403(); }
+	if (false == $user->authHas('forums', 'forums_board', 'show')) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

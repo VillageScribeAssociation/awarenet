@@ -35,6 +35,6 @@
 </table>
 
 <h2>Images</h2>
-[[:images::uploadmultiple::refModule=badges::refModel=Badges_Badge::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=badges::refModel=badges_badge::refUID=%%UID%%:]]
 
 */ ?>

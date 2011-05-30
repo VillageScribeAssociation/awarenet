@@ -69,7 +69,7 @@ class Live_Mailbox {
 	function loadPage($pageUID) {
 		global $db;
 		$conditions = array("pageUID='" . $db->addMarkup($pageUID) . "'");
-		$range = $db->loadRange('Live_Mailbox', '*', $conditions);
+		$range = $db->loadRange('live_mailbox', '*', $conditions);
 		if (0 == count($range)) { return false; }
 		foreach($range as $row) { $this->loadArray($row); }
 		return true;
@@ -131,7 +131,7 @@ class Live_Mailbox {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'live';
-		$dbSchema['model'] = 'Live_Mailbox';
+		$dbSchema['model'] = 'live_mailbox';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -198,7 +198,7 @@ class Live_Mailbox {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Live_Mailbox'>\n"
+		$xml = $indent . "<kobject type='live_mailbox'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <pageUID>" . $this->pageUID . "</pageUID>\n"
 			. $indent . "    <userUID>" . $this->userUID . "</userUID>\n"
@@ -231,17 +231,17 @@ class Live_Mailbox {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'Live_Mailbox', 'show', $this->UID)) {
+		if (true == $user->authHas('live', 'live_mailbox', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showmailbox/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Mailbox', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('live', 'live_mailbox', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/editmailbox/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Mailbox', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('live', 'live_mailbox', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/delmailbox/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -264,7 +264,7 @@ class Live_Mailbox {
 		if (false == $this->loaded) { return false; }		// nothing to do
 
 		// clear any triggers belonging to this page
-		$sql = "delete from Live_Trigger where pageUID='" . $db->addMarkup($this->pageUID) . "'";
+		$sql = "delete from live_trigger where pageUID='" . $db->addMarkup($this->pageUID) . "'";
 		$db->query($sql);
 
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }

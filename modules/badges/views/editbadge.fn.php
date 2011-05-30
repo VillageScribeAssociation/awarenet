@@ -25,7 +25,7 @@ function badges_editbadge($args) {
 	$model = new Badges_Badge($raUID);	//% the object we're editing [object:Badges_Badge]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('badges', 'Badges_Badge', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('badges', 'badges_badge', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

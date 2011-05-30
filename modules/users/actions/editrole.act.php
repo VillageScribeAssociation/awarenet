@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	$UID = $aliases->findRedirect('Users_Role');
-	if (false == $user->authHas('users', 'Users_Role', 'edit', $UID))
+	$UID = $aliases->findRedirect('users_role');
+	if (false == $user->authHas('users', 'users_role', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Roles.'); }
 
 	//----------------------------------------------------------------------------------------------

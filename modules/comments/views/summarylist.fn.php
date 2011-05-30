@@ -30,7 +30,7 @@ function comments_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database and make block
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('Comments_Comment', '*', '', 'createdOn', $num, $start);
+	$list = $db->loadRange('comments_comment', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/comments/views/summary.block.php');
 
 	foreach($list as $UID => $row) {

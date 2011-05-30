@@ -20,7 +20,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	make the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/contact/actions/edit.if.page.php');
+	$page->load('modules/contact/actions/edit.if.page.php');
 	$page->blockArgs['refModule'] = $model->refModule;
 	$page->blockArgs['refModel'] = $model->refModel;
 	$page->blockArgs['refUID'] = $model->refUID;

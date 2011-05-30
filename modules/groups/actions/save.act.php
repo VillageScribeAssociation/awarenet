@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('groups', 'Groups_Group', 'edit', $UID))
+	if (false == $user->authHas('groups', 'groups_group', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Group.'); }
 
 	//----------------------------------------------------------------------------------------------

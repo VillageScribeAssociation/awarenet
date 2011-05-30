@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'Schools_School', 'show')) { $page->do403(); }
+	if (false == $user->authHas('schools', 'schools_school', 'show')) { $page->do403(); }
 
 	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
 

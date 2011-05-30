@@ -1,20 +1,27 @@
-<? /*
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
+
 <page>
-<template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::width=570::label=All Static Pages:]]
+	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - list static pages</title>
+	<content>[[:theme::navtitlebox::width=570::label=All Static Pages:]]
 [[:home::list:]]
 [`|lt]br/[`|gt][`|lt]br/[`|gt]
-[`|lt]a href=[`|sq]http://awarenet.co.za/static/new/[`|sq][`|gt][[`|create] new static page [`|gt][`|gt]][`|lt]/a[`|gt]</content>
-<title>awareNet - list static pages</title>
-<script></script>
-<nav1>[[:admin::subnav:]]</nav1>
-<nav2></nav2>
-<banner></banner>
-<head></head>
-<menu1>[[:home::menu:]]</menu1>
-<menu2>[[:admin::menu:]]</menu2>
-<section></section>
-<subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=Static Pages - ::link=/static/:]]
+[`|lt]a href=[`|sq][`|pc][`|pc]serverPath[`|pc][`|pc]home/new/[`|sq][`|gt][[`|create] new static page [`|gt][`|gt]][`|lt]/a[`|gt]</content>
+	<nav1>[[:admin::subnav:]]</nav1>
+	<nav2></nav2>
+	<script></script>
+	<jsinit>galleryNav[`|us]init()[`|sc]
+msgSubscribe([`|sq]comments-gallery-[`|pc][`|pc]imageUID[`|pc][`|pc][`|sq], msgh[`|us]comments)[`|sc]
+msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<banner></banner>
+	<head></head>
+	<menu1>[[:home::menu:]]</menu1>
+	<menu2>[[:admin::menu:]]</menu2>
+	<section></section>
+	<subsection></subsection>
+	<breadcrumb>[[:theme::breadcrumb::label=Static Pages - ::link=/static/:]]
 [[:theme::breadcrumb::label=All::link=/static/list/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+
+*/ ?>

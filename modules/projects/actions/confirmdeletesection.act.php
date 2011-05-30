@@ -18,7 +18,7 @@
 
 	$model = new Projects_Project($req->args['uid']);
 	if (false == $model->loaded) { $page->do404('Project not found.'); }
-	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID))
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID))
 		{ $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------

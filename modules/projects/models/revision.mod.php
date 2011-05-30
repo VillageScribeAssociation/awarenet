@@ -114,7 +114,7 @@ class Projects_Revision {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'projects';
-		$dbSchema['model'] = 'Projects_Revision';
+		$dbSchema['model'] = 'projects_revision';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -197,7 +197,7 @@ class Projects_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'Projects_Revision', 'show', $this->UID)) { 
+		if (true == $user->authHas('projects', 'projects_revision', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%projects/showrevision/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='%%serverPath%%projects/showrevision/" . $ary['UID'] . "'>"
 					 . "[read on &gt;&gt;]</a>"; 

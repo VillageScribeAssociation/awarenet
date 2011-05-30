@@ -6,6 +6,7 @@
       <input type='submit' value='Upload' /><br/>
       <input type='hidden' name='action' value='uploadSinglefile' />
       <input type='hidden' name='refModule' value='%%refModule%%' />
+      <input type='hidden' name='refModel' value='%%refModel%%' />
       <input type='hidden' name='refUID' value='%%refUID%%' />
       <input type='hidden' name='return' value='uploadmultiple' />
 </form>

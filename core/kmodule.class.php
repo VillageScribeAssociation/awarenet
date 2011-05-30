@@ -125,7 +125,7 @@ class KModule {
 		//echo "fileName: " . $this->fileName . "<br/>\n";
 		//echo "<textarea rows='30' cols='50'>" . $xml . "</textarea><br/>\n";
 		
-		//filePutContents takes a filename relative to $installPath
+		//filePutContents takes a filename relative to $kapenta->installPath
 
 		$kapenta->filePutContents($fileName, $xml, false, true);
 	}

@@ -77,7 +77,7 @@ class Projects_Membership {
 		$conditions = array();
 		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
 		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
-		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		$range = $db->loadRange('projects_membership', '*', $conditions);
 
 		if (count($range) == 0) { return false; }
 		
@@ -135,9 +135,9 @@ class Projects_Membership {
 
 		if (strlen($this->UID) < 5) 
 			{ $report .= "UID not present.\n"; }
-		if (false == $db->objectExists('Users_User', $this->userUID)) 
+		if (false == $db->objectExists('users_user', $this->userUID)) 
 			{ $report .= "Member does not exist."; }
-		if (false == $db->objectExists('Projects_Project', $this->projectUID)) 
+		if (false == $db->objectExists('projects_project', $this->projectUID)) 
 			{ $report .= "Project does not exist."; }
 
 		return $report;
@@ -151,7 +151,7 @@ class Projects_Membership {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'projects';
-		$dbSchema['model'] = 'Projects_Membership';
+		$dbSchema['model'] = 'projects_membership';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -223,17 +223,17 @@ class Projects_Membership {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'Projects_Membership', 'show', $this->UID)) {
+		if (true == $user->authHas('projects', 'projects_membership', 'show', $this->UID)) {
 			$ext['viewUrl'] = "TODO";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'Projects_Membership', 'edit', $this->UID)) {
+		if (true == $user->authHas('projects', 'projects_membership', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Projects/editmembership/' . $this->UID;
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'Projects_Membership', 'delete', $this->UID)) {
+		if (true == $user->authHas('projects', 'projects_membership', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Projects/delmembership/' . $this->UID;
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

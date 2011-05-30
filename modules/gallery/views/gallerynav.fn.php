@@ -28,7 +28,7 @@ function gallery_gallerynav($args) {
 	$conditions[] = "refUID='" . $db->addMarkup($args['galleryUID']) . "'";
 	$conditions[] = "refModule='gallery'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//$sql = "select UID, title, weight, recordAlias from Images_Image "
 	//	 . "where refUID='" . $db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "

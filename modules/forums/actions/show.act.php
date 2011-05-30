@@ -15,8 +15,8 @@
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------	
 	if ('' == $req->ref) { $page->do404('no such forum'); }					// check ref
-	$UID = $aliases->findRedirect('Forums_Board'); 							// check correct ref
-	if (false == $user->authHas('forums', 'Forums_Board', 'show', $UID)) 
+	$UID = $aliases->findRedirect('forums_board'); 							// check correct ref
+	if (false == $user->authHas('forums', 'forums_board', 'show', $UID)) 
 		{ $page->do403('You are not authorized to view this forum.'); }
 
 	//----------------------------------------------------------------------------------------------	

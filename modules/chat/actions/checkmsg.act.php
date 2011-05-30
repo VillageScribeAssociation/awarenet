@@ -21,7 +21,7 @@
 	//	update user's lastonline field
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "update Users_User set lastOnline='" . $db->datetime() . "' "
+	$sql = "update users_user set lastOnline='" . $db->datetime() . "' "
 		 . "where UID='" . $db->addMarkup($user->UID) . "'";
 
 	$db->query($sql);	

@@ -32,7 +32,11 @@
 			case 'refuid':		$model->refUID = $value; break;
 			case 'comment':		$model->comment = $value; break;
 			case 'title':		$model->title = $value; break;
-			case 'fromurl':		$model->fromurl = str_replace($serverPath, '', $value); break;
+
+			case 'fromurl':		
+				$model->fromurl = str_replace($kapenta->serverPath, '', $value); 
+				break;
+
 			//case 'notes':		$model->notes = $utils->cleanString($value); break;
 			//case 'status':	$model->status = $utils->cleanString($value); break;
 		}

@@ -14,10 +14,11 @@ class Notifications_Notification {
 	var $dbSchema;				//_	database table definition [array]
 	var $loaded = false;		//_	set to true when an object has been loaded [bool]
 
-	var $UID;					//_ UID [string]
-	var $refModule;				//_ module [string]
-	var $refModel;				//_ model [string]
-	var $refUID;				//_ ref:*_* [string]
+	var $UID;					//_ Unique identifier of this object [string]
+	var $refModule;				//_ name of a kapenta module [string]
+	var $refModel;				//_ type of object which caused event (model) [string]
+	var $refUID;				//_ UID of object which caused event (ref:*_*) [string]
+	var $refEvent;				//_ name of event which caused this to be created [string]
 	var $title;					//_ title [string]
 	var $content;				//_ wyswyg [string]
 	var $refUrl;				//_ varchar(255) [string]
@@ -73,6 +74,7 @@ class Notifications_Notification {
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];
 		$this->refUID = $ary['refUID'];
+		$this->refEvent = $ary['refEvent'];
 		$this->title = $ary['title'];
 		$this->content = $ary['content'];
 		$this->refUrl = $ary['refUrl'];
@@ -118,7 +120,7 @@ class Notifications_Notification {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'notifications';
-		$dbSchema['model'] = 'Notifications_Notification';
+		$dbSchema['model'] = 'notifications_notification';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -126,6 +128,7 @@ class Notifications_Notification {
 			'refModule' => 'TEXT',
 			'refModel' => 'TEXT',
 			'refUID' => 'VARCHAR(33)',
+			'refEvent' => 'VARCHAR(255)',
 			'title' => 'VARCHAR(255)',
 			'content' => 'MEDIUMTEXT',
 			'refUrl' => 'VARCHAR(255)',
@@ -140,6 +143,7 @@ class Notifications_Notification {
 			'refModule' => '10',
 			'refModel' => '10',
 			'refUID' => '10',
+			'refEvent' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -163,6 +167,7 @@ class Notifications_Notification {
 			'refModule' => $this->refModule,
 			'refModel' => $this->refModel,
 			'refUID' => $this->refUID,
+			'refEvent' => $this->refEvent,
 			'title' => $this->title,
 			'content' => $this->content,
 			'refUrl' => $this->refUrl,
@@ -184,11 +189,12 @@ class Notifications_Notification {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Notifications_Notification'>\n"
+		$xml = $indent . "<kobject type='notifications_notification'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
 			. $indent . "    <refUID>" . $this->refUID . "</refUID>\n"
+			. $indent . "    <refEvent>" . $this->refUID . "</refEvent>\n"
 			. $indent . "    <title>" . $this->title . "</title>\n"
 			. $indent . "    <content><![CDATA[" . $this->content . "]]></content>\n"
 			. $indent . "    <refUrl>" . $this->refUrl . "</refUrl>\n"
@@ -219,17 +225,17 @@ class Notifications_Notification {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('notifications', 'Notifications_Notification', 'show', $this->UID)) {
+		if (true == $user->authHas('notifications', 'notifications_notification', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Notifications/shownotification/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'Notifications_Notification', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('notifications', 'notifications_notification', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Notifications/editnotification/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'Notifications_Notification', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('notifications', 'notifications_notification', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Notifications/delnotification/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -238,8 +244,8 @@ class Notifications_Notification {
 		//	general
 		//------------------------------------------------------------------------------------------
 
-		$ext['createdOnLong'] = date('F nS Y', strtotime($ext['createdOn']));
-		$ext['editedOnLong'] = date('F nS Y', strtotime($ext['editedOn']));		
+		$ext['createdOnLong'] = date('F dS Y', strtotime($ext['createdOn']));
+		$ext['editedOnLong'] = date('F dS Y', strtotime($ext['editedOn']));		
 
 		//------------------------------------------------------------------------------------------
 		//	javascript
@@ -276,7 +282,7 @@ class Notifications_Notification {
 	function loadMembers() {
 		global $db;
 		$conditions = array("notificationUID='" . $db->addMarkup($this->UID) . "'");
-		$range = $db->loadRange('Notifications_UserIndex', '*', $conditions, '');
+		$range = $db->loadRange('notifications_userindex', '*', $conditions, '');
 		if (false === $range) { return false; }
 		$this->members = $range;
 		$this->membersLoaded = true;

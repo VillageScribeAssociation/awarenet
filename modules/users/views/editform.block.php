@@ -47,6 +47,8 @@
          <option value='Std. 10'>Std. 10</option>
          <option value='Std. 11'>Std. 11</option>
          <option value='Std. 12'>Std. 12</option>
+         <option value='Alumni'>Alumni</option>
+         <option value='Staff'>Staff</option>
         </select>
     </td>
   </tr>

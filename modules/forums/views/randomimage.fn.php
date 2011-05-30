@@ -17,7 +17,7 @@ function forums_randomimage($args) {
 	if (false == array_key_exists('forumsUID', $args)) { return ''; }
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 
-	$sql = "select * from Images_Image "
+	$sql = "select * from images_image "
 		 . "where refUID='" . $db->addMarkup($args['forumsUID']) . "' and refModule='forums' "
 		 . "order by RAND() limit 0,1";
 

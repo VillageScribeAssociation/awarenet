@@ -21,7 +21,7 @@ function wiki_allthumbs($args) {
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
 	
 	$model = new Wiki($args['raUID']);	
-	$sql = "select * from Images_Image where refModule='wiki' and refUID='" . $model->UID 
+	$sql = "select * from images_image where refModule='wiki' and refUID='" . $model->UID 
 	     . "' order by weight";
 	
 	

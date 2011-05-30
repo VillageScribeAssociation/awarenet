@@ -11,13 +11,13 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ('' == $req->ref) { $page->do404(); }								// check for ref
-	$UID = $aliases->findRedirect('Videos_Gallery'); 						// check correct ref
+	$UID = $aliases->findRedirect('videos_gallery'); 						// check correct ref
 
 	$model = new Videos_Gallery($UID);
 	if (false == $model->loaded)  { $page->do404('Gallery not found'); }
 	
 	// basic permissions, TODO: extend
-	if (false == $user->authHas('videos', 'Videos_Gallery', 'edit', $model->UID)) {$page->do403();}		
+	if (false == $user->authHas('videos', 'videos_gallery', 'edit', $model->UID)) {$page->do403();}		
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be admin or own gallery to edit)

@@ -7,7 +7,7 @@
 //*	post a spurious notice to self
 //-------------------------------------------------------------------------------------------------
 
-	$postUrl = $serverPath . 'sync/recvnotice/';
+	$postUrl = $kapenta->serverPath . 'sync/recvnotice/';
 
 	$ownData = $sync->getOwnData();
 

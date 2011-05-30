@@ -36,6 +36,8 @@ class Videos_Video {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ share object with other instances (yes|no) [string]
+	var $revision;			//_ bigint [string]
 	var $alias;				//_ alias [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -98,6 +100,8 @@ class Videos_Video {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
+		$this->revision = $ary['revision'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
@@ -113,7 +117,7 @@ class Videos_Video {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('videos', 'Videos_Video', $this->UID, $this->title);
+		$this->alias = $aliases->create('videos', 'videos_video', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 
@@ -143,7 +147,7 @@ class Videos_Video {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'videos';
-		$dbSchema['model'] = 'Videos_Video';
+		$dbSchema['model'] = 'videos_video';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -168,6 +172,8 @@ class Videos_Video {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
+			'revision' => 'BIGINT(20)',
 			'alias' => 'TEXT' );
 
 		//these fields will be indexed
@@ -228,6 +234,8 @@ class Videos_Video {
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
 			'editedBy' => $this->editedBy,
+			'shared' => $this->shared,
+			'revision' => $this->revision,
 			'alias' => $this->alias
 		);
 		return $serialize;
@@ -243,7 +251,7 @@ class Videos_Video {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Videos_Video'>\n"
+		$xml = $indent . "<kobject type='videos_video'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
@@ -264,6 +272,8 @@ class Videos_Video {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
+			. $indent . "    <revision>" . $this->revision . "</revision>\n"
 			. $indent . "    <alias>" . $this->alias . "</alias>\n"
 			. $indent . "</kobject>\n";
 
@@ -288,17 +298,17 @@ class Videos_Video {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('videos', 'Videos_Video', 'show', $this->UID)) {
+		if (true == $user->authHas('videos', 'videos_video', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Videos/showvideo/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'Videos_Video', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('videos', 'videos_video', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Videos/editvideo/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'Videos_Video', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('videos', 'videos_video', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Videos/delvideo/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

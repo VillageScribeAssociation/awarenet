@@ -8,7 +8,7 @@
 	//	load the model
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'Files_Folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }			// check basic permissions
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }			// check basic permissions
 	if ('' == $req->ref) { $page->do404(); }								// check for ref
 	
 	require_once($kapenta->installPath . 'modules/folder/folder.mod.php');

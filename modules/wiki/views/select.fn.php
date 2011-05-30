@@ -5,10 +5,10 @@
 	require_once($kapenta->installPath . 'modules/wiki/models/wikirevision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	make a select element listing all wiki articles (?)
+//*	make a select element listing all wiki articles (?)
 //--------------------------------------------------------------------------------------------------
-// * $args['varname'] = name of variable
-// * $args['default'] = current value
+//opt: varname - name of HTML form variable [string]
+//opt: default - current value [string]
 
 function wiki_select($args) {
 	global $db;
@@ -19,8 +19,9 @@ function wiki_select($args) {
 	if (array_key_exists('default', $args)) { $default = $args['default']; }
 	$html = '';
 	
-	$sql = "select * from wiki order by name";
+	$sql = "select * from wiki_article order by name";
 	$result = $db->query($sql);
+
 	$html .= "<select name='" . $varname . "'>\n";
 	while ($row = $db->fetchAssoc($result)) {
 		if ($row['UID'] == $default) {

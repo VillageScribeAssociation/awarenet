@@ -15,13 +15,13 @@
 	//	check reference
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $req->ref = $user->school; }
-	$aliases->findRedirect('Schools_School');
+	$aliases->findRedirect('schools_school');
 
 	//----------------------------------------------------------------------------------------------
 	//	load model
 	//----------------------------------------------------------------------------------------------
 	$model = new Schools_School($req->ref);
-	if (false == $model->loaded) { $page->do404('could not find school: ' . $req-ref); }
+	if (false == $model->loaded) { $page->do404('could not find school: ' . $req->ref); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page

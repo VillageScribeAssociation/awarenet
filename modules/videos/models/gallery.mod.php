@@ -22,7 +22,12 @@ class Videos_Gallery {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ share this object with other instances (yes|no) [string]
+	var $revision;			//_ revision [string]
 	var $alias;				//_ alias [string]
+
+	var $videos;					//_	array of serialized Videos_Gallery objects [array]
+	var $videosLoaded = false;		//_	set to true when videos array loaded [string]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -72,6 +77,8 @@ class Videos_Gallery {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
+		$this->revision = $ary['revision'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
@@ -87,7 +94,7 @@ class Videos_Gallery {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('videos', 'Videos_Gallery', $this->UID, $this->title);
+		$this->alias = $aliases->create('videos', 'videos_gallery', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -115,7 +122,7 @@ class Videos_Gallery {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'videos';
-		$dbSchema['model'] = 'Videos_Gallery';
+		$dbSchema['model'] = 'videos_gallery';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -128,6 +135,8 @@ class Videos_Gallery {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
+			'revision' => 'BIGINT(20)',
 			'alias' => 'TEXT' );
 
 		//these fields will be indexed
@@ -139,11 +148,12 @@ class Videos_Gallery {
 			'editedBy' => '10',
 			'alias' => '10' );
 
-		//revision history will be kept for these fields
+		//revision history will not be kept for these fields
 		$dbSchema['nodiff'] = array(
 			'title',
 			'description',
-			'videocount' );
+			'videocount' 
+		);
 
 		return $dbSchema;
 		
@@ -164,6 +174,8 @@ class Videos_Gallery {
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
 			'editedBy' => $this->editedBy,
+			'shared' => $this->shared,
+			'revision' => $this->revision,
 			'alias' => $this->alias
 		);
 		return $serialize;
@@ -179,7 +191,7 @@ class Videos_Gallery {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Videos_Gallery'>\n"
+		$xml = $indent . "<kobject type='videos_gallery'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <title>" . $this->title . "</title>\n"
 			. $indent . "    <description><![CDATA[" . $this->description . "]]></description>\n"
@@ -188,6 +200,8 @@ class Videos_Gallery {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
+			. $indent . "    <revision>" . $this->revision . "</revision>\n"
 			. $indent . "    <alias>" . $this->alias . "</alias>\n"
 			. $indent . "</kobject>\n";
 
@@ -212,18 +226,18 @@ class Videos_Gallery {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('videos', 'Videos_Gallery', 'show', $this->UID)) {
+		if (true == $user->authHas('videos', 'videos_gallery', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Videos/showgallery/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'Videos_Gallery', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('videos', 'videos_gallery', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Videos/editgallery/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'Videos_Gallery', 'edit', 'delete', $this->UID)) {
-			$ext['delUrl'] = '%%serverPath%%Videos/delgallery/' . $ext['alias'];
+		if (true == $user->authHas('videos', 'videos_gallery', 'edit', $this->UID)) {
+			$ext['delUrl'] = '%%serverPath%%Videos/confirmdelete/UID_' . $ext['UID'] . '/';
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
 
@@ -253,20 +267,39 @@ class Videos_Gallery {
 		return true;
 	}
 
+	//==============================================================================================
+	//	videos
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//. load all videos in this gallery
+	//----------------------------------------------------------------------------------------------
+	//returns: array of serialized Videos_Video objects [array]
+
+	function loadVideos() {
+		global $db;		
+
+		$conditions = array();
+		$conditions[] = "refModule='videos'";
+		$conditions[] = "refModel='" . $db->addMarkup('videos_gallery') . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($this->UID) . "'";
+
+		$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC');
+
+		$this->videos = $range;
+		$this->videosLoaded = true;
+		return $range;
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//. count videos in this gallery
 	//----------------------------------------------------------------------------------------------
 	//returns: number of videos in the gallery [int]
 
 	function countVideos() {
-		global $db;
-		
-		$conditions = array();
-		$conditions[] = "refUID='" . $db->addMarkup($this->UID) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup('Videos_Gallery') . "'";
-		
-		$num = $db->countRange('Videos_Video', $conditions);
-		return $num;
+		if (false == $this->videosLoaded) { $this->loadVideos(); }
+		$count = count($this->videos);
+		return $count;
 	}
 
 }

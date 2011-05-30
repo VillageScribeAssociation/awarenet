@@ -15,7 +15,7 @@
 	  
 	$model = new Forums_Board($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('Unknown board.'); }
-	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID)) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the board

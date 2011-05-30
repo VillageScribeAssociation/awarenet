@@ -11,22 +11,29 @@ function home_maintenance() {
 	$recordCount = 0;
 	$errorCount = 0;
 	$fixCount = 0;
+	$report = '';
 
-	$report = "<h2>Checking Home_Static table...</h2>";
+
+	$report .= "<h2>Checking home_static table...</h2>";
 
 	//---------------------------------------------------------------------------------------------
-	//	check image count of all gallery tables
+	//	check all static pages
 	//---------------------------------------------------------------------------------------------
-
-	$errors = array();
-	$errors[] = array('UID', 'Title', 'error');
-
-	$sql = "select * from Home_Static";
+	$sql = "select * from home_static";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		//TODO: check alias
+
+		$model = new Home_Static();
+		$model->loadArray($row);
+		$notes = $model->maintain();
+
+		foreach($notes as $note) { 
+			$report .= "<div class='inlinequote'>$note</div>\n";
+			if (false != strpos($note, '<!-- error -->')) { $errorCount++; }
+			if (false != strpos($note, '<!-- fixed -->')) { $fixCount++; }
+		}
 
 		$recordCount++;
 	}
@@ -34,8 +41,6 @@ function home_maintenance() {
 	//---------------------------------------------------------------------------------------------
 	//	compile report
 	//---------------------------------------------------------------------------------------------
-
-	if (count($errors) > 1) { $report .= $theme->arrayToHtmlTable($errors, true, true); }
 
 	$report .= "<b>Records Checked:</b> $recordCount<br/>\n";
 	$report .= "<b>Errors Found:</b> $errorCount<br/>\n";

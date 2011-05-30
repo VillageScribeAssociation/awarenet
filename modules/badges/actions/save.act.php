@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('badges', 'Badges_Badge', 'edit', $UID))
+	if (false == $user->authHas('badges', 'badges_badge', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Badge.'); }
 
 	//----------------------------------------------------------------------------------------------

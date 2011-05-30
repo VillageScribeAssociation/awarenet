@@ -37,45 +37,28 @@ class KCron {
 	}	
 
 	//----------------------------------------------------------------------------------------------
-	//.	load the lastrun.cron file (by default it is in /data/)
+	//.	load the last run tomes from the registry
 	//----------------------------------------------------------------------------------------------
 	//returns: true on success, fals on failure [bool]
 
 	function load() {
-		global $kapenta;
-		$raw = $kapenta->fileGetContents($this->fileName);
-		if (false == $raw) { return false; }
-		$lines = explode("\n", $raw);
-
-		foreach($lines as $line) {
-			if (false !== strpos($line, ':')) {
-				if (false != strpos($line, '#')) { $line = substr($line, 0, strpos($line, '#')); }
-				$parts = explode(":", $line, 2);
-				switch($parts[0]) {
-					case 'tenmins': $this->tenmins = (int)$parts[1];	break;
-					case 'hourly': $this->hourly = (int)$parts[1];		break;
-					case 'daily': $this->daily = (int)$parts[1];		break;
-				}
-			}
-		}
-
+		global $kapenta, $registry;
+		$this->tenmins = (int)$registry->get('kapenta.cron.tenmins');
+		$this->hourly = (int)$registry->get('kapenta.cron.hourly');
+		$this->daily = (int)$registry->get('kapenta.cron.daily');
 		$this->loaded = true;
 		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load the lastrun.cron file (by default it is in /data/
+	//.	save to registry
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-		global $kapenta, $db;
-		$txt = "<? /*\n"
-			 . "tenmins: " . $this->tenmins . " # " . $db->datetime($this->tenmins) . "\n"
-			 . "hourly: " . $this->hourly . " # " . $db->datetime($this->hourly) . "\n"
-			 . "daily: " . $this->daily . " # " . $db->datetime($this->daily) . "\n"
-			 . "*/ ?>";
-
-		$kapenta->filePutContents($this->fileName, $txt);		
+		global $kapenta, $registry, $db;
+		$registry->set('kapenta.cron.tenmins', $this->tenmins);
+		$registry->set('kapenta.cron.hourly', $this->hourly);
+		$registry->set('kapenta.cron.daily', $this->daily);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -107,9 +90,9 @@ class KCron {
 			$this->save(); 
 		}
 
-		if (($now - $this->hourly) > 86400) {
+		if (($now - $this->daily) > 86400) {
 			$hour = (int)date('G', $now);
-			if (($hour > 3) && ($hour < 4)) {				// only between 3 and 4 in the morning
+			if (($hour >= 3) && ($hour < 5)) {				// only between 3 and 4 in the morning
 				$report .= $this->runTasks('daily');		// TODO: make this ^^^ configurable 
 				$this->daily = $now;						
 				$this->save();

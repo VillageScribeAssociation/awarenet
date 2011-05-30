@@ -29,7 +29,7 @@ function videos_samegallerynav($args) {
 	$conditions[] = "refModel='" . $db->addMarkup($model->refModel) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($model->refUID) . "'";
 
-	$range = $db->loadRange('Videos_Video', '*', $conditions, 'weight ASC');
+	$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

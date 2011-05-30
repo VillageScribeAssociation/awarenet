@@ -52,14 +52,14 @@ function messages_folder($args) {
 	$conditions[] = "owner='" . $db->addMarkup($owner) . "'";
 	$conditions[] = "folder='" . $db->addMarkup($folder) . "'";
 
-	$totalItems = $db->countRange('Messages_Message', $conditions);
+	$totalItems = $db->countRange('messages_message', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load page of messages
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageNo - 1) * $num);
-	$range = $db->loadRange('Messages_Message', '*', $conditions, $orderBy, $num, $start);
+	$range = $db->loadRange('messages_message', '*', $conditions, $orderBy, $num, $start);
 
 	//	$sql = "select * from messages "
 	//		 . "where owner='" . $owner . "' and folder='" . $folder . "' "

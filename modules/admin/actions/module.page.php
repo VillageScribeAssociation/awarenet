@@ -1,26 +1,30 @@
-<? /*
-<page>
-<template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::width=570::label=Module:]]
-[`|lt]h1[`|gt]%%modulename%%[`|lt]/h1[`|gt]
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
 
-[[:admin::module::modulename=%%modulename%%:]]
+<page>
+	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - module settings ([`|pc][`|pc]modulename[`|pc][`|pc])</title>
+	<content>[[:theme::navtitlebox::width=570::label=Module:]]
+[`|lt]h1[`|gt][`|pc][`|pc]modulename[`|pc][`|pc][`|lt]/h1[`|gt]
+
+[[:admin::module::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
 
 [[:theme::navtitlebox::label=Install Status:]]
-[[:admin::installstatusreport::modulename=%%modulename%%:]]
-[[:admin::moduleinstallbutton::modulename=%%modulename%%:]]
+[[:admin::installstatusreport::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
+[[:admin::moduleinstallbutton::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
 </content>
-<title>awareNet - module settings (%%modulename%%)</title>
-<script></script>
-<nav1>[[:admin::subnav:]]</nav1>
-<nav2></nav2>
-<banner></banner>
-<head></head>
-<menu1>[[:home::menu:]]</menu1>
-<menu2>[[:admin::menu:]]</menu2>
-<section></section>
-<subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
+	<nav1>[[:admin::subnav:]]</nav1>
+	<nav2></nav2>
+	<script></script>
+	<jsinit></jsinit>
+	<banner></banner>
+	<head></head>
+	<menu1>[[:home::menu:]]</menu1>
+	<menu2>[[:admin::menu:]]</menu2>
+	<section></section>
+	<subsection></subsection>
+	<breadcrumb>[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
 [[:theme::breadcrumb::label=Settings::link=/admin/settings/:]]</breadcrumb>
 </page>
+
 */ ?>

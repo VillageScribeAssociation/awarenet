@@ -26,11 +26,11 @@ function projects_listmembersnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 
-	if (false == $user->authHas('projects', 'Projects_Project', 'show', $model->UID)) { 
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
 		return ''; 
 	}
 
-	if (true == $user->authHas('projects', 'Projects_Project', 'administer', $model->UID)) { 
+	if (true == $user->authHas('projects', 'projects_project', 'administer', $model->UID)) { 
 		$isAdmin = true; 
 	}
 

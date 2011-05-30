@@ -10,7 +10,7 @@
 
 function projects_listall($args) {
 	global $db;
-	$sql = "select * from Projects_Project order by createdOn DESC";
+	$sql = "select * from projects_project order by createdOn DESC";
 	$result = $db->query($sql);
 	$html = '';
 	while ($row = $db->fetchAssoc($result)) {

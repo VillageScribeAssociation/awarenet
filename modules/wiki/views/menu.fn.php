@@ -23,19 +23,19 @@ function wiki_menu($args) {
 	$labels['editthis'] = '';
 	$labels['history'] = '';
 
-	$model = new Wiki_Article($args['raUID']);
+	$model = new Wiki_Article($raUID);
 	if (false == $model->loaded) { 
 		$menu = "[[:theme::submenu::label=Front Page::link=/wiki/:]]\n"
 			  . "[[:theme::submenu::label=All::link=/wiki/list/:]]\n"
 			  . "[[:theme::submenu::label=Markup::link=/wiki/wikicode/:]]\n";
 
-		if (true == $user->authHas('wiki', 'Wiki_Article', 'new', $model->UID)) {	
+		if (true == $user->authHas('wiki', 'wiki_article', 'new', $model->UID)) {	
 			$menu .= "[[:theme::submenu::label=New Article::link=/wiki/new/:]]\n";
 		}
 		return $menu;
 	}
 
-	if (true == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) {
+	if (true == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) {
 		$labels['newarticle'] = '[[:theme::submenu::label=New Article::link=/wiki/new/:]]';
 
 		if ($raUID != 'no') {

@@ -13,7 +13,7 @@
 // * $args['caption'] = yes|no - display caption
 
 function images__widthx($args) {
-	global $serverPath;
+	global $kapenta;
 	$link = 'yes';	$caption = 'no'; $size = 'width300'; $html = ''; $align = ''; $pad = '';
 
 	//---------------------------------------------------------------------------------------------
@@ -36,8 +36,8 @@ function images__widthx($args) {
 	//	make html
 	//---------------------------------------------------------------------------------------------
 
-	$linkUrl = $serverPath . 'images/' . $args['raUID'];
-	$imgUrl = $serverPath . 'images/' . $size . '/' . $args['raUID'];
+	$linkUrl = '%%serverPath%%images/' . $args['raUID'];
+	$imgUrl = '%%serverPath%%images/' . $size . '/' . $args['raUID'];
 
 	$html =  "<img src='" . $imgUrl . "' border='0' $pad/>";	
 	if ($link == 'yes') { $html = "<a href='" . $linkUrl . "'>$html</a>"; }

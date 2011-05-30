@@ -24,7 +24,7 @@ function schools_summary($args) {
 	$model = new Schools_School($raUID);	//% the object we're editing [object:Schools_School]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('schools', 'Schools_School', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('schools', 'schools_school', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

@@ -22,7 +22,7 @@ function messages_contactlist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the contact list
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as numSent, toUID from Messages_Message "
+	$sql = "select count(UID) as numSent, toUID from messages_message "
 		 . "where owner='" . $owner . "' and fromUID='" . $owner . "' "
 		 . "group by toUID order by numSent";
 	

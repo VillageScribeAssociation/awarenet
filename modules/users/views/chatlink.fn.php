@@ -11,7 +11,7 @@ function users_chatlink($args) {
 
 	if (false == array_key_exists('userUID', $args)) { return ''; }
 
-	$sql = "select * from Users_Login where userUID='" . $db->addMarkup($args['userUID']) . "'";
+	$sql = "select * from users_login where userUID='" . $db->addMarkup($args['userUID']) . "'";
 	$result = $db->query($sql);
 	if ($db->numRows($result) > 0) {
 		//-----------------------------------------------------------------------------------------

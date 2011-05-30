@@ -3,7 +3,7 @@
 
 <page>
 	<template>twocol-rightnav.template.php</template>
-	<title>awareNet - admin console</title>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - admin console</title>
 	<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]
 [`|lt]h1[`|gt]Cron[`|lt]/h1[`|gt]
 

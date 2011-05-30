@@ -8,7 +8,7 @@
 //arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_samecategorynav($args) {
-	global $serverPath;
+	global $kapenta;
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$c = new Calendar_Entry($args['raUID']);
 	$html = '';
@@ -22,7 +22,7 @@ function calendar_samecategorynav($args) {
 		$html .= "<td class='title'>&nbsp;Event&nbsp;</td>\n";
 		$html .= "</tr>\n";
 		foreach($ev as $UID => $row) {
-			$link = $serverPath . 'calendar/' . $row['alias'];
+			$link = $kapenta->serverPath . 'calendar/' . $row['alias'];
 			$html .= "<tr>\n";			
 			$html .= "<td valign='top'>" . $row['year'] . '-' . $row['month'] 
 				. '-' . $row['day'] . "</td>\n";

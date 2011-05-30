@@ -24,13 +24,13 @@ USE awarenet;
 
 
 --
--- Table structure for table `Aliases_Alias`
+-- Table structure for table `aliases_alias`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Aliases_Alias` (
+CREATE TABLE `aliases_alias` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -41,24 +41,24 @@ CREATE TABLE `Aliases_Alias` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxAliases_AliasUID` (`UID`(10)),
-  KEY `idxAliases_AliasrefModule` (`refModule`(10)),
-  KEY `idxAliases_AliasrefModel` (`refModel`(10)),
-  KEY `idxAliases_AliasrefUID` (`refUID`(10)),
-  KEY `idxAliases_AliascreatedOn` (`createdOn`),
-  KEY `idxAliases_AliascreatedBy` (`createdBy`(10)),
-  KEY `idxAliases_AliaseditedOn` (`editedOn`),
-  KEY `idxAliases_AliaseditedBy` (`editedBy`(10))
+  KEY `idxaliases_aliasUID` (`UID`(10)),
+  KEY `idxaliases_aliasrefModule` (`refModule`(10)),
+  KEY `idxaliases_aliasrefModel` (`refModel`(10)),
+  KEY `idxaliases_aliasrefUID` (`refUID`(10)),
+  KEY `idxaliases_aliascreatedOn` (`createdOn`),
+  KEY `idxaliases_aliascreatedBy` (`createdBy`(10)),
+  KEY `idxaliases_aliaseditedOn` (`editedOn`),
+  KEY `idxaliases_aliaseditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Announcements_Announcement`
+-- Table structure for table `announcements_announcement`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Announcements_Announcement` (
+CREATE TABLE `announcements_announcement` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -70,25 +70,25 @@ CREATE TABLE `Announcements_Announcement` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxAnnouncements_AnnouncementUID` (`UID`(10)),
-  KEY `idxAnnouncements_AnnouncementrefModule` (`refModule`(10)),
-  KEY `idxAnnouncements_AnnouncementrefModel` (`refModel`(10)),
-  KEY `idxAnnouncements_AnnouncementrefUID` (`refUID`(10)),
-  KEY `idxAnnouncements_AnnouncementcreatedOn` (`createdOn`),
-  KEY `idxAnnouncements_AnnouncementcreatedBy` (`createdBy`(10)),
-  KEY `idxAnnouncements_AnnouncementeditedOn` (`editedOn`),
-  KEY `idxAnnouncements_AnnouncementeditedBy` (`editedBy`(10)),
-  KEY `idxAnnouncements_Announcementalias` (`alias`(10))
+  KEY `idxannouncements_announcementUID` (`UID`(10)),
+  KEY `idxannouncements_announcementrefModule` (`refModule`(10)),
+  KEY `idxannouncements_announcementrefModel` (`refModel`(10)),
+  KEY `idxannouncements_announcementrefUID` (`refUID`(10)),
+  KEY `idxannouncements_announcementcreatedOn` (`createdOn`),
+  KEY `idxannouncements_announcementcreatedBy` (`createdBy`(10)),
+  KEY `idxannouncements_announcementeditedOn` (`editedOn`),
+  KEY `idxannouncements_announcementeditedBy` (`editedBy`(10)),
+  KEY `idxannouncements_announcementalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Announcements_AnnouncementAnnouncements_Announcement`
+-- Table structure for table `announcements_announcementannouncements_announcement`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Announcements_AnnouncementAnnouncements_Announcement` (
+CREATE TABLE `announcements_announcementannouncements_announcement` (
   `UID` varchar(30) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -104,13 +104,13 @@ CREATE TABLE `Announcements_AnnouncementAnnouncements_Announcement` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Calendar_Entry`
+-- Table structure for table `calendar_entry`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Calendar_Entry` (
+CREATE TABLE `calendar_entry` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `category` varchar(100) DEFAULT NULL,
@@ -127,23 +127,23 @@ CREATE TABLE `Calendar_Entry` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxCalendar_EntryUID` (`UID`(10)),
-  KEY `idxCalendar_EntrycreatedOn` (`createdOn`),
-  KEY `idxCalendar_EntrycreatedBy` (`createdBy`(10)),
-  KEY `idxCalendar_EntryeditedOn` (`editedOn`),
-  KEY `idxCalendar_EntryeditedBy` (`editedBy`(10)),
-  KEY `idxCalendar_Entryalias` (`alias`(10))
+  KEY `idxcalendar_entryUID` (`UID`(10)),
+  KEY `idxcalendar_entrycreatedOn` (`createdOn`),
+  KEY `idxcalendar_entrycreatedBy` (`createdBy`(10)),
+  KEY `idxcalendar_entryeditedOn` (`editedOn`),
+  KEY `idxcalendar_entryeditedBy` (`editedBy`(10)),
+  KEY `idxcalendar_entryalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Chat_Discussion`
+-- Table structure for table `chat_discussion`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Chat_Discussion` (
+CREATE TABLE `chat_discussion` (
   `UID` varchar(33) DEFAULT NULL,
   `user` varchar(33) DEFAULT NULL,
   `queue` mediumtext,
@@ -155,13 +155,13 @@ CREATE TABLE `Chat_Discussion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Comments_Comment`
+-- Table structure for table `comments_comment`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Comments_Comment` (
+CREATE TABLE `comments_comment` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -171,25 +171,25 @@ CREATE TABLE `Comments_Comment` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxComments_CommentUID` (`UID`(10)),
-  KEY `idxComments_CommentrefModule` (`refModule`(10)),
-  KEY `idxComments_CommentrefModel` (`refModel`(10)),
-  KEY `idxComments_CommentrefUID` (`refUID`(10)),
-  KEY `idxComments_CommentcreatedOn` (`createdOn`),
-  KEY `idxComments_CommentcreatedBy` (`createdBy`(10)),
-  KEY `idxComments_CommenteditedOn` (`editedOn`),
-  KEY `idxComments_CommenteditedBy` (`editedBy`(10))
+  KEY `idxcomments_commentUID` (`UID`(10)),
+  KEY `idxcomments_commentrefModule` (`refModule`(10)),
+  KEY `idxcomments_commentrefModel` (`refModel`(10)),
+  KEY `idxcomments_commentrefUID` (`refUID`(10)),
+  KEY `idxcomments_commentcreatedOn` (`createdOn`),
+  KEY `idxcomments_commentcreatedBy` (`createdBy`(10)),
+  KEY `idxcomments_commenteditedOn` (`editedOn`),
+  KEY `idxcomments_commenteditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Files_File`
+-- Table structure for table `files_file`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Files_File` (
+CREATE TABLE `files_file` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -208,26 +208,26 @@ CREATE TABLE `Files_File` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxFiles_FileUID` (`UID`(10)),
-  KEY `idxFiles_FilerefModule` (`refModule`(10)),
-  KEY `idxFiles_FilerefModel` (`refModel`(10)),
-  KEY `idxFiles_FilerefUID` (`refUID`(10)),
-  KEY `idxFiles_FilecreatedOn` (`createdOn`),
-  KEY `idxFiles_FilecreatedBy` (`createdBy`(10)),
-  KEY `idxFiles_FileeditedOn` (`editedOn`),
-  KEY `idxFiles_FileeditedBy` (`editedBy`(10)),
-  KEY `idxFiles_Filealias` (`alias`(10))
+  KEY `idxfiles_fileUID` (`UID`(10)),
+  KEY `idxfiles_filerefModule` (`refModule`(10)),
+  KEY `idxfiles_filerefModel` (`refModel`(10)),
+  KEY `idxfiles_filerefUID` (`refUID`(10)),
+  KEY `idxfiles_filecreatedOn` (`createdOn`),
+  KEY `idxfiles_filecreatedBy` (`createdBy`(10)),
+  KEY `idxfiles_fileeditedOn` (`editedOn`),
+  KEY `idxfiles_fileeditedBy` (`editedBy`(10)),
+  KEY `idxfiles_filealias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Files_Folder`
+-- Table structure for table `files_folder`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Files_Folder` (
+CREATE TABLE `files_folder` (
   `UID` varchar(33) DEFAULT NULL,
   `parent` text,
   `title` varchar(255) DEFAULT NULL,
@@ -237,24 +237,24 @@ CREATE TABLE `Files_Folder` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxFiles_FolderUID` (`UID`(10)),
-  KEY `idxFiles_Folderparent` (`parent`(10)),
-  KEY `idxFiles_FoldercreatedOn` (`createdOn`),
-  KEY `idxFiles_FoldercreatedBy` (`createdBy`(10)),
-  KEY `idxFiles_FoldereditedOn` (`editedOn`),
-  KEY `idxFiles_FoldereditedBy` (`editedBy`(10)),
-  KEY `idxFiles_Folderalias` (`alias`(10))
+  KEY `idxfiles_folderUID` (`UID`(10)),
+  KEY `idxfiles_folderparent` (`parent`(10)),
+  KEY `idxfiles_foldercreatedOn` (`createdOn`),
+  KEY `idxfiles_foldercreatedBy` (`createdBy`(10)),
+  KEY `idxfiles_foldereditedOn` (`editedOn`),
+  KEY `idxfiles_foldereditedBy` (`editedBy`(10)),
+  KEY `idxfiles_folderalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Forums_Board`
+-- Table structure for table `forums_board`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Forums_Board` (
+CREATE TABLE `forums_board` (
   `UID` varchar(33) DEFAULT NULL,
   `school` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
@@ -267,24 +267,24 @@ CREATE TABLE `Forums_Board` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxForums_BoardUID` (`UID`(10)),
-  KEY `idxForums_Boardschool` (`school`(10)),
-  KEY `idxForums_BoardcreatedOn` (`createdOn`),
-  KEY `idxForums_BoardcreatedBy` (`createdBy`(10)),
-  KEY `idxForums_BoardeditedOn` (`editedOn`),
-  KEY `idxForums_BoardeditedBy` (`editedBy`(10)),
-  KEY `idxForums_Boardalias` (`alias`(10))
+  KEY `idxforums_boardUID` (`UID`(10)),
+  KEY `idxforums_boardschool` (`school`(10)),
+  KEY `idxforums_boardcreatedOn` (`createdOn`),
+  KEY `idxforums_boardcreatedBy` (`createdBy`(10)),
+  KEY `idxforums_boardeditedOn` (`editedOn`),
+  KEY `idxforums_boardeditedBy` (`editedBy`(10)),
+  KEY `idxforums_boardalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Forums_Reply`
+-- Table structure for table `forums_reply`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Forums_Reply` (
+CREATE TABLE `forums_reply` (
   `UID` varchar(33) DEFAULT NULL,
   `forum` varchar(33) DEFAULT NULL,
   `thread` varchar(33) DEFAULT NULL,
@@ -293,24 +293,24 @@ CREATE TABLE `Forums_Reply` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxForums_ReplyUID` (`UID`(10)),
-  KEY `idxForums_Replyforum` (`forum`(10)),
-  KEY `idxForums_Replythread` (`thread`(10)),
-  KEY `idxForums_ReplycreatedOn` (`createdOn`),
-  KEY `idxForums_ReplycreatedBy` (`createdBy`(10)),
-  KEY `idxForums_ReplyeditedOn` (`editedOn`),
-  KEY `idxForums_ReplyeditedBy` (`editedBy`(10))
+  KEY `idxforums_replyUID` (`UID`(10)),
+  KEY `idxforums_replyforum` (`forum`(10)),
+  KEY `idxforums_replythread` (`thread`(10)),
+  KEY `idxforums_replycreatedOn` (`createdOn`),
+  KEY `idxforums_replycreatedBy` (`createdBy`(10)),
+  KEY `idxforums_replyeditedOn` (`editedOn`),
+  KEY `idxforums_replyeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Forums_Thread`
+-- Table structure for table `forums_thread`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Forums_Thread` (
+CREATE TABLE `forums_thread` (
   `UID` varchar(33) DEFAULT NULL,
   `board` text,
   `title` varchar(255) DEFAULT NULL,
@@ -323,31 +323,31 @@ CREATE TABLE `Forums_Thread` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxForums_ThreadUID` (`UID`(10)),
-  KEY `idxForums_Threadboard` (`board`(10)),
-  KEY `idxForums_Threadsticky` (`sticky`),
-  KEY `idxForums_Threadupdated` (`updated`(10)),
-  KEY `idxForums_ThreadcreatedOn` (`createdOn`),
-  KEY `idxForums_ThreadcreatedBy` (`createdBy`(10)),
-  KEY `idxForums_ThreadeditedOn` (`editedOn`),
-  KEY `idxForums_ThreadeditedBy` (`editedBy`(10)),
-  KEY `idxForums_Threadalias` (`alias`(10))
+  KEY `idxforums_threadUID` (`UID`(10)),
+  KEY `idxforums_threadboard` (`board`(10)),
+  KEY `idxforums_threadsticky` (`sticky`),
+  KEY `idxforums_threadupdated` (`updated`(10)),
+  KEY `idxforums_threadcreatedOn` (`createdOn`),
+  KEY `idxforums_threadcreatedBy` (`createdBy`(10)),
+  KEY `idxforums_threadeditedOn` (`editedOn`),
+  KEY `idxforums_threadeditedBy` (`editedBy`(10)),
+  KEY `idxforums_threadalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Forums_ThreadForums_Thread`
+-- Table structure for table `forums_threadforums_thread`
 --
 
 
 --
--- Table structure for table `Gallery_Gallery`
+-- Table structure for table `gallery_gallery`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Gallery_Gallery` (
+CREATE TABLE `gallery_gallery` (
   `UID` varchar(33) DEFAULT NULL,
   `parent` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
@@ -362,13 +362,13 @@ CREATE TABLE `Gallery_Gallery` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Groups_Group`
+-- Table structure for table `groups_group`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Groups_Group` (
+CREATE TABLE `groups_group` (
   `UID` varchar(33) DEFAULT NULL,
   `school` varchar(33) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -379,23 +379,23 @@ CREATE TABLE `Groups_Group` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxGroups_GroupUID` (`UID`(10)),
-  KEY `idxGroups_GroupcreatedOn` (`createdOn`),
-  KEY `idxGroups_GroupcreatedBy` (`createdBy`(10)),
-  KEY `idxGroups_GroupeditedOn` (`editedOn`),
-  KEY `idxGroups_GroupeditedBy` (`editedBy`(10)),
-  KEY `idxGroups_Groupalias` (`alias`(10))
+  KEY `idxgroups_groupUID` (`UID`(10)),
+  KEY `idxgroups_groupcreatedOn` (`createdOn`),
+  KEY `idxgroups_groupcreatedBy` (`createdBy`(10)),
+  KEY `idxgroups_groupeditedOn` (`editedOn`),
+  KEY `idxgroups_groupeditedBy` (`editedBy`(10)),
+  KEY `idxgroups_groupalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Groups_Membership`
+-- Table structure for table `groups_membership`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Groups_Membership` (
+CREATE TABLE `groups_membership` (
   `UID` varchar(30) DEFAULT NULL,
   `userUID` varchar(33) DEFAULT NULL,
   `groupUID` varchar(33) DEFAULT NULL,
@@ -406,24 +406,24 @@ CREATE TABLE `Groups_Membership` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxGroups_MembershipUID` (`UID`(10)),
-  KEY `idxGroups_MembershipuserUID` (`userUID`(10)),
-  KEY `idxGroups_MembershipgroupUID` (`groupUID`(10)),
-  KEY `idxGroups_MembershipcreatedOn` (`createdOn`),
-  KEY `idxGroups_MembershipcreatedBy` (`createdBy`(10)),
-  KEY `idxGroups_MembershipeditedOn` (`editedOn`),
-  KEY `idxGroups_MembershipeditedBy` (`editedBy`(10))
+  KEY `idxgroups_membershipUID` (`UID`(10)),
+  KEY `idxgroups_membershipuserUID` (`userUID`(10)),
+  KEY `idxgroups_membershipgroupUID` (`groupUID`(10)),
+  KEY `idxgroups_membershipcreatedOn` (`createdOn`),
+  KEY `idxgroups_membershipcreatedBy` (`createdBy`(10)),
+  KEY `idxgroups_membershipeditedOn` (`editedOn`),
+  KEY `idxgroups_membershipeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Home_Static`
+-- Table structure for table `home_static`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Home_Static` (
+CREATE TABLE `home_static` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `template` varchar(30) DEFAULT NULL,
@@ -443,23 +443,23 @@ CREATE TABLE `Home_Static` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxHome_StaticUID` (`UID`(10)),
-  KEY `idxHome_StaticcreatedOn` (`createdOn`),
-  KEY `idxHome_StaticcreatedBy` (`createdBy`(10)),
-  KEY `idxHome_StaticeditedOn` (`editedOn`),
-  KEY `idxHome_StaticeditedBy` (`editedBy`(10)),
-  KEY `idxHome_Staticalias` (`alias`(10))
+  KEY `idxhome_staticUID` (`UID`(10)),
+  KEY `idxhome_staticcreatedOn` (`createdOn`),
+  KEY `idxhome_staticcreatedBy` (`createdBy`(10)),
+  KEY `idxhome_staticeditedOn` (`editedOn`),
+  KEY `idxhome_staticeditedBy` (`editedBy`(10)),
+  KEY `idxhome_staticalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Images_Image`
+-- Table structure for table `images_image`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Images_Image` (
+CREATE TABLE `images_image` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -479,26 +479,26 @@ CREATE TABLE `Images_Image` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxImages_ImageUID` (`UID`(10)),
-  KEY `idxImages_ImagerefModule` (`refModule`(10)),
-  KEY `idxImages_ImagerefModel` (`refModel`(10)),
-  KEY `idxImages_ImagerefUID` (`refUID`(10)),
-  KEY `idxImages_ImagecreatedOn` (`createdOn`),
-  KEY `idxImages_ImagecreatedBy` (`createdBy`(10)),
-  KEY `idxImages_ImageeditedOn` (`editedOn`),
-  KEY `idxImages_ImageeditedBy` (`editedBy`(10)),
-  KEY `idxImages_Imagealias` (`alias`(10))
+  KEY `idximages_imageUID` (`UID`(10)),
+  KEY `idximages_imagerefModule` (`refModule`(10)),
+  KEY `idximages_imagerefModel` (`refModel`(10)),
+  KEY `idximages_imagerefUID` (`refUID`(10)),
+  KEY `idximages_imagecreatedOn` (`createdOn`),
+  KEY `idximages_imagecreatedBy` (`createdBy`(10)),
+  KEY `idximages_imageeditedOn` (`editedOn`),
+  KEY `idximages_imageeditedBy` (`editedBy`(10)),
+  KEY `idximages_imagealias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Images_ImageImages_Image`
+-- Table structure for table `images_imageimages_image`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Images_ImageImages_Image` (
+CREATE TABLE `images_imageimages_image` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(50) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -522,13 +522,13 @@ CREATE TABLE `Images_ImageImages_Image` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Messages_Message`
+-- Table structure for table `messages_message`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Messages_Message` (
+CREATE TABLE `messages_message` (
   `UID` varchar(33) DEFAULT NULL,
   `owner` varchar(33) DEFAULT NULL,
   `folder` varchar(33) DEFAULT NULL,
@@ -543,22 +543,22 @@ CREATE TABLE `Messages_Message` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxMessages_MessageUID` (`UID`(10)),
-  KEY `idxMessages_MessagecreatedOn` (`createdOn`),
-  KEY `idxMessages_MessagecreatedBy` (`createdBy`(10)),
-  KEY `idxMessages_MessageeditedOn` (`editedOn`),
-  KEY `idxMessages_MessageeditedBy` (`editedBy`(10))
+  KEY `idxmessages_messageUID` (`UID`(10)),
+  KEY `idxmessages_messagecreatedOn` (`createdOn`),
+  KEY `idxmessages_messagecreatedBy` (`createdBy`(10)),
+  KEY `idxmessages_messageeditedOn` (`editedOn`),
+  KEY `idxmessages_messageeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Moblog_Post`
+-- Table structure for table `moblog_post`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Moblog_Post` (
+CREATE TABLE `moblog_post` (
   `UID` varchar(33) DEFAULT NULL,
   `school` varchar(33) DEFAULT NULL,
   `grade` varchar(30) DEFAULT NULL,
@@ -571,23 +571,23 @@ CREATE TABLE `Moblog_Post` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxMoblog_PostUID` (`UID`(10)),
-  KEY `idxMoblog_PostcreatedOn` (`createdOn`),
-  KEY `idxMoblog_PostcreatedBy` (`createdBy`(10)),
-  KEY `idxMoblog_PosteditedOn` (`editedOn`),
-  KEY `idxMoblog_PosteditedBy` (`editedBy`(10)),
-  KEY `idxMoblog_Postalias` (`alias`(10))
+  KEY `idxmoblog_postUID` (`UID`(10)),
+  KEY `idxmoblog_postcreatedOn` (`createdOn`),
+  KEY `idxmoblog_postcreatedBy` (`createdBy`(10)),
+  KEY `idxmoblog_posteditedOn` (`editedOn`),
+  KEY `idxmoblog_posteditedBy` (`editedBy`(10)),
+  KEY `idxmoblog_postalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Moblog_PostMoblog_Post`
+-- Table structure for table `moblog_postmoblog_post`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Moblog_PostMoblog_Post` (
+CREATE TABLE `moblog_postmoblog_post` (
   `UID` varchar(33) DEFAULT NULL,
   `school` varchar(33) DEFAULT NULL,
   `grade` varchar(30) DEFAULT NULL,
@@ -604,13 +604,13 @@ CREATE TABLE `Moblog_PostMoblog_Post` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Notifications_Notification`
+-- Table structure for table `notifications_notification`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Notifications_Notification` (
+CREATE TABLE `notifications_notification` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` text,
   `refModel` text,
@@ -622,14 +622,14 @@ CREATE TABLE `Notifications_Notification` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxNotifications_NotificationUID` (`UID`(10)),
-  KEY `idxNotifications_NotificationrefModule` (`refModule`(10)),
-  KEY `idxNotifications_NotificationrefModel` (`refModel`(10)),
-  KEY `idxNotifications_NotificationrefUID` (`refUID`(10)),
-  KEY `idxNotifications_NotificationcreatedOn` (`createdOn`),
-  KEY `idxNotifications_NotificationcreatedBy` (`createdBy`(10)),
-  KEY `idxNotifications_NotificationeditedOn` (`editedOn`),
-  KEY `idxNotifications_NotificationeditedBy` (`editedBy`(10))
+  KEY `idxnotifications_notificationUID` (`UID`(10)),
+  KEY `idxnotifications_notificationrefModule` (`refModule`(10)),
+  KEY `idxnotifications_notificationrefModel` (`refModel`(10)),
+  KEY `idxnotifications_notificationrefUID` (`refUID`(10)),
+  KEY `idxnotifications_notificationcreatedOn` (`createdOn`),
+  KEY `idxnotifications_notificationcreatedBy` (`createdBy`(10)),
+  KEY `idxnotifications_notificationeditedOn` (`editedOn`),
+  KEY `idxnotifications_notificationeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -660,13 +660,13 @@ CREATE TABLE `Notifications_UserIndex` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Projects_Membership`
+-- Table structure for table `projects_membership`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Projects_Membership` (
+CREATE TABLE `projects_membership` (
   `UID` varchar(33) DEFAULT NULL,
   `projectUID` varchar(33) DEFAULT NULL,
   `userUID` varchar(33) DEFAULT NULL,
@@ -676,24 +676,24 @@ CREATE TABLE `Projects_Membership` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxProjects_MembershipUID` (`UID`(10)),
-  KEY `idxProjects_MembershipprojectUID` (`projectUID`(10)),
-  KEY `idxProjects_MembershipuserUID` (`userUID`(10)),
-  KEY `idxProjects_MembershipcreatedOn` (`createdOn`),
-  KEY `idxProjects_MembershipcreatedBy` (`createdBy`(10)),
-  KEY `idxProjects_MembershipeditedOn` (`editedOn`),
-  KEY `idxProjects_MembershipeditedBy` (`editedBy`(10))
+  KEY `idxprojects_membershipUID` (`UID`(10)),
+  KEY `idxprojects_membershipprojectUID` (`projectUID`(10)),
+  KEY `idxprojects_membershipuserUID` (`userUID`(10)),
+  KEY `idxprojects_membershipcreatedOn` (`createdOn`),
+  KEY `idxprojects_membershipcreatedBy` (`createdBy`(10)),
+  KEY `idxprojects_membershipeditedOn` (`editedOn`),
+  KEY `idxprojects_membershipeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Projects_Project`
+-- Table structure for table `projects_project`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Projects_Project` (
+CREATE TABLE `projects_project` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `abstract` text,
@@ -705,23 +705,23 @@ CREATE TABLE `Projects_Project` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxProjects_ProjectUID` (`UID`(10)),
-  KEY `idxProjects_ProjectcreatedOn` (`createdOn`),
-  KEY `idxProjects_ProjectcreatedBy` (`createdBy`(10)),
-  KEY `idxProjects_ProjecteditedOn` (`editedOn`),
-  KEY `idxProjects_ProjecteditedBy` (`editedBy`(10)),
-  KEY `idxProjects_Projectalias` (`alias`(10))
+  KEY `idxprojects_projectUID` (`UID`(10)),
+  KEY `idxprojects_projectcreatedOn` (`createdOn`),
+  KEY `idxprojects_projectcreatedBy` (`createdBy`(10)),
+  KEY `idxprojects_projecteditedOn` (`editedOn`),
+  KEY `idxprojects_projecteditedBy` (`editedBy`(10)),
+  KEY `idxprojects_projectalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Projects_Revision`
+-- Table structure for table `projects_revision`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Projects_Revision` (
+CREATE TABLE `projects_revision` (
   `UID` varchar(33) DEFAULT NULL,
   `projectUID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
@@ -732,23 +732,23 @@ CREATE TABLE `Projects_Revision` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxProjects_RevisionUID` (`UID`(10)),
-  KEY `idxProjects_RevisionprojectUID` (`projectUID`(10)),
-  KEY `idxProjects_RevisioncreatedOn` (`createdOn`),
-  KEY `idxProjects_RevisioncreatedBy` (`createdBy`(10)),
-  KEY `idxProjects_RevisioneditedOn` (`editedOn`),
-  KEY `idxProjects_RevisioneditedBy` (`editedBy`(10))
+  KEY `idxprojects_revisionUID` (`UID`(10)),
+  KEY `idxprojects_revisionprojectUID` (`projectUID`(10)),
+  KEY `idxprojects_revisioncreatedOn` (`createdOn`),
+  KEY `idxprojects_revisioncreatedBy` (`createdBy`(10)),
+  KEY `idxprojects_revisioneditedOn` (`editedOn`),
+  KEY `idxprojects_revisioneditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Revisions_DeletedItem`
+-- Table structure for table `revisions_deletedItem`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Revisions_DeletedItem` (
+CREATE TABLE `revisions_deletedItem` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(20) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -762,13 +762,13 @@ CREATE TABLE `Revisions_DeletedItem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Revisions_Migrate`
+-- Table structure for table `revisions_migrate`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Revisions_Migrate` (
+CREATE TABLE `revisions_migrate` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(20) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -783,13 +783,13 @@ CREATE TABLE `Revisions_Migrate` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Revisions_Revision`
+-- Table structure for table `revisions_revision`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Revisions_Revision` (
+CREATE TABLE `revisions_revision` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(20) DEFAULT NULL,
   `refModel` varchar(100) DEFAULT NULL,
@@ -805,13 +805,13 @@ CREATE TABLE `Revisions_Revision` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Schools_School`
+-- Table structure for table `schools_school`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Schools_School` (
+CREATE TABLE `schools_school` (
   `UID` varchar(33) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` mediumtext,
@@ -824,23 +824,23 @@ CREATE TABLE `Schools_School` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxSchools_SchoolUID` (`UID`(10)),
-  KEY `idxSchools_SchoolcreatedOn` (`createdOn`),
-  KEY `idxSchools_SchoolcreatedBy` (`createdBy`(10)),
-  KEY `idxSchools_SchooleditedOn` (`editedOn`),
-  KEY `idxSchools_SchooleditedBy` (`editedBy`(10)),
-  KEY `idxSchools_Schoolalias` (`alias`(10))
+  KEY `idxschools_schoolUID` (`UID`(10)),
+  KEY `idxschools_schoolcreatedOn` (`createdOn`),
+  KEY `idxschools_schoolcreatedBy` (`createdBy`(10)),
+  KEY `idxschools_schooleditedOn` (`editedOn`),
+  KEY `idxschools_schooleditedBy` (`editedBy`(10)),
+  KEY `idxschools_schoolalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Sync_Download`
+-- Table structure for table `sync_download`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Sync_Download` (
+CREATE TABLE `sync_download` (
   `UID` varchar(33) DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `hash` varchar(255) DEFAULT NULL,
@@ -850,22 +850,22 @@ CREATE TABLE `Sync_Download` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxSync_DownloadUID` (`UID`(10)),
-  KEY `idxSync_DownloadcreatedOn` (`createdOn`),
-  KEY `idxSync_DownloadcreatedBy` (`createdBy`(10)),
-  KEY `idxSync_DownloadeditedOn` (`editedOn`),
-  KEY `idxSync_DownloadeditedBy` (`editedBy`(10))
+  KEY `idxsync_downloadUID` (`UID`(10)),
+  KEY `idxsync_downloadcreatedOn` (`createdOn`),
+  KEY `idxsync_downloadcreatedBy` (`createdBy`(10)),
+  KEY `idxsync_downloadeditedOn` (`editedOn`),
+  KEY `idxsync_downloadeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Sync_Message`
+-- Table structure for table `sync_message`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Sync_Message` (
+CREATE TABLE `sync_message` (
   `UID` varchar(33) DEFAULT NULL,
   `source` varchar(33) DEFAULT NULL,
   `type` varchar(50) DEFAULT NULL,
@@ -882,13 +882,13 @@ CREATE TABLE `Sync_Message` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Sync_Notice`
+-- Table structure for table `sync_notice`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Sync_Notice` (
+CREATE TABLE `sync_notice` (
   `UID` varchar(33) DEFAULT NULL,
   `source` varchar(33) DEFAULT NULL,
   `type` varchar(50) DEFAULT NULL,
@@ -901,23 +901,23 @@ CREATE TABLE `Sync_Notice` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxSync_NoticeUID` (`UID`(10)),
-  KEY `idxSync_Noticesource` (`source`(10)),
-  KEY `idxSync_NoticecreatedOn` (`createdOn`),
-  KEY `idxSync_NoticecreatedBy` (`createdBy`(10)),
-  KEY `idxSync_NoticeeditedOn` (`editedOn`),
-  KEY `idxSync_NoticeeditedBy` (`editedBy`(10))
+  KEY `idxsync_noticeUID` (`UID`(10)),
+  KEY `idxsync_noticesource` (`source`(10)),
+  KEY `idxsync_noticecreatedOn` (`createdOn`),
+  KEY `idxsync_noticecreatedBy` (`createdBy`(10)),
+  KEY `idxsync_noticeeditedOn` (`editedOn`),
+  KEY `idxsync_noticeeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Sync_Server`
+-- Table structure for table `sync_server`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Sync_Server` (
+CREATE TABLE `sync_server` (
   `UID` varchar(33) DEFAULT NULL,
   `servername` varchar(255) DEFAULT NULL,
   `serverurl` varchar(100) DEFAULT NULL,
@@ -928,22 +928,22 @@ CREATE TABLE `Sync_Server` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxSync_ServerUID` (`UID`(10)),
-  KEY `idxSync_ServercreatedOn` (`createdOn`),
-  KEY `idxSync_ServercreatedBy` (`createdBy`(10)),
-  KEY `idxSync_ServereditedOn` (`editedOn`),
-  KEY `idxSync_ServereditedBy` (`editedBy`(10))
+  KEY `idxsync_serverUID` (`UID`(10)),
+  KEY `idxsync_servercreatedOn` (`createdOn`),
+  KEY `idxsync_servercreatedBy` (`createdBy`(10)),
+  KEY `idxsync_servereditedOn` (`editedOn`),
+  KEY `idxsync_servereditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Users_Friendship`
+-- Table structure for table `users_friendship`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users_Friendship` (
+CREATE TABLE `users_friendship` (
   `UID` varchar(33) DEFAULT NULL,
   `userUID` varchar(33) DEFAULT NULL,
   `friendUID` varchar(33) DEFAULT NULL,
@@ -953,23 +953,23 @@ CREATE TABLE `Users_Friendship` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxUsers_FriendshipUID` (`UID`(10)),
-  KEY `idxUsers_FriendshipcreatedOn` (`createdOn`),
-  KEY `idxUsers_FriendshipcreatedBy` (`createdBy`(10)),
-  KEY `idxUsers_FriendshipeditedOn` (`editedOn`),
-  KEY `idxUsers_FriendshipeditedBy` (`editedBy`(10))
+  KEY `idxusers_friendshipUID` (`UID`(10)),
+  KEY `idxusers_friendshipcreatedOn` (`createdOn`),
+  KEY `idxusers_friendshipcreatedBy` (`createdBy`(10)),
+  KEY `idxusers_friendshipeditedOn` (`editedOn`),
+  KEY `idxusers_friendshipeditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
 --
--- Table structure for table `Users_Notification`
+-- Table structure for table `users_notification`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users_Notification` (
+CREATE TABLE `users_notification` (
   `UID` varchar(33) DEFAULT NULL,
   `refModule` varchar(20) DEFAULT NULL,
   `refModel` varchar(50) DEFAULT NULL,
@@ -983,13 +983,13 @@ CREATE TABLE `Users_Notification` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Users_Role`
+-- Table structure for table `users_role`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users_Role` (
+CREATE TABLE `users_role` (
   `UID` varchar(33) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `description` mediumtext,
@@ -999,24 +999,24 @@ CREATE TABLE `Users_Role` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxUsers_RoleUID` (`UID`(10)),
-  KEY `idxUsers_RolecreatedOn` (`createdOn`),
-  KEY `idxUsers_RolecreatedBy` (`createdBy`(10)),
-  KEY `idxUsers_RoleeditedOn` (`editedOn`),
-  KEY `idxUsers_RoleeditedBy` (`editedBy`(10)),
-  KEY `idxUsers_Rolealias` (`alias`(10))
+  KEY `idxusers_roleUID` (`UID`(10)),
+  KEY `idxusers_rolecreatedOn` (`createdOn`),
+  KEY `idxusers_rolecreatedBy` (`createdBy`(10)),
+  KEY `idxusers_roleeditedOn` (`editedOn`),
+  KEY `idxusers_roleeditedBy` (`editedBy`(10)),
+  KEY `idxusers_rolealias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
 --
--- Table structure for table `Users_Session`
+-- Table structure for table `users_session`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users_Session` (
+CREATE TABLE `users_session` (
   `UID` varchar(33) DEFAULT NULL,
   `userUID` varchar(255) DEFAULT NULL,
   `serverurl` varchar(255) DEFAULT NULL,
@@ -1030,13 +1030,13 @@ CREATE TABLE `Users_Session` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Users_User`
+-- Table structure for table `users_user`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Users_User` (
+CREATE TABLE `users_user` (
   `UID` varchar(33) DEFAULT NULL,
   `role` varchar(33) DEFAULT NULL,
   `school` varchar(33) DEFAULT NULL,
@@ -1054,24 +1054,24 @@ CREATE TABLE `Users_User` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxUsers_UserUID` (`UID`(10)),
-  KEY `idxUsers_Userusername` (`username`(10)),
-  KEY `idxUsers_UsercreatedOn` (`createdOn`),
-  KEY `idxUsers_UsercreatedBy` (`createdBy`(10)),
-  KEY `idxUsers_UsereditedOn` (`editedOn`),
-  KEY `idxUsers_UsereditedBy` (`editedBy`(10)),
-  KEY `idxUsers_Useralias` (`alias`(10))
+  KEY `idxusers_userUID` (`UID`(10)),
+  KEY `idxusers_userusername` (`username`(10)),
+  KEY `idxusers_usercreatedOn` (`createdOn`),
+  KEY `idxusers_usercreatedBy` (`createdBy`(10)),
+  KEY `idxusers_usereditedOn` (`editedOn`),
+  KEY `idxusers_usereditedBy` (`editedBy`(10)),
+  KEY `idxusers_useralias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Wiki_Article`
+-- Table structure for table `wiki_article`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Wiki_Article` (
+CREATE TABLE `wiki_article` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `content` text,
@@ -1083,27 +1083,27 @@ CREATE TABLE `Wiki_Article` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` varchar(255) DEFAULT NULL,
-  KEY `idxWiki_ArticleUID` (`UID`(10)),
-  KEY `idxWiki_ArticlecreatedOn` (`createdOn`),
-  KEY `idxWiki_ArticlecreatedBy` (`createdBy`(10)),
-  KEY `idxWiki_ArticleeditedOn` (`editedOn`),
-  KEY `idxWiki_ArticleeditedBy` (`editedBy`(10)),
-  KEY `idxWiki_Articlealias` (`alias`(10))
+  KEY `idxwiki_articleUID` (`UID`(10)),
+  KEY `idxwiki_articlecreatedOn` (`createdOn`),
+  KEY `idxwiki_articlecreatedBy` (`createdBy`(10)),
+  KEY `idxwiki_articleeditedOn` (`editedOn`),
+  KEY `idxwiki_articleeditedBy` (`editedBy`(10)),
+  KEY `idxwiki_articlealias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Wiki_ArticleWiki_Article`
+-- Table structure for table `wiki_articlewiki_article`
 --
 
 --
--- Table structure for table `Wiki_Category`
+-- Table structure for table `wiki_category`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Wiki_Category` (
+CREATE TABLE `wiki_category` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `description` mediumtext,
@@ -1113,25 +1113,25 @@ CREATE TABLE `Wiki_Category` (
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
   `alias` text,
-  KEY `idxWiki_CategoryUID` (`UID`(10)),
-  KEY `idxWiki_Categorytitle` (`title`(10)),
-  KEY `idxWiki_Categoryparent` (`parent`(10)),
-  KEY `idxWiki_CategorycreatedOn` (`createdOn`),
-  KEY `idxWiki_CategorycreatedBy` (`createdBy`(10)),
-  KEY `idxWiki_CategoryeditedOn` (`editedOn`),
-  KEY `idxWiki_CategoryeditedBy` (`editedBy`(10)),
-  KEY `idxWiki_Categoryalias` (`alias`(10))
+  KEY `idxwiki_categoryUID` (`UID`(10)),
+  KEY `idxwiki_categorytitle` (`title`(10)),
+  KEY `idxwiki_categoryparent` (`parent`(10)),
+  KEY `idxwiki_categorycreatedOn` (`createdOn`),
+  KEY `idxwiki_categorycreatedBy` (`createdBy`(10)),
+  KEY `idxwiki_categoryeditedOn` (`editedOn`),
+  KEY `idxwiki_categoryeditedBy` (`editedBy`(10)),
+  KEY `idxwiki_categoryalias` (`alias`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Wiki_Revision`
+-- Table structure for table `wiki_revision`
 --
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Wiki_Revision` (
+CREATE TABLE `wiki_revision` (
   `UID` varchar(33) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `content` text,
@@ -1144,16 +1144,16 @@ CREATE TABLE `Wiki_Revision` (
   `createdBy` varchar(33) DEFAULT NULL,
   `editedOn` datetime DEFAULT NULL,
   `editedBy` varchar(33) DEFAULT NULL,
-  KEY `idxWiki_RevisionUID` (`UID`(10)),
-  KEY `idxWiki_RevisioncreatedOn` (`createdOn`),
-  KEY `idxWiki_RevisioncreatedBy` (`createdBy`(10)),
-  KEY `idxWiki_RevisioneditedOn` (`editedOn`),
-  KEY `idxWiki_RevisioneditedBy` (`editedBy`(10))
+  KEY `idxwiki_revisionUID` (`UID`(10)),
+  KEY `idxwiki_revisioncreatedOn` (`createdOn`),
+  KEY `idxwiki_revisioncreatedBy` (`createdBy`(10)),
+  KEY `idxwiki_revisioneditedOn` (`editedOn`),
+  KEY `idxwiki_revisioneditedBy` (`editedBy`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `Wiki_Revision`
+-- Table structure for table `wiki_revision`
 --
 
 

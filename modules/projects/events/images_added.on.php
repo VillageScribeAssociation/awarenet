@@ -3,45 +3,63 @@
 require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when an image is added 
+//|	fired when an image is added 
 //-------------------------------------------------------------------------------------------------
-//arg: refModule - name of module to which a comment was attached
-//arg: refUID - UID of object to which comment was attached
-//arg: imageUID - UID of the new comment
-//arg: imageTitle - text/html of comment
+//arg: refModule - name of module to which a image was attached [string]
+//arg: refModel - type of object to which image was attached [string]
+//arg: refUID - UID of object to which image was attached [string]
+//arg: imageUID - UID of the new image [string]
+//arg: imageTitle - title of new image [string]
 
 function projects__cb_images_added($args) {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $notifications;
+
+	//----------------------------------------------------------------------------------------------
+	//	check event arguments
+	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('imageUID', $args)) { return false; }
 	if (false == array_key_exists('imageTitle', $args)) { return false; }
 
+	if ('projects' != $args['refModule']) { return false; }
+	//if ('projects_project' != $args['refModel']) { return false; }
+
 	$model = new Projects_Project($args['refUID']);
 	if (false == $model->loaded) { return false; }	
 
 	//----------------------------------------------------------------------------------------------
-	//	send notifications to project member and friends of uplaoder
+	//	create notification
 	//----------------------------------------------------------------------------------------------
-	/*	TODO: re-add notifications
 	$ext = $model->extArray();
 	$link = "<a href='" . $ext['viewUrl'] . "/'>" . $ext['title'].  '</a>';
-	$title = $user->getNameLink() . ' added a new image to your project: ' . $link;
+	$title = $user->getName() . ' added a new image to project: ' . $ext['title'];
 	$url = $ext['viewUrl'];
 	$imgUID = '';
 
 	$content = "<a href='/images/show/" . $args['imageUID'] . "'>[ view image >> ]</a>";
 
-	notifyProject($args['refUID'], $args['commentUID'], 
-				  $user->getName(), $user->getUrl(),
-				  $title, $content, $url, $args['imageUID'] );
+	$nUID = $notifications->create(
+		'projects', 
+		'projects_project', 
+		$model->UID, 
+		'images_added', 
+		$title, 
+		$content, 
+		$url
+	);
 
-	$title = $user->getNameLink() . ' added a new image to their project: ' . $link;
+	//----------------------------------------------------------------------------------------------
+	//	add project members, admins and user's friends
+	//----------------------------------------------------------------------------------------------
+	$members = $project->getMembers();
+	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $userUID); }
 
-	notifyFriends($args['refUID'], $args['imageUID'], 
-				  $user->getName(), $user->getUrl(),
-				  $title, $content, $url, $args['imageUID'] );
-	*/
+	$notifications->addAdmins($nUID);
+
+	$notifications->addFriends($nUID, $user->UID);
 
 	return true;
 }

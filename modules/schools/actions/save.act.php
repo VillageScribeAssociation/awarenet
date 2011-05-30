@@ -15,7 +15,7 @@
 
 	$model = new Schools_School($db->addMarkup($_POST['UID']));
 	if (false == $model->loaded) { $page->do404("could not load School $UID");}
-	if (false == $user->authHas('schools', 'Schools_School', 'edit', $model->UID))
+	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this school.'); }
 
 
@@ -25,13 +25,14 @@
 	//TODO: sanitize description
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'name':	$model->name = $utils->cleanString($value); break;
-			case 'description':	$model->description = $value; break;
-			case 'geocode':	$model->geocode = $utils->cleanString($value); break;
-			case 'region':	$model->region = $utils->cleanString($value); break;
-			case 'country':	$model->country = $utils->cleanString($value); break;
-			case 'hidden':	$model->hidden = $utils->cleanString($value); break;
-			case 'type':	$model->type = $utils->cleanString($value); break;
+			case 'name':		$model->name = $utils->cleanString($value); 		break;
+			case 'description':	$model->description = $value; 						break;
+			case 'geocode':		$model->geocode = $utils->cleanString($value); 		break;
+			case 'region':		$model->region = $utils->cleanString($value); 		break;
+			case 'country':		$model->country = $utils->cleanString($value); 		break;
+			case 'hidden':		$model->hidden = $utils->cleanString($value); 		break;
+			case 'type':		$model->type = $utils->cleanString($value); 		break;
+			case 'notifyall':	$model->notifyAll = $utils->cleanString($value); 	break;
 		}
 	}
 	$report = $model->save();

@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('calendar', 'Calendar_Entry', 'edit', $UID))
+	if (false == $user->authHas('calendar', 'calendar_entry', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Entry.'); }
 
 	//----------------------------------------------------------------------------------------------

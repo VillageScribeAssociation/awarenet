@@ -43,33 +43,33 @@
         </model>
     </models>
     <defaultpermissions>
-		public:p|wiki|Wiki_Article|show
-		public:p|wiki|Wiki_Revision|show
+		public:p|wiki|wiki_article|show
+		public:p|wiki|wiki_revision|show
 
-		student:p|wiki|Wiki_Article|new
-		student:p|wiki|Wiki_Article|show
-		student:p|wiki|Wiki_Article|images-add
-		student:p|wiki|Wiki_Article|images-show
-		student:p|wiki|Wiki_Article|images-edit
-		student:p|wiki|Wiki_Article|edit
+		student:p|wiki|wiki_article|new
+		student:p|wiki|wiki_article|show
+		student:p|wiki|wiki_article|images-add
+		student:p|wiki|wiki_article|images-show
+		student:p|wiki|wiki_article|images-edit
+		student:p|wiki|wiki_article|edit
 
-		student:p|wiki|Wiki_Revision|new
-		student:p|wiki|Wiki_Revision|show
+		student:p|wiki|wiki_revision|new
+		student:p|wiki|wiki_revision|show
 
-		teacher:p|wiki|Wiki_Article|new
-		teacher:p|wiki|Wiki_Article|show
-		teacher:p|wiki|Wiki_Article|comments-add
-		teacher:p|wiki|Wiki_Article|comments-show
-		teacher:p|wiki|Wiki_Article|images-add
-		teacher:p|wiki|Wiki_Article|images-show
-		teacher:p|wiki|Wiki_Article|images-edit
-		teacher:p|wiki|Wiki_Article|images-remove
-		teacher:p|wiki|Wiki_Article|administer
-		teacher:p|wiki|Wiki_Article|edit
+		teacher:p|wiki|wiki_article|new
+		teacher:p|wiki|wiki_article|show
+		teacher:p|wiki|wiki_article|comments-add
+		teacher:p|wiki|wiki_article|comments-show
+		teacher:p|wiki|wiki_article|images-add
+		teacher:p|wiki|wiki_article|images-show
+		teacher:p|wiki|wiki_article|images-edit
+		teacher:p|wiki|wiki_article|images-remove
+		teacher:p|wiki|wiki_article|administer
+		teacher:p|wiki|wiki_article|edit
 
-		teacher:p|wiki|Wiki_Revision|new
-		teacher:p|wiki|Wiki_Revision|show
-		teacher:p|wiki|Wiki_Revision|revert
+		teacher:p|wiki|wiki_revision|new
+		teacher:p|wiki|wiki_revision|show
+		teacher:p|wiki|wiki_revision|revert
 
     </defaultpermissions>
 </module>

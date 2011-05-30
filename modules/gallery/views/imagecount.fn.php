@@ -12,7 +12,7 @@ function gallery_imagecount($args) {
 
 	if (false == array_key_exists('galleryUID', $args)) { return ''; }
 
-	$sql = "select count(UID) as numRecords from Images_Image "
+	$sql = "select count(UID) as numRecords from images_image "
 		 . "where refModule='gallery' and refUID='" . $db->addMarkup($args['galleryUID']) . "'";
 
 	//TODO: use $db->countRange

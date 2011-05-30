@@ -24,10 +24,10 @@ function schools_select($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permisisons
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Schools_School', '*', '', 'name');
+	$range = $db->loadRange('schools_school', '*', '', 'name');
 	//$sql = "select * from Schools_School order by name";
 	
-	$html .= "<select name='" . $varname . "'>\n";
+	$html .= "<select name='" . $varname . "' style='width: 200px'>\n";
 	foreach ($range as $row) {
 		if ($row['UID'] == $default) {
 			$html .= "<option value='" . $row['UID'] . "' selected='YES'>" 

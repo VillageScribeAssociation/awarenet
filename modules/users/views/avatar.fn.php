@@ -12,10 +12,10 @@
 //opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function users_avatar($args) {
-	global $db;
-	global $serverPath;
+	global $db, $kapenta;
 	$size = 'width300';
 	$link = 'yes';
+
 	if (array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('link', $args) == 'no') { $link = 'no'; }
@@ -30,7 +30,7 @@ function users_avatar($args) {
 	}
 
 	$model = new Users_User($db->addMarkup($args['raUID']));	
-	$sql = "select * from Images_Image where refModule='users' and refUID='" 
+	$sql = "select * from images_image where refModule='users' and refUID='" 
 		 . $db->addMarkup($model->UID)
 	     . "' order by weight";
 

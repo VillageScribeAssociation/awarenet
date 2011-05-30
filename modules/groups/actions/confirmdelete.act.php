@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('uid', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $req->args)) { $page->do404('Group not specified.'); }
 
-	$model = new Groups_Group($req->args['uid']);
+	$model = new Groups_Group($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('Group not found.'); }
-	if (false == $user->authHas('groups', 'Groups_Group', 'delete', $model->UID))
+	if (false == $user->authHas('groups', 'groups_group', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this group.'); }	
 	
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 	//----------------------------------------------------------------------------------------------		
 	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/groups/views/confirmdelete.block.php');
-	$html = $theme->replaceLabels($labels, );
+	$html = $theme->replaceLabels($labels, $block);
 	$session->msg($html, 'warn');
 	$page->do302('groups/' . $model->alias);
 

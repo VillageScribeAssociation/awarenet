@@ -7,13 +7,19 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_menu($args) {
-	global $theme;
+	global $theme, $user;
 
-	global $user;
-	$labels = array();
-	if ($user->authHas('schools', 'Schools_School', 'edit', 'TODO:UIDHERE')) {
+	$labels = array('newEntry' => '', 'allContactDetails' => '');
+
+	if ($user->authHas('schools', 'schools_school', 'edit', 'TODO:UIDHERE')) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Add School::link=/schools/new/:]]';
-	} else { $labels['newEntry'] = ''; }
+	}
+
+	if (('admin' == $user->role) || ('teacher' == $user->role)) {
+		$labels['allContactDetails'] = ''
+			 . '[[:theme::submenu::label=All Contact Details'
+			 . '::link=/schools/schoolcontacts/:]]';
+	}
 	
 	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/schools/views/menu.block.php'));
 	return $html;	

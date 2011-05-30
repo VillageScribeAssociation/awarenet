@@ -2,6 +2,7 @@
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/calendar/models/entry.mod.php');
+	require_once($kapenta->installPath . 'modules/calendar/models/template.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	install script for Calendar module
@@ -11,27 +12,27 @@
 //--------------------------------------------------------------------------------------------------
 //|	install the Calendar module
 //--------------------------------------------------------------------------------------------------
-//returns: html report or false if not authorized [string][bool]
+//returns: html report or empty string if not authorized [string][bool]
 
 function calendar_install_module() {
-	global $db, $user;
-	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
-	$report = '';
+	global $user;
+	if ('admin' != $user->role) { return ''; }
 
+	$dba = new KDBAdminDriver();
+	$report = '';				//% return value [string:html]
 	//----------------------------------------------------------------------------------------------
-	//	create or upgrade Calendar_Entry table
+	//	create or upgrade calendar_entry table
 	//----------------------------------------------------------------------------------------------
 	$model = new Calendar_Entry();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
-	//	copy all records from previous table
+	//	create or upgrade calendar_template table
 	//----------------------------------------------------------------------------------------------
-	$rename = array('recordAlias' => 'alias');
-	$count = $dba->copyAll('calendar', $dbSchema, $rename); 
-	$report .= "<b>moved $count records from 'calendar' table.</b><br/>";
+	$model = new Calendar_Template();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
 	//	done
@@ -43,14 +44,14 @@ function calendar_install_module() {
 //|	discover if this module is installed
 //--------------------------------------------------------------------------------------------------
 //:	if installed correctly report will contain HTML comment <!-- installed correctly -->
-//returns: HTML installation status report [string]
+//returns: HTML installation status report or empty string if not authorized [string]
 
 function calendar_install_status_report() {
 	global $user;
 	if ('admin' != $user->role) { return false; }
 
+	$report = '';				//%	return value [string:html]
 	$dba = new KDBAdminDriver();
-	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
 
@@ -58,6 +59,16 @@ function calendar_install_status_report() {
 	//	ensure the table which stores Entry objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Calendar_Entry();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Template objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Calendar_Template();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

@@ -29,7 +29,7 @@ function forums_randomthumbs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from Images_Image "
+	$sql = "select * from images_image "
 		 . "where createdBy='" . $db->addMarkup($args['userUID']) . "' and refModule='forums' "
 		 . "order by RAND() $limit";
 

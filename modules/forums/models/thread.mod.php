@@ -92,7 +92,7 @@ class Forums_Thread {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('forums', 'Forums_Thread', $this->UID, $this->title);
+		$this->alias = $aliases->create('forums', 'forums_thread', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -118,7 +118,7 @@ class Forums_Thread {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'forums';
-		$dbSchema['model'] = 'Forums_Thread';
+		$dbSchema['model'] = 'forums_thread';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -196,6 +196,7 @@ class Forums_Thread {
 		$ary['addChildLink'] = '';
 		$ary['delUrl'] = '';
 		$ary['delLink'] = '';
+		$ary['nameLink'] = '';
 
 		//------------------------------------------------------------------------------------------
 		//	check authorisation
@@ -211,7 +212,8 @@ class Forums_Thread {
 
 		if (true == $user->authHas('forums', 'Forum_Thread', 'view', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%forumthreads/' . $ary['alias'];
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
+			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
+			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
 		if (true == $auth) {
@@ -279,7 +281,7 @@ class Forums_Thread {
 	function updateReplies() {
 		global $db;
 		$conditions = array("thread='" . $db->addMarkup($this->UID) . "'");
-		$this->replies = (int)$db->countRange('Forums_Reply', $conditions);
+		$this->replies = (int)$db->countRange('forums_reply', $conditions);
 	}
 
 }

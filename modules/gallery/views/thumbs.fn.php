@@ -29,7 +29,7 @@ function gallery_thumbs($args) {
 	$conditions[] = "refModule='gallery'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight ASC', $limit, '');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', $limit, '');
 
 	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];

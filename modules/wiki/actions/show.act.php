@@ -5,8 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //	display a wiki article
 //--------------------------------------------------------------------------------------------------
-//	If no recordAlias is specified, the 'index' article is shown.  If that does not exist then
-//	one will be created.
+//	If no alias is specified, the 'index' article is shown.
 
 	$raUID = $req->ref;
 	
@@ -17,7 +16,7 @@
 		//------------------------------------------------------------------------------------------
 		//	no article specified
 		//------------------------------------------------------------------------------------------
-		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', 'Index');
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', 'Index');
 		if (false == $raUID) {
 			$model = new Wiki_Article();
 			$model->mkDefault();
@@ -31,10 +30,10 @@
 		//------------------------------------------------------------------------------------------
 		//	article has been specified
 		//------------------------------------------------------------------------------------------
-		$raUID = $aliases->getOwner('wiki', 'Wiki_Article', $req->ref);	// maybe its an alias
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', $req->ref);	// maybe its an alias
 		if ($raUID == false) {							// no? maybe its a UID
 
-			if (true == $db->objectExists('Wiki_Article', $req->ref)) {
+			if (true == $db->objectExists('wiki_article', $req->ref)) {
 				$raUID = $req->ref;			
 			} else {
 				$page->load('modules/wiki/actions/notfound.page.php');

@@ -14,7 +14,8 @@
 //	default objects
 //--------------------------------------------------------------------------------------------------
 
-	include 'ksystem.class.php';		// system
+	//include 'kregistry.class.php';		// settings registry
+	//include 'ksystem.class.php';		// system
 	include 'kxmldocument.class.php';	// xml parser
 	include 'ksession.class.php';		// HTTP request interpreter
 	include 'krequest.class.php';		// HTTP request interpreter
@@ -25,18 +26,20 @@
 	include 'krevisions.class.php';		// object revision history and recycle bin
 	include 'kutils.class.php';			// miscellaneous utilities
 
-	$dbDriver = '';						// dbType is a global from setup.inc.php
+	$dbDriver = '';						// TODO: add other DBMS here
+	$dbType = 'MySql';
+
 	switch($dbType) {
 		case 'MySQL':	$dbDriver = 'core/dbdriver/mysql.dbd.php';
 		default:		$dbDriver = 'core/dbdriver/mysql.dbd.php';
 	}
 
-	include $installPath . $dbDriver;
-	include $installPath . 'core/dbdriver/mysqladmin.dbd.php';
+	include $dbDriver;
+	include 'core/dbdriver/mysqladmin.dbd.php';
 
-	include $installPath . 'core/kaliases.class.php';
-	include $installPath . 'modules/users/models/user.mod.php';
-	include $installPath . 'modules/users/models/role.mod.php';
+	include 'core/kaliases.class.php';
+	include 'modules/users/models/user.mod.php';
+	include 'modules/users/models/role.mod.php';
 
 //--------------------------------------------------------------------------------------------------
 //	older library stubs (deprecated)

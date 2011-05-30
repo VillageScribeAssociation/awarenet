@@ -31,13 +31,13 @@
 		</model>
 	</models>
     <defaultpermissions>
-		student:p|announcements|Announcements_Announcement|show
-		student:p|announcements|Announcements_Announcement|list
-		student:c|announcements|Announcements_Announcement|edit|(if)|creator
+		student:p|announcements|announcements_announcement|show
+		student:p|announcements|announcements_announcement|list
+		student:c|announcements|announcements_announcement|edit|(if)|creator
 
-		teacher:p|announcements|Announcements_Announcement|announcement-add
-		teacher:c|announcements|Announcements_Announcement|announcement-edit|(if)|creator
-		teacher:c|announcements|Announcements_Announcement|announcement-delete|(if)|creator
+		teacher:p|announcements|announcements_announcement|announcement-add
+		teacher:c|announcements|announcements_announcement|announcement-edit|(if)|creator
+		teacher:c|announcements|announcements_announcement|announcement-delete|(if)|creator
     </defaultpermissions>
     <blocks>
     </blocks>

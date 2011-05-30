@@ -13,7 +13,7 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$model = new Announcements_Announcement($req->ref);
 	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'edit', $model->UID))
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this announcement.'); }
 
 	//$cb = "[[:". $model->refModule ."::haseditauth::raUID=".  $model->refUID .":]]";

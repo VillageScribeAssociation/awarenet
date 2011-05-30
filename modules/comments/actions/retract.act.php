@@ -16,10 +16,10 @@
 
 	$authorised = false;
 
-	if (true == $user->authHas('comments', 'Comments_Comment', 'retractall'))
+	if (true == $user->authHas('comments', 'comments_comment', 'retractall'))
 		{ $authorised = true; }
 
-	if (true == $user->authHas('comments', 'Comments_Comment', 'retract', $model->UID))
+	if (true == $user->authHas('comments', 'comments_comment', 'retract', $model->UID))
 		{ $authorised = true; }
 
 	if (true == $user->authHas($model->refModule, $model->refModel, 'comments-retract', $model->refUID)) 
@@ -44,7 +44,7 @@
 	if (true == array_key_exists('HTTP_REFERER', $_SERVER)) {
 		// TODO, conside the security implications of this
 		$referer = $_SERVER['HTTP_REFERER'];
-		$referer = str_replace($serverPath, '', $referer);
+		$referer = str_replace($kapenta->serverPath, '', $referer);
 		$referer = str_replace('//', '/', $referer);
 		if (substr($referer, 0, 1) == '/') { $referer = substr($referer, 1); }
 		$page->do302($referer);

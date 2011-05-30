@@ -18,7 +18,7 @@ function images_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('images', 'Images_Image', 'show')) { return false; }
+	if (false == $user->authHas('images', 'images_image', 'show')) { return false; }
 
 	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (array_key_exists('page', $args)) { 
@@ -30,7 +30,7 @@ function images_listall($args) {
 	//	load page of items from the database and make the block
 	//----------------------------------------------------------------------------------------------
 	//TODO: add any conditions here
-	$range = $db->loadRange('Images_Image', '*', '', 'createdOn', $num, $start);
+	$range = $db->loadRange('images_image', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/images/summary.block.php');
 
 	foreach($range as $UID => $row) {

@@ -1,30 +1,31 @@
-<? /*
-<page>
-<template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::label=Video Galleries (everyone)::width=570:]]
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
 
-[[:videos::summarylist::orderBy=%%orderBy%%::pageNo=%%pageNo%%:]]</content>
-<title>awareNet - all image galleries</title>
-<script></script>
-<nav1>
-[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden='yes':]]
-[`|lt]div id='divNewGalleryForm' style='visibility: hidden; display: none;'[`|gt]
+<page>
+	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all image galleries</title>
+	<content>[[:theme::navtitlebox::label=Video Galleries (everyone)::width=570:]]
+
+[[:videos::summarylist::orderBy=[`|pc][`|pc]orderBy[`|pc][`|pc]::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]:]]</content>
+	<nav1>[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
+[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 [[:videos::newgalleryform:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=My Video Galleries:]]
-[[:videos::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-<nav2></nav2>
-<banner></banner>
-<head></head>
-<menu1>[[:home::menu:]]</menu1>
-<menu2>[[:videos::menu:]]</menu2>
-<section></section>
-<subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=Video Galleries - ::link=/videos/:]]
-[[:theme::breadcrumb::label=all - ::link=/videos/listall/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]orderLabel[`|pc][`|pc]::link=/videos/listall/orderBy_[`|pc][`|pc]orderBy[`|pc][`|pc]:]]</breadcrumb>
+[[:theme::navtitlebox::label=Unsorted Videos:]]
+[[:videos::randomthumbs::num=12:]]</nav1>
+	<nav2></nav2>
+	<script></script>
+	<jsinit></jsinit>
+	<banner></banner>
+	<head></head>
+	<menu1>[[:home::menu:]]</menu1>
+	<menu2>[[:videos::menu:]]</menu2>
+	<section></section>
+	<subsection></subsection>
+	<breadcrumb>[[:theme::breadcrumb::label=Video Gallery - ::link=/videos/:]]
+[[:theme::breadcrumb::label=Edit::link=/videos/edit/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
 </page>
+
 */ ?>

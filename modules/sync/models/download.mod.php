@@ -118,7 +118,7 @@ class Sync_Download {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'sync';
-		$dbSchema['model'] = 'Sync_Download';
+		$dbSchema['model'] = 'sync_download';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -197,7 +197,7 @@ class Sync_Download {
 
 	function clearOldEntries() {
 		global $db;
-		$downloads = $db->loadRange('Sync_Download', '*', '');
+		$downloads = $db->loadRange('sync_download', '*', '');
 		foreach($downloads as $row) {
 			if (time() > ($row['timestamp'] + $this->maxAge)) {
 				$db->delete($row['UID'], $this->dbSchema);
@@ -213,7 +213,7 @@ class Sync_Download {
 
 	function inList($fileName) {
 		global $db;
-		$sql = "select * from Sync_Download where filename='" . $db->addMarkup($fileName) . "'";
+		$sql = "select * from sync_download where filename='" . $db->addMarkup($fileName) . "'";
 		$result = $db->query($sql);
 		if ($db->numRows($result) > 0) { return true; }
 		return false;
@@ -228,7 +228,7 @@ class Sync_Download {
 		global $db;
 
 		//TODO: use dbCountRange
-		$sql = "select UID from Sync_Download where status='searching'";
+		$sql = "select UID from sync_download where status='searching'";
 		$result = $db->query($sql);
 		if ($db->numRows($result) > $this->numDownloads) { return true; }
 		return false;
@@ -242,7 +242,7 @@ class Sync_Download {
 	function getNextDownload() {
 		global $db;
 
-		$sql = "select * from Sync_Download where status='wait' order by rand()";
+		$sql = "select * from sync_download where status='wait' order by rand()";
 		$result = $db->query($sql);
 		if ($db->numRows($result) > 0) {
 			$row = $db->fetchAssoc($result);

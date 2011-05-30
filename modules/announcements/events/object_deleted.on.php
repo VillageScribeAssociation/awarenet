@@ -20,7 +20,7 @@ function announcements__cb_object_deleted($args) {
 	$conditions = array();
 	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
 	$conditions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
-	$range = $db->loadRange('Announcements_Announcement', '*', $conditions, '', '', '');
+	$range = $db->loadRange('announcements_announcement', '*', $conditions, '', '', '');
 
 	foreach($range as $row) {
 		$model = new Announcements_Announcement();

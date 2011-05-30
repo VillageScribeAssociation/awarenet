@@ -9,21 +9,30 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_uploadmultipleform($args) {
-	global $theme;
+	global $kapenta, $db, $theme, $user;
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	$authArgs = array('UID' => $args['refUID']);
-	if (authHas($args['refModule'], 'files', $authArgs) == false) { return false; }
+	if (array_key_exists('refModule', $args) == false) { return '(refModule not given)'; }
+	if (array_key_exists('refModel', $args) == false) { return '(refModel not given)'; }
+	if (array_key_exists('refUID', $args) == false) { return '(refUID not given)'; }
+
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
+	
+	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
+	if (false == $db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
+
+	if (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form
 	//----------------------------------------------------------------------------------------------
 	$labels = array('refModule' => $args['refModule'], 'refUID' => $args['refUID']);
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/files/views/uploadmultiple.block.php'));
+	$block = $theme->loadBlock('modules/files/views/uploadmultiple.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	
 	return $html;
 }

@@ -24,8 +24,9 @@ function users_showgrade($args) {
 	$conditions = array();
 	$conditions[] = "school='" . $db->addMarkup($args['schoolUID']) . "'";
 	$conditions[] = "grade='" . $db->addMarkup($args['grade']) . "'";
+	$conditions[] = "role != 'banned'";
 
-	$range = $db->loadRange('Users_User', '*', $conditions, 'surname, firstname');
+	$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
 
 	//$sql = "select * from users "
 	//	 . "where school='" . $db->addMarkup($args['schoolUID']) . "' "

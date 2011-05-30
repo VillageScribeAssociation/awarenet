@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/live/models/mailbox.mod.php');
-	require_once($installPath . 'modules/live/models/trigger.mod.php');
+	require_once($kapenta->installPath . 'modules/live/models/mailbox.mod.php');
+	require_once($kapenta->installPath . 'modules/live/models/trigger.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object for reading, writing and rendering pages and other response documents
@@ -144,7 +144,7 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function render() {
-		global $kapenta, $session, $theme, $request, $user, $serverPath;
+		global $kapenta, $session, $theme, $request, $user;
 		//------------------------------------------------------------------------------------------
 		//	set some universals
 		//------------------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ class KPage {
 		//	special admin option
 		//------------------------------------------------------------------------------------------
 		if ('admin' == $user->role) {
-			//$fileName = str_replace($installPath, '', $this->fileName);
+			//$fileName = str_replace($kapenta->installPath, '', $this->fileName);
 			//$parts = explode('/', $fileName);
 			//$editLink = "<a href='/pages/edit/module_" . $parts[1] . "/" . $parts[2] 
 			//	  . "'>[edit this page]</a>";
@@ -242,9 +242,9 @@ class KPage {
 		//------------------------------------------------------------------------------------------
 		$replaceset = explode('|', 'href|src|background|action');
 		foreach($replaceset as $toAbs) {
-			$template = str_replace($toAbs . "='/", $toAbs . "='" . $serverPath, $template);
-			$template = str_replace($toAbs . "=/", $toAbs . "=" . $serverPath, $template);
-			$template = str_replace($toAbs . "=\"/", $toAbs . "=\"" . $serverPath, $template);
+			$template = str_replace($toAbs . "='/", $toAbs . "='" . $kapenta->serverPath, $template);
+			$template = str_replace($toAbs . "=/", $toAbs . "=" . $kapenta->serverPath, $template);
+			$template = str_replace($toAbs . "=\"/", $toAbs . "=\"" . $kapenta->serverPath, $template);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -421,7 +421,7 @@ class KPage {
 		$conditions[] = "module='" . $db->addMarkup($module) . "'";
 		$conditions[] = "channel='" . $db->addMarkup($channel) . "'";
 
-		$range = $db->loadRange('Live_Trigger', '*', $conditions);
+		$range = $db->loadRange('live_trigger', '*', $conditions);
 		foreach($range as $row) {
 			$model = new Live_Trigger();
 			$model->loadArray($row);

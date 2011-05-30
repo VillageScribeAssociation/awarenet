@@ -9,9 +9,7 @@
 //arg: selected - not used at present (yes|no) [string]
 
 function theme_submenu($args) {
-	global $installPath;
-	global $serverPath;
-	global $defaultTheme;
+	global $kapenta;
 	global $theme;
 
 	$label = 'item';			//%	label/caption, default is 'item' [string]

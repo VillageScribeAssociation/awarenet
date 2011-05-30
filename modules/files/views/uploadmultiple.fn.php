@@ -11,7 +11,7 @@
 //opt: categories - comma delimited list of categories these files can belong to [string]
 
 function files_uploadmultiple($args) {
-	global $user; 
+	global $user, $kapenta; 
 	
 	//----------------------------------------------------------------------------------------------
 	//	input validation
@@ -27,7 +27,7 @@ function files_uploadmultiple($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the iframe
 	//----------------------------------------------------------------------------------------------
-	$srcUrl = $serverPath . 'files/uploadmultiple'
+	$srcUrl = '%%serverPath%%files/uploadmultiple'
 		 . '/refModule_' . $args['refModule']
 		 . '/refModel_' . $args['refModel']  
 		 . '/refUID_' . $args['refUID'] . '/';

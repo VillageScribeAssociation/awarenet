@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 	if (trim('') == $req->ref) { $page->do404(); }
-	if (false == $db->objectExists('Sync_Server', $req->ref)) { $page->do404(); }
+	if (false == $db->objectExists('sync_server', $req->ref)) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

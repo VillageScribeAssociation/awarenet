@@ -21,7 +21,7 @@ function videos_randomgalleriesnav($args) {
 	//	load x random galleries from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array('videocount > 0');
-	$range = $db->loadRange('Videos_Gallery', '*', $conditions, 'RAND()', $num);
+	$range = $db->loadRange('videos_gallery', '*', $conditions, 'RAND()', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

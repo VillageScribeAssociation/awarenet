@@ -5,14 +5,14 @@
 //--------------------------------------------------------------------------------------------------
 
 function chat_bot_orly_submit($msg, $recipient) {
-	global $serverPath;
+	global $kapenta;
 	$retVal = array();
 
 	//----------------------------------------------------------------------------------------------
 	//	make response
 	//----------------------------------------------------------------------------------------------
 
-	$url = $serverPath . 'modules/chat/bots/orly/orly.jpg';
+	$url = $kapenta->serverPath . 'modules/chat/bots/orly/orly.jpg';
 	$html = "<img src='" . $url . "' width='180' height='180' />";
 
 	$retVal['sender'] = $html;

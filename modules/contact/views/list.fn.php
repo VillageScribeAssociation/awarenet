@@ -38,7 +38,7 @@ function contact_list($args) {
 	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('Contact_Detail', '*', $conditions);
+	$range = $db->loadRange('contact_detail', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

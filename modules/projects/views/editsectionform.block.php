@@ -1,5 +1,5 @@
 <? /*
-<form name='editSection' method='POST' action='%%serverPath%%projects/save/'>
+<form name='editSection' method='POST' action='%%serverPath%%projects/savesection/'>
 <input type='hidden' name='action' value='saveSection' />
 <input type='hidden' name='UID' value='%%projectUID%%' />
 <input type='hidden' name='sectionUID' value='%%sectionUID%%' />
@@ -40,7 +40,7 @@
 
 [[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
 <div id='divEditImages'>
-[[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%projectUID%%:]]
+[[:images::uploadmultiple::refModule=projects::refModel=projects_project::refUID=%%projectUID%%:]]
 </div>
 <br/>
 */ ?>

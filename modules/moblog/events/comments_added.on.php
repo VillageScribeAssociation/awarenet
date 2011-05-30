@@ -18,7 +18,7 @@ function moblog__cb_comments_added($args) {
 	if (false == array_key_exists('comment', $args)) { return false; }
 
 	if ($args['refModule'] != 'moblog') { return false; }
-	if (false == $db->objectExists('Moblog_Post', $args['refUID'])) { return false; }
+	if (false == $db->objectExists('moblog_post', $args['refUID'])) { return false; }
 	
 	$model = new Moblog_Post($args['refUID']);
 	$u = new Users_User($model->createdBy);

@@ -23,7 +23,7 @@ function projects_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'error');
 
-	$sql = "SELECT * from Projects_Project";
+	$sql = "SELECT * from projects_project";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
@@ -32,7 +32,7 @@ function projects_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check projects
 		//------------------------------------------------------------------------------------------
-		$set = $aliases->getAll('projects', 'Projects_Project', $row['UID']);
+		$set = $aliases->getAll('projects', 'projects_project', $row['UID']);
 		if (0 == count($set)) {
 			$model = new Projects_Project($row['UID']);
 			if (true == $model->loaded) { $model->save(); }
@@ -68,7 +68,7 @@ function projects_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'error');
 
-	$sql = "SELECT * from Projects_Membership";
+	$sql = "SELECT * from projects_membership";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
@@ -77,7 +77,7 @@ function projects_maintenance() {
 		//-----------------------------------------------------------------------------------------
 		//	check reference to project
 		//-----------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Projects_Project', $row['projectUID'])) {
+		if (false == $db->objectExists('projects_project', $row['projectUID'])) {
 			$report .= "project not found - " . $row['projectUID'] 
 					. ", removed membership " . $row['UID'] . ".<br/>\n";
 
@@ -92,7 +92,7 @@ function projects_maintenance() {
 		//-----------------------------------------------------------------------------------------
 		//	check reference to user
 		//-----------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $row['userUID'])) {
+		if (false == $db->objectExists('users_user', $row['userUID'])) {
 			$report .= "user not found - " . $row['userUID'] . ", removed this membership.<br/>\n";
 
 			//$model = new Projects_Membership();

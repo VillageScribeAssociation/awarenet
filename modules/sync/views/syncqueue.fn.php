@@ -23,13 +23,13 @@ function sync_syncqueue($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count sync notices and load a page of them from the database (if any)
 	//----------------------------------------------------------------------------------------------
-	$totalItems = $db->countRange('Sync_Notice', '');
+	$totalItems = $db->countRange('sync_notice', '');
 	$totalPages = ceil($totalItems / $num);
 	$start = (($pageNo - 1) * $num);
 	$finish = ($start + $num);
 	if ($finish > $totalItems) { $finish = $totalItems; }
 
-	$range = $db->loadRange('Sync_Notice', '*', '', 'editedOn', $num, $start);
+	$range = $db->loadRange('sync_notice', '*', '', 'editedOn', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

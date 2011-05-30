@@ -109,7 +109,7 @@ class Notifications_UserIndex {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'notifications';
-		$dbSchema['model'] = 'Notifications_UserIndex';
+		$dbSchema['model'] = 'notifications_userindex';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -168,7 +168,7 @@ class Notifications_UserIndex {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Notifications_UserIndex'>\n"
+		$xml = $indent . "<kobject type='notifications_userindex'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <userUID>" . $this->userUID . "</userUID>\n"
 			. $indent . "    <notificationUID>" . $this->notificationUID . "</notificationUID>\n"
@@ -188,11 +188,9 @@ class Notifications_UserIndex {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-	global $utils;
+		global $utils, $user;
 
-		global $user;
 		$ext = $this->toArray();		//% extended array of properties [array:string]
-
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
 		$ext['editUrl'] = '';	$ext['editLink'] = '';
 		$ext['delUrl'] = '';	$ext['delLink'] = '';
@@ -201,17 +199,20 @@ class Notifications_UserIndex {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('notifications', 'Notifications_UserIndex', 'show', $this->UID)) {
+
+		$objType = 'notifications_userindex';
+
+		if (true == $user->authHas('notifications', $objType, 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Notifications/showuserindex/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'Notifications_UserIndex', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('notifications', $objType, 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Notifications/edituserindex/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'Notifications_UserIndex', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('notifications', $objType, 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Notifications/deluserindex/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -221,6 +222,45 @@ class Notifications_UserIndex {
 		//------------------------------------------------------------------------------------------
 		$ext['UIDJsClean'] = $utils->makeAlphaNumeric($ext['UID']);
 		return $ext;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. perform maintenance tasks on this object
+	//----------------------------------------------------------------------------------------------
+	//returns: array of HTML notes on any action taken [array:string:html]
+
+	function maintain() {
+		global $db;
+		$notes = array();
+		
+		//------------------------------------------------------------------------------------------
+		//	check references to other objects
+		//------------------------------------------------------------------------------------------
+		if (false == $db->objectExists('users_user', $this->userUID)) {
+			// TODO: take action here, delete?
+			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
+					 . 'in field userUID<!-- error -->';
+		}
+
+		if (false == $db->objectExists('notifications_notification', $this->notificationUID)) {
+			// TODO: take action here, delete?
+			$notes[] = 'object ' . $this->UID . ' has invalid reference to notification ' 
+					 . $this->notificationUID . 'in field notificationUID<!-- error -->';
+		}
+
+		if (false == $db->objectExists('users_user', $this->createdBy)) {
+			// TODO: take action here, if possibe assign valid reference to a Users_User
+			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
+					 . 'in field createdBy<!-- error -->';
+		}
+
+		if (false == $db->objectExists('users_user', $this->editedBy)) {
+			// TODO: take action here, if possibe assign valid reference to a Users_User
+			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
+					 . 'in field editedBy<!-- error -->';
+		}
+
+		return $notes;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -248,7 +288,7 @@ class Notifications_UserIndex {
 		$conditions[] = "notificationUID='" . $db->addMarkup($notificationUID) . "'";	
 		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";	
 
-		$num = $db->countRange('Notifications_UserIndex', $conditions);
+		$num = $db->countRange('notifications_userindex', $conditions);
 		if ($num > 0) { return true; }
 		return false;
 	}

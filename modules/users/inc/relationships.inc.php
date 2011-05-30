@@ -28,7 +28,7 @@ function users_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of User object
 	//----------------------------------------------------------------------------------------------
-	if ('Users_User' == $refModel) {
+	if ('users_user' == $refModel) {
 		$model = new Users_User($UID);						// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
@@ -61,7 +61,7 @@ function users_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Friendship object
 	//----------------------------------------------------------------------------------------------
-	if ('Users_Friendship' == $refModel) {
+	if ('users_friendship' == $refModel) {
 		$model = new Users_Friendship($UID);
 		if (false == $model->loaded) { return false; }
 	}

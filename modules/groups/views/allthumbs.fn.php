@@ -21,7 +21,7 @@ function groups_allthumbs($args) {
 	//	load images from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refModule='groups'");
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -29,7 +29,7 @@ function groups_allthumbs($args) {
 	if (0 == count($range)) { return ''; }
 
 	foreach ($range as $row) {
-		$thisRa = $aliases->getDefault('Groups_Group', $row['refUID']);
+		$thisRa = $aliases->getDefault('groups_group', $row['refUID']);
 		$alt = str_replace('-', ' ', $thisRa);
 		$html .= "<a href='/groups/show/" . $thisRa . "'>" 
 				. "<img src='/images/thumb90/" . $row['alias'] 

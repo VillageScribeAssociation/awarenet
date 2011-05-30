@@ -116,7 +116,7 @@ class Contact_Detail {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'contact';
-		$dbSchema['model'] = 'Contact_Detail';
+		$dbSchema['model'] = 'contact_detail';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -190,7 +190,7 @@ class Contact_Detail {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Contact_Detail'>\n"
+		$xml = $indent . "<kobject type='contact_detail'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
@@ -227,17 +227,17 @@ class Contact_Detail {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('contact', 'Contact_Detail', 'show', $this->UID)) {
+		if (true == $user->authHas('contact', 'contact_detail', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%contact/showdetail/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('contact', 'Contact_Detail', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('contact', 'contact_detail', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%contact/edit/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('contact', 'Contact_Detail', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('contact', 'contact_detail', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%contact/delete/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

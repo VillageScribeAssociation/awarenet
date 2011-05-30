@@ -26,7 +26,7 @@ function images_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Images_Image object
 	//----------------------------------------------------------------------------------------------
-	if ('Images_Image' == $refModel) {
+	if ('images_image' == $refModel) {
 		$model = new Images_Image($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

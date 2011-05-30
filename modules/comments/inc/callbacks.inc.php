@@ -22,7 +22,7 @@ function comments__cb_record_delete($args) {
 	//	discover if any images belonging this record and delete them
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select UID from Comments_Comment "
+	$sql = "select UID from comments_comment "
 		 . "where refUID='". $db->addMarkup($args['UID']) ."' "
 		 . "and refModule='". $db->addMarkup($args['module']) ."'";
 

@@ -17,12 +17,10 @@ function notifications_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	//if (false == $user->authHas('notifications', 'Notifications_Notification', 'show'))
-	//		{ return ''; }
 	if (false == array_key_exists('userUID', $args)) { return '(user not specified)'; }
 
 	$userUID = $args['userUID'];
-	if (false == $db->objectExists('Users_User', $userUID)) { return '(no such user)'; }
+	if (false == $db->objectExists('users_user', $userUID)) { return '(no such user)'; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) 
@@ -35,7 +33,7 @@ function notifications_list($args) {
 	$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
 	$conditions[] = "status='show'";
 
-	$totalItems = $db->countRange('Notifications_UserIndex', $conditions);
+	$totalItems = $db->countRange('notifications_userindex', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	if (0 == $totalItems) { 
@@ -50,10 +48,16 @@ function notifications_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of notifications from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Notifications_UserIndex', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $db->loadRange('notifications_userindex', '*', $conditions, 'createdOn DESC', $num, $start);
+	$block = $theme->loadBlock('modules/notifications/views/show.block.php');
 
-	foreach($range as $UID => $row) 
-		{ $html .= "[[:notifications::show::UID=" . $row['notificationUID'] . ":]]"; }
+	foreach($range as $UID => $row) { 
+		$model = new Notifications_Notification($row['notificationUID']);
+		$labels = $model->extArray();
+		$labels['userIndexUID'] = $row['UID'];
+		$html .= $theme->replaceLabels($labels, $block);
+		//$html .= "[[:notifications::show::UID=" . $row['notificationUID'] . ":]]"; 
+	}
 
 	$html = $pagination . $html . $pagination;
 

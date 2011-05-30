@@ -15,7 +15,7 @@ function gallery_showchildren($args) {
 
 	if (false == array_key_exists('UID', $args)) { return ''; }
 
-	$sql = "select * from Gallery_Gallery where parent='" . $args['UID'] . "' order by title DESC";	
+	$sql = "select * from gallery_gallery where parent='" . $args['UID'] . "' order by title DESC";	
 	$result = $db->query($sql);
 
 	if ($db->numRows($result) > 0) {

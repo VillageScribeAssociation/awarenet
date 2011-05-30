@@ -45,6 +45,8 @@ class Images_Image {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ share this object with other instances (yes|no) [string]
+	var $revision;			//_ BIGINT [string]
 	var $alias;				//_ alias [string]
 	var $img;				// image handle
 
@@ -108,6 +110,8 @@ class Images_Image {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
+		$this->revision = $ary['revision'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
@@ -123,7 +127,7 @@ class Images_Image {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('images', 'Images_Image', $this->UID, $this->title);
+		$this->alias = $aliases->create('images', 'images_image', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 
@@ -156,7 +160,7 @@ class Images_Image {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'images';
-		$dbSchema['model'] = 'Images_Image';
+		$dbSchema['model'] = 'images_image';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -179,6 +183,8 @@ class Images_Image {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
+			'revision' => 'BIGINT(20)',
 			'alias' => 'VARCHAR(255)' );
 
 		//these fields will be indexed
@@ -231,6 +237,8 @@ class Images_Image {
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
 			'editedBy' => $this->editedBy,
+			'shared' => $this->shared,
+			'revision' => $this->revision,
 			'alias' => $this->alias
 		);
 
@@ -251,7 +259,7 @@ class Images_Image {
 		$xType = 'kobject';
 		if (true == $oldFormat) { $xType = 'image'; }
 
-		$xml = $indent . "<$xType type='Images_Image'>\n"
+		$xml = $indent . "<$xType type='images_image'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
@@ -296,17 +304,17 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('images', 'Images_Image', 'show', $this->UID)) {
+		if (true == $user->authHas('images', 'images_image', 'show', $this->UID)) {
 			$ext['viewUrl'] = "";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('images', 'Images_Image', 'edit', $this->UID)) {
+		if (true == $user->authHas('images', 'images_image', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%~%serverPath%~%images/edit/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('images', 'Images_Image', 'delete', $this->UID)) {
+		if (true == $user->authHas('images', 'images_image', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%~%serverPath%~%images/delimage/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -488,7 +496,7 @@ class Images_Image {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 		$conditions[] = "category='" . $db->addMarkup($category) . "'";
-		$range = $db->loadRange('Images_Image', '*', $conditions, 'weight', '1', '');
+		$range = $db->loadRange('images_image', '*', $conditions, 'weight', '1', '');
 
 		foreach($range as $row) {
 			$this->load($row['UID']); 
@@ -561,7 +569,7 @@ class Images_Image {
 		}
 		
 		if (file_exists($kapenta->installPath . $this->fileName) == true) 
-			{ @unlink($installPath . $this->fileName); }		// TODO: kapenta should hand this
+			{ @unlink($kapenta->installPath . $this->fileName); }	// TODO: kapenta should do this
 
 		//-----------------------------------------------------------------------------------------
 		//	delete the record

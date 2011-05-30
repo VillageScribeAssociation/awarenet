@@ -13,7 +13,7 @@
 
 	$model = new Announcements_Announcement($req->args['uid']);
 	if (false == $model->loaded) { $page->do404('Announcement not found.'); }
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'delete', $model->UID))
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this announcement.'); }	
 	
 	//----------------------------------------------------------------------------------------------

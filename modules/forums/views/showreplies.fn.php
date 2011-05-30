@@ -33,14 +33,14 @@ function forums_showreplies($args) {
 	//	count all replies in this thread
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("thread='" . $model->UID . "'");
-	$totalItems = $db->countRange('Forums_Reply', $conditions);
+	$totalItems = $db->countRange('forums_reply', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$range = $db->loadRange('Forums_Reply', '*', $conditions, 'createdOn ASC', $num, $start);
+	$range = $db->loadRange('forums_reply', '*', $conditions, 'createdOn ASC', $num, $start);
 
 	//$sql = "select * from Forums_Reply "
 	//	 . "where thread='" . $model->UID . "' "

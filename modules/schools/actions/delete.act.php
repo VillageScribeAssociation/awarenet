@@ -14,7 +14,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('School not specified (UID)'); }
  
 	$model = new Schools_School($_POST['UID']);
-	if (false == $user->authHas('schools', 'Schools_School', 'edit', $model->UID))
+	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID))
 		{ $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------

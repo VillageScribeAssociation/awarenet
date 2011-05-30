@@ -4,7 +4,7 @@
 //	save a gallery entry
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('gallery', 'Gallery_Gallery', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('gallery', 'gallery_gallery', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 	require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 	if (array_key_exists('action', $_POST)) {

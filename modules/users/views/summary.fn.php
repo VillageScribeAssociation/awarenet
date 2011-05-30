@@ -16,7 +16,7 @@ function users_summary($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('UID', $args)) { return ''; }
-	if (false == $user->authHas('users', 'Users_User', 'summary', '')) { return ''; }
+	if (false == $user->authHas('users', 'users_user', 'summary', '')) { return ''; }
 
 	$model = new Users_User($args['UID']);
 	if (false == $model->loaded) { return ''; }

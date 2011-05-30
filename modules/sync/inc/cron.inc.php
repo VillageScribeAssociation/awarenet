@@ -15,13 +15,13 @@
 
 function sync_cron_hourly() {
 	global $db, $req, $kapenta;
-	$report = '<h2>users_cron_hourly<h2>\n';
+	$report = '<h2>sync_cron_hourly<h2>\n';
 
 	//---------------------------------------------------------------------------------------------
 	//	delete all failed sync notices more than a day old
 	//---------------------------------------------------------------------------------------------
 
-	$sql = "select * from Sync_Notice where status='failed'";
+	$sql = "select * from sync_notice where status='failed'";
 	$result = $db->query($sql);
 	$now = time();
 
@@ -48,12 +48,12 @@ function sync_cron_hourly() {
 	//---------------------------------------------------------------------------------------------
 	//	retry failed sync items
 	//---------------------------------------------------------------------------------------------
-	$sql = "select * from Sync_Notice where status='failed'";	
+	$sql = "select * from sync_notice where status='failed'";	
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		$od = $installPath . 'data/temp/' . time() . '-' . $row['UID'] . '.sync';
-		$url = $serverPath . 'sync/send/' . $row['UID'];
+		$od = $kapenta->installPath . 'data/temp/' . time() . '-' . $row['UID'] . '.sync';
+		$url = $kapenta->serverPath . 'sync/send/' . $row['UID'];
 		$shellCmd = "wget --output-document=" . $od . " $url";
 		$kapenta->procExecBackground($shellCmd);
 	}
@@ -65,8 +65,9 @@ function sync_cron_hourly() {
 	for ($i = 0; $i < $dl->numDownloads; $i++) {
 		$nextDl = $dl->getNextDownload();
 		if  (($nextDl != false) && (false == $dl->maxDownloads()false)) {
-			$od = '--output-document=' . $installPath . 'data/temp/' . $kapenta->createUID() . '.sync';
-			$cmd = 'wget ' . $od . ' ' . $serverPath . 'sync/findfile/' . $nextDl;
+			$od = '--output-document=' . $kapenta->installPath . 'data/temp/' 
+				. $kapenta->createUID() . '.sync';
+			$cmd = 'wget ' . $od . ' ' . $kapenta->serverPath . 'sync/findfile/' . $nextDl;
 			$kapenta->procExecBackground($cmd);	
 		}
 	}
@@ -74,7 +75,8 @@ function sync_cron_hourly() {
 	//---------------------------------------------------------------------------------------------
 	//	delete crap from temp directory
 	//---------------------------------------------------------------------------------------------
-	$shellCmd = "rm " . $installPath . "data/temp/*.sync";	//TODO: fix this, remove shell_exec
+	$shellCmd = "rm " . $kapenta->installPath . "data/temp/*.sync";	
+	//TODO: fix this, remove shell_exec
 	shell_exec($shellCmd);
 
 	*/
@@ -98,7 +100,7 @@ function sync_cron_daily() {
 	$conditions[] = "active='active'";
 	$conditions[] = "(direction='upstream' OR direction='downstream')";
 
-	$range = $db->loadRange('Sync_Server', '*', $conditions);
+	$range = $db->loadRange('sync_server', '*', $conditions);
 	foreach($range as $row) {
 		$report .= sync_entireDatabase($row['UID']);
 		$report .= sync_allFiles($row['UID']);

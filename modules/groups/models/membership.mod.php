@@ -67,7 +67,7 @@ class Groups_Membership {
 		$conditions = array();
 		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
 		$conditions[] = "groupUID='" . $db->addMarkup($groupUID) . "'";
-		$range = $db->loadRange('Groups_Membership', '*', $conditions);
+		$range = $db->loadRange('groups_membership', '*', $conditions);
 
 		foreach($range as $row) {
 			$this->loadArray($row);
@@ -126,9 +126,9 @@ class Groups_Membership {
 
 		if (strlen($this->UID) < 5) 
 			{ $report .= "UID not present.\n"; }
-		if (false == $db->objectExists('Users_User', $this->userUID)) 
+		if (false == $db->objectExists('users_user', $this->userUID)) 
 			{ $report .= "Member does not exist."; }
-		if (false == $db->objectExists('Groups_Group', $this->groupUID)) 
+		if (false == $db->objectExists('groups_group', $this->groupUID)) 
 			{ $report .= "Group does not exist."; }
 
 		return $report;
@@ -142,7 +142,7 @@ class Groups_Membership {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'groups';
-		$dbSchema['model'] = 'Groups_Membership';
+		$dbSchema['model'] = 'groups_membership';
 
 		//table columns
 		$dbSchema['fields'] = array(

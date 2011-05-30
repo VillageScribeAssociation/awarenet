@@ -1,7 +1,10 @@
-<? /*
+<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<?xml version="1.0" ?>
+
 <page>
-<template>twocol-rightnav.template.php</template>
-<content>[[:theme::navtitlebox::width=570::label=Create a New Article:]]
+	<template>twocol-rightnav.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|create] new wiki article</title>
+	<content>[[:theme::navtitlebox::width=570::label=Create a New Article:]]
 [`|lt]div class=[`|sq]indent[`|sq][`|gt]
 [`|lt]h1[`|gt]Create An Article[`|lt]/h1[`|gt]
 
@@ -17,16 +20,18 @@
 [`|lt]input type=[`|sq]submit[`|sq] value=[`|sq][`|create][`|sq] /[`|gt]
 [`|lt]/form[`|gt]
 [`|lt]/div[`|gt]</content>
-<title>awareNet - create new wiki article</title>
-<script></script>
-<nav1>[[:theme::navtitlebox::label=Recently Created:]]</nav1>
-<nav2></nav2>
-<banner></banner>
-<head></head>
-<menu1>[[:home::menu:]]</menu1>
-<menu2>[[:wiki::menu::raUID=no:]]</menu2>
-<section></section>
-<subsection></subsection>
-<breadcrumb>[[:theme::breadcrumb::label=Wiki - ::link=/wiki/:]]
+	<nav1>[[:theme::navtitlebox::label=Recently Created:]]</nav1>
+	<nav2></nav2>
+	<script></script>
+	<jsinit></jsinit>
+	<banner></banner>
+	<head></head>
+	<menu1>[[:home::menu:]]</menu1>
+	<menu2>[[:wiki::menu::raUID=no:]]</menu2>
+	<section></section>
+	<subsection></subsection>
+	<breadcrumb>[[:theme::breadcrumb::label=Wiki - ::link=/wiki/:]]
 [[:theme::breadcrumb::label=Create Article::link=/wiki/new/:]]</breadcrumb>
-</page>\n*/ ?>
+</page>
+
+*/ ?>

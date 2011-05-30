@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('badges', 'Badges_Badge', 'new'))
+	if (false == $user->authHas('badges', 'badges_badge', 'new'))
 		{ $page->do403('You are not authorized to create new Badges.'); }
 
 	//----------------------------------------------------------------------------------------------

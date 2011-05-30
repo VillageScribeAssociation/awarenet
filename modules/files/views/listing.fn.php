@@ -9,7 +9,7 @@
 //arg: refUID - UID of object which owns these files [string]
 
 function files_listing($args) {
-	global $serverPath;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation
@@ -21,7 +21,7 @@ function files_listing($args) {
 	//----------------------------------------------------------------------------------------------
 	//	add the form
 	//----------------------------------------------------------------------------------------------
-	$src = $serverPath . 'files/listing/refModule_' . $args['refModule'] 
+	$src = '%%serverPath%%files/listing/refModule_' . $args['refModule'] 
 	     . '/refUID_' . $args['refUID'] . '/';
 	     
 	$html = "<iframe name='listFiles" . $args['refUID'] . "' src='" . $src 

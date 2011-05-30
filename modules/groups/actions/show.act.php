@@ -13,12 +13,12 @@
 	//----------------------------------------------------------------------------------------------
 	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Groups_Group');
+	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
 	if (false == $model->loaded) { $page->do404('Could not load group.'); }
 
-	if (true == $user->authHas('groups', 'Groups_Group', 'edit', $model->UID)) 
+	if (true == $user->authHas('groups', 'groups_group', 'edit', $model->UID)) 
 		{ $editUrl = '%%serverPath%%groups/edit/' . $model->alias; }
 
 	//----------------------------------------------------------------------------------------------	

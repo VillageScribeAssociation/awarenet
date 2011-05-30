@@ -20,7 +20,7 @@ function badges_listbadges($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('badges', 'Badges_Badge', 'list')) { return ''; }
+	if (false == $user->authHas('badges', 'badges_badge', 'list')) { return ''; }
 
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
@@ -41,9 +41,9 @@ function badges_listbadges($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('Badges_Badge', $conditions);	//% total number of items [int]
+	$total = $db->countRange('badges_badge', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('Badges_Badge', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $db->loadRange('badges_badge', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>(no badges yet added)</div><br/>\n";
@@ -57,7 +57,7 @@ function badges_listbadges($args) {
 	$titleRow = array('Img', 'Name');						//% add column names here [array:string]
 	$table[] = $titleRow;
 
-	$imgOpts = "::refModule=badges::refModel=Badges_Badge::size=thumb::link=no";
+	$imgOpts = "::refModule=badges::refModel=badges_badge::size=thumb::link=no";
 
 	$model = new Badges_Badge();
 	foreach($range as $item) {

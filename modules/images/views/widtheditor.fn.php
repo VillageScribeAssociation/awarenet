@@ -11,7 +11,7 @@
 //opt: link - link to larger version (yes|no) [string]
 
 function images_widtheditor($args) { 
-	global $serverPath;
+	global $kapenta;
 	$link = 'yes';	$caption = 'no'; $size = 'width300'; $html = ''; $align = '';
 	if (array_key_exists('imageUID', $args) == true) { $args['raUID'] = $args['imageUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
@@ -20,8 +20,8 @@ function images_widtheditor($args) {
 	if (array_key_exists('size', $args)) { $size = $args['size']; }
 	if (array_key_exists('align', $args)) { $align = $args['align']; }
 	
-	$linkUrl = $serverPath . 'images/' . $args['raUID'];
-	$imgUrl = $serverPath . 'images/' . $size . '/' . $args['raUID'];
+	$linkUrl = '%%serverPath%%images/' . $args['raUID'];
+	$imgUrl = '%%serverPath%%images/' . $size . '/' . $args['raUID'];
 
 	$html =  "<img src='" . $imgUrl . "' border='0' />";	
 	if ($link == 'yes') { $html = "<a href='" . $linkUrl . "'>$html</a>"; }

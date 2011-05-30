@@ -30,7 +30,7 @@ function videos_videosetdetail($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner)'; }
 
-	if (false == $user->authHas($refModule, $refModel, 'videos-show', $refUID)) { return ''; }
+	//if (false == $user->authHas($refModule, $refModel, 'videos-show', $refUID)) { return ''; }
 	//TODO: check the permission, work out naming convention for inheritance
 
 	//----------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ function videos_videosetdetail($args) {
 	//$sql = "select * from Videos_Video where refModule='" . $db->addMarkup($args['refModule']) 
 	//     . "' and refUID='" . $db->addMarkup($args['refUID']) . "' order by floor(weight)";
 	
-	$range = $db->loadRange('Videos_Video', '*', $conditions, 'floor(weight)');
+	$range = $db->loadRange('videos_video', '*', $conditions, 'floor(weight)');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

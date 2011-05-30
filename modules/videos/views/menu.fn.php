@@ -11,7 +11,7 @@ function videos_menu($args) {
 	$labels = array();
 
 	$labels['newEntry'] = '[[:theme::submenu::label=Create New Gallery::link=/gallery/new/:]]';
-	if (false == $user->authHas('videos', 'Videos_Gallery', 'new')) { $labels['newEntry'] = ''; }
+	if (false == $user->authHas('videos', 'videos_gallery', 'new')) { $labels['newEntry'] = ''; }
 	
 	$block = $theme->loadBlock('modules/videos/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

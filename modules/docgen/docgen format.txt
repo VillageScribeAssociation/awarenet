@@ -1,0 +1,13 @@
+Docgen extends basic comments looking for paterns with special meaning:
+
+syntax - comment begins with
+
+//* file summary
+//+ explanation (file)
+//| function summary
+//: explanation (function)
+//. class method summary
+//, explanation (class method)
+//arg: mandatory argument - description
+//opt: optional argument - description
+//returns: return value of the function

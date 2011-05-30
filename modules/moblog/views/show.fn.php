@@ -18,7 +18,7 @@ function moblog_show($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

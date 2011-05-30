@@ -17,7 +17,7 @@ function announcements_listnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check aruments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show'))
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'show'))
 		{ return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return ''; }
@@ -31,7 +31,7 @@ function announcements_listnav($args) {
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 
-	$range = $db->loadRange('Announcements_Announcement', '*', $conditions, 'createdOn DESC', $num);
+	$range = $db->loadRange('announcements_announcement', '*', $conditions, 'createdOn DESC', $num);
 	$block = $theme->loadBlock('modules/announcements/views/summarynav.block.php');
 
 	//$sql = "select * from Announcements_Announcement "

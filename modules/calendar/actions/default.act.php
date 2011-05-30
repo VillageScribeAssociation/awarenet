@@ -1,9 +1,13 @@
 <?
 
+//--------------------------------------------------------------------------------------------------
+//*	default action of calendar module
+//--------------------------------------------------------------------------------------------------
+
 	if ('' == $req->ref) {
-		include $installPath . 'modules/calendar/actions/list.act.php';
+		include $kapenta->installPath . 'modules/calendar/actions/list.act.php';
 	} else {
-		include $installPath . 'modules/calendar/actions/show.act.php';
+		include $kapenta->installPath . 'modules/calendar/actions/show.act.php';
 	}
 
 ?>

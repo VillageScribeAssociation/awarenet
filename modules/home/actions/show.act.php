@@ -10,14 +10,14 @@
 	//	check references and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $req->ref = 'frontpage'; }
-	$UID = $aliases->findRedirect('Home_Static');
+	$UID = $aliases->findRedirect('home_static');
 	$model = new Home_Static($UID);
 	if (false == $model->loaded) {
 		if ('frontpage' == $req->ref) { $page->do404('no front page'); }
 		else { $page->do404('page not found'); }
 	}
 
-	if (false == $user->authHas('home', 'Home_Static', 'show', $UID)) { $page->do403();}
+	if (false == $user->authHas('home', 'home_static', 'show', $UID)) { $page->do403();}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

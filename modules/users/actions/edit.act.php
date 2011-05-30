@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/users/actions/edit.page.php');
 	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['userUID'] = $aliases->getOwner('users', 'Users_User', $req->ref);
+	$page->blockArgs['userUID'] = $aliases->getOwner('users', 'users_user', $req->ref);
 	$page->render();
 
 ?>

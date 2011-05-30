@@ -18,7 +18,7 @@ function projects_addsectionform($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
-	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 	if (false == $model->isMember($user->UID)) { return ''; }
 	
 	//----------------------------------------------------------------------------------------------

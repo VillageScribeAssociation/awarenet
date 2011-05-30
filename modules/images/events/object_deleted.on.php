@@ -20,7 +20,7 @@ function images__cb_object_deleted($args) {
 	$conditions = "refUID='" . $db->addMarkup($args['UID']) . "'";
 	$conditions = "refModule='" . $db->addMarkup($args['module']) . "'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, '', '', '');
+	$range = $db->loadRange('images_image', '*', $conditions, '', '', '');
 
 	foreach($range as $row) {
 		$model = new Images_Image();

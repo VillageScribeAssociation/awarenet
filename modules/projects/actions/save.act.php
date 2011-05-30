@@ -13,7 +13,7 @@
 	$model = new Projects_Project();
 
 	if ( (true == array_key_exists('UID', $_POST)) 
-		AND (true == $db->objectExists('Projects_Project', $_POST['UID'])) ) {
+		AND (true == $db->objectExists('projects_project', $_POST['UID'])) ) {
 
 		$model->load($_POST['UID']);
 		if (true == $model->isMember($user->UID)) { $authorised = true; }
@@ -68,8 +68,41 @@
 		//------------------------------------------------------------------------------------------
 		$model->abstract = $_POST['abstract'];
 		$report = $model->save();
-		if ('' == $report) { $session->msg('Saved changes to abstract.', 'ok'); }
-		else { $session->msg('Could not save changes to abstract.', 'bad'); }		
+		if ('' == $report) { 
+			//--------------------------------------------------------------------------------------
+			//	notify project members and user's friends
+			//--------------------------------------------------------------------------------------
+			$ext = $model->extArray();
+			$title = "Project update: " . $ext['nameLink'];
+			$content = "" 
+				. "[[:users::namelink::userUID=" . $user->UID . ":]] "
+				. "has made changes to the project abstract.";
+
+			$nUID = $notifications->create(
+				'projects', 'projects_project', $model->UID, 'projects_edit', 
+				$title, $content, $ext['viewUrl']
+			);
+
+			$notifications->addProject($nUID, $model->UID);
+			$notifications->addFriends($nUID, $user->UID);
+			$notifications->addAdmins($nUID);
+
+			//--------------------------------------------------------------------------------------
+			//	raise a microbog event for this
+			//--------------------------------------------------------------------------------------
+			$args = array(
+				'refModule' => 'projects',
+				'refModel' => 'projects_project',
+				'refUID' => $model->UID,
+				'message' => '#'. $kapenta->websiteName .' project updated - '. $model->title
+			);
+
+			$kapenta->raiseEvent('*', 'microblog_event', $args);
+
+			$session->msg('Saved changes to abstract.', 'ok'); 
+		} else {
+			$session->msg('Could not save changes to abstract.', 'bad');
+		}		
 		
 		$page->do302('projects/edit/' . $model->alias);
 	}
@@ -97,7 +130,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	save changes to a section
 	//----------------------------------------------------------------------------------------------
-
 	if ( (true == array_key_exists('action', $_POST))
 	    AND ('saveSection' == $_POST['action'])
 		AND (true == array_key_exists('sectionUID', $_POST)) 
@@ -124,8 +156,20 @@
 		$newVersion = $model->getSimpleHtml();
 		if ($newVersion != $oldVersion) {
 			$report = $model->saveRevision();
-			if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
-			else { $session->msg('Revision not saved.', 'bad'); }
+			if ('' == $report) { 
+				//----------------------------------------------------------------------------------
+				//	raise 'project_saved' event
+				//----------------------------------------------------------------------------------
+				$args = array(
+					'UID' => $model->UID,
+					'user' => $user->UID,
+					'section' => $sectionTitle
+				);
+
+				$kapenta->raiseEvent('projects', 'project_saved', $args);
+				$session->msg('Saved revision.', 'ok'); 
+
+			} else { $session->msg('Revision not saved.', 'bad'); }
 		}
 		
 		$page->do302('projects/editsection/section_' . $_POST['sectionUID'] .  '/' . $model->alias);
@@ -134,7 +178,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	nothing doing, unsupported action requested?
 	//----------------------------------------------------------------------------------------------
-	
 	$page->do404();
 
 ?>

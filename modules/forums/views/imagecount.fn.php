@@ -15,7 +15,7 @@ function forums_imagecount($args) {
 
 	if (false == array_key_exists('forumUID', $args)) { return ''; }
 
-	$sql = "select count(UID) as numRecords from Images_Image "
+	$sql = "select count(UID) as numRecords from images_image "
 		 . "where refModule='forums' and refUID='" . $db->addMarkup($args['forumUID']) . "'";
 
 	$result = $db->query($sql);

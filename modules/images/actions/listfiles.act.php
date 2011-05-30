@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	list everything in /data/images
+//*	list everything in /data/images
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -13,11 +13,12 @@
 	//	list all files
 	//---------------------------------------------------------------------------------------------
 
-	$shellCmd = 'find ' . $installPath . 'data/images/';
+	$shellCmd = 'find ' . $kapenta->installPath . 'data/images/';
+	//TODO: remove the shell exec
 	$result = shell_exec($shellCmd);
 	$lines = explode("\n", $result);
 	foreach($lines as $line) {
-		$line = str_replace($installPath, $serverPath, $line);
+		$line = str_replace($kapenta->installPath, $kapenta->serverPath, $line);
 		echo $line . "<br/>\n";
 	}
 

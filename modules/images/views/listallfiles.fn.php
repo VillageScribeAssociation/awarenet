@@ -15,7 +15,7 @@ function images_listallfiles($args) {
 	
 	$list = '';
 
-	$sql = "select fileName from Images_Image";
+	$sql = "select fileName from images_image";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) { $list .= sqlRemoveMarkup($row['fileName']). "\n"; }
 	return $list;

@@ -41,7 +41,7 @@ function announcements_list($args) {
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('Announcements_Announcement', '*', $conditions, 'createdOn DESC', $num);
+	$range = $db->loadRange('announcements_announcement', '*', $conditions, 'createdOn DESC', $num);
 
 	//	$sql = "select * from Announcements_Annoucement "
 	//		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "

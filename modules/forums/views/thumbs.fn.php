@@ -20,7 +20,7 @@ function forums_thumbs($args) {
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 	if (true == array_key_exists('num', $args)) { $limit = 'limit ' . $args['num']; }
 
-	$sql = "select * from Images_Image "
+	$sql = "select * from images_image "
 		 . "where refUID='" . $db->addMarkup($args['UID']) . "' and refModule='forums' "
 		 . "order by createdOn DESC $limit";
 

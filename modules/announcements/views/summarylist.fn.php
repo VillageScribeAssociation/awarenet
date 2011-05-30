@@ -18,7 +18,7 @@ function announcements_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('announcements', 'Announcements_Announcement', 'show')) 
+	if (false == $user->authHas('announcements', 'announcements_announcement', 'show')) 
 		{ return ''; }
 
 	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
@@ -30,7 +30,7 @@ function announcements_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Announcements_Announcement', '*', '', 'createdOn', $num, $start);
+	$range = $db->loadRange('announcements_announcement', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/announcements/views/summary.block.php');
 
 	foreach($range as $UID => $row) {

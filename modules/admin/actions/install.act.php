@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and form vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { do403(); }
+	if ('admin' != $user->role) { $page->do403(); }
 
 	if (false == array_key_exists('modulename', $_POST)) { $page->do404('module not specified'); }	
 	

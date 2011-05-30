@@ -27,7 +27,7 @@ function images_imageset($args) {
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
 	//    . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
@@ -36,7 +36,7 @@ function images_imageset($args) {
 		$imgUrl = '%%serverPath%%images/thumb/' . $row['alias'];
 		$editURL = '%%serverPath%%images/edit/return_uploadmultiple/' . $row['alias'];
 		if (false == $user->authHas($row['refModule'], $row['refModel'], 'images-edit', $row['refUID'])) 
-			{ $editURL = $serverPath . 'images/viewset/return_uploadmultiple/' . $recordAlias; }
+			{ $editURL = '%%serverPath%%images/viewset/return_uploadmultiple/' . $recordAlias; }
 		
 		$html .= "<a href='" . $editURL . "'>" 
 			. "<img src='" . $imgUrl . "' border='0' /></a>\n";

@@ -6,13 +6,13 @@
 //*	display a gallery page
 //--------------------------------------------------------------------------------------------------
 	
-	//if ($user->authHas('gallery', 'Gallery_Gallery', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }		// check basic permissions
+	//if ($user->authHas('gallery', 'gallery_gallery', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }		// check basic permissions
 	if ('' == $req->ref) { $page->do404(); }							// check ref
-	$UID = $aliases->findRedirect('Gallery_Gallery'); 					// check correct ref
+	$UID = $aliases->findRedirect('gallery_gallery'); 					// check correct ref
 	
 	$model = new Gallery_Gallery($req->ref);	
 
-	$userRa = $aliases->getDefault('Users_User', $model->createdBy);
+	$userRa = $aliases->getDefault('users_user', $model->createdBy);
 
 	$page->load('modules/gallery/actions/show.page.php');
 	$page->blockArgs['UID'] = $UID;

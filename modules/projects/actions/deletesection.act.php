@@ -18,7 +18,7 @@
 	//	load the project and check that user has edit permissions on this project
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($_POST['UID']);
-	if (false == $user->authHas('projects', 'Projects_Project', 'edit', $model->UID))
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID))
 		{ $page->do403('You are not authozed to edit this project'); }
 
 	//if (false == $model->hasEditAuth($user->UID)) { $page->do403(); }

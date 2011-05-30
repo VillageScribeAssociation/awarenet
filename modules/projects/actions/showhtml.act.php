@@ -10,15 +10,17 @@
 	//	TODO: check permissions here
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Projects_Project');
+	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($req->ref);
 
+	$cssUrl = $kapenta->serverPath . "/themes/clockface/css/clockface.css";
+
 	echo "<html>"
-		 . "<link href='" . $serverPath . "/themes/clockface/css/clockface.css' rel='stylesheet' type='text/css' />"
+		 . "<link href='" . $cssUrl . "' rel='stylesheet' type='text/css' />"
 		 . "<title>" . $model->title . "</title><body>"
 		 . $model->getSimpleHtml() . "</body></html>";
 

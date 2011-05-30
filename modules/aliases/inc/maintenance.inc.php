@@ -13,7 +13,7 @@ function alias_maintenace() {
 	$errorCount = 0;
 	$fixCount = 0;
 
-	$report = "<h2>Checking Aliases_Alias table...</h2>";
+	$report = "<h2>Checking aliases_alias table...</h2>";
 
 	//---------------------------------------------------------------------------------------------
 	//	check that all recordaliases are for an existing record
@@ -25,7 +25,7 @@ function alias_maintenace() {
 	$db->loadTables();
 	$tables = $db->tables;
 
-	$sql = "select * from Aliases_Alias";
+	$sql = "select * from aliases_alias";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);

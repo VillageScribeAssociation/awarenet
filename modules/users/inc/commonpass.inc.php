@@ -1,10 +1,15 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	make an array of common passwords people should not be allowd to use
+//|	make an array of common passwords people should not be allowd to use
 //-------------------------------------------------------------------------------------------------
-//	List is from a cracking dictionary I found on a forum some time back, probably out of date
-//	as new celebrities, TV shows, etc become popular.  Add to it as needed.
+//.	List is from a cracking dictionary I found on a forum some time back, probably out of date
+//.	as new celebrities, TV shows, etc become popular.  Add to it as needed.
+//returns: array of common passwords [array:string]
+//TODO: consider making this configurable
+
+
+function users_commonPasswords() {
 
 	$commonPass = '000000 0000000 00000000'
 		 . '10sne1 1234qwer 123abc 1a2b3c 1p2o3i '
@@ -349,5 +354,9 @@
 		 . 'zombie zxcvbnm';
 
 	$commonPass = explode(' ', $commonPass);
+
+	return $commonPass;
+
+}
 
 ?>

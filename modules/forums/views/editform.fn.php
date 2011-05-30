@@ -18,7 +18,7 @@ function forums_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Forums_Board($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('forums', 'Forums_Board', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

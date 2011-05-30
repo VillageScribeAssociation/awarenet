@@ -24,7 +24,7 @@ function files__cb_object_deleted($args) {
 	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'"
 	$conditions[] = "refModule='" . $db->addMarkup($args['module']) . "'"
 
-	$range = $db->loadRange('Files_File', '*', $conditions, '', '', '');
+	$range = $db->loadRange('files_file', '*', $conditions, '', '', '');
 
 	foreach($range as $row) {
 		$model = new Files_File();

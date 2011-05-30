@@ -22,7 +22,7 @@ function comments__cb_object_deleted($args) {
 	$conditions = array(	"refUID='" . $db->addMarkup($args['UID']) . "'", 
 							"refModule='" . $db->addMarkup($args['module']) . "'"	);
 
-	$rows = $db->loadRange('Comments_Comment', '*', $conditions, '', '', '');
+	$rows = $db->loadRange('comments_comment', '*', $conditions, '', '', '');
 
 	foreach($rows as $row) {
 		$model = new Comments_Comment();

@@ -119,7 +119,7 @@ class Abuse_Report {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'abuse';
-		$dbSchema['model'] = 'Abuse_Report';
+		$dbSchema['model'] = 'abuse_report';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -202,7 +202,7 @@ class Abuse_Report {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Abuse_Report'>\n"
+		$xml = $indent . "<kobject type='abuse_report'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"

@@ -25,7 +25,7 @@ function forums_summarylistall($args) {
 	//----------------------------------------------------------------------------------------------
 	//$sql = "SELECT count(UID) as numForums, school FROM Forums_Board GROUP BY school";
 
-	$sql = "SELECT count(UID) as numForums, sum(weight) as totalWeight, school FROM Forums_Board "
+	$sql = "SELECT count(UID) as numForums, sum(weight) as totalWeight, school FROM forums_board "
 		 . "GROUP BY school "
 		 . "ORDER BY totalWeight";
 
@@ -40,7 +40,7 @@ function forums_summarylistall($args) {
 		$row = $db->rmArray($row);
 		$schoolName = '';
 		if ('' == $row['school']) { $schoolName = 'General'; }
-		else { $schoolName = $aliases->getDefault('Schools_School', $row['school']);  }
+		else { $schoolName = $aliases->getDefault('schools_school', $row['school']);  }
 
 		$html .= "[[:theme::navtitlebox::width=570::label=$schoolName:]]\n"
 			   . "[[:forums::summarylist::school=" . $row['school'] . ":]]\n";

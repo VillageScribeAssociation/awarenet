@@ -26,7 +26,7 @@
 		if (array_key_exists('refmodule', $req->args) == true) 
 			{ $conditions[] = "refModule='" . $db->addMarkup($req->args['refmodule']) . "'"; }
 
-		$range = $db->loadRange('Images_Image', '*', $conditions);
+		$range = $db->loadRange('images_image', '*', $conditions);
 
 		echo "<?xml version=\"1.0\"?>\n";
 		echo "<imageset>\n";	

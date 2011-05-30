@@ -20,7 +20,7 @@ function users_listroles($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'Users_Role', 'list')) { return ''; }
+	if (false == $user->authHas('users', 'users_role', 'list')) { return ''; }
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }
 
@@ -39,9 +39,9 @@ function users_listroles($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('Users_Role', $conditions);	//% total number of items [int]
+	$total = $db->countRange('users_role', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('Users_Role', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $db->loadRange('users_role', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>no Roles yet added</div><br/>\n";

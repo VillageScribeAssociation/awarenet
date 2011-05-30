@@ -31,12 +31,12 @@
         </model>
     </models>
     <defaultpermissions>
-		student:p|comments|Comments_Comment|show
-		student:p|comments|Comments_Comment|showall
-		student:c|comments|Comments_Comment|retract|(if)|creator
-		teacher:p|comments|Comments_Comment|show
-		teacher:p|comments|Comments_Comment|showall
-		teacher:c|comments|Comments_Comment|retract|(if)|creator
+		student:p|comments|comments_comment|show
+		student:p|comments|comments_comment|showall
+		student:c|comments|comments_comment|retract|(if)|creator
+		teacher:p|comments|comments_comment|show
+		teacher:p|comments|comments_comment|showall
+		teacher:c|comments|comments_comment|retract|(if)|creator
     </defaultpermissions>
     <blocks>
     </blocks>

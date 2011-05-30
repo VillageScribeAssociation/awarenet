@@ -6,7 +6,7 @@
 <input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='tags' value='%%tags%%' />
 <input type='hidden' name='return' value='uploadmultiple' />
-<b>URL: </b><input type='text' name='URL' value='http://' size='48' />
+<b>URL: </b><input type='text' name='URL' value='http://' size='38' />
 <input type='submit' value='Download' /><br/>
 </form>
 */ ?>

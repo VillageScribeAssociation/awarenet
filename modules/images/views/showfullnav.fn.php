@@ -8,34 +8,30 @@
 //arg: raUID - recordAlias or UID of an image record [string]
 
 function images_showfullnav($args) {
-	global $db;
-
-	global $theme;
-
-	global $serverPath;
+	global $kapenta, $db, $theme, $user;
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form
 	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$i = new Images_Image($args['raUID']);
-	if ($i->fileName == '') { return false; }
+	$model = new Images_Image($args['raUID']);
+	if ($model->fileName == '') { return false; }
 	
 	//----------------------------------------------------------------------------------------------
-	//	find related inages
+	//	find related images
 	//----------------------------------------------------------------------------------------------
 	
 	$related = '';
 	
-	$sql = "select * from Images_Image where refModule='" . $i->refModule 
-	     . "' order by refUID='" . $i->refUID . "' limit 20";
+	$sql = "select * from images_image where refModule='" . $model->refModule 
+	     . "' order by refUID='" . $model->refUID . "' limit 20";
 	
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) {
-	  if ($row['UID'] != $i->UID) {
+	  if ($row['UID'] != $model->UID) {
 		$row = $db->rmArray($row);
-		$showUrl = $serverPath . 'images/show/' . $row['alias'];
-		$thumbUrl = $serverPath . 'images/thumb90/' . $row['alias'];
+		$showUrl = '%%serverPath%%images/show/' . $row['alias'];
+		$thumbUrl = '%%serverPath%%images/thumb90/' . $row['alias'];
 		$related .= "<a href='" . $showUrl . "'><img src='" . $thumbUrl 
 			 . "' border='0' alt='" . $row['title'] . "' /></a>\n";
 	  }
@@ -46,9 +42,10 @@ function images_showfullnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	mix and settle
 	//----------------------------------------------------------------------------------------------
-	$labels = $i->extArray();
+	$block = $theme->loadBlock('modules/images/views/showfullnav.block.php');
+	$labels = $model->extArray();
 	$labels['related'] = $related;
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/images/views/showfullnav.block.php'));	
+	$html = $theme->replaceLabels($labels, );	
 	return $html;
 }
 

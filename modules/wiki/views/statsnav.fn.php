@@ -20,16 +20,14 @@ function wiki_statsnav($args) {
 	
 	$model = new Wiki_Article($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
 	$extArray = $model->extArray();
 
 	//----------------------------------------------------------------------------------------------
 	//	look up revision stats
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("articleUID='" . $model->UID . "'");
-	$extArray['totalRevisions'] = $db->countRange('Wiki_Revision', $conditions);
-
-	//$sql = "select * from Wiki_Revision where articleUID='" . $extArray['UID'] . "'";
+	$extArray['totalRevisions'] = $db->countRange('wiki_revision', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	assemble the block

@@ -23,7 +23,7 @@ function images__cb_record_delete($args) {
 	//	discover if any images belonging this record and delete them
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select UID from Images_Image "
+	$sql = "select UID from images_image "
 		 . "where refUID='". $db->addMarkup($args['UID']) ."' "
 		 . "and refModule='". $db->addMarkup($args['module']) ."'";
 

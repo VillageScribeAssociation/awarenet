@@ -13,7 +13,7 @@
 
 	$args = array(
 		'module' => 'comments',
-		'model' => 'Comments_Comment',
+		'model' => 'comments_comment',
 		'UID' => '1234',
 		'data' => array()
 	);

@@ -9,14 +9,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check auth and recordAlias
 	//----------------------------------------------------------------------------------------------
-	$UID = $aliases->findRedirect('Moblog_Post');	
+	$UID = $aliases->findRedirect('moblog_post');	
 
 	//----------------------------------------------------------------------------------------------
 	//	find user whose post this is
 	//----------------------------------------------------------------------------------------------
 	$model = new Moblog_Post($req->ref);
 	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show', $model->UID)) { $page->do403(''); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $page->do403(''); }
 
 	$thisUser = new Users_User($model->createdBy);
 

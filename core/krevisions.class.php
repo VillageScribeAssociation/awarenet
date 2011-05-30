@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/revisions/models/deleted.mod.php');
-	require_once($installPath . 'modules/revisions/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/revisions/models/deleted.mod.php');
+	require_once($kapenta->installPath . 'modules/revisions/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	interface to revisioning system
@@ -105,7 +105,7 @@ class KRevisions {
 		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
 
-		$num = $db->countRange('Revisions_Deleted', $conditions);
+		$num = $db->countRange('revisions_deleted', $conditions);
 		if ($num > 0) { return true; }
 		return false;
 	}

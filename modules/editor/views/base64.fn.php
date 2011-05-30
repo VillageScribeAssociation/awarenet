@@ -10,7 +10,6 @@
 
 function editor_base64($args) {
 	global $page;
-	global $serverPath;
 	$width = 570;
 	$height = 400;
 
@@ -28,7 +27,7 @@ function editor_base64($args) {
 	//---------------------------------------------------------------------------------------------
 	//	make the script block
 	//---------------------------------------------------------------------------------------------
-	$jsFile = $serverPath . '/modules/editor/HyperTextArea.js';
+	$jsFile = '%%serverPath%%/modules/editor/HyperTextArea.js';
 	$editorJs = "<script language='JavaScript' src='" . $jsFile . "'></script>\n";
 
 	$html = $editorJs

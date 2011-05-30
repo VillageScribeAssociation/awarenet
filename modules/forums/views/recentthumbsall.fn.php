@@ -31,7 +31,7 @@ function forums_recentthumbsall($args) {
 	//$sql = "select count(UID) as numRecords from Images_Image where refModule='forums'";	
 
 	$conditions = array("refModule='forums'");
-	$totalItems = $db->countRange('Images_Image', $conditions)
+	$totalItems = $db->countRange('images_image', $conditions)
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ function forums_recentthumbsall($args) {
 	//$sql = "select * from Images_Image where refModule='forums' order by createdOn DESC " . $limit;	
 
 	$start = (($pageNo - 1) * $num)
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	foreach ($range as $row) {
 		//CONSIDER: load a model here

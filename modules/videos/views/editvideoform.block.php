@@ -64,8 +64,8 @@
 
 [[:theme::navtitlebox::label=Video Thumbnail:]]
 <iframe name='videoThumb' id='ifVideoThumb'
-  src='%%serverPath%%/images/uploadsingle/refModule_users/refModel_Videos_Video/refUID_%%UID%%/category_thumb/'
-  width='300' height='400' frameborder='0' ></iframe>
+  src='%%serverPath%%/images/uploadsingle/refModule_videos/refModel_videos_video/refUID_%%UID%%/category_thumb/'
+  width='100%' height='400' frameborder='0' ></iframe>
 
 %%returnLink%%
 */ ?>

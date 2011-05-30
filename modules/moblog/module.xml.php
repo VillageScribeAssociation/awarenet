@@ -11,7 +11,7 @@
     <search>no</search>
     <models>
       <model>
-        <name>Moblog_Post</name>
+        <name>moblog_post</name>
 		<description>Individual blog posts.</description>
         <permissions>
           <permission>show</permission>
@@ -26,33 +26,33 @@
       </model>
     </models>
     <defaultpermissions>
-		public:p|moblog|Moblog_Post|show
+		public:p|moblog|moblog_post|show
 
-		student:p|moblog|Moblog_Post|new
-		student:p|moblog|Moblog_Post|show
-		student:p|moblog|Moblog_Post|list
-		student:p|moblog|Moblog_Post|comments-add
-		student:p|moblog|Moblog_Post|comments-show
-		student:p|moblog|Moblog_Post|images-show
-		student:c|moblog|Moblog_Post|edit|(if)|creator
-		student:c|moblog|Moblog_Post|images-add|(if)|creator
-		student:c|moblog|Moblog_Post|images-remove|(if)|creator
-		student:c|moblog|Moblog_Post|images-edit|(if)|creator
-		student:c|moblog|Moblog_Post|tags-manage|(if)|creator
-		student:c|moblog|Moblog_Post|delete|(if)|creator
+		student:p|moblog|moblog_post|new
+		student:p|moblog|moblog_post|show
+		student:p|moblog|moblog_post|list
+		student:p|moblog|moblog_post|comments-add
+		student:p|moblog|moblog_post|comments-show
+		student:p|moblog|moblog_post|images-show
+		student:c|moblog|moblog_post|edit|(if)|creator
+		student:c|moblog|moblog_post|images-add|(if)|creator
+		student:c|moblog|moblog_post|images-remove|(if)|creator
+		student:c|moblog|moblog_post|images-edit|(if)|creator
+		student:c|moblog|moblog_post|tags-manage|(if)|creator
+		student:c|moblog|moblog_post|delete|(if)|creator
 
-		teacher:p|moblog|Moblog_Post|new
-		teacher:p|moblog|Moblog_Post|show
-		teacher:p|moblog|Moblog_Post|list
-		teacher:p|moblog|Moblog_Post|comments-add
-		teacher:p|moblog|Moblog_Post|comments-show
-		teacher:p|moblog|Moblog_Post|images-show
-		teacher:c|moblog|Moblog_Post|edit|(if)|creator
-		teacher:c|moblog|Moblog_Post|images-add|(if)|creator
-		teacher:c|moblog|Moblog_Post|images-remove|(if)|creator
-		teacher:c|moblog|Moblog_Post|images-edit|(if)|creator
-		teacher:c|moblog|Moblog_Post|tags-manage|(if)|creator
-		teacher:c|moblog|Moblog_Post|delete|(if)|creator
+		teacher:p|moblog|moblog_post|new
+		teacher:p|moblog|moblog_post|show
+		teacher:p|moblog|moblog_post|list
+		teacher:p|moblog|moblog_post|comments-add
+		teacher:p|moblog|moblog_post|comments-show
+		teacher:p|moblog|moblog_post|images-show
+		teacher:c|moblog|moblog_post|edit|(if)|creator
+		teacher:c|moblog|moblog_post|images-add|(if)|creator
+		teacher:c|moblog|moblog_post|images-remove|(if)|creator
+		teacher:c|moblog|moblog_post|images-edit|(if)|creator
+		teacher:c|moblog|moblog_post|tags-manage|(if)|creator
+		teacher:c|moblog|moblog_post|delete|(if)|creator
     </defaultpermissions>
 </module>
 */ ?>

@@ -4,6 +4,7 @@
 	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
 	require_once($kapenta->installPath . 'modules/wiki/models/category.mod.php');
 	require_once($kapenta->installPath . 'modules/wiki/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/wiki/models/mwimport.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	install script for Wiki module
@@ -46,6 +47,13 @@ function wiki_install_module() {
 	//	create or upgrade Wiki_Revision table
 	//----------------------------------------------------------------------------------------------
 	$model = new Wiki_Revision();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Wiki_MWImport table
+	//----------------------------------------------------------------------------------------------
+	$model = new Wiki_MWImport();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
 
@@ -94,6 +102,16 @@ function wiki_install_status_report() {
 	//	ensure the table which stores Revision objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Wiki_Revision();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores MWImport objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Wiki_MWImport();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

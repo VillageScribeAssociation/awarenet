@@ -23,7 +23,7 @@ function groups_listadmins($args) {
 
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('groups', 'Groups_Group', 'show', $model->UID)) { return ''; }
+	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
 	$members = $model->getMembers();
 
 	//----------------------------------------------------------------------------------------------

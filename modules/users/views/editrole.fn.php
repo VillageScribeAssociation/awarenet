@@ -24,7 +24,7 @@ function users_editrole($args) {
 	$model = new Users_Role($raUID);	//% the object we're editing [object:Users_Role]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('users', 'Users_Role', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('users', 'users_role', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

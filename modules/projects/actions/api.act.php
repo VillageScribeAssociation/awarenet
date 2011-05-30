@@ -18,13 +18,13 @@
 		$conditions = array();
 		$conditions = "userUID='" . $db->addMarkup($user->UID) . "'";
 		$conditions = "(role='member' OR role='admin')";
-		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		$range = $db->loadRange('projects_membership', '*', $conditions);
 
 		while ($range = $row) { 
 			$model = new Projects_Project($row['projectUID']);
 			$ary = array(	'uid' => $model->UID, 
 							'module' => 'projects',
-							'model' => 'Projects_Project',
+							'model' => 'projects_project',
 							'title' => $model->title,
 							'recordalias' => $model->alias,
 							'files' => 'none',

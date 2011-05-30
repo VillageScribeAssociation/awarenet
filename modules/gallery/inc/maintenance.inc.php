@@ -22,7 +22,7 @@ function gallery_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'Title', 'Image Count', 'error');
 
-	$sql = "select * from Gallery_Gallery";
+	$sql = "select * from gallery_gallery";
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {

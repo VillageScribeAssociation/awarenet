@@ -4,7 +4,7 @@
 //	show deleted images
 //-------------------------------------------------------------------------------------------------
 
-	$sql = "select * from Images_Image";
+	$sql = "select * from images_image";
 	$result = $db->query($sql);
 
 	$tbl = array();
@@ -26,10 +26,10 @@
 			$row['refUID'] = str_replace('del-', '', $row['refUID']);
 			$row['refModule'] = str_replace('del-', '', $row['refModule']);
 
-			$sql = "update Images_Image set refUID='" . $db->addMarkup($row['refUID']) . "' where UID='" . $row['UID'] . "'";
+			$sql = "update images_image set refUID='" . $db->addMarkup($row['refUID']) . "' where UID='" . $row['UID'] . "'";
 			$db->query($sql);
 
-			$sql = "update Images_Image set refModule='" . $db->addMarkup($row['refModule']) . "' where UID='" . $row['UID'] . "'";
+			$sql = "update images_image set refModule='" . $db->addMarkup($row['refModule']) . "' where UID='" . $row['UID'] . "'";
 			$db->query($sql);
 
 		}

@@ -87,7 +87,7 @@ class Badges_Badge {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('badges', 'Badges_Badge', $this->UID, $this->name);
+		$this->alias = $aliases->create('badges', 'badges_badge', $this->UID, $this->name);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -112,7 +112,7 @@ class Badges_Badge {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'badges';
-		$dbSchema['model'] = 'Badges_Badge';
+		$dbSchema['model'] = 'badges_badge';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -172,7 +172,7 @@ class Badges_Badge {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Badges_Badge'>\n"
+		$xml = $indent . "<kobject type='badges_badge'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <name>" . $this->name . "</name>\n"
 			. $indent . "    <description><![CDATA[" . $this->description . "]]></description>\n"
@@ -204,18 +204,18 @@ class Badges_Badge {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('badges', 'Badges_Badge', 'show', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_badge', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Badges/show/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 			$ext['nameLink'] = "<a href='" . $ext['viewUrl'] . "'>" . $ext['name'] . "</a>";
 		}
 
-		if (true == $user->authHas('badges', 'Badges_Badge', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_badge', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Badges/edit/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('badges', 'Badges_Badge', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('badges', 'badges_badge', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Badges/confirmdelete/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -255,7 +255,7 @@ class Badges_Badge {
 
 	function awardTo($userUID) {
 		global $db;		
-		if (false == $db->objectExists('Users_User', $userUID)) { return 'Unkown user.'; }
+		if (false == $db->objectExists('users_user', $userUID)) { return 'Unkown user.'; }
 		if (true == $this->hasAward($userUID)) { return 'Badge already awarded.'; }
 
 		$model = new Badges_UserIndex();
@@ -279,7 +279,7 @@ class Badges_Badge {
 		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
 		$conditions[] = "badgeUID='" . $db->addMarkup($this->UID) . "'";
 
-		$range = $db->loadRange('Badges_Userindex', '*', $conditions);
+		$range = $db->loadRange('badges_userindex', '*', $conditions);
 		if (count($range) > 0) { return true; }
 		return false;
 	}

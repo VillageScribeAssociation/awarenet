@@ -104,7 +104,7 @@ class Forums_Board {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('forums', 'Forums_Board', $this->UID, $this->UID);
+		$this->alias = $aliases->create('forums', 'forums_board', $this->UID, $this->UID);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -129,7 +129,7 @@ class Forums_Board {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'forums';
-		$dbSchema['model'] = 'Forums_Board';
+		$dbSchema['model'] = 'forums_board';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -246,7 +246,7 @@ class Forums_Board {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('forums', 'Forums_Board', 'show', $this->UID)) { 
+		if ($user->authHas('forums', 'forums_board', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%forums/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[see all threads &gt;&gt;]</a>"; 
 		}

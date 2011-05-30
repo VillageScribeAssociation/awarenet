@@ -10,7 +10,7 @@ function chat_listallbegin($args) {
 	global $db;
 
 	$html = '';
-	$sql = "select * from Users_User order by role";
+	$sql = "select * from users_user order by role";
 	$result = $db->query($sql);
 
 	$html .= "<table noborder>\n";

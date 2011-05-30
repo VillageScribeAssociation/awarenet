@@ -123,7 +123,7 @@ class Wiki_Article {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('wiki', 'Wiki_Article', $this->UID, $this->title);
+		$this->alias = $aliases->create('wiki', 'wiki_article', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -148,7 +148,7 @@ class Wiki_Article {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'wiki';
-		$dbSchema['model'] = 'Wiki_Article';
+		$dbSchema['model'] = 'wiki_article';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -234,25 +234,25 @@ class Wiki_Article {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('wiki', 'Wiki_Article', 'show', $this->UID)) { 
+		if ($user->authHas('wiki', 'wiki_article', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%wiki/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='%%serverPath%%wiki/" . $ary['alias'] . "'>"
 					 . "[read on &gt;&gt;]</a>"; 
 		}
 
-		if ($user->authHas('wiki', 'Wiki_Article', 'edit', $this->UID)) {
+		if ($user->authHas('wiki', 'wiki_article', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%wiki/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['nomUrl'] =  '%%serverPath%%wiki/nominatedelete/' . $this->alias;
 			$ary['nomLink'] = "<a href='" . $ary['nomUrl'] . "'>[nominate for deletion]</a>"; 
 		}
 
-		if ($user->authHas('wiki', 'Wiki_Article', 'delete', $this->UID)) {
+		if ($user->authHas('wiki', 'wiki_article', 'delete', $this->UID)) {
 			$ary['delUrl'] = '%%serverPath%%wiki/confirmdelete/uid_' . $this->UID;
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>";
 		}
 
-		if ($user->authHas('wiki', 'Wiki_Article', 'new', $this->UID)) { 
+		if ($user->authHas('wiki', 'wiki_article', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%wiki/new/";
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new article]</a>";  
 		}
@@ -368,7 +368,7 @@ class Wiki_Article {
 	function getTalk($articleUID) {
 		global $db;
 		$conditions = array("talkFor='" . $db->addMarkup($articleUID) . "'");
-		$range = $db->loadRange('Wiki_Article', '*', $conditions, 'createdOn', '1');
+		$range = $db->loadRange('wiki_article', '*', $conditions, 'createdOn', '1');
 		if (0 == count($range)) { return ''; }
 		foreach($range as $row) { return $row['UID']; }
 		return false;	// unreachable?

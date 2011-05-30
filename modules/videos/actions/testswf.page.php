@@ -3,7 +3,7 @@
 
 <page>
 	<template>iframe.template.php</template>
-	<title>:: awareNet :: Videos :: test ::</title>
+	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: Videos :: test ::</title>
 	<content>
 [`|pc][`|pc]navReturn[`|pc][`|pc]
 

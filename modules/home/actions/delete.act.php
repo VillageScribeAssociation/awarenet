@@ -14,7 +14,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('Page not specified (UID).'); }
     
 	$model = new Home_Static($_POST['UID']);
-	if (false == $user->authHas('home', 'Home_Static', 'delete', $model->UID))
+	if (false == $user->authHas('home', 'home_static', 'delete', $model->UID))
 		{ $page->do403('You are not authorzed to delete this page.'); }
 
 	//----------------------------------------------------------------------------------------------

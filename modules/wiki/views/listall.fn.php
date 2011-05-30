@@ -37,16 +37,14 @@ function wiki_listall($args) {
 	$conditions = array();
 	$conditions[] = "namespace='" . $namespace . "'";
 
-	$totalItems = $db->countRange('Wiki_Article', $conditions);
+	$totalItems = $db->countRange('wiki_article', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of articles
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$range = $db->loadRange('Wiki_Article', '*', $conditions, 'title', $num, $start);
-
-	//$sql = "select * from Wiki_Article order by title ASC limit $start, $num";
+	$range = $db->loadRange('wiki_article', '*', $conditions, 'title', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make table
@@ -65,9 +63,9 @@ function wiki_listall($args) {
 	}
 
 	//TODO: stabilize talk
-//				. "\t\t<td><small>" . strlen($row['content']) . " bytes</small></td>\n"
-//				. "\t\t<td><small>" . strlen($row['talk']) . " bytes</small></td>\n"
-//				. "\t\t<td>" . $row['viewcount'] . "</td>"
+	//		. "\t\t<td><small>" . strlen($row['content']) . " bytes</small></td>\n"
+	//		. "\t\t<td><small>" . strlen($row['talk']) . " bytes</small></td>\n"
+	//		. "\t\t<td>" . $row['viewcount'] . "</td>"
 
 
 	//----------------------------------------------------------------------------------------------

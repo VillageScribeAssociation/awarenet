@@ -3,10 +3,10 @@
 
 <page>
 	<template>iframe.template.php</template>
-	<title>:: awareNet :: Videos :: test ::</title>
+	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: Videos :: test ::</title>
 	<content>
 [[:theme::navtitlebox::label=Flash Animation:]]
-[[:videos::flashcontainer::videoUID=%%UID%%:]]
+[[:videos::flashcontainer::videoUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
 </content>
 	<nav1>

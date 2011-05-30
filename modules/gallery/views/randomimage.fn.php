@@ -26,7 +26,7 @@ function gallery_randomimage($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a random image from the databse
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from Images_Image "
+	$sql = "select * from images_image "
 		 . "where refUID='" . $db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
 		 . "order by RAND() limit 0,1";
 

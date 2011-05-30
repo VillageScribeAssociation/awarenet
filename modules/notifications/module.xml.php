@@ -15,8 +15,8 @@
         <permissions>
           <permission>show</permission>
           <permission>hide</permission>
-          <export>notificaions-show</export>
-          <export>notificaions-list</export>
+          <export>notifications-show</export>
+          <export>notifications-list</export>
         </permissions>
         <relationships>
 		  <relationship>creator</relationship>
@@ -25,8 +25,8 @@
       </model>
     </models>
     <defaultpermissions>
-		student:c|notifications|Notifications_Notification|show|(if)|member
-		teacher:c|notifications|Notifications_Notification|show|(if)|member
+		student:c|notifications|notifications_notification|show|(if)|member
+		teacher:c|notifications|notifications_notification|show|(if)|member
     </defaultpermissions>
 </module>
 */ ?>

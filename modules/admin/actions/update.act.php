@@ -55,7 +55,7 @@
 	//---------------------------------------------------------------------------------------------
 
 	foreach($rList as $rUID => $item) { 
-		$absFile = str_replace('//', '/', $installPath . $item['relfile']);
+		$absFile = str_replace('//', '/', $kapenta->installPath . $item['relfile']);
 		if (file_exists($absFile) == false) {
 			echo "[*] $absFile is missing.<br/>\n";
 			if (false == $repository->isExempt($item['relFile'])) { downloadFileFromRepository($item); }
@@ -73,7 +73,7 @@
 	//	list local files, compare to repository
 	//---------------------------------------------------------------------------------------------
 
-	$raw = shell_exec("find $installPath");
+	$raw = shell_exec("find " . $kapenta->installPath);
 	$lines = explode("\n", $raw);
 
 	foreach($lines as $line) {
@@ -83,7 +83,7 @@
 
 		$skip = false;
 		if (trim($line) == '') { $skip = true; }						// must not be blank	
-		$line = str_replace($installPath, '/', $line);					// relative position
+		$line = str_replace($kapenta->installPath, '/', $line);					// relative position
 		$fileName = basename($line);									// get filename
 		if (strpos(' ' . $fileName, '.') == false) { $skip = true; }	// filename must contain .
 
@@ -97,9 +97,10 @@
 		//	compare hash with local file
 		//-----------------------------------------------------------------------------------------
 
-		if ((false == $skip) && (filesize($installPath . $line) < 10000000)) {
+		if ((false == $skip) && (filesize($kapenta->installPath . $line) < 10000000)) {
 			$itemUID = ''; 
-			$sha1 = sha1(implode(file($installPath . $line)));
+			//TODO: use $kapenta for this
+			$sha1 = sha1(implode(file($kapenta->installPath . $line)));
 
 			//--------------------------------------------------------------------------------------
 			//	compare to repository

@@ -16,7 +16,7 @@ function users_removefriend($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('friendshipUID', $args)) { return ''; }
-	if (false == $db->objectExists('Users_Friendship', $args['friendshipUID'])) { return ''; }
+	if (false == $db->objectExists('users_friendship', $args['friendshipUID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

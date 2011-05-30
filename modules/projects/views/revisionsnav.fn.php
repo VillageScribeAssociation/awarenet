@@ -13,7 +13,7 @@
 function projects_revisionsnav($args) {
 	global $db;
 
-	if ($user->authHas('projects', 'Projects_Project', 'show', 'TODO:UIDHERE') == false) { return false; }
+	if ($user->authHas('projects', 'projects_project', 'show', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID']; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 	$html = '';
@@ -22,7 +22,7 @@ function projects_revisionsnav($args) {
 	//	load all revisions
 	//----------------------------------------------------------------------------------------------
 
-	$sql = "select * from Projects_Revision "
+	$sql = "select * from projects_revision "
 		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
 
 	$result = $db->query($sql);

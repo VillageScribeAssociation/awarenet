@@ -12,16 +12,14 @@
 //opt: size - size to display images (default is width300) [string]
 
 function projects_allimages($args) {
-	global $db;
-
-	global $serverPath;
+	global $db, $kapenta, $user, $theme;
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$size = 'width300';
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
 	
 	$model = new Projects_Project(|$db->addMarkup($args['raUID']));	
-	$sql = "select * from Images_Image where refModule='projects' and refUID='" . $model->UID 
+	$sql = "select * from images_image where refModule='projects' and refUID='" . $model->UID 
 	     . "' order by weight";
 	
 	$html = '';

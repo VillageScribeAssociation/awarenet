@@ -11,7 +11,7 @@
 
 	$model = new Files_Folder($req->args['uid']);
 	if (false == $model->loaded) { $page->do404('Folder not found.'); }
-	if (false == $user->authHas('files', 'Files_Folder', 'delete', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('files', 'files_folder', 'delete', $model->UID)) { $page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block and show the item to be deleted

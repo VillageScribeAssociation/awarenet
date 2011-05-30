@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	// if no user specified then show own profile
 	if ('' == $req->ref) { $req->ref = $user->alias; }
-	$UID = $aliases->findRedirect('Users_User');
+	$UID = $aliases->findRedirect('users_user');
 	$model = new Users_User($UID);
 	if (false == $model->loaded) { $page->do404('no such user'); }
 
@@ -17,7 +17,7 @@
 	$userUID = $model->UID;
 	$userName = $model->getName();
 
-	if (false == $user->authHas('users', 'Users_User', 'viewprofile', $UID))
+	if (false == $user->authHas('users', 'users_user', 'viewprofile', $UID))
 		{ $page->do403('you cannot view this profile'); }
 
 	//----------------------------------------------------------------------------------------------

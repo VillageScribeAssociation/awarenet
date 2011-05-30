@@ -45,7 +45,7 @@ function projects_menu($args) {
 			$histUrl = '%%serverPath%%projects/history/' . $model->alias;
 			$labels['viewHistory'] = "[[:theme::submenu::label=History::link=$histUrl:]]";
 
-			if ($user->authHas('projects', 'Projects_Project', 'edit', $model->UID)) {
+			if ($user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
 				//----------------------------------------------------------------------------------
 				//	user can edit this project
 				//----------------------------------------------------------------------------------

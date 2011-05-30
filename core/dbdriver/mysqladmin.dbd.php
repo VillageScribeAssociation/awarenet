@@ -171,11 +171,12 @@ class KDBAdminDriver {
 	//returns: HTML table with kapenta 'scaffold' style [string]
 
 	function schemaToHtml($dbSchema, $title = '') {
-		global $theme;
+		global $theme, $session;
 
 		if ('' == $title) { $title = $dbSchema['model'] . " (dbSchema)"; }		// default title
 		$html = "<h2>" . $title . "</h2>\n";
 		$rows = array(array('Field', 'Type', 'Index'));
+
 		foreach($dbSchema['fields'] as $field => $type) {
 			$idx = '';
 			if (array_key_exists($field, $dbSchema['indices'])) { 
@@ -267,7 +268,24 @@ class KDBAdminDriver {
 		$sql = 'SELECT * FROM ' . $tableName;
 		$result = $db->query($sql);
 		//TODO: more intelligence here
-		while ($row = $db->fetchAssoc($result)) { $db->save($db->rmArray($row), $tmpSchema); }
+		while ($row = $db->fetchAssoc($result)) { 
+			$row = $db->rmArray($row);
+			foreach($dbSchema['fields'] as $fName => $fType) {
+				switch(strtolower($fType)) {
+					case 'bigint':
+						if (false == array_key_exists($fName, $row)) { $row[$fName] = '0'; }
+						if ('' == $row[$fName]) { $row[$fName] = '0'; }
+						break;
+
+					case 'bigint(20)':
+						if (false == array_key_exists($fName, $row)) { $row[$fName] = '0'; }
+						if ('' == $row[$fName]) { $row[$fName] = '0'; }
+						break;
+
+				}
+			}
+			$db->save($row, $tmpSchema); 
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	delete the original table and its indices
@@ -288,7 +306,10 @@ class KDBAdminDriver {
 		$this->createTable($dbSchema);
 		$sql = "select * from " . $tmpSchema['model'];
 		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) { $db->save($db->rmArray($row), $dbSchema); }
+		while ($row = $db->fetchAssoc($result)) { 
+			$row = $db->rmArray($row);
+			$db->save($row, $dbSchema); 
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	delete the temp table
@@ -419,6 +440,23 @@ class KDBAdminDriver {
 	
 		if (true == $installed) { $report .= "<!-- table installed correctly -->"; }
 		return $report;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	find an object in the database given its UID
+	//----------------------------------------------------------------------------------------------
+	//arg: UID - Unique identifier of any object [string]
+	//returns: name of table containing object, false if not found [string][bool]
+
+	function findByUID($UID) {
+		global $db;
+
+		$tables = $db->loadTables();
+		foreach($tables as $tableName) { 
+			if (true == $db->objectExists($tableName, $UID)) { return $tableName; }
+		}
+
+		return false;
 	}
 
 }

@@ -14,7 +14,7 @@ function home_editform($args) {
 
 	$model = new Home_Static($args['raUID']);
 	if (false == $model->loaded) { return false; }
-	if (false == $user->authHas('home', 'Home_Static', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('home', 'home_static', 'edit', $model->UID)) { return ''; }
 	
 	$extArray = $model->extArray();
 	$labels = array();

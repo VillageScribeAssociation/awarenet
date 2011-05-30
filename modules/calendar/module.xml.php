@@ -29,23 +29,23 @@
         </model>
     </models>
     <defaultpermissions>
-		student:p|calendar|Calendar_Entry|new
-		student:p|calendar|Calendar_Entry|show
-		student:p|calendar|Calendar_Entry|images-show
-		student:c|calendar|Calendar_Entry|edit|(if)|creator
-		student:c|calendar|Calendar_Entry|delete|(if)|creator
-		student:c|calendar|Calendar_Entry|images-add|(if)|creator
-		student:c|calendar|Calendar_Entry|images-edit|(if)|creator
-		student:c|calendar|Calendar_Entry|images-remove|(if)|creator
+		student:p|calendar|calendar_entry|new
+		student:p|calendar|calendar_entry|show
+		student:p|calendar|calendar_entry|images-show
+		student:c|calendar|calendar_entry|edit|(if)|creator
+		student:c|calendar|calendar_entry|delete|(if)|creator
+		student:c|calendar|calendar_entry|images-add|(if)|creator
+		student:c|calendar|calendar_entry|images-edit|(if)|creator
+		student:c|calendar|calendar_entry|images-remove|(if)|creator
 
-		teacher:p|calendar|Calendar_Entry|new
-		teacher:p|calendar|Calendar_Entry|show
-		teacher:p|calendar|Calendar_Entry|images-show
-		teacher:c|calendar|Calendar_Entry|edit|(if)|creator
-		teacher:c|calendar|Calendar_Entry|delete|(if)|creator
-		teacher:c|calendar|Calendar_Entry|images-add|(if)|creator
-		teacher:c|calendar|Calendar_Entry|images-edit|(if)|creator
-		teacher:c|calendar|Calendar_Entry|images-remove|(if)|creator
+		teacher:p|calendar|calendar_entry|new
+		teacher:p|calendar|calendar_entry|show
+		teacher:p|calendar|calendar_entry|images-show
+		teacher:c|calendar|calendar_entry|edit|(if)|creator
+		teacher:c|calendar|calendar_entry|delete|(if)|creator
+		teacher:c|calendar|calendar_entry|images-add|(if)|creator
+		teacher:c|calendar|calendar_entry|images-edit|(if)|creator
+		teacher:c|calendar|calendar_entry|images-remove|(if)|creator
     </defaultpermissions>
 
 </module>

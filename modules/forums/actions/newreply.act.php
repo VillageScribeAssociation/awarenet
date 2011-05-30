@@ -15,7 +15,7 @@
 
 	$thread = new Forums_Thread($_POST['thread']);
 	if (false == $thread->loaded) { $page->do404(); }
-	if (false == $user->authHas('forums', 'Forums_Reply', 'new', $thread->UID))
+	if (false == $user->authHas('forums', 'forums_reply', 'new', $thread->UID))
 		{ $page->do403(); }
 
 	//------------------------------------------------------------------------------------------
@@ -43,9 +43,37 @@
 	$forum->save();
 
 	//----------------------------------------------------------------------------------------------
-	//	send a notification to poster
+	//	send a notification to poster's friends and other members of the thread
 	//----------------------------------------------------------------------------------------------
-	//TODO:	send a notification to poster
+	if ('' == $report) {
+		//------------------------------------------------------------------------------------------
+		//	notify user's friends
+		//------------------------------------------------------------------------------------------
+		$ext = $thread->extArray();
+
+		$title = "New Forum Reply: " . $thread->title;
+		$content = $reply->content;
+
+		$nUID = $notifications->create(
+			'forums', 'forums_reply', $reply->UID, 'forum_newreply', 
+			$title, $content, $ext['viewUrl']
+		);
+
+		$notifications->addFriends($nUID, $user->UID);
+		$notifications->addAdmins($nUID, $user->UID);
+
+		//------------------------------------------------------------------------------------------
+		//	raise a microbog event for this
+		//------------------------------------------------------------------------------------------
+		$args = array(
+			'refModule' => 'forums',
+			'refModel' => 'forums_thread',
+			'refUID' => $thread->UID,
+			'message' => '#'. $kapenta->websiteName .' new reply to forum thread - '. $thread->title
+		);
+
+		$kapenta->raiseEvent('*', 'microblog_event', $args);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to thread

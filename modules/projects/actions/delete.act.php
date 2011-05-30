@@ -15,7 +15,7 @@
 		{ $page->do404('Projects not specified (UID).'); }
     
 	$model = new Projects_Project($_POST['UID']);
-	if (false == $user->authHas('projects', 'Projects_Project', 'delete', $model->UID))
+	if (false == $user->authHas('projects', 'projects_project', 'delete', $model->UID))
 		{ $page->do403('You are not authorzed to delete this project.'); }
 
 	//----------------------------------------------------------------------------------------------

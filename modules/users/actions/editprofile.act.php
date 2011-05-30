@@ -8,7 +8,7 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $req->ref = $user->alias; }
-	$UID = $aliases->findRedirect('Users_User');
+	$UID = $aliases->findRedirect('users_user');
 	$model = new Users_User($UID);
 	if (false == $model->loaded) { $page->do404('no such user'); }
 

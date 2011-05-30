@@ -11,7 +11,7 @@
 function wiki_summarylist($args) {
 	global $db;
 
-	$sql = "select * from wiki order by refno DESC";
+	$sql = "select * from wiki_article order by refno DESC";
 	$result = $db->query($sql);
 	$html = '';
 	while ($row = $db->fetchAssoc($result)) {

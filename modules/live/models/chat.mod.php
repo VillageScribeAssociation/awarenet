@@ -114,7 +114,7 @@ class Live_Chat {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'live';
-		$dbSchema['model'] = 'Live_Chat';
+		$dbSchema['model'] = 'live_chat';
 		$dbSchema['archive'] = 'no';
 
 		//table columns
@@ -163,7 +163,7 @@ class Live_Chat {
 			'UID' => $this->UID,
 			'fromUID' => $this->fromUID,
 			'toUID' => $this->toUID,
-			'owerUID' => $this->ownerUID,
+			'ownerUID' => $this->ownerUID,
 			'msg' => $this->msg,
 			'sent' => $this->sent,
 			'state' => $this->state,
@@ -185,7 +185,7 @@ class Live_Chat {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Live_Chat'>\n"
+		$xml = $indent . "<kobject type='live_chat'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <fromUID>" . $this->fromUID . "</fromUID>\n"
 			. $indent . "    <toUID>" . $this->toUID . "</toUID>\n"
@@ -220,17 +220,17 @@ class Live_Chat {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'Live_Chat', 'show', $this->UID)) {
+		if (true == $user->authHas('live', 'live_chat', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showchat/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Chat', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('live', 'live_chat', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/editchat/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'Live_Chat', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('live', 'live_chat', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/delchat/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

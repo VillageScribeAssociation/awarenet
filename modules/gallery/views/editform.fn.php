@@ -17,7 +17,7 @@ function gallery_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Gallery_Gallery($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('gallery', 'Gallery_Gallery', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

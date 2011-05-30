@@ -44,7 +44,7 @@
   <tr>
     <td><b>Source URL:</b></td>
     <td><input type='text' size='60' 
-         name='attribURL' value='%%attribURL%%' /></td>
+         name='attribUrl' value='%%attribUrl%%' /></td>
   </tr>
   <tr>
     <td></td>

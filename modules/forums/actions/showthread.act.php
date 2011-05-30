@@ -15,14 +15,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference ( TODO: banned, moderator, etc)
 	//----------------------------------------------------------------------------------------------
-	$threadUID = $aliases->findRedirect('Forums_Thread');
+	$threadUID = $aliases->findRedirect('forums_thread');
 	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }
 
 	$thread = new Forums_Thread($threadUID);
 	$forum = new Forums_Board($thread->board);
 
-	if (false == $user->authHas('forums', 'Forums_Thread', 'show', $thread->UID)) { $page->do403();}
-	if (false == $user->authHas('forums', 'Forums_Board', 'show', $forum->UID)) { $page->do403(); }	
+	if (false == $user->authHas('forums', 'forums_thread', 'show', $thread->UID)) { $page->do403();}
+	if (false == $user->authHas('forums', 'forums_board', 'show', $forum->UID)) { $page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	redner the page

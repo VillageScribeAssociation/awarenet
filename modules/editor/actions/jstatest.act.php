@@ -20,7 +20,7 @@
 
 	echo "<h2>utf8/base64 Javascript Test</h2>";
 	echo "<textarea id='taContent' rows='30' cols='80'></textarea>\n";
-	echo "<script src='" . $serverPath . "core/utils.js'></script>\n";
+	echo "<script src='" . $kapenta->serverPath . "core/utils.js'></script>\n";
 	echo "<script>\n";
 	echo $utils->base64EncodeJs('content', $text);
 	echo "base64_loadTextArea('taContent', content);\n";

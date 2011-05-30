@@ -8,15 +8,30 @@
 .style1 {font-size: 9px}
 </style>
 
+<script src='%%serverPath%%core/utils.js'></script>
 <script language='javascript'>
 	function kPageInit() {
 		resizeFrame();
 	}
 
+	ifMaxHeight = -1;
+
 	function resizeFrame() {
 		frameObj = window.parent.document.getElementsByName(window.name);
-		frameObj[0].height = document.body.offsetHeight + 40;
+		if (frameObj[0]) {
+			if (-1 == ifMaxHeight) {
+				// iframe height same as content height
+				frameObj[0].height = document.body.offsetHeight + 40;
 
+			} else {
+				// iframe height same as content height unless greater than maxHeight
+				if ((document.body.offsetHeight + 40) > ifMaxHeight) {
+					frameObj[0].height = ifMaxHeight;
+				} else {
+					frameObj[0].height = document.body.offsetHeight + 40;
+				}
+			}
+		}
 	}
 
 %%script%%

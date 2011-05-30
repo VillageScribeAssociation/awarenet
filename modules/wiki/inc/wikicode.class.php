@@ -419,7 +419,7 @@ class WikiCode {
 				$hash = substr($ref, $hashPos);
 				$ref = substr($ref, 0, $hashPos);
 			}
-			$refUID = $aliases->getOwner('wiki', 'Wiki_Article', $ref);
+			$refUID = $aliases->getOwner('wiki', 'wiki_article', $ref);
 			if (false == $refUID) {
 				//----------------------------------------------------------------------------------
 				// link to article which does not yet exist

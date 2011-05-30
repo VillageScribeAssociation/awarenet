@@ -21,7 +21,7 @@ function forums_busiestthreads($args) {
 	// TODO: permissions check here
 
 	// thread with the smallest ammount of time between replies is the winner
-	$sql = "select *, ((now() - TIMESTAMP(createdOn)) / replies) as score from Forums_Thread "
+	$sql = "select *, ((now() - TIMESTAMP(createdOn)) / replies) as score from forums_thread "
 		 . "where replies > 0 order by score";
 
 	$block = $theme->loadBlock('modules/forums/views/threadsummarynav.block.php');

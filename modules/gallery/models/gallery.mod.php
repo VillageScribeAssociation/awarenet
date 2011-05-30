@@ -94,7 +94,7 @@ class Gallery_Gallery {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('gallery', 'Gallery_Gallery', $this->UID, $this->title);
+		$this->alias = $aliases->create('gallery', 'gallery_gallery', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -119,7 +119,7 @@ class Gallery_Gallery {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'gallery';
-		$dbSchema['model'] = 'Gallery_Gallery';
+		$dbSchema['model'] = 'gallery_gallery';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -209,9 +209,10 @@ class Gallery_Gallery {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('gallery', 'Gallery_Gallery', 'show', $this->UID)) { 
+		if ($user->authHas('gallery', 'gallery_gallery', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%gallery/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
+			$ary['titleLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>"; 
 		}
 
 		if ($auth == true) {
@@ -252,7 +253,7 @@ class Gallery_Gallery {
 		$ary['userName'] = $model->firstname . ' ' . $model->surname;		
 		$ary['userRa'] = $model->alias;
 		$ary['userUrl'] = '%%serverPath%%users/profile/' . $ary['userRa'];
-		$ary['userLink'] = "<a href='" . $ary['userUrl'] . "'>" . $ary['userRa'] . "</a>";
+		$ary['userLink'] = "<a href='" . $ary['userUrl'] . "'>" . $ary['userName'] . "</a>";
 	
 		return $ary;
 	}

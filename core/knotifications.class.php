@@ -1,7 +1,7 @@
 <?
 
-	require_once($installPath . 'modules/notifications/models/notification.mod.php');
-	require_once($installPath . 'modules/notifications/models/userindex.mod.php');
+	require_once($kapenta->installPath . 'modules/notifications/models/notification.mod.php');
+	require_once($kapenta->installPath . 'modules/notifications/models/userindex.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object representing the notifications system
@@ -27,14 +27,16 @@ class KNotifications {
 	//arg: imgUID - UID of an image for thumbnail [string]
 	//returns: UID of new notification, or false on failure [string][bool]
 
-	function create($refModule, $refModel, $refUID, $title, $content, $url = '') {
+	function create($refModule, $refModel, $refUID, $refEvent, $title, $content, $url = '') {
+		global $kapenta;
 		$model = new Notifications_Notification();
 		$model->refModule = $refModule;
 		$model->refModel = $refModel;
 		$model->refUID = $refUID;
+		$model->refEvent = $refEvent;
 		$model->title = $title;
 		$model->content = $content;
-		$model->refUrl = $url;
+		$model->refUrl = str_replace($kapenta->serverPath, '%%serverPath%%', $url);
 		$report = $model->save();
 		if ('' == $report) { return $model->UID; }
 		return false;
@@ -43,6 +45,10 @@ class KNotifications {
 	//----------------------------------------------------------------------------------------------
 	//.	count notifications made about some object
 	//----------------------------------------------------------------------------------------------
+	//arg: refModule - name of a mapenta module [string]
+	//arg: refModel - type of object notifications are about [string]
+	//arg: refUID - UID of object notifications are about [string]
+	//returns: number of notifications about this object [string]
 
 	function count($refModule, $refModel, $refUID) {
 		global $db;
@@ -50,8 +56,86 @@ class KNotifications {
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$count = $db->countRange('Notifications_Notification', $conditions);
+		$count = $db->countRange('notifications_notification', $conditions);
 		return $count;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover if a notification has been made about the same thing recently
+	//----------------------------------------------------------------------------------------------
+	//arg: refModule - name of a mapenta module [string]
+	//arg: refModel - type of object notifications are about [string]
+	//arg: refUID - UID of object notifications are about [string]
+	//arg: refEvent - event which caused notification to be sent, '*' for all [string]
+	//arg: userUID - UID of user who caused this notification to be sent, '*' for all [string]
+	//arg: maxAge - maximum age of a event, in seconds [string]
+	//returns: UID of recent notification, if it exists [string]
+
+	function existsRecent($refModule, $refModel, $refUID, $userUID, $refEvent, $maxAge) {
+		global $db;
+		global $session;
+
+		//------------------------------------------------------------------------------------------
+		//	load most recent notification abot this object, event (optional) and user (optional)
+		//------------------------------------------------------------------------------------------
+		$conditions = array();
+		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+
+		if (('*' != $refEvent) && ('' != $refEvent)) {
+			$conditions[] = "refEvent='" . $db->addMarkup($refEvent) . "'";
+		}
+
+		if (('*' != $userUID) && ('' != $userUID)) {
+			$conditions[] = "createdBy='" . $db->addMarkup($userUID) . "'";
+		} 
+
+		$by = "createdOn DESC";
+		$range = $db->loadRange('notifications_notification', '*', $conditions, $by, '10');
+
+		//------------------------------------------------------------------------------------------
+		//	if such a notification exists, see if it is younger than maxAge
+		//------------------------------------------------------------------------------------------
+		foreach($range as $item) {
+			$lastEdit = strtotime($item['editedOn']);
+			$oldest = time() - $maxAge;
+			if ($lastEdit > $oldest) { return $item['UID'];  }	// found one
+		}	
+
+		return '';												// no event younger than maxAge
+	}	
+
+	//----------------------------------------------------------------------------------------------
+	//.	add further content to a notification
+	//----------------------------------------------------------------------------------------------
+	//arg: notificationUID - UID of a Notifications_Notification object [string]
+	//arg: userUID - UID of a Users_User object [string]
+	//returns: true on success, false on failure [bool]
+
+	function annotate($notificationUID, $annotation) {
+		global $db;
+
+		//------------------------------------------------------------------------------------------
+		//	update the notification
+		//------------------------------------------------------------------------------------------
+		$model = new Notifications_Notification($notificationUID);	// load the notification
+		if (false == $model->loaded) { return false; }				// no such notification
+		$model->content .= $annotation;
+		$report = $model->save();
+		if ('' != $report) { return false; }						// could not save
+
+		//------------------------------------------------------------------------------------------
+		//	bump to the top of users feeds
+		//------------------------------------------------------------------------------------------
+		$conditions = array();
+		$conditions[] = "notificationUID='" . $db->addMarkup($model->UID) . "'";
+		$range = $db->loadRange('notifications_userindex', '*', $conditions);
+
+		foreach($range as $item) {
+			$ui = new Notifications_UserIndex($item['UID']);
+			$ui->save();
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -72,6 +156,30 @@ class KNotifications {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	add all users to a notification
+	//----------------------------------------------------------------------------------------------
+	//arg: notificationUID - UID of a Notifications_Notification object [string]
+	//returns: true on success, false on failure [bool]
+
+	function addEveryone($notificationUID) {
+		global $db;
+		$allOk = true;
+
+		$sql = "select UID, role from users_user";
+		$result = $db->query($sql);
+
+		while($row = $db->fetchAssoc($result)) {
+			$row = $db->rmArray($row);
+			if (('public' != $row['role']) && ('banned' != $row['role'])) {
+				$check = $this->addUser($notificationUID, $db->removeMarkup($row['UID']));
+				if (false == $check) { $allOk = false; }
+			}
+		}
+
+		return $allOk;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	add all admin users to a notification
 	//----------------------------------------------------------------------------------------------
 	//arg: notificationUID - UID of a Notifications_Notification object [string]
@@ -81,7 +189,7 @@ class KNotifications {
 		global $db;
 		$allOk = true;		//%	return value [bool]
 
-		$range = $db->loadRange('Users_User', '*', array("role='admin'"));
+		$range = $db->loadRange('users_user', '*', array("role='admin'"));
 		foreach($range as $row) 
 			{ if (false == $this->addUser($notificationUID, $row['UID'])) { $allOk = false; } }
 
@@ -97,7 +205,7 @@ class KNotifications {
 	function addSchool($notificationUID, $schoolUID) {
 		global $db;		
 
-		$sql = "select * from Users_User where school='" . $db->addMarkup($schoolUID) . "'";
+		$sql = "select * from users_user where school='" . $db->addMarkup($schoolUID) . "'";
 		$result = $db->query($sql);
 
 		while ($row = $db->fetchAssoc($result)) {
@@ -117,7 +225,7 @@ class KNotifications {
 	function addSchoolGrade($notificationUID, $schoolUID, $grade) {
 		global $db;
 
-		$sql = "select * from Users_User"
+		$sql = "select * from users_user"
 			 . " where school='" . $db->addMarkup($schoolUID) . "'"
 			 . " and grade='" . $db->addMarkup($grade) . "'";
 
@@ -138,7 +246,7 @@ class KNotifications {
 	function addGroup($notificationUID, $groupUID) {
 		global $db;		
 
-		$sql = "select * from Groups_Membership where groupUID='" . $db->addMarkup($groupUID) . "'";
+		$sql = "select * from groups_membership where groupUID='" . $db->addMarkup($groupUID) . "'";
 		$result = $db->query($sql);
 
 		while ($row = $db->fetchAssoc($result)) {
@@ -156,7 +264,7 @@ class KNotifications {
 	function addFriends($notificationUID, $userUID) {
 		global $db;		
 
-		$sql = "select * from Users_Friendship"
+		$sql = "select * from users_friendship"
 			 . " where userUID='" . $db->addMarkup($userUID) . "'"
 			 . " and status='confirmed'";
 
@@ -186,7 +294,7 @@ class KNotifications {
 		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
 		$conditions[] = "(role='admin' OR role='member')";
 
-		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		$range = $db->loadRange('projects_membership', '*', $conditions);
 		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }		
 	}
 
@@ -207,7 +315,7 @@ class KNotifications {
 		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
 		$conditions[] = "role='admin'";
 
-		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		$range = $db->loadRange('projects_membership', '*', $conditions);
 		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }
 	}
 
@@ -220,6 +328,58 @@ class KNotifications {
 	function addForumThread($notificationUID, $projectUID) {
 		global $db;		
 		//TODO
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get the content of a notification
+	//----------------------------------------------------------------------------------------------
+	//arg: notificationUID - UID of a Notifications_Notification object [string]
+	//returns: Body of notification on success, empty string on failure [string]
+
+	function getContent($notificationUID) {
+		$model = new Notifications_Notification($notificationUID);
+		if (false == $model->loaded) { return ''; }
+		return $model->content;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the content of a notification
+	//----------------------------------------------------------------------------------------------
+	//arg: notificationUID - UID of a Notifications_Notification object [string]
+	//arg: content - new body of notification [string]
+	//returns: true on success, false on failure [string]
+
+	function setContent($notificationUID, $content) {
+		$model = new Notifications_Notification($notificationUID);
+		if (false == $model->loaded) { return false; }
+		$model->content = $content;
+		$model->save();
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the title of an existing notification
+	//----------------------------------------------------------------------------------------------
+	//arg: notificationUID - UID of a Notifications_Notification object [string]
+	//arg: title - new title of notification [string]
+	//returns: true on success, false on failure [string]
+
+	function setTitle($notificationUID, $title) {
+		$model = new Notifications_Notification($notificationUID);
+		if (false == $model->loaded) { return false; }
+		$model->title = $title;
+		$model->save();
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get database schema for notifications_notification object
+	//----------------------------------------------------------------------------------------------
+	//returns: database schema of notifications_notification objects [array]
+
+	function getDbSchema() {
+		$model = new Notifications_Notification();
+		return $model->getDbSchema();
 	}
 
 }

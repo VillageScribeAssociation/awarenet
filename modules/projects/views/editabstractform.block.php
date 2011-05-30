@@ -1,11 +1,7 @@
 <? /*
-<form name='editAbstract' method='POST' action='/projects/save/'>
-<input type='hidden' name='action' value='saveAbstract' />
-<input type='hidden' name='UID' value='%%UID%%' />
-
 <h1>%%projectTitle%% (Abstract)</h1>
 
-<form name='editProject' method='POST' action='%%serverPath%%projects/save/'>
+<form name='editProject' method='POST' action='%%serverPath%%projects/changetitle/'>
 <input type='hidden' name='action' value='saveChangeTitle' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -19,7 +15,7 @@
 </form>
 <br/>
 
-<form name='editAbstract' method='POST' action='%%serverPath%%projects/save/'>
+<form name='editAbstract' method='POST' action='%%serverPath%%projects/saveabstract/'>
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -43,7 +39,7 @@
 <br/>
 [[:theme::navtitlebox::label=Images::toggle=divAbsImages:]]
 <div id='divAbsImages'>
-[[:images::uploadmultiple::refModule=projects::refModel=Projects_Project::refUID=%%UID%%:]]
+[[:images::uploadmultiple::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
 <br/>
 </div>
 <br/>

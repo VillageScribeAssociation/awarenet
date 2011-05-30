@@ -8,7 +8,7 @@
 
 	if ('' == $req->ref) { $page->do404('no project specified'); }
 	if (false == array_key_exists('section', $req->args)) { $page->do404('section not given'); }
-	$UID = $aliases->findRedirect('Projects_Project');
+	$UID = $aliases->findRedirect('projects_project');
 	$sectionUID = $req->args['section'];
 
 	//----------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['projectUID'] = $model->UID;
 	$page->blockArgs['sectionUID'] = $sectionUID;
-//	$page->blockArgs['viewProjectUrl'] = $serverPath . 'projects/' . $model->alias;
+//	$page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
 	$page->render();
 
 ?>

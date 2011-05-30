@@ -15,7 +15,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($installPath . 'modules/abuse/actions/list.page.php');
+	$page->load('modules/abuse/actions/list.page.php');
 	$page->blockArgs['pageNo'] = $pageNo . '';
 	$page->render();
 

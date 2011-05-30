@@ -17,7 +17,7 @@
 		//-----------------------------------------------------------------------------------------
 		// delete all notices
 		//-----------------------------------------------------------------------------------------
-		$sql = "delete from Sync_Notice";
+		$sql = "delete from sync_notice";
 		$db->query($sql);
 
 		$msg = "Sync Queue cleared.  Please perform a manual sync with upstream "

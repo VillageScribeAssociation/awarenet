@@ -48,28 +48,28 @@
       </model>
     </models>
     <defaultpermissions>
-		student:p|users|Users_User|viewprofile
-		student:p|users|Users_User|comments-add
-		student:c|users|Users_User|images-add|(if)|self
-		student:p|users|Users_User|comments-add
-		student:p|users|Users_User|comments-show
-		student:p|users|Users_User|comments-list
-		student:c|users|Users_User|comments-retract|(if)|creator
-		student:p|users|Users_User|show
-		student:c|users|Users_User|edit|(if)|creator
-		student:c|users|Users_User|edit|(if)|self
-		student:c|users|Users_User|editprofile|(if)|self
-		student:p|users|Users_User|viewprofile
+		student:p|users|users_user|viewprofile
+		student:p|users|users_user|comments-add
+		student:c|users|users_user|images-add|(if)|self
+		student:p|users|users_user|comments-add
+		student:p|users|users_user|comments-show
+		student:p|users|users_user|comments-list
+		student:c|users|users_user|comments-retract|(if)|creator
+		student:p|users|users_user|show
+		student:c|users|users_user|edit|(if)|creator
+		student:c|users|users_user|edit|(if)|self
+		student:c|users|users_user|editprofile|(if)|self
+		student:p|users|users_user|viewprofile
 
-		teacher:p|users|Users_User|comments-add
-		teacher:c|users|Users_User|images-add|(if)|self
-		teacher:p|users|Users_User|comment-add
-		teacher:c|users|Users_User|comment-retract|(if)|creator
-		teacher:p|users|Users_User|show
-		teacher:c|users|Users_User|edit|(if)|creator
-		teacher:c|users|Users_User|edit|(if)|self
-		teacher:c|users|Users_User|editprofile|(if)|self
-		student:p|users|Users_User|viewprofile
+		teacher:p|users|users_user|comments-add
+		teacher:c|users|users_user|images-add|(if)|self
+		teacher:p|users|users_user|comment-add
+		teacher:c|users|users_user|comment-retract|(if)|creator
+		teacher:p|users|users_user|show
+		teacher:c|users|users_user|edit|(if)|creator
+		teacher:c|users|users_user|edit|(if)|self
+		teacher:c|users|users_user|editprofile|(if)|self
+		teacher:p|users|users_user|viewprofile
     </defaultpermissions>
     <blocks>
     </blocks>

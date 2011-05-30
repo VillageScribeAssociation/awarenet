@@ -15,7 +15,7 @@
 	$model = new Moblog_Post($req->ref);
 	if (false == $model->loaded) { $page->do404(); }	// no such post
 
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'edit', $model->UID))
+	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this blog post.'); }
 
 	//----------------------------------------------------------------------------------------------

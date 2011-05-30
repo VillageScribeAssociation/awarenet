@@ -132,7 +132,7 @@ class Projects_Project {
 		// ensure that the user who started project is a member
 		$this->addMember($this->createdBy, 'admin');
 
-		$this->alias = $aliases->create('projects', 'Projects_Project', $this->UID, $this->title);
+		$this->alias = $aliases->create('projects', 'projects_project', $this->UID, $this->title);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -157,7 +157,7 @@ class Projects_Project {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'projects';
-		$dbSchema['model'] = 'Projects_Project';
+		$dbSchema['model'] = 'projects_project';
 		$dbSchema['archive'] = 'yes';
 
 		//table columns
@@ -238,13 +238,14 @@ class Projects_Project {
 		$ary['delUrl'] = '';			$ary['delLink'] = '';
 		$ary['newUrl'] = '';			$ary['newLink'] = '';
 		$ary['editAbstractUrl'] = '';	$ary['editAbstractLink'] = '';
+		$ary['nameLink'] = $ary['title'];
 
 		//------------------------------------------------------------------------------------------
 		//	permissions
 		//------------------------------------------------------------------------------------------
 
 		$editAuth = false;
-		if ( (true == $user->authHas('projects', 'Projects_Project', 'edit', $this->UID)) 
+		if ( (true == $user->authHas('projects', 'projects_project', 'edit', $this->UID)) 
 			 AND (true == $this->isMember($user->UID)) ) { $editAuth = true; }
 
 		$delAuth = false;
@@ -256,9 +257,10 @@ class Projects_Project {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('projects', 'Projects_Project', 'show', $this->UID)) { 
+		if (true == $user->authHas('projects', 'projects_project', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%projects/' . $this->alias;
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
+			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
+			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
 		if ($editAuth == true) {
@@ -277,7 +279,7 @@ class Projects_Project {
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if ($user->authHas('projects', 'Projects_Project', 'new', $this->UID)) { 
+		if ($user->authHas('projects', 'projects_project', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%projects/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new project]</a>"; 
 		}
@@ -286,8 +288,8 @@ class Projects_Project {
 		//	abstract 
 		//------------------------------------------------------------------------------------------
 
-		$ary['createdOnLong'] = date('F nS Y', strtotime($ary['createdOn']));
-		$ary['editedOnLong'] = date('F nS Y', strtotime($ary['editedOn']));		
+		$ary['createdOnLong'] = date('F jS Y h:i', strtotime($ary['createdOn']));
+		$ary['editedOnLong'] = date('F jS Y h:i', strtotime($ary['editedOn']));		
 
 		$ary['abstractHtml'] = str_replace(">\n", ">", $ary['abstract']);
 		$ary['abstractHtml'] = str_replace("\n", "<br/>\n", $ary['abstractHtml']);
@@ -634,7 +636,7 @@ class Projects_Project {
 	function loadMembers() {
 		global $db;
 		$conditions = array("projectUID='" . $db->addMarkup($this->UID) . "'");
-		$range = $db->loadRange('Projects_Membership', '*', $conditions);
+		$range = $db->loadRange('projects_membership', '*', $conditions);
 		$this->members = $range;
 		$this->membersLoaded = true;
 	}
@@ -648,7 +650,7 @@ class Projects_Project {
 
 	function addMember($userUID, $role) {
 		global $db;
-		if (false == $db->objectExists('Users_User', $userUID)) { return false; }
+		if (false == $db->objectExists('users_user', $userUID)) { return false; }
 		if (false == $this->membersLoaded) { $this->loadMembers(); }
 
 		//------------------------------------------------------------------------------------------

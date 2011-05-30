@@ -17,13 +17,13 @@ function forums_summarylist($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('school', $args)) { return ''; }
-	if (false == $user->authHas('forums', 'Forums_Board', 'show')) { return ''; }
+	if (false == $user->authHas('forums', 'forums_board', 'show')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load boards from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("school='" . $db->addMarkup($args['school']) . "'");
-	$range = $db->loadRange('Forums_Board', '*', $conditions, 'weight DESC');
+	$range = $db->loadRange('forums_board', '*', $conditions, 'weight DESC');
 	//$sql = "select * from Forums_Board "
 	//	 . "where school='" . $db->addMarkup($args['school']) . "' "
 	//	 . "order by weight DESC";

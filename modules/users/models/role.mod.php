@@ -69,7 +69,7 @@ class Users_Role {
 		global $db;
 
 		$conditions = array("name='" . $db->addMarkup($name) . "'");
-		$range = $db->loadRange('Users_Role', '*', $conditions);
+		$range = $db->loadRange('users_role', '*', $conditions);
 		if (false == $range) { return false; }						// query failed
 		if (0 == count($range)) { return false; }					// no role with this name
 
@@ -108,7 +108,7 @@ class Users_Role {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('users', 'Users_Role', $this->UID, $this->name);
+		$this->alias = $aliases->create('users', 'users_role', $this->UID, $this->name);
 		$ary = $this->toArray();
 		echo "<textarea rows='10' cols='80'>{$ary['permissions']}</textarea>";
 		$check = $db->save($ary, $this->dbSchema);
@@ -135,7 +135,7 @@ class Users_Role {
 	function getDbSchema() {
 		$dbSchema = array();
 		$dbSchema['module'] = 'users';
-		$dbSchema['model'] = 'Users_Role';
+		$dbSchema['model'] = 'users_role';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -195,7 +195,7 @@ class Users_Role {
 	function toXml($xmlDec = false, $indent = '') {
 		//NOTE: any members which are not XML clean should be marked up before sending
 
-		$xml = $indent . "<kobject type='Users_Role'>\n"
+		$xml = $indent . "<kobject type='users_role'>\n"
 			. $indent . "    <UID>" . $this->UID . "</UID>\n"
 			. $indent . "    <name>" . $this->name . "</name>\n"
 			. $indent . "    <description><![CDATA[" . $this->description . "]]></description>\n"
@@ -229,19 +229,19 @@ class Users_Role {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('users', 'Users_Role', 'show', $this->UID)) {
+		if (true == $user->authHas('users', 'users_role', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Users/showrole/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('users', 'Users_Role', 'edit', 'edit', $this->UID)) {
+		if (true == $user->authHas('users', 'users_role', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Users/editrole/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['goLink'] = "<a href='" . $ext['editUrl'] . "'>" . $ext['name'] . "</a>";
 		}
 
-		if (true == $user->authHas('users', 'Users_Role', 'edit', 'delete', $this->UID)) {
+		if (true == $user->authHas('users', 'users_role', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Users/delrole/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -321,6 +321,7 @@ class Users_Role {
 
 		foreach($this->permissions as $moduleName => $modPerms) {
 			foreach($modPerms as $p) {
+				$p['model'] = strtolower($p['model']);
 				$txt .= $p['type'] . '|' . $p['module'] . '|' . $p['model'] . '|' . $p['permission'];
 				if ('c' == $p['type']) { $txt .= "|(if)|" . $p['condition']; }
 				$txt .= "\n";
@@ -353,7 +354,7 @@ class Users_Role {
 		$perm = array(
 			'type' => $type, 
 			'module' => $module,
-			'model' => $model,
+			'model' => strtolower($model),
 			'permission' => $permission
 		);
 

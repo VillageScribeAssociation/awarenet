@@ -11,7 +11,7 @@ if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 //--------------------------------------------------------------------------------------------------
 
 if ($req->ref == 'myrecords') {
-	$sql = "select * from Gallery_Gallery where createdBy='" . $user->UID . "' order by title";
+	$sql = "select * from gallery_gallery where createdBy='" . $user->UID . "' order by title";
 	$result = $db->query($sql);
 	
 	echo "<?xml version=\"1.0\"?>\n";

@@ -29,7 +29,7 @@ function gallery_randomthumbs($args) {
 	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
 	$conditions[] = "refModule='gallery'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'RAND()', $limit, '');
+	$range = $db->loadRange('images_image', '*', $conditions, 'RAND()', $limit, '');
 
 	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];

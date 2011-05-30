@@ -23,7 +23,7 @@ function forums_selectforum($args) {
 	//---------------------------------------------------------------------------------------------
 	//	load all forums into a select box
 	//---------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Forums_Board', '*', '', 'title', '', '');
+	$range = $db->loadRange('forums_board', '*', '', 'title', '', '');
 
 	$html = "<select name='" . $varname . "'>\n";
 	foreach($range as $row) {

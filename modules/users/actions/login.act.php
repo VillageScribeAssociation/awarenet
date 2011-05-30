@@ -17,7 +17,7 @@
 		$username = $db->addMarkup($_POST['user']);
 		$password = $db->addMarkup($_POST['pass']);
 
-		$range = $db->loadRange('Users_User', '*', array("username='" . $username . "'"));
+		$range = $db->loadRange('users_user', '*', array("username='" . $username . "'"));
 		// ^ "select * from Users_User where username='" . $username . "'";
 
 		if (count($range) > 0) {

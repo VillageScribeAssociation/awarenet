@@ -16,7 +16,7 @@ function schools_editform($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Schools_School($args['raUID']);
-	if (false == $user->authHas('schools', 'Schools_School', 'edit', $model->UID)) { return ''; }
+	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -12,10 +12,16 @@
 //opt: caption - display caption, deprecated (yes|no) [string]
 //opt: imageUID - overrides raUID [string]
 //opt: pad - blank space to elave around image [string]
+//TODO: discover if this is used by anything, remove if not
 
 function images__widthx($args) {
-	global $serverPath;
-	$link = 'yes';	$caption = 'no'; $size = 'width300'; $html = ''; $align = '';
+	global $kapenta;
+	$link = 'yes';	
+	$caption = 'no'; 
+	$size = 'width300'; 
+	$html = ''; 
+	$align = '';
+
 	if (array_key_exists('imageUID', $args) == true) { $args['raUID'] = $args['imageUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('link', $args)) { $link = $args['link']; }
@@ -24,8 +30,8 @@ function images__widthx($args) {
 	if (array_key_exists('size', $args)) { $size = $args['size']; }
 	if (array_key_exists('align', $args)) { $align = $args['align']; }	
 
-	$linkUrl = $serverPath . 'images/' . $args['raUID'];
-	$imgUrl = $serverPath . 'images/' . $size . '/' . $args['raUID'];
+	$linkUrl = '%%serverPath%%images/' . $args['raUID'];
+	$imgUrl = '%%serverPath%%images/' . $size . '/' . $args['raUID'];
 
 	$pad = '';
 	if (array_key_exists('pad', $args) {

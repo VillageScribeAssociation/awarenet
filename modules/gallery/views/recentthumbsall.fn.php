@@ -28,7 +28,7 @@ function gallery_recentthumbsall($args) {
 	//	count total records owned by this module
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refModule='gallery'");
-	$totalItems = $db->countRange('Images_Image', $conditions);
+	$totalItems = $db->countRange('images_image', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	//$sql = "select count(UID) as numRecords from Images_Image where refModule='gallery'";	
 
@@ -36,7 +36,7 @@ function gallery_recentthumbsall($args) {
 	//	make thumbs of images on this page
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageNo - 1) * $num);
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	foreach ($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];

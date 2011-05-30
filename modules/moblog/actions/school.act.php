@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Schools_School();
-	if (false == $user->authHas('moblog', 'Moblog_Post', 'show')) { $page->do403(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
 
 	if ('' != $req->ref) {
 		$model->load($req->ref);

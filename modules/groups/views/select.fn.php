@@ -25,7 +25,7 @@ function groups_select($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make and return the select element
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Groups_Group', '*', '', 'name');
+	$range = $db->loadRange('groups_group', '*', '', 'name');
 	//$sql = "select * from Groups_Group order by name";
 
 	$html .= "<select name='" . $varname . "'>\n";

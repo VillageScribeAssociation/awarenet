@@ -16,7 +16,7 @@ function home_install_module() {
 	global $user;
 	if ('admin' != $user->role) { return false; }	// only admins can do this
 
-	$report = "<h3>Installing Home_Static Module</h3>\n";
+	$report = "<h3>Installing home_static Module</h3>\n";
 	$dba = new KDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------

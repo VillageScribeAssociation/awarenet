@@ -10,7 +10,7 @@
 	//	check reference and load project
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do404(); }
-	//$UID = $aliases->findRedirect('Projects_Project');
+	//$UID = $aliases->findRedirect('projects_project');
 
 	$model = new Projects_Project($req->ref);
 	if (false == $model->loaded) { $page->do404('Unkonwn project.', true); }
@@ -42,7 +42,7 @@
 	// eg /projects/editmembers/removemember_8237146489/Some-Project
 
 	if (true == array_key_exists('removemember', $req->args)) {
-		//AND (true == $db->objectExists('Users_User', $req->args['removemember'])) ) {
+		//AND (true == $db->objectExists('users_user', $req->args['removemember'])) ) {
 		$model->removeMember($req->args['removemember']);
 		$session->msg("Removed member from " . $model->title . ".", 'ok');
 	}

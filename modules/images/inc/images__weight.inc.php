@@ -13,7 +13,7 @@
 function images__checkWeight($refModule, $refUID) {
 	global $db;
 
-	$sql = "select UID, weight from Images_Image "
+	$sql = "select UID, weight from images_image "
 		 . "where refUID='" . $db->addMarkup($refUID) . "' "
 		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
@@ -43,7 +43,7 @@ function images__checkWeight($refModule, $refUID) {
 function images__getNextHeaviest($refModule, $refUID, $weight) {
 	global $db;
 
-	$sql = "select UID, weight from Images_Image "
+	$sql = "select UID, weight from images_image "
 		 . "where refUID='" . $db->addMarkup($refUID) . "' "
 		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";
@@ -89,7 +89,7 @@ function images__getHeaviest($refModule, $refUID) {
 
 	$retVal = 0;
 
-	$sql = "select UID, weight from Images_Image "
+	$sql = "select UID, weight from images_image "
 		 . "where refUID='" . $db->addMarkup($refUID) . "' "
 		 . "and refModule='" . $db->addMarkup($refModule) . "' "
 		 . "order by floor(weight)";

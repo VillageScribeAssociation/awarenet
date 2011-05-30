@@ -12,7 +12,7 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$model = new Calendar_Entry($req->ref);
 	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }	
-	if (false == $user->authHas('calendar', 'Calendar_Entry', 'edit', $model->UID))
+	if (false == $user->authHas('calendar', 'calendar_entry', 'edit', $model->UID))
 		{ $page->do403('You cannot edit this calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------

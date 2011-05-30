@@ -10,7 +10,7 @@
     </dependencies>
     <models>
         <model>
-            <name>Videos_Gallery</name>
+            <name>videos_gallery</name>
             <description>Container object which owns images.</description>
             <permissions>
                 <permission>show</permission>
@@ -23,7 +23,7 @@
             </relationships>
         </model>
         <model>
-            <name>Videos_Video</name>
+            <name>videos_video</name>
             <description>Represents a single uploaded flash or MP4 video.</description>
             <permissions>
                 <permission>show</permission>
@@ -40,43 +40,49 @@
         </model>
     </models>
     <defaultpermissions>
-		student:p|videos|Videos_Gallery|new
-		student:p|videos|Videos_Gallery|show
-		student:p|videos|Videos_Gallery|images-show
-		student:p|videos|Videos_Gallery|comments-add
-		student:p|videos|Videos_Gallery|comments-show
-		student:c|videos|Videos_Gallery|edit|(if)|creator
-		student:c|videos|Videos_Gallery|images-add|(if)|creator
-		student:c|videos|Videos_Gallery|images-remove|(if)|creator
-		student:c|videos|Videos_Gallery|images-edit|(if)|creator
-		student:c|videos|Videos_Gallery|videos-add|(if)|creator
-		student:c|videos|Videos_Gallery|videos-remove|(if)|creator
-		student:c|videos|Videos_Gallery|videos-edit|(if)|creator
-		student:c|videos|Videos_Gallery|delete|(if)|creator
+		student:p|videos|videos_gallery|new
+		student:p|videos|videos_gallery|show
+		student:p|videos|videos_gallery|images-show
+		student:p|videos|videos_gallery|comments-add
+		student:p|videos|videos_gallery|comments-show
+		student:c|videos|videos_gallery|edit|(if)|creator
+		student:c|videos|videos_gallery|images-add|(if)|creator
+		student:c|videos|videos_gallery|images-remove|(if)|creator
+		student:c|videos|videos_gallery|images-edit|(if)|creator
+		student:c|videos|videos_gallery|videos-add|(if)|creator
+		student:c|videos|videos_gallery|videos-remove|(if)|creator
+		student:c|videos|videos_gallery|videos-edit|(if)|creator
+		student:c|videos|videos_gallery|delete|(if)|creator
+		teacher:p|videos|videos_gallery|videos-show
 
-		teacher:p|videos|Videos_Gallery|new
-		teacher:p|videos|Videos_Gallery|show
-		teacher:p|videos|Videos_Gallery|images-show
-		student:p|videos|Videos_Gallery|comments-add
-		student:p|videos|Videos_Gallery|comments-show
-		teacher:c|videos|Videos_Gallery|edit|(if)|creator
-		teacher:c|videos|Videos_Gallery|images-add|(if)|creator
-		teacher:c|videos|Videos_Gallery|images-remove|(if)|creator
-		teacher:c|videos|Videos_Gallery|images-edit|(if)|creator
-		teacher:c|videos|Videos_Gallery|videos-add|(if)|creator
-		teacher:c|videos|Videos_Gallery|videos-remove|(if)|creator
-		teacher:c|videos|Videos_Gallery|videos-edit|(if)|creator
-		teacher:c|videos|Videos_Gallery|delete|(if)|creator
+		teacher:p|videos|videos_gallery|new
+		teacher:p|videos|videos_gallery|show
+		teacher:p|videos|videos_gallery|images-show
+		student:p|videos|videos_gallery|comments-add
+		student:p|videos|videos_gallery|comments-show
+		teacher:c|videos|videos_gallery|edit|(if)|creator
+		teacher:c|videos|videos_gallery|images-add|(if)|creator
+		teacher:c|videos|videos_gallery|images-remove|(if)|creator
+		teacher:c|videos|videos_gallery|images-edit|(if)|creator
+		teacher:c|videos|videos_gallery|videos-add|(if)|creator
+		teacher:p|videos|videos_gallery|videos-show
+		teacher:c|videos|videos_gallery|videos-remove|(if)|creator
+		teacher:c|videos|videos_gallery|videos-edit|(if)|creator
+		teacher:c|videos|videos_gallery|delete|(if)|creator
 
+		student:p|videos|videos_video|comments-add
+		student:p|videos|videos_video|comments-retract|(if)|creator
+		student:p|videos|videos_video|comments-show
 
-		student:c|videos|Videos_Video|comments-add
-		student:c|videos|Videos_Video|comments-retract|(if)|creator
-		student:c|videos|Videos_Video|comments-show
+		student:c|videos|videos_video|images-add|(if)|creator
+		student:c|videos|videos_video|images-edit|(if)|creator
 
+		teacher:c|videos|videos_video|images-add|(if)|creator
+		teacher:c|videos|videos_video|images-edit|(if)|creator
 
-		teacher:c|videos|Videos_Video|comments-add
-		teacher:c|videos|Videos_Video|comments-retract|(if)|creator
-		teacher:c|videos|Videos_Video|comments-show
+		teacher:p|videos|videos_video|comments-add
+		teacher:p|videos|videos_video|comments-retract|(if)|creator
+		teacher:p|videos|videos_video|comments-show
     </defaultpermissions>
 </module>
 */ ?>

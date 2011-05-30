@@ -15,7 +15,7 @@
 
 	$model = new Wiki_Article($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('no such article'); }
-	if (false == $user->authHas('wiki', 'Wiki_Article', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $page->do403(); }
 
 	//------------------------------------------------------------------------------------------
 	//	save any changes

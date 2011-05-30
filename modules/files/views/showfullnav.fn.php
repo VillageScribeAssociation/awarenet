@@ -24,7 +24,7 @@ function files_showfullnav($args) {
 	//----------------------------------------------------------------------------------------------
 	$related = '';
 	
-	$sql = "select * from Files_File where refModule='" . $model->refModule 
+	$sql = "select * from files_file where refModule='" . $model->refModule 
 	     . "' order by refUID='" . $model->refUID . "' limit 20";
 	
 	$result = $db->query($sql);

@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ('' == $req->ref) { $page->do404(); }
-	$UID = $aliases->findRedirect('Groups_Group');
+	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
 	if (false == $model->loaded) { $page->do404('no such group'); }
@@ -50,7 +50,7 @@
 	// eg /groups/editmembers/removemember_8237146489/Some-group
 
 	if ( (true == array_key_exists('removemember', $req->args))
-		AND (true == $db->objectExists('Users_User', $req->args['removemember'])) ) {
+		AND (true == $db->objectExists('users_user', $req->args['removemember'])) ) {
 
 		$model->removeMember($req->args['removemember']);
 		$session->msg("Removed member from " . $model->name . ".", 'ok');

@@ -10,8 +10,8 @@
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { $page->do302('home/list/'); }
-	$UID = $aliases->findRedirect('Home_Static');
-	if (false == $user->authHas('home', 'Home_Static', 'edit', $UID)) 
+	$UID = $aliases->findRedirect('home_static');
+	if (false == $user->authHas('home', 'home_static', 'edit', $UID)) 
 		{ $page->do403('you cannot edit this static page'); }
 
 	//----------------------------------------------------------------------------------------------

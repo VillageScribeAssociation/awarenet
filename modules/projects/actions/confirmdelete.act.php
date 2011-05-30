@@ -13,7 +13,7 @@
 
 	$model = new Projects_Project($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('Project not found.'); }
-	if (false == $user->authHas('projects', 'Projects_Project', 'delete', $model->UID))
+	if (false == $user->authHas('projects', 'projects_project', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this project.'); }	
 	
 	//----------------------------------------------------------------------------------------------

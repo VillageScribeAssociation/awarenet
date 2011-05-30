@@ -35,7 +35,7 @@
 	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//	$sql = "select * from Images_Image where refModule='" . $db->addMarkup($req->args['refmodule']) 
 	//		. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
@@ -72,7 +72,7 @@
 	$img = "
 	<img src='/images/width560/" . $imgRow['alias'] . "' /><br/>
 	<b>" . $imgRow['title'] . "</b> " . $db->removeMarkup($imgRow['caption']) . "
-	<a href='#' onClick=\"window.parent.location='" . $serverPath . "images/full/" 
+	<a href='#' onClick=\"window.parent.location='%%serverPath%%images/full/" 
 	. $imgRow['alias'] . "'\">[view larger]</a>
 	<br/>
 	<small>image licence: " . $imgRow['licence'] . " $attrib</small>

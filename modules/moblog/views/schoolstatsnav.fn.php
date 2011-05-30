@@ -19,10 +19,10 @@ function moblog_schoolstatsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load states from database	//TODO: precache this
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'Schools_School', 'show')) { return ''; }
+	if (false == $user->authHas('schools', 'schools_school', 'show')) { return ''; }
 
 	$sql = "SELECT count(UID) AS postCount, school "
-		 . "FROM Moblog_Post "
+		 . "FROM moblog_post "
 		 . "GROUP BY school "
 		 . "ORDER BY postCount DESC";
 
@@ -40,8 +40,8 @@ function moblog_schoolstatsnav($args) {
 		//TODO: remove inermodule dependancy (block on schools module?)
 		$row = $db->rmArray($row);
 		$schoolUID = $row['school'];
-		if (true == $db->objectExists('Schools_School', $schoolUID)) {
-			$schoolRa = $aliases->getDefault('Schools_School', $schoolUID);
+		if (true == $db->objectExists('schools_school', $schoolUID)) {
+			$schoolRa = $aliases->getDefault('schools_school', $schoolUID);
 			$nameBlock = '[[:schools::name::schoolUID='. $schoolUID .'::link=no:]]';
 			$schoolName = $theme->expandBlocks($nameBlock, '');
 			$schoolUrl = "%%serverPath%%moblog/school/" . $schoolRa;

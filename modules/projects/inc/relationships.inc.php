@@ -26,9 +26,9 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	relationships of Project object
+	//	relationships of Projects_Project objects
 	//----------------------------------------------------------------------------------------------
-	if ('Projects_Project' == $refModel) {
+	if ('projects_project' == $refModel) {
 		$model = new Projects_Project($UID);				// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
@@ -55,7 +55,7 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Revision object
 	//----------------------------------------------------------------------------------------------
-	if ('Projects_Project' == $refModel) {
+	if ('projects_revision' == $refModel) {
 		$model = new Projects_Revision($UID);				// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

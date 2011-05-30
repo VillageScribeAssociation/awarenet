@@ -13,7 +13,7 @@
 		$kapenta->logSync("/SYNC/SEND/ **** item not specified.<br/>\n");	
 		$page->doXmlError('item not specified'); 
 	}
-	if (false == $db->objectExists('Sync_Notice', $req->ref)) {
+	if (false == $db->objectExists('sync_notice', $req->ref)) {
 		$kapenta->logSync("/SYNC/SEND/ **** no such item.<br/>\n");	
 		$page->doXmlError('no such item');
 	}

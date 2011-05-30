@@ -48,7 +48,7 @@ class Images_ImageSet {
 		$conditions[] = "refModel='" . $db->addMarkup($this->refModel) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($this->refUID) . "'";
 
-		$range = $db->loadRange('Images_Image', '*', $conditions, 'weight');
+		$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 		if (false == $range) { return false; }
 		
 		foreach($range as $row) { $this->images[] = $row; }

@@ -40,11 +40,11 @@ function videos_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('videocount > 0');	// do not show galleries with no images
-	$numRows = $db->countRange('Videos_Gallery', $conditions);
+	$numRows = $db->countRange('videos_gallery', $conditions);
 	$numPages = ceil($numRows / $pageSize);
 	$startRow = $pageSize * ($pageNo - 1);
 
-	$range = $db->loadRange('Videos_Gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
+	$range = $db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
 
 	//---------------------------------------------------------------------------------------------
 	//	render html

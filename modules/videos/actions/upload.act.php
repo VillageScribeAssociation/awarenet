@@ -111,9 +111,10 @@
 			if (substr($revName, 0, 4) == 'vlf.') { $format = 'flv'; }
 			if (substr($revName, 0, 4) == '4pm.') { $format = 'mp4'; }
 			if (substr($revName, 0, 4) == 'fws.') { $format = 'swf'; }
+			if (substr($revName, 0, 4) == '3pm.') { $format = 'mp3'; }
 			if ('' == $format) {
-			if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
-				$session->msg('Video container not supported (must be flv or mp4).', 'bad'); 
+				if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
+				$session->msg('Format not supported (must be flv, swf, mp3 or mp4).', 'bad'); 
 				$page->do302($returnUrl);
 			}
 
@@ -152,6 +153,7 @@
 	$vidName = strtolower($srcName);
 	$vidName = str_replace('.flv', '', $vidName);
 	$vidName = str_replace('.mp4', '', $vidName);
+	$vidName = str_replace('.mp3', '', $vidName);
 	//$vidName = str_replace('.png', '', $vidName);
 	//$vidName = str_replace('.gif', '', $vidName);
 	if ('' == $vidName) { $vidName = $kapenta->createUID() . '.jpg'; }
@@ -166,7 +168,7 @@
 		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
 		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
 	
-		$range = $db->loadRange('Videos_Video', '*', $conditions);
+		$range = $db->loadRange('videos_video', '*', $conditions);
 		foreach ($range as $row) {
 			$oldVid = new Videos_Video($row['UID']);
 			$oldVid->delete();
@@ -197,6 +199,7 @@
 		//------------------------------------------------------------------------------------------
 		$args = array(
 			'refModule' => $refModule, 
+			'refModel' => $refModel, 
 			'refUID' => $refUID, 
 			'videoUID' => $model->UID, 
 			'videoTitle' => $model->title

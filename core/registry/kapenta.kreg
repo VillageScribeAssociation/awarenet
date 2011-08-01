@@ -1,8 +1,13 @@
 <?php /*
 kapenta.installpath           L3Zhci93d3cvYXdhcmVuZXQv
-kapenta.serverpath            aHR0cDovLzEyNy4wLjAuMS8=
+kapenta.serverpath            aHR0cDovL2FuaGFyZHkuY28uemEv
 kapenta.sitename              YXdhcmVOZXQ=
 kapenta.themes.default        Y2xvY2tmYWNl
 kapenta.modules.default       aG9tZQ==
-kapenta.recoverypassword      NTViYzVkZTRhZDczOWZjMGMzMzJkODI2Y2IyMWJhYjZjMGZkMjhiNw==
+kapenta.recoverypassword      Yzc2N2U1ZWY4MmY2NjdhMDllZWIwNGUwZGEyMmU1M2MwNjA5OWY5Yw==
+kapenta.db.name               YXdhcmVuZXQ=
+kapenta.db.host               MTI3LjAuMC4x
+kapenta.db.password           
+kapenta.db.user               c3RyaXg=
+kapenta.db.type               TXlTUUw=
 */ ?>

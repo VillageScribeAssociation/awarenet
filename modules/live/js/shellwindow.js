@@ -12,13 +12,14 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 	
-	this.serverPath = serverPath;
-	this.userName = userName;
-	this.hWnd = hWnd;
-	this.history = new Array();
-	this.bufferLength = 20;
-	this.bufferPointer = 0;
-	
+	this.serverPath = serverPath;		//_	URL of kapenta installation [string]
+	this.userName = userName;			//_	name of current user [string]
+	this.hWnd = hWnd;					//_	ID of this window in kwindowmanager [int]
+	this.history = new Array();			//_	array of shellCmd objects [array:string]
+	this.bufferLength = 20;				//_	number of history items to keep [int]
+	this.bufferPointer = 0;				//_	array index of last command [int]
+	this.replayPointer = 0;				//_	array index of selected command [int]
+
 	this.divHistory = document.getElementById('divHistory');
 	this.taPrompt = document.getElementById('content');
 
@@ -45,6 +46,7 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 		}
 
 		this.history[this.bufferPointer] = newCmd;
+		this.replayPointer = this.bufferPointer;
 
 		this.divHistory.innerHTML = this.divHistory.innerHTML + newCmd.toHtml(); 
 		this.scrollToBottom();
@@ -120,14 +122,35 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 
 	this.taKeyUp = function(e) {
 		var keyID = (window.event) ? event.keyCode : e.keyCode;
+		
 		switch(keyID) {
-			case 38:	alert('arrow up');		break;
-			case 40:	alert('arrow down');	break;
-		}
+			case 38:	
+				if (kshellwindow.history.length > 0) {
+					if (kshellwindow.replayPointer > 0) { kshellwindow.replayPointer--; }
+					kshellwindow.taPrompt.value = kshellwindow.history[kshellwindow.replayPointer].cmdStr;
+				} else {
+					alert('no history');
+				}
+				break;		// .....................................................................
+	
+			case 40:	
+				if (kshellwindow.history.length > 0) {
+					if (kshellwindow.replayPointer < kshellwindow.bufferPointer) { kshellwindow.replayPointer++; }
+					kshellwindow.taPrompt.value = kshellwindow.history[kshellwindow.replayPointer].cmdStr;
+				} else {
+					alert('no history');
+				}
+				break;		// .....................................................................
 
-		if ((kshellwindow.taPrompt.value.indexOf("\n") != -1)||(kshellwindow.taPrompt.value.indexOf("\r") != -1)) {
-			kshellwindow.sendCmd(kshellwindow.taPrompt.value);
-			kshellwindow.taPrompt.value = '';
+			default:
+				if ((kshellwindow.taPrompt.value.indexOf("\n") != -1)||(kshellwindow.taPrompt.value.indexOf("\r") != -1)) {
+					kshellwindow.taPrompt.value = kshellwindow.taPrompt.value.replace(/(\r\n|\n|\r)/gm,"");
+					//alert('sending: ' + kshellwindow.taPrompt.value);
+					kshellwindow.sendCmd(kshellwindow.taPrompt.value);
+					kshellwindow.taPrompt.value = '';
+				}
+				break;		// .....................................................................
+
 		}
 	}
 

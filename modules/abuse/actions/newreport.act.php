@@ -27,11 +27,11 @@
 	$model = new Abuse_Report();
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'refmodule':	$model->refModule = $value; break;
-			case 'refmodel':	$model->refModel = $value; break;
-			case 'refuid':		$model->refUID = $value; break;
-			case 'comment':		$model->comment = $value; break;
-			case 'title':		$model->title = $value; break;
+			case 'refmodule':	$model->refModule = $value; 					break;
+			case 'refmodel':	$model->refModel = $value; 						break;
+			case 'refuid':		$model->refUID = $value; 						break;
+			case 'comment':		$model->comment = $utils->cleanHtml($value); 	break;
+			case 'title':		$model->title = $utils->cleanTitle($value); 	break;
 
 			case 'fromurl':		
 				$model->fromurl = str_replace($kapenta->serverPath, '', $value); 

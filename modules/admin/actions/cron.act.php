@@ -19,10 +19,35 @@
 	//----------------------------------------------------------------------------------------------
 	//	display report if user is administrator
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' == $user->role) { 
+		//------------------------------------------------------------------------------------------
+		//	admin report
+		//------------------------------------------------------------------------------------------
+		$page->load('modules/admin/actions/cron.page.php');
+		$page->blockArgs['report'] = $report;
+		$page->render();
 
-	$page->load('modules/admin/actions/cron.page.php');
-	$page->blockArgs['report'] = $report;
-	$page->render();
+	} else {
+		//------------------------------------------------------------------------------------------
+		//	basic status report
+		//------------------------------------------------------------------------------------------
+		echo "
+		<b>Confirm cron:</b><br/>
+		<table noborder>
+			<tr>
+				<td>ten minutes</td>
+				<td>" . $registry->get('kapenta.cron.tenmins') . "</td>
+			</tr>
+			<tr>
+				<td>hourly</td>
+				<td>" . $registry->get('kapenta.cron.hourly') . "</td>
+			</tr>
+			<tr>
+				<td>daily</td>
+				<td>" . $registry->get('kapenta.cron.daily') . "</td>
+			</tr>
+		</table>
+		";
+	}
 
 ?>

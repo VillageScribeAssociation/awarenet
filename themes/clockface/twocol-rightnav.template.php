@@ -19,13 +19,13 @@
 
 <script language='javascript'>
 
+	var kapentaLoaded = false;
 	var hasParentFrame = false;
 	var awareNetChat = true;
 	var jsServerPath = '%%serverPath%%';
 	var jsPageUID = '%%pageInstanceUID%%';
 	var jsUserUID = '%%jsUserUID%%';
 	var formChecks = new Array();
-
 	var kchatclient = 0;
 
 	//----------------------------------------------------------------------------------------------
@@ -38,6 +38,8 @@
 		//------------------------------------------------------------------------------------------
 		//	create global objects
 		//------------------------------------------------------------------------------------------
+		kutils = new Kapenta_Utility();
+
 		klive = new Live_Pump(jsPageUID, jsServerPath);			// create the message pump
 		klive.start();											// start the message pump
 
@@ -51,6 +53,8 @@
 			testResult = formCheckExecuteAll();
 			if (testResult != false) { return testResult; }
 		}
+
+		kapentaLoaded = true;
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -131,14 +135,35 @@
 	<td width='40'></td>
 	<!-- footer -->
     <td bgcolor='%%clrMenu1bg%%' height='%%pxxMenu2height%%' align='center'>
-		<small><span style='color: #eee;'>awareNet is developed by <a href='http://eckayaICT.com' class='menu'>eKhaya ICT</a>
-				building bridges across the digital divide.</span>
+		<small>
+			<span style='color: #eee;'>
+				&nbsp;awareNet is developed by <a href='http://ekhayaICT.com' class='menu'>eKhaya ICT</a>
+				building bridges across the digital divide.
+			</span>
+		</span>
 		</small>
     </td>
 	<!-- white border -->
 	<td width='40'></td>
   </tr>	
 </table>
+<br/>
+<table noborder cellpadding='0' cellspacing='0' width='250'>
+  <tr>
+    <td bgcolor='%%clrMenu1bg%%' height='%%pxxMenu2height%%' align='center'>
+			<span style='color: #eee;'>
+				<small>
+				&nbsp; 
+				<a href='%%serverPath%%awareNet-Privacy-Policy' class='footer'>Privacy</a> | 
+				<a href='%%serverPath%%awarenet-Copyright-Policy' class='footer'>Copyright</a> |
+				<a href='#' class='footer'>Abuse</a> |  
+				<a href='%%serverPath%%' class='footer'>Contact</a> &nbsp;
+			</small>			  
+		</span>
+	</td>
+  </tr>
+</table>
+
 <div id='pumpDiv' name='xPump'></div>
 <br/>
 <br/><br/>
@@ -147,4 +172,5 @@
 <div id='debugger'></div>
 </body>
 </html>
+
 */ ?>

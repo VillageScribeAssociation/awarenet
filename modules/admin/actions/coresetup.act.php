@@ -15,13 +15,12 @@
 
 	foreach($_POST as $key => $value) {
 		switch($key) {
-			case 'kapenta_db_host':		$registry->set('kapenta.db.host', $value);		break;
-
-			case 'kapenta_db_name':		$registry->set('kapenta.db.name', $value);		break;
-			case 'kapenta_db_user':		$registry->set('kapenta.db.user', $value);		break;
-			case 'kapenta_db_password':	$registry->set('kapenta.db.password', $value);	break;
-
-			case 'kapenta_sitename':	$registry->set('kapenta.sitename', $value);		break;
+			case 'kapenta_db_host':			$registry->set('kapenta.db.host', $value);		break;
+			case 'kapenta_db_name':			$registry->set('kapenta.db.name', $value);		break;
+			case 'kapenta_db_user':			$registry->set('kapenta.db.user', $value);		break;
+			case 'kapenta_db_password':		$registry->set('kapenta.db.password', $value);	break;
+			case 'kapenta_db_persistent':	$registry->set('kapenta.db.persistent', $value);break;
+			case 'kapenta_sitename':		$registry->set('kapenta.sitename', $value);		break;
 
 			case 'kapenta_themes_default':	
 				//TODO: check this value

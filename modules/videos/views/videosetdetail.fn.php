@@ -71,7 +71,8 @@ function videos_videosetdetail($args) {
 		
 		if ('' == trim($labels['caption'])) { $labels['caption'] = 'none.'; }
 
-		$returnUrl = '/video/uploadmultiple/refModule_' . $model->refModule 
+		$returnUrl = 'videos/uploadmultiple'
+			   . '/refModule_' . $model->refModule 
 			   . '/refModel_' . $model->refModel
 			   . '/refUID_' . $model->refUID . '/';
 		

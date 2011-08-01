@@ -43,36 +43,21 @@
 	$model->refModule = $refModule;
 	$model->refModel = $refModel;
 	$model->refUID = $refUID;
-	$model->comment = strip_tags($_POST['comment']);		//TODO: better clean function here
+	$model->comment = $utils->cleanHtml($_POST['comment']);
 	$ext = $model->extArray();
-	$model->save();
+	$report = $model->save();
 
 	//----------------------------------------------------------------------------------------------
 	//	raise 'comment_added' event on refModule
 	//----------------------------------------------------------------------------------------------
-	/*	TODO: this
 	$args = array(	'refModule' => $refModule, 
+					'refModel' => $refModel, 
 					'refUID' => $refUID, 
-					'commentUID' => $commentUID, 
+					'commentUID' => $ext['UID'], 
 					'comment' => $ext['comment']    );
 
-	eventSendSingle($refModule, 'comments_added', $args);
-	*/
-
-	//----------------------------------------------------------------------------------------------
-	//	send out page notifications
-	//----------------------------------------------------------------------------------------------
-	/*	TODO: to be handled by page triggers
-	$channelID = 'comments-' . $refModule . '-' . $refUID;
-	$blockHtml = $theme->expandBlocks('[[:comments::summary::UID=' . $ext['UID'] . ':]]', '');
-	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
-	notifyChannel($channelID, 'add', $data);
-
-	$channelID = 'comments-' . $refModule . '-' . $refUID . '-nav';
-	$blockHtml = $theme->expandBlocks('[[:comments::summarynav::UID=' . $ext['UID'] . ':]]', '');
-	$data = base64_encode($ext['UID'] . '|' . base64_encode($blockHtml));
-	notifyChannel($channelID, 'add', $data);
-	*/
+	$kapenta->raiseEvent($refModule, 'comments_added', $args);
+	
 	//----------------------------------------------------------------------------------------------
 	//	return to whence the comment came
 	//----------------------------------------------------------------------------------------------

@@ -23,15 +23,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	update the record	//TODO: use a switch here
 	//----------------------------------------------------------------------------------------------
-		
-	if (true == array_key_exists('title', $_POST))
-		{ $model->title = trim($_POST['title']); }
-
-	if (true == array_key_exists('content', $_POST))
-		{ $model->content = trim($_POST['content']); }
-
-	if (true == array_key_exists('published', $_POST))
-		{ $model->published = $_POST['published']; }
+	
+	foreach($_POST as $key => $value) {
+		switch($key) {
+			case 'title':		$model->title = $utils->cleanTitle($value);			break;
+			case 'content':		$model->content = $utils->cleanHtml($value);		break;
+			case 'published':	$model->published = $utils->cleanYesNo($value);		break;
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	save it and redirect
@@ -62,11 +61,12 @@
 			//--------------------------------------------------------------------------------------
 			//	raise a microbog event for this
 			//--------------------------------------------------------------------------------------
+			$message = '#' . $kapenta->websiteName . ' blog - '. $model->title;
 			$args = array(
 				'refModule' => 'moblog',
 				'refModel' => 'moblog_post',
 				'refUID' => $model->UID,
-				'message' => '#'. $kapenta->websiteName .' blog - '. $model->title
+				'message' => $message
 			);
 		}
 	}

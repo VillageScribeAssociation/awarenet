@@ -45,6 +45,16 @@ paths) and on the network (for constructing URLs).  Both should end with a trail
 	  <td><input type='text' name='kapenta_db_password' value='%%kapenta.db.password%%' size='30'></td>	
     </tr>
     <tr>
+	  <td><b>Persistent:</b></td>
+	  <td>
+		<select name='kapenta_db_persistent'>
+			<option value='%%kapenta.db.persistent%%'>%%kapenta.db.persistent%%</option>
+			<option value='yes'>yes</option>
+			<option value='no'>no</option>
+		</select> <small>(recommended)</small>
+	  </td>	
+    </tr>
+    <tr>
 	  <td><b></b></td>
 	  <td><input type='submit' value='Set'></td>	
     </tr>

@@ -45,7 +45,10 @@
 	$img = false;
 	$imgName = '';
 	
-	if ('' == $refUID) { $page->do404('(refUID not given or upload too large)', true); }
+	if ('' == $refUID) { 
+		print_r($_POST);
+		$page->do404('(refUID not given or upload too large)', true); 
+	}
 	if ('' == $refModule) { $page->do404('(refModule not given)', true); }
 	if ('' == $refModel) { $page->do404('(refModel not given)', true); }
 

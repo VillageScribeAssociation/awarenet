@@ -1,8 +1,8 @@
 <? /*
 <div class='inlinequote'>
-<table noborder>
+<table noborder width='100%'>
   <tr>
-    <td valign='top'>
+    <td valign='top' width='60'>
       <a href='%%userUrl%%'>
       %%userThumb%%</a>
     </td>

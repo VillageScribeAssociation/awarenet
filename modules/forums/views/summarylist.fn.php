@@ -35,7 +35,7 @@ function forums_summarylist($args) {
 
 	foreach($range as $row) { 
 		$html .= "[[:forums::summary::raUID=" . $row['UID'] . ":]]\n"
-			   . "[[:forums::showthreads::num=10::forumUID=" . $row['UID'] . ":]]";
+			   . "[[:forums::showthreadsjs::num=3::forumUID=" . $row['UID'] . ":]]";
 	}
 
 	return $html;

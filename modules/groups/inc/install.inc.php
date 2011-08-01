@@ -3,6 +3,7 @@
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
 	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/schoolindex.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	install script for Groups module
@@ -38,6 +39,13 @@ function groups_install_module() {
 	//	create or upgrade Groups_Membership table
 	//----------------------------------------------------------------------------------------------
 	$model = new Groups_Membership();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade groups_schoolindex table
+	//----------------------------------------------------------------------------------------------
+	$model = new Groups_SchoolIndex();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
 
@@ -83,6 +91,16 @@ function groups_install_status_report() {
 	//	ensure the table which stores Membership objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Groups_Membership();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores SchoolIndex objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Groups_SchoolIndex();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

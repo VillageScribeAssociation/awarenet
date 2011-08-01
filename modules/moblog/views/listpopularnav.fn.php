@@ -4,36 +4,48 @@
 	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	list x recent posts from the same blog (ie same user) as the post UID supplied
+//|	list most popular posts on local node formatted for the nav
 //--------------------------------------------------------------------------------------------------
+//opt: ladder - ladder to display, default is moblog.all [string]
 //opt: num - max number of posts to show (default is 10) [string]
 
 function moblog_listpopularnav($args) {
-	global $theme, $db, $user;
-	$num = 10;
-	$html = '';			//%	return value [string]
+	global $theme;
+	global $user;
+	global $session;
+
+	$num = 10;					//%	number of items to show [int]
+	$ladder = 'moblog.all';		//%	name of popularity ladder to user [string]
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('ladder', $args)) { $ladder = $args['ladder']; }
 
 	//----------------------------------------------------------------------------------------------
-	//	load a set of popular posts from the database
+	//	get ladder from 'popular' module
 	//----------------------------------------------------------------------------------------------
-	$conditions = array();
-	$conditions[] = "published='yes'";
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'viewcount DESC', $num);
+	$block = '[[:popular::ladder::name=' . $ladder . '::num=' . $num . ':]]';
+	$raw = $theme->expandBlocks($block, '');
+	$items = explode("\n", $raw);
+
+	//echo "listing popular nav, args ok, ladder: $ladder<br/>" . str_replace("\n", "<br/>\n", $raw) . "<br/>";
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block and return
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
-	foreach($range as $row) {
-		$model = new Moblog_Post();
-		$model->loadArray($row);
-		$html .= $theme->replaceLabels($model->extArray(), $block);
+	foreach($items as $item) {
+		if ('' != trim($item)) {
+			$model = new Moblog_Post($item);				
+			if (true == $model->loaded) {
+				$ext = $model->extArray();
+				$html .= $theme->replaceLabels($ext, $block);
+			}
+		}
 	}
 
 	return $html;

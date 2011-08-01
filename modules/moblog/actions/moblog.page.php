@@ -4,9 +4,11 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - everyone</title>
-	<content>[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
+	<content>
 
-[[:moblog::summarylist::page=[`|pc][`|pc]pageno[`|pc][`|pc]::num=10:]]</content>
+[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
+
+[[:live::river::rivermodule=moblog::riverview=summarylist::riverpagevar=page::allow=num|pagination::num=3::pagination=no:]]</content>
 	<nav1>
 [[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
 [`|lt]div id=[`|sq]divSchoolStats[`|sq][`|gt]
@@ -32,6 +34,10 @@
 [[:moblog::listpopularnav:]]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
+
+[[:theme::navtitlebox::label=Activity:]]
+[[:calendar::notificationmonthsubnav::year=2011::month=07:]]
+[[:calendar::notificationmonthsubnav::year=2011::month=06:]]
 
 [`|lt]br/[`|gt]</nav1>
 	<nav2></nav2>

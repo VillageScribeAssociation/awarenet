@@ -326,7 +326,7 @@ class Calendar_Entry {
 				    . "<h3>$dayNum</h3>" . $day['label'] . "</td>\n";
 
 			} else {
-			  $blocks[] = "<td bgcolor='" . $day['bgcolor'] . "' width='40' $dayLink>$dayNum</td>";
+			  $blocks[] = "<td bgcolor='" . $day['bgcolor'] . "' width='40' style='cursor: pointer;' $dayLink>$dayNum</td>";
 			}
 		}
 		

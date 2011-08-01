@@ -15,7 +15,7 @@ function images_showfullnav($args) {
 	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new Images_Image($args['raUID']);
-	if ($model->fileName == '') { return false; }
+	if ('' == $model->fileName) { return false; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	find related images
@@ -37,7 +37,7 @@ function images_showfullnav($args) {
 	  }
 	}
 	
-	if ($related == '') { $related = '(no images are related to this one)'; }
+	if ('' == $related) { $related = '(no images are related to this one)'; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	mix and settle
@@ -45,7 +45,7 @@ function images_showfullnav($args) {
 	$block = $theme->loadBlock('modules/images/views/showfullnav.block.php');
 	$labels = $model->extArray();
 	$labels['related'] = $related;
-	$html = $theme->replaceLabels($labels, );	
+	$html = $theme->replaceLabels($labels, $block);	
 	return $html;
 }
 

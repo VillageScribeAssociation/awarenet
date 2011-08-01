@@ -6,13 +6,15 @@
 //arg: userUID - UID of a Users_User object [string]
 //opt: page - page number to display, default is 1 (int) [string]
 //opt: num - number of records per page (default is 30) [string]
+//opt: pagination - show pagination bar, default is 'yes' (yes|no) [string]
 
 function notifications_list($args) {
 	global $page, $db, $user, $theme;
-	$start = 0;
-	$num = 30;
-	$pageNo = 1;
-	$html = '';				//%	return value [string]
+	$start = 0;					//%	row position in table at which page starts [int]
+	$num = 30;					//%	number of items per page [int]
+	$pageNo = 1;				//%	current results page (from 1) [int]
+	$pagination = 'yes';		//% display pagination bar (yes|no) [string]
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -23,12 +25,14 @@ function notifications_list($args) {
 	if (false == $db->objectExists('users_user', $userUID)) { return '(no such user)'; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
 	if (true == array_key_exists('page', $args)) 
 		{ $pageNo = $args['page']; $start = ($pageNo - 1) * $num; }
 
 	//----------------------------------------------------------------------------------------------
 	//	count visible notifications
 	//----------------------------------------------------------------------------------------------
+	//TODO: tidy so as not to count results when pagination disabled
 	$conditions = array();
 	$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
 	$conditions[] = "status='show'";
@@ -59,7 +63,7 @@ function notifications_list($args) {
 		//$html .= "[[:notifications::show::UID=" . $row['notificationUID'] . ":]]"; 
 	}
 
-	$html = $pagination . $html . $pagination;
+	if ('yes' == $pagination) {	$html = $pagination . $html . $pagination; }	
 
 	return $html;
 

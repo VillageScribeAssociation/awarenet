@@ -1,12 +1,13 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/schoolindex.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object representing user groups
 //--------------------------------------------------------------------------------------------------
 //+	group type could be Team/Club/Society, etc
-
-require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
-require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
 
 class Groups_Group {
 
@@ -14,22 +15,26 @@ class Groups_Group {
 	//	member variables (as retieved from database)
 	//----------------------------------------------------------------------------------------------
 
-	var $data;			//_	currently loaded database record [array]
-	var $dbSchema;		//_	database table definition [array]
-	var $loaded;		//_	set to true when an object has been loaded [bool]
+	var $data;					//_	currently loaded database record [array]
+	var $dbSchema;				//_	database table definition [array]
+	var $loaded;				//_	set to true when an object has been loaded [bool]
 
-	var $UID;			//_ UID [string]
-	var $school;		//_ varchar(33) [string]
-	var $name;			//_ title [string]
-	var $type;			//_ varchar(30) [string]
-	var $description;	//_ wyswyg [string]
-	var $createdOn;		//_ datetime [string]
-	var $createdBy;		//_ ref:Users_User [string]
-	var $editedOn;		//_ datetime [string]
-	var $editedBy;		//_ ref:Users_User [string]
-	var $alias;			//_ alias [string]
+	var $UID;					//_ UID [string]
+	var $school;				//_ varchar(33) [string]
+	var $name;					//_ title [string]
+	var $type;					//_ varchar(30) [string]
+	var $description;			//_ wyswyg [string]
+	var $createdOn;				//_ datetime [string]
+	var $createdBy;				//_ ref:Users_User [string]
+	var $editedOn;				//_ datetime [string]
+	var $editedBy;				//_ ref:Users_User [string]
+	var $alias;					//_ alias [string]
 
-	var $members;		//_ range of serialized objects [array]
+	var $schools;				//_	array of serialized Groups_SchoolIndex objects [array:array]
+	var $schoolsLoaded = false;	//_	set to true when schools index objects have been loaded [bool]
+
+	var $members;				//_ array of serialized Groups_Membership objects [array]
+	var $membersLoaded = false;	//_	set to true when memberships loaded [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -95,6 +100,7 @@ class Groups_Group {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
+		$this->updateSchoolsIndex();
 		$this->alias = $aliases->create('groups', 'groups_group', $this->UID, $this->name);
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
@@ -258,18 +264,27 @@ class Groups_Group {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	//.	load list of members
+	//.	return list of members, fetching from database if not already available
 	//----------------------------------------------------------------------------------------------
 	//returns: range of serialized Groups_Membership objects [array]
 
 	function getMembers() {
+		if (false == $this->membersLoaded) {
+			$this->members = $this->loadMembers();
+			$this->membersLoaded = true;
+		}
+		
+		return $this->members;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load all Groups_Membership objects relating to this group from the database
+	//----------------------------------------------------------------------------------------------
+	//returns: range of serialized Groups_Membership objects [array]
+
+	function loadMembers() {
 		global $db;
 		if (false == $db->tableExists('groups_membership')) { return array(); }
-
-		//$sql = "select Groups_Membership.* from Groups_Membership, users "
-		//	 . "where Groups_Membership.groupUID='" . $this->UID . "' "
-		//	 . "and Groups_Membership.userUID = users.UID "
-		//	 . "order by users.firstname";
 
 		$conditions = array();
 		$conditions[] = "groups_membership.groupUID='" . $db->addMarkup($this->UID) . "'";
@@ -284,20 +299,30 @@ class Groups_Group {
 	//arg: userUID - UID of a user [string]
 	//arg: position - position or role within the group [string]
 	//arg: admin - whether the member is an admin of this group (yes|no) [string]
+	//returns: true on success, false on failure [bool]
 
 	function addMember($userUID, $position, $admin) {
 		global $kapenta, $db;
+		$saved = false;									//%	return value [bool]
 
-		$this->removemember($userUID);
+		$this->removemember($userUID);					//	clear out any previous membership
 
-		$model = new Groups_Membership();
-		$model->UID = $kapenta->createUID();
+		$model = new Groups_Membership();				//	(re)create with position and admin
+		$model->UID = $kapenta->createUID();			//	privileges as called.
 		$model->userUID = $userUID;
 		$model->groupUID = $this->UID;
 		$model->position = $position;
 		$model->admin = $admin;
 		$model->joined = $db->datetime();
-		$model->save();
+		$report = $model->save();
+
+		if ('' == $report) { 							//	any html report indicates db error
+			$saved = true;								//	was saved to database
+			$this->members = $this->loadMembers();		//	update members list
+			$this->updateSchoolsIndex();				//	update associations with schools
+		}
+
+		return $saved;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -311,7 +336,27 @@ class Groups_Group {
 		$model->loadMembership($userUID, $this->UID);
 		if (false == $model->loaded) { return false; }
 		$result = $model->delete();
+
+		if (true == $result) {
+			$this->members = $this->loadMembers();		//	update members list
+			$this->updateSchoolsIndex();				//	update associations with schools
+		}
+
 		return $result;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover if a user belongs to a group
+	//----------------------------------------------------------------------------------------------
+	//arg: userUID - UID of a Users_User object to search for [string]
+	//returns: true if membership is found for the given user, false if not [bool]
+
+	function hasMember($userUID) {
+		$members = $this->getMembers();
+		foreach($members as $membership) {
+			if ($userUID == $membership['userUID']) { return true; }
+		}
+		return false;		
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -331,7 +376,134 @@ class Groups_Group {
 		foreach($this->members as $row) { 
 			if (($row['userUID'] == $userUID) && ('yes' == $row['admin'])) { return true; } 	
 		}	
+
 		return false;
+	}
+
+	//==============================================================================================
+	//	SCHOOLS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	returns the set of Groups_SchoolIndex objects belonging to this group
+	//----------------------------------------------------------------------------------------------
+
+	function getSchoolsIndex() {
+		if (false == $this->schoolsLoaded) {
+			$this->schools = $this->loadSchoolsIndex();
+			$this->schoolsLoaded = true;
+		}
+		return $this->schools;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	loads the set of Groups_SchoolIndex objects belonging to this group
+	//----------------------------------------------------------------------------------------------
+	//returns: array of serialized Groups_SchoolIndex objects [array:array]
+
+	function loadSchoolsIndex() {
+		global $db;
+		$conditions = array("groupUID='" . $db->addMarkup($this->UID) . "'");
+		$range = $db->loadRange('groups_schoolindex', '*', $conditions);
+		return $range;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discovers if a group has members at a given school
+	//----------------------------------------------------------------------------------------------	
+	//arg: schoolUID - UID of a Schools_School object [string]
+	//returns: true if member(s) found, false if not [bool]
+
+	function hasSchool($schoolUID) {
+		$schools = $this->getSchoolsIndex();
+		$found = false;							//%	return value [bool]
+
+		foreach($this->schools as $schoolIndex) {
+			if ($schoolUID == $schoolIndex['schoolUID']) { $found = true; }
+		}
+
+		return $found;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	updates list of schools at which this group has members
+	//----------------------------------------------------------------------------------------------	
+	//returns: true on success, false on failure [bool]
+
+	function updateSchoolsIndex() {
+		global $theme;
+		global $db;
+		global $session;
+
+		//echo "[i] updating school index of group " . $this->UID . "<br/>";
+
+		$updated = true;								//%	return value [bool]
+		$members = $this->getMembers();					//%	array of memberships [array]
+		$oldSchools = $this->getSchoolsIndex();			//%	extant schools index set [array]	
+		$newSchools = array();							//%	UIDs for comparison [array]
+
+		//------------------------------------------------------------------------------------------
+		//	for each member, discover if their school is linked to this group
+		//------------------------------------------------------------------------------------------
+		foreach($members as $member) {
+			// look up UID of the school this member attends
+			$block = "[[:users::schooluid::userUID=" . $member['userUID'] . ":]]";
+			$schoolUID = $theme->expandBlocks($block, '');
+	
+			//echo "schoolUID: $schoolUID<br/>\n";
+
+			// add to list of schools if not already present
+			if (false == in_array($schoolUID, $newSchools)) { 
+				//echo "added $schoolUID to list<br/>\n";
+				$newSchools[] = $schoolUID; 
+			}
+		
+			// associate school with this group if not already done
+			if (false == $this->hasSchool($schoolUID)) {
+				//echo "school $schoolUID not associated with group<br/>";
+
+				//----------------------------------------------------------------------------------
+				//	new association with a school
+				//----------------------------------------------------------------------------------
+				$model = new Groups_SchoolIndex();
+				$model->groupUID = $this->UID;
+				$model->schoolUID = $schoolUID;
+				$report = $model->save();
+
+				if ('' == $report) {
+					$msg = "Group '" . $this->name . "' now active at "
+						 . "[[:schools::name::schoolUID=" . $schoolUID . "::link=yes:]]"
+						 . " (UID: $schoolUID)";
+					$session->msg($msg, 'ok');
+					//echo "created school index for $schoolUID<br/>";
+
+				} else {
+					$updated = false;
+					$msg = "Could not add group " . $this->UID . " to school:<br/>" . $report;
+					$session->msg($msg, 'bad');
+					//echo "could not create school index for $schoolUID<br/>$report<br/>";
+
+				}
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	for each school this group was associated with, check it has at least one member
+		//------------------------------------------------------------------------------------------
+		foreach($oldSchools as $schoolIndex) {
+			if (false == in_array($schoolIndex['schoolUID'], $newSchools)) {
+				//----------------------------------------------------------------------------------
+				//	school is associated with group but has no group members, remove
+				//----------------------------------------------------------------------------------
+				$model = new Groups_SchoolIndex();
+				$model->loadArray($schoolIndex);
+				$check = $model->delete();
+				if (false == $check) { $updated = false; }
+			}
+		}
+
+		$this->schools = $this->loadSchoolsIndex();			//	update list of schools
+		return $updated;
 	}
 
 }

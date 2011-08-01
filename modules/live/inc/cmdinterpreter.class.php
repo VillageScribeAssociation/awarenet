@@ -31,6 +31,7 @@ class Live_CmdInterpreter {
 	//----------------------------------------------------------------------------------------------
 
 	function parse($raw) {
+		$raw = $raw . ' ';
 		$curr = '';
 		$mode = 'raw';
 		while(strlen($raw) > 1) {

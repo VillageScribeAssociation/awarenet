@@ -43,19 +43,8 @@
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------
-	//	authorised, notify new member that they are now on the project //TODO: handle with event
+	//	authorised, create notification
 	//----------------------------------------------------------------------------------------------
-	/*
-	$fromUrl = '%%serverPath%%users/profile/' . $user->alias;
-	$title = "You have been added to project: " . $model->getLink();
-	$content = "You were added by " . $user->getNameLink() . " and can now edit this project. " . 
-				"Please be considerate of the contributions of other members.";
-
-	notifyUser($membership['userUID'], $kapenta->createUID(), $user->getName(), 
-				$fromUrl, $title, $content, $model->getUrl(), '');
-
-	*/
-
 	$refUID = $project->UID;
 	$newName = $theme->expandBlocks('[[:users::namelink::userUID=' . $model->userUID . ':]]', '');
 	$title = $newName . " is now a member of project '" . $project->title . "'";
@@ -66,7 +55,21 @@
 		'projects', 'projects_project', $refUID, 'projects_memberaccepted', $title, $content, $url
 	);
 
-	$notifications->addProject($nUID, $project->UID);
+	//----------------------------------------------------------------------------------------------
+	//	add user and their friends to notification
+	//----------------------------------------------------------------------------------------------
+	$notifications->addUser($nUID, $user->UID);
+	$notifications->addFriends($nUID, $user->UID);
+
+	//----------------------------------------------------------------------------------------------
+	//	add project members to notification
+	//----------------------------------------------------------------------------------------------
+	$ea = array(
+		'projectUID' => $project->UID,
+		'notificationUID' => $nUID
+	);
+
+	$kapenta->raiseEvent('projects', 'notify_project', $ea);
 
 	//----------------------------------------------------------------------------------------------
 	//	return to project page

@@ -26,8 +26,7 @@
 	<section></section>
 	<subsection></subsection>
 	<breadcrumb>[[:theme::breadcrumb::label=People - ::link=/users/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]userName[`|pc][`|pc] - ::link=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
-[[:theme::breadcrumb::label=Friends::link=/users/friends/[`|pc][`|pc]userRa[`|pc][`|pc]:]]</breadcrumb>
+[[:theme::breadcrumb::label=All::link=/users/:]]</breadcrumb>
 </page>
 
 */ ?>

@@ -47,16 +47,29 @@ class KAliases {
 	//returns: alias assigned to this object [string]
 
 	function create($refModule, $refModel, $refUID, $plainText) {
-		//------------------------------------------------------------------------------------------
-		//	get the default recordAlias for this plaintext
-		//------------------------------------------------------------------------------------------
-		$default = $this->stringToAlias($plainText);
+		global $kapenta;
 
-		//echo "Creating alias for $refModule, $refModel, $refUID, $plainText<br/>";
+		//------------------------------------------------------------------------------------------
+		//	get the default alais for this plaintext, and lists of actions and modules
+		//------------------------------------------------------------------------------------------
+		$default = $this->stringToAlias($plainText);	//%	ideal alias [string]
+		$modules = $kapenta->listModules();				//%	list of modules [array:string]
+		$actions = $kapenta->listActions($refModule);	//%	list of actions [array:string]
 
 		if ('' == $default) {		 						// no plainText
 			$default = $refUID;								// no refUID
 			if (trim($default) == '') { return false; } 	// no service
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check for collisions with action or module names
+		//------------------------------------------------------------------------------------------
+		foreach($modules as $module) { 
+			if (strtolower($default) == strtolower($module)) { $default .= '-'; }
+		}
+
+		foreach($actions as $action) { 
+			if (strtolower($default) . '.act.php' == strtolower($action)) { $default .= '-'; }
 		}
 	
 		//------------------------------------------------------------------------------------------
@@ -66,34 +79,35 @@ class KAliases {
 	
 		if ($defaultOwner == $refUID) { return $default; }
 		if ($defaultOwner == false) {
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			//	alias is not owned, it can be assigned to this record
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			$this->saveAlias($refModule, $refModel, $refUID, $default);
 			return $default;
 		}
 
-		//----------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		//	the default alias is already owned by another record
-		//----------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		$currAliases = $this->getAll($refModule, $refModel, $refUID);
 
 		if ($currAliases == false) {
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			//	this record has no alias yet, find an unused record by appending a number
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			$available = $this->findAvailable($refModule, $refModel, $default, 0);
 			if ($available == false) { return false; }
 			$this->saveAlias($refModule, $refModel, $refUID, $available);
 			return $available;			
 
 		} else {
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			//	the default is owned by another record, return the first alias the record registered
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			foreach ($currAliases as $caUID => $caAlias) { return $caAlias; }
 
 		}
+
 		return false; // just in case
 	}
 

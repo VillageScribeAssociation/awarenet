@@ -1,5 +1,5 @@
 //=================================================================================================
-//	common javascript utilities which are widely used by this site
+//	common javascript utilities which are widely used by kapenta modules
 //=================================================================================================
 
 /* 
@@ -41,6 +41,299 @@
  */
 
 
+//==================================================================================================
+//  kutils object
+//==================================================================================================
+
+function Kapenta_Utility() {
+
+	//----------------------------------------------------------------------------------------------
+	//	properties
+	//----------------------------------------------------------------------------------------------
+	//TODO: consider adding form checks here, or perhaps spin that off as another object
+
+	//==============================================================================================
+	//	network IO
+	//==============================================================================================
+
+	//-------------------------------------------------------------------------------------------------
+	//.	make an XMLHTTPRequest GET
+	//-------------------------------------------------------------------------------------------------
+	//arg: url - url to get [string]
+	//arg: callback - a function to invoke when request completes [function]
+
+	this.httpGet = function(url, callback) {
+		//TODO:
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	make an XMLHTTPRequest POST
+	//-------------------------------------------------------------------------------------------------
+	//arg: url - url to get [string]
+	//arg: params - urlencoded from values [string]
+	//arg: callback - a function to invoke when request completes [function]
+
+	this.httpPost = function(url, params, callback) {
+		//------------------------------------------------------------------------------------------
+		//	create XMLHttpRequest object
+		//------------------------------------------------------------------------------------------
+		var req = new XMLHttpRequest();  
+		req.open('POST', url, true);  
+		req.setRequestHeader('Connection', 'close');
+		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+		//------------------------------------------------------------------------------------------
+		//	create handler for returned content
+		//------------------------------------------------------------------------------------------ 
+		req.kapentaCallback = callback;
+		req.onreadystatechange = function (aEvt) {  
+			//klive.log('loading: ' + req.status);
+			if ((4 == req.readyState) && (200 == req.status))  {
+				req.kapentaCallback(req.responseText);
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	send the request
+		//------------------------------------------------------------------------------------------ 
+		req.send(params);
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	create a long random number
+	//-------------------------------------------------------------------------------------------------
+	//returns: unique identifier [string]
+
+	this.createUID = function() {
+		var theUID = '';
+		for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
+		return theUID;
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	base64 encode (PHP.Js implementation)
+	//-------------------------------------------------------------------------------------------------
+	//;	credit: Kevin van Zonneveld
+	//;	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_base64_encode/
+	//arg: data - string to encode [string]
+	//returns: bease 64 encoded string [string]
+
+	this.base64_encode = function(data) {
+    	// http://kevin.vanzonneveld.net
+    	// +   original by: Tyler Akins (http://rumkin.com)
+    	// +   improved by: Bayron Guevara
+    	// +   improved by: Thunder.m
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// +   bugfixed by: Pellentesque Malesuada
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// -    depends on: utf8_encode
+    	// *     example 1: base64_encode('Kevin van Zonneveld');
+    	// *     returns 1: 'S2V2aW4gdmFuIFpvbm5ldmVsZA=='
+ 
+    	// mozilla has this native
+    	// - but breaks in 2.0.0.12!
+    	//if (typeof this.window['atob'] == 'function') {
+    	//    return atob(data);
+    	//}
+        
+    	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    	var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, enc="", tmp_arr = [];
+ 
+    	if (!data) {
+    	    return data;
+    	}
+ 
+    	data = this.utf8_encode(data+'');
+    
+    	do { // pack three octets into four hexets
+    	    o1 = data.charCodeAt(i++);
+    	    o2 = data.charCodeAt(i++);
+    	    o3 = data.charCodeAt(i++);
+ 
+    	    bits = o1<<16 | o2<<8 | o3;
+ 
+    	    h1 = bits>>18 & 0x3f;
+    	    h2 = bits>>12 & 0x3f;
+    	    h3 = bits>>6 & 0x3f;
+    	    h4 = bits & 0x3f;
+ 
+    	    // use hexets to index into b64, and append result to encoded string
+    	    tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+    	} while (i < data.length);
+    
+    	enc = tmp_arr.join('');
+    
+    	switch (data.length % 3) {
+    	    case 1:
+    	        enc = enc.slice(0, -2) + '==';
+    	    break;
+    	    case 2:
+    	        enc = enc.slice(0, -1) + '=';
+    	    break;
+    	}
+ 
+    	return enc;
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	base64 decode (PHP.Js implementation)
+	//-------------------------------------------------------------------------------------------------
+	//;	credit: Kevin van Zonneveld
+	//;	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_base64_decode/
+
+	this.base64_decode = function(data) {
+    	// http://kevin.vanzonneveld.net
+    	// +   original by: Tyler Akins (http://rumkin.com)
+    	// +   improved by: Thunder.m
+    	// +      input by: Aman Gupta
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// +   bugfixed by: Onno Marsman
+    	// +   bugfixed by: Pellentesque Malesuada
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// +      input by: Brett Zamir (http://brett-zamir.me)
+    	// +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// -    depends on: utf8_decode
+    	// *     example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
+    	// *     returns 1: 'Kevin van Zonneveld'
+ 
+    	// mozilla has this native
+    	// - but breaks in 2.0.0.12!
+    	//if (typeof this.window['btoa'] == 'function') {
+    	//    return btoa(data);
+	    //}
+ 
+    	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    	var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, dec = "", tmp_arr = [];
+ 
+    	if (!data) { return data; }
+    	data += '';
+ 
+    	do {  
+			//--------------------------------------------------------------------------------------
+			// unpack four hexets into three octets using index points in b64
+			//--------------------------------------------------------------------------------------
+    	    h1 = b64.indexOf(data.charAt(i++));
+    	    h2 = b64.indexOf(data.charAt(i++));
+    	    h3 = b64.indexOf(data.charAt(i++));
+    	    h4 = b64.indexOf(data.charAt(i++));
+ 
+    	    bits = h1<<18 | h2<<12 | h3<<6 | h4;
+ 
+    	    o1 = bits>>16 & 0xff;
+    	    o2 = bits>>8 & 0xff;
+    	    o3 = bits & 0xff;
+ 
+    	    if (h3 == 64) {
+    	        tmp_arr[ac++] = String.fromCharCode(o1);
+    	    } else if (h4 == 64) {
+    	        tmp_arr[ac++] = String.fromCharCode(o1, o2);
+    	    } else {
+    	        tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
+    	    }
+    	} while (i < data.length);
+ 
+    	dec = tmp_arr.join('');
+    	dec = this.utf8_decode(dec);
+ 
+    	return dec;
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	utf8 encode (PHP.Js implementation)
+	//-------------------------------------------------------------------------------------------------
+	//;	credit: Kevin van Zonneveld
+	//;	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_utf8_encode/
+	//arg: argString - string to encode [string]
+	//returns: utf8 encoded string [string]
+
+	this.utf8_encode = function(argString) {
+    	// http://kevin.vanzonneveld.net
+    	// +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// +   improved by: sowberry
+    	// +    tweaked by: Jack
+    	// +   bugfixed by: Onno Marsman
+    	// +   improved by: Yves Sucaet
+    	// +   bugfixed by: Onno Marsman
+    	// +   bugfixed by: Ulrich
+    	// *     example 1: utf8_encode('Kevin van Zonneveld');
+    	// *     returns 1: 'Kevin van Zonneveld'
+ 
+    	var string = (argString+''); 	// .replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    	var utftext = "";				//%	return value [string]
+    	var start = 0;					//%	[int]
+		var end = 0;					//%	[int]
+    	var stringl = 0;
+ 
+    	stringl = string.length;
+    	for (var n = 0; n < stringl; n++) {
+    	    var c1 = string.charCodeAt(n);
+    	    var enc = null;						
+ 
+    	    if (c1 < 128) {
+    	        end++;
+    	    } else if (c1 > 127 && c1 < 2048) {
+    	        enc = String.fromCharCode((c1 >> 6) | 192) + String.fromCharCode((c1 & 63) | 128);
+    	    } else {
+    	        enc = String.fromCharCode((c1 >> 12) | 224) + String.fromCharCode(((c1 >> 6) & 63) | 128) + String.fromCharCode((c1 & 63) | 128);
+    	    }
+	        if (enc !== null) {
+    	        if (end > start) { utftext += string.substring(start, end); }
+    	        utftext += enc;
+    	        start = end = n+1;
+    	    }
+	    }
+ 	
+    	if (end > start) { utftext += string.substring(start, string.length); }
+    	return utftext;
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	utf8 decode (PHP.Js implementation)
+	//-------------------------------------------------------------------------------------------------
+	//	credit: Kevin van Zonneveld
+	//	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_utf8_decode/
+	//arg: str_data - string to encode [string]
+	//returns: utf8 decoded data [string]
+
+	this.utf8_decode = function(str_data) {
+    	// http://kevin.vanzonneveld.net
+    	// +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
+    	// +      input by: Aman Gupta
+    	// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// +   improved by: Norman "zEh" Fuchs
+    	// +   bugfixed by: hitwork
+    	// +   bugfixed by: Onno Marsman
+    	// +      input by: Brett Zamir (http://brett-zamir.me)
+    	// +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    	// *     example 1: utf8_decode('Kevin van Zonneveld');
+    	// *     returns 1: 'Kevin van Zonneveld'
+ 
+    	var tmp_arr = [], i = 0, ac = 0, c1 = 0, c2 = 0, c3 = 0;
+    	str_data += '';
+    
+    	while ( i < str_data.length ) {
+    	    c1 = str_data.charCodeAt(i);
+    	    if (c1 < 128) {
+    	        tmp_arr[ac++] = String.fromCharCode(c1);
+    	        i++;
+    	    } else if ((c1 > 191) && (c1 < 224)) {
+    	        c2 = str_data.charCodeAt(i+1);
+    	        tmp_arr[ac++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+    	        i += 2;
+    	    } else {
+    	        c2 = str_data.charCodeAt(i+1);
+    	        c3 = str_data.charCodeAt(i+2);
+    	        tmp_arr[ac++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+    	        i += 3;
+    	    }
+    	}
+ 
+    	return tmp_arr.join('');
+	}
+
+}
+
 //-------------------------------------------------------------------------------------------------
 //	create a long random number
 //-------------------------------------------------------------------------------------------------
@@ -50,6 +343,7 @@ function createUID() {
 	for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
 	return theUID;
 }
+
 //-------------------------------------------------------------------------------------------------
 //	base64 encode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------

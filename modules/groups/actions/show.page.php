@@ -13,8 +13,12 @@
 [[:announcements::newlink::refModule=groups::refModel=groups[`|us]group::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 </content>
-	<nav1>[[:theme::navtitlebox::label=At This School:]]
-[[:groups::listallnav::sameschool=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+	<nav1>
+[[:theme::navtitlebox::label=Schools::toggle=divActiveSchools:]]
+<div id='divActiveSchools'>
+[[:groups::listschoolsnav::groupUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+</div>
+<br/>
 
 [[:theme::navtitlebox::label=Members:]]
 [[:groups::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]

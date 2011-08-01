@@ -5,7 +5,9 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - [`|pc][`|pc]userName[`|pc][`|pc] ::</title>
 	<content>[[:theme::navtitlebox::label=Aggregated Blogs ([`|pc][`|pc]userName[`|pc][`|pc])::width=570:]]
-[[:moblog::summarylist::num=10::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</content>
+
+[[:live::river::rivermodule=moblog::riverview=summarylist::riverpagevar=page::allow=num|userUID|pagination::num=5::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::pagination=no:]]
+</content>
 	<nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]
 [[:theme::navtitlebox::label=Author:]]
 [[:images::default::refModule=users::refUID=[`|pc][`|pc]userUID[`|pc][`|pc]::size=width300:]]

@@ -10,38 +10,47 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-
 	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
 	if ('newThread' != $_POST['action']) { $page->do404('Action not supported.'); }
 	if (false == array_key_exists('forum', $_POST)) { $page->do404('Forum not specified.'); }
 
 	$forum = new Forums_Board($_POST['forum']);
 	if (false == $forum->loaded) { $page->do404('Forum not found.'); }
-	if (false == $user->authHas('forums', 'forums_board', 'makethread', $forum->UID)) 
-		{ $page->do403('You cannot create new threads in this forum.'); }
+	if (false == $user->authHas('forums', 'forums_board', 'makethread', $forum->UID)) {
+		$page->do403('You cannot create new threads in this forum.'); 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	create thread
 	//----------------------------------------------------------------------------------------------
-
-	$threadTitle = '';
-	if (true == array_key_exists('title', $_POST)) { $threadTitle = $utils->cleanString($_POST['title']); }
-	if ('' == trim($threadTitle)) { $threadTitle = '(No Subject)'; }
-
 	$model = new Forums_Thread();
 	$model->board = $forum->UID;
-	$model->title = $threadTitle;
-	$model->content = strip_tags($_POST['content']);	// TODO: allow some tags 
+	
+	foreach($_POST as $key => $value) {
+		switch($key) {
+			case 'title':		$model->title = $utils->cleanTitle($value); 	break;
+			case 'content':		$model->content = $utils->cleanHtml($value);	break;
+		}
+	}
+
+	if ('' == trim($model->title)) { $model->title = '(No Subject)'; }
 	$report = $model->save();
 
-	// redirect back to forum if thread was nto created
+	//----------------------------------------------------------------------------------------------
+	//	raise events and redirect to thread
+	//----------------------------------------------------------------------------------------------
 	if ('' != $report) {
+		//------------------------------------------------------------------------------------------
+		// redirect back to forum if thread was not created
+		//------------------------------------------------------------------------------------------
 		$session->msg("Cound not create thread:<br/>$report", 'bad');
 		$page->do302('forums/' . $forum->alias);
+
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	notify user's friends
 		//------------------------------------------------------------------------------------------
+		//TODO: move this to an event handler
 		$ext = $model->extArray();
 		$title = "New Forum Post: " . $ext['title'];
 		$content = $model->content;
@@ -65,7 +74,6 @@
 		);
 
 		$kapenta->raiseEvent('*', 'microblog_event', $args);
-
 	}
 
 	//----------------------------------------------------------------------------------------------

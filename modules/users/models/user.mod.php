@@ -70,6 +70,7 @@ class Users_User {
 	var $lang;				// varchar(30)
 	var $profile;			// stored as XML in a text field [array]
 	var $permissions;		// actions this user is authorised to take [array]
+	var $settings;			// per-user configuration options [array]
 	var $lastOnline;		// datetime
 	var $createdOn;			// datetime
 	var $createdBy;			// ref:users-user
@@ -107,6 +108,7 @@ class Users_User {
 			$this->createdBy = 'public';
 			$this->editedOn = $db->datetime();
 			$this->editedBy = 'public';
+			$this->settings = array();
 		}
 	}
 
@@ -142,6 +144,7 @@ class Users_User {
 		$this->lang = $ary['lang'];
 		$this->profile = $this->expandProfile($ary['profile']);
 		$this->permissions = $this->expandPermissions($ary['permissions']);
+		$this->settings = $this->expandSettings($ary['settings']);
 		$this->lastOnline = $ary['lastOnline'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
@@ -161,6 +164,7 @@ class Users_User {
 
 	function save() {
 		global $db, $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('users', 'users_user', $this->UID, $this->username);
@@ -177,6 +181,10 @@ class Users_User {
 	function verify() {
 		global $db;
 		$report = '';
+
+		//------------------------------------------------------------------------------------------
+		//	check this object
+		//------------------------------------------------------------------------------------------
 
 		if (strlen($this->UID) < 5) 
 			{ $report .= "UID not present.\n"; }
@@ -195,6 +203,14 @@ class Users_User {
 
 		if (false == $db->objectExists('schools_school', $this->school)) 
 			{ $report .= "Please select a school for this user.\n"; }
+
+		//------------------------------------------------------------------------------------------
+		//	check that a user with this name does not already exist
+		//------------------------------------------------------------------------------------------
+		$extantUID = $this->getUserUID($this->username);
+		if (('' != $extantUID) && ($this->UID != $extantUID)) {
+			$report .= "The username '" . $this->username . "' is already taken by someone else.";
+		}
 
 		return $report;
 	}
@@ -223,6 +239,7 @@ class Users_User {
 			'lang' => 'VARCHAR(30)',
 			'profile' => 'TEXT',
 			'permissions' => 'TEXT',
+			'settings' => 'TEXT',
 			'lastOnline' => 'TEXT',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -266,6 +283,7 @@ class Users_User {
 			'lang' => $this->lang,
 			'profile' => $this->collapseProfile(),
 			'permissions' => $this->collapsePermissions(),
+			'settings' => $this->collapseSettings($this->settings),
 			'lastOnline' => $this->lastOnline,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
@@ -365,6 +383,86 @@ class Users_User {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get user UID given username
+	//----------------------------------------------------------------------------------------------
+	//arg: username - a kapenta username [string]
+	//returns: UID if username exists, empty string if not [string]
+
+	function getUserUID($username) {
+		global $db;
+		$conditions = array("LOWER(username)='" . $db->addmarkup(strtolower($username)) . "'");
+		$range = $db->loadRange('users_user', '*', $conditions);
+		foreach($range as $item) { return $item['UID']; }
+		return '';
+	}
+
+	//==============================================================================================
+	//	USER SETTINGS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	unserializes user settings
+	//----------------------------------------------------------------------------------------------
+	//arg: serialized - serialized user settings [string]
+	//returns: dictionary key => base 64 encoded value [array]
+
+	function expandSettings($serialized) {
+		$settings = array();
+
+		$lines = explode("\n", $serialized);
+		foreach($lines as $line) {
+			if ((strlen($line) >= 30) && ('#' != substr($line, 0, 1))) {
+				$key = trim(substr($line, 0, 30));
+				$value = trim(substr($line, 30));
+				$settings[$key] = $value;
+			}
+		}
+		
+		return $settings;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	serializes user settings
+	//----------------------------------------------------------------------------------------------
+	//arg: settings - array of all user settings (values base64 encoded) [string]
+	//returns: string representation of all settings [string]
+
+	function collapseSettings($settings) {
+		$serialized = '';						//%	return value [string]
+		$thirty = str_repeat(' ', 30);			//%	blank key name [string]
+
+		foreach($settings as $k => $v) { $serialized .= substr($k . $thirty, 0, 30) . $v . "\n"; }
+		return $serialized;	
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	retrieve a user setting
+	//----------------------------------------------------------------------------------------------
+	//arg: key - name of setting [string]
+	//returns: value of setting or empty string if not found [string]
+
+	function getSetting($key) {
+		$value = '';
+		if (false == array_key_exists($key, $this->settings)) { return ''; }
+		$value = base64_decode($this->settings[$key]);
+		return $value;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	store a user setting
+	//----------------------------------------------------------------------------------------------
+	//arg: key - name of setting [string]
+	//arg: value - value to store [string]
+	//returns: true on success, false on failure [bool]
+
+	function storeSetting($key, $value) {
+		if ('public' == $this->role) { return false; }
+		$this->settings[$key] = base64_encode($value);
+		$this->save();
 		return true;
 	}
 

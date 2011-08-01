@@ -312,7 +312,7 @@ class KTheme {
 			//--------------------------------------------------------------------------------------
 			// 	recurse, expand any blocks that were created by the hook
 			//--------------------------------------------------------------------------------------
-			$bHTML = $this->expandBlocks($bHTML, $calledBy . $block. "\n");
+			$bHTML = $this->expandBlocks($bHTML, $calledBy . $block . "\n");
 			$txt = str_replace($block, $bHTML, $txt);
 
 		}

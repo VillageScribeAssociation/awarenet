@@ -23,6 +23,11 @@ div.desktop {
 
 div.window {
 	position: absolute;
+	background-color: transparent;
+}
+
+table.window {
+	background-color: transparent;
 }
 
 img.titlebaricon {

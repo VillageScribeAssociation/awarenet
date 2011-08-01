@@ -8,13 +8,20 @@
 //--------------------------------------------------------------------------------------------------
 //opt: page - page no to display (default is 0) [string]
 //opt: num - number of records per page (default is 30) [string]
+//opt: pagination - set to 'no' to disable page nav bar (yes|no) [string]
 
 function moblog_summarylist($args) {
-	global $page, $db, $user, $theme, $page;
+	global $page;
+	global $db;
+	global $user;
+	global $theme;
+	global $page;
+
 	$start = 0;
 	$num = 30;
 	$pageNo = 1;
 	$html = '';
+	$pagination = 'yes';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -22,8 +29,10 @@ function moblog_summarylist($args) {
 	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	if (true == array_key_exists('page', $args)) 
-		{ $pageNo = $args['page']; $start = ($pageNo - 1) * $num; }
+	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
+	if (true == array_key_exists('page', $args)) { 
+		$pageNo = $args['page']; $start = ($pageNo - 1) * $num; 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	count visible posts
@@ -62,7 +71,7 @@ function moblog_summarylist($args) {
 		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
-	$html = $pagination . $html . $pagination;
+	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
 
 	return $html;
 }

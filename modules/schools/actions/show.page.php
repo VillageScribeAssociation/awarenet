@@ -33,12 +33,16 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Clubs, Teams and Societies:]]
-[[:groups::listallnav::school=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[[:theme::navtitlebox::label=Clubs, Teams and Societies::toggle=divSchoolGroups:]]
+[`|lt]div id=[`|sq]divSchoolGroups[`|sq][`|gt]
+[[:groups::atschoolnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Recent Blog Posts:]]
+[[:theme::navtitlebox::label=Recent Blog Posts::toggle=divRecentBlogs:]]
+[`|lt]div id=[`|sq]divRecentBlogs[`|sq][`|gt]
 [[:moblog::schoolrecentnav::schoolUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=5:]]
+[`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Online Now:]]

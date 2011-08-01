@@ -6,8 +6,8 @@
 //|	return a school's name
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - alias or UID of a Schools_School object [string]
-//opt: schoolUID - overrides raUID [string]
-//opt: link - link to this record? [string]
+//opt: schoolUID - overrides raUID if present [string]
+//opt: link - link to this record? Default is 'no' (yes|no) [string]
 
 function schools_name($args) {
 	global $db;
@@ -34,4 +34,3 @@ function schools_name($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

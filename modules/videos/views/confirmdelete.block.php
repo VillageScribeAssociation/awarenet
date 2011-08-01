@@ -4,7 +4,7 @@
 <table noborder>
   <tr>
     <td valign='top'>
-    <form name='confirmDelete' method='POST' action='%%serverPath%%videos/delete/'>
+    <form name='confirmDelete' method='POST' action='%%serverPath%%videos/deletegallery/'>
     <input type='hidden' name='action' value='deleteRecord' />
     <input type='hidden' name='UID' value='%%UID%%' />
     <input type='submit' value='Yes: Delete it' />

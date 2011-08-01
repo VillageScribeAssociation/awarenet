@@ -69,7 +69,7 @@ class KNotifications {
 	//arg: refEvent - event which caused notification to be sent, '*' for all [string]
 	//arg: userUID - UID of user who caused this notification to be sent, '*' for all [string]
 	//arg: maxAge - maximum age of a event, in seconds [string]
-	//returns: UID of recent notification, if it exists [string]
+	//returns: UID of recent notification, if it exists, null string if not [string]
 
 	function existsRecent($refModule, $refModel, $refUID, $userUID, $refEvent, $maxAge) {
 		global $db;
@@ -204,14 +204,9 @@ class KNotifications {
 	
 	function addSchool($notificationUID, $schoolUID) {
 		global $db;		
-
-		$sql = "select * from users_user where school='" . $db->addMarkup($schoolUID) . "'";
-		$result = $db->query($sql);
-
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['UID']);
-		}
+		$conditions = array("school='" . $db->addMarkup($schoolUID) . "'");
+		$range = $db->loadRange('users_user', '*', $conditions);
+		foreach ($range as $item) { $this->addUser($notificationUID, $item['UID']); }
 	}
 
 
@@ -225,16 +220,12 @@ class KNotifications {
 	function addSchoolGrade($notificationUID, $schoolUID, $grade) {
 		global $db;
 
-		$sql = "select * from users_user"
-			 . " where school='" . $db->addMarkup($schoolUID) . "'"
-			 . " and grade='" . $db->addMarkup($grade) . "'";
+		$conditions = array();
+		$conditions[] = "school='" . $db->addMarkup($schoolUID) . "'";
+		$conditions[] = "grade='" . $db->addMarkup($grade) . "'";
 
-		$result = $db->query($sql);
-
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['UID']);
-		}
+		$range = $db->loadRange('users_user', '*', $conditions);
+		foreach ($range as $item) { $this->addUser($notificationUID, $item['UID']); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -246,13 +237,11 @@ class KNotifications {
 	function addGroup($notificationUID, $groupUID) {
 		global $db;		
 
-		$sql = "select * from groups_membership where groupUID='" . $db->addMarkup($groupUID) . "'";
-		$result = $db->query($sql);
+		$conditions = array();
+		$conditions[] = "groupUID='" . $db->addMarkup($groupUID) . "'";
 
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['userUID']);
-		}
+		$range = $db->loadRange('groups_membership', '*', $conditions);
+		foreach ($range as $item) { $this->addUser($notificationUID, $item['userUID']); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -264,17 +253,13 @@ class KNotifications {
 	function addFriends($notificationUID, $userUID) {
 		global $db;		
 
-		$sql = "select * from users_friendship"
-			 . " where userUID='" . $db->addMarkup($userUID) . "'"
-			 . " and status='confirmed'";
+		$conditions = array();
+		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+		$conditions[] = "status='confirmed'";
 
-		$result = $db->query($sql);
+		$range = $db->loadRange('users_friendship', '*', $conditions);
 
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
-			$this->addUser($notificationUID, $row['friendUID']);
-		}
-
+		foreach ($range as $item) { $this->addUser($notificationUID, $item['friendUID']); }
 	}
 
 	//----------------------------------------------------------------------------------------------

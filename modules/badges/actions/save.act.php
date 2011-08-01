@@ -13,25 +13,25 @@
 	if ('saveBadge' != $_POST['action']) { $page->do404('action not supported'); } 
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed'); }
 
-	$UID = $_POST['UID'];
+	$model = new Badges_Badge($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Unknown badge.'); }
 
-	if (false == $user->authHas('badges', 'badges_badge', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Badge.'); }
+	if (false == $user->authHas('badges', 'badges_badge', 'edit', $model->UID)) {
+			$page->do403('You are not authorized to edit this Badge.');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
-
-	$model = new Badges_Badge($UID);
 	if (false == $model->loaded) { $page->do404("could not load Badge $UID");}
-	//TODO: sanitize description
 
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'name':		$model->name = $utils->cleanString($value); break;
-			case 'description':	$model->description = $theme->stripBlocks($value); break;
+			case 'name':			$model->name = $utils->cleanTitle($value); 			break;
+			case 'description':		$model->description = $utils->cleanHtml($value);	break;
 		}
 	}
+
 	$report = $model->save();
 
 	//----------------------------------------------------------------------------------------------

@@ -64,13 +64,22 @@ class KDBDriver {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $session, $page;
+		global $session, $page, $registry;
+		$connect = false;							//%	database connection handle [int]
+		$selected = false;							//%	database selection [bool]
+		$result = false;							//%	recordset handle [int]
+
 		$page->logDebug('query', $query);
 
 		//------------------------------------------------------------------------------------------
 		// connect to database server and select database
 		//------------------------------------------------------------------------------------------
-		$connect = @mysql_connect($this->host, $this->user, $this->pass);
+		if ('yes' == $registry->get('kapenta.db.persistent')) {
+			$connect = @mysql_pconnect($this->host, $this->user, $this->pass);
+		} else {
+			$connect = @mysql_connect($this->host, $this->user, $this->pass);
+		}
+
 		if (false === $connect) { 
 			$session->msgAdmin('Could not connect to database server.' , 'bad');
 			return false; 

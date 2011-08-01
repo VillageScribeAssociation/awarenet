@@ -19,6 +19,7 @@
 				<span style='vertical-align: top; background-color: black;'>
 					<a href='%%serverPath%%projects/' class='menu'>Projects</a><small>&nbsp</small>
 					<a href='%%serverPath%%schools/myschool/' class='menu'>School</a><small>&nbsp</small>
+					<a href='%%serverPath%%groups/' class='menu'>Groups</a><small>&nbsp</small>
 					<a href='%%serverPath%%gallery/supergallery/' class='menu'>Pictures</a><small>&nbsp</small>
 					<a href='%%serverPath%%videos/listallgalleries/' class='menu'>Video</a><small>&nbsp</small>
 					<a href='%%serverPath%%calendar/' class='menu'>Calendar</a><small>&nbsp</small>

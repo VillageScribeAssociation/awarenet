@@ -43,6 +43,7 @@
 		$toNameBlock = '[[:users::name::userUID=' . $toUID . ':]]';
 		$toName = $theme->expandBlocks($toNameBlock, '');
 
+		//TODO: more sanitization here
 		$model = new Messages_Message();
 		$model->owner = $toUID;
 		$model->folder = 'inbox';
@@ -52,7 +53,7 @@
 		$model->toName = $toName;
 		$model->cc = implode('|', $cc);
 		$model->title = $subject;
-		$model->content = $_POST['content'];
+		$model->content = $utils->cleanHtml($_POST['content']);
 		$model->status = 'unread';
 		$model->save();
 

@@ -6,8 +6,19 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all groups</title>
 	<content>[[:theme::navtitlebox::width=570::label=groups:]]
 [[:groups::listall:]]</content>
-	<nav1>[[:theme::navtitlebox::label=All groups:]]
-[[:groups::allthumbs:]]</nav1>
+	<nav1>
+[[:theme::navtitlebox::label=Groups active at my school::toggle=divAtMySchool:]]
+<div id='divAtMySchool'>
+[[:groups::atschoolnav:]]
+</div>
+<br/>
+
+[[:theme::navtitlebox::label=Recent announcements::toggle=divRecentAnnouncements:]]
+<div id='divRecentAnnouncements'>
+[[:announcements::listnav::refModule=groups:]]
+</div>
+
+</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

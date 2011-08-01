@@ -24,6 +24,7 @@ function admin_coresetup($args) {
 		'kapenta.db.user' => $registry->get('kapenta.db.user'),
 		'kapenta.db.password' => $registry->get('kapenta.db.password'),
 		'kapenta.db.name' => $registry->get('kapenta.db.name'),
+		'kapenta.db.persistent' => $registry->get('kapenta.db.persistent'),
 		'kapenta.sitename' => $registry->get('kapenta.sitename'),
 		'kapenta.themes.default' => $registry->get('kapenta.themes.default'),
 		'kapenta.modules.default' => $registry->get('kapenta.modules.default')

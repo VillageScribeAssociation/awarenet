@@ -6,6 +6,15 @@
 //TODO: tidy this up, add settings and permissions appropriate to this
 
 	//----------------------------------------------------------------------------------------------
+	//	check if user user is authorized to create new accounts
+	//----------------------------------------------------------------------------------------------
+
+	if (('no' == $registry->get('users.allowpublicsignup')) && ('admin' != $user->role)) {
+		$session->msg('Public signup has been disabled.', 'bad');
+		$page->do403('Not authorized.');
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//	form variables
 	//----------------------------------------------------------------------------------------------
 
@@ -55,9 +64,12 @@
 		if (strlen(trim($formvars['firstname'])) < 1) 
 			{ $report .= "[*] Please add your first name.<br/>\n"; }	
 
+		if ('' != $user->getUserUID($formvars['username'])) 
+			{ $report .= "[*] Username is already taken.<br/>\n"; }	
+
 		// check if user is already registered
 		$sql = "select * from users_user"
-			 . " where lower(username)='" . $db->addMarkup($formvars['username']) ."'";
+			 . " where lower(username)='" . $db->addMarkup(strtolower($formvars['username'])) ."'";
 
 		$result = $db->query($sql);
 
@@ -91,17 +103,21 @@
 			$model->lastOnline = $db->datetime();
 			$model->createdOn = $db->datetime();
 			$model->createdBy = 'admin';
-			$model->save();
+			$report = $model->save();
 
-			//authUpdatePermissions();
+			if ('' == $report) {
+				//----------------------------------------------------------------------------------
+				//	user account created, sign user in and redirect to profile
+				//----------------------------------------------------------------------------------
+				$session->user = $model->UID;
+				$session->msg('You are now logged in.', 'ok');
+				$user->load($model->UID);
+				$page->do302('users/profile/');			// show user his profile
 
-			//--------------------------------------------------------------------------------------
-			//	sign user in
-			//--------------------------------------------------------------------------------------
-			$session->user = $model->UID;
-			$session->msg('You are now logged in.', 'ok');
-			$user->load($model->UID);
-			$page->do302('users/profile/'); // show user his profile
+			} else {
+				$session->msg('Could not create account:<br/>' . $report, 'bad');
+				$page->do302('users/signup/');			// back to signup form
+			}
 
 		} else {
 			//--------------------------------------------------------------------------------------

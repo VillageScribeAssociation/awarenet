@@ -28,6 +28,7 @@ function live_cron_tenmins() {
 		$model->delete();
 
 		$msg = "[i] Removed old mailbox (UID: ". $model->UID ." page: ". $model->pageUID ." )<br/>";
+		$report .= $msg;
 		$kapenta->logLive($msg);
 	}
 

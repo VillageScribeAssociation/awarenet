@@ -24,22 +24,22 @@
 	$model = new Calendar_Entry($UID);
 	if (false == $model->loaded) { $page->do404("could not load Entry $UID");}
 
-	//TODO: error checking /sanitation here
-
+	//TODO: more error checking here
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'title':	$model->title = $utils->cleanString($value); break;
+			case 'title':		$model->title = $utils->cleanTitle($value); break;
 			case 'category':	$model->category = $utils->cleanString($value); break;
-			case 'venue':	$model->venue = $utils->cleanString($value); break;
-			case 'content':	$model->content = $value; break;
-			case 'year':	$model->year = $utils->cleanString($value); break;
-			case 'month':	$model->month = $utils->cleanString($value); break;
-			case 'day':	$model->day = $utils->cleanString($value); break;
+			case 'venue':		$model->venue = $utils->cleanString($value); break;
+			case 'content':		$model->content = $utils->cleanHtml($value); break;
+			case 'year':		$model->year = $utils->cleanString($value); break;
+			case 'month':		$model->month = $utils->cleanString($value); break;
+			case 'day':			$model->day = $utils->cleanString($value); break;
 			case 'eventstart':	$model->eventStart = $utils->cleanString($value); break;
 			case 'eventend':	$model->eventEnd = $utils->cleanString($value); break;
 			case 'published':	$model->published = $utils->cleanString($value); break;
 		}
 	}
+
 	$report = $model->save();
 
 	//----------------------------------------------------------------------------------------------

@@ -1,28 +1,46 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/videos/models/gallery.mod.php');
+	require_once($kapenta->installPath . 'modules/videos/models/video.mod.php');
+	//require_once($kapenta->installPath . 'modules/videos/inc/videos__weight.inc.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	delete a Videos_Gallery object
+//*	delete a Videos_Video object, cover image, etc
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('deleteRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Gallery not specified (UID).'); }
-    
-	$model = new Videos_Gallery($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Gallery not found'); }
-	if (false == $user->authHas('videos', 'videos_gallery', 'delete', $model->UID))
-		{ $page->do403('You are not authorzed to delete this gallery.'); }
+	if (false == array_key_exists('UID', $_POST)) { $page->do404('Video not specified.', true); }
+
+	$model = new Videos_Video($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Video not found.', true); }
+
+	//TODO: add other permissions here?
+	$auth = false;
+
+	if ($user->UID == $model->createdBy) { $auth = true; }
+
+	if (true == $user->authHas($model->refModule, $model->refModel, 'videos-remove', $model->refUID)) {
+		$auth = true;
+	}
+
+	if (false == $auth) { $page->do403('You cannot delete this video.', true); }
 
 	//----------------------------------------------------------------------------------------------
-	//	delete the gallery and redirect
+	//	delete the image
 	//----------------------------------------------------------------------------------------------
+	$kapenta->logSync("deleteing video " . $model->UID . "via form on videos module.\n");
 	$model->delete();
-	$session->msg("Deleted gallery: " . $model->title);
-	$page->do302('videos/');
+	
+	if (true == array_key_exists('return', $_POST)) {
+		if ('xml' == $_POST['return']) {
+			echo "<?xml version=\"1.0\"?>\n";
+			echo "<notice>Image " . $model->UID . " deleted</notice>\n";
+			die();
+
+		} else { $page->do302($_POST['return']); }
+	}
+
+	$page->do302('/videos/');
 
 ?>

@@ -6,20 +6,36 @@
 //--------------------------------------------------------------------------------------------------
 //|	make iframe to search for friends
 //--------------------------------------------------------------------------------------------------
+//opt: cbjs - optional javascript function to call with the user UID [string]
+//opt: cblabel - optional label for the callback function [string]
+//opt: cbicon - TODO [string]
 
 function users_usersearchbox($args) {
 	global $user, $theme;
-	$html = '';				//%	return value [string]
+	$html = '';							//%	return value [string]
+	$cbjs = '';							//%	js function to call when a result is clicked [string]
+	$cblabel = '';						//%	alt text for search result button [string]
+	$cbicon = 'arrow_left_green.png';	//%	result button image [string]				
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('users', 'users_user', 'view')) { return ''; }
+	if (true == array_key_exists('cbjs', $args)) { $cbjs = $args['cbjs']; }
+	if (true == array_key_exists('cblabel', $args)) { $cblabel = $args['cblabel']; }
+	if (true == array_key_exists('cbicon', $args)) { $cbicon = $args['cbicon']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$html = $theme->loadBlock('modules/users/views/usersearchbox.block.php');
+	$block = $theme->loadBlock('modules/users/views/usersearchbox.block.php');
+	$labels = array(
+		'cbjs' => $cbjs,
+		'cblabel' => $cblabel,
+		'cbicon' => $cbicon
+	);
+
+	$html = $theme->replacelabels($labels, $block);
 
 	return $html;
 }

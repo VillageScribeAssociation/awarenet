@@ -9,6 +9,7 @@
 			<div style="margin-right:60px; margin-top:0px; text-align:right">
 				<span style='vertical-align: bottom; background-color: black;'>
 					<a href='%%serverPath%%/' class='menu'>Home</a>&nbsp;
+					[[:users::signuplink:]]
 					<a href='%%serverPath%%users/login/' class='menu'>Log In</a>&nbsp;
 				</span>
 			</div>

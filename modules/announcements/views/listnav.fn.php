@@ -5,12 +5,17 @@
 //--------------------------------------------------------------------------------------------------
 //|	list all most recent x announcments owned by a particular record on a given module in the nav
 //--------------------------------------------------------------------------------------------------
-//arg: refUID - record which owns the announcements [string]
-//arg: refModule - module which owns the record [string]
+//opt: refModule - kapenta module to which announcements appply [string]
+//opt: refModel - type of object which may own announcments [string]
+//opt: refUID - record which owns the announcements [string]
 //opt: num - number of records per page (default is 10) [string]
 
 function announcements_listnav($args) {
 	global $db, $theme, $user, $page;
+
+	$refModule = '';				//%	kapenta module [string]
+	$refModel = '';					//%	type of object which may own announcements [string]
+	$refUID = '';					//%	UID of single object which may own announcements [string]
 	$num = 10;						//%	number of items per page [int]
 	$html = '';						//%	return value [html]
 
@@ -20,36 +25,32 @@ function announcements_listnav($args) {
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'show'))
 		{ return ''; }
 
-	if (false == array_key_exists('refModule', $args)) { return ''; }
-	if (false == array_key_exists('refUID', $args)) { return ''; }
+	if (true == array_key_exists('refModule', $args)) { $refModule = $args['refModule']; }
+	if (true == array_key_exists('refModel', $args)) { $refModel = $args['refModel']; }
+	if (true == array_key_exists('refUID', $args)) { $refUID = $args['refUID']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	if ('' != $refUID) { $conditions[] = "refUID='" . $db->addMarkup($refUID) . "'"; }
+	if ('' != $refModel) { $conditions[] = "refModel='" . $db->addMarkup($refModel) . "'"; }
+	if ('' != $refModule) { $conditions[] = "refModule='" . $db->addMarkup($refModule) . "'"; }
 
 	$range = $db->loadRange('announcements_announcement', '*', $conditions, 'createdOn DESC', $num);
-	$block = $theme->loadBlock('modules/announcements/views/summarynav.block.php');
-
-	//$sql = "select * from Announcements_Announcement "
-	//	 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
-	//	 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
-	//	 . "order by createdOn DESC limit " . $db->addMarkup($num) . "";
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/announcements/views/summarynav.block.php');
+	if (0 == count($range)) { $html .= "(no announcements at present)"; }
 
-	if (count($range) > 0) {
-		foreach ($range as $row) {
-			$model = new Announcements_Announcement();
-			$model->loadArray($row);
-			$html .= $theme->replaceLabels($model->extArray(), $block);
-		}  
-	} else { $html .= "(no announcements at present)"; }
+	foreach ($range as $row) {
+		$model = new Announcements_Announcement();
+		$model->loadArray($row);
+		$html .= $theme->replaceLabels($model->extArray(), $block);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	set AJAX triggers

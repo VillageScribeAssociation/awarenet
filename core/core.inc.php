@@ -25,6 +25,7 @@
 	include 'knotifications.class.php';	// user notification of events
 	include 'krevisions.class.php';		// object revision history and recycle bin
 	include 'kutils.class.php';			// miscellaneous utilities
+	include 'khtml.class.php';			// html parser
 
 	$dbDriver = '';						// TODO: add other DBMS here
 	$dbType = 'MySql';

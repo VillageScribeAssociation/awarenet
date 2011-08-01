@@ -16,11 +16,11 @@
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('cmd', $_POST)) { die('cmd not given'); }
+
 	$raw = base64_decode($_POST['cmd']);
 
 	$interpreter = new Live_CmdInterpreter($raw);
-	//echo $interpreter->toHtml();
-	
+
 	echo $kapenta->shellExecCmd($interpreter->cmd, $interpreter->arguments);
 
 ?>

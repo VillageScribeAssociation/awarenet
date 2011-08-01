@@ -10,8 +10,13 @@
 //arg: UID - UID of deleted object [string]
 
 function moblog__cb_object_updated($args) {
-	global $kapenta, $db, $user, $page;
+	global $kapenta;
+	global $db; 
+	global $user;
+	global $page;
+
 	$kapenta->logLive('in moblog callback: ');
+
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('model', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }

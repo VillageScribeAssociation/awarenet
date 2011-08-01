@@ -12,9 +12,6 @@
 	if ('' == $req->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
-	//if (false == $user->authHas('projects', 'projects_project', 'edit', $UID)) 
-	//	{ $page->do403('You are not authorized to edit this project.'); }
-
 	//----------------------------------------------------------------------------------------------
 	//	load the model and determine if the current user can edit it
 	//----------------------------------------------------------------------------------------------

@@ -47,6 +47,16 @@ function videos_player($args) {
 		$ext['width'] = '560';
 		$ext['height'] = '420';
 
+		// load cover image (TODO: make this better)
+		$ciBlock = "[[:images::default::size=width570::link=no"
+			. "::refModule=videos::refModel=videos_video::refUID=" . $model->UID . ":]]";
+
+		$ciTag = $theme->expandBlocks($ciBlock, '');
+		$parts = explode("'", $ciTag);
+
+		$ext['coverImage'] = $parts[1];
+
+		// assemble the block
 		$html = $theme->replaceLabels($ext, $block);
 
 	}

@@ -25,9 +25,8 @@
 	//TODO: sanitize description
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'title':		$model->title = $utils->cleanString($value); 		break;
-			case 'description':	$model->description = $value;						break;
-			case 'imagecount':	$model->imagecount = $utils->cleanString($value);	break;
+			case 'title':		$model->title = $utils->cleanTitle($value); 		break;
+			case 'description':	$model->description = $utils->cleanHtml($value);	break;
 		}
 	}
 

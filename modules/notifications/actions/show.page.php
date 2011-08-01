@@ -7,8 +7,11 @@
 	<content>[[:theme::navtitlebox::width=570::label=Notifications:]]
 [`|lt]h1[`|gt]All Activity: [`|pc][`|pc]userName[`|pc][`|pc][`|lt]/h1[`|gt]
 [`|lt]br/[`|gt]
-[[:notifications::list::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::page=[`|pc][`|pc]pageNo[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</content>
+
+[[:live::river::rivermodule=notifications::riverview=list::riverpagevar=page::allow=num|pagination|userUID::num=10::pagination=no::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+[`|lt]br/[`|gt]
+
+</content>
 	<nav1>[[:users::showfriendrequests::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 

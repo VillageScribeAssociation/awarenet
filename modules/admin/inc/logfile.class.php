@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'core/khtml.class.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object for working with kapenta log files, particularly the pageview log
 //--------------------------------------------------------------------------------------------------
@@ -10,17 +12,29 @@ class Admin_LogFile {
 	//	properties
 	//----------------------------------------------------------------------------------------------
 
-	var $fileName = '';			//%	location of log file relative to installPath [string]
-	var $entries;				//%	contents of log file [array:array]
+	var $inFile = '';			//%	location of log file relative to installPath [string]
+	var $outFile = '';			//%	(temporary) output to file [string]
+	var $type = 'pageview';		//%	log file format [string]
 	var $loaded = false;		//%	set to true when log file has been parsed [bool]
+	var $format = 'apache';		//%	output mode [string]
+
+	var $inFh = 0;				//%	input file handle [string]
+	var $outFh = 0;				//%	output file name [int
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
-	//opt: fileName - location of XML log file relative to installPath [string]
+	//opt: inFile - log file, relative to installPath [string]
+	//opt: outFile - file to recieve output, relative to installPath [string]
 
-	function Admin_Logfile($fileName = '') {
-		if ('' != $fileName) { $this->load($fileName); }
+	function Admin_Logfile($inFile = '', $outFile = '', $format = 'apache') {
+		global $kapenta;
+
+		///TODO: detect log type here
+
+		$this->format = $format;
+		if ('' == $outFile) { $outFile = 'data/temp/' . time() . '-' . $kapenta->createUID() . '.tmp'; }
+		if ('' != $inFile) { $this->load($inFile, $outFile); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -28,43 +42,141 @@ class Admin_LogFile {
 	//----------------------------------------------------------------------------------------------
 	//arg: fileName - location of XML log file relative to installPath [string]
 	//returns: true on success, false on failure [bool]
+	//TODO: make this stream based, rather than loading the whole file at once
 
-	function load($fileName) {
+	function load($inFile, $outFile) {
 		global $kapenta;
-		if (false == $kapenta->fileExists($fileName)) { return false; }
 
-		$raw = $kapenta->fileGetContents($fileName, true, false);
-		$startPos = strpos($raw, '<entry>');
-		$raw = ' ' . substr($raw, $startPos);
-		
-		$continue = true;
-		$startPos = 0;
+		$continue = true;					//%	loop condition [bool]
+		$stub = true;						//%	set to true at end of stub program [bool]
+		$buffer = '';						//%	holds current entry [string]
+
+		//------------------------------------------------------------------------------------------
+		//	open input and output files
+		//------------------------------------------------------------------------------------------
+		if (false == $kapenta->fileExists($inFile)) { return false; }
+		$this->inFile = $inFile;
+		$this->inFh = fopen($kapenta->installPath . $inFile, 'r+');
+
+		$this->outFile = $outFile;
+		$this->outFh = fopen($kapenta->installPath . $outFile, 'w+');
+
+		//------------------------------------------------------------------------------------------
+		//	read file one line at a time
+		//------------------------------------------------------------------------------------------
 		while (true == $continue) {
-			$endPos = strpos($raw, '</entry>');
-			if (false == $endPos) { 
+			$line = fgets($this->inFh);
+			if (false == $line) { 
 				$continue = false; 
 			} else {
-				$entry = substr($raw, $startPos, ($endPos + 8) - $startPos);
-				$this->addEntry($entry);
+				if (false == $stub) { $buffer .= trim($line) . "\n"; }
 			}
+
+			if ('</entry>' == trim($line)) { 
+				$entry = array();
+
+				//----------------------------------------------------------------------------------
+				// convert log entry to array
+				//----------------------------------------------------------------------------------
+				switch($this->type) {
+					case 'pageview':	$entry = $this->pageviewToArray($buffer);	break;
+				}
+
+				//----------------------------------------------------------------------------------
+				// throw entry to appropriate serializer
+				//----------------------------------------------------------------------------------
+				switch($this->format) {
+					case 'apache':		$this->addEntryApache($entry);				break;
+				}
+
+				//----------------------------------------------------------------------------------
+				// clear the buffer
+				//----------------------------------------------------------------------------------
+				$buffer = '';
+			}
+
+			if ((true == $stub) && ('?>' == trim($line))) { $stub = false; }
 		}
 
+		//------------------------------------------------------------------------------------------
+		//	done, close input and output files
+		//------------------------------------------------------------------------------------------
+		fclose($this->inFh);
+		fclose($this->outFh);
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	add a raw entry
+	//.	output in html format
+	//----------------------------------------------------------------------------------------------
+	//arg: xml - a single pageview log entry in raw XML	format [string]
+	//returns: the same entry as an associative array [array]
+
+	function pageviewToArray($xml) {
+		global $utils;
+		$entry = array();		//%	return value [array]
+
+		//TODO: set default values for these
+		$fields = array(
+			'timestamp' => '0',
+			'mysqltime' => '',
+			'user' => 'public',
+			'remotehost' => 'unknown', 
+			'remoteip' => '0.0.0.0',
+			'request' => '',
+			'referrer' => '',
+			'uid' => '',
+			'useragent' => 'unknown'
+		);
+
+		foreach($fields as $field => $value) {
+			$substr = $utils->strdelim($xml, '<' . $field . '>', '</' . $field . '>');
+			if ('' != $substr) { $entry[$field] = $substr; }
+		}
+
+		return $entry;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	output in apache format
 	//----------------------------------------------------------------------------------------------
 
-	function addEntry($entry) {
-		$lines = explode("\n", $entry);
-		foreach($lines as $line) {
-			$line = trim($line);
-			$startPos = strpos($line, '>');
-			if (false != $startPos) {
-				$type = substr($line, 1, $startPos);
-				echo $type . " \n";
-			}
-		}
+	function addEntryApache($entry) {
+		global $kapenta;
+
+		$line = ''
+			. $entry['remoteip']
+			. ' - - '
+			. date('[d/M/Y:H:i:s +0000]', $entry['timestamp']) . ' '
+			. "\"GET " . $entry['request'] . " HTTP/1.1\" 200 - " 
+			. "\"" . $kapenta->serverPath . $entry['request'] . "\" "
+			. "\"" . $entry['useragent'] . "\""
+			. "\n";
+
+		fwrite($this->outFh, $line);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	make analog report
+	//----------------------------------------------------------------------------------------------
+	//returns: HTML report as generated by analog [string]
+
+	function analog() {
+		global $kapenta;
+
+		$reportFile = 'data/temp/' . time() . '-' . $kapenta->createUID() . '.html';
+		
+		$shellCmd = 'analog ' . $kapenta->installPath . $this->outFile
+			 . ' +O' . $kapenta->installPath . $reportFile;
+
+		//echo $shellCmd . "<br/>\n";
+
+		$result = shell_exec($shellCmd);
+		$raw = $kapenta->fileGetContents($reportFile);
+
+		$parser = new KHTMLParser($raw);
+		$report = $parser->output;
+
+		return $report;
 	}
 
 }

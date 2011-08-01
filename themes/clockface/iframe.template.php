@@ -10,8 +10,12 @@
 
 <script src='%%serverPath%%core/utils.js'></script>
 <script language='javascript'>
+
+	var kapentaLoaded = false;
+
 	function kPageInit() {
 		resizeFrame();
+		kapentaLoaded = true;
 	}
 
 	ifMaxHeight = -1;

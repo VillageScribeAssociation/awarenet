@@ -30,8 +30,8 @@
 	if (false == array_key_exists('content', $_POST)) { $page->do404('no content given'); }
 
 	$sectionUID = $_POST['sectionUID'];
-	$sectionTitle = $utils->cleanString($_POST['sectionTitle']);
-	$content = strip_tags($_POST['content'], $model->allowTags);
+	$sectionTitle = $utils->cleanTitle($_POST['sectionTitle']);
+	$content = $utils->cleanHtml($_POST['content']);
 
 	if (false == array_key_exists($sectionUID, $model->sections)) { 
 		$page->do404('unkown section'); 
@@ -74,4 +74,3 @@
 	$page->do302('projects/editsection/section_' . $sectionUID .  '/' . $model->alias);
 
 ?>
-

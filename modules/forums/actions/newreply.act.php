@@ -14,16 +14,17 @@
 	if (false == array_key_exists('thread', $_POST)) { $page->do404('Thread not specified.'); }
 
 	$thread = new Forums_Thread($_POST['thread']);
-	if (false == $thread->loaded) { $page->do404(); }
-	if (false == $user->authHas('forums', 'forums_reply', 'new', $thread->UID))
-		{ $page->do403(); }
+	if (false == $thread->loaded) { $page->do404('Thread not found.'); }
+	if (false == $user->authHas('forums', 'forums_reply', 'new', $thread->UID)) { 
+		$page->do403('You are not permitted to post in this thread.'); 
+	}
 
 	//------------------------------------------------------------------------------------------
 	//	add the reply
 	//------------------------------------------------------------------------------------------
 	$reply = new Forums_Reply();
-	$reply->thread = $_POST['thread'];
-	$reply->content = $_POST['content'];
+	$reply->thread = $thread->UID;
+	$reply->content = $utils->cleanHtml($_POST['content']);
 	$report = $reply->save();
 	if ('' != $report) { $session->msg('Could not add reply: <br/>' . $report, 'bad'); }
 
@@ -53,6 +54,7 @@
 
 		$title = "New Forum Reply: " . $thread->title;
 		$content = $reply->content;
+		$url = $ext['viewUrl'];
 
 		$nUID = $notifications->create(
 			'forums', 'forums_reply', $reply->UID, 'forum_newreply', 

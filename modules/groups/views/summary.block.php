@@ -2,6 +2,7 @@
 <table noborder>
   <tr>
     <td valign='top'>
+	  <br/>
       <a href='/groups/%%alias%%'>
       [[:groups::image::raUID=%%UID%%::size=width200::link=no:]]</a>
     </td>

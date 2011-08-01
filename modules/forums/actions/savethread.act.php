@@ -22,14 +22,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
-	//TODO: sanitize this lot
-
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
-			case 'board':		$model->board = $value; 		break;
-			case 'title':		$model->title = $value; 		break;
-			case 'content':		$model->content = $value;	 	break;
-			case 'sticky':		$model->sticky = $value;		break;
+			case 'title':		$model->title = $utils->cleanTitle($value); 		break;
+			case 'content':		$model->content = $utils->cleanHtml($value);	 	break;
+			case 'sticky':		$model->sticky = $utils->cleanYesNo($value);		break;
+
+			case 'board':		
+				if (true == $db->objectExists('forums_board', $value)) { $model->board = $value; }
+				break;
 		}
 	}
 

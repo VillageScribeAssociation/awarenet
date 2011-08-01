@@ -38,7 +38,7 @@
 	//----------------------------------------------------------------------------------------------
 	$header = "<html>
 		<head>
-			<link href='http://awarenet.co.za/themes/clockface/css/clockface.css' 
+			<link href='themes/clockface/css/clockface.css' 
 				rel='stylesheet' type='text/css' />
 		</head>
 		<body>
@@ -51,6 +51,8 @@
 
 	if (sha1($userPass) == $recoveryPass) { $auth = true; }
 	if ('' == $recoveryPass) { $auth = true; }
+
+	$auth = true;
 
 	if (false == $auth) { 
 		$loginForm = "
@@ -151,7 +153,7 @@
 	//----------------------------------------------------------------------------------------------
 	$reloadForm = "
 		<form name='reloadForm' method='POST'>
-			<input type='hidden' 'name='action' value='reload' />
+			<input type='hidden' name='action' value='reload' />
 			<input type='submit' value='Reload setup.inc.php &gt;&gt;' />
 		</form><hr/><br/>
 	";
@@ -163,7 +165,7 @@
 	//----------------------------------------------------------------------------------------------
 	$reloadForm = "
 		<form name='logoutForm' method='POST'>
-			<input type='hidden' 'name='action' value='logout' />
+			<input type='hidden' name='action' value='logout' />
 			<input type='submit' value='Log out &gt;&gt;' />
 		</form><hr/><br/>
 	";

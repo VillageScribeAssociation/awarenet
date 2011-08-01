@@ -12,6 +12,15 @@
 	if (false == $user->authHas('users', 'users_user', 'new'))
 		{ $page->do403('You are not authorized to create new Users.'); }
 
+	if (false == array_key_exists('username', $_POST)) { $page->do404(); }
+
+	//----------------------------------------------------------------------------------------------
+	//*	check that username is not already registered
+	//----------------------------------------------------------------------------------------------
+	if ('' != $user->getUserUID(strtolower($_POST['username']))) {
+		$session->msg('Could not create new User: Username already taken.<br/>');
+		$page->do302('users/' . $model->alias);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//*	create the object

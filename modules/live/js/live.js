@@ -4,14 +4,18 @@
 //+	this should be instantiated into a global called klive.
 //+
 //+	divs are registered as corresponding to blocks by special comments like:
-//+	<!-- REGSITERBLOCK:divId:BASE64+ENCODED+BLOCK -->
+//+	<!-- REGISTERBLOCK:divId:BASE64+ENCODED+BLOCK -->
 
 //--------------------------------------------------------------------------------------------------
 //	message pump object (periodically polls server for new messages)
 //--------------------------------------------------------------------------------------------------
 
 function Live_Pump(jsPageUID, jsServerPath) {
-	
+
+	//----------------------------------------------------------------------------------------------
+	//	properties
+	//----------------------------------------------------------------------------------------------	
+
 	this.interval = 5000;				//_ default initial interval, milliseconds [int]
 	this.maxinterval = 20000;			//_	max interval between poll, milliseconds [int]
 
@@ -150,10 +154,27 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	//arg: blockTag - a block tag [string]
 	//returns: true on success, false on failure [bool]
 
-	this.setDivContent = function(divId, blockTag) {	
+	this.setDivContent = function(divId, blockTag) {
 		var theDiv = document.getElementById(divId);
 		this.log('[i] setting div content: ' + divId + ' to block ' + blockTag);
-		//TODO: check here
+		//TODO: check here that the div was found
+
+		//------------------------------------------------------------------------------------------
+		//	register with / update div map
+		//------------------------------------------------------------------------------------------
+
+		var found = false;
+		for (var idx in this.divs) {
+			if (this.divs[idx].divId == divId) { 
+				this.divs[idx].blockTag = blockTag; 
+				found = true;
+			}
+		}
+
+		if (false == found) { 
+			var newDiv = new Live_DivMap(divId, blockTag);
+			this.divs[this.divs.length] = newDiv;
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	look for existing content for div
@@ -167,9 +188,10 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	content not cached; try download it from server
+		//	content not cached; try download it from server, and register the div if not already done
 		//------------------------------------------------------------------------------------------
 		this.log('[i] block found not found in cache, loading from server: ' + blockTag);
+
 		this.updateBlockFromServer(blockTag);
 	}
 
@@ -229,6 +251,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 
 	this.updateBlockFromServer = function(blockTag) {
 		this.log('getting block/view from server: ' + blockTag);
+
 		//------------------------------------------------------------------------------------------
 		//	set throbber effect
 		//------------------------------------------------------------------------------------------
@@ -309,9 +332,9 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				var theDiv = document.getElementById(this.divs[idx].divId);
 				//TODO: check the div was found
 				theDiv.innerHTML = content;
-				if ('' != this.divs[idx].bgColor) {
-					theDiv.style.backgroundColor = this.divs[idx].bgColor;
-				}
+				//if ('' != this.divs[idx].bgColor) {
+					theDiv.style.backgroundColor = '#ffffff';
+				//}
 			}
 		}
 	}
@@ -329,6 +352,18 @@ function Live_Pump(jsPageUID, jsServerPath) {
 			}
 		}
 		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	map divs and blocks for debugging
+	//----------------------------------------------------------------------------------------------
+
+	this.mapDivs = function() {
+		var divmap = '';
+		for (var idx in this.divs) {
+			divmap = divmap + 'divId: ' + this.divs[idx].divId + ' blockTag: ' + this.divs[idx].blockTag + "\n";
+		}
+		return divmap;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -355,6 +390,31 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	this.setlastChatMessage = function(lastMessage) {
 		this.lastChatMessage = lastMessage;
 		alert(lastMessage);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	diagnostic report
+	//----------------------------------------------------------------------------------------------
+
+	this.diagnostic = function() {
+		var report = ''
+		 + 'KLIVE OBJECT\n'
+		 + '-------------------------------------------------------------------------------------\n'
+		 + 'Page UID: ' + this.UID + '\n'
+		 + 'ServerPath: ' + this.serverPath + '\n'
+		 + 'User UID: ' + jsUserUID + ' (env)\n'
+		 + 'Polling Interval: ' + this.interval + '\n'
+		 + 'Max Interval: ' + this.maxinterval + '\n'
+		 + '\n'
+		 + 'DIV MAP\n'
+		 + '-------------------------------------------------------------------------------------\n'
+		 + '\n';
+
+		for (var i = 0; i < this.divs.length; i++) {
+			report = report + 'd:' + this.divs[i].divId + ' => b:' + this.divs[i].blockTag + '\n'
+		}
+
+		return report;
 	}
 
 }

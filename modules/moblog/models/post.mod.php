@@ -27,7 +27,7 @@ class Moblog_Post {
 	var $title;				//_ title [string]
 	var $content;			//_ wyswyg [string]
 	var $published;			//_ varchar(10) [string]
-	var $viewcount;			//_ viewcount [string]
+	var $commentCount;		//_ commentCount [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -50,7 +50,7 @@ class Moblog_Post {
 			$this->published = 'no';
 			$this->school = $user->school;
 			$this->grade = $user->grade;
-			$this->viewcount = 0;
+			$this->commentCount = 0;
 			$this->loaded = false;
 		}
 	}
@@ -83,7 +83,7 @@ class Moblog_Post {
 		$this->title = $ary['title'];
 		$this->content = $ary['content'];
 		$this->published = $ary['published'];
-		$this->viewcount = $ary['viewcount'];
+		$this->commentCount = $ary['commentCount'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -139,7 +139,7 @@ class Moblog_Post {
 			'title' => 'VARCHAR(255)',
 			'content' => 'MEDIUMTEXT',
 			'published' => 'VARCHAR(3)',
-			'viewcount' => 'BIGINT(20)',
+			'commentCount' => 'BIGINT(20)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -175,7 +175,7 @@ class Moblog_Post {
 			'title' => $this->title,
 			'content' => $this->content,
 			'published' => $this->published,
-			'viewcount' => $this->viewcount,
+			'commentCount' => $this->commentCount,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -302,6 +302,7 @@ class Moblog_Post {
 
 	function maintain() {
 		global $aliases;
+		global $theme;
 		$notes = array();
 
 		// article must have a title
@@ -337,6 +338,20 @@ class Moblog_Post {
 			$notes[] = "Re-saved to correct alias.<!-- error --><!-- fixed -->";
 		}
 
+		// check comment count
+
+		$block = '[[:comments::count'
+				. '::refModule=moblog'
+				. '::refModel=moblog_post'
+				. '::refUID=' . $this->UID . ':]]';
+
+		$commentCount = $theme->expandBlocks($block, '');
+		if ($commentCount != $this->commentCount) {
+			$this->commentCount = $commentCount;
+			$this->save();
+			$notes[] = "Changed comment count to $commentCount.<!-- error --><!-- fixed -->";
+		}
+
 		return $notes;
 	}
 
@@ -357,9 +372,9 @@ class Moblog_Post {
 	//.	increment hit count
 	//----------------------------------------------------------------------------------------------
 
-	function incrementViewCount() { 
+	function incrementcommentCount() { 
 		//TODO: this
-		//$db->updateQuiet('moblog', $this->UID, 'viewcount', ($this->data['viewcount'] + 1)); 
+		//$db->updateQuiet('moblog', $this->UID, 'commentCount', ($this->data['commentCount'] + 1)); 
 	}
 
 }

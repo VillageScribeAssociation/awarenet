@@ -19,7 +19,7 @@ function groups_membercount($args) {
 	if (true == array_key_exists('UID', $args)) { $args['groupUID'] = $args['UID']; }
 	if (false == array_key_exists('groupUID', $args)) { return ''; }
 
-	$model = new Groups_Group($args['raUID']);
+	$model = new Groups_Group($args['groupUID']);
 
 	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return false; }
 

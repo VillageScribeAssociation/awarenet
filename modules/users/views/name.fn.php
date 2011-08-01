@@ -10,12 +10,20 @@
 //opt: userUID - overrides raUID [string]
 
 function users_name($args) {
-	if (array_key_exists('userUID', $args) == true) { $args['raUID'] = $args['userUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$html = '';
+	$html = '';					//%	return value [string]
 
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	get the name
+	//----------------------------------------------------------------------------------------------
 	$model = new Users_User($args['raUID']);
 	$html = $model->firstname . ' ' . $model->surname;
+
 	return $html;
 }
 

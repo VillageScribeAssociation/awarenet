@@ -21,8 +21,9 @@
 	//----------------------------------------------------------------------------------------------
 	$admin = $model->hasEditAuth($user->UID);		//TODO: use a permission for this
 	$members = $model->getMembers();
-	foreach($members as $mbr) 
-		{ if (($mbr['user'] == $user->UID) AND ($mbr['admin'] == 'yes')) { $admin = true; } }
+	foreach($members as $member) { 
+		if (($member['userUID'] == $user->UID) AND ('yes' == $member['admin'])) { $admin = true; } 
+	}
 
 	if ($admin == false) { $page->do403(); }
 

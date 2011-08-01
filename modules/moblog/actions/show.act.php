@@ -28,16 +28,17 @@
 	if ($model->createdBy != $user->UID) { $newPostForm = ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	increment hit count if not viewed by this user this session
+	//	bump popularity of this item if viewed by someone other than the creator
 	//----------------------------------------------------------------------------------------------
-	/*
-	$viewKey = $model->UID . '_' . $user->UID;
-	if (array_key_exists('sMoblogView', $_SESSION) == false) { $_SESSION['sMoblogView'] = array(); }
-	if (array_key_exists($viewKey , $_SESSION['sMoblogView']) == false) {
-		//$_SESSION['sMoblogView'][$viewKey] = 'viewed';
-		//$model->incHitCount();
-	} 
-	*/
+	if ($model->createdBy != $user->UID) {
+		$args = array(
+			'ladder' => 'moblog.all',
+			'item' => $model->UID
+		);
+
+		$kapenta->raiseEvent('popular', 'popularity_bump', $args);
+		//TODO: consider adding ladders for tags and for individual blogs
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

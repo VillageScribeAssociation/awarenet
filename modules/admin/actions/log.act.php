@@ -32,6 +32,7 @@
 
 		case 'html':
 			$page->load('modules/admin/actions/log.page.php');
+			$page->blockArgs['logFile'] = $fileName;
 			$page->render();
 			break;
 

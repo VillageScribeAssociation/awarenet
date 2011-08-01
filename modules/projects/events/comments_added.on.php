@@ -5,21 +5,33 @@ require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 //-------------------------------------------------------------------------------------------------
 //|	fired when a comment is added
 //-------------------------------------------------------------------------------------------------
-//arg: refModule - name of module to which a comment was attached
-//arg: refUID - UID of object to which comment was attached
-//arg: commentUID - UID of the new comment
-//arg: comment - text/html of comment
+//arg: refModule - name of module to which a comment was attached [string]
+//arg: refModel - type of object to which comment was attached [string]
+//arg: refUID - UID of object to which comment was attached [string]
+//arg: commentUID - UID of the new comment [string]
+//arg: comment - text/html of comment [string]
 
 function projects__cb_comments_added($args) {
-	global $db, $user;
-	if (false == array_key_exists('refModule', $args)) { return false; }
-	if (false == array_key_exists('refUID', $args)) { return false; }
-	if (false == array_key_exists('commentUID', $args)) { return false; }
-	if (false == array_key_exists('comment', $args)) { return false; }
+	global $kapenta;
+	global $db;
+	global $user;
+	global $notifications;
 
-	if ($args['refModule'] != 'projects') { return false; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments
+	//----------------------------------------------------------------------------------------------	
+	if (false == array_key_exists('refModule', $args)) 		{ return false; }
+	if (false == array_key_exists('refUID', $args)) 		{ return false; }
+	if (false == array_key_exists('commentUID', $args)) 	{ return false; }
+	if (false == array_key_exists('comment', $args)) 		{ return false; }
+
+	$refModule = $args['refModule'];
+	$refModel = $args['refModel'];
+	$refUID = $args['refUID'];
+
+	if ('projects' != $refModule) { return false; }
 	
-	$model = new Projects_Project($args['refUID']);
+	$model = new Projects_Project($refUID);
 	if (false == $model->loaded) { return false; }
 	$u = new Users_User($model->createdBy);
 	if (false == $u->loaded) { return false; }
@@ -27,31 +39,44 @@ function projects__cb_comments_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to project members
 	//----------------------------------------------------------------------------------------------
-	/*	TODO: re-add notifications
 	$ext = $model->extArray();
-	$commentUrl = $ext['viewUrl'] . "#comment" . $args['commentUID'];
-
-	$link = "<a href='" . $commentUrl ."'>" . $ext['title'] . "</a>";
-	$title = $user->getNameLink() . " commented on " . $u->getName() . "'s blog post " . $link;
+	$title = $user->getName() . " commented on project " . $model->title;
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
-	$imgUID = imgGetDefaultUID('moblog', $args['refUID']);
 
-	if ($user->UID == $u->UID) 
-		{ $title = $user->getNameLink() . " commented on their own blog post " . $link; }
+	$nUID = $notifications->create(
+		$refModule, $refModel, $refUID, 'comments_added', $title, $args['comment'], $url
+	);
 
-	notifyFriends($args['refUID'], $args['commentUID'], 
-				  $user->getName(), $user->getUrl(),
-				  $title, $args['comment'], $url, $imgUID );
+	$notifications->addUser($nUID, $user->UID);
+	$notifications->addFriends($nUID, $user->UID);
 
-	$title = $user->getNameLink() . " commented on your blog post " . $link;
-	notifyUser($args['refUID'], $args['commentUID'], 
-				  $user->getName(), $user->getUrl(),
-				  $title, $args['comment'], $url, $imgUID );
-	*/
+	//----------------------------------------------------------------------------------------------
+	//	add all project members
+	//----------------------------------------------------------------------------------------------	
+	$ea = array(
+		'projectUID' => $model->UID, 
+		'notificationUID' => $nUID
+	);
 
+	$kapenta->raiseEvent('projects', 'notify_project', $ea);
+
+	//----------------------------------------------------------------------------------------------
+	//	add anyone who has commented on this project
+	//----------------------------------------------------------------------------------------------	
+	$ea = array(
+		'refModule' => 'projects',
+		'refModel' => 'projects_project',
+		'refUID' => $model->UID,
+		'notificationUID' => $nUID
+	);
+
+	$kapenta->raiseEvent('comments', 'notify_commenters', $ea);
+
+	//----------------------------------------------------------------------------------------------
+	//	ok, done
+	//----------------------------------------------------------------------------------------------	
 	return true;
 }
-
 
 //-------------------------------------------------------------------------------------------------
 ?>

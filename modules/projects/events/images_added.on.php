@@ -39,7 +39,8 @@ function projects__cb_images_added($args) {
 	$url = $ext['viewUrl'];
 	$imgUID = '';
 
-	$content = "<a href='/images/show/" . $args['imageUID'] . "'>[ view image >> ]</a>";
+	$imgBlock = "[[:images::width300::imageUID=" . $args['imageUID'] . "::link=no:]]";
+	$content = "<a href='$url'>$imgBlock<br/>[ view image >> ]</a>";
 
 	$nUID = $notifications->create(
 		'projects', 
@@ -54,7 +55,7 @@ function projects__cb_images_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	add project members, admins and user's friends
 	//----------------------------------------------------------------------------------------------
-	$members = $project->getMembers();
+	$members = $model->getMembers();
 	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $userUID); }
 
 	$notifications->addAdmins($nUID);

@@ -210,14 +210,14 @@ class Forums_Thread {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('forums', 'Forum_Thread', 'view', $this->UID)) { 
-			$ary['viewUrl'] = '%%serverPath%%forumthreads/' . $ary['alias'];
+		if (true == $user->authHas('forums', 'forums_thread', 'show', $this->UID)) { 
+			$ary['viewUrl'] = '%%serverPath%%forums/showthread/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
 		if (true == $auth) {
-			$ary['editUrl'] = '%%serverPath%%forumthreads/edit/' . $ary['alias'];
+			$ary['editUrl'] = '%%serverPath%%forums/editthread/' . $ary['alias'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['newUrl'] = "%%serverPath%%forums/newthread/";
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new forumthreads]</a>";  

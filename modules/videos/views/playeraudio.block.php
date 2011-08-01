@@ -5,12 +5,12 @@
 <a
 	href="%%serverPath%%%%fileName%%"
 	style="display:block;width:100%;height:%%height%%px;"
-	id="player">
+	id="player%%UID%%">
 </a>
 
 <script language="JavaScript">
 flowplayer(
-	"player", 
+	"player%%UID%%", 
 	"%%serverPath%%modules/videos/flash/flowplayer-3.2.5.swf", 
 	{
 		plugins: {

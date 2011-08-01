@@ -10,6 +10,7 @@
 //arg: refUID - UID of item which own videos [string]
 //opt: categories - comma delimited list of categories these pictures can belong to [string]
 //opt: tags - display block tags instead of draggable buttons, default is no (yes|no) [string]
+//TODO: make max upload size a registry setting
 
 function videos_uploadmultiple($args) {
 	global $kapenta, $db, $user; 

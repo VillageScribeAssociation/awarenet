@@ -9,14 +9,22 @@
 //opt: clear - do not pre-fill form values (yes|no), no is default [string]
 
 function users_signupform($args) {
-	global $kapenta, $db, $theme;
+	global $kapenta;
+	global $db;
+	global $user;
+	global $theme;
+	global $registry;
+
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and any permissions
 	//----------------------------------------------------------------------------------------------
+	if (('public' == $user->role) && ('yes' != $registry->get('users.allowpublicsignup'))) { 
+		return '(this site is not currently accepting public registrations)'; 
+	}
+
 	if (false == array_key_exists('clear', $args)) { $args['clear'] = 'no'; }
-	//TODO: check public permission to signup
 
 	//----------------------------------------------------------------------------------------------
 	//	set defaults

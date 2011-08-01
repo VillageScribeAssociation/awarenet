@@ -7,7 +7,7 @@
 class KUtils {
 
 	//----------------------------------------------------------------------------------------------
-	//.	make a random number
+	//.	make a random number, compatability with older PHP versions
 	//----------------------------------------------------------------------------------------------
 	//opt: min - bottom of range [float]
 	//opt: max - top of range [float]
@@ -17,6 +17,53 @@ class KUtils {
 	function random($min = 0, $max = 1) {
 		srand(make_seed());
 		return rand($min, $max);
+	}
+
+	//==============================================================================================
+	//	INPUT SANITIZATION
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	filter HTML to allowed tags and attributes
+	//----------------------------------------------------------------------------------------------
+	//arg: html - html to be sanitized [string]
+	//returns: sanitized input [string]
+	//TODO: more configuration options
+
+	function cleanHtml($html) {
+		$parser = new KHTMLParser($html);
+		return $parser->output;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	clean html entities in titles and similar strings
+	//----------------------------------------------------------------------------------------------
+	//arg: txt - text to clean of html tags and entities [string]
+	//returns: sanitized input [string]
+
+	function cleanTitle($txt) {
+		$txt = $this->stripHtml($txt);
+		$txt = htmlentities($txt);
+		return $txt;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	clean yes/no fields 
+	//----------------------------------------------------------------------------------------------
+	//arg: yesno - string to match against truthy and falsey values for 'yes' and 'no' [string]
+	//returns: 'yes' or 'no' [string]
+
+	function cleanYesNo($yesno) {
+		$yesno = trim(strtolower($yesno));
+		switch($yesno) {
+			case 'false':		$yesno = 'no';		break;
+			case 'true':		$yesno = 'yes';		break;
+			case '0':			$yesno = 'no';		break;
+			case '1':			$yesno = 'yes';		break;
+		}
+
+		if ('yes' != $yesno) { $yesno = 'no'; }
+		return $yesno;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -46,6 +93,10 @@ class KUtils {
 	function stripHTML($someText) { 
 		return preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $someText);
 	}
+
+	//==============================================================================================
+	//	TEXT FORMATTING
+	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
 	//.	remove all but alphanumeric characters from a string (allow specified others)
@@ -152,18 +203,57 @@ class KUtils {
 		return $b64;														// done
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	get a substring delimited by start and end strings
+	//----------------------------------------------------------------------------------------------
+	//arg: start - string begins with [string]
+	//arg: end - string ends with [string]
+
+	function strdelim($str, $start, $end) {
+		$str = ' ' . $str;
+		$substr = '';
+		$startPos = strpos($str, $start);
+		if (false != $startPos) {
+			$startPos = $startPos + strlen($start);
+			$endPos = strpos($str, $end, $startPos);
+			if (false != $endPos) { $substr = substr($str, $startPos, $endPos - $startPos); }
+		}
+		return $substr;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	mark up html for injection via javascript (deprecated)
+	//----------------------------------------------------------------------------------------------
+	//arg: txt - text to be marked up [string]
+	//returns: escaped txt [string]
+	//: this is deprecated in favor of base64 encoding
+
+	function jsMarkup($txt) {
+		$txt = str_replace("'", '--squote--', $txt);
+		$txt = str_replace("\"", '--dquote--', $txt);
+		$txt = str_replace("\n", '--newline--', $txt);
+		$txt = str_replace("\r", '', $txt);
+		$txt = str_replace("[[:", '[[%%delme%%:', $txt);
+		return $txt;
+	}
+
+	//==============================================================================================
+	//	network IO
+	//==============================================================================================
+
 	//--------------------------------------------------------------------------------------------------
 	//|	HTTP GET a URL using cURL, respecting kapenta settings for proxy, etc
 	//--------------------------------------------------------------------------------------------------
 	//: TODO - attempt other download methods (wget, file wrapper, etc) if curl not present
 	//: TODO - implement password for systems which use older HTTP authentication methods
 	//: TODO - handle HTTP error codes
-	//: TODO - make POST version of this method
 	//arg: url - a URL [string]
 	//opt: password - reserved for HTTP/1.x credentials, not implemented [string]
+	//opt: headers - set to true to return HTTP headers [string]
+	//opt: cookie - cookie string to use for this request [string]
 	//returns: result of HTTP GET request, false if no cURL [string]
 
-	function curlGet($url, $password = '') {
+	function curlGet($url, $password = '', $headers = false, $cookie = '') {
 		global $kapenta;
 	
 		if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
@@ -174,8 +264,10 @@ class KUtils {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		if ('' != $kapenta->hostInterface) 
-			{ curl_setopt($ch, CURLOPT_INTERFACE, $kapenta->hostInterface); }
+		$interface = $kapenta->hostInterface;
+		if ('' != $interface) { curl_setopt($ch, CURLOPT_INTERFACE, $interface); }
+		if (true == $headers) { curl_setopt($ch, CURLOPT_HEADER, true); }
+		if ('' != $cookie) { curl_setopt($ch, CURLOPT_COOKIE, $cookie); }
 
 		//------------------------------------------------------------------------------------------
 		//	use HTTP proxy if enabled
@@ -198,20 +290,55 @@ class KUtils {
 		return $result;
 	}
 
-	//----------------------------------------------------------------------------------------------
-	//.	mark up html for injection via javascript (deprecated)
-	//----------------------------------------------------------------------------------------------
-	//arg: txt - text to be marked up [string]
-	//returns: escaped txt [string]
-	//: this is deprecated in favor of base64 encoding
+	//--------------------------------------------------------------------------------------------------
+	//|	HTTP GET a URL using cURL, respecting kapenta settings for proxy, etc
+	//--------------------------------------------------------------------------------------------------
+	//: TODO - attempt other download methods (wget, file wrapper, etc) if curl not present
+	//: TODO - implement password for systems which use older HTTP authentication methods
+	//: TODO - handle HTTP error codes
+	//arg: url - a URL [string]
+	//arg: postvars - array of key => value pairs [array]
+	//opt: headers - set to true to return HTTP headers [string]
+	//opt: cookie - cookie string to use for this request [string]
+	//returns: result of HTTP GET request, false if no cURL [string]
 
-	function jsMarkup($txt) {
-		$txt = str_replace("'", '--squote--', $txt);
-		$txt = str_replace("\"", '--dquote--', $txt);
-		$txt = str_replace("\n", '--newline--', $txt);
-		$txt = str_replace("\r", '', $txt);
-		$txt = str_replace("[[:", '[[%%delme%%:', $txt);
-		return $txt;
+	function curlPost($url, $postvars, $headers = false, $cookie = '') {
+		global $kapenta;
+	
+		if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
+
+		//------------------------------------------------------------------------------------------
+		//	create baisc cURL HTTP GET request
+		//------------------------------------------------------------------------------------------
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
+
+		$interface = $kapenta->hostInterface;
+		if ('' != $interface) { curl_setopt($ch, CURLOPT_INTERFACE, $interface); }
+		if (true == $headers) { curl_setopt($ch, CURLOPT_HEADER, true); }
+		if ('' != $cookie) { curl_setopt($ch, CURLOPT_COOKIE, $cookie); }
+
+		//------------------------------------------------------------------------------------------
+		//	use HTTP proxy if enabled
+		//------------------------------------------------------------------------------------------
+		if ('yes' == $kapenta->proxyEnabled) {
+			$credentials = $kapenta->proxyUser . ':' . $kapenta->proxyPass;
+			curl_setopt($ch, CURLOPT_PROXY, $kapenta->proxyAddress);
+			curl_setopt($ch, CURLOPT_PROXYPORT, $kapenta->proxyPort);
+			curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+			if (trim($credentials) != ':') {
+				curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $credentials);
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	return result
+		//------------------------------------------------------------------------------------------
+		$result = curl_exec($ch);
+		return $result;
 	}
 
 }

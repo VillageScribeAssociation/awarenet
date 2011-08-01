@@ -13,11 +13,11 @@ function images_showfull($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('raUID', $args)) { return ''; }
-	if (false == $db->objectExists('images_image', $args['raUID'])) { return ''; }
+	if (false == array_key_exists('raUID', $args)) { return '(no image specified)'; }
+
 	$model = new Images_Image($args['raUID']);
-	if (false == $model->loaded) { return false; }
-	if ($model->fileName == '') { return false; }
+	if (false == $model->loaded) { return '(image not found)'; }
+	if ('' == $model->fileName) { return '(invalid or corrupt image)'; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block

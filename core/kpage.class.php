@@ -393,7 +393,7 @@ class KPage {
 	//.	create a trigger for this page
 	//----------------------------------------------------------------------------------------------	
 	//arg: module - name of a kapenta module [string]
-	//arg: name - name of trigger / channel [string]
+	//arg: channel - name of trigger / channel [string]
 	//arg: block - block to refresh when tripped [string]
 	//return: true on success, false on failure [bool]
 

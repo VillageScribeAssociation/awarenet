@@ -13,24 +13,30 @@ function admin_svnadd($args) {
 	//	define which files should not be tracked by SVN
 	//---------------------------------------------------------------------------------------------
 	$exemptions = array(
-						'setup.inc.php', 
-						'uploader/',
-						'data/images/',
-						'data/files/',
-						'data/log/',
-						'data/temp/',
-						'data/exampapers/',
-						'data/khanacademy/',
-						'data/',
-						'.log.php',
-						'svnadd.sh',
-						'svndelete.sh',
-						'/drawcache/',
-						'~',
-						'.svn',
-						'install/',
-						'tmp.xml'
-						);
+		'setup.inc.php', 
+		'tweet.txt',
+		'morbo.gif',
+		'modules/pages/',
+		'modules/recordalias/',
+		'modules/mods/',		
+		'uploader/',
+		'data/images/',
+		'data/files/',
+		'data/log/',
+		'data/temp/',
+		'data/exampapers/',
+		'data/khanacademy/',
+		'data/',
+		'.log.php',
+		'svnadd.sh',
+		'svndelete.sh',
+		'/drawcache/',
+		'/TODO/',
+		'~',
+		'.svn',
+		'install/',
+		'tmp.xml'
+	);
 
 	//---------------------------------------------------------------------------------------------
 	//	find all files in this project

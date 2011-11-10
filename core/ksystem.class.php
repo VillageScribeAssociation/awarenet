@@ -76,12 +76,15 @@ class KSystem {
 		//	guess any missing values
 		//-----------------------------------------------------------------------------------------
 		if ('' == $this->installPath) { 
-			$this->installPath = $_SERVER['DOCUMENT_ROOT'];
+			$this->installPath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
 			$registry->set('kapenta.installpath', $this->installPath); 
 		}
 
 		if ('' == $this->serverPath) { 
-			$this->serverPath = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+			$this->serverPath = ''
+				. 'http://' . $_SERVER['HTTP_HOST'] 
+				. str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+
 			$registry->set('kapenta.serverpath', $this->serverPath); 
 		}
 
@@ -124,6 +127,25 @@ class KSystem {
 		$this->modulesLoaded = false;
 		$this->themes = array();
 		$this->themesLoaded = false;
+	}
+
+	//==============================================================================================
+	//	objects
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	create a unique ID 
+	//----------------------------------------------------------------------------------------------
+	//returns: a new UID, 18 chars long [string]
+
+	function createUID() {
+		$tempUID = "";
+		list($usec, $sec) = explode(' ', microtime());				//	make a seed for rand() ...
+		$seed = (float) $sec + ((float) $usec * 100000);			//	is only needed for older PHP
+		srand($seed);												//	seed it
+		for ($i = 0; $i < 16; $i++) { $tempUID .= "" . rand(); }
+		$tempUID = substr($tempUID, 0, 18);
+		return $tempUID;
 	}
 
 	//==============================================================================================
@@ -338,6 +360,84 @@ class KSystem {
 	}
 
 	//==============================================================================================
+	//	time and date
+	//==============================================================================================
+	//TODO: check and overhaul with chat
+
+	//----------------------------------------------------------------------------------------------
+	//.	convert a MySQL formatted date (string) to unix timestamp in network time zone
+	//----------------------------------------------------------------------------------------------
+	//;	note that the p2p network may use a different tiem zone than the local server
+	//arg: str - mysql formatted date string [string]
+	//returns: unix timestamp [int]
+
+	function strtotime($str) {
+		if (true == function_exists('date_default_timezone_set')) {
+			//PHP5 only, TODO: figure out what to do about PHP4
+			date_default_timezone_set('UTC');
+		}
+		
+		return strtotime($str);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get the current unix timestamp in network time zone
+	//----------------------------------------------------------------------------------------------
+	//returns: unix timestamp of current network time [int]
+
+	function time() {
+		global $registry;
+		if (true == function_exists('date_default_timezone_set')) {
+			//PHP5 only, TODO: figure out what to do about PHP4
+			date_default_timezone_set('UTC');
+		}
+		
+		$adjust = (int)$registry->get('kapenta.timedelta');
+		$utcTime = time();
+		$networkTime = $utcTime + $adjust;
+
+		return $networkTime;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get mysql formatted datetime
+	//----------------------------------------------------------------------------------------------
+	//opt: timestamp - a unix timestamp, set to p2p network time [int]
+
+	function datetime($timestamp = 0) {
+		if (true == function_exists('date_default_timezone_set')) {
+			//PHP5 only, TODO: figure out what to do about PHP4
+			date_default_timezone_set('UTC');
+		}
+
+		if (0 == $timestamp) { $timestamp = $this->time(); }
+		$date = gmdate("Y-m-d H:i:s", $timestamp);
+		return $date;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get long format date
+	//----------------------------------------------------------------------------------------------
+	//opt: datetime - MySQL datetime [string]
+
+	function longDate($datetime = '') {
+		if ('' == $datetime) { $datetime = $this->datetime(); }
+		$longDate = date('jS F, Y', $this->strtotime($datetime));
+		return $longDate;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get long format datetime
+	//----------------------------------------------------------------------------------------------
+	//opt: datetime - MySQL datetime [string]
+
+	function longDatetime($datetime = '') {
+		if ('' == $datetime) { $datetime = $this->datetime(); }
+		$longDatetime = date('F jS Y h:i', $this->strtotime($datetime));
+		return $longDatetime;
+	}
+
+	//==============================================================================================
 	//	filesystem methods
 	//==============================================================================================
 
@@ -475,6 +575,18 @@ class KSystem {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	delete a file
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	function fileDelete($fileName, $inData = false) {
+		if (false == $this->fileCheckName($fileName, $inData)) { return false; }
+		if (false == $this->fileExists($fileName)) { return false; }
+		$check = @unlink($this->installPath . $fileName);
+		return $check;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	list the contents of a directory, excluding subdirectories
 	//----------------------------------------------------------------------------------------------
 	//arg: dir - directory path relative to $kapenta->installPath [string]
@@ -527,15 +639,18 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 	//opt: dir - starting directory [string]
 	//opt: ext - file extension, eg '.block.php' [string]
+	//opt: folders - add directories to the results, default is false [bool]
+	//returns: array of file locations [array:string]
 	//;	not very efficient, could be improved
 
-	function fileSearch($dir = '', $ext = '') {
+	function fileSearch($dir = '', $ext = '', $folders = false) {
 		$list = $this->fileList($dir, $ext, false);			//%	return value [array:string]
 		$subDirs = $this->fileList($dir, '', true);
 		//echo "<pre>\n"; print_r($subDirs); echo "</pre><br/>\n";
 		foreach ($subDirs as $subDir) {
 			$more = $this->fileSearch($subDir, $ext);
 			foreach($more as $item) { $list[] = $item; }
+			if (true == $folders) { $list[] = $subDir; }
 		}
 		return $list;
 	}
@@ -577,6 +692,53 @@ class KSystem {
 		return $content;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	get sha1 hash of file
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location relative to installPath [string]
+	//returns: sha1 hash of file, empty string on failure [string]
+
+	function fileSha1($fileName) {
+		$hash = '';
+		if (true == $this->fileExists($fileName)) {
+			$hash = sha1_file($this->installPath . $fileName);
+		}
+		return $hash;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get size of file 
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location relative to installPath [string]
+	//returns: size of file in bytes, -1 on failure [int]
+
+	function fileSize($fileName) {		
+		$size = -1;														//%	return value [int]
+		if (true == $this->fileExists($fileName)) {
+			$size = filesize($this->installPath . $fileName);
+		}
+		return $size;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	copy a file
+	//----------------------------------------------------------------------------------------------
+	//arg: src - location relative to installPath [string]
+	//arg: dest - location relative to installPath [string]
+	//returns: true on success, false on failure [bool]
+
+	function fileCopy($src, $dest) {
+		$check = false;								//%	return false [bool]
+		$src = $this->fileCheckName($src);
+		$dest = $this->fileCheckName($dest);
+		if ((false == $src) || (false == $dest)) { return $check; }
+		if (false == $this->fileExists($src)) { return $check; }
+		$check = $this->filemakeSubDirs($dest);
+		if (false == $check) { return false; }
+		$check = copy($this->installPath . $src, $this->installPath . $dest);
+		return $check;
+	}
+
 	//==============================================================================================
 	//	module events, this is a purely push system
 	//==============================================================================================
@@ -614,25 +776,6 @@ class KSystem {
 	}
 
 	//==============================================================================================
-	//	objects
-	//==============================================================================================
-
-	//----------------------------------------------------------------------------------------------
-	//.	create a unique ID 
-	//----------------------------------------------------------------------------------------------
-	//returns: a new UID, 18 chars long [string]
-
-	function createUID() {
-		$tempUID = "";
-		list($usec, $sec) = explode(' ', microtime());				//	make a seed for rand() ...
-		$seed = (float) $sec + ((float) $usec * 100000);			//	is only needed for older PHP
-		srand($seed);												//	seed it
-		for ($i = 0; $i < 16; $i++) { $tempUID .= "" . rand(); }
-		$tempUID = substr($tempUID, 0, 18);
-		return $tempUID;
-	}
-
-	//==============================================================================================
 	//	object relationships
 	//==============================================================================================
 
@@ -651,6 +794,7 @@ class KSystem {
 		$result = $relFn($model, $UID, $relationship, $userUID);	// check
 		return $result;												// do it
 	}
+
 
 	//==============================================================================================
 	//	logging
@@ -672,8 +816,8 @@ class KSystem {
 			{ $referer = $_SERVER['HTTP_REFERER']; }
 
 		$entry = "<entry>\n"
-			. "\t<timestamp>" . time() . "</timestamp>\n"
-			. "\t<mysqltime>" . $db->datetime() . "</mysqltime>\n"
+			. "\t<timestamp>" . $this->time() . "</timestamp>\n"
+			. "\t<mysqltime>" . $this->datetime() . "</mysqltime>\n"
 			. "\t<user>" . $user->username . "</user>\n"
 			. "\t<remotehost>" . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</remotehost>\n"
 			. "\t<remoteip>" . $_SERVER['REMOTE_ADDR'] . "</remoteip>\n"
@@ -686,7 +830,7 @@ class KSystem {
 		$result = $this->filePutContents($fileName, $entry, true, false, 'a+');
 
 		//notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
-		//$entry = $db->datetime() . " - " . $user->username . ' - ' . $_SERVER['REQUEST_URI'];
+		//$entry = $kapenta->datetime() . " - " . $user->username . ' - ' . $_SERVER['REQUEST_URI'];
 		//notifyChannel('admin-syspagelogsimple', 'add', base64_encode($entry));
 
 		return $result;
@@ -735,7 +879,7 @@ class KSystem {
 		//	add a new entry to the log file
 		//------------------------------------------------------------------------------------------
 		$entry = "<event>\n";
-		$entry .= "\t<datetime>" . $db->datetime() . "</datetime>\n";
+		$entry .= "\t<datetime>" . $this->datetime() . "</datetime>\n";
 		$entry .= "\t<session>" . $session->UID . "</session>\n";
 		$entry .= "\t<ip>" . $remoteAddr . "</ip>\n";
 		$entry .= "\t<system>" . $subsystem . "</system>\n";
@@ -777,6 +921,7 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 	//.	log sync activity
 	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: remove when protocol changeover is complete
 	//arg: msg - message to log [string]
 	//: this is overused due to development, needs to be trimmed out of a lot of places now
 	//: that the sync module is pretty stable.
@@ -785,7 +930,43 @@ class KSystem {
 		global $db;
 		$fileName = 'data/log/' . date("y-m-d") . '-sync.log.php';
 		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
-		$msg = $db->datetime() . " *******************************************************\n". $msg;
+		$msg = $this->datetime() . " **************************************************\n". $msg;
+		$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
+		return $result;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	log p2p activity
+	//----------------------------------------------------------------------------------------------
+	//arg: msg - message to log [string]
+	//: this is overused due to development, needs to be trimmed out of a lot of places now
+	//: that the sync module is pretty stable.
+
+	function logP2P($msg) {
+		global $db;
+		$fileName = 'data/log/' . date("y-m-d") . '-p2p.log.php';
+		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
+		$msg = $this->datetime() . " **************************************************\n". $msg;
+		$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
+		return $result;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	log p2p activity
+	//----------------------------------------------------------------------------------------------
+	//arg: msg - message to log [string]
+	//: this is overused due to development, needs to be trimmed out of a lot of places now
+	//: that the sync module is pretty stable.
+
+	function logCron($msg) {
+		global $db;
+		$fileName = 'data/log/' . date("y-m-d") . '-cron.log.php';
+		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
+		$msg = ''
+		 . "<event>\n"
+		 . "\t<time>" . $this->datetime() . "</time>\n"
+		 . "\t<msg>" . htmlentities($msg) . "</msg>\n"
+		 . "</event>\n";
 		$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
 		return $result;
 	}
@@ -947,12 +1128,12 @@ class KSystem {
 					unlink($this->installPath . 'data/temp/' . $entry);
 
 				} else {
-					//----------------------------------------------------------------------------------	
+					//------------------------------------------------------------------------------	
 					// look for old files
-					//----------------------------------------------------------------------------------
+					//------------------------------------------------------------------------------
 					$parts = explode('-', $entry, 2);
 					$timestamp = (int)$parts[0];
-					$hourago = time() - (3600);		// TODO: make this a setting, remove literal
+					$hourago = $this->time() - (3600);	// TODO: make a setting, remove literal
 					if ($timestamp < $hourago) { 
 						$report .= "old file: " . $entry . " (removed)<br/>\n";
 						unlink($this->installPath . 'data/temp/' . $entry);

@@ -1,11 +1,12 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/alias/models/alias.mod.php');
-
 //--------------------------------------------------------------------------------------------------
-//*	development action (reserved)
+//|	show details of an Aliases_Alias object TODO
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+function aliases_show($args) {
+	$html = '(not implemented)';
+	return $html;
+}
 
 ?>

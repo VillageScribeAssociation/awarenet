@@ -16,6 +16,7 @@ function admin_svnadd($args) {
 		'setup.inc.php', 
 		'tweet.txt',
 		'morbo.gif',
+		'.kreg',
 		'modules/pages/',
 		'modules/recordalias/',
 		'modules/mods/',		

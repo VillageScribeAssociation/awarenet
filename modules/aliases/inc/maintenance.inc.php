@@ -1,13 +1,15 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/aliases/models/aliad.mod.php');
+	require_once($kapenta->installPath . 'modules/aliases/models/alias.mod.php');
 
-//-------------------------------------------------------------------------------------------------
-//	maintain the recordAlias table
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//|	maintain the aliases module
+//--------------------------------------------------------------------------------------------------
 
-function alias_maintenace() {
-	global $db, $theme;
+function aliases_maintenance() {
+	global $db;
+	global $revisions;
+	global $theme;
 
 	$recordCount = 0;
 	$errorCount = 0;
@@ -15,12 +17,12 @@ function alias_maintenace() {
 
 	$report = "<h2>Checking aliases_alias table...</h2>";
 
-	//---------------------------------------------------------------------------------------------
-	//	check that all recordaliases are for an existing record
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
+	//	check that all aliases are for an existing record
+	//----------------------------------------------------------------------------------------------
 
 	$errors = array();
-	$errors[] = array('UID', 'refTable', 'refUID', 'alias', 'error');
+	$errors[] = array('UID', 'refModel', 'refUID', 'alias', 'error');
 
 	$db->loadTables();
 	$tables = $db->tables;
@@ -30,21 +32,24 @@ function alias_maintenace() {
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
 
-		//-----------------------------------------------------------------------------------------
-		//	check that refTable and refUID exist
-		//-----------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
+		//	check that refModel and refUID exist
+		//------------------------------------------------------------------------------------------
 		$allGood = true;
-		if (false == in_array($row['refTable'], $tables)) { $allGood = false; } 
-		else {
-			if (false == $db->objectExists($row['refTable'], $row['refUID'])) { $allGood = false; }
+		if (false == in_array($row['refModel'], $tables)) {
+			//$allGood = false;
+		} else {
+			if (true == $revisions->isDeleted($row['refModel'], $row['refUID'])) {
+				$allGood = false;
+			}
 		}
 		
-		//-----------------------------------------------------------------------------------------
-		//	delete dud records
-		//-----------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
+		//	delete aliases for obejcts which have been deleted
+		//------------------------------------------------------------------------------------------
 		if (false == $allGood) {
 			$msg = "nosuch";
-			$error = array($row['UID'], $row['refTable'], $row['refUID'], $row['alias'], $msg);
+			$error = array($row['UID'], $row['refModel'], $row['refUID'], $row['alias'], $msg);
 			$errors[] = $error;
 
 			$model = new Aliases_Alias();
@@ -58,9 +63,9 @@ function alias_maintenace() {
 		$recordCount++;
 	}
 
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	compile report
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 
 	if (count($errors) > 1) { $report .= $theme->arrayToHtmlTable($errors, true, true); }
 

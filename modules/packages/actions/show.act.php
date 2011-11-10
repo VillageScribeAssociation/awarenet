@@ -1,11 +1,9 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/alias/models/alias.mod.php');
-
 //--------------------------------------------------------------------------------------------------
-//*	development action (reserved)
+//*	alias of showpackage
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	include($kapenta->installPath . 'modules/packages/actions/showpackage.act.php');
 
 ?>

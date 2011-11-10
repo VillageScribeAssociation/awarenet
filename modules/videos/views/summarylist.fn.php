@@ -5,26 +5,32 @@
 //--------------------------------------------------------------------------------------------------
 //|	list all galleries belonging to a specified user
 //--------------------------------------------------------------------------------------------------
+//: galleries which do not contain any videos are not displayed
 //opt: orderBy - field to order by, default is title (title|imagecount|createdOn|editedOn) [string]
 //opt: pageNo - page number to display, default is '1' [string]
-//opt: pageSize - number of records per page, default '10' [string]
-//: galleries which do not contain any images are not displayed
+//opt: num - number of records per page, default '10' [string]
+//opt: pagination - show order links and pagination, default is 'yes' (yes|no) [string]
 //returns: html list [string]
 
 function videos_summarylist($args) {
-	global $db, $theme;
-	$orderBy = 'title';
-	$pageNo = 1;
-	$pageSize = 10;
+	global $db;
+	global $theme;
+
+	$pageNo = 1;					//%	page to show, starting from 1 [int]
+	$num = 10;						//%	number of items per page [int]
+	$start = 0;						//%	offset in database results [int]
+	$orderBy = 'editedOn';			//%	order field [string]
+	$ad = 'DESC';					//%	list order [string]
+	$pagination = 'yes';			//%	show order links and pagination (yes|no) [string]
 	$html = '';
-	$ad = 'DESC';
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('orderBy', $args) == true) { $orderBy = $args['orderBy']; }
-	if (array_key_exists('pageNo', $args) == true) { $pageNo = (int)$args['pageNo']; }
-	if (array_key_exists('pageSize', $args) == true) { $pageSize = (int)$args['pageSize']; }
+	if (true == array_key_exists('orderBy', $args)) { $orderBy = $args['orderBy']; }
+	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pagination', $args)) { $pageSize = (int)$args['pagination']; }
 
 	if ($pageSize <= 0) { $pageSize = 10; }
 
@@ -32,7 +38,7 @@ function videos_summarylist($args) {
 		case 'createdOn':	$ad = 'DESC';	break;
 		case 'editedOn':	$ad = 'DESC';	break;
 		case 'title':		$ad = 'ASC';	break;
-		case 'imagecount':	$ad = 'DESC';	break;
+		case 'videocount':	$ad = 'DESC';	break;
 		default:			return ''; // no such sortable column
 	}
 
@@ -40,36 +46,27 @@ function videos_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('videocount > 0');	// do not show galleries with no images
-	$numRows = $db->countRange('videos_gallery', $conditions);
-	$numPages = ceil($numRows / $pageSize);
-	$startRow = $pageSize * ($pageNo - 1);
+	$totalItems = $db->countRange('videos_gallery', $conditions);
+	$totalPages = ceil($totalItems / $pageSize);
+	$start = $num * ($pageNo - 1);
 
-	$range = $db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
+	$range = $db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $num, $start);
 
 	//---------------------------------------------------------------------------------------------
-	//	render html
+	//	make the block
 	//---------------------------------------------------------------------------------------------
-
 	$linkBase = '%%serverPath%%videos/listallgalleries/orderby_';
 	$pagination = "[[:theme::pagination::page=" . $pageNo 
-				 . "::total=" . $numPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
+				 . "::total=" . $totalPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
 
-	$orderLinks = "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
-				. "&nbsp;&nbsp; list by: "
-				. "<a href='" . $linkBase . "title'>[title]</a> "
-				. "<a href='" . $linkBase . "imagecount'>[number of images]</a> "
-				. "<a href='" . $linkBase . "createdOn'>[creation date]</a>"
-				. "</td></tr></table><hr/>";
+	$orderLinks = '[[:videos::orderlinks:]]';
 
-	$html .= $pagination . $orderLinks;
+	if ('yes' == $pagination) { $html .= $pagination . $orderLinks; }
 
-	if (count($range) > 0) {
-		foreach($range as $row) { $html .= "[[:videos::summary::raUID=" . $row['UID'] . ":]]"; }
-	} else { 
-		$html .= "(no galleries match criteria)"; 
-	}
+	foreach($range as $item) { $html .= "[[:videos::summary::raUID=" . $item['UID'] . ":]]"; }
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
-	$html .= $pagination . $orderLinks;
+	if ('yes' == $pagination) { $html .= $pagination . $orderLinks; }
 
 	return $html;
 }
@@ -77,4 +74,3 @@ function videos_summarylist($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

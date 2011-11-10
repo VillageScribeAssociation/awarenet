@@ -26,7 +26,7 @@ function twitter__cb_microblog_event($args) {
 	$model->refUID = $args['refUID'];
 	$model->content = substr($args['message'], 0, 140);
 	$model->status = 'new';
-	$model->save();
+	$report = $model->save();
 
 	if ('' != $report) { return false; }
 	return true;

@@ -134,8 +134,16 @@ class Videos_Video {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$report = '';
+		global $kapenta;
+		$report = '';					//%	return value [string]
+
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
+		// add hash if missing and the file is available
+		if (('' == $this->hash) && (true == $kapenta->fileExists($this->fileName))) {
+			$this->hash = sha1_file($kapenta->installPath . $this->fileName);
+		}
+
 		return $report;
 	}
 
@@ -299,19 +307,24 @@ class Videos_Video {
 		//	links
 		//------------------------------------------------------------------------------------------
 		if (true == $user->authHas('videos', 'videos_video', 'show', $this->UID)) {
-			$ext['viewUrl'] = '%%serverPath%%Videos/showvideo/' . $ext['alias'];
+			$ext['viewUrl'] = '%%serverPath%%videos/play/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_video', 'edit', 'edit', $this->UID)) {
-			$ext['editUrl'] = '%%serverPath%%Videos/editvideo/' . $ext['alias'];
+			$ext['editUrl'] = '%%serverPath%%videos/editvideo/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_video', 'edit', 'delete', $this->UID)) {
-			$ext['delUrl'] = '%%serverPath%%Videos/delvideo/' . $ext['alias'];
+			$ext['delUrl'] = '%%serverPath%%videos/delvideo/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
+
+		$ext['streamUrl'] = '%%serverPath%%' . $ext['fileName'];
+		$ext['browserLink'] = "<a href='" . $ext['streamUrl'] . "'>[Watch in browser]</a>";
+
+		if ('private' == $ext['category']) { $ext['browserLink'] = ''; }
 
 		//------------------------------------------------------------------------------------------
 		//	javascript

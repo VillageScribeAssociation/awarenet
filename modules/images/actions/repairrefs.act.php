@@ -3,8 +3,9 @@
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	repair damaged image references
+//*	repair damaged image references
 //-------------------------------------------------------------------------------------------------
+//TODO: discover if this is still necessary, remove if not
 
 	//---------------------------------------------------------------------------------------------
 	//	must be admin

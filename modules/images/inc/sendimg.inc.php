@@ -3,11 +3,14 @@
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	send an image at the specified size
+//*	send an image at the specified size, managing browser cache, etc
 //-------------------------------------------------------------------------------------------------
 
 function imgSend($size) {
-	global $req, $page, $request, $kapenta, $sync;
+	global $kapenta;
+	global $req;
+	global $page;
+	global $sync;
 
 	//----------------------------------------------------------------------------------------------
 	//	load the image record
@@ -18,7 +21,10 @@ function imgSend($size) {
 	if (false == $model->loaded) { $page->do404('Image not found'); }
 	if ('' == $model->fileName) { $page->do404('File missing.'); }
 	
-	$lmDate = date(DATE_RFC1123, strtotime($model->createdOn));
+	$lmDate = date(DATE_RFC1123, $kapenta->strtotime($model->editedOn));
+	$eTag = md5($lmDate . $size . $model->hash);
+	//echo "eTag: " . $eTag . "<br/>\n";
+	//echo 'HTTP_IF_NONE_MATCH: ' . $_SERVER['HTTP_IF_NONE_MATCH'] . "<br/>\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	check for If-Modified-Since header
@@ -27,12 +33,14 @@ function imgSend($size) {
 	if ( (true == array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER))
 	   || (true == array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)) ) {
 
-		header('Last-Modified: ' . $lmDate);
-		header("ETag: \"" . md5($lmDate . $size) . "\"");
-		header('Cache-Control: max-age=3600');
- 	    header('HTTP/1.0 304 Not Modified');
-		echo ""; flush();				
-		die();
+		if ($eTag == $_SERVER['HTTP_IF_NONE_MATCH']) {
+			header('Last-Modified: ' . $lmDate);
+			header("ETag: \"" . $eTag . "\"");
+			header('Cache-Control: max-age=3600');
+	 	    header('HTTP/1.0 304 Not Modified');
+			echo ""; flush();				
+			die();
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -65,7 +73,7 @@ function imgSend($size) {
 
 			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $model->fileName);
 			$model->transforms[$size] = $thumbFile;
-			$model->save();
+			//$model->save();
 			imagejpeg($thumb, $kapenta->installPath . $thumbFile, 95);
 	
 		} else {
@@ -78,7 +86,7 @@ function imgSend($size) {
 		if (true == $exists) { 
 			header('Content-Type: image/jpeg');
 			header('Last-Modified: ' . $lmDate);
-			header("ETag: \"" . md5($lmDate . $size) . "\"");
+			header("ETag: \"" . $eTag . "\"");
 			header('Cache-Control: max-age=3600');
 			readfile($kapenta->installPath . $thumbFile);	
 
@@ -88,7 +96,7 @@ function imgSend($size) {
 	} else {
 	
 		//------------------------------------------------------------------------------------------
-		//	return the transform
+		//	output the transform
 		//------------------------------------------------------------------------------------------
 
 		if (file_exists($$kapenta->installPath . $model->transforms[$size]) == true) {
@@ -97,7 +105,7 @@ function imgSend($size) {
 			//-------------------------------------------------------------------------------------
 			header('Content-Type: image/jpeg');
 			header('Last-Modified: ' . $lmDate);
-			header("ETag: \"" . md5($lmDate . $size) . "\"");
+			header("ETag: \"" . $eTag . "\"");
 			header('Cache-Control: max-age=3600');
 			readfile($kapenta->installPath . $model->transforms[$size]);
 

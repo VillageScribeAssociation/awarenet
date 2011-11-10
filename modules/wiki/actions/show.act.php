@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/wiki/models/article.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display a wiki article
+//*	display a wiki article
 //--------------------------------------------------------------------------------------------------
 //	If no alias is specified, the 'index' article is shown.
 

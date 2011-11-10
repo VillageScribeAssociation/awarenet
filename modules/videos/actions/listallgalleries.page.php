@@ -5,8 +5,10 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all image galleries</title>
 	<content>[[:theme::navtitlebox::label=Video Galleries (everyone)::width=570:]]
+	[[:videos::orderlinks:]]
+	[[:live::river::mod=videos::view=summarylist::pv=pageNo::allow=orderBy|pagination|num::pagination=no::orderBy=%%orderBy%%::num=5:]]
 
-[[:videos::summarylist::orderBy=[`|pc][`|pc]orderBy[`|pc][`|pc]::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]:]]</content>
+	</content>
 	<nav1>[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
 [`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 [[:videos::newgalleryform:]]

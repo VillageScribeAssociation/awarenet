@@ -147,6 +147,7 @@
 	$model->licence = 'unknown';
 	$model->attribURL = '';
 	$model->category = $category;
+	$model->shared = 'yes';
 	//NOTE: weight is set by $model->save()
 	$ext = $model->extArray();
 	$report = $model->save();
@@ -154,7 +155,6 @@
 	//------------------------------------------------------------------------------------------
 	//	send 'images_added' event to module whose record owns this image
 	//------------------------------------------------------------------------------------------
-
 	$args = array(	
 		'refModule' => $refModule, 
 		'refModel' => $refModel, 
@@ -164,6 +164,20 @@
 	);
 
 	$kapenta->raiseEvent('*', 'images_added', $args);
+
+	//------------------------------------------------------------------------------------------
+	//	broadcast 'file_added' event (used by p2p, etc)
+	//------------------------------------------------------------------------------------------
+	$args = array(
+		'refModule' => 'images', 
+		'refModel' => 'images_image', 
+		'refUID' => $model->UID, 
+		'fileName' => $model->fileName, 
+		'hash' => $kapenta->fileSha1($model->fileName),
+		'size' => $kapenta->fileSize($model->fileName)
+	);
+
+	$kapenta->raiseEvent('*', 'file_added', $args);
 
 	//----------------------------------------------------------------------------------------------
 	//	return xml or redirect back 

@@ -1,6 +1,6 @@
 
 //-------------------------------------------------------------------------------------------------
-//	javascript do display results of user search and allow of selection
+//*	javascript do display results of user search and allow selection
 //-------------------------------------------------------------------------------------------------
 
 var usrPage = 0;			// page we're currently on

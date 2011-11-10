@@ -18,6 +18,7 @@ class Images_ImageSet {
 	var $refModule;			//_ kapenta module [string]
 	var $refModel;			//_	type of object [string]
 	var $refUID;			//_	UID of object which owns images [string]
+	var $count = 0;			//_	number of images in this set [int]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor (loads all images belonging to some object)
@@ -52,6 +53,7 @@ class Images_ImageSet {
 		if (false == $range) { return false; }
 		
 		foreach($range as $row) { $this->images[] = $row; }
+		$this->count = count($this->images);
 		$this->loaded = true;
 		return true;
 	}
@@ -156,6 +158,41 @@ class Images_ImageSet {
 		$this->load();
 		$this->checkWeights();
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set an image as the default (weight 0)
+	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of an Images_Image object [string]
+	//returns: true on succes, false on failure [bool]
+
+	function setDefault($UID) {
+		$found = false;						//%	return value [bool]
+		$currWeight = 1;
+
+		// check that this is not already the default
+		foreach ($this->images as $objArray) {
+			if (($UID == $objArray['UID']) && (0 == $objArray['weight'])) { return true; }
+		}
+
+		// set weight to 0
+		foreach ($this->images as $objArray) {
+			$model = new Images_Image();
+			$model->loadArray($objArray);
+			if ($UID == $model->UID) {
+				$model->weight = 0;			//	this one is the default
+				$found = true;
+			} else {
+				$model->weight = $currWeight;
+				$currWeight++;
+			}
+
+			// save only if weight has changed
+			if ($model->weight != $objArray['weight']) { $model->save(); }
+		}
+
+		$this->checkWeights();				//	in case of not found, this will reset weights
+		return $found;
 	}
 
 }

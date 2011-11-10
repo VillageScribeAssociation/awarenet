@@ -4,21 +4,22 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]userName[`|pc][`|pc] (profile)</title>
-	<content>[[:theme::navtitlebox::label=User Profile::width=570:]]
-[[:users::profile:]]
-[`|lt]br/[`|gt]
+	<content>
+		[[:theme::navtitlebox::label=User Profile::width=570:]]
+		[[:users::profile:]]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Add Wall Post::width=570::toggle=divWallAddComment::hidden=yes:]]
-[`|lt]div id=[`|sq]divWallAddComment[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:comments::addcommentform::refModule=users::refModel=users[`|us]user::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Add Wall Post::width=570::toggle=divWallAddComment::hidden=yes:]]
+		[`|lt]div id=[`|sq]divWallAddComment[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:comments::addcommentform::refModule=users::refModel=users[`|us]user::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/users/profile/[`|pc][`|pc]userRa[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Wall::width=570::toggle=divWall:]]
-[`|lt]div id=[`|sq]divWall[`|sq][`|gt]
-[[:comments::list::refModule=users::refModel=users[`|us]user::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Wall::width=570::toggle=divWall:]]
+		[`|lt]div id=[`|sq]divWall[`|sq][`|gt]
+		[[:live::river::mod=comments::view=list::pv=pageNo::allow=refModule|refModel|refUID::refModule=users::refModel=users[`|us]user::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Friends::width=570::toggle=divUserFriends:]]
 [`|lt]div id=[`|sq]divUserFriends[`|sq][`|gt]

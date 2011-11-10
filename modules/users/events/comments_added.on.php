@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when a comment is added
+//|	fired when a comment is added
 //-------------------------------------------------------------------------------------------------
 //arg: refModule - name of module to which a comment was attached [string]
 //arg: refModel - Type of object to which comment was attached [string]

@@ -1,10 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display an image scaled to 560 px wide
+//*	display an image scaled to 560 px wide
 //--------------------------------------------------------------------------------------------------
+//DEPRECATED: remove this action when data is clean [string]
 
-	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
-	imgSend('width560');
+	$page->do302('images/s_width560/' . $req->ref);
 
 ?>

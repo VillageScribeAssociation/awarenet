@@ -1,53 +1,19 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/settings.set.php');
+	require_once($kapenta->installPath . 'modules/users/models/friendships.set.php');
+	require_once($kapenta->installPath . 'modules/users/models/permissions.set.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object to represent site users.  This module is required.
 //--------------------------------------------------------------------------------------------------
-//+	permissions field is formatted in lines: |auto/special|modulename|perm|cond| where condition
-//+	may be blank or something like: %%createdBy%%=%%user.UID%%
-//+	'auto' permissions are generated from module.xml.php files, 'special' permissions are manually
-//+	granted by an administrator.
-//+
-//+	PERMISSIONS
-//+
-//+	Users and groups may be granted permissions on individual objects or more often on entire 
-//+	classes of objects.  Permissions are defined by the module to which an object belongs, and 
-//+	may be exported to other modules (ie, inherited permisisons)
-//+
-//+ Inheritable permissions are exported by the module which maintains an owned object, say a 
-//+	comment which belongs to a blog post.  They are granted according to the relationship between
-//+	the owner object and a user.  For example, a user may have permission to delete an image 
-//+	belonging to a blog post because the user created that post.  These relationships between 
-//+ objects and users are defined by the module which owns an object.
-//+
-//+	Format of basic permissions:
-//+	p|module|model|permission								- blanket permission
-//+	c|module|model|permission|(if)|relationship				- conditional permission
-//+	
-//+	Note that in the case of inherited permissions, the first object is the owner, the second
-//+	is the owned object, the permission applies to the owned object, and the condition to the
-//+	owner object.
-//+
-//+ Examples:
-//+	c|blog|Blog_Post|edit|(if)|creator						- may edit their own blog posts
-//+	p|blog|Blog_Post|create									- may create blog posts
-//+ p|blog|Blog_Post|comment-create							- may comment on blog posts
-//+	c|blog|Blog_Post|image-create|(if)|creator				- may add images to their own blog posts
-//+	c|projects|Projects_Project|images-delete|(if)|member	- may delete images if member of project
-//+
-//+ TODO: consider adding third permission type 'e', evalutaing a member, say to allow an individual
-//+	user to edit an individual document (when)|UID=1234, or to allow a role permissions on a
-//+ subset of objects - say members of the 'sales' role can edit wiki pages in category 'marketing',
-//+	but not in category 'accounts', or to give 'moderators' the ability to delete comments from
-//+	unregistered users without review.
 //+
 //+	TODO: consider a better way for admins to decide on profile fields
 //+	TODO: make profile expansion explicit, current method is wasteful, parses XML that is 
 //+	almost never used.
-
-require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
-require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
-require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 class Users_User {
 
@@ -69,8 +35,8 @@ class Users_User {
 	var $password;			// varchar(50)
 	var $lang;				// varchar(30)
 	var $profile;			// stored as XML in a text field [array]
-	var $permissions;		// actions this user is authorised to take [array]
-	var $settings;			// per-user configuration options [array]
+	var $permissions;		// object:Users_Permissions [array]
+	var $settings;			// object:Users_Settings per-user configuration options [array]
 	var $lastOnline;		// datetime
 	var $createdOn;			// datetime
 	var $createdBy;			// ref:users-user
@@ -78,25 +44,28 @@ class Users_User {
 	var $editedBy;			// ref:users-user
 	var $alias;				// alias
 
-	//TODO: make this an admin-editable setting
+	//TODO: make this a registry setting
 	var $profileFields = 'interests|hometown|music|goals|books|also|birthyear|tel|email';
 	
-	//----------------------------------------------------------------------------------------------
-	//.	constructor
-	//----------------------------------------------------------------------------------------------
-	//opt: raUID - recordAlias or UID of a user [string]
-
 	//----------------------------------------------------------------------------------------------
 	//. constructor
 	//----------------------------------------------------------------------------------------------
 	//opt: raUID - UID or alias of a User object [string]
+	//opt: byName - set to true to load by username and not raUID [string]
 
-	function Users_User($raUID = '') {
+	function Users_User($raUID = '', $byName = false) {
 		global $db;
-		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+
+		$this->dbSchema = $this->getDbSchema();				//	initialise table schema
+		$this->settings = new Users_Settings();				//	create user registry
+		$this->permissions = new Users_Permissions();		//	create permission set		
+		$this->friendships = new Users_Friendships();		//	this user's friends
 
 		if ('public' == $raUID) { $raUID = ''; }			//	no user object
-		if ('' != $raUID) { $this->load($raUID); }			// 	try load an object from the database
+		if ('' != $raUID) {										// 	try load from the database
+			if (false == $byName) { $this->load($raUID); }		//	.. by alias or UID
+			if (true == $byName) { $this->loadByName($raUID); }	//	.. by username
+		}							
 
 		if (false == $this->loaded) {						// check if we did
 			//note: we can't use $db->makeBlank yet, it requires global user
@@ -108,7 +77,6 @@ class Users_User {
 			$this->createdBy = 'public';
 			$this->editedOn = $db->datetime();
 			$this->editedBy = 'public';
-			$this->settings = array();
 		}
 	}
 
@@ -126,9 +94,24 @@ class Users_User {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record provided as an associative array
+	//.	load a use given their username
+	//----------------------------------------------------------------------------------------------
+	//arg: username - username [string]
+	//returns: true on success, false on failure [bool]
+
+	function loadByName($username) {
+		global $db;
+		$conditions = array("username='" . $db->addMarkup($username) . "'");
+		$range = $db->loadRange('users_user', '*', $conditions);
+		foreach($range as $objary) { return $this->loadArray($objary); }
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load an object serialized as an associative array
 	//----------------------------------------------------------------------------------------------
 	//arg: ary - associative array of fields and values [array]
+	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
 		if (false == $ary) { return false; }
@@ -143,16 +126,19 @@ class Users_User {
 		$this->password = $ary['password'];
 		$this->lang = $ary['lang'];
 		$this->profile = $this->expandProfile($ary['profile']);
-		$this->permissions = $this->expandPermissions($ary['permissions']);
-		$this->settings = $this->expandSettings($ary['settings']);
+		$this->permissions->expand($ary['permissions']);
+		$this->settings->expand($ary['settings']);
 		$this->lastOnline = $ary['lastOnline'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
 		$this->alias = $ary['alias'];
+
+		$this->friendships->userUID = $this->UID;	//	make queires with this UID
+		$this->friendships->loaded = false;			//	clear any existsing recordset
+
 		$this->loaded = true;
-		
 		return true; 
 	}
 
@@ -240,7 +226,7 @@ class Users_User {
 			'profile' => 'TEXT',
 			'permissions' => 'TEXT',
 			'settings' => 'TEXT',
-			'lastOnline' => 'TEXT',
+			'lastOnline' => 'VARCHAR(255)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -258,7 +244,7 @@ class Users_User {
 			'alias' => '10' );
 
 		//revision history will be kept for these fields
-		$dbSchema['nodiff'] = array('UID');
+		$dbSchema['nodiff'] = array('UID', 'lastOnline');
 		//TODO: add more nodiff fields
 
 		return $dbSchema;
@@ -282,8 +268,8 @@ class Users_User {
 			'password' => $this->password,
 			'lang' => $this->lang,
 			'profile' => $this->collapseProfile(),
-			'permissions' => $this->collapsePermissions(),
-			'settings' => $this->collapseSettings($this->settings),
+			'permissions' => $this->permissions->collapse(),
+			'settings' => $this->settings->collapse(),
 			'lastOnline' => $this->lastOnline,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
@@ -363,12 +349,19 @@ class Users_User {
 		//	look up school info
 		//------------------------------------------------------------------------------------------
 		$mySchool = new Schools_School($ary['school']);
+		$ary['schoolName'] = '';
+		$ary['schoolCountry'] = 'no school chosen';
+		$ary['schoolRecordAlias'] = '';
+		$ary['schoolUrl'] = '%%serverPath%%schools/';
+		$ary['schoolLink'] = "<a href='" . $ary['schoolUrl'] . "'></a>";
 
-		$ary['schoolName'] = $mySchool->name;
-		$ary['schoolCountry'] = $mySchool->country;
-		$ary['schoolRecordAlias'] = $mySchool->alias;
-		$ary['schoolUrl'] = '%%serverPath%%schools/' . $mySchool->alias;
-		$ary['schoolLink'] = "<a href='" . $ary['schoolUrl'] . "'>" . $mySchool->name . "</a>";
+		if (true == $mySchool->loaded) {
+			$ary['schoolName'] = $mySchool->name;
+			$ary['schoolCountry'] = $mySchool->country;
+			$ary['schoolRecordAlias'] = $mySchool->alias;
+			$ary['schoolUrl'] = '%%serverPath%%schools/' . $mySchool->alias;
+			$ary['schoolLink'] = "<a href='" . $ary['schoolUrl'] . "'>" . $mySchool->name . "</a>";
+		} 
 
 		return $ary;
 	}
@@ -401,69 +394,28 @@ class Users_User {
 	}
 
 	//==============================================================================================
-	//	USER SETTINGS
+	//	PASSWORD
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	//.	unserializes user settings
+	//.	discover if a password is vaid for this user
 	//----------------------------------------------------------------------------------------------
-	//arg: serialized - serialized user settings [string]
-	//returns: dictionary key => base 64 encoded value [array]
+	//arg: candidate - password to test [string]
+	//returns: true on succes, false on failure [bool]
 
-	function expandSettings($serialized) {
-		$settings = array();
-
-		$lines = explode("\n", $serialized);
-		foreach($lines as $line) {
-			if ((strlen($line) >= 30) && ('#' != substr($line, 0, 1))) {
-				$key = trim(substr($line, 0, 30));
-				$value = trim(substr($line, 30));
-				$settings[$key] = $value;
-			}
-		}
-		
-		return $settings;
+	function checkPassword($candidate) {
+		if ($this->password == sha1($candidate . $this->UID)) { return true; }
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	serializes user settings
+	//.	set user's password
 	//----------------------------------------------------------------------------------------------
-	//arg: settings - array of all user settings (values base64 encoded) [string]
-	//returns: string representation of all settings [string]
-
-	function collapseSettings($settings) {
-		$serialized = '';						//%	return value [string]
-		$thirty = str_repeat(' ', 30);			//%	blank key name [string]
-
-		foreach($settings as $k => $v) { $serialized .= substr($k . $thirty, 0, 30) . $v . "\n"; }
-		return $serialized;	
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	retrieve a user setting
-	//----------------------------------------------------------------------------------------------
-	//arg: key - name of setting [string]
-	//returns: value of setting or empty string if not found [string]
-
-	function getSetting($key) {
-		$value = '';
-		if (false == array_key_exists($key, $this->settings)) { return ''; }
-		$value = base64_decode($this->settings[$key]);
-		return $value;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	store a user setting
-	//----------------------------------------------------------------------------------------------
-	//arg: key - name of setting [string]
-	//arg: value - value to store [string]
+	//arg: password - new password [string]
 	//returns: true on success, false on failure [bool]
 
-	function storeSetting($key, $value) {
-		if ('public' == $this->role) { return false; }
-		$this->settings[$key] = base64_encode($value);
-		$this->save();
-		return true;
+	function setPassword($password) {
+		//TODO: this, make it check for length and common passwords
 	}
 
 	//==============================================================================================
@@ -480,23 +432,29 @@ class Users_User {
 	//returns: true if the user is authorized, otherwise false [bool]
 
 	function authHas($module, $model, $permission, $UID = '') {
-		global $kapenta, $role, $page;
-		if ('admin' == $this->role) { return true; }			// admins have all permissions
-		if (false == $role->loaded) { return false; }			// no such role
+		global $kapenta;
+		global $role;
+		global $page;
+
+		if ('admin' == $this->role) { return true; }			//	admins have all permissions
+		if (false == $role->loaded) { return false; }			//	no such role
+		$model = strtolower($model);							//	fixes some calls
 
 		$page->logDebug('auth', "Checking: $module - $model - $permission - $UID <br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	check role permisisons first
 		//------------------------------------------------------------------------------------------
-		if (true == array_key_exists($module, $role->permissions)) {
-			foreach($role->permissions[$module] as $p) {
-				if (($model == $p['model']) && ($permission == $p['permission'])) {
-					if ('p' == $p['type']) { 
+		if (true == array_key_exists($module, $role->permissions->members)) {
+			foreach($role->permissions->members[$module] as $p) {
+				if (($model == strtolower($p['model'])) && ($permission == $p['permission'])) {
+
+					if ('p' == $p['type']) {
 						//--------------------------------------------------------------------------
-						// user has blanket permission to perform this action
+						//	user has permission on all objects of this type
 						//--------------------------------------------------------------------------
-						return true;
+						$page->logDebug('auth', "Role has blanket permission.<br/>\n");
+						return true; 		
 					}
 
 					if ('c' == $p['type']) {
@@ -511,28 +469,24 @@ class Users_User {
 							$this->UID
 						);
 
-						if (true == $met) { return true; }
+						if (true == $met) {
+							$page->logDebug('auth', "Condition met: ". $p['condition'] ."<br/>\n");
+							return true;
+						}
 					}
 				}
 			}
-		} 
+		}
 
 		$page->logDebug('auth', "Role does not support permission.<br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	if role does not authorize action, try user-specific permissions
 		//------------------------------------------------------------------------------------------
-		if (false == is_array($this->permissions)) { $this->permissions = array(); }	// TODO: fix
-		if (true == array_key_exists($module, $this->permissions)) {
-			foreach($this->permissions[$module] as $p) {
+		if (true == array_key_exists($module, $this->permissions->members)) {
+			foreach($this->permissions->members[$module] as $p) {
 				if (($model == $p['model']) && ($permission == $p['permission'])) {
-					if ('p' == $p['type']) { 
-						//--------------------------------------------------------------------------
-						// user has blanket permission to perform this action
-						//--------------------------------------------------------------------------
-						return true;
-					}
-
+					if ('p' == $p['type']) { return true; }		// has blanket permission
 					if ('c' == $p['type']) {
 						//--------------------------------------------------------------------------
 						// user has permission to perform this action is a condition is met
@@ -555,59 +509,6 @@ class Users_User {
 		//	at this point to policy has been shown to authorize this user to permform this action
 		//------------------------------------------------------------------------------------------
 		return false;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	read [permissions] into array for authentication
-	//----------------------------------------------------------------------------------------------
-	//arg: serialized - permissions set as raw string [string]
-	//returns: permissions set as an array [array]
-
-	function expandPermissions($data) {
-		$permissions = array();
-		$lines = explode("\n", $data);
-		foreach($lines as $line) {
-		  if (strpos($line, '|') != false) {
-			$parts = explode("|", $line);
-			$perm = array();
-
-			$perm['type'] = $parts[0];
-			$perm['module'] = $parts[1];
-			$perm['model'] = $parts[2];
-			$perm['permission'] = $parts[3];
-
-			if ('c' == $perm['type']) {	$perm['condition'] = $parts[5];	}
-	
-			if (false == array_key_exists($perm['module'], $permissions)) 
-				{ $permissions[$perm['module']] = array(); }
-
-			$permissions[$perm['module']][] = $perm;
-		  }
-		}
-
-		return $permissions;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	collapse permissions array back to an XML string
-	//----------------------------------------------------------------------------------------------
-	//returns: permissions serialized as a string [string]
-
-	function collapsePermissions() {
-		$txt = '';
-
-		if (false == is_array($this->permissions))
-			{ $this->permissions = $this->expandPermissions($this->permissions); }
-
-		foreach($this->permissions as $moduleName => $modPerms) {
-			foreach($modPerms as $p) {
-				$txt .= $p['type'] . '|' . $p['module'] . '|' . $p['model'] . '|' . $p['permission'];
-				if ('c' == $p['type']) { $txt .= "|(if)|" . $p['condition']; }
-				$txt .= "\n";
-			}
-		}
-
-		return $txt;
 	}
 
 	//==============================================================================================
@@ -680,51 +581,6 @@ class Users_User {
 		$conditions[] = "school='" . $db->addMarkup($this->school) . "'";
 		$conditions[] = "grade='" . $db->addMarkup($this->grade) . "'";
 		$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
-		return $range;
-	}
-
-	//==============================================================================================
-	//	USER RELATIONSHIPS
-	//==============================================================================================
-	//----------------------------------------------------------------------------------------------
-	//.	get the current users friends
-	//----------------------------------------------------------------------------------------------
-	//returns: array of friendshipUID => friendship for loadArray [array]
-	//, TODO: handle this differently, perhaps with a block
-	//, TODO: see if this can be removed entirely
-
-	function getFriends() {
-		global $db;
-		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($this->UID) . "'";
-		$conditions[] = "status='confirmed'";
-		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
-		return $range;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get inbound friend requests (that have been made to this user) // TODO: make this a block?
-	//----------------------------------------------------------------------------------------------
-
-	function getFriendRequestsIn() {
-		global $db;
-		$conditions = array();
-		$conditions[] = "friendUID='" . $db->addMarkup($this->UID) . "'";
-		$conditions[] = "status='unconfirmed'";
-		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
-		return $range;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get outbound friend requests (that this user has made) // TODO: make this a block?
-	//----------------------------------------------------------------------------------------------
-	
-	function getFriendRequestsOut() {
-		global $db;
-		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($this->UID) . "'";
-		$conditions[] = "status='unconfirmed'";
-		$range = $db->loadRange('users_friendship', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 

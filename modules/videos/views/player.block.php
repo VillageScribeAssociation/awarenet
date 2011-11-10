@@ -1,6 +1,6 @@
 <? /*
 
-<script src="%%serverPath%%modules/videos/js/flowplayer-3.2.4.min.js"></script>
+<script src="%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js"></script>
 
 <a
 	href="%%serverPath%%%%fileName%%"
@@ -11,7 +11,7 @@
 <script language="JavaScript">
 flowplayer(
 	"player%%UID%%", 
-	"%%serverPath%%modules/videos/flash/flowplayer-3.2.5.swf", 
+	"%%serverPath%%modules/videos/flash/flowplayer-3.2.7.swf", 
 	{
 		plugins: {
 		},
@@ -19,12 +19,15 @@ flowplayer(
 
 		clip: { 
 		   autoPlay: false,
-		   url: '%%serverPath%%%%fileName%%',
-		   coverImage: { url: '%%coverImage%%', scaling: 'orig' } 
-		}
+		   url: '%%serverPath%%%%fileName%%'
+		},
+
+		canvas:  { backgroundImage: 'url(%%coverImage%%)' }
 
 	}
 );
 </script>
+
+%%browserLink%%
 
 */ ?>

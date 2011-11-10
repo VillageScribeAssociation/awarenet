@@ -6,7 +6,7 @@
 //|	form for editing videos
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - alias or UID of a Videos_Video object [string]
-//opt: return - return to upload dialog (set to 'uploadmultiple') [string]
+//opt: return - return to upload dialog (set to 'uploadmultiple' or 'player') [string]
 
 function videos_editvideoform($args) {
 	global $user, $theme;
@@ -28,16 +28,27 @@ function videos_editvideoform($args) {
 	
 	$labels = $model->extArray();
 	$labels['return'] = $return;
+	$labels['returnUrl'] = '';
 	$labels['returnLink'] = '';
 	
-	if ($return == 'uploadmultiple') { 
-		$labels['returnUrl'] = '/videos/uploadmultiple' 
+	switch($return) {
+		case 'uploadmultiple':
+			$labels['returnUrl'] = '/videos/uploadmultiple' 
 			 . '/refModule_' . $model->refModule
 			 . '/refModel_' . $model->refModel  
 			 . '/refUID_' . $model->refUID . '/';
 				     
-		$labels['returnLink'] = "<a href='" . $labels['returnUrl'] 
-				      . "'>[&lt;&lt; return to upload form ]</a>";
+			$labels['returnLink'] = ''
+			 . "<a href='" . $labels['returnUrl'] . "'>[&lt;&lt; return to upload form ]</a>";
+			break;		//..........................................................................
+
+		case 'player':
+			$labels['returnUrl'] = '/videos/play/' . $model->alias;
+				     
+			//$labels['returnLink'] = ''
+			// . "<a href='" . $labels['returnUrl'] . "' target='_parent'>[ show in player &gt;&gt; ]</a>";
+			break;
+		
 	}
 	
 	$block = $theme->loadBlock('modules/videos/views/editvideoform.block.php');

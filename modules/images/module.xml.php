@@ -13,8 +13,8 @@
     </dependencies>
     <models>
         <model>
-            <name>Image</name>
-            <description>Object representing user images</description>
+            <name>images_image</name>
+            <description>Object representing user images.</description>
             <permissions>
                 <permission>show</permission>
                 <permission>edit</permission>
@@ -31,6 +31,14 @@
         </model>
     </models>
     <defaultpermissions>
+	student:p|images|images_image|comments-add
+	student:p|images|images_image|comments-show
+
+	teacher:p|images|images_image|comments-add
+	teacher:p|images|images_image|comments-show
+
+	moderator:p|images|images_image|comments-add
+	moderator:p|images|images_image|comments-show
     </defaultpermissions>
 </module>
 */ ?>

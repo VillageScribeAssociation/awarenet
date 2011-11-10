@@ -1,5 +1,6 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/friendships.set.php');
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
@@ -11,24 +12,22 @@
 
 function users_friendrequestprofilenav($args) {
 	global $theme;
+	global $user;
 
-	global $user; $html = '';
-	if (array_key_exists('userUID', $args) == false) { return false; }	// dud block
-	if ($args['userUID'] == $user->UID) { return false; }		// own profile
-
-	$model = new Users_Friendship();
+	$html = '';
 
 	//----------------------------------------------------------------------------------------------
-	//	look for an existing friendship
+	//	check arguments and permissions 
 	//----------------------------------------------------------------------------------------------
-	$friends = $model->getFriends($user->UID);
-	foreach($friends as $friendUID => $replationship) {
-		if ($friendUID == $args['userUID']) { return ''; }	// are already friends
-	}
+	if (false == array_key_exists('userUID', $args)) { return '(userUID not given)'; }
+	if ($args['userUID'] == $user->UID) { return ''; }		// cannot be friend with self
 
 	//----------------------------------------------------------------------------------------------
 	//	look for an existing friend request
 	//----------------------------------------------------------------------------------------------
+	if (true == $user->friendships->hasConfirmed($args['userUID'])) { return ''; } 
+	//TODO:	perhaps add 'remove from friends' option in this case?
+	
 	$titlebar = "[[:theme::navtitlebox::label=Friend Request:]]\n";
 	$return = '';
 	if (array_key_exists('notitle', $args) == true) { 
@@ -36,29 +35,43 @@ function users_friendrequestprofilenav($args) {
 		$return = 'search';
 	}
 
-	$friends = $model->getFriendRequests($user->UID);
-	foreach($friends as $friendUID => $relationship) {
-		if ($friendUID == $args['userUID']) { 
+	//----------------------------------------------------------------------------------------------
+	//	look for unconfirmed friend request
+	//----------------------------------------------------------------------------------------------
+	if ($user->friendships->hasUnconfirmed($args['userUID'])) {
 
-			$html = $titlebar 
-				  . "You have requested to add " 
-				  . "[[:users::namelink::userUID=" . $friendUID . ":]] as a friend \n"
-				  . "(relationship: $relationship), they must approve your request before "
-				  . "they will appear on your friends list.<br/><br/>\n";
+		$model = new Users_Friendship();
+		$model->loadFriend($user->UID, $args['userUID']);
 
-			return $html;
-		}
+		$withdrawBlock = '';	//TODO
+
+		$html = $titlebar 
+		 . "You have requested to add " 
+		 . "[[:users::namelink::userUID=" . $model->friendUID . ":]] as a friend \n"
+		 . "(relationship: " . $model->relationship . "), they must approve your request "
+		 . "before they will appear on your friends list.<br/><br/>\n"
+		 . "<form name='withdrawFriendRequest' method='POST'"
+		 . " action='%%serverPath%%users/removefriend/'>"
+		 . "<input type='hidden' name='action' value='withdrawRequest' />"
+		 . "<input type='hidden' name='friendUID' value='" . $model->friendUID . "' />"
+		 . "<input type='submit' value='Widthdraw Request' />"
+		 . "</form>"
+		 . "<hr/>";
+
+		return $html;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	neither, add friend request form
 	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/users/views/friendrequestform.block.php');
+	$labels = array(
+		'friendUID' => $args['userUID'],
+		'titlebar' => $titlebar,
+		'return' => $return
+	);
 
-	$labels = array('friendUID' => $args['userUID']);
-	$labels['titlebar'] = $titlebar;
-	$labels['return'] = $return;
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/users/views/friendrequestform.block.php'));
-
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;
 	
 }

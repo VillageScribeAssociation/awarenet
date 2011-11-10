@@ -29,7 +29,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	delete the image
 	//----------------------------------------------------------------------------------------------
-	$kapenta->logSync("deleteing image " . $model->UID . "via form on images module.\n");
+	$kapenta->logSync("deleting image " . $model->UID . "via form on images module.\n");
 	$model->delete();
 	
 	if (true == array_key_exists('return', $_POST)) {

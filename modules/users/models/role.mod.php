@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/permissions.set.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	object to represent site roles
 //--------------------------------------------------------------------------------------------------
@@ -17,7 +19,7 @@ class Users_Role {
 	var $UID;				//_ UID [string]
 	var $name;				//_ title [string]
 	var $description;		//_ wyswyg [string]
-	var $permissions;		//_ plaintext [string]
+	var $permissions;		//_ object:Users_PermissionSet [object]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -32,6 +34,8 @@ class Users_Role {
 
 	function Users_Role($raUID = '', $byName = false) {
 		global $db;
+
+		$this->permissions = new Users_Permissions();
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { 								// try load an object from the database
@@ -88,7 +92,7 @@ class Users_Role {
 		$this->UID = $ary['UID'];
 		$this->name = $ary['name'];
 		$this->description = $ary['description'];
-		$this->permissions = $this->expandPermissions($ary['permissions']);
+		$this->permissions->expand($ary['permissions']);
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -110,7 +114,7 @@ class Users_Role {
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('users', 'users_role', $this->UID, $this->name);
 		$ary = $this->toArray();
-		echo "<textarea rows='10' cols='80'>{$ary['permissions']}</textarea>";
+		//echo "<textarea rows='10' cols='80'>{$ary['permissions']}</textarea>";
 		$check = $db->save($ary, $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -175,7 +179,7 @@ class Users_Role {
 			'UID' => $this->UID,
 			'name' => $this->name,
 			'description' => $this->description,
-			'permissions' => $this->collapsePermissions($this->permissions),
+			'permissions' => $this->permissions->collapse(),
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -274,7 +278,7 @@ class Users_Role {
 	}
 
 	//==============================================================================================
-	//	PERMISSIONS
+	//	LEGACY METHODS	//TODO: remove
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
@@ -284,28 +288,9 @@ class Users_Role {
 	//returns: permissions set as an array [array]
 
 	function expandPermissions($data) {
-		$permissions = array();
-		$lines = explode("\n", $data);
-		foreach($lines as $line) {
-		  if (strpos($line, '|') != false) {
-			$parts = explode("|", $line);
-			$perm = array();
-
-			$perm['type'] = $parts[0];
-			$perm['module'] = $parts[1];
-			$perm['model'] = $parts[2];
-			$perm['permission'] = $parts[3];
-
-			if ('c' == $perm['type']) {	$perm['condition'] = $parts[5];	}
-	
-			if (false == array_key_exists($perm['module'], $permissions)) 
-				{ $permissions[$perm['module']] = array(); }
-
-			$permissions[$perm['module']][] = $perm;
-		  }
-		}
-
-		return $permissions;
+		global $session;
+		$session->msgAdmin('DEPRECATED: Users_Role');
+		return $this->permissions->expand($data);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -314,21 +299,7 @@ class Users_Role {
 	//returns: permissions serialized as a string [string]
 
 	function collapsePermissions() {
-		$txt = '';
-
-		if (false == is_array($this->permissions))
-			{ $this->permissions = $this->expandPermissions($this->permissions); }
-
-		foreach($this->permissions as $moduleName => $modPerms) {
-			foreach($modPerms as $p) {
-				$p['model'] = strtolower($p['model']);
-				$txt .= $p['type'] . '|' . $p['module'] . '|' . $p['model'] . '|' . $p['permission'];
-				if ('c' == $p['type']) { $txt .= "|(if)|" . $p['condition']; }
-				$txt .= "\n";
-			}
-		}
-
-		return $txt;
+		return $this->permissions->collapse();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -342,32 +313,7 @@ class Users_Role {
 	//returns: true if permission was added, false if not [bool]
 
 	function addPermission($type, $module, $model, $permission, $condition = '') {
-		global $kapenta;
-		if (false == $kapenta->moduleExists($module)) { 
-			echo "role->addPermission(), no such module: $module <br/>\n";
-			return false; 
-		}
-		if (false == is_array($this->permissions)) { $this->permissions = array(); }
-		if (true == $this->hasPermission($type, $module, $model, $permission, $condition))
-			{ return true; }
-
-		$perm = array(
-			'type' => $type, 
-			'module' => $module,
-			'model' => strtolower($model),
-			'permission' => $permission
-		);
-
-		if ('c' == $type) { $perm['condition'] = $condition; }
-
-		if (false == array_key_exists($module, $this->permissions)) 
-			{ $this->permissions[$module] = array(); }
-
-		$this->permissions[$module][] = $perm;
-		$report = $this->save();
-
-		if ('' == $report) { return true; }
-		return false;
+		return $this->permissions->add($type, $module, $model, $permission, $condition = '');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -381,21 +327,7 @@ class Users_Role {
 	//returns: true if permission was added, false if not [bool]
 
 	function hasPermission($type, $module, $model, $permission, $condition = '') {
-		if (false == is_array($this->permissions)) { return false; }
-		foreach($this->permissions as $modName => $modPerms) {
-			if ($modName == $module) {
-				foreach($modPerms as $p) {
-					if (false == array_key_exists('condition', $p)) { $p['condition'] = ''; }
-					if (
-						($p['type'] == $type) &&
-						($p['model'] == $model)	&&
-						($p['permission'] == $permission) &&
-						($p['condition'] == $condition)
-					) { return true; }
-				}
-			}
-		}
-		return false;
+		return $this->permissions->has($type, $module, $model, $permission, $condition);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -403,29 +335,7 @@ class Users_Role {
 	//----------------------------------------------------------------------------------------------
 
 	function toHtml() {
-		global $theme;
-		$html = '';
-
-		$table = array();
-		$table[] = array('Type', 'Module', 'Model', 'Permission', 'Condition');
-		foreach($this->permissions as $modName => $modPerms) {
-			foreach($modPerms as $p) {
-				$condition = '';
-				if ('c' == $p['type']) { $condition = $p['condition']; }
-				$row = array(
-					$p['type'],
-					$p['module'],
-					$p['model'],
-					$p['permission'],
-					$condition
-				);
-				$table[] = $row;
-			}
-		}
-		$html .= "<h2>Role: " . $this->name . " (" . $this->UID . ")</h2>\n";
-		$html .= $theme->arrayToHtmlTable($table, true, true);
-		if ('admin' == $this->name) { 	$html .= "(admin user passes all auth checks)<br/>"; }
-		return $html;
+		return $this->permissions->toHtml();
 	}
 
 }

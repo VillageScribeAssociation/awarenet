@@ -29,8 +29,8 @@ function comments_addcommentform($args) {
 	$refUID = $args['refUID'];
 
 	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID))
-		{ return ''; }
+
+	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { return ""; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

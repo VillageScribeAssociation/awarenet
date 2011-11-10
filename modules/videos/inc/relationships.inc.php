@@ -27,7 +27,7 @@ function videos_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Gallery object
 	//----------------------------------------------------------------------------------------------
-	if ('videos_gallery' == $refModel) {
+	if ('videos_gallery' == strtolower($refModel)) {
 		$model = new Videos_Gallery($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
@@ -44,7 +44,7 @@ function videos_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Video object
 	//----------------------------------------------------------------------------------------------
-	if ('videos_video' == $refModel) {
+	if ('videos_video' == strtolower($refModel)) {
 		$model = new Videos_Video($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

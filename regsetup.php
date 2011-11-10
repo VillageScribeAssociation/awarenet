@@ -38,7 +38,7 @@
 	//----------------------------------------------------------------------------------------------
 	$header = "<html>
 		<head>
-			<link href='themes/clockface/css/clockface.css' 
+			<link href='themes/clockface/css/default.css' 
 				rel='stylesheet' type='text/css' />
 		</head>
 		<body>
@@ -51,8 +51,6 @@
 
 	if (sha1($userPass) == $recoveryPass) { $auth = true; }
 	if ('' == $recoveryPass) { $auth = true; }
-
-	$auth = true;
 
 	if (false == $auth) { 
 		$loginForm = "
@@ -117,6 +115,8 @@
 		$key = (array_key_exists('key', $_POST)) ? $_POST['key'] : '';
 		$value = (array_key_exists('value', $_POST)) ? $_POST['value'] : '';
 
+		//echo "setting $key to $value ...<br/>";
+
 		if (('kapenta.recoverypassword' == $key) && ('' != $value)) { $value = sha1($value); }
 
 		if ('' != $key) {
@@ -128,11 +128,10 @@
 	//	load all registry files
 	//----------------------------------------------------------------------------------------------
 	$prefixes = $registry->listFiles();
-	foreach($prefixes as $prefix) {
-		echo "<h2>" . $prefix . "</h2>\n";
-		echo $registry->toHtml($prefix);
-		echo "<hr/><br/>\n";
-	}	
+
+	echo "<b>Jump to:</b> ";
+	foreach($prefixes as $prefix) { echo "<a href='#$prefix'>$prefix</a>, "; }
+	echo "<br/><br/>";
 
 	//----------------------------------------------------------------------------------------------
 	//	show 'add key' form
@@ -143,10 +142,8 @@
 			<b>key:</b> <input type='text' name='key' />
 			<b>value:</b> <input type='text' name='value' />
 			<input type='submit' value='Add Key &gt;&gt;' />
-		</form><hr/><br/>
+		</form><br/>
 	";
-
-	echo $addForm;
 
 	//----------------------------------------------------------------------------------------------
 	//	show 'reload' form
@@ -158,22 +155,34 @@
 		</form><hr/><br/>
 	";
 
-	echo $reloadForm;
-
 	//----------------------------------------------------------------------------------------------
 	//	show 'log out' form
 	//----------------------------------------------------------------------------------------------
-	$reloadForm = "
+	$logOutForm = "
 		<form name='logoutForm' method='POST'>
 			<input type='hidden' name='action' value='logout' />
 			<input type='submit' value='Log out &gt;&gt;' />
 		</form><hr/><br/>
 	";
 
-	echo $reloadForm;
+	echo $logOutForm;
+
+	//----------------------------------------------------------------------------------------------
+	//	show keys and controls
+	//----------------------------------------------------------------------------------------------
+
+	foreach($prefixes as $prefix) {
+		echo "<h2><a name='$prefix'>" . $prefix . "</a></h2>\n";
+		echo $addForm;
+		echo $registry->toHtml($prefix);
+		echo $reloadForm;
+	}	
+
+	echo $logOutForm;
 
 	//----------------------------------------------------------------------------------------------
 	//	done
 	//----------------------------------------------------------------------------------------------
+
 	echo $footer;
 ?>

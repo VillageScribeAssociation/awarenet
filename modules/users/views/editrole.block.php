@@ -10,14 +10,21 @@
     </tr>
     </table>
 <b>description:</b><br/>
-%%descriptionJs64%%
-[[:editor::base64::jsvar=%%descriptionJsVar64%%::name=description:]]<br/>
+<div class='HyperTextArea64' title='description' width='100%' height='400'>
+%%description64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 <b>permissions:</b><br/>
 <textarea rows='10' cols='80' name='permissions'>%%permissions%%</textarea>
 </form>
 <table noborder>
   <tr>
-    <td><input type='button' value='Save' onClick='document.editRole%%UIDJsClean%%.submit()'></td>
+    <td>
+		<input 
+			type='button' 
+			value='Save' 
+			onClick='khta.updateAllAreas();document.editRole%%UIDJsClean%%.submit();'
+		></td>
     <td>
       <form name='cancelRole%%UIDJsClean%%' method='GET' action='%%serverPath%%users/showrole/%%UID%%'>
         <input type='hidden' name='action' value='deleteRole' />

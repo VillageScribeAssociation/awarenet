@@ -1,7 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
-	require_once($kapenta->installPath . 'modules/images/inc/images__widthx.inc.php');
+	require_once($kapenta->installPath . 'modules/images/views/show.fn.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a single image thumbnail 90px square
@@ -10,7 +10,7 @@
 //opt: imageUID - overrides raUID [string]
 //opt: link - link to larger version (yes|no) [string]
 
-function images_thumb90($args) { $args['size'] = 'thumb90'; return images__widthx($args); }
+function images_thumb90($args) { $args['size'] = 'thumb90'; return images_show($args); }
 
 //--------------------------------------------------------------------------------------------------
 

@@ -14,7 +14,12 @@
 //returns: html report or false if not authorized [string][bool]
 
 function videos_maintenance() {
-	global $db, $aliases, $user, $theme;
+	global $kapenta;
+	global $db;
+	global $aliases;
+	global $user;
+	global $theme;
+
 	if ('admin' != $user->role) { return false; }
 	$recordCount = 0;
 	$errorCount = 0;
@@ -32,8 +37,8 @@ function videos_maintenance() {
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objArray);		// remove database markup
-		$model->loadArray($objAry);		// load into model
+		$objAry = $db->rmArray($objAry);		// remove database markup
+		$model->loadArray($objAry);				// load into model
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
@@ -46,6 +51,18 @@ function videos_maintenance() {
 			$errorCount++;
 			if (true == $saved) { $fixCount++; }
 		}
+
+		//------------------------------------------------------------------------------------------
+		//	check share status
+		//------------------------------------------------------------------------------------------
+		if ('' == $model->shared) {
+			$model->shared = 'yes';
+			$saved = $model->save();		// should reset alias
+			$errors[] = array($model->UID, $model->title, 'Fixed share status.');
+			$errorCount++;
+			if (true == $saved) { $fixCount++; }
+		}
+
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
@@ -69,7 +86,6 @@ function videos_maintenance() {
 	//----------------------------------------------------------------------------------------------
 	$report .= $theme->arrayToHtmlTable($errors, true, true);
 	
-
 	//----------------------------------------------------------------------------------------------
 	//	check all Video objects
 	//----------------------------------------------------------------------------------------------
@@ -81,12 +97,12 @@ function videos_maintenance() {
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objArray);		// remove database markup
+		$objAry = $db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
-		//	checking alias
+		//	check alias
 		//------------------------------------------------------------------------------------------
 		$defaultAlias = $aliases->getDefault('videos_video', $objAry['UID']);
 		if ((false == $defaultAlias) || ($defaultAlias != $model->alias)) {
@@ -95,12 +111,34 @@ function videos_maintenance() {
 			$errorCount++;
 			if (true == $saved) { $fixCount++; }
 		}
+
+		//------------------------------------------------------------------------------------------
+		//	check hash
+		//------------------------------------------------------------------------------------------
+		if (('' == $model->hash) && (true == $kapenta->fileExists($model->fileName))) {
+			$model->save();			// hash is set by $model->vertify()
+			$errors[] = array($model->UID, $model->title, 'added hash');
+			$errorCount++;
+			$fixCount++;
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check share status
+		//------------------------------------------------------------------------------------------
+		if ('' == $model->shared) {
+			$model->shared = 'yes';
+			$saved = $model->save();			// hash is set by $model->vertify()
+			$errors[] = array($model->UID, $model->title, 'Fixed share status');
+			$errorCount++;
+			if ('' == $saved) { $fixCount++; }
+		}
+
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('*_*', $model->refUID)) {
-			// TODO: take action here, if possibe assign valid reference to a *_*
-			$errors[] = array($model->UID, $model->title, 'invalid reference (refUID:*_*)');
+		if (false == $db->objectExists($model->refModel, $model->refUID)) {
+			// TODO: take action here, if possibe assign valid reference
+			$errors[] = array($model->UID, $model->title, 'invalid reference (refModel:refUID)');
 			$errorCount++;
 		}
 

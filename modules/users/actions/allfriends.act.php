@@ -3,8 +3,9 @@
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	show all friendships in database
+//*	show all friendships in database
 //-------------------------------------------------------------------------------------------------
+//+	This is an administrative option - TODO: export as graphvis
 
 	//---------------------------------------------------------------------------------------------
 	//	authenticate

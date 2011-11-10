@@ -6,6 +6,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	list all original image files known to image module and present on this peer
 //--------------------------------------------------------------------------------------------------
+//TODO: page this to avoid memry issue when images table gets huge
 //opt: status - status of files (all|present|missing), default all [string]
 //opt: format - format of list to return (xml|csv|html), default xml [string]
 
@@ -22,18 +23,16 @@ function images_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 	if (true == array_key_exists('status', $args)) { $status = $args['status']; }
 	if (true == array_key_exists('format', $args)) { $format = $args['format']; }
-	//if ('admin' != $user->role) { return ''; } // TODO: sync auth
+	//if (('admin' != $user->role) && ('maintenance' != $user->role)) { return ''; }
 	
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	consider files of all image records
-	//---------------------------------------------------------------------------------------------
-
-	//TODO: consider dbLoadRange (possible memory issue)
-	$sql = "select UID, fileName from images_image";
+	//----------------------------------------------------------------------------------------------
+	$sql = "select UID, fileName, hash from images_image";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) { 
 		$row = $db->rmArray($row);
-		$currFile = array($row['UID'], $row['fileName']);
+		$currFile = array($row['UID'], $row['fileName'], $row['hash']);
 
 		if ('all' == $status) {
 			//-------------------------------------------------------------------------------------
@@ -73,7 +72,8 @@ function images_listfiles($args) {
 					$list .= "  <refModule>images</refModule>\n";
 					$list .= "  <refModel>images_image</refModel>\n";
 					$list .= "  <refUID>" . $file[0] . "</refUID>\n";
-					$list .= "  <location>" . $file[1] . "</location>\n"; 
+					$list .= "  <location>" . $file[1] . "</location>\n";
+					$list .= "  <hash>" . $file[2] . "</hash>\n";  
 					$list .= "</file>\n";
 				}
 				break;
@@ -82,8 +82,8 @@ function images_listfiles($args) {
 				//---------------------------------------------------------------------------------
 				//	return file list in CSV format
 				//---------------------------------------------------------------------------------
-				foreach($files as $file) {
-					$list .= "images, images_image, " . $file[0] . ", " . $file[1] . "\n";
+				foreach($files as $f) {
+					$list .= "images, images_image, " . $f[0] . ", " . $f[1] . ", " . $f[2] . "\n";
 				}
 				break;
 
@@ -97,6 +97,7 @@ function images_listfiles($args) {
 	}			
 
 	return $list;
+
 }
 
 //--------------------------------------------------------------------------------------------------

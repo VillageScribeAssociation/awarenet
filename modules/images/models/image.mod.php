@@ -1,6 +1,7 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
+	require_once($kapenta->installPath . 'modules/images/models/images.set.php');
+	require_once($kapenta->installPath . 'modules/images/models/transforms.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object for managing images
@@ -10,6 +11,9 @@
 //+	Transforms are derivative images that do not need their own record, such as thumbnails.  They 
 //+	are automatically created as needed and destroyed if unused for a period of time, to free disk 
 //+	space.
+//+
+//+	Transforms are stored in the same directory as the orignal image with the trnasform name 
+//+	appended, eg 1234567890.jpg => 1234567890.thumbsm.jpg
 //+
 //+	examples: /images/width300/someimage.jpg /images/thumb/someimage.jpg
 //+
@@ -57,15 +61,18 @@ class Images_Image {
 
 	function Images_Image($raUID = '') {
 		global $db;
-		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
-		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
-			$this->loadArray($this->data);					// initialize
-			$this->title = 'New Image ' . $this->UID;		// set default title
-			$this->transforms = array();					// no transforms yet
-			$this->weight = 10000;							// end of list (corrected on save())
+		$this->dbSchema = $this->getDbSchema();				//	initialise table schema
+		$this->transforms = new Images_Transforms();		//	initialize transforms object
+
+		if ('' != $raUID) { $this->load($raUID); }			//	try load an object from the database
+		if (false == $this->loaded) {						//	check if we did
+			$this->data = $db->makeBlank($this->dbSchema);	//	make new object
+			$this->loadArray($this->data);					//	initialize
+			$this->title = 'New Image ' . $this->UID;		//	set default title
+			$this->transforms = array();					//	no transforms yet
+			$this->weight = 10000;							//	end of list (corrected on save())
 			$this->hash = '';
+			$this->shared = 'yes';
 			$this->loaded = false;
 		}
 	}
@@ -102,7 +109,6 @@ class Images_Image {
 		$this->fileName = $ary['fileName'];
 		$this->hash = $ary['hash'];
 		$this->format = $ary['format'];
-		$this->transforms = $this->expandTransforms($ary['transforms']);
 		$this->caption = $ary['caption'];
 		$this->category = $ary['category'];
 		$this->weight = $ary['weight'];
@@ -113,6 +119,10 @@ class Images_Image {
 		$this->shared = $ary['shared'];
 		$this->revision = $ary['revision'];
 		$this->alias = $ary['alias'];
+
+		$this->transforms = new Images_Transforms($this->UID, $this->fileName);
+		$this->transforms->load();
+
 		$this->loaded = true;
 		return true;
 	}
@@ -124,7 +134,9 @@ class Images_Image {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('images', 'images_image', $this->UID, $this->title);
@@ -132,7 +144,7 @@ class Images_Image {
 		if (false == $check) { return "Database error.<br/>\n"; }
 
 		// update image weights
-		$set = new Images_Imageset($this->refModule, $this->refModel, $this->UID);
+		$set = new Images_Images($this->refModule, $this->refModel, $this->UID);
 		$set->checkWeights();
 
 		return '';
@@ -144,11 +156,53 @@ class Images_Image {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$report = '';
+		global $kapenta;
+		$report = '';				//%	return value [string]
+
+		//------------------------------------------------------------------------------------------
+		//	a little tidying, fix mess cuased by legacy undelete scheme
+		//------------------------------------------------------------------------------------------
+
+		$this->refModule = str_replace('del-', '', $this->refModule);
+		$this->refUID = str_replace('del-', '', $this->refUID);
+
+		if ('' == $this->refModel) {
+			switch($this->refModule) {
+				case 'calendar':		$this->refModel = 'calendar_entry';					break; 
+				case 'moblog':			$this->refModel = 'moblog_post';					break;
+				case 'gallery':			$this->refModel = 'gallery_gallery';				break;
+				case 'projects':		$this->refModel = 'projects_project';				break;
+				case 'groups':			$this->refModel = 'groups_group';					break;
+				case 'announcements':	$this->refModel = 'announcements_announcement';		break;
+				case 'users':			$this->refModel = 'users_user';						break;
+				case 'home':			$this->refModel = 'home_static';					break;
+				case 'schools':			$this->refModel = 'schools_school';					break;
+
+				case 'Blogs':
+					$this->refModule = 'moblog';	$this->refModel = 'moblog_post';		break;
+				case 'Galleries':
+					$this->refModule = 'gallery'; 	$this->refModel = 'gallery_gallery';	break;
+				case 'static':
+					$this->refModule = 'home';		$this->refModel = 'home_static';		break;
+				case 'moblogs':
+					$this->refModule = 'moblog';	$this->refModel = 'moblog_post';		break;
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check
+		//------------------------------------------------------------------------------------------
+
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 		if ('' == $this->refModule) { $report .= "No refModule.<br/>\n"; }
 		if ('' == $this->refModel) { $report .= "No refModel.<br/>\n"; }
 		if ('' == $this->refUID) { $report .= "No refUID.<br/>\n"; }
+
+		// add hash if missing and the file is available
+		if (('' == $this->hash) && (true == $kapenta->fileExists($this->fileName))) {
+			$this->hash = sha1_file($kapenta->installPath . $this->fileName);
+		}
+
 		return $report;
 	}
 
@@ -229,7 +283,7 @@ class Images_Image {
 			'fileName' => $this->fileName,
 			'hash' => $this->hash,
 			'format' => $this->format,
-			'transforms' => $this->collapseTransforms($this->transforms),
+			'transforms' => '',
 			'caption' => $this->caption,
 			'category' => $this->category,
 			'weight' => $this->weight,
@@ -323,55 +377,6 @@ class Images_Image {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	expand transforms
-	//----------------------------------------------------------------------------------------------
-	//arg: serialized - serialized transforms [string]
-	//returns: array of transforms, size => fileName [string]
-
-	function expandTransforms($serialized) {
-		$transforms = array();
-		$lines = explode("\n", $serialized);
-		foreach($lines as $line) {
-		  $pipe = strpos($line, '|');
-		  if ($pipe != false) {
-			$transName = substr($line, 0, $pipe);
-			$transFile = substr($line, $pipe + 1);
-			$this->transforms[$transName] = $transFile;
-		  }
-		}
-		return $transforms;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	collapse transforms
-	//----------------------------------------------------------------------------------------------
-	//arg: transforms - transforms array [array]
-	//returns: transforms serialized to string [string]
-
-	function collapseTransforms($transforms) {
-		$serialized = '';								//%	return value [string]
-		foreach($transforms as $transName => $transFile) 
-			{ $serialized .= $transName . '|' . $transFile . "\n"; }
-
-		return $serialized;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	check if a given transform exists
-	//----------------------------------------------------------------------------------------------
-	//arg: transName - name of a transform, eg thumb [string]
-	//returns: location of transformed file if it exists, false if not [string][bool]
-
-	function hasTrasform($transName) {
-		global $kapenta;
-		if (false == array_key_exists($transName, $this->transforms)) { return false; }
-		if ($kapenta->fileExists($this->transforms[$transName])) { 
-			return $this->transforms[$transName];
-		}
-		return false;
-	}
-
-	//----------------------------------------------------------------------------------------------
 	//.	get sha1 hash of image file (if any)
 	//----------------------------------------------------------------------------------------------
 	//returns: SHA1 hash of image file, null string if none [string]
@@ -399,86 +404,6 @@ class Images_Image {
 		if ('gif' == $this->format) { $this->img = @imagecreatefromgif($fileName); }
 		if (false == $this->img) { return false; }
 		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	scale the image to a given width
-	//----------------------------------------------------------------------------------------------
-	//arg: width - width in pixels [int]
-	//returns: handle to new image [int]
-
-	function scaleToWidth($width) {
-		$aspect = (imagesx($this->img) / imagesy($this->img));
-		$height = ($width / $aspect);
-		$newImg = imagecreatetruecolor($width, $height);
-		imagecopyresampled($newImg, $this->img, 0, 0, 0, 0, 
-					$width, $height, imagesx($this->img), imagesy($this->img));
-
-		return $newImg;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	scale and crop the image to fit a given box
-	//----------------------------------------------------------------------------------------------
-	//arg: toWidth - box width [int]
-	//arg: toHeight - box height [int]
-	//returns: handle of new image [int]
-
-	function scaleToBox($toWidth, $toHeight) {
-		$srcAspect = (imagesx($this->img) / imagesy($this->img));
-		$destAspect = $toWidth / $toHeight;
-		$newImg = imagecreatetruecolor($toWidth, $toHeight);
-
-		$chatty = '';		
-		$chatty .= "source aspect ratio: $srcAspect <br/>\n";
-		$chatty .= "dest aspect ratio: $destAspect <br/>\n";
-		$chatty .= "dest width: $toWidth <br/>";
-		$chatty .= "dest height: $toHeight <br/>";
-		
-		if ($destAspect > $srcAspect) {
-			//--------------------------------------------------------------------------------------
-			// resize to common width, trim top and bottom edges
-			// think: if they had the same width, what would be the difference in height?
-			//--------------------------------------------------------------------------------------
-		
-			$scaleHeight = ($toWidth / $srcAspect);
-			$destY = ($toHeight - $scaleHeight) / 2;
-			$chatty .= "scaleHeight: $scaleHeight <br/>\n";
-			$chatty .= "destY: $destY <br/>\n";			
-			$chatty .= "here ---!--- ";
-
-			imagecopyresampled(
-				$newImg, $this->img, 
-				0, $destY, 
-				0, 0, 
-				$toWidth, $scaleHeight, 
-				imagesx($this->img), imagesy($this->img)
-			);			
-			
-		} else {		
-			//--------------------------------------------------------------------------------------
-			// resize to common height, trim left and right edges
-			// think: if they had the same height, what would be the difference in width?
-			//--------------------------------------------------------------------------------------
-			
-			$scaleWidth = ($toHeight * $srcAspect);
-			$destX = ($toWidth - $scaleWidth) / 2;
-		
-			$chatty .= "scale width: $scaleWidth <br/>\n";
-			$chatty .= "dest x: $destX <br/>\n";
-	
-			imagecopyresampled(
-				$newImg, $this->img, 
-				$destX, 0, 
-				0, 0, 
-				$scaleWidth, $toHeight, 
-				imagesx($this->img), imagesy($this->img)
-			);
-			
-		}
-		
-		//echo $chatty;
-		return $newImg;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -531,59 +456,34 @@ class Images_Image {
 	//---------------------------------------------------------------------------------------------
 	//.	nominally delete the current record, dissociate from owner
 	//---------------------------------------------------------------------------------------------
-	//, due to some messed up events of March 2010, images are not deleted first time round
+	//returns: true on success, false on failuore [bool]
 
 	function delete() {
-		$ext = $this->extArray();
+		global $kapenta;
+		global $db;
 
-		$this->refUID  = str_replace('del-', '', $this->refUID);
-		$this->refModule  = str_replace('del-', '', $this->refModule);
+		$check = false;
 
-		$this->refUID = 'del-' . $this->refUID;
-		$this->refModule = 'del-' . $this->refModule;
-		$this->save();
+		if (false == $this->loaded) { return $check; }
 
 		//------------------------------------------------------------------------------------------
-		//	send specific event to module responsible for object which owned the deleted image
+		//	remove file and database record
 		//------------------------------------------------------------------------------------------
-		//$args = array('module' => 'images', 'UID' => $this->UID, 'title' => $ext['title']);
-		//eventSendSingle($ext['refModule'], 'images_deleted', $args);
-		//TODO: this
-	}
-
-	//---------------------------------------------------------------------------------------------
-	//.	delete current image and all transforms
-	//---------------------------------------------------------------------------------------------
-
-	function finalDelete() {
-		global $kapenta, $db;;
-		$ext = $this->extArray();
-
-		//-----------------------------------------------------------------------------------------
-		//	delete the file and any transforms
-		//-----------------------------------------------------------------------------------------
-		$this->expandTransforms();
-		foreach($this->transforms as $transName => $fileName) {
-			$fileName = $kapenta->installPath . $fileName;
-			if (file_exists($fileName) == true) { @unlink($fileName); }
+		if (true == $kapenta->fileExists($this->fileName)) {
+			$kapenta->fileDelete($this->fileName, true);
 		}
-		
-		if (file_exists($kapenta->installPath . $this->fileName) == true) 
-			{ @unlink($kapenta->installPath . $this->fileName); }	// TODO: kapenta should do this
 
-		//-----------------------------------------------------------------------------------------
-		//	delete the record
-		//-----------------------------------------------------------------------------------------
-		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
-		return true;
-
-		//-----------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		//	send specific event to module responsible for object which owned the deleted image
-		//-----------------------------------------------------------------------------------------
-		//$args = array('module' => 'images', 'UID' => $this->UID, 'title' => $ext['title']);
-		//eventSendSingle($ext['refModule'], 'image_deleted', $args);
-		//TODO: this
+		//------------------------------------------------------------------------------------------
+		//$args = array('module' => 'images', 'UID' => $this->UID, 'title' => $this->title);
+		//$kapenta->raiseEvent('*', 'images_deleted', $args);
+
+		//------------------------------------------------------------------------------------------
+		//	remove it from the database
+		//------------------------------------------------------------------------------------------
+		$check = $db->delete($this->UID, $this->dbSchema);
+		return $check;
 	}
 
 }

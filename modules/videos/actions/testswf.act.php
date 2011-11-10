@@ -17,7 +17,7 @@
 		<table noborder>
 		  <tr>
 			<td>
-				<img src='%%serverPath%%themes/clockface/icons/arrow_left.jpg' />
+				<img src='%%serverPath%%themes/%%defaultTheme%%/icons/arrow_left.jpg' />
 			</td>
 			<td>
 			<b>Return to video gallery.</b>

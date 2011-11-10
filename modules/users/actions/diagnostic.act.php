@@ -3,8 +3,9 @@
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	examine objects on this module and look for errors
+//*	examine objects on this module and look for errors
 //--------------------------------------------------------------------------------------------------
+//TODO: check integration with admin console, and evaluate whether this is still needed.
 
 	//----------------------------------------------------------------------------------------------
 	//	user auth

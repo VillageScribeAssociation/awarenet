@@ -7,15 +7,10 @@
 <input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 
-<table noborder>
+<table noborder width='100%'>
   <tr>
     <td><b>Title:</b></td>
-    <td><input type='text' size='50' name='title' value='%%title%%' /></td>
-  </tr>
-  <tr>
-    <td><b>Caption:</b></td>
-    <td>
-      <textarea name='caption' rows='5' cols='47'>%%caption%%</textarea></td>
+    <td><input type='text' size='40' name='title' value='%%title%%' style='width: 100%;' /></td>
   </tr>
   <tr>
     <td><b>Licence:</b></td>
@@ -33,27 +28,23 @@
         <option value='CC-BY-SA'>CC-BY-SA</option>
         <option value='CC-BY-ND'>CC-BY-ND</option>
       </select>
-
-      <b>Weight:</b>
-      <input type='text' size='5' name='weight' value='%%weight%%' />
-
     </td>
   </tr>
   <tr>
     <td><b>Attribution:    </b></td>
-    <td><input type='text' size='50' 
-         name='attribName' value='%%attribName%%'/></td>
+    <td><input type='text' size='40' 
+         name='attribName' value='%%attribName%%' style='width: 100%;' /></td>
   </tr>
   <tr>
     <td><b>Source URL:</b></td>
-    <td><input type='text' size='50' 
-         name='attribURL' value='%%attribUrl%%' /></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><input type='submit' value='Save' /></td>
+    <td><input type='text' size='40' 
+         name='attribURL' value='%%attribUrl%%' style='width: 100%;' /></td>
   </tr>
 </table>
+<br/>
+<b>Caption:</b><br/>
+<textarea name='caption' rows='5' cols='40' style='width: 100%;'>%%caption%%</textarea>
+<input type='submit' value='Save' />
 </form>
 <br/>
 %%returnLink%%

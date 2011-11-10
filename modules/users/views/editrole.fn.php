@@ -10,7 +10,9 @@
 //opt: roleUID - UID of a Users_Role object, overrides raUID [string]
 
 function users_editrole($args) {
-	global $user, $theme;
+	global $user;
+	global $theme;
+	global $utils;
 	$html = '';					//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -31,6 +33,7 @@ function users_editrole($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/users/views/editrole.block.php');
 	$labels = $model->extArray();
+	$labels['description64'] = $utils->b64wrap($labels['description']);
 	// ^ add any labels, block args, etc here
 
 	$html = $theme->replaceLabels($labels, $block);

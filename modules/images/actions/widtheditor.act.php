@@ -1,10 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display an image scaled to 530 px wide
+//*	display an image scaled to the default width of the WYSWYG editor
 //--------------------------------------------------------------------------------------------------
-
-	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
-	imgSend('widtheditor');
+//DEPRECATED: remove this action when data is clean [string]
+	
+	$page->do302('images/s_widtheditor/' . $req->ref);
 
 ?>

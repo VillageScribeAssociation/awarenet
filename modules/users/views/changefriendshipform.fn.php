@@ -19,12 +19,15 @@ function users_changefriendshipform($args) {
 	if (false == $db->objectExists('users_friendship', $args['friendshipUID'])) { return ''; }
 	//TODO: permissions check here
 
+	$model = new Users_Friendship($args['friendshipUID']);
+	if (false == $model->loaded) { return '(friendship not found)'; }
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$model = new Users_Friendship($args['friendshipUID']);
 	$block = $theme->loadBlock('modules/users/views/changefriendshipform.block.php');
-	$html = $theme->replaceLabels($model->extArray();, $block);
+	$labels = $model->extArray();
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;
 }
 

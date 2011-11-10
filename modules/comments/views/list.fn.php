@@ -8,12 +8,20 @@
 //arg: refModule - module to check for permissions on [string]
 //arg: refModel - type of object which may on comments [string]
 //arg: refUID - object which may own comments [string]
+//opt: pageNo - result page to display, default is 1 (int) [string]
 //opt: num - number of records per page [string]
 
 function comments_list($args) {
-	global $kapenta, $db, $user, $theme, $page;
-	$num = 10;
-	$html = '';	
+	global $kapenta;
+	global $db;
+	global $user;
+	global $theme;
+	global $page;
+
+	$pageNo = 1;				//%	page number to show [int]
+	$num = 10;					//%	number of items per page [int]
+	$start = 0;					//%	offset in database results [int]
+	$html = '';					//%	return value [string]	
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -22,6 +30,11 @@ function comments_list($args) {
 	if (false == array_key_exists('refModel', $args)) { return '(no model)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no UID)'; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+
+	if (true == array_key_exists('pageNo', $args)) {
+		$pageNo = (int)$args['pageNo'];
+		$start = (($pageNo - 1) * $num);
+	}
 
 	$refModule = $args['refModule'];
 	$refModel = $args['refModel'];
@@ -37,19 +50,19 @@ function comments_list($args) {
 	if (false == $auth) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	load a page of comments from the database
+	//	count comments attached to this item
 	//----------------------------------------------------------------------------------------------
-
 	$conditions = array();
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num);
+	$totalItems = $db->countRange('comments_comment', $conditions);
 
-	//$sql = "select * from Comments_Comment "
-	//	 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
-	//	 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
-	//	 . "order by createdOn DESC limit " . $db->addMarkup($num) . "";
+	//----------------------------------------------------------------------------------------------
+	//	load a page of comments from the database
+	//----------------------------------------------------------------------------------------------
+
+	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -63,8 +76,10 @@ function comments_list($args) {
 			$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
 		}  
 	} else {
-		$html .= "(no comments at present)";
+		$html .= "<div class='inlinequote'>no comments at present.</div>";
 	}
+
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	set triggers
@@ -78,7 +93,6 @@ function comments_list($args) {
 			. "</div>";
 
 	$channel = 'comment-' . $refModel . '-' . $refUID;
-	$kapenta->logLive("set trigger on channel: $channel");
 	$page->setTrigger('comments', $channel, $args['rawblock']);
 
 

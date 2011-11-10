@@ -34,6 +34,8 @@
 		$registry->set('users.grades', $gradeStr);
 	}
 
+	if ('' == $registry->get('users.maxmessages')) { $registry->set('users.maxmessages', '5'); }
+
 	//----------------------------------------------------------------------------------------------
 	//	handle any POST vars
 	//----------------------------------------------------------------------------------------------
@@ -53,6 +55,10 @@
 
 			case 'users_grades':	
 				$registry->set('users.grades', trim($value));	
+				break;	//..........................................................................
+
+			case 'users_maxmessages':	
+				$registry->set('users.maxmessages', (int)$value);	
 				break;	//..........................................................................
 
 		}

@@ -8,26 +8,33 @@
 //arg: refUID - record which owns the comments [string]
 //arg: refModel - type of object [string]
 //arg: refModule - module which owns the record [string]
+//opt: pageNo - result page to display [string]
 //opt: num - number of records per page (default is 4) [string]
 
 function comments_listnavjs($args) {
 	global $db, $theme, $user, $utils;
-	$num = 4;		//%	default number of comments per page [int]
-	$html = '';		//%	return value [string]
-	$js = '';		//%	javascript [string]
 
-	$blockTemplate = $theme->loadBlock('modules/comments/views/summarynav.block.php');
-	$scriptUrl = '%%serverPath%%modules/comments/js/comments.js';
+	$pageNo = 1;	//%	page to show [int]
+	$num = 4;		//%	default number of comments per page [int]
+	$start = 0;	
+
+	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
-	//if ($user->authHas('comments', 'Comment_Comment', 'list', 'TODO:UIDHERE') == false) { return false; }
-	//if ($user->authHas('comments', 'Comment_Comment', 'show', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
+
+	//TODO: permissions check here
+
+	if (true == array_key_exists('refModule', $args)) { return '(refModule not given)'; }
+	if (true == array_key_exists('refModel', $args)) { return '(refModel not given)'; }
+	if (true == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
+	if (true == array_key_exists('num', $args)) { $num = $args['num']; }
+
+	if (true == array_key_exists('pageNo', $args)) { 
+		$pageNo = (int)$args['pageNo'];
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load comments from database
@@ -38,14 +45,10 @@ function comments_listnavjs($args) {
 	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC');
 
 	//----------------------------------------------------------------------------------------------
-	//	query database
+	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$js .= "<script src='" . $scriptUrl . "' language='javascript'></script>";
-	$js .= "<script language='javascript'>\n";
-	$js .= "var commentsPageSize = " . $num .  ";\n";
-	$js .= "var commentsPage = 0;\n";
-	$js .= "var aryComments = new Array();\n";
-	
+	$block = $theme->loadBlock('modules/comments/views/summarynav.block.php');
+
 	if (count($range) > 0) {
 		foreach ($range as $row) {
 			$model = new Comments_Comment();

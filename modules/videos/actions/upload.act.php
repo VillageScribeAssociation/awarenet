@@ -46,7 +46,6 @@
 	$imgName = '';
 	
 	if ('' == $refUID) { 
-		print_r($_POST);
 		$page->do404('(refUID not given or upload too large)', true); 
 	}
 	if ('' == $refModule) { $page->do404('(refModule not given)', true); }
@@ -102,7 +101,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	get the upload
 	//----------------------------------------------------------------------------------------------
-
 	if (true == array_key_exists('userfile', $_FILES)) {
 		$tempFile = $_FILES['userfile']['tmp_name'];
 		$srcName = $_FILES['userfile']['name'];
@@ -133,7 +131,7 @@
 				$session->msg('Could not move image (disk full?).', 'bad'); 
 				$page->do302($returnUrl);
 			}
-			unlink($tempFile);
+			@unlink($tempFile);
 
 			//--------------------------------------------------------------------------------------
 			//	TODO: validate this video somehow (mplayer?) and try find its length
@@ -198,7 +196,7 @@
 
 	if ('' == $report) {
 		//------------------------------------------------------------------------------------------
-		//	send 'videos_added' event to module to which owner belongs
+		//	broadcast 'videos_added' event (used by owner module)
 		//------------------------------------------------------------------------------------------
 		$args = array(
 			'refModule' => $refModule, 
@@ -208,6 +206,20 @@
 			'videoTitle' => $model->title
 		);
 		$kapenta->raiseEvent('*', 'videos_added', $args);
+
+		//------------------------------------------------------------------------------------------
+		//	broadcast 'file_added' event (used by p2p, etc)
+		//------------------------------------------------------------------------------------------
+		$args = array(
+			'refModule' => 'videos', 
+			'refModel' => 'videos_video', 
+			'refUID' => $model->UID, 
+			'fileName' => $model->fileName, 
+			'hash' => $kapenta->fileSha1($model->fileName),
+			'size' => $kapenta->fileSize($model->fileName)
+		);
+
+		$kapenta->raiseEvent('*', 'file_added', $args);
 
 		//------------------------------------------------------------------------------------------
 		//	return xml or redirect back 

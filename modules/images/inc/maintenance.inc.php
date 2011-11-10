@@ -3,11 +3,11 @@
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	maintain the images table
+//*	maintain the images module
 //-------------------------------------------------------------------------------------------------
 
 function images_maintenance() {
-	global $db, $kapenta, $theme;
+	global $db, $kapenta, $theme, $aliases;
 	$recordCount = 0;
 	$errorCount = 0;
 	$fixCount = 0;
@@ -26,26 +26,83 @@ function images_maintenance() {
 
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
-		$model = new Images_Image();
-		$model->loadArray($row);
+		$model = new Images_Image($row['UID']);
 
 		//-----------------------------------------------------------------------------------------
-		//	check that this record has a recordAlias
+		//	check that this object has a reference
 		//-----------------------------------------------------------------------------------------
-		if ('' == trim($row['alias'])) {
+		if ('' == $model->refUID) {
+			$db->delete($model->UID, $model->dbSchema);
+			$errorCount++;
+			$errors[] = array($row['UID'], $row['title'], 'No reference.');
+		}
+
+		//-----------------------------------------------------------------------------------------
+		//	clean up legacy undelete scheme
+		//-----------------------------------------------------------------------------------------
+		if ($model->refUID != str_replace('del-', '', $model->refUID)) {
+			$model->save();
+			$errorCount++;
+			$errors[] = array($row['UID'], $row['title'], 'legacy undelete issue');
+		}
+
+		if ($model->refModule != str_replace('del-', '', $model->refModule)) {
+			$model->save();
+			$errorCount++;
+			$errors[] = array($row['UID'], $row['title'], 'legacy undelete issue');
+		}
+
+		if (('videos_video' == $model->refModel) && ('videos' != $model->refModule)) {
+			$model->refModule = 'videos';
+			$model->save();
+			$errorCount++;
+			$errors[] = array($row['UID'], $row['title'], 'legacy undelete issue');
+		}
+
+		//-----------------------------------------------------------------------------------------
+		//	check that this object has an alias
+		//-----------------------------------------------------------------------------------------
+		if ('' == trim($model->alias)) {
+			echo "no alias recorded on object, creating.<br/>\n";
 			$model->save();
 			$errorCount++;
 			$model->load($row['UID']);
 			if ('' == trim($model->alias)) {
 				// not fixed
-				$errors[] = array($row['UID'], $row['title'], 'added alias');
+				$errors[] = array($row['UID'], $row['title'], '*could not add alias');
 			} else {
 				// fixed
-				$errors[] = array($row['UID'], $row['title'], 'added alias');
+				$errors[] = array($row['UID'], $row['title'], '*added alias');
 				$fixCount++;
 			}
 		}
 
+		$range = $aliases->getAll('images', 'images_image', $model->UID);
+		if (0 == count($range)) {
+			echo "Image does not own any objects in aliases table, creating.<br/>\n";
+			$report = $model->save();			//	should create and save a new default alias
+			if ('' == $report) {			
+				$errorCount++;
+				if ('' == trim($model->alias)) {
+					$errors[] = array($row['UID'], $row['title'], 'could not add alias');
+				} else {
+					$errors[] = array($row['UID'], $row['title'], 'added alias');
+					$fixCount++;
+				}
+			} else {
+				echo $report . "<br/>\n";
+			}
+		}
+
+		//-------------------------------------------------------------------------------------
+		//	add hash if not already done and file is available
+		//-------------------------------------------------------------------------------------
+		if (('' == $model->hash) && (true == $kapenta->fileExists($model->fileName))) {
+			$model->save();			// hash is set by $model->vertify()
+			$errors[] = array($row['UID'], $row['title'], 'added hash');
+			$errorCount++;
+			$fixCount++;
+		}
 
 		//-------------------------------------------------------------------------------------
 		//	make sure image file is in /data/images/ (security)
@@ -70,34 +127,6 @@ function images_maintenance() {
 			//$model->fileName = '/data/images/error';
 			//$model->save();
 		}
-
-		//-----------------------------------------------------------------------------------------
-		//	check transforms
-		//-----------------------------------------------------------------------------------------
-		foreach($model->transforms as $transName => $transFile) {
-			//-------------------------------------------------------------------------------------
-			//	make sure it's in /data/images
-			//-------------------------------------------------------------------------------------
-			if ('data/images/' == substr($transFile, 0, 12)) {
-				if (true == file_exists($kapenta->installPath . $transFile)) {		// file exists
-					if (false != strpos($transFile, '.jpg')) {				// has extension .jpg
-						$img = @imagecreatefromjpeg($kapenta->installPath . $transFile);
-						if (false == $img) {								// is not valid image
-							unlink($kapenta->installPath . $transFile);		// delete it
-							$label = 'removed broken transform (' . $transName . ')';
-							$errors[] = array($row['UID'], $row['title'], $label);
-							$errorCount++;
-							$fixCount++;						
-						}
-					}
-				}
-
-			} else {
-				//TODO:
-				echo "NOT in /data/images/ TODO: remove this transform";
-			}
-
-		}		
 
 		$recordCount++;
 	}

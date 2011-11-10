@@ -9,7 +9,8 @@
 //opt: videoUID - overrides raUID if present [string]
 
 function videos_player($args) {
-	global $theme, $user;
+	global $theme;
+	global $user;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -20,7 +21,10 @@ function videos_player($args) {
 
 	$model = new Videos_Video($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	//TODO: permissions check here
+	
+	if (('public' == $user->role) && ('public' != $model->category)) {
+		return "[[:users::pleaselogin:]]";
+	}
 
 	if ('mp3' == $model->format) { 
 		$block = "[[:videos::playeraudio::raUID=" . $model->UID . ":]]";

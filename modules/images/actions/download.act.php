@@ -122,11 +122,11 @@
 	if ('' == $report) { $session->msg('Downloaded image: ' . $URL, 'ok'); }
 	else { $session->msg('Could not save image: ' . $URL, 'bad'); }
 
-	//------------------------------------------------------------------------------------------
-	//	send 'images_added' event to all modules
-	//------------------------------------------------------------------------------------------
-	
+
 	if ('' == $report) {
+		//------------------------------------------------------------------------------------------
+		//	send 'images_added' event to all modules
+		//------------------------------------------------------------------------------------------
 		$args = array(	'refModule' => $refModule, 
 						'refUID' => $refUID, 
 						'imageUID' => $ext['UID'], 
@@ -135,6 +135,21 @@
 	
 		$kapenta->raiseEvent('*', 'images_added', $args);			// send to all modules
 		//$kapenta->raiseEvent($refModule, 'images_added', $args);	// send to owner module
+
+		//------------------------------------------------------------------------------------------
+		//	broadcast 'file_added' event (used by p2p, etc)
+		//------------------------------------------------------------------------------------------
+		$args = array(
+			'refModule' => 'images', 
+			'refModel' => 'images_image', 
+			'refUID' => $model->UID, 
+			'fileName' => $model->fileName, 
+			'hash' => sha1_file($kapenta->installPath . $model->fileName),
+			'size' => filesize($kapenta->installPath . $model->fileName)
+		);
+
+		$kapenta->raiseEvent('*', 'file_added', $args);
+
 	}
 
 	//----------------------------------------------------------------------------------------------

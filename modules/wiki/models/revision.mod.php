@@ -194,8 +194,12 @@ class Wiki_Revision {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
-		$ary = $this->toArray();
+		global $kapenta;
+		global $user;
+		global $theme;
+
+		$ary = $this->toArray();			//%	return value [dict]
+
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
 
 		//------------------------------------------------------------------------------------------
@@ -209,7 +213,7 @@ class Wiki_Revision {
 		//------------------------------------------------------------------------------------------
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
-		$ary['editedOnLong'] = date('jS F, Y', strtotime($ary['editedOn']));
+		$ary['editedOnLong'] = $kapenta->longDate($ary['editedOn']);
 
 		//------------------------------------------------------------------------------------------
 		//	done

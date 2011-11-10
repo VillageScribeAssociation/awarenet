@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	object for handling userlogins
+//*	colelction object for handling Users_Login objects
 //--------------------------------------------------------------------------------------------------
 
 class Users_Logins {
@@ -39,8 +39,9 @@ class Users_Logins {
 		global $db, $kapenta;
 		$range = $db->loadRange('users_login', '*', '', '', '', '');
 		foreach($range as $row) {
-			if (($row['serverUID'] == $kapenta->serverPath) && (time() > ($row['lastseen'] + $this->maxAge)))
-				{ $db->delete('users', 'users_login', $row['UID']); }
+			if (($row['serverUID'] == $kapenta->serverPath) && ($kapenta->time() > ($row['lastseen'] + $this->maxAge))) { 
+				$db->delete('users', 'users_login', $row['UID']); 
+			}
 		}
 	}
 

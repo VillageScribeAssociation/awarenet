@@ -44,7 +44,7 @@ function images_uploadmultiple($args) {
 		
 	if (array_key_exists('categories', $args)) { $srcUrl .= '/cats_' . $args['categories']; }
 	$html = "<iframe src='" . $srcUrl . "' name='imgMul" . $refModule . $refUID . "'" 
-		. " width='570' height='200' frameborder='0'></iframe>";
+		. " class='consoleif' width='100%' height='200' frameborder='0'></iframe>";
 		
 	return $html;
 }

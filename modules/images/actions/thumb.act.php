@@ -1,10 +1,10 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display an image thumbnail
+//*	display an image thumbnail, 100px square
 //--------------------------------------------------------------------------------------------------
+//DEPRECATED: remove this action when data is clean [string]
 
-	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
-	imgSend('thumb');
+	$page->do302('images/s_thumb/' . $req->ref);
 
 ?>

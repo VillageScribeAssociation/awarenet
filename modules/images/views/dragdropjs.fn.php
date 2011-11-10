@@ -199,7 +199,7 @@ function images_dragdropjs($args) {
 
 		this.addImage = function(data) {
 			var divProgress = document.getElementById('divProgress');
-			var imgUID = 'img' + createUID();
+			var imgUID = 'img' + kutils.createUID();
 			divProgress.innerHTML = divProgress.innerHTML 
 				+ \"<img src='\" + data + \"' height='100' />\";
 		}
@@ -226,7 +226,7 @@ function images_dragdropjs($args) {
 			}
 
 			this.console.innerHTML = html;
-			resizeFrame();
+			kutils.resizeIFrame();
 		}
 
 	}
@@ -244,7 +244,7 @@ function images_dragdropjs($args) {
 		if (msg == lastMsg) { return; }
 		//theDiv.innerHTML = theDiv.innerHTML + msg + \"<br>\";
 		lastMsg = msg;
-		resizeFrame();
+		kutils.resizeIFrame();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -310,7 +310,7 @@ function images_dragdropjs($args) {
 			log('FileReader API present...');
 		}
 
-		resizeFrame();
+		kutils.resizeIFrame();
 
 		var dropbox = document.getElementById('divDropTarget')
 

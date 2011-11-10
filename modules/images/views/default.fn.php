@@ -49,7 +49,7 @@ function images_default($args) {
 			// no images found for this item
 			//--------------------------------------------------------------------------------------
 			$imgUrl = $kapenta->serverPath . 'themes/clockface/unavailable/' . $size . '.jpg';
-			$html = "<img src='" . $imgUrl . "' border='0' />"; 
+			$html = "[[:images::unavailable::size=" . $size . ":]]"; 
 
 		} else {
 			//--------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ function images_default($args) {
 		//	item owns at least one image, return default (the one with lowest weight)
 		//-----------------------------------------------------------------------------------------
 		$row = array_pop($range);
-		$imgUrl = "%%serverPath%%images/" . $size . "/" . $row['alias'];
+		$imgUrl = "%%serverPath%%images/s_" . $size . "/" . $row['alias'];
 		$html = "<img src='" . $imgUrl . "' border='0' alt='" . $row['title'] . "' />";
 
 		if ($link == 'yes') {

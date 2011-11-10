@@ -222,8 +222,12 @@ class Wiki_Article {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
-		$ary = $this->toArray();
+		global $kapenta;
+		global $user;
+		global $theme;
+
+		$ary = $this->toArray();				//%	return value [dict]
+
 		$ary['editUrl'] = '';	$ary['editLink'] = '';	// edit
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
 		$ary['newUrl'] = '';	$ary['newLink'] = '';	// new article form
@@ -268,8 +272,8 @@ class Wiki_Article {
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
 
-		$ary['createdOnLong'] = date('jS F, Y', strtotime($ary['createdOn']));
-		$ary['editedOnLong'] = date('jS F, Y', strtotime($ary['editedOn']));
+		$ary['createdOnLong'] = $kapenta->longDate($ary['createdOn']);
+		$ary['editedOnLong'] = $kapenta->longDate($ary['editedOn']);
 		$ary['titleUpper'] = strtoupper($ary['title']);
 
 		//------------------------------------------------------------------------------------------

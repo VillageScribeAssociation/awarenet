@@ -21,6 +21,7 @@
 	if (false == array_key_exists('UID', $_POST))
 		{ $page->do404('reference object not specified', true); }
 
+	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
 
 	$model = new Videos_Video($_POST['UID']);
 	if (false == $model->loaded) { $page->do404('No such video', true); }
@@ -56,14 +57,18 @@
 				. '/refModule_' . $model->refModule
 				. '/refModel_' . $model->refModel
 				. '/refUID_' . $model->refUID . '/';
-			break;
+			break;		//..........................................................................
 
 		case 'uploadsingle':
 			$returnUrl = 'videos/uploadsingle'
 				. '/refModule_' . $model->refModule
 				. '/refModel_' . $model->refModel
 				. '/refUID_' . $model->refUID . '/';
-			break;
+			break;		//..........................................................................
+
+		case 'player':
+			$returnUrl = 'videos/play/' . $model->alias;
+			break;		//..........................................................................
 
 		default:
 			$page->do302('videos/edit/' . $model->alias);

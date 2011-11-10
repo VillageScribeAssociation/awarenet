@@ -1,7 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
-	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
+	require_once($kapenta->installPath . 'modules/images/models/images.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	decrement the weight of an image
@@ -20,7 +20,7 @@
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editimage', $model->refUID)) 
 		{ $page->do403('You are not authorized to edit this image.'); }
 
-	$set = new Images_Imageset($model->refModule, $model->refModel, $model->refUID);
+	$set = new Images_Images($model->refModule, $model->refModel, $model->refUID);
 	$set->decWeight($model->UID);
 
 	if (true == array_key_exists('return', $req->args)) { $return = $req->args['return']; }

@@ -181,7 +181,7 @@ class KPackage {
 
 				case 'filter':
 					$this->includes = array();					// 	clear existing filter
-					$this->excludes = array();					//	...
+					$this->excludes = array('.svn', '~{end}');	//	...
 					$filter = $doc->getChildren($childId);
 					foreach($filter as $filterId) {
 						$entity = $doc->getEntity($filterId);

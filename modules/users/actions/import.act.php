@@ -3,9 +3,9 @@
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	import users from CSV file
+//*	import users from CSV file (DEPRECATED)
 //--------------------------------------------------------------------------------------------------
-//TODO: remove this
+//DEPRECATED: TODO: remove this
 	
 	if ('admin' != $user->role) { $page->do403(); }
 

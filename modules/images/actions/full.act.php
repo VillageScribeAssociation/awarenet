@@ -24,7 +24,7 @@
 	} else {
 		// original file missing, send placeholder image
 		header('Content-Type: image/jpeg');
-		$sync->requestFile($i->fileName);
+		//$sync->requestFile($i->fileName);
 
 		readfile(
 			$kapenta->installPath . 'themes/' . $kapenta->defaultTheme . '/unavailable/loading.jpg'

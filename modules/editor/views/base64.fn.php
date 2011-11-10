@@ -7,33 +7,36 @@
 //arg: name - name of html field [string]
 //opt: width - width of editor in pixels [string]
 //opt: height - height of editor in pixels [string]
+//opt: areaname - name of javascript object [string]
 
 function editor_base64($args) {
 	global $page;
+
 	$width = 570;
 	$height = 400;
+	$areaname = 'area';
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('jsvar', $args) == false) { return ''; }
-	if (array_key_exists('name', $args) == false) { return ''; }
-	if (array_key_exists('width', $args) == true) { $width = $args['width']; }
-	if (array_key_exists('height', $args) == true) { $height = $args['height']; }
+	if (false == array_key_exists('jsvar', $args)) { return '(no jsvar given)'; }
+	if (false == array_key_exists('name', $args)) { return '(name not given)'; }
+	if (true == array_key_exists('width', $args)) { $width = $args['width']; }
+	if (true == array_key_exists('height', $args)) { $height = $args['height']; }
+	if (true == array_key_exists('areaname', $args)) { $areaname = $args['areaname']; } 
 
-	if (is_numeric($width) == false) { return ''; }
-	if (is_numeric($height) == false) { return ''; }
+	if (false == is_numeric($width)) { return ''; }
+	if (false == is_numeric($height)) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	make the script block
 	//---------------------------------------------------------------------------------------------
-	$jsFile = '%%serverPath%%/modules/editor/HyperTextArea.js';
-	$editorJs = "<script language='JavaScript' src='" . $jsFile . "'></script>\n";
+	//TODO: ensure that page template includes /js/HyperTextArea.js
 
-	$html = $editorJs
+	$html = ''
 		  . "<script language='JavaScript' type='text/javascript'>\n"
-		  . $args['jsvar'] . " = base64_decode(" . $args['jsvar'] . ");\n"
-		  . "area = new HyperTextArea('" . $args['name'] . "', " . $args['jsvar'] . ","
+		  . $args['jsvar'] . " = kutils.base64_decode(" . $args['jsvar'] . ");\n"
+		  . $areaname . " = new HyperTextArea('" . $args['name'] . "', " . $args['jsvar'] . ","
 		  . " $width, $height,'/modules/editor/');\n"
 		  . "</script>\n";	
 

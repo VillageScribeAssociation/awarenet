@@ -3,7 +3,7 @@
 require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when a record is deleted
+//|	fired when an object is deleted ($db->delete())
 //-------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted record
 //arg: UID - UID of deleted record

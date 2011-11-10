@@ -1,9 +1,5 @@
 <? /*
-[[:theme::navtitlebox::label=Preview:]]
-[[:videos::player::videoUID=%%UID%%:]]
-<br/>
 
-[[:theme::navtitlebox::label=Video Details:]]
 <form name='editVideo' method='POST' action='%%serverPath%%videos/savevideo/' >
 <input type='hidden' name='action' value='saveVideo' />
 <input type='hidden' name='UID' value='%%UID%%' />
@@ -12,15 +8,21 @@
 <input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 
-<table noborder>
+<table noborder width='100%'>
   <tr>
     <td><b>Title:</b></td>
-    <td><input type='text' size='50' name='title' value='%%title%%' /></td>
+    <td><input type='text' size='30' name='title' value='%%title%%' style='width: 100%;' /></td>
   </tr>
   <tr>
     <td><b>Caption:</b></td>
     <td>
-      <textarea name='caption' rows='5' cols='47'>%%caption%%</textarea></td>
+      <textarea name='caption' rows='5' cols='47' style='width: 100%;'>%%caption%%</textarea></td>
+  </tr>
+  <tr>
+    <td><b>Availability:</b></td>
+    <td>
+		[[:videos::selectcategory::default=%%category%%::fieldname=category:]]
+	</td>
   </tr>
   <tr>
     <td><b>Licence:</b></td>
@@ -39,19 +41,17 @@
         <option value='CC-BY-ND'>CC-BY-ND</option>
       </select>
 
-      <b>Weight:</b>
-      <input type='text' size='5' name='weight' value='%%weight%%' />
-
+      <b>Weight:</b> %%weight%%
     </td>
   </tr>
   <tr>
     <td><b>Attribution:    </b></td>
-    <td><input type='text' size='50' 
+    <td><input type='text' size='30' style='width: 100%;'
          name='attribName' value='%%attribName%%'/></td>
   </tr>
   <tr>
     <td><b>Source URL:</b></td>
-    <td><input type='text' size='50' 
+    <td><input type='text' size='30' style='width: 100%;'
          name='attribURL' value='%%attribUrl%%' /></td>
   </tr>
   <tr>
@@ -62,10 +62,11 @@
 </form>
 <br/>
 
-[[:theme::navtitlebox::label=Video Thumbnail:]]
-<iframe name='videoThumb' id='ifVideoThumb'
+[[:theme::navtitlebox::label=Video Thumbnail::toggle=divVideoThumbnail::hidden=yes:]]
+<div id='divVideoThumbnail' style='visibility: hidden; display: none;'>
+<iframe name='videoThumb' class='consoleif' id='ifVideoThumb'
   src='%%serverPath%%/images/uploadsingle/refModule_videos/refModel_videos_video/refUID_%%UID%%/category_thumb/'
   width='100%' height='400' frameborder='0' ></iframe>
-
+</div>
 %%returnLink%%
 */ ?>

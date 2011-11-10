@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/images/inc/images__weight.inc.php');
 
 //--------------------------------------------------------------------------------------------------
-//	save changes to an image
+//*	save changes to an image
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -28,10 +28,11 @@
 	if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
 		{ $page->do403('You are not authorized to edit this Image.'); }
 
+	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
+
 	//----------------------------------------------------------------------------------------------
 	//	make the changes
 	//----------------------------------------------------------------------------------------------
-		
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
 			case 'title':		$model->title = $utils->cleanString($value);		break;
@@ -51,6 +52,11 @@
 	//------------------------------------------------------------------------------------------
 
 	switch(strtolower($return)) {
+		case 'show':
+			$returnUrl = 'images/show/' . $model->alias;
+			if ('' == $report) { $session->msg('Image updated.', 'ok'); }
+			break;
+
 		case 'uploadmultiple':
 			$returnUrl = 'images/uploadmultiple'
 				. '/refModule_' . $model->refModule

@@ -24,7 +24,7 @@ function videos_editgalleryform($args) {
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$ext['galleryTitle'] = $ext['title'];
-	$ext['descriptionJs64'] = $utils->base64EncodeJs('descriptionJs64', $ext['description']);
+	$ext['description64'] = $utils->b64wrap($ext['description']);
 	$block = $theme->loadBlock('modules/videos/views/editgalleryform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 	return $html;

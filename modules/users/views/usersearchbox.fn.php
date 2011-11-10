@@ -20,7 +20,7 @@ function users_usersearchbox($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_user', 'view')) { return ''; }
+	if (false == $user->authHas('users', 'users_user', 'show')) { return ''; }
 	if (true == array_key_exists('cbjs', $args)) { $cbjs = $args['cbjs']; }
 	if (true == array_key_exists('cblabel', $args)) { $cblabel = $args['cblabel']; }
 	if (true == array_key_exists('cbicon', $args)) { $cbicon = $args['cbicon']; }

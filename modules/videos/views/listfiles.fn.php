@@ -28,11 +28,11 @@ function videos_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 
 	//TODO: consider dbLoadRange (possible memory issue)
-	$sql = "select UID, fileName from videos_video";
+	$sql = "select UID, fileName, hash from videos_video";
 	$result = $db->query($sql);
 	while ($row = $db->fetchAssoc($result)) { 
 		$row = $db->rmArray($row);
-		$currFile = array($row['UID'], $row['fileName']);
+		$currFile = array($row['UID'], $row['fileName'], $row['hash']);
 
 		if ('all' == $status) {
 			//-------------------------------------------------------------------------------------
@@ -72,7 +72,8 @@ function videos_listfiles($args) {
 					$list .= "  <refModule>videos</refModule>\n";
 					$list .= "  <refModel>videos_video</refModel>\n";
 					$list .= "  <refUID>" . $file[0] . "</refUID>\n";
-					$list .= "  <location>" . $file[1] . "</location>\n"; 
+					$list .= "  <location>" . $file[1] . "</location>\n";
+					$list .= "  <hash>" . $file[2] . "</hash>\n";  
 					$list .= "</file>\n";
 				}
 				break;
@@ -81,8 +82,8 @@ function videos_listfiles($args) {
 				//---------------------------------------------------------------------------------
 				//	return file list in CSV format
 				//---------------------------------------------------------------------------------
-				foreach($files as $file) {
-					$list .= "videos, videos_video, " . $file[0] . ", " . $file[1] . "\n";
+				foreach($files as $f) {
+					$list .= "videos, videos_video, " . $f[0] . ", " . $f[1] . ", " . $f[2] . "\n";
 				}
 				break;
 

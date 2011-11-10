@@ -1,15 +1,18 @@
 <? /*
 [[:theme::navtitlebox::width=570::label=Image:]]
-<img src='/images/width570/%%alias%%' border='0' />
-[[:theme::navtitlebox::width=570::label=Metadata::toggle=divImageMeta:]]
-<div id='divImageMeta'>
+<a href='%%serverPath%%images/full/%%alias%%'>
+<img src='%%serverPath%%images/width570/%%alias%%' border='0' />
+</a>
+<br/>
+[[:theme::navtitlebox::width=570::label=About::toggle=divImageAbout:]]
+<div id='divImageAbout'>
 <h1>%%title%%</h1>
 <p>%%caption%%</p>
 
-<table noborder>
-  <tr><td><b>Licence:</b></td><td>%%licence%%</td></tr>
-  <tr><td><b>Attribution:</b></td><td>%%attribName%%</td></tr>
-  <tr><td><b>Source:</b></td><td>%%attribUrl%%</td></tr>
-</table>
+<a href='%%serverPath%%images/full/%%alias%%'>[show original size]</a>
+<a href='%%serverPath%%images/setprofilepicture/%%alias%%'>[set as my profile picture]</a>
+
+%%userEditBlock%%
+
 </div>
 */ ?>

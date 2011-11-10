@@ -11,6 +11,8 @@
 [`|lt]h2[`|gt][`|pc][`|pc]title[`|pc][`|pc][`|lt]/h2[`|gt]
 [`|lt]p[`|gt][`|pc][`|pc]caption[`|pc][`|pc][`|lt]/p[`|gt]
 
+%%editBlock%%
+
 [[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddCommentForm::hidden=yes:]]
 [`|lt]div id=[`|sq]divAddCommentForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 [[:comments::addcommentform::refModule=videos::refModel=videos[`|us]video::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/videos/play/[`|pc][`|pc]raUID[`|pc][`|pc]:]]

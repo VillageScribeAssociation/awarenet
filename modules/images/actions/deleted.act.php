@@ -1,8 +1,11 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	show deleted images
+//*	show deleted images
 //-------------------------------------------------------------------------------------------------
+//DEPRECATED: image files are no longer kept after deletion TODO: remove
+
+	if ('admin' != $user->role) { $page->do403(); }
 
 	$sql = "select * from images_image";
 	$result = $db->query($sql);

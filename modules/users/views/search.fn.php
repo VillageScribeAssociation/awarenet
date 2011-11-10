@@ -50,12 +50,18 @@ function users_search($args) {
 	$qsField = "concat(firstname, ' ', surname, ' ', username)";
 
 	$conditions = array();
+	$conditions[] = "role <> 'banned'";
+	$conditions[] = "role <> 'public'";
+
 	foreach($parts as $part) {
 		if ('' != $part) { $conditions[] = "LOCATE('". $db->addMarkup($part) ."', $qsField) > 0"; }
 	}
 
 	$totalItems = $db->countRange('users_user', $conditions);
-	$range = $db->loadRange('users_user', "UID, $qsField as qs", $conditions, 'surname', $num, $start);
+	$range = $db->loadRange(
+		'users_user', "UID, $qsField as qs",
+		$conditions, 'surname', $num, $start
+	);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

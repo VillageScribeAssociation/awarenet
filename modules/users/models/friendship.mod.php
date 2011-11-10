@@ -41,6 +41,7 @@ class Users_Friendship {
 			$this->loadArray($this->data);
 			$this->userUID = $user->UID;
 			$this->status = 'unconfirmed';
+			$this->loaded = false;
 		}
 	}
 
@@ -195,7 +196,7 @@ class Users_Friendship {
 
 	function extArray() {
 		global $user;
-		$ary = $this->data;
+		$ary = $this->toArray();
 		// TODO	
 		return $ary;
 	}
@@ -207,8 +208,7 @@ class Users_Friendship {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
-	global $db;
-
+		global $db;
 		$report = "<h3>Installing Friendships Table</h3>\n";
 
 		//------------------------------------------------------------------------------------------
@@ -236,58 +236,6 @@ class Users_Friendship {
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get a users list of confirmed friends 
-	//----------------------------------------------------------------------------------------------
-	//arg: userUID - UID of a user [string]
-	//returns: array of friendUID => relationship [array]
-
-	function getFriends($userUID) {
-		global $db;
-		$retVal = array();
-		$cond = array("userUID='" . $db->addMarkup($userUID) . "'", "status='confirmed'");
-		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
-
-		foreach($range as $row) { $retVal[$row['friendUID']] = $row['relationship']; }
-		return $retVal;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get a users list of outgoing friend requests (ie, that they have made)
-	//----------------------------------------------------------------------------------------------
-	//arg: userUID - UID of a user [string]
-	//returns: array of friendUID => relationship [array]
-
-	function getFriendRequests($userUID) {
-		global $db;
-		$retVal = array();
-
-		// load unconfirmed (ie, friend requests)
-		$cond = array("userUID='" . $db->addMarkup($userUID) . "'", "status='unconfirmed'");
-		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
-
-		// make into simple array and return
-		foreach($range as $row) { $retVal[$row['friendUID']] = $row['relationship']; }
-		return $retVal;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get a users list of incoming friend requests (ie, that others have made)
-	//----------------------------------------------------------------------------------------------
-	//arg: userUID - UID of a user [string]
-	//returns: array of friendUID => relationship [array]
-
-	function getFriendRequested($userUID) {
-		global $db;
-		$retVal = array();
-		// load unconfirmed (ie, friend requests)
-		$cond = array("friendUID='" . $db->addMarkup($userUID) . "'", "status='unconfirmed'");
-		$range = $db->loadRange('users_friendship', '*', $cond, 'createdOn DESC', '', '');
-		// make into simple array
-		foreach($range as $row) { $retVal[$row['userUID']] = $row['relationship']; }
-		return $retVal;
 	}
 
 	//----------------------------------------------------------------------------------------------

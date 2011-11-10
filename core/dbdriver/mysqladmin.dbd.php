@@ -24,16 +24,21 @@ class KDBAdminDriver {
 	//.	make a database (consider removing this, live sites should not need this functionality)
 	//----------------------------------------------------------------------------------------------
 	//arg: database - name of database [string]
+	//returns: true on success or false on error [bool]
 
 	function create($database) {
 		global $db, $user;
 
 		if ('admin' == $user->role) {
 		$query = 'CREATE DATABASE ' . $database;
-		$connect = mysql_pconnect($db->host, $db->user, $db->pass) or die("no connect");
+		$connect = @mysql_pconnect($db->host, $db->user, $db->pass);
+
+		if (false == $connect) { return false; }		
+
 		//$connect = mysql_connect($db->host, $db->user, $db->pass) or die("no connect");
-		mysql_query($query, $connect) or die("<h1>Houston, we have a problem...</h1>" 
-			. mysql_error() ."<p>" . $query);
+		$result = @mysql_query($query, $connect);
+		if (false == $result) { return false; }
+		return true;
 	  }
 	}
 
@@ -209,9 +214,9 @@ class KDBAdminDriver {
 		//------------------------------------------------------------------------------------------
 		foreach($dbSchema1['fields'] as $key => $val) { $tStr1 .= $key . '|' . $val . "\n"; }
 		foreach($dbSchema2['fields'] as $key => $val) { $tStr2 .= $key . '|' . $val . "\n"; }
-		if ($tStr1 != $tStr2) { 
-			return false; 
-		}
+		$tStr1 = str_replace('VARCHAR(', 'CHAR(', $tStr1);
+		$tStr2 = str_replace('VARCHAR(', 'CHAR(', $tStr2);
+		if ($tStr1 != $tStr2) { return false; }
 
 		//------------------------------------------------------------------------------------------
 		//	indices need not be in same order

@@ -3,8 +3,8 @@
 //-------------------------------------------------------------------------------------------------
 //*	save changes to a Users_User object
 //-------------------------------------------------------------------------------------------------
-//	Permissions: a user may save changes to their own forename, surname, password, profile and 
-//	language.  Admins may change most other fields.
+//+	Permissions: a user may save changes to their own forename, surname, password, profile and 
+//+	language.  Admins may change most other fields.
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -54,7 +54,7 @@
 		else { $session->msg($report, 'bad'); }
 
 		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-		$page->do302('users/list/');
+		$page->do302('users/profile/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -3,8 +3,7 @@
 	<template>iframe.template.php</template>
 	<content>
 [[:theme::navtitlebox::label=Drag and Drop Images::toggle=divImgDragDrop:]]
-[`|lt]div id='divImgDragDrop'[`|gt]
-[[:images::dragdropjs::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::tags=[`|pc][`|pc]tags[`|pc][`|pc]:]]
+[[:images::dragdrop::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]::refModel=[`|pc][`|pc]refModel[`|pc][`|pc]::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::tags=[`|pc][`|pc]tags[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]

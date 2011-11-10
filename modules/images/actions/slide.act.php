@@ -1,10 +1,9 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display an image thumbnail
+//*	display an image scaled and cropped to fit the slideshow
 //--------------------------------------------------------------------------------------------------
 
-	require_once($kapenta->installPath . 'modules/images/inc/sendimg.inc.php');
-	imgSend('slide');
+	$page->do302('images/s_slide/' . $req->ref);
 
 ?>

@@ -26,7 +26,7 @@
 		$model->loadFriend($model->friendUID, $user->UID);
 		$model->delete();
 
-		$msg = "[[:users::namelink::userUID=" . $_POST['friendshipUID'] . ":]]"
+		$msg = "[[:users::namelink::userUID=" . $model->userUID . ":]]"
 			 . " removed from friends list.<br/>\n";
 
 		$session->msg($msg, 'ok');

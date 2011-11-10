@@ -1,9 +1,9 @@
 <? /*
-[[:users::summarynav::userUID=%%friendUID%%::extra=(relationship; %%relationship%%):]]
+[[:users::summarynav::userUID=%%userUID%%::extra=(relationship; %%relationship%%):]]
 <form name='confirmFriend' method='POST' action='%%serverPath%%users/confirmfriend/' />
 <input type='hidden' name='action' value='confirmFriendReq' />
-<input type='hidden' name='friendUID' value='%%friendUID%%' />
-What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?
+<input type='hidden' name='friendUID' value='%%userUID%%' />
+What is your relationship to [[:users::namelink::userUID=%%userUID%%:]]?
 <select name='relationship'>
   <option value='friend'>friend</option>
   <option value='family'>family</option>
@@ -20,7 +20,7 @@ What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?
 
 <form name='ignoreFriendRequest' method='POST' action='%%serverPath%%users/removefriend/'>
 <input type='hidden' name='action' value='ignoreRequest' />
-<input type='hidden' name='friendUID' value='%%friendUID%%' />
+<input type='hidden' name='friendUID' value='%%userUID%%' />
 <input type='submit' value='ignore this request'>
 </form>
 

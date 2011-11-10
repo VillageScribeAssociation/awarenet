@@ -100,7 +100,7 @@ function videos_videosetdetail($args) {
 		<input type='hidden' name='action' value='deleteVideo' />
 		<input type='hidden' name='UID' value='" . $model->UID . "' />
 		<input type='hidden' name='return' value='" . $returnUrl . "' />
-		<input type='image' src='%%serverPath%%themes/clockface/images/btn-del.png' alt='delete' />
+		<input type='image' src='%%serverPath%%themes/%%defaultTheme%%/images/btn-del.png' alt='delete' />
 		</form>
 		";
 		

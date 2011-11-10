@@ -58,8 +58,8 @@
 		teacher:p|videos|videos_gallery|new
 		teacher:p|videos|videos_gallery|show
 		teacher:p|videos|videos_gallery|images-show
-		student:p|videos|videos_gallery|comments-add
-		student:p|videos|videos_gallery|comments-show
+		teacher:p|videos|videos_gallery|comments-add
+		teacher:p|videos|videos_gallery|comments-show
 		teacher:c|videos|videos_gallery|edit|(if)|creator
 		teacher:c|videos|videos_gallery|images-add|(if)|creator
 		teacher:c|videos|videos_gallery|images-remove|(if)|creator
@@ -81,7 +81,7 @@
 		teacher:c|videos|videos_video|images-edit|(if)|creator
 
 		teacher:p|videos|videos_video|comments-add
-		teacher:p|videos|videos_video|comments-retract|(if)|creator
+		teacher:c|videos|videos_video|comments-retract|(if)|creator
 		teacher:p|videos|videos_video|comments-show
     </defaultpermissions>
 </module>

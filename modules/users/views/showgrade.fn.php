@@ -43,8 +43,14 @@ function users_showgrade($args) {
 		$html .= "<table noborder>\n";
 		$odd = true;
 
-		foreach ($range as $row) {
-			$cell = "[[:users::summarynav::userUID=" . $row['UID'] . ":]]";
+		foreach ($range as $item) {
+			$cell = ''
+			 . "<table noborder>"
+			 . "<td width='50'>[[:users::avatar::size=thumbsm::userUID=" . $item['UID'] . ":]]</td>"
+			 . "<td width='5px'></td>"
+			 . "<td>[[:users::namelink::userUID=" . $item['UID'] . ":]]</td>"
+			 . "</table>";
+
 			if ($odd == true) { $html .= "\t<tr>\n\t\t<td valign='top'>$cell</td>\n"; }
 			else { $html .= "\t\t<td valign='top'>$cell</td>\n\t</tr>\n"; }
 			$odd = !$odd;

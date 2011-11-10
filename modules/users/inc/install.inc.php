@@ -4,8 +4,9 @@
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/role.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
-
+	require_once($kapenta->installPath . 'modules/users/models/session.mod.php');
+	require_once($kapenta->installPath . 'core/kmodule.class.php');
+	
 //--------------------------------------------------------------------------------------------------
 //*	install script for Users module
 //--------------------------------------------------------------------------------------------------
@@ -20,7 +21,8 @@ function users_install_module() {
 	global $db;
 	global $user;
 	global $registry;
-
+	global $kapenta;
+	
 	if ('admin' != $user->role) { return false; }
 	$dba = new KDBAdminDriver();
 	$report = '';						//%	return value [string]
@@ -40,9 +42,9 @@ function users_install_module() {
 	$report .= "<b>moved $count records from 'friendships' table.</b><br/>";
 
 	//----------------------------------------------------------------------------------------------
-	//	create or upgrade Users_Login table
+	//	create or upgrade Users_Session table
 	//----------------------------------------------------------------------------------------------
-	$model = new Users_Login();
+	$model = new Users_Session();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
 
@@ -93,6 +95,94 @@ function users_install_module() {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//	create default user roles if they do not already exist
+	//----------------------------------------------------------------------------------------------
+	$roles = array('admin', 'public', 'student', 'teacher', 'banned');
+	
+	foreach($roles as $roleName) {
+	$model = new Users_Role($roleName, true);
+		if (false == $model->loaded) {
+			$model->UID = $kapenta->createUID();
+			$model->name = $roleName;
+			$check = $model->save();
+			if ('' == $check) { $report .= "Created '" . $roleName . "' user group.<br/>\n"; }
+			else { $report .= "Could not create '" . $roleName . "' user group.<br/>\n"; }
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	set default permissions as specified by modules
+	//----------------------------------------------------------------------------------------------
+	
+	$modList = $kapenta->listModules();
+	foreach($modList as $modName) {
+		$mod = new KModule($modName);
+		if (false == $mod->loaded) {
+			$report .= "Could not load module: $modName<br/>\n";
+		} else {
+			//--------------------------------------------------------------------------------------		
+			//	
+			//--------------------------------------------------------------------------------------
+			$report .= ''
+				. "module: $modName <br/>\n"
+				. "description: " . $mod->description . "<br/>\n"
+				. "Default permissions: " . count($mod->defaultpermissions) . "<br/>\n";
+
+			foreach($mod->defaultpermissions as $defperm) { 
+				$parts = explode(':', trim($defperm), 2);
+				$args = explode('|', $parts[1] . '|||||||');
+				$role = new Users_Role($parts[0], true);
+				if (true == $role->loaded) { 
+					$added = $role->permissions->add(
+						$args[1], $args[2], $args[3], $args[5]
+					);
+					if (true == $added) {
+						$report .= "added permission: {$parts[1]} ({$parts[0]}) <br/>\n"; 
+					} else { 
+						$report .= "could not add default permission: $defperm<br/>\n";
+					}
+
+					$check = $role->save();
+					if ('' != $check) { $report .= "Could not save role: $check <br/>\n"; }
+
+				} else { $report .= "Could not load role: " . $parts[0] . "<br/>\n"; }
+
+			}
+
+		}
+
+	}
+	
+	//----------------------------------------------------------------------------------------------
+	//	create default admin account from windows installer if it doesn't already exist
+	//----------------------------------------------------------------------------------------------
+	$adminUID = $registry->get('firstrun.adminuid');
+	$adminUser = $registry->get('firstrun.adminuser');
+	$adminPass = $registry->get('firstrun.adminpass');
+	$firstSchool = $registry->get('firstrun.firstschool');
+	
+	if (('' !== $adminUID) && ('' !== $adminUser) && ('' !== $adminPass)) {
+		if (false == $db->objectExists('users_user', $adminUID)) {
+			$model = new Users_User();
+			$model->UID = $adminUID;
+			$model->role = 'admin';
+			if ('' !== $firstSchool) { $model->school = $firstSchool; }
+			$model->grade = 'Staff';
+			$model->firstname = 'System';
+			$model->surname = 'Administrator';
+			$model->username = $adminUser;
+			$model->password = sha1($adminPass . $adminUID);
+			$model->lang = 'en';
+			$check = $model->save();
+			if ('' == $check) {
+				$report .= "Created default admin account ($adminUID).<br/>\n";
+			} else {
+				$report .= "Could not create default administrator account:<br/>\n$check<br/>\n";
+			}
+		}
+	}
+	
+	//----------------------------------------------------------------------------------------------
 	//	done
 	//----------------------------------------------------------------------------------------------
 	return $report;
@@ -134,9 +224,9 @@ function users_install_status_report() {
 	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	ensure the table which stores Login objects exists and is correct
+	//	ensure the table which stores Session objects exists and is correct
 	//----------------------------------------------------------------------------------------------
-	$model = new Users_Login();
+	$model = new Users_Session();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

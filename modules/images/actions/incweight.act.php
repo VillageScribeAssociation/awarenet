@@ -1,7 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
-	require_once($kapenta->installPath . 'modules/images/inc/imageset.class.php');
+	require_once($kapenta->installPath . 'modules/images/models/images.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	increment the weight of an image
@@ -24,7 +24,7 @@
 
 	$returnUrl = 'images/edit/' . $model->alias;
 
-	$set = new Images_Imageset($model->refModule, $model->refModel, $model->refUID);
+	$set = new Images_Images($model->refModule, $model->refModel, $model->refUID);
 	$set->incWeight($model->UID);
 
 	//------------------------------------------------------------------------------------------

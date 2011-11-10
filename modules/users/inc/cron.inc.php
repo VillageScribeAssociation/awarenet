@@ -12,15 +12,22 @@
 //returns: HTML report of any actions taken [string]
 
 function users_cron_tenmins() {
+	global $kapenta;
 	global $db;
-	$report = "<h2>users_cron_tenmins</h2>\n";	//%	return value [string]
+
+	$report = "<h2>users_cron_tenmins</h2>\n";							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	remove userlogin records if user has not been seen online for awhile
 	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: remove this section, replaced by users_session table
+
+	$report .= "<h2>Removing old login records (DEPRECATED)</h2>";
+
 	$expTime = time() - 600;	// TODO: make this a configurable setting
 	$sql = "select * from users_login where lastseen < '" . $db->datetime($expTime) . "'";
 	$result = $db->query($sql);
+	$count = 0;
 
 	if (0 == $db->numRows($result)) { $report .= "(no inactive sessions)"; }
 	else {
@@ -36,10 +43,34 @@ function users_cron_tenmins() {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	post and retrieve a list of active logins from the central server
+	//	mark sessions as inactive if user not seen for 10 or more minutes
 	//----------------------------------------------------------------------------------------------
+	//TODO: replace magic number with registry setting
 
-	
+	$report .= "<h2>Checking user session status.</h2>";
+	$sql = "select * from users_session where status='active'";
+	$result = $db->query($sql);
+	$count = 0;
+
+	while($row = $db->fetchAssoc($result)) {
+		$item = $db->rmArray($row);						//%	remove SQL markup [array]
+		$ts = $kapenta->strtotime($item['editedOn']);	//%	session last updated [int]
+		$limit = time() - 600;							//% ten nimutes ago [int]
+
+		if ($ts < $limit) {
+			$model = new Users_Session($item['UID']);
+			$model->status = 'closed';
+			$check = $model->save();
+			if ('' == $check) {
+				$report .= "Session exired: " . $model->UID . " (" . $model->createdBy . ")<br/>\n";
+				$count++;
+			} else {
+				$report .= "<b>Could not update user session:</b><br/>$check<br/>\n";
+			}
+		}
+	}
+
+	if (0 < $count) { $report .= "<b>Closed $count expired sessions.</b><br/>"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	done

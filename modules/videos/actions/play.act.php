@@ -9,12 +9,31 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
 	if ('' == $req->ref) { $page->do404('Video not specified.'); }
 
 	$model = new Videos_Video($req->ref);
 	if (false == $model->loaded) { $page->do404('Video not found.'); }
-	//TODO: permissions check here
+
+	if (('public' == $user->role) && ('public' != $model->category)) { $page->do403(); }
+
+	// temporarily disabled while permissions are in flux  TODO: add this back in when stable
+	//if (false == $user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
+	//	$page->do403(); 
+	//}
+
+	//----------------------------------------------------------------------------------------------
+	//	block for inline editing if permitted
+	//----------------------------------------------------------------------------------------------
+	$editAuth = $user->authHas('videos', 'videos_video', 'edit', $model->UID);
+	$editBlock = '';
+
+	if (($model->createdBy == $user->UID) || (true == $editAuth)) {
+		$editBlock = ''
+		 . '[[:theme::navtitlebox::label=Edit Video Details::toggle=divEVD::hidden=yes:]]'
+		 . "<div id='divEVD' style='visibility: hidden; display: none;'>"
+		 . '[[:videos::editvideoform::raUID=' . $model->UID . '::return=player:]]'
+		 . '</div><br/>';
+	}
 
 	if ('swf' == $model->format) { $page->do302('videos/animate/' . $model->alias); }
 
@@ -27,6 +46,7 @@
 	$page->blockArgs['title'] = $model->title;
 	$page->blockArgs['caption'] = $model->caption;
 	$page->blockArgs['raUID'] = $model->alias;
+	$page->blockArgs['editBlock'] = $editBlock;
 	$page->render();
 
 ?>

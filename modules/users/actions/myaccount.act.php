@@ -1,13 +1,19 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	action to show 'my account' page - does not accept reference
+//*	action to show 'my account' page - does not accept reference
 //--------------------------------------------------------------------------------------------------
-//	NOTE: 'public' user has no My Account page (redirect to signup?) but users in 'public' GROUP
-//	do have accounts and hence My Account pages.
+//+	NOTE: 'public' user has no My Account page (redirect to signup?) but users in 'public' GROUP
+//+	do have accounts and hence My Account pages.
 
+	//----------------------------------------------------------------------------------------------
+	//	check user role
+	//----------------------------------------------------------------------------------------------
 	if ($user->UID == 'public') { $page->do404(); }	// not for public user
 
+	//----------------------------------------------------------------------------------------------
+	//	render page
+	//----------------------------------------------------------------------------------------------
 	$page->load('modules/users/actions/myaccount.page.php');
 	$page->blockArgs['UID'] = $user->UID;
 	$page->blockArgs['userUID'] = $user->UID;

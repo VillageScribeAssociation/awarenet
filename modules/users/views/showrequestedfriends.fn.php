@@ -1,5 +1,6 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/users/models/friendships.set.php');
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 
@@ -9,40 +10,32 @@
 //arg: userUID - UID of user whose profile this box is on [string]
 
 function users_showrequestedfriends($args) {
-	global $user; $html = '';
-	if (array_key_exists('userUID', $args) == false) { return false; }
+	global $user; 
+	global $theme;
 
-	// admins can see everyones friend requests
-	if ( ($args['userUID'] != $user->UID)
-	 AND ( 'admin' != $user->role)  ) { return false; }
+	$html = '';					//%	return value [string]
 
-	// make the list
-	$model = new Users_Friendship();
-	$reqs = $model->getFriendRequests($args['userUID']);	
-	
-	if (count($reqs) > 0) {
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('userUID', $args)) { return '(User UID not given)'; }
+
+	// admins can see everyones friend requests	TODO: use a permission for this
+	if (($args['userUID'] != $user->UID) && ( 'admin' != $user->role) ) { return ''; }
+
+	$set = new Users_Friendships($args['userUID']);
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$requests = $set->getRequestsByMe();	
+	$block = $theme->loadBlock('modules/users/views/showfriendrequest.block.php');
+
+	if (count($requests) > 0) {
 		$html .= "[[:theme::navtitlebox::label=Friend Requests (from me):]]\n";
+		foreach($requests as $item) { $html .= $theme->replaceLabels($item, $block); }
+	}
 
-		foreach($reqs as $friendUID => $relationship) {
-			//$labels = array('userUID' => $friendUID, 'relationship' => $relationship);
-			//$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/users/views/confirmfriendnav.block.php'));
-			$html .= "[[:users::summarynav::userUID=" . $friendUID 
-					. "::extra=(relationship: $relationship):]]\n";
-
-			$rmUrl = '%%serverPath%%users/removefriend/';
-
-			$html .= "<form name='withdrawFriendRequest' method='POST' action='" . $rmUrl . "'>\n"
-					. "<input type='hidden' name='action' value='withdrawRequest' />\n"
-					. "<input type='hidden' name='friendUID' value='" . $friendUID . "' />\n"
-					. "<input type='submit' value='widthdraw request' />\n"
-					. "</form>\n";
-
-			$html .= "<hr/>\n";
-
-		}
-
-	}	
-	
 	return $html;
 }
 

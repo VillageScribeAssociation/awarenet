@@ -6,7 +6,7 @@
 <input type='hidden' name='refUID' value='%%refUID%%' />
 <input type='hidden' name='return' value='%%return%%' />
 
-<textarea name='comment' rows='5' cols='39'></textarea><br/>
+<textarea name='comment' rows='5' cols='39' style='width: 100%;'></textarea><br/>
 <input type='submit' value='Add Comment' />
 </form>
 */ ?>

@@ -8,13 +8,18 @@
 //arg: refModule - a kapenta module [string]
 //arg: refModel - type of object which may have comments [string]
 //arg: refUID - UID of object which owns comments [string]
+//opt: pageNo - current result page to display [string]
 //opt: num - number of records per page (default 10) [string]
-//TODO: pagination here
 
 function comments_listnav($args) {
-	global $db, $user, $theme;
-	$num = 10;	
-	$html = '';
+	global $db;
+	global $user;
+	global $theme;
+	
+	$pageNo = 1;		//%	result page to display [int]
+	$num = 4;			//%	number of comments per page [int]
+	$start = 0;			//%	offset in database results [int]
+	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -28,29 +33,39 @@ function comments_listnav($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $user->authHas($refModule, $refModel, 'comments-show', $refUID)) { return ''; }
+
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pageNo', $args)) { 
+		$pageNo = (int)$args['pageNo'];
+		$start = (($pageNo - 1) * $num);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	count comments on this item
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+
+	$total = $db->countRange('comments_comment', $conditions);
+	if ($start >= $total) {
+		return '<!-- end of results -->';
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of comments from the database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num);
-
-	//$sql = "select * from Comments_Comment "
-	//	 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
-	//	 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
-	//	 . "order by createdOn DESC limit " . $db->addMarkup($num) . "";
+	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/comments/views/summarynav.block.php');
 
-	if (0 == count($range)) { return "(no comments at present)<br/>"; }
-
+	if (0 == count($range)) { 
+		return "<div class='inlinequote'>No comments.</div>";
+	}
 
 	foreach ($range as $row) {
 		$model = new Comments_Comment();

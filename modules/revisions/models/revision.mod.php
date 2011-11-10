@@ -115,6 +115,8 @@ class Revisions_Revision {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+		if ('revisions_revision' == $this->refModel) { $report .= "Revisions not kept for this."; }
+		if ('p2p_gift' == $this->refModel) { $report .= "Revisions not kept for this."; }
 		return $report;
 	}
 

@@ -8,7 +8,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	handle submissions
 	//----------------------------------------------------------------------------------------------
-
 	if ((array_key_exists('action', $_POST)) AND ($_POST['action'] == 'login')) {
 
 		//------------------------------------------------------------------------------------------
@@ -36,17 +35,8 @@
 					//------------------------------------------------------------------------------
 					//	feedback and redirect
 					//------------------------------------------------------------------------------
-
-
-					//$msg = "[[:theme::navtitlebox::label=Notice:]]"
-					//	 . "<div class='inlinequote'><p>"
-					//	 . "<img src='%%serverPath%%themes/clockface/images/info.png' "
-					//	 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
-					//	 . "You are now logged in.</p></div>\n";
-
-
-					$session->user = $row['UID'];						//	set current user UID
-					$session->store();									//	and save
+					$session->set('user', $row['UID']);					//	set current user UID
+					$session->set('role', $row['role']);				//	set current user role
 					$session->msg('You are now logged in.', 'ok');
 
 					$user->loadArray($row);
@@ -54,8 +44,11 @@
 					if (true == array_key_exists('redirect', $_POST)) { 
 						$page->do302($_POST['redirect']); 				// retry action after login
 					} else {
-						$user->lastOnline = $db->datetime();
-						$user->save();
+						//--------------------------------------------------------------------------
+						//	user is logged in, raise event and redirect
+						//--------------------------------------------------------------------------
+						$args = array('userUID' => $row['UID']);
+						$kapenta->raiseEvent('*', 'users_login', $args);
 						$page->do302('notifications/'); 				// default landing page
 					}
 
@@ -67,15 +60,7 @@
 		//------------------------------------------------------------------------------------------
 		//	cound not authenticate
 		//------------------------------------------------------------------------------------------
-		
-		//$msg = "[[:theme::navtitlebox::label=Notice:]]"
-		//	 . "<div class='inlinequote'><p>"
-		//	 . "<img src='%%serverPath%%themes/clockface/images/btn-del.png' "
-		//	 . "class='infobutton' width='18' height='18' />&nbsp;&nbsp;"
-		//	 . "</div>\n";
-
 		$session->msg('Username or password not recognised, you are not logged in.', 'no');
-								
 
 	}
 

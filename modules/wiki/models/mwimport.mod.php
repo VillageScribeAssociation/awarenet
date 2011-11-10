@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	
+//*	temorary store of MediaWiki articles before converting into Wiki_Article objects
 //--------------------------------------------------------------------------------------------------
 
 class Wiki_MWImport {
@@ -26,6 +26,7 @@ class Wiki_MWImport {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared = 'no';		//_ not shared with other peers [string]
 	var $alias;				//_ alias [string]
 
 	var $apFromFile;
@@ -44,6 +45,7 @@ class Wiki_MWImport {
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New MWImport ' . $this->UID;	// set default title
 			$this->loaded = false;
+			$this->shared = 'no';
 		}
 
 		$this->apFromFile = 'data/apfrom.txt';
@@ -85,6 +87,7 @@ class Wiki_MWImport {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
@@ -142,6 +145,7 @@ class Wiki_MWImport {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
 			'alias' => 'VARCHAR(255)' );
 
 		//these fields will be indexed
@@ -192,6 +196,7 @@ class Wiki_MWImport {
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
 			'editedBy' => $this->editedBy,
+			'shared' => 'no',
 			'alias' => $this->alias
 		);
 		return $serialize;
@@ -220,6 +225,7 @@ class Wiki_MWImport {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
 			. $indent . "    <alias>" . $this->alias . "</alias>\n"
 			. $indent . "</kobject>\n";
 

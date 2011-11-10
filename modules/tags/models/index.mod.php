@@ -134,7 +134,7 @@ class Tags_Index {
 			'refModule' => '10',
 			'refModel' => '10',
 			'refUID' => '10',
-			'status' => '10',
+			'status' => '5',
 			'tagUID' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',

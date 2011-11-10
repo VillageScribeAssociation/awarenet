@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	add a new announcements post
+//*	add a new announcements post
 //--------------------------------------------------------------------------------------------------
 
 	if ($user->authHas('announcements', 'announcements_announcement', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }

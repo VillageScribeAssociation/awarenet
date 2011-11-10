@@ -3,7 +3,7 @@
 require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when a record is deleted
+//|	fired when an object is deleted from the database
 //-------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted record
 //arg: UID - UID of deleted record

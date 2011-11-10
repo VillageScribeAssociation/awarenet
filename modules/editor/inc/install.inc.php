@@ -1,11 +1,11 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	install scripts for WYSWYG editor
+//*	install scripts for WYSWYG editor
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-//	install the WYSWYG editor module
+//|	install the WYSWYG editor module
 //--------------------------------------------------------------------------------------------------
 //returns: html report [string]
 
@@ -14,7 +14,7 @@ function editor_install_module() {
 
 	if ('admin' != $user->role) { return false; }	// only admins can do this
 
-	$report .= "<h3>Installing WYSWYG Editor</h3>\n";
+	$report = "<h3>Installing WYSWYG Editor</h3>\n";
 
 	//------------------------------------------------------------------------------------------
 	//	admin module has no database presence at now

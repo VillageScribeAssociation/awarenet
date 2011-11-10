@@ -5,7 +5,7 @@
 	function users_userSearch() {
 		var theQ = document.getElementById('users_USQ');
 		var blockTag = '[[' + ':users::search'
-			 + '::q=' + base64_encode(theQ.value)
+			 + '::q=' + kutils.base64_encode(theQ.value)
 			 + '::b64=yes'
 			 + '::cbjs=%%cbjs%%'
 			 + '::cblabel=%%cblabel%%'

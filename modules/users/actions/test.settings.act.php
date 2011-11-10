@@ -1,14 +1,15 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//.	temporary action to test user settings
+//*	temporary development action to test user settings
 //--------------------------------------------------------------------------------------------------
-	
+//TODO: once this feature is stable	
+
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$user->storeSetting('anothertest.setting', '1234value');
+	$user->settings->store('anothertest.setting', '1234value');
 
-	$value = $user->getSetting('test.setting');
+	$value = $user->settings->get('test.setting');
 
 	echo "stored and returned: $value <br/>";
 

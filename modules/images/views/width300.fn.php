@@ -1,7 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
-	require_once($kapenta->installPath . 'modules/images/inc/images__widthx.inc.php');
+	require_once($kapenta->installPath . 'modules/images/views/show.fn.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display a single image 300px wide
@@ -10,7 +10,10 @@
 //opt: imageUID - overrides raUID [string]
 //opt: link - link to larger version (yes|no) [string]
 
-function images_width300($args) { $args['size'] = 'width300'; return images__widthx($args); }
+function images_width300($args) {
+	$args['size'] = 'width300';
+	return images_show($args);
+}
 
 //--------------------------------------------------------------------------------------------------
 

@@ -49,8 +49,6 @@
 	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['userName'] = $userName;
 	$page->title = 'awareNet - ' . $userName . ' (profile)';
-	//$page->jsinit .= "msgSubscribe('comments-users-" . $userUID . "', msgh_comments);\n";
-	//$page->jsinit .= "msgh_commentsRefresh();\n";
 	$page->render();
 
 ?>

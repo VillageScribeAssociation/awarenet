@@ -29,7 +29,7 @@ function twitter_cron_tenmins() {
 			$model->status = 'sent';
 			$model->save();
 
-			$report = twitter_send($model->content);
+			$report .= twitter_send($model->content);
 		}
 
 		$sql = "update twitter_tweet set status='sent' where status='new'";

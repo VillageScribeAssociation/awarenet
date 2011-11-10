@@ -13,13 +13,7 @@
 	//	list all files
 	//---------------------------------------------------------------------------------------------
 
-	$shellCmd = 'find ' . $kapenta->installPath . 'data/images/';
-	//TODO: remove the shell exec
-	$result = shell_exec($shellCmd);
-	$lines = explode("\n", $result);
-	foreach($lines as $line) {
-		$line = str_replace($kapenta->installPath, $kapenta->serverPath, $line);
-		echo $line . "<br/>\n";
-	}
+	$results = $kapenta->fileSearch('data/images/', '', false);
+	foreach($results as $result) { echo $kapenta->serverPath . $result . "<br/>\n"; }
 
 ?>

@@ -107,9 +107,9 @@
 	if ('' == $imgName) { $imgName = $kapenta->createUID() . '.jpg'; }
 
 	//----------------------------------------------------------------------------------------------
-	//	create image record and save file
+	//	create video record and save file
 	//----------------------------------------------------------------------------------------------
-	$model = new Images_Image();
+	$model = new Videos_Video();
 	$model->refUID = $refUID;
 	$model->refModel = $refModel;
 	$model->refModule = $refModule;
@@ -124,7 +124,7 @@
 	else { $session->msg('Could not save image: ' . $URL, 'bad'); }
 
 	//------------------------------------------------------------------------------------------
-	//	send 'images_added' event to all modules
+	//	send 'videos_added' event to all modules
 	//------------------------------------------------------------------------------------------
 	
 	if ('' == $report) {
@@ -134,7 +134,7 @@
 						'imageTitle' => $ext['title']
     	);
 	
-		$kapenta->raiseEvent('*', 'images_added', $args);			// send to all modules
+		$kapenta->raiseEvent('*', 'videos_added', $args);			// send to all modules
 		//$kapenta->raiseEvent($refModule, 'images_added', $args);	// send to owner module
 	}
 

@@ -1,7 +1,7 @@
 <? /*
 <table noborder>
   <tr>
-    <td valign='top'>
+    <td valign='top' width='50px'>
       <a href='%%serverPath%%videos/showgallery/%%alias%%'>
       [[:videos::gallerythumb::size=thumbsm::galleryUID=%%UID%%:]]</a>
     </td>

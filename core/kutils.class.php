@@ -31,6 +31,9 @@ class KUtils {
 	//TODO: more configuration options
 
 	function cleanHtml($html) {
+		$mq = strtolower(ini_get('magic_quotes_gpc'));
+		if (('on' == $mq) || ('1' == $mq)) { $html = stripslashes($html); }
+
 		$parser = new KHTMLParser($html);
 		return $parser->output;
 	}
@@ -181,6 +184,19 @@ class KUtils {
 		$txt = str_replace('&lt;', '<', $txt);
 		$txt = str_replace('&gt;', '>', $txt);
 		$txt = str_replace('&amp;', '&', $txt);
+		return $txt;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// 	convert to base64 and word wrap 
+	//----------------------------------------------------------------------------------------------
+	//arg: txt - text to convert to base 64 [string]
+	//opt: width - max line width - default is 80 [int]
+	//returns: wrapped base 64  [string]
+
+	function b64wrap($txt, $width = 80) {
+		$txt = base64_encode($txt);
+		$txt = wordwrap($txt, $width, "\n", true);
 		return $txt;
 	}
 

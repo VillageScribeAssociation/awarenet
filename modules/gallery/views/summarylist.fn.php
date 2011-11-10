@@ -5,28 +5,35 @@
 //--------------------------------------------------------------------------------------------------
 //|	list all galleries belonging to a specified user
 //--------------------------------------------------------------------------------------------------
+//: galleries which do not contain any images are not displayed
 //opt: orderBy - field to order by, default is title (title|imagecount|createdOn|editedOn) [string]
 //opt: pageNo - page number to display, default is '1' [string]
-//opt: pageSize - number of records per page, default '10' [string]
-//: galleries which do not contain any images are not displayed
+//opt: pagination - display pagination bars, default is 'yes' (yes|no) [string]
+//opt: num - number of items per page (int) [string]
 //returns: html list [string]
 
 function gallery_summarylist($args) {
-	global $db, $theme;
-	$orderBy = 'title';
-	$pageNo = 1;
-	$pageSize = 10;
-	$html = '';
-	$ad = 'DESC';
+	global $db;
+	global $theme;
+
+	$pageNo = 1;				//%	page to display, from 1 [int]
+	$num = 10;					//%	number of galleries per page [int]
+	$start = 0;					//% db results offset [int]
+	$orderBy = 'title';			//%	sort field [string]
+	$ad = 'DESC';				//%	list order (ASC|DESC) [string]
+	$pagination = 'yes';		//%	display pagination bar and order links (yes|no) [string]
+	$html = '';					//%	return value [string]
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
 	//---------------------------------------------------------------------------------------------
-	if (array_key_exists('orderBy', $args) == true) { $orderBy = $args['orderBy']; }
-	if (array_key_exists('pageNo', $args) == true) { $pageNo = (int)$args['pageNo']; }
-	if (array_key_exists('pageSize', $args) == true) { $pageSize = (int)$args['pageSize']; }
+	if (true == array_key_exists('orderBy', $args)) { $orderBy = $args['orderBy']; }
+	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
+	if (true == array_key_exists('pageSize', $args)) { $num = (int)$args['pageSize']; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
 
-	if ($pageSize <= 0) { $pageSize = 10; }
+	if ($num <= 0) { $num = 10; }
 
 	switch ($orderBy) {
 		case 'createdOn':	$ad = 'DESC';	break;
@@ -42,38 +49,28 @@ function gallery_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');	// do not show galleries with no images
-	$numRows = $db->countRange('gallery', $conditions);
-	$numPages = ceil($numRows / $pageSize);
-	$startRow = $pageSize * ($pageNo - 1);
+	$totalItems = $db->countRange('gallery_gallery', $conditions);
+	$totalPages = ceil($totalItems / $num);
+	$start = $num * ($pageNo - 1);
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy . ' ' . $ad, $pageSize, $startRow);
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy .' '. $ad, $num, $start);
 
 	//---------------------------------------------------------------------------------------------
-	//	render html
+	//	make the block
 	//---------------------------------------------------------------------------------------------
 
 	$linkBase = '%%serverPath%%gallery/listall/orderby_';
 	$pagination = "[[:theme::pagination::page=" . $pageNo 
-				 . "::total=" . $numPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
+				 . "::total=" . $totalPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";
 
-	$orderLinks = "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
-				. "&nbsp;&nbsp; list by: "
-				. "<a href='" . $linkBase . "title'>[title]</a> "
-				. "<a href='" . $linkBase . "ownerName'>[creator]</a> "
-				. "<a href='" . $linkBase . "schoolName'>[school]</a> "
-				. "<a href='" . $linkBase . "imagecount'>[number of images]</a> "
-				. "<a href='" . $linkBase . "createdOn'>[creation date]</a>"
-				. "</td></tr></table><hr/>";
+	$orderLinks = '[[:gallery::orderlinks:]]';
 
-	$html .= $pagination . $orderLinks;
+	if ('yes' == $pagination) { $html .= $pagination . $orderLinks; }
 
-	if (count($range) > 0) {
-		foreach($range as $row) { $html .= "[[:gallery::summary::raUID=" . $row['UID'] . ":]]"; }
-	} else { 
-		$html .= "(no galleries match criteria)"; 
-	}
+	foreach($range as $item) { $html .= "[[:gallery::summary::raUID=" . $item['UID'] . ":]]"; }
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
-	$html .= $pagination . $orderLinks;
+	if ('yes' == $pagination) { $html .= $pagination . $orderLinks; }
 
 	return $html;
 }

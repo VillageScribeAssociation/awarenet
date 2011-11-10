@@ -1,14 +1,15 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/section.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/changes.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	save changes to a project section
 //--------------------------------------------------------------------------------------------------
 //postarg: action - must be 'saveSection' [string]
-//postarg: UID - UID of a Projects_Project object [string]
-//postarg: sectionUID - UID of project section [string]
-//postarg: sectionTitle - name of project section [string]
+//postarg: UID - UID of project section [string]
+//postarg: title - name of project section [string]
 //postarg: content - html [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -18,59 +19,67 @@
 	if ('saveSection' != $_POST['action']) { $page->do404('action not supported'); }
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not specified'); }
 
-	$model = new Projects_Project($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	$model = new Projects_Section($_POST['UID']);
+	if (false == $model->loaded) { $page->do404('Project section not found.'); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
-		$page->do403('You are not authorized to edit this project.'); 
-	}
+	$project = new Projects_Project($model->projectUID);
+	if (false == $project->loaded) { $page->do404('Project not found.'); }
 
-	if (false == array_key_exists('sectionUID', $_POST)) { $page->do404('no section UID'); }
-	if (false == array_key_exists('sectionTitle', $_POST)) { $page->do404('no section Title'); }
-	if (false == array_key_exists('content', $_POST)) { $page->do404('no content given'); }
-
-	$sectionUID = $_POST['sectionUID'];
-	$sectionTitle = $utils->cleanTitle($_POST['sectionTitle']);
-	$content = $utils->cleanHtml($_POST['content']);
-
-	if (false == array_key_exists($sectionUID, $model->sections)) { 
-		$page->do404('unkown section'); 
+	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
+		$page->do403('You are not authorized to edit this section.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	check for changes (revision)
+	//	check lock
 	//----------------------------------------------------------------------------------------------
-	$oldVersion = $model->getSimpleHtml();
-		
+	//if ($user->UID != $model->checkLock()) {
+	//	$page->do403('Could not save, you do not own the lock on this section.');
+	//}
+
 	//----------------------------------------------------------------------------------------------
-	//	save the changes
+	//	save changes to section and clear lock
 	//----------------------------------------------------------------------------------------------
-	$model->sections[$sectionUID]['title'] = strip_tags($sectionTitle);
-	$model->sections[$sectionUID]['content'] = $content;
-	$model->save();
+	$compare = $model->toArray();
+
+	foreach($_POST as $key => $value) {
+		switch($key) {
+			case 'title':	$model->title = $utils->cleanTitle($value);		break;
+			case 'content':	$model->content = $utils->cleanHtml($value);	break;
+			case 'weight':	$model->weight = $value;						break;
+		}
+	}
+
+	$model->lockedBy = '';	
+	$report = $model->save();
+
+	if ('' == $report) {
+		$session->msg('Updated project section: ' . $model->title, 'ok');
+	} else {
+		$session->msg('Could not save section:<br/>' . $report, 'bad');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	save revision (if changed)
 	//----------------------------------------------------------------------------------------------
-	$newVersion = $model->getSimpleHtml();
-	if ($newVersion != $oldVersion) {
-		$report = $model->saveRevision();
-		if ('' == $report) {
-			//--------------------------------------------------------------------------------------
-			//	raise 'project_saved' event
-			//--------------------------------------------------------------------------------------
-			$args = array(
-				'UID' => $model->UID,
-				'user' => $user->UID,
-				'section' => $sectionTitle
-			);
+	$changes = new Projects_Changes($model->projectUID, $model->UID);
 
-			$kapenta->raiseEvent('projects', 'project_saved', $args);
-			$session->msg('Saved revision.', 'ok'); 
-
-		} else { $session->msg('Revision not saved.', 'bad'); }
+	if ($model->title != $compare['title']) {
+		$msg = 'Changed section title to:';
+		$report = $changes->add('s.title', $msg, $model->title);
+		if ('' == $report) { $session->msg('Added revision.', 'ok'); }
+		else { $session->msg('Could not save revision:<br/>' . $report, 'bad'); }
 	}
 
-	$page->do302('projects/editsection/section_' . $sectionUID .  '/' . $model->alias);
+	if ($model->content != $compare['content']) {
+		$msg = 'Changed section content to:';
+		$report = $changes->add('s.content', $msg, $model->content);
+		if ('' == $report) { $session->msg('Added revision.', 'ok'); }
+		else { $session->msg('Could not save revision:<br/>' . $report, 'bad'); }
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	redirect back to project page
+	//----------------------------------------------------------------------------------------------
+	$page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
 
 ?>

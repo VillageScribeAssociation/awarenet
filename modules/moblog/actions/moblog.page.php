@@ -8,7 +8,7 @@
 
 [[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
 
-[[:live::river::rivermodule=moblog::riverview=summarylist::riverpagevar=page::allow=num|pagination::num=3::pagination=no:]]</content>
+[[:live::river::mod=moblog::view=summarylist::pv=page::allow=num|pagination::num=3::pagination=no:]]</content>
 	<nav1>
 [[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
 [`|lt]div id=[`|sq]divSchoolStats[`|sq][`|gt]

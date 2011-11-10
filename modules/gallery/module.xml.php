@@ -28,11 +28,14 @@
       </model>
     </models>
     <defaultpermissions>
+		public:p|gallery|gallery_gallery|show
+
 		student:p|gallery|gallery_gallery|new
 		student:p|gallery|gallery_gallery|show
 		student:p|gallery|gallery_gallery|images-show
 		student:p|gallery|gallery_gallery|comments-add
 		student:p|gallery|gallery_gallery|comments-show
+		student:c|gallery|gallery_gallery|comments-retract|(if)|creator
 		student:c|gallery|gallery_gallery|edit|(if)|creator
 		student:c|gallery|gallery_gallery|images-add|(if)|creator
 		student:c|gallery|gallery_gallery|images-remove|(if)|creator
@@ -42,8 +45,9 @@
 		teacher:p|gallery|gallery_gallery|new
 		teacher:p|gallery|gallery_gallery|show
 		teacher:p|gallery|gallery_gallery|images-show
-		student:p|gallery|gallery_gallery|comments-add
-		student:p|gallery|gallery_gallery|comments-show
+		teacher:p|gallery|gallery_gallery|comments-add
+		teacher:p|gallery|gallery_gallery|comments-show
+		teacher:c|gallery|gallery_gallery|comments-retract|(if)|creator
 		teacher:c|gallery|gallery_gallery|edit|(if)|creator
 		teacher:c|gallery|gallery_gallery|images-add|(if)|creator
 		teacher:c|gallery|gallery_gallery|images-remove|(if)|creator

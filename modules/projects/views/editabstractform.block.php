@@ -5,23 +5,22 @@
 <input type='hidden' name='action' value='saveChangeTitle' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
-<table noborder>
-  <tr>
-    <td><b>Project Title:</b></td>
-    <td><input type='text' name='title' value='%%projectTitle%%' size='40' /></td>
-    <td><input type='submit' value='Change Title' /></td>
-  </tr>
-</table>
+<b>Title:</b>
+<input type='text' name='title' value='%%projectTitle%%' size='30' />
+<input type='submit' value='Change Title' />
 </form>
+<hr/>
 <br/>
 
+[[:theme::navtitlebox::label=Abstract:]]
 <form name='editAbstract' method='POST' action='%%serverPath%%projects/saveabstract/'>
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
-%%abstractJs64%%
-[[:editor::base64::jsvar=abstractJs64::name=abstract:]]
-<br/>
+<div class='HyperTextArea64' title='abstract' width='100%' height='400'>
+%%abstract64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 
 <table noborder>
   <tr>
@@ -37,8 +36,9 @@
  </tr>
 </table>
 <br/>
-[[:theme::navtitlebox::label=Images::toggle=divAbsImages:]]
-<div id='divAbsImages'>
+
+[[:theme::navtitlebox::label=Images::toggle=divAbsImages::hidden=yes:]]
+<div id='divAbsImages' style='visibility: hidden; display: none;'>
 [[:images::uploadmultiple::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
 <br/>
 </div>

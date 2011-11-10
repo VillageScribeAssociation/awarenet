@@ -41,7 +41,7 @@ function theme_navtitlebox($args) {
 		$onClick = "onClick=\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\"";
 		$toggle = "<img $id class='navboxbtn' src='" . $icoFile . "' width='16px'>";
 		$eventJs = "<script language='Javascript'>attachOnClick('ti" . $UID . "', "
-		  	  	 . "\"toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\");</script>";
+		  	  	 . "\"kutils.toggleVisible('ti" . $UID . "','" . $args['toggle'] . "');\");</script>";
 	}
 
 	//----------------------------------------------------------------------------------------------

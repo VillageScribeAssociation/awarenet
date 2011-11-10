@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when a comment is added
+//*	fired when a comment is added
 //-------------------------------------------------------------------------------------------------
 //arg: refModule - name of module to which a comment was attached [string]
 //arg: refModel - type of object which owns comment [string]
@@ -15,9 +15,11 @@ function moblog__cb_comments_added($args) {
 	global $kapenta;
 	global $db;
 	global $user;
+	global $theme;
 	global $notifications;
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refModel', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('commentUID', $args)) { return false; }
 	if (false == array_key_exists('comment', $args)) { return false; }
@@ -53,7 +55,7 @@ function moblog__cb_comments_added($args) {
 	}
 
 	$nUID = $notifications->create(
-		'moblog', 'moblog_post', $refUID, 'comments_added', $title, $arg['comment'], $url
+		'moblog', 'moblog_post', $refUID, 'comments_added', $title, $args['comment'], $url
 	);
 
 	//----------------------------------------------------------------------------------------------
@@ -63,6 +65,7 @@ function moblog__cb_comments_added($args) {
 	$notifications->addUser($nUID, $u->UID);
 	$notifications->addFriends($nUID, $user->UID);
 	$notifications->addFriends($nUID, $u->UID);
+	$notifications->addAdmins($nUID);
 
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to anyone else who has commented on this post
@@ -72,7 +75,7 @@ function moblog__cb_comments_added($args) {
 		'refModel' => $refModel,
 		'refUID' => $refUID,
 		'notificationUID' => $nUID
-	}
+	);
 
 	$kapenta->raiseEvent('comments', 'notify_commenters', $ea);
 

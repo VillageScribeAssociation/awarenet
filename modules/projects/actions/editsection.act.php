@@ -1,38 +1,46 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/section.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	edit a project section
 //--------------------------------------------------------------------------------------------------
-
-	if ('' == $req->ref) { $page->do404('no project specified'); }
-	if (false == array_key_exists('section', $req->args)) { $page->do404('section not given'); }
-	$UID = $aliases->findRedirect('projects_project');
-	$sectionUID = $req->args['section'];
+//ref: UID of a Projects_Section object [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	check user is authorised to edit this project
+	//	check reference and permissions
+	//----------------------------------------------------------------------------------------------
+	if ('' == $req->ref) { $page->do404('section not specified'); }
+	$model = new Projects_Section($req->ref);
+	if (false == $model->loaded) { $page->do404('section not found', true); }
+
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
+		$page->do403('You are not permitted to edit this project.', true);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	check lock and set if not present
 	//----------------------------------------------------------------------------------------------
 
-	$model = new Projects_Project($UID);
-	if (false == $model->loaded) { $page->do404('no such project'); }
+	$lockedBy = $model->checkLock();
 
-	if ((false == $model->isMember($user->UID)) && ('admin' != $user->role)) {
-		// TODO: use a permission for this
-		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
-		$page->do302('projects/' . $model->alias);
+	if (('' == $lockedBy) || ($user->UID == $lockedBy)) {
+		$check = $model->setLock($user->UID);
+		if (false == $check) { $session->msg('Database Error - Could not set lock.'); }
+
+	} else {
+		$session->msg('Someone else is editing this section, please wait and try again.');
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/editsection.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
+	$page->load('modules/projects/actions/editsection.if.page.php');
+	$page->blockArgs['raUID'] = $model->UID;
 	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['projectUID'] = $model->UID;
-	$page->blockArgs['sectionUID'] = $sectionUID;
-//	$page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
+	$page->blockArgs['projectUID'] = $model->projectUID;
+	$page->blockArgs['sectionUID'] = $model->UID;
 	$page->render();
 
 ?>

@@ -14,6 +14,9 @@
 	$model = new Projects_Project($UID);
 	if (false == $model->loaded) { $page->do404('No such project.'); }
 
+	$pageNo = 1;
+	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
@@ -21,6 +24,7 @@
 	$page->blockArgs['UID'] = $UID;
 	$page->blockArgs['raUID'] = $req->ref;
 	$page->blockArgs['articleTitle'] = $model->title;
+	$page->blockArgs['pageNo'] = $pageNo . '';
 	$page->render();
 
 ?>

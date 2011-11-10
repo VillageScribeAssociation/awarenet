@@ -29,7 +29,6 @@
 
 	include 'core/core.inc.php';
 
-	$session = new KSession();						//	current user session
 	$db = new KDBDriver();							//	database wrapper
 	$req = new KRequest($request_uri);				//	interpret HTTP request
 	$theme = new KTheme($kapenta->defaultTheme);	//	the current theme
@@ -38,7 +37,6 @@
 	$notifications = new KNotifications();			//	user notification of events
 	$revisions = new KRevisions();					//	object revision history and recycle bin
 	$utils = new KUtils();							//	miscellaneous
-	$sync = new KSync();							//	P2P subsystem
 
 	$request = $req->toArray();						//	(DEPRECATED)
 	$ref = $req->ref;								//	(DEPRECATED)
@@ -47,28 +45,42 @@
 //	load the current user (public if not logged in)
 //--------------------------------------------------------------------------------------------------
 
+	session_start();
+	$session = new Users_Session();					//	user's session
 	$user = new Users_User($session->user);			//	the user record itself
 	$role = new Users_Role($user->role, true);		//	object with user's permissions
-	$userlogin = new Users_Login();					//	user's session on the P2P system
-
+	
 	if ('public' != $user->role) {					//	only logged in users can be addressed
-		$userlogin->loadUser($user->UID);			
-		if (false == $userlogin->loaded) { 			//	create new session is none found
-			$userlogin->userUID = $user->UID;
-			$userlogin->save();
-		}
-		//$userlogin->updateLastSeen();				//	record that this user is still active
+		$session->updateLastSeen();					//	record that this user is still active
+	}
+
+//--------------------------------------------------------------------------------------------------
+//	check for recovery mode
+//--------------------------------------------------------------------------------------------------
+
+	if (true == array_key_exists('recover', $req->args)) {
+		$pass = $registry->get('kapenta.recoverypassword');
+		if (sha1($req->args['recover']) == $pass) {	$session->set('recover', 'yes'); }
+	}
+	
+	if ('yes' == $session->get('recover')) {
+		$user->role = 'admin';
 	}
 
 //--------------------------------------------------------------------------------------------------
 //	set up the debugger (only admins can toggle debug mode, will persist across multiple logins)
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' == $user->role) {
-		if (true == array_key_exists('debug', $req->args)) {
-			if ('on' == $req->args['debug']) { $session->debug = true; }
-			else { $session->debug = false; }
-		}
+	if (true == array_key_exists('debug', $req->args)) {
+		$auth = false;
+		if ('admin' == $user->role) { $auth = true; }
+		if (
+			(array_key_exists('password', $req->args)) && 
+			(sha1($req->args['password']) == $registry->get('kapenta.recoverypassword'))
+		) { $auth = true; }
+
+		if ((true == $auth) && ('on' == $req->args['debug'])) { $session->debug = true; }
+		else { $session->debug = false; }
 	}
 
 	$page->logDebug = $session->debug;

@@ -12,7 +12,7 @@
 //arg: userUID - UID of the user related to this object [string]
 //returns: true if the given relationship exists, otherwise false [bool]
 
-function users_relationships($refModel, $UID, $relationship, $userUID) {
+function groups_relationships($refModel, $UID, $relationship, $userUID) {
 	global $user;
 
 	//----------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ function users_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of User object
 	//----------------------------------------------------------------------------------------------
-	if ('groups_group' == $refModel) {
+	if ('groups_group' == strtolower($refModel)) {
 		$model = new Groups_Group($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

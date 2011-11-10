@@ -26,19 +26,13 @@ function projects_askjoinnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	determine if user is a member of project already
 	//----------------------------------------------------------------------------------------------
-	$member = false;					//%	is the user already a memebr of this project? [bool]
-	$asked = false;						//%	has the user already asked to join this project? [bool]
-
-	if (true == array_key_exists($user->UID, $model->getMembers())) { $member = true; }
-	if (true == array_key_exists($user->UID, $model->getProspectiveMembers())) { $asked = true; }
 	
-	if (true == $member) { return ''; }	//	can't ask to join if you are already a member
+	//	can't ask to join if you are already a member
+	if (true == $model->memberships->hasMember($user->UID)) { return ''; }
 
-	if ((true == $asked) || (true == $member)) {
-		if (true == 'asked') {
-			$html = "[[:theme::navtitlebox::label=Ask to Join Project:]]\n"
+	if (true == $model->memberships->hasAsked($user->UID)) {
+		$html = "[[:theme::navtitlebox::label=Ask to Join Project:]]\n"
 				  . "You have asked to join this project.<br/><br/>";
-		}
 
 	} else {
 		$labels = array(	'userUID' => $user->UID, 

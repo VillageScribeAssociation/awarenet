@@ -3,6 +3,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/inc/diff.inc.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
@@ -11,17 +12,29 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_revisionsnav($args) {
+	global $kapenta;
+	global $user;
 	global $db;
 
-	if ($user->authHas('projects', 'projects_project', 'show', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID']; }
-	if (array_key_exists('UID', $args) == false) { return false; }
-	$html = '';
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	load all revisions
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('projectUID', $args)) { $args['UID'] = $args['projectUID']; }
+	if (false == array_key_exists('UID', $args)) { return false; }
 
+	$model = new Projects_Project($args['UID']);
+	if (false == $model->loaded) { return 'Project not found.'; }
+
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
+		return ''; 
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	load all revisions from database
+	//----------------------------------------------------------------------------------------------
+	//TODO: update this to use collection object of section revisions
 	$sql = "select * from projects_revision "
 		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
 
@@ -30,7 +43,7 @@ function projects_revisionsnav($args) {
 		$row = $db->rmArray($row);
 
 		$revisionLink = '/projects/revision/' . $row['UID'];
-		$revisionDate = date('Y-m-d', strtotime($row['editedOn']));
+		$revisionDate = date('Y-m-d', $kapenta->strtotime($row['editedOn']));
 
 		$item = "$revisionDate by [[:users::name::userUID=" . $row['editedBy'] . ":]] ";
 			 // . "<a href='" . $revisionLink . "'>[show]</a><hr/>";

@@ -5,7 +5,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	list all (TODO: pagination, etc)
+//|	list all projects
 //--------------------------------------------------------------------------------------------------
 
 function projects_listall($args) {

@@ -1,7 +1,7 @@
 <? /*
 <div id='blockMoblogS%%UID%%'>
 <a href='%%viewUrl%%'><h2>%%mbTitle%%</h2></a>
-[[:abuse::button::refModule=moblog::refModel=moblog_post::refUID=%%UID%%:]]
+[[:abuse::buttonwnd::refModule=moblog::refModel=moblog_post::refUID=%%UID%%:]]
 %%unpublished%% %%aboveFold%%<br/>
 <br/>
 <b>Comments:</b> %%commentCount%%<br/>

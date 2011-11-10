@@ -7,11 +7,11 @@
 <form name='adminContact' method='POST' action='%%serverPath%%messages/toadmins/'>
   <input type='hidden' name='action' value='sendMessage'>
   <b>Your Name:</b><br/>
-  <input type='text' name='contactName' size='34' /><br/>
+  <input type='text' name='contactName' size='30' style='width: 100%;' /><br/>
   <b>Your Email Address:</b><br/>
-  <input type='text' name='contactEmail' size='34' /><br/>
+  <input type='text' name='contactEmail' size='30' style='width: 100%;' /><br/>
   <b>Message:</b><br/>
-  <textarea rows='10' cols='39' name='message'></textarea><br/>
+  <textarea rows='10' name='message' style='width: 100%;' ></textarea><br/>
   <input type='submit' value='Send' />  
 </form>
 

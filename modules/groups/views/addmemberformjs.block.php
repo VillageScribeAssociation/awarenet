@@ -30,9 +30,8 @@
     <td><input 
 			type='button' 
 			value='Add to group' 
-			onClick="groups_addMember(
+			onClick="memberConsole.addMember(
 				'%%userUID%%', 
-				'%%groupUID%%', 
 				document.getElementById('selPosition%%userUID%%').value,
 				document.getElementById('selAdmin%%userUID%%').value
 			);"

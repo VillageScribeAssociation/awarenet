@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/groups/models/group.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	show a group record
+//*	show a group's profile page (description, members, announcements, etc)
 //--------------------------------------------------------------------------------------------------
 
 	$editUrl = '';

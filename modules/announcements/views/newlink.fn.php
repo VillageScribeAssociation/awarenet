@@ -20,7 +20,7 @@ function announcements_newlink($args) {
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'add-announcement', $refUID)) { return ''; }
+	if (false == $user->authHas($refModule, $refModel, 'announcements-add', $refUID)) { return ''; }
 
 	$html = "<a href='/announcements/new/"
 			 . "refModule_" . $refModule . "/"

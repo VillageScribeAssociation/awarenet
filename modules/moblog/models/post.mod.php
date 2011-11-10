@@ -191,8 +191,12 @@ class Moblog_Post {
 	//returns: associative array of object properties in context of the current user [array]
 
 	function extArray() {
-		global $user, $theme;
-		$ary = $this->toArray();
+		global $kapenta;
+		global $user;
+		global $theme;
+
+		$ary = $this->toArray();				//%	return value [dict]
+
 		$ary['editUrl'] = '';
 		$ary['editLink'] = '';
 		$ary['viewUrl'] = '';
@@ -270,7 +274,6 @@ class Moblog_Post {
 		//------------------------------------------------------------------------------------------
 		//	summary (clipped to {fold})
 		//------------------------------------------------------------------------------------------
-
 		$ary['aboveFold'] = trim($this->content);
 		$foldPos = strpos($ary['aboveFold'], '{fold}');
 		if ($foldPos > 0) { $ary['aboveFold'] = substr($ary['aboveFold'], 0, $foldPos);	}
@@ -279,8 +282,8 @@ class Moblog_Post {
 		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['content']);
 		$ary['contentHtml'] = str_replace('{fold}', '', $ary['contentHtml']);
 
-		$ary['createdOnLong'] = date('F jS Y h:i', strtotime($ary['createdOn']));
-		$ary['editedOnLong'] = date('F jS Y h:i', strtotime($ary['editedOn']));		
+		$ary['createdOnLong'] = $kapenta->longDatetime($ary['createdOn']);
+		$ary['editedOnLong'] = $kapenta->longDatetime($ary['editedOn']);		
 
 		//------------------------------------------------------------------------------------------
 		//	marked up for wyswyg editor

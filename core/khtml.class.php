@@ -21,6 +21,7 @@ class KHTMLParser {
 	var $log = '';					//_	debug log [string]
 
 	var $allowTags;					//_	set of permitted tags [array]
+	var $hotlink = false;			//_	allow hotlinking of images from other sites? [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -30,15 +31,20 @@ class KHTMLParser {
 
 	function KHTMLParser($html = '', $debug = false) {
 		global $registry;
-		$this->html = $html;
+		$this->html = $this->delocalizeUrls($html);
 		$this->tagAtName = array();
 		$this->tagAtVal = array();
 		$this->debug = $debug;
+		
+		if ('yes' == $registry->get('kapenta.htmlparser.hotlink')) { $this->hotlink = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	set list of allowed HTML tags
 		//------------------------------------------------------------------------------------------
-		$default = 'a|h1|h2|h3|h4|h5|p|br|b|i|u|ul|ol|li|span|small|table|tbody|th|td|tr|div';
+		$default = ''
+		 . 'a|h1|h2|h3|h4|h5|p|br|b|i|u|ul|ol|li|span|small|table|tbody|th|td|tr|div|img|'
+		 . 'blockquote|strong|tt';
+
 		$allowed = $registry->get('kapenta.htmlparser.allowtags');
 
 		if ('' == $allowed) {
@@ -118,7 +124,7 @@ class KHTMLParser {
 						case '/':
 							if ('>' == $nextChar) {					// end of self closing tag
 								$this->throwToken($thisChar . $nextChar, 'endsc');
-								$thisHtmlCharNo++;					// skip the next char									
+								$thisHtmlCharNo++;					// skip the next char
 								$mode = 'outside';					// done with this tag
 
 							} else {								// start of token
@@ -285,10 +291,15 @@ class KHTMLParser {
 	//----------------------------------------------------------------------------------------------
 
 	function addTag() {
+		global $session;
+
 		$allowed = false;							//%	if this tag is allowed [bool]
 		$tnLower = strtolower($this->tagType);		//%	for comparison below [string]
 		$tagStr = '<' . $this->tagType . ' ';		//%	redacted/rebuilt HTML tag [string]
 
+		//------------------------------------------------------------------------------------------
+		//	discard script tags and random XML
+		//------------------------------------------------------------------------------------------
 		if (('script' == $tnLower) && (false == $this->selfClose)) { $this->discard = true; }
 		if ('/script' == $tnLower) { $this->discard = false; }
 		if (('style' == $tnLower) && (false == $this->selfClose)) { $this->discard = true; }
@@ -296,12 +307,18 @@ class KHTMLParser {
 		if (('xml' == $tnLower) && (false == $this->selfClose)) { $this->discard = true; }
 		if ('/xml' == $tnLower) { $this->discard = false; }
 
+		//------------------------------------------------------------------------------------------
+		//	check if this tag is of an allowed type
+		//------------------------------------------------------------------------------------------
 		if (true == in_array(str_replace('/', '', $tnLower), $this->allowTags)) { $allowed = true; }
 		if (false == $allowed) { 
 			$this->htmlLog("Not adding tag: $tnLower (disallowed type)");
 			return false; 
 		}
 
+		//------------------------------------------------------------------------------------------
+		//	tag is allowed, check that attributes are allowed
+		//------------------------------------------------------------------------------------------
 		for ($i = 0; $i < count($this->tagAtName); $i++) { 
 			$atName = $this->tagAtName[$i];			//%	attribute name [string]
 			$atVal = $this->tagAtVal[$i];			//%	attribute value [string]
@@ -311,7 +328,7 @@ class KHTMLParser {
 				if ('' != $atVal) {									// If there is a value
 					if ('style' == $atName) {						// and this is a 'style' attrib
 						$cStyle = $this->cleanStyle($atVal);		// clean the value
-						$tagStr = $tagStr .'='. $cleanStyle .' ';	// before adding it.
+						$tagStr = $tagStr .'='. $cStyle .' ';		// before adding it.
 
 					} else { $tagStr = $tagStr .'='. $atVal .' '; }	// not 'style', just add it
 
@@ -323,6 +340,35 @@ class KHTMLParser {
 		if (true == $this->selfClose) {	$tagStr .= '/>'; }			// img, br, etc
 		else { $tagStr = str_replace(' >', '>', $tagStr . '>'); }	// all other tags
 
+		//------------------------------------------------------------------------------------------
+		//	special case for hotlinked images (disallowed in awareNet for bandwidth reasons)
+		//------------------------------------------------------------------------------------------
+		//TODO: control this feature via a registry setting	
+	
+		if ('img' == $tnLower) {
+			$src = '';
+			for ($i = 0; $i < count($this->tagAtName); $i++) { 
+				if ('src' == strtolower($this->tagAtName[$i])) { $src = $this->tagAtVal[$i]; }
+			}
+
+			$src = str_replace("\"", '', $src);
+			$src = str_replace("\'", '', $src);
+			if ('\\' == substr($src, 0, 1)) { $src = substr($src, 1); }
+			if ('../../' == substr($src, 0, 6)) { $src = '%%serverPath%%' . substr($src, 6); }
+			$src = trim($src);
+
+			if (('' == $src) || ('%%serverPath%%' != substr($src, 0, 14))) {
+				$check = substr($src, 0, 15);
+				$src = str_replace('%%', '%~%', $src);
+				$msg = "Removed image: $src <br/>Only images uploaded to awareNet can be used.<br/>$check";
+				$session->msg($msg);
+				$tagStr = '';
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	tag is OK, add to output
+		//------------------------------------------------------------------------------------------
 		$this->output .= $tagStr;									// we're done, add to output
 		$this->log .= "Adding tag: " . htmlentities($tagStr) . "<br/>\n";
 	} // end this.addTag
@@ -344,17 +390,24 @@ class KHTMLParser {
 		//	some tags may have specific attributes, eg: a -> href, img -> src
 		//--------------------------------------------------------------------------------------
 		switch ($tagType) {
+			case 'div':
+				switch ($attribute) {
+					case 'style': 	return true;	break;
+				}
+				break;		// .....................................................................
+
 			case 'span':
 				switch ($attribute) {
 					case 'style': 	return true;	break;
 				}
-				break; // ......................................................................
+				break;		// .....................................................................
 
 			case 'a':
 				switch ($attribute) {
 					case 'href': 	return true;	break;
+					case 'style': 	return true;	break;
 				}
-				break; // ......................................................................
+				break;		// .....................................................................
 
 			case 'img':
 				switch ($attribute) {
@@ -363,16 +416,22 @@ class KHTMLParser {
 					case 'alt': 	return true;	break;
 					case 'style': 	return true;	break;
 				}
-				break; // ......................................................................
+
+			case 'p':
+				switch ($attribute) {
+					case 'style': 	return true;	break;
+				}
+
+				break;		// .....................................................................
 
 		}
 
 		return false;
 	} // end this.allowAttrib
 
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//.	classes which are allowed
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//arg: styleDef - CSS style definition [string]
 
 	function cleanStyle($styleDef) {
@@ -393,6 +452,7 @@ class KHTMLParser {
 			$styleParamName = strtolower($styleParamName);
 
 			switch($styleParamName) {
+				case 'text-align':	$styleIsAllowed = true; 	break;
 				case 'color': 		$styleIsAllowed = true; 	break;
 				case 'font-size':	$styleIsAllowed = true; 	break;
 			}
@@ -407,6 +467,31 @@ class KHTMLParser {
 
 		return "\"" . $newStyleDef . "\"";
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	replace absolute local URLs with serverPath environment variable
+	//----------------------------------------------------------------------------------------------
+	//;	this is to ensure links refer to the local instance when content is rendered on other nodes
+
+	function delocalizeUrls($html) {
+		global $kapenta;
+		global $session;
+
+		$html = str_replace($kapenta->serverPath, '%%serverPath%%', $html);
+
+		//note: these can be removed, they are here to correct legacy test content:
+		$html = str_replace('http://awarenet.eu/', '%%serverPath%%', $html);
+		$html = str_replace('http://awarenet.org.za/', '%%serverPath%%', $html);
+		$html = str_replace('http://andev.co.za/', '%%serverPath%%', $html);
+		$html = str_replace('http://mothsorchid.com/', '%%serverPath%%', $html);
+		$html = str_replace('../../../', '%%serverPath%%', $html);
+
+		// fix image size while we're at it
+		$html = str_replace('images/widtheditor/', 'images/width570/', $html);
+
+		return $html;
+	}
+	
 
 	//----------------------------------------------------------------------------------------------
 	//.	debugging log

@@ -17,7 +17,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($req->ref);
 
-	$cssUrl = $kapenta->serverPath . "/themes/clockface/css/clockface.css";
+	$cssUrl = $kapenta->serverPath . "/themes/clockface/css/default.css";
 
 	echo "<html>"
 		 . "<link href='" . $cssUrl . "' rel='stylesheet' type='text/css' />"

@@ -64,7 +64,7 @@ div.menubar {
 div.menu {
 	position: absolute;
 	border: 1px solid #444;
-	//width: 100px;
+	/* width: 100px; */
 	background-color: #b3ada3;
 }
 

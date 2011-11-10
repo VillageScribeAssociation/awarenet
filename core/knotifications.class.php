@@ -72,6 +72,7 @@ class KNotifications {
 	//returns: UID of recent notification, if it exists, null string if not [string]
 
 	function existsRecent($refModule, $refModel, $refUID, $userUID, $refEvent, $maxAge) {
+		global $kapenta;
 		global $db;
 		global $session;
 
@@ -98,8 +99,8 @@ class KNotifications {
 		//	if such a notification exists, see if it is younger than maxAge
 		//------------------------------------------------------------------------------------------
 		foreach($range as $item) {
-			$lastEdit = strtotime($item['editedOn']);
-			$oldest = time() - $maxAge;
+			$lastEdit = $kapenta->strtotime($item['editedOn']);
+			$oldest = $kapenta->time() - $maxAge;
 			if ($lastEdit > $oldest) { return $item['UID'];  }	// found one
 		}	
 

@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/changes.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	save changes to a project abstract
@@ -37,9 +38,21 @@
 	//----------------------------------------------------------------------------------------------
 	//	save the record
 	//----------------------------------------------------------------------------------------------
+	$compare = $model->abstract;
 	$model->abstract = $utils->cleanHtml($_POST['abstract']);
 	$report = $model->save();
 	if ('' == $report) { 
+		//------------------------------------------------------------------------------------------
+		//	create a revision if abstract has changed
+		//------------------------------------------------------------------------------------------
+		if ($compare != $model->abstract) {
+			$changes = new Projects_Changes($model->UID);
+			$msg = 'Changed project abstract to:';
+			$check = $changes->add('p.abstract', $msg, $model->abstract);
+			if ('' == $check) {	$session->msg('Saved revision.', 'ok'); }
+			else { $session->msg('Could not save revision:<br/>' . $report, 'bad'); }
+		}
+
 		//------------------------------------------------------------------------------------------
 		//	raise 'project_saved' event
 		//------------------------------------------------------------------------------------------

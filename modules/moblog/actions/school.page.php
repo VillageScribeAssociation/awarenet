@@ -5,7 +5,10 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
 	<content>[[:theme::navtitlebox::label=Aggregated Blogs ([`|pc][`|pc]schoolName[`|pc][`|pc])::width=570:]]
-[[:moblog::schoolsummarylist::num=10::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</content>
+
+[[:live::river::rivermodule=moblog::riverview=schoolsummarylist::riverpagevar=page::allow=num|pagination|schoolUID::num=3::pagination=no::schoolUID=%%schoolUID%%:]]
+
+</content>
 	<nav1>[[:theme::navtitlebox::label=School:]]
 [[:schools::image::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]::size=width300:]]
 [[:schools::summarynav::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]

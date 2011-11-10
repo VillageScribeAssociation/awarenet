@@ -4,6 +4,8 @@
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/section.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/change.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	install script for Projects module
@@ -50,12 +52,15 @@ function projects_install_module() {
 	$report .= "<b>moved $count records from 'projects' table.</b><br/>";
 
 
+	/*
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Projects_Revision table
 	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: TODO Remove this when safe to do so
 	$model = new Projects_Revision();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
+	*/
 
 	//----------------------------------------------------------------------------------------------
 	//	import any records from previous static table
@@ -63,6 +68,20 @@ function projects_install_module() {
 	$rename = array();
 	$count = $dba->copyAll('projectrevisions', $dbSchema, $rename); 
 	$report .= "<b>moved $count records from 'projectrevisions' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Projects_Section table
+	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Section();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Projects_Change table
+	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Change();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
 	//	done
@@ -86,7 +105,7 @@ function projects_install_status_report() {
 	$installed = true;
 
 	//----------------------------------------------------------------------------------------------
-	//	ensure the table which stores Membership objects exists and is correct
+	//	ensure the table which stores Projects_Membership objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Membership();
 	$dbSchema = $model->getDbSchema();
@@ -96,7 +115,7 @@ function projects_install_status_report() {
 	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
-	//	ensure the table which stores Project objects exists and is correct
+	//	ensure the table which stores Projects_Project objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project();
 	$dbSchema = $model->getDbSchema();
@@ -105,10 +124,34 @@ function projects_install_status_report() {
 	if (false == strpos($treport, $installNotice)) { $installed = false; }
 	$report .= $treport;
 
+	/*
 	//----------------------------------------------------------------------------------------------
-	//	ensure the table which stores Revision objects exists and is correct
+	//	ensure the table which stores Projects_Revision objects exists and is correct
 	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: TODO Remove this when safe to do so
 	$model = new Projects_Revision();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+	*/
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Projects_Section objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Section();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Projects_Change objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Projects_Change();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

@@ -36,8 +36,8 @@ function groups_maintenance() {
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
-		$model->loadArray($objAry);				// load into model
+		$objAry = $db->rmArray($objAry);			// remove database markup
+		$model = new Groups_Group($objAry['UID']);
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
@@ -49,6 +49,14 @@ function groups_maintenance() {
 			$errors[] = array($model->UID, $model->name, 'non default alias');
 			$errorCount++;
 			if (true == $saved) { $fixCount++; }
+		}
+
+		$allAliases = $aliases->getAll('groups', 'groups_group', $objAry['UID']);
+		if (0 == count($allAliases)) {
+			$saved = $model->save();									// should reset alias
+			$errors[] = array($model->UID, $model->name, 'no alias');
+			$errorCount++;
+			if (true == $saved) { $fixCount++; }			
 		}
 
 		//------------------------------------------------------------------------------------------

@@ -4,21 +4,14 @@
 <head>
 <title>%%title%%</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='%%serverPath%%themes/%%defaultTheme%%/css/clockface.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%themes/%%defaultTheme%%/css/default.css' rel='stylesheet' type='text/css' />
 <link href='%%serverPath%%themes/%%defaultTheme%%/css/windows.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%themes/clockface/icons/favicon.ico' rel='shortcut icon' type='image/x-icon' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>
 
-<script src='%%serverPath%%core/utils.js'></script>
-<script src='%%serverPath%%modules/live/js/live.js'></script>
-<script src='%%serverPath%%modules/live/js/windows.js'></script>
-<script src='%%serverPath%%modules/live/js/chat.js'></script>
-
-%%head%%
-
 <script language='javascript'>
-
 	var kapentaLoaded = false;
 	var hasParentFrame = false;
 	var awareNetChat = true;
@@ -27,9 +20,20 @@
 	var jsUserUID = '%%jsUserUID%%';
 	var formChecks = new Array();
 	var kchatclient = 0;
+</script>
+
+<script src='%%serverPath%%core/utils.js'></script>
+<script src='%%serverPath%%modules/live/js/live.js'></script>
+<script src='%%serverPath%%modules/live/js/windows.js'></script>
+<script src='%%serverPath%%modules/editor/js/HyperTextArea.js'></script>
+<script src='%%serverPath%%modules/live/js/chat.js'></script>
+
+%%head%%
+
+<script language='javascript'>
 
 	//----------------------------------------------------------------------------------------------
-	//	initialise page
+	//	initialise page (called at end of HTML but before page is fully loaded)
 	//----------------------------------------------------------------------------------------------
 
 	function kPageInit() {
@@ -38,13 +42,11 @@
 		//------------------------------------------------------------------------------------------
 		//	create global objects
 		//------------------------------------------------------------------------------------------
-		kutils = new Kapenta_Utility();
-
-		klive = new Live_Pump(jsPageUID, jsServerPath);			// create the message pump
+		//kutils = new Kapenta_Utility(); 						// create utility object
+		//klive = new Live_Pump(jsPageUID, jsServerPath);			// create the message pump
 		klive.start();											// start the message pump
-
-		kwindowmanager = new Live_WindowManager();
-		kmouse = new Live_Mouse();
+		kwindowmanager = new Live_WindowManager();				// create window manager
+		kmouse = new Live_Mouse();								// ... used by window manager
 
 		if (true == awareNetChat) { kchatclient = new Live_ChatClient(); }
 
@@ -66,7 +68,7 @@
 </script>
 </head>
 
-<body onLoad="kPageInit();" > 
+<body onLoad="" > 
 <center>
 <div id='msgDiv'></div>
 <table class='tableborder' cellspacing='0' cellpadding='0' height='100%' class='table_main' >
@@ -169,6 +171,7 @@
 <br/><br/>
 %%debug%%
 </center>
+<script language='Javascript'>kPageInit();</script>
 <div id='debugger'></div>
 </body>
 </html>

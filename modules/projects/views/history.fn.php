@@ -57,9 +57,9 @@ function projects_history($args) {
 	//		 . "order by editedOn DESC limit $num";
 
 	foreach ($range as $row) {
-		$model = new Projects_Revision();
-		$model->loadArray($row);
-		$ext = $model->extArray();
+		$revision = new Projects_Revision();
+		$revision->loadArray($row);
+		$ext = $revision->extArray();
 		//projects module does not use a reason field
 		//if (trim($ext['reason']) != '') { $ext['reason'] = "<i>(none given)</i>"; }
 		$html .= $theme->replaceLabels($ext, $block);
@@ -68,7 +68,7 @@ function projects_history($args) {
 	//----------------------------------------------------------------------------------------------
 	//	add meta and navigation elements
 	//----------------------------------------------------------------------------------------------
-	$link = '%%serverPath%%projects/history/' . $model->projectUID;	
+	$link = '%%serverPath%%projects/history/' . $model->alias . '/';	
 	$pagination = "[[:theme::pagination::page=$pageNo::total=$totalPages::link=$link:]]\n";
 	$html = $pagination . "<b>Total revisions:</b> $totalItems <br/>\n" . $html . $pagination;
 

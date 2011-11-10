@@ -8,22 +8,23 @@
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID or groups entry [string]
 //arg: groupUID - overrides raUID [string]
-// TODO: stop using [[groups::image::...::]]
+//arg: extra - any extra line or information to add to this summary [string]
 
 function groups_summarynav($args) {
 	global $user, $theme;
+	
+	$extra = '';				//%	any other information to be added [string]
 	$html = '';					//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
-	if (array_key_exists('groupUID', $args) == true) { $args['raUID'] = $args['groupUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	if (true == array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
+	if (false == array_key_exists('raUID', $args)) { return '(raUID not given)'; }
+	
+	if (true == array_key_exists('extra', $args)) { $extra = $args['extra']; }
 
-	//----------------------------------------------------------------------------------------------
-	//	load the group
-	//----------------------------------------------------------------------------------------------
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
 	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
@@ -32,7 +33,10 @@ function groups_summarynav($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/groups/views/summarynav.block.php');
-	$html = $theme->replaceLabels($model->extArray(), $block);
+	$labels = $model->extArray();
+	$labels['groupUID'] = $labels['UID'];
+	$labels['extra'] = $extra;
+	$html = $theme->replaceLabels($labels, $block);
 
 	return $html;
 }

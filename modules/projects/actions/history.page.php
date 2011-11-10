@@ -4,14 +4,18 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - projects - history</title>
-	<content>[[:theme::navtitlebox::width=570::label=History:]]
-[`|lt]div class=[`|sq]indent[`|sq][`|gt]
-[`|lt]h1[`|gt]Revision History: [`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
-[[:projects::history::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]</content>
-	<nav1>[[:theme::navtitlebox::label=Details:]]
-[[:projects::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</nav1>
+	<content>
+		[[:theme::navtitlebox::width=570::label=History:]]
+		[`|lt]div class=[`|sq]indent[`|sq][`|gt]
+		[`|lt]h1[`|gt]Revision History: [`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
+		[[:live::river::mod=projects::view=showchanges::pv=pageNo::allow=UID|num::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
+		[`|lt]/div[`|gt]
+		</content>
+	<nav1>
+		[[:theme::navtitlebox::label=Details:]]
+		[[:projects::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit>msgSubscribe([`|sq]comments-projects-[`|pc][`|pc]UID[`|pc][`|pc]-nav[`|sq], msgh[`|us]comments)[`|sc]

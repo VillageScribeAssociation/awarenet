@@ -6,14 +6,32 @@
 //--------------------------------------------------------------------------------------------------
 //|	show a record
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID of a group [string]
+//arg: raUID - alias or UID of a Groups_Group object [string]
+//opt: groupUID - overrrides raUID if present [string]
 
 function groups_show($args) {
 	global $theme;
+	global $user;
 
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	$html = '';							//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
+	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Groups_Group($args['raUID']);
-	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/groups/views/show.block.php'));
+
+	//TODO: permissions check here, perhaps to implement private groups
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/groups/views/show.block.php');
+	$labels = $model->extArray();
+	$html = $theme->replaceLabels($labels, $block);
+
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

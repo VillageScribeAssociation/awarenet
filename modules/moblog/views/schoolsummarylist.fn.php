@@ -7,16 +7,24 @@
 //|	summary list (the 'moblog itself')
 //--------------------------------------------------------------------------------------------------
 //arg: schoolUID - UID of a Schools_School object [string]
-//opt: page - page no to display (default is 0) [string]
-//opt: num - number of records per page (default is 30) [string]
+//opt: page - page no to display, default is 1 (int) [string]
+//opt: num - number of records per page, default is 30 (int) [string]
+//opt: pagination - show pagination bar, default is 'yes' (yes|no) [string]
 
 function moblog_schoolsummarylist($args) {
-	global $page, $db, $user, $theme, $page, $aliases;
+	global $page;
+	global $db;
+	global $user;
+	global $theme;
+	global $page;
+	global $aliases;
+
 	$start = 0;
 	$num = 30;
 	$pageNo = 1;
-	$html = '';
 	$schoolUID = '';
+	$pagination = 'yes';		//%	show pagination (yes|no) [string]
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -28,7 +36,9 @@ function moblog_schoolsummarylist($args) {
 	$schoolUID = $args['schoolUID'];
 	if (false == $db->objectExists('schools_school', $schoolUID)) { return 'No such schoolUID'; }
 
+	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pageNo', $args)) { $args['page'] = $args['pageNo']; }
 	if (true == array_key_exists('page', $args)) 
 		{ $pageNo = $args['page']; $start = ($pageNo - 1) * $num; }
 
@@ -67,7 +77,9 @@ function moblog_schoolsummarylist($args) {
 		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
-	$html = $pagination . $html . $pagination;
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
+
+	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
 
 	return $html;
 }

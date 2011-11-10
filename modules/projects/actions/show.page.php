@@ -4,28 +4,39 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]projectTitle[`|pc][`|pc] (project)</title>
-	<content>[[:theme::navtitlebox::width=570::label=Project:]]
-[[:projects::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-	<nav1>[[:theme::navtitlebox::label=Members:]]
-[[:projects::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+	<content>
+		<script language='Javascript'> var project = new Projects_Editor('%%UID%%'); </script>
+		[[:theme::navtitlebox::width=570::label=Project:]]
+		<div id='divProject%%UID%%'>
+		[[:projects::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
+		[[:projects::addsectionform::projectUID=%%raUID%%:]]
+	</content>
+	<nav1>
+		[[:theme::navtitlebox::label=Members::toggle=divAllMembers:]]
+		<div id='divAllMembers'>
+		[[:projects::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
+		[`|lt]br/[`|gt]
 
-[[:projects::askjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[[:projects::askjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
-[[:theme::navtitlebox::label=Add A Comment::toggle=divAddCommentNav::hidden=yes:]]
-[`|lt]div id=[`|sq]divAddCommentNav[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:comments::addcommentformnav::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Add A Comment::toggle=divAddCommentNav::hidden=yes:]]
+		[`|lt]div id=[`|sq]divAddCommentNav[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:comments::addcommentformnav::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/projects/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Recent Comments::toggle=divCommentsNav:]]
-[`|lt]div id=[`|sq]divCommentsNav[`|sq][`|gt]
-[[:comments::listnav::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Recent Comments::toggle=divCommentsNav:]]
+		[`|lt]div id=[`|sq]divCommentsNav[`|sq][`|gt]
 
-[[:projects::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1::label=Last Edit:]]
+		[[:live::river::rivermodule=comments::riverview=listnav::riverpagevar=pageNo::allow=refModule|refModel|refUID::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
+
+		[[:projects::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1::label=Last Edit:]]
 
 [[:theme::navtitlebox::label=Tags (this project)::toggle=divTagsNav:]]
 [`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
@@ -33,8 +44,10 @@
 [`|lt]/div[`|gt]
 [`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Their Other Projects:]]
+[[:theme::navtitlebox::label=Their Other Projects::toggle=divOtherProjects::hidden=yes:]]
+<div id='divOtherProjects' style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq]>
 [[:projects::listsamembersanav::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+</div>
 [`|lt]br/[`|gt]
 
 
@@ -47,10 +60,9 @@
 </nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>msgSubscribe([`|sq]comments-projects-[`|pc][`|pc]UID[`|pc][`|pc]-nav[`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<jsinit></jsinit>
 	<banner></banner>
-	<head></head>
+	<head><script src='%%serverPath%%modules/projects/js/editor.js'></script></head>
 	<menu1>[[:home::menu:]]</menu1>
 	<menu2>[[:projects::menu::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</menu2>
 	<section></section>

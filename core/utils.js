@@ -52,8 +52,31 @@ function Kapenta_Utility() {
 	//----------------------------------------------------------------------------------------------
 	//TODO: consider adding form checks here, or perhaps spin that off as another object
 
+	this.userUID = '';		
+	this.pageUID = '';		
+	this.serverPath = '';	
+	
+	if (jsUserUID) { this.userUID = jsUserUID; } else { alert('No jsUserUID.'); }
+	if (jsPageUID) { this.pageUID = jsPageUID; } else { alert('No jsPageUID'); }
+	if (jsServerPath) { this.serverPath = jsServerPath; } else { alert('serverPath not set.'); }
+
 	//==============================================================================================
-	//	network IO
+	//	KAPENTA SPECIFIC
+	//==============================================================================================
+
+	//-------------------------------------------------------------------------------------------------
+	//.	create a long random number
+	//-------------------------------------------------------------------------------------------------
+	//returns: unique identifier [string]
+
+	this.createUID = function() {
+		var theUID = '';
+		for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
+		return theUID;
+	}
+
+	//==============================================================================================
+	//	NETWORK IO
 	//==============================================================================================
 
 	//-------------------------------------------------------------------------------------------------
@@ -73,14 +96,15 @@ function Kapenta_Utility() {
 	//arg: params - urlencoded from values [string]
 	//arg: callback - a function to invoke when request completes [function]
 
-	this.httpPost = function(url, params, callback) {
+	this.httpPost = function(sendUrl, params, callback) {
 		//------------------------------------------------------------------------------------------
 		//	create XMLHttpRequest object
 		//------------------------------------------------------------------------------------------
 		var req = new XMLHttpRequest();  
-		req.open('POST', url, true);  
-		req.setRequestHeader('Connection', 'close');
+		req.open('POST', sendUrl, true);  
 		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		req.setRequestHeader('Content-length', params.length);
+		req.setRequestHeader('Connection', 'close');
 
 		//------------------------------------------------------------------------------------------
 		//	create handler for returned content
@@ -88,8 +112,8 @@ function Kapenta_Utility() {
 		req.kapentaCallback = callback;
 		req.onreadystatechange = function (aEvt) {  
 			//klive.log('loading: ' + req.status);
-			if ((4 == req.readyState) && (200 == req.status))  {
-				req.kapentaCallback(req.responseText);
+			if (4 == req.readyState) {
+				req.kapentaCallback(req.responseText, req.status);
 			}
 		}
 
@@ -99,15 +123,43 @@ function Kapenta_Utility() {
 		req.send(params);
 	}
 
-	//-------------------------------------------------------------------------------------------------
-	//.	create a long random number
-	//-------------------------------------------------------------------------------------------------
-	//returns: unique identifier [string]
+	//==============================================================================================
+	//	STRING MANIPULATION - BASE64, UTF8 AND HASHING
+	//==============================================================================================
 
-	this.createUID = function() {
-		var theUID = '';
-		for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
-		return theUID;
+	//----------------------------------------------------------------------------------------------
+	//.	trim whitespace from both ends of a string
+	//----------------------------------------------------------------------------------------------
+	//	source: http://www.webtoolkit.info/javascript-trim.html
+ 
+	this.trim = function(str, chars) { 
+		return this.ltrim(this.rtrim(str, chars), chars); 
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	trim whitespace left of string
+	//----------------------------------------------------------------------------------------------
+ 
+	this.ltrim = function(str, chars) {
+		chars = chars || "\\s";
+		return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	trim whitespace right of string
+	//----------------------------------------------------------------------------------------------
+ 
+	this.rtrim = function(str, chars) {
+		chars = chars || "\\s";
+		return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	replace html entities to allow printing of HTML, XML, etc
+	//----------------------------------------------------------------------------------------------
+
+	this.htmlEntities = function(str) {
+	    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	}
 
 	//-------------------------------------------------------------------------------------------------
@@ -118,7 +170,7 @@ function Kapenta_Utility() {
 	//arg: data - string to encode [string]
 	//returns: bease 64 encoded string [string]
 
-	this.base64_encode = function(data) {
+	this.base64_encode = function(data, safe) {
     	// http://kevin.vanzonneveld.net
     	// +   original by: Tyler Akins (http://rumkin.com)
     	// +   improved by: Bayron Guevara
@@ -136,6 +188,9 @@ function Kapenta_Utility() {
     	//    return atob(data);
     	//}
         
+		safe = safe || false;
+		if (safe) { b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_*"; }
+
     	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     	var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, enc="", tmp_arr = [];
  
@@ -181,7 +236,7 @@ function Kapenta_Utility() {
 	//;	credit: Kevin van Zonneveld
 	//;	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_base64_decode/
 
-	this.base64_decode = function(data) {
+	this.base64_decode = function(data, safe) {
     	// http://kevin.vanzonneveld.net
     	// +   original by: Tyler Akins (http://rumkin.com)
     	// +   improved by: Thunder.m
@@ -204,9 +259,13 @@ function Kapenta_Utility() {
  
     	var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     	var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, dec = "", tmp_arr = [];
+
+		safe = safe || false;
+		if (safe) { b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_*"; }
  
     	if (!data) { return data; }
-    	data += '';
+    	data = this.trim(data + '');			// ensure it's a string
+		data = data.replace(/\n/g, '');			// remove whitespace and newlines
  
     	do {  
 			//--------------------------------------------------------------------------------------
@@ -332,257 +391,251 @@ function Kapenta_Utility() {
     	return tmp_arr.join('');
 	}
 
-}
+	//----------------------------------------------------------------------------------------------
+	//  SHA-1 implementation in JavaScript (c) Chris Veness 2002-2009                                 
+	//----------------------------------------------------------------------------------------------
+	// source: http://www.movable-type.co.uk/scripts/sha1.html
+	// licence: LGPL - http://creativecommons.org/licenses/LGPL/2.1/
+
+	this.sha1Hash = function(msg) {
+    	// constants [§4.2.1]
+    	var K = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
+
+	    // PREPROCESSING 
+    	msg += String.fromCharCode(0x80); // add trailing '1' bit (+ 0's padding) to string [§5.1.1]
+
+    	// convert string msg into 512-bit/16-integer blocks arrays of ints [§5.2.1]
+    	var l = msg.length/4 + 2;  // length (in 32-bit integers) of msg + ‘1’ + appended length
+    	var N = Math.ceil(l/16);   // number of 16-integer-blocks required to hold 'l' ints
+    	var M = new Array(N);
+    	for (var i=0; i<N; i++) {
+    	    M[i] = new Array(16);
+    	    for (var j=0; j<16; j++) {  // encode 4 chars per integer, big-endian encoding
+            M[i][j] = (msg.charCodeAt(i*64+j*4)<<24) | (msg.charCodeAt(i*64+j*4+1)<<16) | 
+                      (msg.charCodeAt(i*64+j*4+2)<<8) | (msg.charCodeAt(i*64+j*4+3));
+    	    }
+    	}
+    	// add length (in bits) into final pair of 32-bit integers (big-endian) [5.1.1]
+    	// note: most significant word would be (len-1)*8 >>> 32, but since JS converts
+    	// bitwise-op args to 32 bits, we need to simulate this by arithmetic operators
+    	M[N-1][14] = ((msg.length-1)*8) / Math.pow(2, 32); M[N-1][14] = Math.floor(M[N-1][14])
+    	M[N-1][15] = ((msg.length-1)*8) & 0xffffffff;
+
+    	// set initial hash value [§5.3.1]
+    	var H0 = 0x67452301;
+    	var H1 = 0xefcdab89;
+    	var H2 = 0x98badcfe;
+    	var H3 = 0x10325476;
+    	var H4 = 0xc3d2e1f0;
+
+    	// HASH COMPUTATION [§6.1.2]
+
+    	var W = new Array(80); var a, b, c, d, e;
+   		for (var i=0; i<N; i++) {
+
+    	    // 1 - prepare message schedule 'W'
+    	    for (var t=0;  t<16; t++) W[t] = M[i][t];
+    	    for (var t=16; t<80; t++) W[t] = this.sha1ROTL(W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16], 1);
+
+    	    // 2 - initialise five working variables a, b, c, d, e with previous hash value
+    	    a = H0; b = H1; c = H2; d = H3; e = H4;
+
+    	    // 3 - main loop
+    	    for (var t=0; t<80; t++) {
+    	        var s = Math.floor(t/20); // seq for blocks of 'f' functions and 'K' constants
+    	        var T = (this.sha1ROTL(a,5) + this.sha1f(s,b,c,d) + e + K[s] + W[t]) & 0xffffffff;
+    	        e = d;
+    	        d = c;
+    	        c = this.sha1ROTL(b, 30);
+    	        b = a;
+    	        a = T;
+    	    }
+
+    	    // 4 - compute the new intermediate hash value
+    	    H0 = (H0+a) & 0xffffffff;  // note 'addition modulo 2^32'
+    	    H1 = (H1+b) & 0xffffffff; 
+    	    H2 = (H2+c) & 0xffffffff; 
+    	    H3 = (H3+d) & 0xffffffff; 
+    	    H4 = (H4+e) & 0xffffffff;
+    	}
+
+    	return H0.toHexStr() + H1.toHexStr() + H2.toHexStr() + H3.toHexStr() + H4.toHexStr();
+	}
+
+	//--------------------------------------------------------------------------------------------------
+	//. function 'f' [§4.1.1]
+	//--------------------------------------------------------------------------------------------------
+
+	this.sha1f = function(s, x, y, z) {
+    	switch (s) {
+    	case 0: return (x & y) ^ (~x & z);           // Ch()
+    	case 1: return x ^ y ^ z;                    // Parity()
+    	case 2: return (x & y) ^ (x & z) ^ (y & z);  // Maj()
+    	case 3: return x ^ y ^ z;                    // Parity()
+    	}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//. rotate left (circular left shift) value x by n positions [§3.2.5]
+	//----------------------------------------------------------------------------------------------
+
+	this.sha1ROTL = function(x, n) { return (x<<n) | (x>>>(32-n)); }
+
+	//--------------------------------------------------------------------------------------------------
+	// extend Number class with a tailored hex-string method (note toString(16) is 
+	// implementation-dependant, and in IE returns signed numbers when used on full words)
+
+	Number.prototype.toHexStr = function() {
+	    var s="", v;
+	    for (var i=7; i>=0; i--) { v = (this>>>(i*4)) & 0xf; s += v.toString(16); }
+	    return s;
+	}
+
+	//==============================================================================================
+	//	IFRAMES AND DIVS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	toggle visiblity of a div (from navtitlebar);
+	//----------------------------------------------------------------------------------------------
+	//;	source: kapenta.org.uk
+
+	this.toggleNTVisible = function(navImgId, divId) {
+		var theDiv = document.getElementById(divId);
+		var theImg = document.getElementById(navImgId);
+
+		//----------------------------------------------------------------------------------------------
+		//	make the target div visible or not
+		//----------------------------------------------------------------------------------------------
+
+		if (theDiv.style.visibility == 'hidden') { 
+			theDiv.style.visibility = 'visible'; 
+			theDiv.style.display = 'block'; 
+			theImg.src = jsServerPath + 'themes/clockface/icons/btn-minus.png';
+			theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+
+		} else {
+			theDiv.style.visibility = 'hidden'; 
+			theDiv.style.display = 'none'; 
+			theImg.src = jsServerPath + 'themes/clockface/icons/btn-plus.png';
+			theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+
+		}
+
+		this.resizeAllIFrames();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	resize all child iframes to fit their content
+	//----------------------------------------------------------------------------------------------
+	//;	source: kapenta.org.uk
+
+	this.resizeAllIFrames = function() {
+		var allFrames = document.getElementsByTagName('IFRAME');		// get all iframes
+		for (i = 0; i < allFrames.length; i++) {
+			var currFrame = allFrames[i];
+			
+			//------------------------------------------------------------------------------------------
+			//	children where class='consoleif'
+			//------------------------------------------------------------------------------------------
+			var className = currFrame.getAttribute('class');
+			if (className) {
+				if ('consoleif' == className) {
+					//alert('child frame: ' + currFrame.name);
+					currFrame.contentWindow.kutils.resizeAllIFrames();
+				}
+			}
+
+		}
+
+		this.resizeIFrame();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	resize the current iframe to fit content
+	//----------------------------------------------------------------------------------------------
+	//;	note that this only works is the iframe has a name
+
+	this.resizeIFrame = function() {
+		if (self == top) { return false; }		// not an iframe, no parent
+		frameObj = window.parent.document.getElementsByName(window.name);
+		if (frameObj[0]) {
+			if (-1 == ifMaxHeight) {
+				// iframe height same as content height
+				frameObj[0].height = document.body.offsetHeight + 40;
+
+			} else {
+				// iframe height same as content height unless greater than maxHeight
+				if ((document.body.offsetHeight + 40) > ifMaxHeight) {
+					frameObj[0].height = ifMaxHeight;
+				} else {
+					frameObj[0].height = document.body.offsetHeight + 40;
+				}
+			}
+		}
+	}
+
+} // end of Kapenta_Utilities
+
+	kutils = new Kapenta_Utility();
 
 //-------------------------------------------------------------------------------------------------
 //	create a long random number
 //-------------------------------------------------------------------------------------------------
 
 function createUID() {
-	var theUID = '';
-	for(var i = 0; i < 5; i++) { theUID += ( Math.floor ( Math.random ( ) * 9000 + 1000 ) ) + ''; }
-	return theUID;
+	if ('admin' == jsUserUID) { alert('JS Deprecated: createUID()'); }
+	return kutils.createUID()
 }
 
 //-------------------------------------------------------------------------------------------------
 //	base64 encode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------
-//	credit: Kevin van Zonneveld
-//	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_base64_encode/
-
 
 function base64_encode (data) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Tyler Akins (http://rumkin.com)
-    // +   improved by: Bayron Guevara
-    // +   improved by: Thunder.m
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   bugfixed by: Pellentesque Malesuada
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // -    depends on: utf8_encode
-    // *     example 1: base64_encode('Kevin van Zonneveld');
-    // *     returns 1: 'S2V2aW4gdmFuIFpvbm5ldmVsZA=='
- 
-    // mozilla has this native
-    // - but breaks in 2.0.0.12!
-    //if (typeof this.window['atob'] == 'function') {
-    //    return atob(data);
-    //}
-        
-    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, enc="", tmp_arr = [];
- 
-    if (!data) {
-        return data;
-    }
- 
-    data = this.utf8_encode(data+'');
-    
-    do { // pack three octets into four hexets
-        o1 = data.charCodeAt(i++);
-        o2 = data.charCodeAt(i++);
-        o3 = data.charCodeAt(i++);
- 
-        bits = o1<<16 | o2<<8 | o3;
- 
-        h1 = bits>>18 & 0x3f;
-        h2 = bits>>12 & 0x3f;
-        h3 = bits>>6 & 0x3f;
-        h4 = bits & 0x3f;
- 
-        // use hexets to index into b64, and append result to encoded string
-        tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
-    } while (i < data.length);
-    
-    enc = tmp_arr.join('');
-    
-    switch (data.length % 3) {
-        case 1:
-            enc = enc.slice(0, -2) + '==';
-        break;
-        case 2:
-            enc = enc.slice(0, -1) + '=';
-        break;
-    }
- 
-    return enc;
+	if ('admin' == jsUserUID) { alert('JS Deprecated: base64_encode()'); }
+	return kutils.base64_encode(data);
 }
 
 //-------------------------------------------------------------------------------------------------
 //	base64 decode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------
-//	credit: Kevin van Zonneveld
-//	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_base64_decode/
 
 function base64_decode (data) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Tyler Akins (http://rumkin.com)
-    // +   improved by: Thunder.m
-    // +      input by: Aman Gupta
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   bugfixed by: Onno Marsman
-    // +   bugfixed by: Pellentesque Malesuada
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +      input by: Brett Zamir (http://brett-zamir.me)
-    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // -    depends on: utf8_decode
-    // *     example 1: base64_decode('S2V2aW4gdmFuIFpvbm5ldmVsZA==');
-    // *     returns 1: 'Kevin van Zonneveld'
- 
-    // mozilla has this native
-    // - but breaks in 2.0.0.12!
-    //if (typeof this.window['btoa'] == 'function') {
-    //    return btoa(data);
-    //}
- 
-    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, dec = "", tmp_arr = [];
- 
-    if (!data) {
-        return data;
-    }
- 
-    data += '';
- 
-    do {  // unpack four hexets into three octets using index points in b64
-        h1 = b64.indexOf(data.charAt(i++));
-        h2 = b64.indexOf(data.charAt(i++));
-        h3 = b64.indexOf(data.charAt(i++));
-        h4 = b64.indexOf(data.charAt(i++));
- 
-        bits = h1<<18 | h2<<12 | h3<<6 | h4;
- 
-        o1 = bits>>16 & 0xff;
-        o2 = bits>>8 & 0xff;
-        o3 = bits & 0xff;
- 
-        if (h3 == 64) {
-            tmp_arr[ac++] = String.fromCharCode(o1);
-        } else if (h4 == 64) {
-            tmp_arr[ac++] = String.fromCharCode(o1, o2);
-        } else {
-            tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
-        }
-    } while (i < data.length);
- 
-    dec = tmp_arr.join('');
-    dec = this.utf8_decode(dec);
- 
-    return dec;
+	if ('admin' == jsUserUID) { alert('JS Deprecated: base64_decode()'); }
+	return kutils.base64_decode(data);	
 }
 
 //-------------------------------------------------------------------------------------------------
 //	utf8 encode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------
-//	credit: Kevin van Zonneveld
-//	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_utf8_encode/
 
-function utf8_encode ( argString ) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: sowberry
-    // +    tweaked by: Jack
-    // +   bugfixed by: Onno Marsman
-    // +   improved by: Yves Sucaet
-    // +   bugfixed by: Onno Marsman
-    // +   bugfixed by: Ulrich
-    // *     example 1: utf8_encode('Kevin van Zonneveld');
-    // *     returns 1: 'Kevin van Zonneveld'
- 
-    var string = (argString+''); // .replace(/\r\n/g, "\n").replace(/\r/g, "\n");
- 
-    var utftext = "";
-    var start, end;
-    var stringl = 0;
- 
-    start = end = 0;
-    stringl = string.length;
-    for (var n = 0; n < stringl; n++) {
-        var c1 = string.charCodeAt(n);
-        var enc = null;
- 
-        if (c1 < 128) {
-            end++;
-        } else if (c1 > 127 && c1 < 2048) {
-            enc = String.fromCharCode((c1 >> 6) | 192) + String.fromCharCode((c1 & 63) | 128);
-        } else {
-            enc = String.fromCharCode((c1 >> 12) | 224) + String.fromCharCode(((c1 >> 6) & 63) | 128) + String.fromCharCode((c1 & 63) | 128);
-        }
-        if (enc !== null) {
-            if (end > start) {
-                utftext += string.substring(start, end);
-            }
-            utftext += enc;
-            start = end = n+1;
-        }
-    }
- 
-    if (end > start) {
-        utftext += string.substring(start, string.length);
-    }
- 
-    return utftext;
-}
+function utf8_encode(argString) { return kutils.utf8_encode(argString);	}
 
 //-------------------------------------------------------------------------------------------------
 //	utf8 decode (PHP.Js implementation)
 //-------------------------------------------------------------------------------------------------
-//	credit: Kevin van Zonneveld
-//	http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_utf8_decode/
 
-function utf8_decode ( str_data ) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
-    // +      input by: Aman Gupta
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Norman "zEh" Fuchs
-    // +   bugfixed by: hitwork
-    // +   bugfixed by: Onno Marsman
-    // +      input by: Brett Zamir (http://brett-zamir.me)
-    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // *     example 1: utf8_decode('Kevin van Zonneveld');
-    // *     returns 1: 'Kevin van Zonneveld'
- 
-    var tmp_arr = [], i = 0, ac = 0, c1 = 0, c2 = 0, c3 = 0;
-    
-    str_data += '';
-    
-    while ( i < str_data.length ) {
-        c1 = str_data.charCodeAt(i);
-        if (c1 < 128) {
-            tmp_arr[ac++] = String.fromCharCode(c1);
-            i++;
-        } else if ((c1 > 191) && (c1 < 224)) {
-            c2 = str_data.charCodeAt(i+1);
-            tmp_arr[ac++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
-            i += 2;
-        } else {
-            c2 = str_data.charCodeAt(i+1);
-            c3 = str_data.charCodeAt(i+2);
-            tmp_arr[ac++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-            i += 3;
-        }
-    }
- 
-    return tmp_arr.join('');
-}
+function utf8_decode(str_data) { return kutils.utf8_decode(str_data); }
 
 //-------------------------------------------------------------------------------------------------
 //	functions to trim whitespace from a string
 //-------------------------------------------------------------------------------------------------
 //	source: http://www.webtoolkit.info/javascript-trim.html
  
-function trim(str, chars) { return ltrim(rtrim(str, chars), chars); }
+function trim(str, chars) { 
+	if ('admin' == jsUserUID) { alert('JS Deprecated: trim()'); }
+	return kutils.trim(str, chars); 
+}
  
 function ltrim(str, chars) {
-	chars = chars || "\\s";
-	return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
+	if ('admin' == jsUserUID) { alert('JS Deprecated: ltrim()'); }
+	return kutils.ltrim(str, chars);
 }
  
 function rtrim(str, chars) {
-	chars = chars || "\\s";
-	return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
+	if ('admin' == jsUserUID) { alert('JS Deprecated: rtrim()'); }
+	return kutils.rtrim(str, chars);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -593,32 +646,36 @@ function rtrim(str, chars) {
 function base64_loadTextArea(taId, b64data) {
 	var theTa = document.getElementById(taId);
 	if (null == theTa) { return false; }
-	theTa.value = base64_decode(b64data);
+	theTa.value = kutils.base64_decode(b64data);
 	return true;
 }
 
-//-------------------------------------------------------------------------------------------------
-//	toggle visiblity of a div (from navtitlebar);
-//-------------------------------------------------------------------------------------------------
-//	source: kapenta.org.uk
 
-function toggleVisible(navImgId, divId) {
-	var theDiv = document.getElementById(divId);
-	var theImg = document.getElementById(navImgId);
+//--------------------------------------------------------------------------------------------------
+//.	resize all child iframes, so that the container fits the content
+//--------------------------------------------------------------------------------------------------
 
-	if (theDiv.style.visibility == 'hidden') { 
-		theDiv.style.visibility = 'visible'; 
-		theDiv.style.display = 'block'; 
-		theImg.src = jsServerPath + 'themes/clockface/icons/btn-minus.png';
-		theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+function toggleVisible(navImgId, divId) { kutils.toggleNTVisible(navImgId, divId); }
 
-	} else {
-		theDiv.style.visibility = 'hidden'; 
-		theDiv.style.display = 'none'; 
-		theImg.src = jsServerPath + 'themes/clockface/icons/btn-plus.png';
-		theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+function resizeAllIFrames() {
+	var allFrames = document.getElementsByTagName('IFRAME');		// get all iframes
+	for (i = 0; i < allFrames.length; i++) {
+		var currFrame = allFrames[i];
+			
+		//------------------------------------------------------------------------------------------
+		//	children where class='consoleif'
+		//------------------------------------------------------------------------------------------
+		var className = currFrame.getAttribute('class');
+		if (className) {
+			if ('consoleif' == className) {
+				alert('child frame: ' + currFrame.name);
+				currFrame.contentWindow.resizeFrame();
+			}
+		}
 
 	}
+
+	//if (hasParentFrame) { resizeFrame(); }
 }
 
 //-------------------------------------------------------------------------------------------------

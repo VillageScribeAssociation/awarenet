@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	display all blog posts from a particular school
+//*	display all blog posts from a particular school
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -18,6 +18,8 @@
 		if (false  == $model->loaded) { $page->do404(); }
 
 	} else { $model->load($user->school); }
+
+	//TODO: permissions check here
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page

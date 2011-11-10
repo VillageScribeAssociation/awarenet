@@ -26,7 +26,7 @@ function gallery_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Gallery object
 	//----------------------------------------------------------------------------------------------
-	if ('gallery_gallery' == $refModel) {
+	if ('gallery_gallery' == strtolower($refModel)) {
 		$model = new Gallery_Gallery($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

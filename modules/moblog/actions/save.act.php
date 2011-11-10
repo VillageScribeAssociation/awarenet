@@ -38,38 +38,6 @@
 
 	$report = $model->save();
 	if ('' != $report) { $session->msg('Could not have blog post: ' . $report, 'bad'); }
-	else {
-		if ('yes' == $model->published) {
-
-			//--------------------------------------------------------------------------------------
-			//	notify user's friends
-			//--------------------------------------------------------------------------------------
-			$ext = $model->extArray();
-			$title = "Blog update: " . $ext['nameLink'];
-			$content = "" 
-				. "[[:users::namelink::userUID=" . $model->createdBy . ":]] "
-				. "has updated their blog post.";
-
-			$nUID = $notifications->create(
-				'moblog', 'moblog_post', $model->UID, 'moblog_editpost', 
-				$title, $content, $ext['viewUrl']
-			);
-
-			$notifications->addFriends($nUID, $user->UID);
-			$notifications->addAdmins($nUID, $user->UID);
-
-			//--------------------------------------------------------------------------------------
-			//	raise a microbog event for this
-			//--------------------------------------------------------------------------------------
-			$message = '#' . $kapenta->websiteName . ' blog - '. $model->title;
-			$args = array(
-				'refModule' => 'moblog',
-				'refModel' => 'moblog_post',
-				'refUID' => $model->UID,
-				'message' => $message
-			);
-		}
-	}
 
 	$session->msg('Blog post updated: ' . $model->title, 'ok');
 	$page->do302('moblog/' . $model->alias);

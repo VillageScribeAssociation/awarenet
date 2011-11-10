@@ -26,7 +26,7 @@ function moblog_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Gallery object
 	//----------------------------------------------------------------------------------------------
-	if ('moblog_post' == $refModel) {
+	if ('moblog_post' == strtolower($refModel)) {
 		$model = new Moblog_Post($UID);						// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
@@ -35,7 +35,6 @@ function moblog_relationships($refModel, $UID, $relationship, $userUID) {
 				// relationship exists of user started this project
 				if ($model->createdBy == $userUID) { return true; }
 				break;	//..........................................................................
-
 
 		}
 	}

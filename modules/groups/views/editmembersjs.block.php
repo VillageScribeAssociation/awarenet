@@ -1,12 +1,16 @@
 <? /*
 
+<script src='%%serverPath%%modules/groups/js/memberconsole.js' language='Javascript'></script>
 <script language='Javascript'>
+
+	var memberConsole = new Groups_MemberConsole('%%groupUID%%');
 
 	//----------------------------------------------------------------------------------------------
 	//	show form for adding member to a group
 	//----------------------------------------------------------------------------------------------
 
 	function groups_addMemberForm(memberUID) {
+		alert('deprecated: groups_addMemberForm(memberUID)');
 		var statusDiv = document.getElementById('divSRStatus' + memberUID);
 		statusDiv.innerHTML = statusDiv.innerHTML + "<span class='ajaxmsg'>Loading...</span>";
 
@@ -24,6 +28,7 @@
 	//arg: memberUID - UID of a Users_User object to associate with group [string]
 
 	function groups_addMember(memberUID, groupUID, position, isGroupAdmin) {
+		alert('deprecated: groups_addMember(memberUID, groupUID, position, isGroupAdmin)');
 		if (false == kapentaLoaded) { alert('Page loading... please wait'); }
 
 		//------------------------------------------------------------------------------------------
@@ -45,8 +50,12 @@
 		 + '&admin=' + isGroupAdmin;
 
 		cbFn = function(responseText) { 
-			var sDiv = document.getElementById(statusDivId);
-			sDiv.innerHTML = responseText;
+			if (200 == status) {
+				var sDiv = document.getElementById(statusDivId);
+				sDiv.innerHTML = responseText;
+			} else {
+				alert('' + status + "\n" + responseText);
+			}
 		}
 
 		kutils.httpPost(url, params, cbFn);
@@ -60,6 +69,7 @@
 	//arg: memberUID - UID of a Users_User object to remove from group [string]
 
 	function groups_removeMember(memberUID) {
+		alert('deprecated: groups_removeMember(memberUID)');
 		if (false == kapentaLoaded) { alert('loading... please wait'); }
 	
 		var answer = confirm ("Remove from this group?")
@@ -82,9 +92,13 @@
 		 + '&userUID=' + memberUID
 		 + '&groupUID=%%groupUID%%';
 
-		cbFn = function(responseText) { 
-			var sDiv = document.getElementById(statusDivId);
-			sDiv.innerHTML = responseText;
+		cbFn = function(responseText, status) { 
+			if (200 == status) {
+				var sDiv = document.getElementById(statusDivId);
+				sDiv.innerHTML = responseText;
+			} else {
+				alert('' + status + "\n" + responseText);
+			}
 		}
 
 		kutils.httpPost(url, params, cbFn);
@@ -95,8 +109,9 @@
 
 [[:theme::navtitlebox::label=Add Members::toggle=divAddmembers%%groupUID%%:]]
 <div id='divAddmembers%%groupUID%%'>
-[[:users::usersearchbox::cbjs=groups_addMemberForm::cblabel=add to group::cbicon=arrow_down_green.png:]]
+[[:users::usersearchbox::cbjs=memberConsole.addMemberForm::cblabel=add to group::cbicon=arrow_down_green.png:]]
 </div>
+groupUID: %%groupUID%%
 <br/>
 
 [[:theme::navtitlebox::label=All Members::toggle=divMembers%%groupUID%%:]]

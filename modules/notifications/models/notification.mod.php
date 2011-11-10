@@ -214,8 +214,12 @@ class Notifications_Notification {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-	global $theme, $utils, $user;
-		$ext = $this->toArray();		//% extended array of properties [array:string]
+		global $kapenta;
+		global $theme;
+		global $utils;
+		global $user;
+
+		$ext = $this->toArray();						//% return value [dict]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
 		$ext['editUrl'] = '';	$ext['editLink'] = '';
@@ -244,8 +248,8 @@ class Notifications_Notification {
 		//	general
 		//------------------------------------------------------------------------------------------
 
-		$ext['createdOnLong'] = date('F dS Y', strtotime($ext['createdOn']));
-		$ext['editedOnLong'] = date('F dS Y', strtotime($ext['editedOn']));		
+		$ext['createdOnLong'] = $kapenta->longDate($ext['createdOn']);
+		$ext['editedOnLong'] = $kapenta->longDate($ext['editedOn']);		
 
 		//------------------------------------------------------------------------------------------
 		//	javascript

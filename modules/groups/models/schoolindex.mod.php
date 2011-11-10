@@ -102,7 +102,9 @@ class Groups_SchoolIndex {
 
 		$matchUID = $this->getIndexUID($this->groupUID, $this->schoolUID);
 		if (('' != $matchUID) && ($matchUID != $this->UID)) {
-			$report .= "Association already exists for this group and school.<br/>\n";
+			$report .= ''
+			 . "Association $matchUID already exists for this group "
+			 . "(" . $this->groupUID . ") and school (" . $this->schoolUID . ").<br/>\n";
 		}
 
 		return $report;

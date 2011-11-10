@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	add a new project
+//*	create a new project, set the title and and the originating user as a project admin
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -21,20 +21,30 @@
 	$model->title = 'New Project ' . $model->UID;
 
 	if (true == array_key_exists('title', $_POST)) {
-		$title = $utils->cleanString($_POST['title']);
-		if ('' == $title)  {
+		$model->title = $utils->cleanTitle($_POST['title']);
+		if ('' == $model->title)  {
 			$session->msg("Please choose a name to create your project with.", 'bad');
 			$page->do302('projects/');
 		}
-		$model->title = $title;
-		$model->save(); 
+	}
 
-	} else { $model->save(); }
+	$report = $model->save(); 
+	if ('' == $report) {
+		$session->msg('Created new project: ' . $model->title, 'ok');
+	} else { 
+		$session->msg('Could not create new project:<br/>' . $report, 'bad');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	create membership for current user
 	//----------------------------------------------------------------------------------------------
-	$model->addMember($user->UID, 'admin');
+	$userNameBlock = '[[:users::namelink::userUID=' . $user->UID . ':]]';
+	$check = $model->memberships->add($user->UID, 'admin');
+	if (true == $check) { 
+		$session->msg('Add project admin: ' . $userNameBlock, 'ok');
+	} else {
+		$session->msg('Could not add ' . $userNameBlock . ' as project admin.', 'bad');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect to edit page

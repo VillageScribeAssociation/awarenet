@@ -16,7 +16,7 @@
 		AND (true == $db->objectExists('projects_project', $_POST['UID'])) ) {
 
 		$model->load($_POST['UID']);
-		if (true == $model->isMember($user->UID)) { $authorised = true; }
+		if (true == $model->hasMember($user->UID)) { $authorised = true; }
 	
 	} else { $page->do404(); } // no such project, or UID not specified
 
@@ -105,74 +105,6 @@
 		}		
 		
 		$page->do302('projects/edit/' . $model->alias);
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	add a new section
-	//----------------------------------------------------------------------------------------------
-
-	if ( (true == array_key_exists('action', $_POST))
-	    AND ('addSection' == $_POST['action'])
-		AND (true == array_key_exists('sectionTitle', $_POST)) ) {
-
-		$sectionTitle = $utils->cleanString($_POST['sectionTitle']);
-		$weight = $model->getMaxWeight() + 1;
-		$model->addSection($sectionTitle, $weight);
-		$_SESSION['sMessage'] .= "Added new section $sectionTitle<br/>\n";
-
-		$report = $model->saveRevision();
-		if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
-		else { $session->msg('Revision not saved.', 'bad'); }
-
-		$page->do302('projects/editindex/' . $model->alias);
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	save changes to a section
-	//----------------------------------------------------------------------------------------------
-	if ( (true == array_key_exists('action', $_POST))
-	    AND ('saveSection' == $_POST['action'])
-		AND (true == array_key_exists('sectionUID', $_POST)) 
-		AND (true == array_key_exists($_POST['sectionUID'], $model->sections)) ) {
-
-		$sectionTitle = $utils->cleanString($_POST['sectionTitle']);
-		$content = strip_tags($_POST['content'], $model->allowTags);
-
-		//------------------------------------------------------------------------------------------
-		//	check for changes (revision)
-		//------------------------------------------------------------------------------------------
-		$oldVersion = $model->getSimpleHtml();
-		
-		//------------------------------------------------------------------------------------------
-		//	save the changes
-		//------------------------------------------------------------------------------------------
-		$model->sections[$_POST['sectionUID']]['title'] = strip_tags($sectionTitle);
-		$model->sections[$_POST['sectionUID']]['content'] = $content;
-		$model->save();
-
-		//------------------------------------------------------------------------------------------
-		//	save revision (if changed)
-		//------------------------------------------------------------------------------------------
-		$newVersion = $model->getSimpleHtml();
-		if ($newVersion != $oldVersion) {
-			$report = $model->saveRevision();
-			if ('' == $report) { 
-				//----------------------------------------------------------------------------------
-				//	raise 'project_saved' event
-				//----------------------------------------------------------------------------------
-				$args = array(
-					'UID' => $model->UID,
-					'user' => $user->UID,
-					'section' => $sectionTitle
-				);
-
-				$kapenta->raiseEvent('projects', 'project_saved', $args);
-				$session->msg('Saved revision.', 'ok'); 
-
-			} else { $session->msg('Revision not saved.', 'bad'); }
-		}
-		
-		$page->do302('projects/editsection/section_' . $_POST['sectionUID'] .  '/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------

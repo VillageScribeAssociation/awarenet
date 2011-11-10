@@ -4,49 +4,52 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	action to accept someone who has applied to join a project
+//*	action to accept someone who has applied to join a project
 //--------------------------------------------------------------------------------------------------
-
-	if ($user->role == 'public') { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('no project membership given'); }
+//postarg: action - set to 'acceptMember' [string]
+//postarg: projectUID - UID of a Project_Project object [string]
+//postarg: userUID - UID of a Users_User object who has requested to join project [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	load the request and the project it pertains to
+	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	$model = new Projects_Membership($req->ref);	
-	if (false == $model->loaded) { $page->do404('Unknown request.'); }		// no membership request
-	$project = new Projects_Project($model->projectUID);
+	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified'); }
+	if ('acceptMember' != $_POST['action']) { $page->do404('Action not recognized'); }
+	if (false == array_key_exists('projectUID', $_POST)) { $page->do404('Project not specified.'); }
+	if (false == array_key_exists('userUID', $_POST)) { $page->do404('User not specified.'); }
+
+	$projectUID = $_POST['projectUID'];
+	$userUID = $_POST['userUID'];
+
+	//----------------------------------------------------------------------------------------------
+	//	load the project and check permissions, request
+	//----------------------------------------------------------------------------------------------
+	$project = new Projects_Project($projectUID);
 	if (false ==  $project->loaded) { $page->do404('No such project.'); }	// no project
+	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $project->UID)) {
+		$page->do403();
+	}
 
-	//----------------------------------------------------------------------------------------------
-	//	ensure that current user is admin of project, or a sysadmin
-	//----------------------------------------------------------------------------------------------
-	if ((false == $project->isAdmin($user->UID)) && ('admin' != $user->role)) { $page->do403(); }
-
-	//----------------------------------------------------------------------------------------------
-	//	authorised, notify current members of new addition
-	//----------------------------------------------------------------------------------------------
-	/* 	TODO: $notifications->addProject()...
-	$newUser = new Users_User($membership['userUID']);
-
-	$title = $newUser->getNameLink() . " is now a member of project " . $model->getLink();
-	$content = "Added by " . $user->getNameLink() . ' on ' . $db->datetime();
-	
-	notifyProject($membership['projectUID'], $kapenta->createUID(), $user->getName(), 
-					$user->getUrl(), $title, $content, $model->getUrl(), '');
-	*/
+	if (false == $project->memberships->hasAsked($userUID)) { $page->do404('Request not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, grant membership
 	//----------------------------------------------------------------------------------------------
+	$membershipUID = $project->memberships->getUID($userUID);
+	if ('' == $membershipUID) { $page->do404('Membership not found.'); }
+	
+	$model = new Projects_Membership($membershipUID);	
+	if (false == $model->loaded) { $page->do404('Could not load membership.'); }
 	$model->role = 'member';
-	$model->save();
+	$report = $model->save();
+
+	if ('' != $report) { $page->do404('Database error, could not grant membership.', 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, create notification
 	//----------------------------------------------------------------------------------------------
 	$refUID = $project->UID;
-	$newName = $theme->expandBlocks('[[:users::namelink::userUID=' . $model->userUID . ':]]', '');
+	$newName = $theme->expandBlocks('[[:users::name::userUID=' . $model->userUID . ':]]', '');
 	$title = $newName . " is now a member of project '" . $project->title . "'";
 	$content = "Request to join was accepted by " . $user->getNameLink();
 	$url = '%%serverPath%%projects/' . $project->alias;
@@ -64,13 +67,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	add project members to notification
 	//----------------------------------------------------------------------------------------------
-	$ea = array(
-		'projectUID' => $project->UID,
-		'notificationUID' => $nUID
-	);
-
-	$kapenta->raiseEvent('projects', 'notify_project', $ea);
-
+	$members = $project->memberships->getMembers();
+	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $user->UID); }
+	
 	//----------------------------------------------------------------------------------------------
 	//	return to project page
 	//----------------------------------------------------------------------------------------------

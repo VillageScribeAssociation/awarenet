@@ -28,7 +28,7 @@ function notifications_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Notifications objects
 	//----------------------------------------------------------------------------------------------
-	if ('notifications_notification' == $refModel) {
+	if ('notifications_notification' == strtolower($refModel)) {
 		$model = new Notifications_Notification($UID);		// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

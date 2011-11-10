@@ -30,6 +30,7 @@ function announcements__cb_announcement_updated($args) {
 	//----------------------------------------------------------------------------------------------
 	//	prepare notification
 	//----------------------------------------------------------------------------------------------
+	$ext = $model->extArray();
 	$title = "Announcement: " . $ext['title'];
 	$content = $ext['summary'];
 	$url = $ext['viewUrl'];
@@ -75,7 +76,7 @@ function announcements__cb_announcement_updated($args) {
 	//---------------------------------------------------------------------------------------------
 	//	pull triggers
 	//---------------------------------------------------------------------------------------------
-	if ('announcements' == $args['module']) {
+	if ('announcements' == $args['refModule']) {
 		$page->doTrigger('announcements', 'announcement-any');
 		$page->doTrigger('announcements', 'announcement-' . $args['UID']);
 		if (true == array_key_exists('refUID', $args['data'])) {

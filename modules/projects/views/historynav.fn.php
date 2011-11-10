@@ -1,7 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
-	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/change.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	history summary formatted for nav // TODO: pagination
@@ -53,13 +53,13 @@ function projects_historynav($args) {
 	//	load a page of results from the database and make the block
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('projects_revision', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $db->loadRange('projects_change', '*', $conditions, 'editedOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/projects/views/revisionsummarynav.block.php');
 
 	if (0 == count($range)) { return ''; }
 
 	foreach ($range as $row) {
-		$model = new Projects_Revision();
+		$model = new Projects_Change();
 		$model->loadArray($row);
 		$ext = $model->extArray();
 		//if ('' == trim($ext['reason'])) { $ext['reason'] = "<i>(no reason given)</i>"; }

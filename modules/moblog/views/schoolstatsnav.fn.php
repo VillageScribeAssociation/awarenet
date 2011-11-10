@@ -23,6 +23,7 @@ function moblog_schoolstatsnav($args) {
 
 	$sql = "SELECT count(UID) AS postCount, school "
 		 . "FROM moblog_post "
+		 . "WHERE published <> 'no' "
 		 . "GROUP BY school "
 		 . "ORDER BY postCount DESC";
 

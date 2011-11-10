@@ -28,7 +28,7 @@
 		switch(strtolower($field)) {
 			case 'school':			$model->school = $utils->cleanString($value); 		break;
 			case 'name':			$model->name = $utils->cleanTitle($value); 			break;
-			case 'type':			$model->type = $utils->cleanString($value); 		break;
+			case 'type':			$model->type = $utils->cleanTitle($value);	 		break;
 			case 'description':		$model->description = $utils->cleanHtml($value); 	break;
 		}
 	}

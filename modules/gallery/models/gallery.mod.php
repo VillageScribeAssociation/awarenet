@@ -227,10 +227,8 @@ class Gallery_Gallery {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	strandardise date format to previous website
+		//	upper case title TODO: discover if this is ever used, remove if not
 		//------------------------------------------------------------------------------------------
-
-		//$ary['longdate'] = date('jS F, Y', strtotime($ary['date']));
 		$ary['titleUpper'] = strtoupper($ary['title']);
 
 		//------------------------------------------------------------------------------------------

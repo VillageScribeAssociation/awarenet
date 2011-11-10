@@ -3,7 +3,7 @@
 require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when an image is added 
+//|	fired when an image is added 
 //-------------------------------------------------------------------------------------------------
 //arg: refModule - name of module to which a comment was attached
 //arg: refUID - UID of object to which comment was attached
@@ -45,7 +45,7 @@ function gallery__cb_images_added($args) {
 		$ext = $model->extArray();
 		$url = $ext['viewUrl'];
 		$link = "<a href='" . $url . "'>" . $model->title . "</a>";
-		$title = $user->getNameLink() . ' added a new image.';
+		$title = $user->getName() . ' added a new image.';
 		$refUID = $model->UID;
 		$content = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
 			 . "[[:images::width300::raUID=" . $args['imageUID'] . "::link=no:]]"
@@ -72,15 +72,15 @@ function gallery__cb_images_added($args) {
 		$newImg = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
 			. "[[:images::width100::raUID=" . $args['imageUID'] . "::link=no:]]</a>\n";
 
-
 		// temp fix
-		if (false == strpos($content, '<!-- more images -->')) 
-			{ $content = str_replace(":]]</a>", ":]]</a><!-- more images -->", $content); }
+		if (false == strpos($content, '<!-- more images -->')) {
+			$content = str_replace(":]]</a>", ":]]</a><!-- more images -->", $content);
+		}
 
 		$content = str_replace('<!-- more images -->', $newImg . '<!-- more images -->', $content);
 
 		$ext = $model->extArray();
-		$title = $ext['userLink'] .' added new images to their gallery '. $ext['titleLink'] .'.';
+		$title = $ext['userName'] .' added new images to their gallery '. $ext['title'] .'.';
 
 		$notifications->setContent($recentUID, $content);
 		$notifications->setTitle($recentUID, $title);

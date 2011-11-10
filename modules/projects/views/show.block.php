@@ -1,8 +1,7 @@
 <? /*
 <h1>%%projectTitle%%</h1>
-%%abstract%%  %%editAbstractLink%%
-<h3>Index</h3>
-%%indexHtml%%
-%%contentHtml%%<br/>
+%%abstract%%  
+[[:projects::index::projectUID=%%UID%%:]]
+[[:projects::allsections::projectUID=%%UID%%:]]<br/>
 <br/>
 */ ?>

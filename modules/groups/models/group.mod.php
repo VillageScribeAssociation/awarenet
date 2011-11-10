@@ -85,6 +85,9 @@ class Groups_Group {
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
 		$this->alias = $ary['alias'];
+
+		$this->membersLoaded = false;
+
 		$this->members = $this->getMembers();
 		$this->loaded = true;
 		return true;
@@ -233,10 +236,10 @@ class Groups_Group {
 		//------------------------------------------------------------------------------------------
 		//	summary 
 		//------------------------------------------------------------------------------------------
+		$ary['contentHtml'] = $ary['description'];
+		//$ary['contentHtml'] = str_replace(">\n", ">", $ary['description']);
+		//$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['contentHtml']);
 
-		$ary['contentHtml'] = str_replace(">\n", ">", $ary['description']);
-		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['contentHtml']);
-		//TODO: theme summary fn
 		$ary['summary'] = $theme->makeSummary($ary['description'], 400);
 
 		//------------------------------------------------------------------------------------------
@@ -273,7 +276,7 @@ class Groups_Group {
 			$this->members = $this->loadMembers();
 			$this->membersLoaded = true;
 		}
-		
+
 		return $this->members;
 	}
 
@@ -286,8 +289,10 @@ class Groups_Group {
 		global $db;
 		if (false == $db->tableExists('groups_membership')) { return array(); }
 
+		//echo "loading members of group: " . $this->UID . "<br/>\n";
+
 		$conditions = array();
-		$conditions[] = "groups_membership.groupUID='" . $db->addMarkup($this->UID) . "'";
+		$conditions[] = "groupUID='" . $db->addMarkup($this->UID) . "'";
 		$range = $db->loadRange('groups_membership', '*', $conditions);
 
 		return $range;
@@ -435,12 +440,14 @@ class Groups_Group {
 		global $db;
 		global $session;
 
-		//echo "[i] updating school index of group " . $this->UID . "<br/>";
+		//echo "[i] updating school index of group " . $this->name . " (" . $this->UID . ")<br/>\n";
 
 		$updated = true;								//%	return value [bool]
 		$members = $this->getMembers();					//%	array of memberships [array]
 		$oldSchools = $this->getSchoolsIndex();			//%	extant schools index set [array]	
 		$newSchools = array();							//%	UIDs for comparison [array]
+
+		//echo "Members: " . count($this->members) . "<br/>\n";
 
 		//------------------------------------------------------------------------------------------
 		//	for each member, discover if their school is linked to this group
@@ -450,7 +457,7 @@ class Groups_Group {
 			$block = "[[:users::schooluid::userUID=" . $member['userUID'] . ":]]";
 			$schoolUID = $theme->expandBlocks($block, '');
 	
-			//echo "schoolUID: $schoolUID<br/>\n";
+			//echo "schoolUID: $schoolUID groupUID: " . $this->UID . "<br/>\n";
 
 			// add to list of schools if not already present
 			if (false == in_array($schoolUID, $newSchools)) { 
@@ -479,7 +486,7 @@ class Groups_Group {
 
 				} else {
 					$updated = false;
-					$msg = "Could not add group " . $this->UID . " to school:<br/>" . $report;
+					$msg = "Could not add group " . $this->UID . " to school: $schoolUID <br/>" . $report;
 					$session->msg($msg, 'bad');
 					//echo "could not create school index for $schoolUID<br/>$report<br/>";
 

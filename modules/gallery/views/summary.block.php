@@ -4,5 +4,5 @@
 on %%createdOn%% and last updated on %%editedOn%%</div>
 
 %%summary%% %%viewLink%% %%editLink%%<br/><br/>
-[[:gallery::thumbs::UID=%%UID%%::num=15:]]
+[[:gallery::thumbs::galleryUID=%%UID%%::num=15:]]
 */ ?>

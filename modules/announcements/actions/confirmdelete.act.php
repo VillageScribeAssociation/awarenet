@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('uid', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $req->args)) { $page->do404(); }
 
-	$model = new Announcements_Announcement($req->args['uid']);
+	$model = new Announcements_Announcement($req->args['UID']);
 	if (false == $model->loaded) { $page->do404('Announcement not found.'); }
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this announcement.'); }	
@@ -21,7 +21,7 @@
 	//----------------------------------------------------------------------------------------------		
 	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/announcements/views/confirmdelete.block.php');
-	$html = $theme->replaceLabels($labels, );
+	$html = $theme->replaceLabels($labels, $block);
 	$session->msg($html, 'warn');
 	$page->do302('announcements/' . $model->alias);
 

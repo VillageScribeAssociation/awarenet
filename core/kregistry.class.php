@@ -44,8 +44,11 @@ class KRegistry {
 	//returns: true on success, false on failure [bool]
 
 	function load($prefix) {
-		$regFile = $this->path . $prefix . ".kreg";
-		if (false == file_exists($regFile)) { return false; }
+		$regFile = $this->path . $prefix . ".kreg.php";
+		if (false == file_exists($regFile)) { 
+			$regFile = $this->path . $prefix . ".kreg";
+			if (false == file_exists($regFile)) { return false; }
+		}
 
 		$lines = file($regFile);
 		foreach($lines as $line) {
@@ -62,11 +65,22 @@ class KRegistry {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	load all registry files
+	//----------------------------------------------------------------------------------------------
+
+	function loadAll() {
+		$prefixes = $this->listFiles();
+		foreach($prefixes as $prefix) { $this->load($prefix); }
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	save registry to files
 	//----------------------------------------------------------------------------------------------
 	//arg: prefix - registry key prefix, usually module name or 'kapenta' [string]
+	//return: true on success, false on failure [bool]
 
 	function save($prefix) {
+		if ('' == trim($prefix)) { return false; }
 		$raw = "<?php /*\n";										//%	raw file contents [string]
 		foreach($this->keys as $key => $value) {
 			if ($prefix == $this->getPrefix($key)) { 
@@ -77,7 +91,7 @@ class KRegistry {
 
 		if (false == file_exists($this->path)) { mkdir($this->path); } 
 
-		$regFile = $this->path . $prefix . ".kreg";
+		$regFile = $this->path . $prefix . ".kreg.php";
 		$fH = fopen($regFile, 'w+');
 		fwrite($fH, $raw);
 		fclose($fH);
@@ -98,11 +112,13 @@ class KRegistry {
 	//.	get key value
 	//----------------------------------------------------------------------------------------------
 	//arg: key - name of a registry key [string]
+	//arg: forceReload - reload file from disk to see changes made by other threads [bool]
 	//returns: key value, empty string on failure [string]
 
-	function get($key) {
+	function get($key, $forceReload = false) {
 		$keys = trim(strtolower($key));
 		$prefix = $this->getPrefix($key);
+		if (true == $forceReload) { $this->load($prefix); }
 		if (false == in_array($prefix, $this->files)) { $this->load($prefix); }
 		if (false == array_key_exists($key, $this->keys)) { return ''; }
 		$value = base64_decode($this->keys[$key]);
@@ -114,6 +130,7 @@ class KRegistry {
 	//----------------------------------------------------------------------------------------------
 	//arg: key - name of a registry key [string]
 	//arg: value - value of registry key [string]
+	//returns: true on success, false on failure [bool]
 
 	function set($key, $value) {
 		global $session;
@@ -121,12 +138,14 @@ class KRegistry {
 		if (false == in_array($prefix, $this->files)) { $this->load($prefix); }
 		$key = trim(strtolower($key));
 		$this->keys[$key] = base64_encode($value);
-		$this->save($prefix);
+		$check = $this->save($prefix);
 		
 		if (true == isset($session)) {
 			$msg = 'Set registry key: ' . $key . '<br/>' . 'Value: ' . $value;
 			$session->msgAdmin($msg, 'ok');
 		}
+
+		return $check;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -138,6 +157,7 @@ class KRegistry {
 	function delete($key) {
 		if (false == array_key_exists($key, $this->keys)) { return false; }
 		$prefix = $this->getPrefix($key);
+		if ('' == trim($prefix)) { return false; }
 
 		$newKeys = array();											//% new set of keys [array]
 		$found = false;												//%	[bool]
@@ -170,15 +190,16 @@ class KRegistry {
 	//----------------------------------------------------------------------------------------------
 	//.	list registry files
 	//----------------------------------------------------------------------------------------------
+	//;	IMPORTANT: this does not use $kapenta->fileSearch() because registry is initialized
+	//;	before KSystem is, so keep the ugly Dir business plox.
 	//opt: fullName - return path and filename is true [bool]
-	//returns: array of registry prefixes, or of relative file paths [array:string]
-	
+	//returns: array of registry prefixes, or of relative file paths [array:string]	
+
 	function listFiles($fullName = false) {
-		echo "listing files in registry<br/>..."; flush();
-		$files = array();
-		$d = Dir($this->path);
-		$continue = true;
-		$max = 1000;
+		$files = array();						//%	return value [array]
+		$d = Dir($this->path);					
+		$continue = true;						//%	loop control [bool]
+		$max = 1000;							//%	temp, sanity check [int]
 		while (true == $continue) {
 			$max--;								// temp bugfixing measure
 			if (0 == $max) { 
@@ -190,13 +211,34 @@ class KRegistry {
 				$continue = false;
 			} else {
 				if (false != strpos($entry, '.kreg')) {
-					if (false == $fullName) { $entry = str_replace('.kreg', '', $entry); }
+					if (false == $fullName) {
+						$entry = str_replace('.kreg.php', '', $entry);
+						$entry = str_replace('.kreg', '', $entry);
+					}
 					$files[] = $entry;
 				}
 			}
 		}
-		echo "finished listing files in registry<br/>..."; flush();
+
 		return $files;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	return a subset of keys matching from the given prefix
+	//----------------------------------------------------------------------------------------------
+	//arg: prefix - registry file to load before searching [string]
+	//arg: begins - registry key starts with this [string]
+	//returns: set of registry keys and values [dict]
+
+	function search($prefix, $begins) {
+		$matches = array();						//%	return value [string]
+		$this->load($prefix);
+		foreach($this->keys as $key => $value64) {
+			if ($begins == substr($key, 0, strlen($begins))) { 
+				$matches[$key] = base64_decode($value64);
+			}
+		}
+		return $matches;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -208,8 +250,10 @@ class KRegistry {
 	function toHtml($prefix) {
 		$html = '';				//%	return value [string:html]
 
-		$html .= "<table noboder>\n" 
+		$html .= "<table noboder width='100%'>\n" 
 			. "<tr><td class='title'>Key</td><td class='title'>Value</td></tr>\n";
+
+		$this->load($prefix);
 
 		foreach($this->keys as $key => $value) {
 			if ($prefix == $this->getPrefix($key)) {

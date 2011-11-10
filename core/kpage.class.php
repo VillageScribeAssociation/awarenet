@@ -161,15 +161,8 @@ class KPage {
 		//------------------------------------------------------------------------------------------
 		//	session messages
 		//------------------------------------------------------------------------------------------
-
-		if ('' != $session->message) {
-
-			$d['sMessage'] = "[[:theme::navtitlebox::label=Notice::toggle=divSMessage:]]"
-						   . "<div id='divSMessage'>"
-						   . $session->message . "</div><br/>\n";
-
-			$session->message = ''; // send message to user once only
-		}
+		$d['sMessage'] = $session->messagesToHtml();
+		$session->clearMessages();
 
 		//------------------------------------------------------------------------------------------
 		//	load the template
@@ -210,18 +203,6 @@ class KPage {
 		$template = $this->replaceLabels($theme->style, $template);
 
 		//------------------------------------------------------------------------------------------
-		//	special admin option
-		//------------------------------------------------------------------------------------------
-		if ('admin' == $user->role) {
-			//$fileName = str_replace($kapenta->installPath, '', $this->fileName);
-			//$parts = explode('/', $fileName);
-			//$editLink = "<a href='/pages/edit/module_" . $parts[1] . "/" . $parts[2] 
-			//	  . "'>[edit this page]</a>";
-
-			//$template = str_replace('</body>', $editLink . "\n</body>", $template);
-		}
-
-		//------------------------------------------------------------------------------------------
 		//	include debug report if enabled
 		//------------------------------------------------------------------------------------------
 		
@@ -238,7 +219,7 @@ class KPage {
 		$template = str_replace('%%' . 'delme%%', '', $template);
 
 		//------------------------------------------------------------------------------------------
-		//	convert relative URLs to absolute URLs
+		//	convert relative URLs to absolute URLs	(DEPRECATED behivior)
 		//------------------------------------------------------------------------------------------
 		$replaceset = explode('|', 'href|src|background|action');
 		foreach($replaceset as $toAbs) {
@@ -251,7 +232,6 @@ class KPage {
 		//	log the page view and send the page
 		//------------------------------------------------------------------------------------------
 		$kapenta->logPageView();	// log this page view
-		$session->store();			// store session state
 		echo $template;
 	}
 
@@ -306,7 +286,6 @@ class KPage {
  		header( "HTTP/1.1 301 Moved Permanently" );
  		header( "Location: " . $URI ); 
 		echo "The page you requested moved <a href='" . $URI  . "'>here</a>.";
-		$session->store();		// store session state
 		die();
 	}
 
@@ -339,7 +318,6 @@ class KPage {
  		header( "HTTP/1.1 302 Moved Temporarily" );
  		header( "Location: " . $URI ); 
 		echo "The page you requested has moved <a href='" . $URI . "'>here</a>.";
-		$session->store();		// store session state
 		die();
 	}
 
@@ -381,7 +359,6 @@ class KPage {
 	 	header( "HTTP/1.1 404 Not Found" );
 		echo "<?xml version=\"1.0\"?>\n";
 		echo "<error>$msg</error>\n";
-		$session->store();		// store session state
 		die();
 	}
 

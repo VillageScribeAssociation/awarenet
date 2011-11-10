@@ -46,6 +46,9 @@
 		student:c|groups|groups_group|announcements-add|(if)|groupadmin
 		student:c|groups|groups_group|announcements-edit|(if)|groupadmin
 		student:c|groups|groups_group|announcements-delete|(if)|groupadmin
+		student:c|groups|groups_group|images-add|(if)|groupadmin
+		student:c|groups|groups_group|images-edit|(if)|groupadmin
+		student:c|groups|groups_group|images-delete|(if)|groupadmin
 
 		teacher:p|groups|groups_group|show
 		teacher:c|groups|groups_group|edit|(if)|groupadmin

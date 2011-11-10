@@ -2,6 +2,7 @@
 
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/section.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
@@ -28,9 +29,9 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Projects_Project objects
 	//----------------------------------------------------------------------------------------------
-	if ('projects_project' == $refModel) {
-		$model = new Projects_Project($UID);				// try load the object
-		if (false == $model->loaded) { return false; }		// check that we did
+	if ('projects_project' == strtolower($refModel)) {
+		$model = new Projects_Project($UID);					// try load the object
+		if (false == $model->loaded) { return false; }			// check that we did
 
 		switch($relationship) {
 			case 'creator':	
@@ -40,13 +41,43 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 
 			case 'projectmember':
 				// is user is a member of this project
-				if (true == $model->isMember($userUID)) { return true; }
-				if (true == $model->isAdmin($userUID)) { return true; }
+				if (true == $model->memberships->hasMember($userUID)) { return true; }
+				if (true == $model->memberships->hasAdmin($userUID)) { return true; }
 				break;	//..........................................................................
 
 			case 'projectadmin':
 				// is user is an administrator of this project
-				if (true == $model->isAdmin($userUID)) { return true; }
+				if (true == $model->memberships->hasAdmin($userUID)) { return true; }
+				break;
+
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	relationships of Projects_Section objects
+	//----------------------------------------------------------------------------------------------
+	if ('projects_section' == strtolower($refModel)) {
+		$model = new Projects_Section($UID);					// try load the object
+		if (false == $model->loaded) { return false; }			// check that we did
+
+		$project = new Projects_Project($model->projectUID);
+		if (false == $project->loaded) { return false; }
+
+		switch($relationship) {
+			case 'creator':	
+				// relationship exists of user started this project
+				if ($model->createdBy == $userUID) { return true; }
+				break;	//..........................................................................
+
+			case 'projectmember':
+				// is user is a member of this project
+				if (true == $project->memberships->hasMember($userUID)) { return true; }
+				if (true == $project->memberships->hasAdmin($userUID)) { return true; }
+				break;	//..........................................................................
+
+			case 'projectadmin':
+				// is user is an administrator of this project
+				if (true == $project->memberships->hasAdmin($userUID)) { return true; }
 				break;
 
 		}
@@ -55,7 +86,7 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Revision object
 	//----------------------------------------------------------------------------------------------
-	if ('projects_revision' == $refModel) {
+	if ('projects_revision' == strtolower($refModel)) {
 		$model = new Projects_Revision($UID);				// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
@@ -70,13 +101,13 @@ function projects_relationships($refModel, $UID, $relationship, $userUID) {
 
 			case 'projectmember':
 				// is user is a member of this project
-				if (true == $project->isMember($userUID)) { return true; }
-				if (true == $project->isAdmin($userUID)) { return true; }
+				if (true == $project->memberships->hasMember($userUID)) { return true; }
+				if (true == $project->memberships->hasAdmin($userUID)) { return true; }
 				break;	//..........................................................................
 
 			case 'projectadmin':
 				// is user is an administrator of this project
-				if (true == $project->isAdmin($userUID)) { return true; }
+				if (true == $project->memberships->hasAdmin($userUID)) { return true; }
 				break;
 		}
 	}

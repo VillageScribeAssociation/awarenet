@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	makes a list of all groups active at a school, formatted for nav
+//|	makes a list of all groups active at a school, formatted for nav
 //--------------------------------------------------------------------------------------------------
 //opt: schoolUID - UID of a Schools_School object [string]
 //opt: school - alias of above [string]
@@ -16,8 +16,9 @@ function groups_atschoolnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (true == array_key_exists('schoollUID', $args)) { $schoolUID = $args['schoolUID']; }	
-	if (true == array_key_exists('schooll', $args)) { $schoolUID = $args['school']; }	
+	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if (true == array_key_exists('schoolUID', $args)) { $schoolUID = $args['schoolUID']; }	
+	if (true == array_key_exists('school', $args)) { $schoolUID = $args['school']; }	
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
@@ -38,6 +39,8 @@ function groups_atschoolnav($args) {
 	foreach($range as $item) {
 		$html .= "[[:groups::summarynav::groupUID=" . $item['groupUID'] . ":]]\n";
 	}
+
+	$html .= "<small>$schoolUID</small>";
 
 	return $html;
 }

@@ -3,7 +3,7 @@
 require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	fired when an image is deleted
+//|	fired when an image is deleted
 //-------------------------------------------------------------------------------------------------
 //arg: refModule - name of module to which a comment was attached
 //arg: refUID - UID of object to which comment was attached

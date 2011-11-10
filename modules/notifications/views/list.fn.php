@@ -55,6 +55,8 @@ function notifications_list($args) {
 	$range = $db->loadRange('notifications_userindex', '*', $conditions, 'createdOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/notifications/views/show.block.php');
 
+	if (0 == count($range)) { $html .= "<!-- end of results -->"; }
+
 	foreach($range as $UID => $row) { 
 		$model = new Notifications_Notification($row['notificationUID']);
 		$labels = $model->extArray();

@@ -22,7 +22,7 @@ function groups_addmemberformjs($args) {
 		{ return "<span class='ajaxerror'>Missing user UID.</span>"; }
 
 	$model = new Groups_Group($args['groupUID']);
-	if (false == $model->loaded) { return "<span class='ajaxerror'>Unkown group.</span>"; }
+	if (false == $model->loaded) { return "<span class='ajaxerror'>Unkown group: " . $args['groupUID'] . "</span>"; }
 
 	if ($model->hasMember($args['userUID'])) { 
 		return "<span class='ajaxwarn'>This person is already a member.</span>"; 

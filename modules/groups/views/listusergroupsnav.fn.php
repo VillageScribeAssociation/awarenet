@@ -28,8 +28,11 @@ function groups_listusergroupsnav($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	foreach($range as $row) 
-		{ $html .= "[[:groups::summarynav::groupUID=" . $row['groupUID'] . ":]]"; }
+	foreach($range as $item) { 
+		$extra = '';
+		if ('' != $item['position']) { $extra = "<b>Position:</b> " . $item['position'] . "<br/>"; }
+		$html .= "[[:groups::summarynav::groupUID=" . $item['groupUID'] . "::extra=$extra:]]";
+	}
 
 	return $html;
 }

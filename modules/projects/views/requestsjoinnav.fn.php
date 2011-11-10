@@ -10,7 +10,10 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_requestsjoinnav($args) {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $theme;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -22,33 +25,29 @@ function projects_requestsjoinnav($args) {
 	$model = new Projects_Project($args['raUID']);	
 	if (false == $model->loaded) { return ''; }
 
-	if ((false == $model->isAdmin($user->UID)) && ('admin' != $user->role)) { return ''; }
-	//if (false == $user->authHas('projects', 'projects_project', 'administer', $model->UID))
-	//	{ return ''; }
+	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
+		return ''; 
+	}
 
 	//----------------------------------------------------------------------------------------------
-	//	load prospective memebrs from the database
+	//	get prospective members
 	//----------------------------------------------------------------------------------------------
-
-	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
-	$conditions[] = "role='asked'";
-	
-	$range = $db->loadRange('projects_membership', '*', $conditions);
+	$prospective = $model->memberships->getProspectiveMembers();
+	if (0 == count($prospective)) { return ''; }					// nothing to show
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-
-	if (0 == count($range)) { return ''; }			// nothing to show
-
+	$block = $theme->loadBlock('modules/projects/views/requestjoinnav.block.php');
 	$html .= "[[:theme::navtitlebox::label=Have Asked To Join:]]\n";
-	foreach($range as $row) {
-		$addUrl = "%%serverPath%%projects/acceptmember/" . $row['UID'];
-		$html .= "[[:users::summarynav::userUID=" . $row['userUID'] . ":]]\n"
-			   . "<a href='$addUrl'>[add as project member >> ]</a><hr/>\n";
+
+	foreach($prospective as $userUID => $role) {
+		$labels = array('projectUID' => $model->UID, 'userUID' => $userUID, 'role' => $role);
+		$html .= $theme->replaceLabels($labels, $block);
 	}
-	
+
+	$html .= "<br/>";
+
 	return $html;
 }
 

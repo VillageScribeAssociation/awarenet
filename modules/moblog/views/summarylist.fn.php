@@ -9,6 +9,8 @@
 //opt: page - page no to display (default is 0) [string]
 //opt: num - number of records per page (default is 30) [string]
 //opt: pagination - set to 'no' to disable page nav bar (yes|no) [string]
+//opt: userUID - constrain to posts by this user (ref:Users_User) [string]
+//opt: schoolUID - constrain to posts from this school (ref:Schools_School) [string]
 
 function moblog_summarylist($args) {
 	global $page;
@@ -17,11 +19,11 @@ function moblog_summarylist($args) {
 	global $theme;
 	global $page;
 
-	$start = 0;
-	$num = 30;
-	$pageNo = 1;
-	$html = '';
-	$pagination = 'yes';
+	$pageNo = 1;				//%	results page to display [int]
+	$num = 30;					//%	number of items per page [int]
+	$start = 0;					//%	offset in database results [int]
+	$pagination = 'yes';		//%	show pagination [string]
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -71,6 +73,7 @@ function moblog_summarylist($args) {
 		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
 
 	return $html;

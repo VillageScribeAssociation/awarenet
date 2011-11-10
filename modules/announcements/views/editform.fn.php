@@ -31,6 +31,7 @@ function announcements_editform($args) {
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$ext['contentJs64'] = $utils->base64EncodeJs('contentJs64', $ext['content']);
+	$ext['content64'] = $utils->b64wrap($ext['content']);
 	$block = $theme->loadBlock('modules/announcements/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 	return $html;

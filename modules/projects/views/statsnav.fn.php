@@ -26,7 +26,7 @@ function projects_statsnav($args) {
 	//	look up revision stats
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("projectUID='" . $model->UID . "'");
-	$extArray['totalRevisions'] = $db->countRange('projects_revision', $conditions);
+	$extArray['totalRevisions'] = $db->countRange('projects_change', $conditions);
 
 	//$sql = "select * from Projects_Revision where projectUID='" . $extArray['UID'] . "'";
 

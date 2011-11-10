@@ -10,7 +10,10 @@
 //arg: raUID - recordAlias or UID or projects entry [string]
 
 function projects_editabstractform($args) {
-	global $theme, $user, $utils;
+	global $theme;
+	global $user;
+	global $utils;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -19,14 +22,14 @@ function projects_editabstractform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
-	//if (false == $model->isMember($user->UID)) { return ''; }
+	//if (false == $model->hasMember($user->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$ext = $model->extArray();
-	$ext['abstractJs64'] = $utils->base64EncodeJs('abstractJs64', $ext['abstract']);
 	$block = $theme->loadBlock('modules/projects/views/editabstractform.block.php');
+	$ext = $model->extArray();
+	$ext['abstract64'] = $utils->b64wrap($ext['abstract']);
 	$html = $theme->replaceLabels($ext, $block);
 	return $html;
 }

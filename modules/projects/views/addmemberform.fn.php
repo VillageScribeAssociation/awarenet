@@ -22,7 +22,7 @@ function projects_addmemberform($args) {
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'projects_project', 'administer', $model->UID)) {
+	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
 		return '';	// no permission
 	}
 

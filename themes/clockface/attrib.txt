@@ -1,3 +1,1 @@
-Clock face artwork is creative commons licences under:
-
-http://barefootliam-stock.deviantart.com/art/Antique-French-clock-face-46326241
+Note that most of the icons are from GTK theme which ships with Ubuntu, and distributed under that licence.

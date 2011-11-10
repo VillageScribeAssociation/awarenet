@@ -55,11 +55,10 @@ function projects__cb_images_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	add project members, admins and user's friends
 	//----------------------------------------------------------------------------------------------
-	$members = $model->getMembers();
+	$members = $model->memberships->getMembers();
 	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $userUID); }
 
 	$notifications->addAdmins($nUID);
-
 	$notifications->addFriends($nUID, $user->UID);
 
 	return true;

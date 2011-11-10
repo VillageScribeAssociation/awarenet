@@ -18,7 +18,7 @@ function projects_editsectiontable($args) {
 	$html = '';
 
 	$model = new Projects_Project(|$args['raUID']);
-	if ($model->isMember($user->UID) == false) { return false; }
+	if ($model->hasMember($user->UID) == false) { return false; }
 
 	$html = "<table noborder>";
 	foreach($model->sections as $sUID => $section) {

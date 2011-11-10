@@ -3,7 +3,7 @@
 <head>
 <title>%%title%%</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='%%serverPath%%themes/%%defaultTheme%%/css/clockface.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%themes/%%defaultTheme%%/css/default.css' rel='stylesheet' type='text/css' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>

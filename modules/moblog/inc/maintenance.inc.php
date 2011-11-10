@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	maintain the moblog
+//*	maintain the moblog module
 //-------------------------------------------------------------------------------------------------
 
 function moblog_maintenance() {

@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //*	change the order (weight) of sections relative to one another
 //--------------------------------------------------------------------------------------------------
+//TODO: re-implement for current setup (sections as independant objects) or remove
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference, args and permissions
@@ -24,7 +25,7 @@
 	//	check user is authorised to edit this project
 	//----------------------------------------------------------------------------------------------
 	$authorised = false;
-	if ($model->isMember($user->UID) == true) { $authorised = true; }
+	if ($model->hasMember($user->UID) == true) { $authorised = true; }
 	if ('admin' == $user->role) { $authorised = true; }
 
 	if ($authorised == false) { $page->do403(); }

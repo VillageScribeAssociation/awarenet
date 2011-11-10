@@ -21,7 +21,6 @@ class KModule {
 	var $description = '';		//_	description of this module [string]
 	var $core = '';				//_	no longer used, TODO: remove [string]
 	var $installed = '';		//_	no longer used, TODO: remove [string]
-	var $enabled = '';			//_	reserved [bool]
 	var $search = '';			//_	not used in awareNet [bool]
 
 	var $defaultpermissions;	//_	default permission set for this module [array]
@@ -50,11 +49,12 @@ class KModule {
 		global $kapenta;
 
 		$fileName = 'modules/' . $moduleName . '/module.xml.php';
-		if (false == $kapenta->fileExists($fileName)) { "echo NSF $fileName"; return false; }
 
 		$this->modulename = $moduleName;
 		$this->fileName = $fileName;
 		$this->models = array();
+
+		if (false == $kapenta->fileExists($fileName)) { return false; }
 
 		//------------------------------------------------------------------------------------------
 		//	read xml
@@ -74,14 +74,13 @@ class KModule {
 				case 'version':		$this->version = $child['value']; 			break;
 				case 'revision':	$this->revision = $child['value']; 			break;
 				case 'description':	$this->description = $child['value'];		break;
-				case 'enabled':		$this->enabled = $child['value']; 			break;
 				case 'search':		$this->search = $child['value'];			break;
 
 				case 'defaultpermissions':	
 					$this->defaultpermissions = array();
 					$lines = explode("\n", $child['value']);		
 					foreach($lines as $line) 
-						{ if ('' != trim($line)) { $this->defaultpermissions[] = $line; } }
+						{ if ('' != trim($line)) { $this->defaultpermissions[] = trim($line); } }
 
 					break;	//......................................................................
 
@@ -121,13 +120,7 @@ class KModule {
 	function save() {
 		global $kapenta;
 		$xml = $this->toXml();
-
-		//echo "fileName: " . $this->fileName . "<br/>\n";
-		//echo "<textarea rows='30' cols='50'>" . $xml . "</textarea><br/>\n";
-		
-		//filePutContents takes a filename relative to $kapenta->installPath
-
-		$kapenta->filePutContents($fileName, $xml, false, true);
+		$kapenta->filePutContents($this->fileName, $xml, false, true);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -158,7 +151,6 @@ class KModule {
 		     . "    <version>" . $this->version . "</version>\n"
 		     . "    <revision>" . $this->revision . "</revision>\n"
 		     . "    <description>" . $this->description . "</description>\n"
-		     . "    <enabled>" . $this->enabled . "</enabled>\n"
 		     . "    <search>" . $this->search . "</search>\n"
 		     . "    <models>\n"
 			 . $modelsXml
@@ -188,7 +180,6 @@ class KModule {
 			'core' => $this->core,
 			'models' => $this->models,
 			'installed' => $this->installed,
-			'enabled' => $this->enabled,
 			'search' => $this->search
 		);
 		return $ary;
@@ -209,8 +200,12 @@ class KModule {
 		if ('admin' == $user->role) {
 			$ext['editUrl'] = '%%serverPath%%admin/module/' . $this->modulename;	
 			$ext['installUrl'] = '%%serverPath%%admin/install/' . $this->modulename;
+
+			$ext['defaultpermissions'] = implode("\n", $this->defaultpermissions);
+
 			//TODO: moar
 		}
+
 		return $ext;
 	}
 
@@ -234,11 +229,47 @@ class KModule {
 		return $statusFn();
 	}
 
+	//==============================================================================================
+	//	MODELS
+	//==============================================================================================
+	
+	//----------------------------------------------------------------------------------------------
+	//.	discover if this module includes a model definition
+	//----------------------------------------------------------------------------------------------
+	//arg: modelname - name of an object type [string]
+	//returns: true if found, false if unkown model [bool]
+
+	function hasModel($modelname) {
+		if (true == array_key_exists($modelname, $this->models)) { return true; }
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	remove a model defintiion
+	//----------------------------------------------------------------------------------------------
+	//arg: modelName - name of model to remove [string]
+	//returns: true on success, false on failure [bool]
+
+	function removeModel($modelName) {
+		$found = false;						//%	return value [bool]
+		$newModels = array();
+		foreach($this->models as $modelAry) {
+			if ($modelName != $modelAry['name']) { $newModels[$modelAry['name']] = $modelAry; }
+			else { $found = true; }
+		} 
+		$this->models = $newModels;
+		return $found;
+	}
+
+	//==============================================================================================
+	//	INSTALLATION
+	//==============================================================================================
+
 	//----------------------------------------------------------------------------------------------
 	//.	get the current module's installation status
 	//----------------------------------------------------------------------------------------------
 	//returns: installation status message [string]
-	//, this function depends upon a standard install.inc.php
+	//, this function depends upon a standard /inc/install.inc.php
 
 	function install() {
 		global $kapenta;

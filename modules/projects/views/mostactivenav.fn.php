@@ -1,12 +1,12 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	display n most active projects (by number of revisions)
+//|	display n most active projects (by number of revisions)
 //--------------------------------------------------------------------------------------------------
 //opt: num - number of projects to display, default is 10 (int) [string]
 
 function projects_mostactivenav($args) {
-	global $db, $theme, $user;
+	global $db, $theme, $user, $session, $kapenta;
 	$html = '';		//%	return value [string]
 	$num = 10;
 
@@ -20,9 +20,14 @@ function projects_mostactivenav($args) {
 	//	count revisions
 	//----------------------------------------------------------------------------------------------
 
+	$monthAgo = $kapenta->datetime($kapenta->time() - 5184000);
+	//$session->msgAdmin('monthago: ' . $monthAgo);
+
 	$sql = "SELECT projectUID, count(UID) as numRevisions "
-		 . "FROM projects_revision "
-		 . "WHERE projectUID != ''"
+		 . "FROM projects_change "
+		 . "WHERE projectUID != '' "
+		 . "AND (DATE(`createdOn`) > DATE('" . $monthAgo . "')) "
+		 . "AND (createdBy <> 'public') "
 		 . "GROUP BY projectUID "
 		 . "ORDER BY numRevisions DESC LIMIT $num";
 

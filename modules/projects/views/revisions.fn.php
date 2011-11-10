@@ -3,6 +3,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/inc/diff.inc.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	list revisions made to a project
@@ -11,16 +12,24 @@
 //opt: projectUID - overrides UID [string]
 
 function projects_revisions($args) {
+	global $kapenta;
+	global $user;
 	global $db;
 
-	global $kapenta;
+	$html = '';					//%	return value [string]
 
-	require_once($kapenta->installPath . 'modules/projects/inc/diff.inc.php');
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('projectUID', $args)) { $args['UID'] = $args['projectUID']; }
+	if (false == array_key_exists('UID', $args)) { return false; }
 
-	if ($user->authHas('projects', 'projects_project', 'show', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('projectUID', $args) == true) { $args['UID'] = $args['projectUID']; }
-	if (array_key_exists('UID', $args) == false) { return false; }
-	$html = '';
+	$model = new Projects_Project($args['UID']);
+	if (false == $model->loaded) { return 'Project not found.'; }
+
+	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
+		return ''; 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load all revisions
@@ -36,7 +45,7 @@ function projects_revisions($args) {
 
 		if (count($lastRow) > 0) {
 			$revisionLink = '/projects/revision/' . $row['UID'];
-			$revisionDate = date('Y-m-d', strtotime($row['editedOn']));
+			$revisionDate = date('Y-m-d', $kapenta->strtotime($row['editedOn']));
 
 			$item = "<hr/>\n"
 				  . "<table noborder>\n"

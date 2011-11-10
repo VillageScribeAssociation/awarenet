@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	confirm deletion of a project
+//*	show a message asking the user if they really want to delete a project
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------

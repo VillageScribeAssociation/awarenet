@@ -209,7 +209,10 @@ class Home_Static {
 
 	function extArray() {
 		global $user;
+		global $utils;
+
 		$ary = $this->toArray();
+
 		$ary['editLink'] = '';
 		$ary['viewLink'] = '';
 		$ary['newLink'] = '';
@@ -245,13 +248,8 @@ class Home_Static {
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 
-		//------------------------------------------------------------------------------------------
-		//	done
-		//------------------------------------------------------------------------------------------
-	
-		$ary['contentJs'] = $ary['content'];
-		$ary['contentJs'] = str_replace("'", '--squote--', $ary['contentJs']);
-		$ary['contentJs'] = str_replace("'", '--dquote--', $ary['contentJs']);
+
+		$ary['content64'] = $utils->b64wrap($ary['content']);
 
 		return $ary;
 	}

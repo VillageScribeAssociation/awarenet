@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	maintain the projects module
+//|	maintain the projects module
 //--------------------------------------------------------------------------------------------------
 
 function projects_maintenance() {

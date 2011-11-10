@@ -4,8 +4,10 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - supergallery</title>
-	<content>[[:theme::navtitlebox::width=570::label=Recent Images From Everybody:]]
-[[:gallery::recentthumbsall::num=45:]]</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=Recent Images From Everybody:]]
+		[[:live::river::mod=gallery::view=recentthumbsall::pv=page::allow=num|pagination::pagination=no::num=25:]]
+	</content>
 	<nav1>
 [[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=yes:]]
 [`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]

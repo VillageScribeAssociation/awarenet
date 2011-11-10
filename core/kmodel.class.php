@@ -125,7 +125,6 @@ class KModel {
 		return $xml;
 	}
 
-
 	//----------------------------------------------------------------------------------------------
 	//.	serialize this object to an array
 	//----------------------------------------------------------------------------------------------
@@ -139,6 +138,92 @@ class KModel {
 		$serialize['export'] = $this->export;
 		$serialize['relationships'] = $this->relationships;
 		return $serialize;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	make an extended array of all data a view will need
+	//----------------------------------------------------------------------------------------------
+	//returns: extended array of member variables and metadata [array]
+
+	function extArray() {
+		global $user;
+		$ext = $this->toArray();
+
+		return $ext;
+	}
+
+	//==============================================================================================
+	//	RELATIONSHIPS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	add a new relationship
+	//----------------------------------------------------------------------------------------------
+	//arg: relationship - name of a relationship between a user and some other object [string]
+	//returns: true on success, false on failure [bool]
+
+	function addRelationship($relationship) {
+		if (true == in_array($relationship, $this->relationships)) { return false; }
+		$this->relationships[] = $relationship;
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	remove a relationship
+	//----------------------------------------------------------------------------------------------
+	//arg: relationship - name of a relationship between a user and some other object [string]
+	//returns: true on success, false on failure [bool]
+	
+	function removeRelationship($relationship) {
+		if (false == in_array($relationship, $this->relationships)) { return false; }
+		$newSet = array();
+		foreach($this->relationships as $idx => $current) {
+			if ($relationship != $current) { $newSet[] = $current; }
+		}
+		$this->relationships = $newSet;
+		return true;
+	}
+
+	//==============================================================================================
+	//	PERMISSIONS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	add a new permission
+	//----------------------------------------------------------------------------------------------
+	//arg: permission - name of a permission on objects of this type [string]
+	//arg: export - is this permission is exported to other modules (yes|no) [string]
+	//returns: true on success, false on failure [bool]
+
+	function addPermission($permission, $export) {
+		$export = strtolower(trim($export));
+		if ('yes' == $export) {
+			if (true == in_array($permission, $this->export)) { return false; }
+			$this->export[] = $permission;
+			return true;
+
+		} else {
+			if (true == in_array($permission, $this->permissions)) { return false; }
+			$this->permissions[] = $permission;
+			return true;
+		}
+	}
+	
+	//----------------------------------------------------------------------------------------------
+	//.	remove a permission
+	//----------------------------------------------------------------------------------------------
+	//arg: permission - name of a permission on objects of this type [string]
+	//returns: true on success, false on failure [bool]
+	
+	function removePermission($permission) {
+		$found = false;
+
+		$newSet = array();
+		foreach($this->permissions as $idx => $current) {
+			if ($permission != $current) { $newSet[] = $current; }
+		}
+		$this->permissions = $newSet;
+		return true;
 	}
 
 }

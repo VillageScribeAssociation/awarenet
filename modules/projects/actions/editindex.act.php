@@ -16,7 +16,7 @@
 
 	$model = new Projects_Project($UID);
 
-	if ((false == $model->isMember($user->UID)) && ('admin' != $user->role)) {
+	if ((false == $model->hasMember($user->UID)) && ('admin' != $user->role)) {
 		// TODO: use a permission for this
 		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
 		$page->do302('projects/' . $model->alias);

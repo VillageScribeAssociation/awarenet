@@ -14,6 +14,9 @@
 
 function home_install_module() {
 	global $user;
+	global $db;
+	global $registry;
+
 	if ('admin' != $user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing home_static Module</h3>\n";
@@ -29,9 +32,49 @@ function home_install_module() {
 	//----------------------------------------------------------------------------------------------
 	//	import any records from previous static table
 	//----------------------------------------------------------------------------------------------
-	$rename = array('recordAlias' => 'alias');
-	$count = $dba->copyAll('static', $dbSchema, $rename); 
-	$report .= "<b>moved $count records from 'static' table.</b><br/>";
+	//$rename = array('recordAlias' => 'alias');
+	//$count = $dba->copyAll('static', $dbSchema, $rename); 
+	//$report .= "<b>moved $count records from 'static' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	create and set a front page if one does not exist
+	//----------------------------------------------------------------------------------------------
+	$conditions = array("UID <> ''");
+	$numPages = $db->countRange('home_static', $conditions);
+
+	if (0 == $numPages) {
+		$newPage = new Home_Static();
+		$newPage->title = "awareNet";
+		$newPage->template = "twocol-rightnav.template.php";
+		$newPage->content = ''
+		 . "[[:theme::navtitlebox::label=Home:]]\n"
+		 . "<h1>Welcome</h1>\n"
+		 . "<p>awareNet is social networking software for schools, for creating student "
+		 . "communities in a safe, rich environment that spans the digital divide.&nbsp; It is "
+		 . "free, open source software which anyone can use, change and redistribute.&nbsp; Its "
+		 . "features follow our goals of education and learner collaboration, expanding young "
+		 . "people's worlds beyond the confines of their local communities.&nbsp; These features "
+		 . "are:<br></p><ul>"
+		 . "<li>social network with profiles, status updates, notifications, etc</li>"
+		 . "<li>collaborative projects to encourage teamwork</li>"
+		 . "<li>discussion forums</li><li>blogging and blog aggregation</li>"
+		 . "<li>personal and syndicated picture galleries</li>"
+		 . "<li>instant messaging (chat)</li>"
+		 . "<li>user messaging (mail)</li>"
+		 . "<li>image and file management</li>"
+		 . "<li>shared calendaring<br></li>"
+		 . "</ul><p>The software is developed by eKhaya ICT in cooperation with the Village "
+		 . "Scribe Association to enhance literacy and computer literacy in South Africa "
+		 . "and to improve information flow and awareness nationally and internationally.<br></p>";
+
+		$newPage->nav1 = "[[:theme::navtitlebox::label=Login:]]\n[[:users::loginform:]]";
+		$check = $newPage->save();
+
+		if ('' == $check) {
+			$registry->set('home.frontpage', $newPage->UID);
+			$report .= "Home page set to " . $newPage->UID . ".<br/>";
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	done

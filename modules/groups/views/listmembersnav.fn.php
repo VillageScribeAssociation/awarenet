@@ -71,7 +71,7 @@ function groups_listmembersnav($args) {
 							<td valign='top'>
 								<a 
 									href='javascript:void(0);'
-									onClick=\"groups_removeMember('" . $userUID . "');\" 
+									onClick=\"memberConsole.removeMember('" . $userUID . "');\" 
 									title='Remove member.'
 								><img src='$imgUrl' /></a>
 							</td>

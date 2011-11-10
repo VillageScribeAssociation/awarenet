@@ -46,10 +46,10 @@ class KTheme {
 	//.	load a block template file
 	//----------------------------------------------------------------------------------------------
 	//arg: fileName - relative to installPath [string]
-	//returns: block template, or false on failure [string][bool]
+	//returns: block template, or null string on failure [string]
 
 	function loadBlock($fileName) {
-		global $kapenta, $user;
+		global $kapenta, $user, $session;
 	
 		if ($kapenta->fileExists($fileName)) {
 		  	$raw = $kapenta->fileGetContents($fileName, false, true);
@@ -67,7 +67,11 @@ class KTheme {
 
 		  	return $raw;
 
-		} else { return false; }
+		} else { 
+			$msg = 'Could not load requested block file:<br/>' . $fileName;
+			$session->msgAdmin($msg, 'bad');
+			return ''; 
+		}
 	}
 
 
@@ -289,7 +293,7 @@ class KTheme {
 	//returns: txt with blocks recusively expanded [string]
 	//: calledBy is used to prevent infinite recursion, newline delimited list of parents
 
-	function expandBlocks($txt, $calledBy) {
+	function expandBlocks($txt, $calledBy = '') {
 		//------------------------------------------------------------------------------------------
 		//	filter out any calling blocks - prevent infinite recursion
 		//------------------------------------------------------------------------------------------

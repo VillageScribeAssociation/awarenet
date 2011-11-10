@@ -27,6 +27,10 @@ class Projects_Revision {
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
 
+	var $sections;			//_	array of section objects [array]
+	var $sectionsLoaded = false;
+	var $sectionFields = 'UID|title|weight|content';
+
 	//----------------------------------------------------------------------------------------------
 	//. constructor
 	//----------------------------------------------------------------------------------------------
@@ -34,6 +38,7 @@ class Projects_Revision {
 
 	function Projects_Revision($UID = '') {
 		global $db;
+		$this->sections = array();
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
@@ -76,6 +81,9 @@ class Projects_Revision {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+	
+		$this->expandSections($this->content);
+
 		$this->loaded = true;
 		return true;
 	}
@@ -226,6 +234,206 @@ class Projects_Revision {
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
+
+	//==============================================================================================
+	//	SECTIONS
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	expand sections
+	//----------------------------------------------------------------------------------------------
+	//returns: number of sections [int]
+
+	function expandSections($xml) {
+		global $kapenta;
+		$this->sections = array();
+		if ('' == $xml) { return 0; }
+
+		$sF = explode('|', $this->sectionFields);
+		$doc = new KXmlDocument($xml);					// 
+		$secIds = $doc->getChildren(1);					// children of root node
+		if (false === $secIds) { return 0; }
+
+		foreach($secIds as $index => $sectionId) {
+			$nsIds = $doc->getChildren($sectionId);
+			//print_r($nsIds);
+
+			$section = array(
+				'UID' => $kapenta->createUID(),
+				'title' => 'New Section',
+				'weight' => '0',
+				'content' => ''
+			);
+
+			foreach($nsIds as $nsId) {
+				$ent = $doc->getEntity($nsId);
+				//print_r($ent);
+				switch($ent['type']) {
+					case "UID":			$section['UID'] = $ent['value']; 			break;
+					case "title":		$section['title'] = $ent['value']; 			break;
+					case "weight":		$section['weight'] = $ent['value']; 		break;
+
+					case "content":
+						$section['content'] = $doc->stripCDATA($ent['value']);
+						break;
+				}
+			}
+
+			$this->sections[$section['UID']] = $section;
+			//TODO: use KXmlDocument to fill array
+		}
+	
+		$this->sectionsLoaded = true;
+		return count($this->sections);		
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	collapse sections
+	//----------------------------------------------------------------------------------------------
+
+	function collapseSections() {
+		global $utils;
+		//$sF = explode('|', $this->sectionFields);
+		$xml = '';		
+
+		foreach($this->sections as $section) {
+			if (false == array_key_exists('content', $section)) { $section['content'] = ''; }
+			$section['content'] = '<![CDATA[[' . $section['content'] . ']]>';
+			$xml .= $utils->arrayToXml2d('section', $section);
+		}
+
+		$xml = "<article>\n$xml</article>";
+		return $xml;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	sort sections by weight
+	//----------------------------------------------------------------------------------------------
+
+	function sort() {
+		$twoD = array();
+		$sections = $this->sections;
+		foreach($sections as $key => $section) { $twoD[$key] = $section['weight']; 	}
+
+		asort($twoD);
+		$this->sections = array();
+		foreach($twoD as $key => $weight) {	$this->sections[$key] = $sections[$key]; }
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	add a section
+	//----------------------------------------------------------------------------------------------
+	//arg: title - section title [string]
+	//arg: weight - weight of this section [int]
+
+	function addSection($title, $weight) {
+		global $kapenta; 
+		$newSection = array();
+		$newSection['UID'] = $kapenta->createUID();
+		$newSection['title'] = $title;
+		$newSection['weight'] = $weight;
+		$newSection['content'] = '';
+		$this->sections[$newSection['UID']] = $newSection;
+		$this->sort();
+		$this->save();
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	delete a section
+	//----------------------------------------------------------------------------------------------
+	//arg: rmUID - UID of the section to be removed [string]
+	//returns: true if the section was deleted, false if not found [bool]
+
+	function deleteSection($rmUID) {
+		$newSections = array();
+		$found = false;
+		foreach($this->sections as $UID => $section) {
+			if ($UID == $rmUID) {
+				$found = true;
+			} else {
+				$newSections[$UID] = $section;
+				if (true == $found) { $newSections[$UID]['weight']--; }
+			}
+		}
+		$this->sections = $newSections;
+		if (true == $found) { $this->save(); }
+		return $found;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	find the section with the largest weight
+	//----------------------------------------------------------------------------------------------
+	//returns: weight of the heaviest section [int]
+
+	function getMaxWeight() {
+		$maxWeight = 0;
+		foreach($this->sections as $sUID => $section) {
+			if ($section['weight'] > $maxWeight) { $maxWeight = $section['weight']; }		
+		}
+		return $maxWeight;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	increase a section's weight
+	//----------------------------------------------------------------------------------------------
+	//arg: sectionUID - UID of a section [string]
+	//returns: true on success, false if unchanged [bool]
+
+	function incrementSection($sectionUID) {
+		if (false == array_key_exists($sectionUID, $this->sections)) { return false; }
+		$oldWeight = $this->sections[$sectionUID]['weight'];		// this section's weight
+
+		if ($this->getMaxWeight() == $oldWeight) { return false; }	// already max weight
+
+		foreach($this->sections as $currUID => $section) {			// dec section below
+			if (($oldWeight + 1) == $section['weight']) 
+				{ $this->sections[$currUID]['weight'] = $oldWeight; }
+		}
+
+		$this->sections[$sectionUID]['weight'] = $oldWeight + 1;	// inc self
+		$this->sort();
+		$this->save();
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	decrease a section's weight
+	//----------------------------------------------------------------------------------------------
+	//arg: sectionUID - UID of a section [string]
+	//returns: true if decremented, false if not [bool]
+
+	function decrementSection($sectionUID) {
+		if (array_key_exists($sectionUID, $this->sections) == false) { return false; }
+		$oldWeight = $this->sections[$sectionUID]['weight'];		// this section's weight
+		if (1 == $oldWeight) { return false; }
+
+		foreach($this->sections as $currUID => $section) {			// inc section above
+			if (($oldWeight - 1) == $section['weight']) 
+				{ $this->sections[$currUID]['weight'] = $oldWeight; }
+		}
+
+		$this->sections[$sectionUID]['weight'] = $oldWeight - 1;	// inc self
+		$this->sort();
+		$this->save();
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	convert to html for diff
+	//----------------------------------------------------------------------------------------------
+	//returns: project title, abstract and sections compiled into html [string]
+
+	function getSimpleHtml() {
+		$html = "<h1>" . $this->title . "</h1>" . $this->abstract;
+		foreach($this->sections as $key => $section) {
+			$html .= "<h2>" . trim($section['title']) . "</h2>" . trim($section['content'])
+				  . "<p><small>weight: " . $section['weight'] . " uid: " . $section['UID']
+				  . " title: " . $section['title'] . "</small></p>";
+		}
+		return $html;
+	}
+
 
 }
 

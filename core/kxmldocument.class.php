@@ -54,13 +54,13 @@ class KXmlDocument {
 		$this->entities = array();
 		$this->tags = array();
 
-		if ($raw != '') {
-			if (true == $isFile) {
-				// try to load XML from file
-				$raw = $kapenta->fileGetContents($raw, false, true);
-				if (false == $raw) { $raw = ''; }
-			}
+		if ((true == $isFile) && ('' != $raw)) {
+			// try to load XML from file
+			$raw = $kapenta->fileGetContents($raw, false, true);
+			if (false == $raw) { $raw = ''; }
+		}
 
+		if ($raw != '') {
 			$this->raw = $raw;
 			$this->parseAllTags();
 			$this->linkEntities(0, 0);

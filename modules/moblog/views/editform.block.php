@@ -21,8 +21,10 @@
 </table>
 <br/>
 <b>Post Body: </b><small>(use special {fold} marker at end of introduction)</small>
-%%contentJs64%%
-[[:editor::base64::jsvar=contentJs64::name=content:]]
+<div class='HyperTextArea64' title='content' width='570' height='400' style='visibility: hidden; display: none'>
+%%content64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 <br/>
 <table noborder>
   <tr>

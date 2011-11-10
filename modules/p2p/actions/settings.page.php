@@ -7,7 +7,7 @@
 	<content>
 [`|tb][[:theme::navtitlebox::label=Settings:]]
     [`|lt]h1[`|gt]Module Settings: p2p[`|lt]/h1[`|gt]
-[`|tb][`|lt]p[`|gt]The following control how your site interacts with the central node.[`|lt]/p[`|gt]
+[`|tb][`|lt]p[`|gt]The following control how your site interacts with other peers.[`|lt]/p[`|gt]
 [`|tb][[:p2p::settings:]]</content>
 	<nav1></nav1>
 	<nav2></nav2>

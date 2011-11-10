@@ -21,7 +21,7 @@
 	<script></script>
 	<jsinit></jsinit>
 	<banner></banner>
-	<head></head>
+	<head><script src="%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js"></script></head>
 	<menu1>[[:home::menu:]]</menu1>
 	<menu2>[[:users::menu:]]</menu2>
 	<section></section>

@@ -8,34 +8,23 @@
 .style1 {font-size: 9px}
 </style>
 
+<script language='javascript'>
+	var kapentaLoaded = false;
+	var jsServerPath = '%%serverPath%%';
+	var jsPageUID = '%%pageInstanceUID%%';
+	var jsUserUID = '%%jsUserUID%%';
+	var formChecks = new Array();
+	var kchatclient = 0;
+	var ifMaxHeight = -1;
+</script>
+
 <script src='%%serverPath%%core/utils.js'></script>
+<script src='%%serverPath%%modules/editor/js/HyperTextArea.js'></script>
 <script language='javascript'>
 
-	var kapentaLoaded = false;
-
 	function kPageInit() {
-		resizeFrame();
 		kapentaLoaded = true;
-	}
-
-	ifMaxHeight = -1;
-
-	function resizeFrame() {
-		frameObj = window.parent.document.getElementsByName(window.name);
-		if (frameObj[0]) {
-			if (-1 == ifMaxHeight) {
-				// iframe height same as content height
-				frameObj[0].height = document.body.offsetHeight + 40;
-
-			} else {
-				// iframe height same as content height unless greater than maxHeight
-				if ((document.body.offsetHeight + 40) > ifMaxHeight) {
-					frameObj[0].height = ifMaxHeight;
-				} else {
-					frameObj[0].height = document.body.offsetHeight + 40;
-				}
-			}
-		}
+		kutils.resizeIFrame();
 	}
 
 %%script%%

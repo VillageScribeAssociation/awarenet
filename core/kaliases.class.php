@@ -58,7 +58,7 @@ class KAliases {
 
 		if ('' == $default) {		 						// no plainText
 			$default = $refUID;								// no refUID
-			if (trim($default) == '') { return false; } 	// no service
+			if ('' == trim($default)) { return false; } 	// no service
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -223,7 +223,7 @@ class KAliases {
 				case ':':	$alias .= '-c-';	break;
 				case ';':	$alias .= '-sc-';	break;
 				case '#':	$alias .= 'No.';	break;
-				case '?':	$alias .= '?';		break;
+				case '?':	$alias .= '-q-';	break;
 
 				case '-':	$alias .= '-';		break;		// allow these chars
 				case '.':	$alias .= '.';		break;		// ...
@@ -302,19 +302,21 @@ class KAliases {
 		//------------------------------------------------------------------------------------------
 		//	try load the object from the database
 		//------------------------------------------------------------------------------------------
-		$sql = "select * from $model where UID='" . $db->addMarkup($UID) . "'";
-		$result = $db->query($sql);
-		if (false == $result) { return false; }								// bad table name
-		if (0 == $db->numRows($result)) { return false; }					// no such object
-		$row = $db->fetchAssoc($result);									// should be only one
-		$objAry = $db->rmArray($row);										// strip db markup
+		$conditions = array();
+		$conditions[] = "UID='" . $db->addMarkup($UID) . "'";
+		$range = $db->loadRange($model, '*', $conditions);		
+		if (0 == count($range)) { return false; }								// no aliases found
 
 		//------------------------------------------------------------------------------------------
 		//	return the alias, if it has one
 		//------------------------------------------------------------------------------------------
-		if (false == array_key_exists('alias', $objAry)) { return false; } 	// no alias field
-		if ('' == $objAry['alias']) { return false; }						// alias field blank 
-		return $objAry['alias'];											// OK.
+		foreach($range as $item) {
+			if (false == array_key_exists('alias', $item)) { return false; } 	// no alias field
+			if ('' == trim($item['alias'])) { return false; }					// alias field blank 
+			return $item['alias'];												// OK.
+		}
+
+		return false;															//	unreachable
 	}
 
 	//--------------------------------------------------------------------------------------------------

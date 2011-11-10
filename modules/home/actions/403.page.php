@@ -6,6 +6,8 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - not authorised</title>
 	<content>[`|lt]h1[`|gt]403 - Forbidden[`|lt]/h1[`|gt]
 
+	%%message%%
+
 [`|lt]p[`|gt]You are not authorised to perform the requested action.  It could be that your session has expired, in which case you[`|sq]ll just need to login again, or you may not have the necessary permissions.[`|lt]/p[`|gt]
 
 [`|lt]h2[`|gt]Log in[`|lt]/h2[`|gt]

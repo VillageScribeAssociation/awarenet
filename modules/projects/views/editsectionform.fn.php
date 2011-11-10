@@ -7,8 +7,8 @@
 //--------------------------------------------------------------------------------------------------
 //|	form for editing an article section
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID or projects entry [string]
-//arg: sectionUID - UID of a section [string]
+//arg: UID - alias or UID of a Projects_Section object [string]
+//opt: sectionUID - overrides raUID if present [string]
 
 function projects_editsectionform($args) {
 	global $theme, $user, $utils;
@@ -17,18 +17,18 @@ function projects_editsectionform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('raUID', $args)) { return ''; }
-	if (false == array_key_exists('sectionUID', $args)) { return ''; }
-	$model = new Projects_Project($args['raUID']);
-	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
-	if (false == array_key_exists($args['sectionUID'], $model->sections)) { return ''; }
+	if (true == array_key_exists('sectionUID', $args)) { $args['UID'] = $args['sectionUID']; }
+	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
+	$model = new Projects_Section($args['UID']);
+	if (false == $model->loaded) { return '(unkown section)'; }
+	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) { return ''; }
+	if ('yes' == $model->hidden) { return "<span class='ajaxwarn'>Removed</span>"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$labels = $model->sectionArray($args['sectionUID']);
-	$labels['contentJs64'] = $utils->base64EncodeJs('contentJs64', $labels['content']);
+	$labels = $model->extArray();
+	$labels['content64'] = $utils->b64wrap($labels['content']);
 	$block = $theme->loadBlock('modules/projects/views/editsectionform.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	return $html;

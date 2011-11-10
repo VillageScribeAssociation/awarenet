@@ -67,9 +67,12 @@ class KCron {
 	//returns: HTML report of actions taken [string]
 
 	function run() {
-		global $db, $session;
+		global $kapenta;
+		global $db;
+		global $session;
+
 		$report = "<h1>" . $db->datetime() . "</h1>\n";		//%	return value [string]
-		$now = time();										//%	timestamp when script started [int]
+		$now = $kapenta->time();							//%	timestamp when script started [int]
 
 		$msg = "running cron: $now #" . $db->datetime($now) . "<br/>\n"
 			 . "tenmins: " . $this->tenmins . " #" . $db->datetime($this->tenmins) . "<br/>\n"
@@ -108,7 +111,7 @@ class KCron {
 	//arg: interval - name of interval (tenmins|hourly|weekly) [string]
 
 	function runTasks($interval) {
-		global $kapenta, $db, $user, $theme, $page, $session;
+		global $kapenta, $db, $user, $theme, $page, $session, $cron;
 		$report = '';
 
 		$session->msgAdmin('running task set: ' . $interval);
@@ -122,10 +125,34 @@ class KCron {
 				if (true == function_exists($fnName)) { 
 					$session->msgAdmin('running task set: ' . $incFile . ' (' . $interval . ')');
 					$report .= $fnName();
+					if ('admin' == $user->role) {
+						$cron->log($report, 'black');
+						$report = '';
+					}
 				}
 			}
 		}
 		return $report;
+	}
+
+	//==============================================================================================
+	//	HTML output
+	//==============================================================================================
+	
+	//----------------------------------------------------------------------------------------------
+	//	writes a status message directly to output
+	//----------------------------------------------------------------------------------------------
+	//arg: msg - status message [string]
+	//opt: color - message box color (black|red|green) [string]
+
+	function log($msg, $color = 'black') {
+		global $kapenta;
+		global $user;
+	
+		$kapenta->logCron($msg);
+		if ('admin' == $user->role) { 
+			echo "<div class='chatmessage" . $color . "'>$msg</div>\n"; flush();
+		}
 	}
 
 }

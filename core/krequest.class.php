@@ -25,6 +25,19 @@ class KRequest {
 	function KRequest($raw) {
 		global $registry;
 
+		//------------------------------------------------------------------------------------------
+		//	first detect if we are running from a subdirectory
+		//------------------------------------------------------------------------------------------
+		$subdir = str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']); 
+		if ('/' !== $subdir) {
+			$subdir = substr($subdir, 1);
+			$raw = str_replace($subdir, '', $raw);
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	first detect if we are running from a subdirectory
+		//------------------------------------------------------------------------------------------
+
 		$this->raw = $raw;											// store for future reference
 		$this->module = $registry->get('kapenta.modules.default');	// see setup.inc.php
 		$this->action = 'default';									// they should all have one

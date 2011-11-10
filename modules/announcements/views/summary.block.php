@@ -1,6 +1,6 @@
 <? /*
 <div class='inlinequote' id='blockAnnouncements%%UID%%'>
-<table noborder>
+<table noborder width='100%'>
   <tr>
     <td valign='top'>
       <a href='/announcements/%%alias%%'>

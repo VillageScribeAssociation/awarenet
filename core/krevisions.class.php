@@ -30,9 +30,10 @@ class KRevisions {
 	//----------------------------------------------------------------------------------------------
 	//arg: changes - associative array of fields and values [array]
 	//arg: dbSchema - a database table definition [array]		
+	//arg: UID - UID of the object to be stored [string]
 	//returns: true on success, false on failure [bool]
 
-	function storeRevision($changes, $dbSchema) {
+	function storeRevision($changes, $dbSchema, $UID) {
 		global $db;
 		if (false == $db->checkSchema($dbSchema)) { return false; }
 
@@ -42,7 +43,7 @@ class KRevisions {
 		$model = new Revisions_Revision();
 		$model->refModule = $dbSchema['module'];
 		$model->refModel = $dbSchema['model'];
-		$model->refUID = $dbSchema['fields']['UID'];
+		$model->refUID = $UID;
 		$model->fields = $changes;
 		$report = $model->save();
 
@@ -71,7 +72,7 @@ class KRevisions {
 			return false;
 		}
 
-		// check whether objects has already been deleted
+		// check whether object has already been deleted
 		if (true == $this->isDeleted($dbSchema['model'], $dbSchema['fields']['UID'])) {
 			$session->msgAdmin('revisions->recordDeletion() ALREADY DELETED', 'bad');
 			return false;

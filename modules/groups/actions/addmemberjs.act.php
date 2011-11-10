@@ -6,6 +6,12 @@
 //*	add a member to a group, return HTML snippet to browser JS client
 //--------------------------------------------------------------------------------------------------
 //+	a groupUID and userUID should be posted along with 'addMember as the form action
+//postarg: action - set to 'addMember' [string]
+//postarg: userUID - UID fo a Users_User object to add to the group [string]
+//postarg: groupUID - UID of a Groups_Group object [string]
+//postarg: position - user's role within the group, just a label [string]
+//postarg: admin - can this user administer this group (yes|no) [string]
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions

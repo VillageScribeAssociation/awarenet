@@ -1,11 +1,11 @@
 <? /*
 <table noborder>
   <tr>
-    <td valign='top'>
+    <td valign='top' width='50'>
       <a href='/moblog/%%alias%%'>
       [[:moblog::image::postUID=%%UID%%::size=thumbsm::link=no:]]</a>
     </td>
-    <td width='10'></td>
+    <td width='5'></td>
     <td valign='top'>
       <b><a class='black' href='/moblog/%%alias%%'>%%mbTitle%%</a></b><br/>
       <small>

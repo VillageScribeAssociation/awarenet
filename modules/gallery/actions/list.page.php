@@ -5,8 +5,12 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all image galleries</title>
 	<content>[[:theme::navtitlebox::label=Image Galleries::width=570:]]
-[`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
-[[:gallery::summarylistuser:]]</content>
+	
+	[`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
+
+	[[:gallery::summarylistuser:]]
+
+	</content>
 	<nav1>[[:theme::navtitlebox::label=Made By:]]
 [[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]

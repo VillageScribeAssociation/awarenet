@@ -16,10 +16,8 @@
 	$model = new Projects_Project($UID);
 	if (false == $model->loaded) { $page->do404('Project not found.'); }
 
-	if ((false == $model->isMember($user->UID)) && ('admin' != $user->role)) {
-		// TODO: use a permission for this
-		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
-		$page->do302('projects/' . $model->alias);
+	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
+		$page->do403('You are not permitted to edit this project abstract.');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -28,6 +26,7 @@
 	$page->load('modules/projects/actions/editabstract.page.php');
 	$page->blockArgs['raUID'] = $model->alias;
 	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['title'] = $model->title;
 	//$page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
 	$page->render();
 

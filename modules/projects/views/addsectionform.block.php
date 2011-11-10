@@ -1,9 +1,23 @@
 <? /*
-<form name='addProjectSection' method='POST' action='%%serverPath%%projects/save/'>
+
+<div id='divProjectAddSection'>
+[[:theme::navtitlebox::label=Add Section::toggle=divAddSectionForm::hidden=yes:]]
+<div id='divAddSectionForm' style='visibility: hidden; display: none;'>
+<form name='addProjectSection' method='POST' action='%%serverPath%%projects/addsection/'>
 <input type='hidden' name='action' value='addSection' />
 <input type='hidden' name='UID' value='%%UID%%' />
-<b>Add Section:</b><br/>
-<input type='text' name='sectionTitle' value='' size='20' />
-<input type='submit' value='>>' />
+<input type='hidden' name='projectUID' value='%%UID%%' />
+
+<table noborder width='100%'>
+  <tr>
+    <td width='50px'><b>Title: </b></td>
+	<td><input type='text' name='title' value='' size='20' style='width: 100%;' /></td>
+  </tr>
+</table>
+[[:editor::add::name=content:]]
+<input type='submit' value='Add Section >>' />
 </form>
+</div>
+</div>
+
 */ ?>

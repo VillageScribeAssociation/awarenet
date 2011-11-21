@@ -36,7 +36,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	this.start = function() {
 		this.log('[*] Starting Message Pump...');
 		this.registerAllBlocks(document.body.innerHTML);
-		// TODO: any initialization here (eg, scan page for register blocks, etc)
+		// TODO: any further initialization here
 		this.pump();
 	}
 
@@ -48,21 +48,16 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		//------------------------------------------------------------------------------------------
 		//	create XMLHttpRequest object
 		//------------------------------------------------------------------------------------------
-		var req = new XMLHttpRequest();  
-		var mailUrl = this.serverPath + 'live/getmessages/' + this.UID;
-		this.log('[*] Polling server: ' + mailUrl + '...');	
-
-		req.open('POST', mailUrl, true);  
-		req.setRequestHeader('Connection', 'close');
-		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		var url = kutils.serverPath + 'live/getmessages/' + this.UID;
+		this.log('[*] Polling server: ' + url + '...');	
 
 		//------------------------------------------------------------------------------------------
 		//	create handler for returned content
 		//------------------------------------------------------------------------------------------ 
-		req.onreadystatechange = function (aEvt) {  
-			//klive.log('loading: ' + req.status);
-			if ((4 == req.readyState) && (200 == req.status))  {
-				klive.procMessages(req.responseText); 
+		var cbFn = function(responseText, status) {  
+			klive.log('loading: ' + status);
+			if (200 == status)  {
+				klive.procMessages(responseText); 
 			}
 		}
 
@@ -72,7 +67,8 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		params = "";
 		this.log("[i] klive.lastChatMessage=" + this.lastChatMessage);
 		if (true == awareNetChat) {	params = 'chatsince=' + escape(this.lastChatMessage); }
-		req.send(params);
+
+		kutils.httpPost(url, params, cbFn);
 
 		//------------------------------------------------------------------------------------------
 		//	schedule next poll
@@ -102,7 +98,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				switch (route) {
 					case 'block':
 						//alert('recieved block update instruction: ' + base64_decode(msg));
-						this.updateBlockFromServer(base64_decode(msg));
+						this.updateBlockFromServer(kutils.base64_decode(msg));
 						break;	//..................................................................
 
 					case 'chat':
@@ -124,12 +120,12 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	//.	bind div to a block (ie, bind the content of a div to server-side view)
 	//----------------------------------------------------------------------------------------------
 	//arg: divId - element ID to bind to a view [string]
-	//arg: blockTag - base64 encoded block tag [string]
+	//arg: blockTag - a block tag, possibly base64 encoded [string]
 	//arg: B64 - set to true if the block tag is base64 encoded [bool]
 
 	this.bindDivToBlock = function(divId, blockTag, B64) {
 		var found = false;
-		if (true == B64) { blockTag = base64_decode(blockTag); }
+		if (true == B64) { blockTag = kutils.base64_decode(blockTag); }
 		this.log('[i] binding div: ' + divId + ' to block ' + blockTag);
 
 		//	replace any existing binding to a block tag
@@ -195,7 +191,6 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		this.updateBlockFromServer(blockTag);
 	}
 
-
 	//----------------------------------------------------------------------------------------------
 	//.	go through a piece of HTML and action all 'register block' comments
 	//----------------------------------------------------------------------------------------------
@@ -214,8 +209,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				line = line.replace(/ /g, '');
 				var parts = line.split(':');
 
-				//note: base64_decode as from phpJs
-				var newDiv = new Live_DivMap(parts[1], base64_decode(parts[2]));
+				var newDiv = new Live_DivMap(parts[1], kutils.base64_decode(parts[2]));
 				this.divs[this.divs.length] = newDiv;
 			}
 		}
@@ -264,44 +258,20 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		//------------------------------------------------------------------------------------------
 		//	download new content from server
 		//------------------------------------------------------------------------------------------
-		var block64 = base64_encode(blockTag);
+		var block64 = kutils.base64_encode(blockTag);
 		var params = 'b=' + escape(block64);
 		this.log('sending: ' + params);
 
-		var req = new XMLHttpRequest();  
-		req.open('POST', this.serverPath + 'live/getblock/', true);  
-		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		//req.setRequestHeader('Content-length', params.length);
-		req.setRequestHeader('Connection', 'close'); 
-		//req.replaceDivId = divId;			
-		//req.newDivBgColor = oldBgColor;
-		req.blockTag = blockTag;
-		req.onreadystatechange = function (aEvt) {  
-			klive.log('[i] Downloading updated content: ' + req.status);
-			if ((4 == req.readyState) && (200 == req.status))  {
-				//----------------------------------------------------------------------------------
-				//	update the page
-				//----------------------------------------------------------------------------------
-				klive.log('[i] setting block content: ' + req.blockTag);
-				klive.setBlockContent(req.blockTag, req.responseText);
-
-				//: hat tip to Stack Overflow :3
-				//:	http://stackoverflow.com/questions/1700870/how-do-i-do-outerhtml-in-firefox/
-
-				/*
-				var xDiv = document.getElementById(this.replaceDivId);
-				var s = req.responseText
-		        var r = xDiv.ownerDocument.createRange();  
-		        r.setStartBefore(xDiv);  
-		        var df = r.createContextualFragment(s);  
-		        xDiv.parentNode.replaceChild(df, xDiv);  
-				xDiv.style.backgroundColor = this.newDivBgColor;
-				*/
-
+		var cbfn = function(responseText, status) {
+			if (200 == status) {
+				klive.log('[i] setting block content: ' + blockTag);
+				klive.setBlockContent(blockTag, responseText);
+			} else {
+				alert('WARNING: ' + status + "<br/>" + responseText);
 			}
 		}
 
-		req.send(params);
+		kutils.httpPost(kutils.serverPath + 'live/getblock/', params, cbfn);
 
 		return true;
 	}
@@ -340,6 +310,30 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	remove a block from the cache (to force re-download)
+	//----------------------------------------------------------------------------------------------
+	//arg: blockTag - a block tag, possibly base64 encoded [string]
+	//arg: B64 - set to true if the block tag is base64 encoded [bool]
+	//returns: true on sucess, false if not found [bool]
+
+	this.removeBlock = function(blockTag, B64) {
+		var found = false;								//%	return value [bool]
+		var newBlocks = new Array();					//%	[array:object]
+		if (true == B64) { blockTag = kutils.base64_decode(blockTag); }		
+
+		for (var idx in this.blocks) {
+			if (blockTag == this.blocks[idx].tag) {
+				found = true;
+			} else {
+				newBlocks[newBlocks.length] = this.blocks[idx];
+			}
+		}
+
+		this.blocks = newBlocks;
+		return found;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	get divId given blockTag
 	//----------------------------------------------------------------------------------------------
 	//arg: divId - DOM element ID [string]
@@ -372,6 +366,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	//arg: msg - message to log to the console [string]
 
 	this.log = function(msg) {
+		//console.log(msg);
 		var theDiv = document.getElementById('pumpDiv');
 		theDiv.align = 'left';
 		if (theDiv.innerHTML.length > 4000) { this.clearLog(); }
@@ -438,6 +433,9 @@ function Live_DivMap(divId, blockTag) {
 	this.bgColor = '';
 	klive.log('Mapping block ' + blockTag + ' to div ' + divId);
 }
+
+if (!kutils) { alert('Warning: kutils not loaded)'); }
+klive = new Live_Pump();
 
 //--------------------------------------------------------------------------------------------------
 //	temporary, remove this when all msgSubscribe calls have been found and removed

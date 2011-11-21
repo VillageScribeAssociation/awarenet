@@ -227,17 +227,20 @@ class Contact_Detail {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('contact', 'contact_detail', 'show', $this->UID)) {
+		$authS = $user->authHas($this->refModule, $this->refModel, 'contact-show', $this->refUID);
+		$authE = $user->authHas($this->refModule, $this->refModel, 'contact-edit', $this->refUID);
+
+		if (true == $authS) {
 			$ext['viewUrl'] = '%%serverPath%%contact/showdetail/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('contact', 'contact_detail', 'edit', 'edit', $this->UID)) {
+		if (true == $authE) {
 			$ext['editUrl'] = '%%serverPath%%contact/edit/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('contact', 'contact_detail', 'edit', 'delete', $this->UID)) {
+		if (true == $authE) {
 			$ext['delUrl'] = '%%serverPath%%contact/delete/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -252,17 +255,20 @@ class Contact_Detail {
 		//------------------------------------------------------------------------------------------
 		$ext['extValue'] = str_replace("\n", "<br/>\n", $ext['value']);
 		switch($ext['type']) {
+
 			case 'web page':	
 					$ext['extValue'] = ''
-						 . "<a href='". $ext['value'] ."' target='". $kapenta->createUID() ."'>"
-						 . $ext['value'] . "</a>";
-					break;
+					 . "<a href='" . $ext['value'] . "' target='" . $kapenta->createUID() . "'>"
+					 . $ext['value'] . "</a>";
+
+					break;		//..................................................................
 
 			case 'email address':
 					$ext['extValue'] = ''
 						 . "<a href='mailto:" . $ext['value'] . "'>" 
 						 . $ext['value'] . "</a>";
-					break;
+
+					break;		//..................................................................
 		}
 
 		//------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------------------------
-//*	chat window code
+//*	shell window code
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
@@ -9,31 +9,40 @@
 function Live_ShellWindow(serverPath, userName, hWnd) {
 
 	//----------------------------------------------------------------------------------------------
-	//	member variables
+	//	properties
 	//----------------------------------------------------------------------------------------------
+	if (!kutils) { alert('WARNING: kutils not available'); }
 	
 	this.serverPath = serverPath;		//_	URL of kapenta installation [string]
 	this.userName = userName;			//_	name of current user [string]
 	this.hWnd = hWnd;					//_	ID of this window in kwindowmanager [int]
 	this.history = new Array();			//_	array of shellCmd objects [array:string]
 	this.bufferLength = 20;				//_	number of history items to keep [int]
-	this.bufferPointer = 0;				//_	array index of last command [int]
-	this.replayPointer = 0;				//_	array index of selected command [int]
+	this.bufferPointer = -1;			//_	array index of last command [int]
+	this.replayPointer = -1;			//_	array index of selected command [int]
 
 	this.divHistory = document.getElementById('divHistory');
 	this.taPrompt = document.getElementById('content');
+	this.taPrompt.focus();
 
 	//----------------------------------------------------------------------------------------------
-	//	send a command entered by the current user (xmlHTTPRequest POST)
+	//.	user has entered a command in the box and pressed enter
 	//----------------------------------------------------------------------------------------------
+	//returns: true if command created / run, false if not [bool]
 
-	this.sendCmd = function(cmdStr) {
+	this.cmdSubmitted = function() {
+		//------------------------------------------------------------------------------------------
+		//	tidy and check the command
+		//------------------------------------------------------------------------------------------
+		this.taPrompt.value = this.taPrompt.value.replace(/(\r\n|\n|\r)/gm,"");
+		//alert('command submitted: ' + this.taPrompt.value);
+		var cmdStr = kutils.trim(this.taPrompt.value);
+		if ('' == cmdStr) { return false; }
+		
 		//------------------------------------------------------------------------------------------
 		//	make a new shell cmd object and add it to the array
 		//------------------------------------------------------------------------------------------
-		var cmdUID = createUID();			//%	uniquely identifies this command [string]				
-
-		var newCmd = new Live_ShellCmd(cmdUID, cmdStr);
+		var newCmd = new Live_ShellCmd(this, cmdStr);
 
 		if (this.bufferPointer >= this.bufferLength) {
 			// bump first item off start of queue
@@ -45,46 +54,44 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 			this.bufferPointer++;
 		}
 
-		this.history[this.bufferPointer] = newCmd;
-		this.replayPointer = this.bufferPointer;
+		this.history[this.bufferPointer] = newCmd;		// add to end of array
+		this.replayPointer = this.bufferPointer;		// point to last item in command array
+		this.history[this.bufferPointer].send();		// POST to server
 
-		this.divHistory.innerHTML = this.divHistory.innerHTML + newCmd.toHtml(); 
+		//------------------------------------------------------------------------------------------
+		// render new command into main (history) div
+		//------------------------------------------------------------------------------------------
+		this.divHistory.innerHTML = this.divHistory.innerHTML + newCmd.toHtml();
 		this.scrollToBottom();
+		this.taPrompt.value = '';
 
-		//------------------------------------------------------------------------------------------
-		//	send to server via xmlHTTPRequest POST
-		//------------------------------------------------------------------------------------------
-		var params = 'cmd=' + base64_encode(cmdStr);
-		var sendUrl = this.serverPath + 'live/docmd/';
+		return true;
+	}
 
-		var http = new XMLHttpRequest();
-		http.open("POST", sendUrl, true);
-		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		http.setRequestHeader("Content-length", params.length);
-		http.setRequestHeader("Connection", "close");
-		http.historyUID = cmdUID;		
+	//----------------------------------------------------------------------------------------------
+	//.	up arrow pressed, load previous history item
+	//----------------------------------------------------------------------------------------------
+	//returns: true if history was navigated, false if not [bool]
 
-		http.onreadystatechange = function() {
-			if(http.readyState == 4 && http.status == 200) {
-				var resultDiv = document.getElementById('result' + http.historyUID);
-				resultDiv.innerHTML = http.responseText;
-				kshellwindow.scrollToBottom();
+	this.historyPrev = function() {
+		if (-1 == this.bufferPointer) { return false; }			// no commands in history
+		if (this.replayPointer > 0) { this.replayPointer--; }
+		this.taPrompt.value = this.history[this.replayPointer].cmdStr;
+		this.setStatus('History ' + this.replayPointer);
+		return true;
+	}
 
-				if (http.responseText.indexOf("<!-- kshellwindow.clearHistory() -->") > 0) {
-					kshellwindow.clearHistory();
-				}
+	//----------------------------------------------------------------------------------------------
+	//.	down arrow pressed, load next history item or clear ta if none available
+	//----------------------------------------------------------------------------------------------
+	//returns: true if hostory was navigated, false if not [bool]
 
-				if (http.responseText.indexOf("<!-- cmd.error() -->") > 0) {
-					//resultDiv.class = "chatmessagered";
-				}
-
-				if (http.responseText.indexOf("<!-- cmd.ok() -->") > 0) {
-					//resultDiv.class = "chatmessagegreen";
-				}
-
-			}
-		}
-		http.send(params);
+	this.historyNext = function() {
+		if (this.history.length > 0) {
+			if (this.replayPointer < this.bufferPointer) { this.replayPointer++; }
+			this.taPrompt.value = this.history[this.replayPointer].cmdStr;
+			this.setStatus('History ' + this.replayPointer);
+		} else { this.setStatus('no history'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -96,6 +103,14 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 	this.getHistoryIndex = function(UID) {
 		for (var i in this.history) { if (this.history[i].UID == UID) { return i; } }
 		return -1;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the status bar text for this window
+	//----------------------------------------------------------------------------------------------
+
+	this.setStatus = function(txt) {
+		window.parent.kwindowmanager.windows[windowIdx].setStatus(txt);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -121,33 +136,24 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 	//TODO: figure out how to reference this without the global
 
 	this.taKeyUp = function(e) {
+		var e = e || window.event;
 		var keyID = (window.event) ? event.keyCode : e.keyCode;
 		
 		switch(keyID) {
 			case 38:	
-				if (kshellwindow.history.length > 0) {
-					if (kshellwindow.replayPointer > 0) { kshellwindow.replayPointer--; }
-					kshellwindow.taPrompt.value = kshellwindow.history[kshellwindow.replayPointer].cmdStr;
-				} else {
-					alert('no history');
-				}
+				kshellwindow.historyPrev();
 				break;		// .....................................................................
 	
 			case 40:	
-				if (kshellwindow.history.length > 0) {
-					if (kshellwindow.replayPointer < kshellwindow.bufferPointer) { kshellwindow.replayPointer++; }
-					kshellwindow.taPrompt.value = kshellwindow.history[kshellwindow.replayPointer].cmdStr;
-				} else {
-					alert('no history');
-				}
+				kshellwindow.historyNext();
 				break;		// .....................................................................
 
 			default:
-				if ((kshellwindow.taPrompt.value.indexOf("\n") != -1)||(kshellwindow.taPrompt.value.indexOf("\r") != -1)) {
-					kshellwindow.taPrompt.value = kshellwindow.taPrompt.value.replace(/(\r\n|\n|\r)/gm,"");
-					//alert('sending: ' + kshellwindow.taPrompt.value);
-					kshellwindow.sendCmd(kshellwindow.taPrompt.value);
-					kshellwindow.taPrompt.value = '';
+				if (
+					(kshellwindow.taPrompt.value.indexOf("\n") != -1) || 
+					(kshellwindow.taPrompt.value.indexOf("\r") != -1)
+				) {
+					kshellwindow.cmdSubmitted();
 				}
 				break;		// .....................................................................
 
@@ -158,22 +164,21 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//	object representing a single chat messages
+//	object representing a single console messages / commands
 //--------------------------------------------------------------------------------------------------
-//note: this is a client-side version of Live_Chat objects.
 
-function Live_ShellCmd(UID, cmdStr) {
+function Live_ShellCmd(oShellWindow, cmdStr) {
 	
 	//----------------------------------------------------------------------------------------------
-	//	member variables
+	//	properties
 	//----------------------------------------------------------------------------------------------
-	//TODO: look into setting up a time delta (UTC) on chat messages to correct for TZ differences
-	this.UID = UID;					//_	UID of this Live_ShellCmd object [string]
-	this.cmdStr = cmdStr;			//_ command as enteredthis.divHistory.innerHTML by user [string]
-	this.state = 'new';				//_	current state of execution [string]
+	this.UID = kutils.createUID();		//_	UID of this Live_ShellCmd object [string]
+	this.cmdStr = cmdStr;				//_ command as entered by user [string]
+	this.state = 'new';					//_	current state of execution [string]
+	this.oShell = oShellWindow;			//_	shell window this command runs from [object]
 
 	//----------------------------------------------------------------------------------------------
-	//	convert to HTML
+	//.	render as HTML
 	//----------------------------------------------------------------------------------------------
 	//returns: html as displayed in the messages page of the chat window [string]
 
@@ -199,13 +204,49 @@ function Live_ShellCmd(UID, cmdStr) {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	convert to params string for HTTP POST
+	//.	convert to params string for HTTP POST
 	//----------------------------------------------------------------------------------------------
 	//returns: urlencoded POST body [string]
 
 	this.toFormData = function() {
 		var params = 'cmd=' + base64_encode(this.cmdStr);		//% POST body [string]
 		return params;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	send this command to be run on the server
+	//----------------------------------------------------------------------------------------------
+
+	this.send = function() {
+		var that = this;										//%	ref from clusures [string]		
+		var params = 'cmd=' + kutils.base64_encode(cmdStr);		//%	POST vars [string]
+		var sendUrl = this.oShell.serverPath + 'live/docmd/';	//%	URL to POST to [string]
+
+		var cbFn = function(responseText, status) {
+			if (200 == status) {
+				var resultDiv = document.getElementById('result' + that.UID);
+				var strCls = '<!-- kshellwindow.clearHistory() -->';
+				var strExt = '<!-- kshellwindow.exit() -->';
+				var strErr = '<!-- cmd.error() -->';
+				var strAOk = '<!-- cmd.ok() -->';
+
+				resultDiv.innerHTML = responseText;
+				that.oShell.scrollToBottom();
+
+				//NOTE: using .class proeprty breaks IE7
+				if (responseText.indexOf(strErr) > 0) { 
+					resultDiv.setAttribute('class', 'chatmessagered');
+				}
+				if (responseText.indexOf(strAOk) > 0) {
+					resultDiv.setAttribute('class', "chatmessagegreen");
+				}
+
+				if (responseText.indexOf(strCls) > 0) { that.oShell.clearHistory(); }
+				if (responseText.indexOf(strExt) > 0) { closeWindow(); }
+			}
+		}
+
+		kutils.httpPost(sendUrl, params, cbFn);					//	send it
 	}
 
 }

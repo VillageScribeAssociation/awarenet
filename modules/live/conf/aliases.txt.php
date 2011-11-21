@@ -16,5 +16,13 @@ db := admin.db
 registry := admin.registry
 sha1 := live.sha1
 tweet := twitter.tweet
+exit := live.exit
+describe := admin.describe
+time := admin.time
+kpkg := packages.kpkg
+sources := packages.sources
+imgfiles := images.listfiles
+downloads := p2p.downloads
+share := p2p.share
 
 */ ?>

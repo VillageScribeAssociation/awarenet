@@ -26,7 +26,11 @@ function contact_show($args) {
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'contacts-edit', $refUID)) { return '403'; }
+	$auth = false;
+
+	if (true == $user->authHas($refModule, $refModel, 'contact-show', $refUID)) { $auth = true; }
+	if (true == $user->authHas($refModule, $refModel, 'contact-view', $refUID)) { $auth = true; }
+	if (false == $auth) { return ''; }
 
 	if (true == array_key_exists('label', $args)) { $label = $args['label']; }
 

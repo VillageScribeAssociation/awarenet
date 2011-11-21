@@ -17,8 +17,11 @@
 	$refModel = $req->args['refModel'];
 	$refUID = $req->args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModule, 'contacts-edit', $refUID)) 
-		{ $page->do403('not authorized to edit contact details', true); }
+	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.'); }
+	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('No such object.'); }
+
+	if (false == $user->authHas($refModule, $refModel, 'contact-add', $refUID)) 
+		{ $page->do403('Not authorized to add contact details.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	all OK, make the new obejct

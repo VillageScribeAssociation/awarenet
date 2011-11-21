@@ -23,6 +23,7 @@ class Live_Trigger {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared = 'no';		//_ not sharing with other peers [string]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -72,6 +73,7 @@ class Live_Trigger {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = 'no';
 		$this->loaded = true;
 		return true;
 	}
@@ -123,7 +125,8 @@ class Live_Trigger {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'CHAR(3)' );
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -166,7 +169,8 @@ class Live_Trigger {
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => 'no'
 		);
 		return $serialize;
 	}
@@ -191,6 +195,7 @@ class Live_Trigger {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>no</shared>\n"
 			. $indent . "</kobject>\n";
 
 		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}
@@ -244,7 +249,7 @@ class Live_Trigger {
 	function send() {
 		$model = new Live_Mailbox($this->pageUID, true);
 
-		if (false == $model->loaded) { 
+		if (false == $model->loaded) {
 			// orphan trigger
 			$this->delete();
 			return false;

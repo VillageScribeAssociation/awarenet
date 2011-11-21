@@ -25,7 +25,9 @@ function contact_editdetails($args) {
 	if (false == $kapenta->moduleExists($args['refModule'])) { return '(bad refModule)'; }
 	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return '(no owner)'; }
 
-	//TODO: permission check here
+	if (false == $user->authHas($refModule, $refModel, 'contact-add', $refUID)) { 
+		return '(no permission to edit contact details)'; 
+	}	
 
 	//----------------------------------------------------------------------------------------------
 	//	make the iframe

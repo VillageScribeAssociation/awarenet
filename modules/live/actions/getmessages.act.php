@@ -38,7 +38,7 @@
 		$model->messages = '';
 	}
 
-	$model->lastChecked = time();
+	$model->lastChecked = $kapenta->time();
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------

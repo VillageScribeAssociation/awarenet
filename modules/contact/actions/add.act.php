@@ -9,18 +9,24 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('contact', 'contact_detail', 'new'))
-		{ $page->do403('You are not authorized to create new Details.'); }
 	if (false == array_key_exists('refModule', $_POST))
 		{ $page->do404('reference module not specified', true); }
 	if (false == array_key_exists('refModel', $_POST))
 		{ $page->do404('reference model not specified', true); }
 	if (false == array_key_exists('refUID', $_POST))
 		{ $page->do404('reference object UID not specified', true); }
-	if (false == moduleExists($_POST['module']))
-		{ $page->do404('specified module does not exist', true); }
-	if (false == $db->objectExists($_POST['model'], $_POST['UID']))
-		{ $page->do404('specified owner does not exist in database', true); }
+
+	$refModule = $_POST['refModule'];
+	$refModel = $_POST['refModel'];
+	$refUID = $_POST['refUID'];
+
+	if (false == moduleExists($reModule)) { $page->do404('refModule does not exist', true); }
+	if (false == $db->objectExists($refModel, $refUID)) { 
+		$page->do404('specified owner does not exist in database', true); 
+	}
+
+	if (false == $user->authHas($refModule, $refModel, 'contact-add', $refUID))
+		{ $page->do403('You are not authorized to create new Details.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//*	create the object

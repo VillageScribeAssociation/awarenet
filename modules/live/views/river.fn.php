@@ -5,23 +5,32 @@
 //--------------------------------------------------------------------------------------------------
 //arg: rivermodule - module on which block is constructed [string]
 //arg: riverview - view showing individual pages [string]
+//opt: mod - alias of 'rivermodule' [string]
+//opt: view - alias of 'riverview' [string]
 //opt: riverpagevar - 'page' variable to be incremented, default is 'pageno' [string]
+//opt: pv - alias of 'riverpagevar' [string]
 //opt: allow - list of arguments to pass on to the incremented block, pipe separated [string]
 
 function live_river($args) {
 	global $kapenta;
 	global $theme;
 
-	$html = '';						//% return value [string]
 	$riverpagevar = 'pageno';		//%	pagination variable [string]
 	$allow = array();				//%	arguments to pass forward [array]
+	$html = '';						//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('mod', $args)) { $args['rivermodule'] = $args['mod']; }
 	if (false == array_key_exists('rivermodule', $args)) { return '(module not specified)'; }
+
+	if (true == array_key_exists('view', $args)) { $args['riverview'] = $args['view']; }
 	if (false == array_key_exists('riverview', $args)) { return '(view not specified)'; }
+
+	if (true == array_key_exists('pv', $args)) { $args['riverpagevar'] = $args['pv']; }
 	if (true == array_key_exists('riverpagevar', $args)) { $riverpagevar = $args['riverpagevar']; }
+
 	if (true == array_key_exists('allow', $args)) { $allow = explode('|', $args['allow']); }
 
 	$rivermodule = $args['rivermodule'];

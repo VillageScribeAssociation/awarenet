@@ -23,7 +23,7 @@ function badges_awarded($args) {
 
 	if (count($range) == 0) { return ''; }
 
-	$imgOpts = "size=thumb::link=no::refModule=badges::refModel=badges_badge::";
+	$imgOpts = "size=thumb::link=no::refModule=badges::refModel=badges_badge::size=thumb90::";
 
 	$html .= "[[:theme::navtitlebox::label=Badges:]]\n";
 	foreach($range as $row) {

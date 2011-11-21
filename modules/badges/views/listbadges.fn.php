@@ -12,18 +12,18 @@
 function badges_listbadges($args) {
 	global $db, $user, $theme;
 
-	$pageNo = 1;			//%	first page if not specified [int]
-	$pageSize = 10;			//%	default number of items per page [int]
+	$pageNo = 1;				//%	first page if not specified [int]
+	$pageSize = 10;				//%	default number of items per page [int]
 	$orderBy = 'createdOn';		//%	default list order [string]
-	$html = '';				//%	return value [string]
+	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('badges', 'badges_badge', 'list')) { return ''; }
 
-
-	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
+	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
+	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['page']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }
 
 	// users may list by these fields
@@ -68,7 +68,7 @@ function badges_listbadges($args) {
 		$table[] = $row;
 	}
 
-	$link = 'badges/listbadge/';	//% relative to serverPath [string]
+	$link = '/badges/list/';	//% relative to serverPath [string]
 	$html .= "[[:theme::pagination::page=$pageNo::total=$totalPages::link=$link:]]\n";
 	$html .= $theme->arrayToHtmlTable($table, true, true);
 

@@ -57,7 +57,7 @@ function Live_ChatWindow(serverPath, msgDivId, userUID, userName, partnerUID, pa
 
 		var toUID = this.partnerUID;
 		var msgId = this.messages.length;
-		var newMsg = new Live_ChatMessage(createUID(), this.userUID, toUID, msgTxt, 'sending', dtStr);
+		var newMsg = new Live_ChatMessage(kutils.createUID(), this.userUID, toUID, msgTxt, 'sending', dtStr);
 		this.messages[msgId] = newMsg;
 
 		window.parent.kwindowmanager.windows[kchatwindow.hWnd].setStatus('Sending...');

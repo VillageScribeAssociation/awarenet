@@ -16,6 +16,16 @@
 	if (false == $model->loaded) { $page->do404('User not found.', true); }
 
 	//----------------------------------------------------------------------------------------------
+	//	render the page  
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/live/actions/chatwindow.page.php');
+	$page->blockArgs['chatUID'] = 'experimental';
+	$page->render();
+
+
+/*
+
+	//----------------------------------------------------------------------------------------------
 	//	render the page  //TODO: make a generic window template
 	//----------------------------------------------------------------------------------------------
 
@@ -23,7 +33,7 @@
 <head>
 <title>:: kapenta :: live :: test getblock</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='" . $kapenta->serverPath . "themes/clockface/css/windows.css' rel='stylesheet' type='text/css' />
+<link href='" . $kapenta->serverPath . "themes/%%defaultTheme%%/css/windows.css' rel='stylesheet' type='text/css' />
 <script src='" . $kapenta->serverPath . "core/utils.js'></script>
 <script src='" . $kapenta->serverPath . "modules/live/js/chatwindow.js'></script>
 <style type='text/css'>
@@ -178,5 +188,7 @@ a h2 {
 
 	$raw = $theme->expandBlocks($raw, '');
 	echo $raw;
+
+*/
 
 ?>

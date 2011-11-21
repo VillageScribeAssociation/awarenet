@@ -24,7 +24,9 @@ function contact_list($args) {
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'contacts-edit', $refUID)) { return '403'; }
+	if (false == $user->authHas($refModule, $refModel, 'contact-add', $refUID)) { 
+		return '(no permission to edit contact details)'; 
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load any contact details from database
@@ -57,7 +59,7 @@ function contact_list($args) {
 
 			$table[] = array(
 				$ext['type'],
-				$ext['extValue'],
+				$ext['extValue'] . ' <small>(' . $ext['description'] . ')</small>',
 				$ext['editLink'],
 				$ext['delLink']
 			);

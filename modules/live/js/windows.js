@@ -1,41 +1,65 @@
 //==================================================================================================
-//	
+//*	DESKTOP AND WINDOW MANAGER
 //==================================================================================================
-//	expects global object kwindowmanager
+//+	note that init script in the page template should create the following objects,expected by
+//+	klive.
+
+//+		kwindowmanager - a Live_WindowManager
+//+		kmouse - a Live_Mouse
 
 //--------------------------------------------------------------------------------------------------
-//	
+//	Window
 //--------------------------------------------------------------------------------------------------
+//+	expects to be initalized as global object kwindowmanager
 
 function Live_WindowManager() {
 
 	//----------------------------------------------------------------------------------------------
-	//	member variable
+	//	properties
 	//----------------------------------------------------------------------------------------------
 
 	this.windows = new Array();
-	this.pageWidth = window.innerWidth;		//_ px, can constrain windows, eg for taskbar [int]
-	this.pageHeight = window.innerHeight;	//_ px, can constrain windows, eg for taskbar [int]
+
+	this.pageWidth = -1;					//_ px, can constrain windows, eg for taskbar [int]
+	this.pageHeight = -1;					//_ px, can constrain windows, eg for taskbar [int]
+
+	if (window.innerWidth) {							
+		this.pageWidth = window.innerWidth;							// available on Firefox, Chrome
+		this.pageHeight = window.innerHeight;						// and Safari
+	}
+
+	if ((document.documentElement) && (document.documentElement.clientWidth)) {
+		this.pageWidth = document.documentElement.clientWidth;		// available on IE and Opera
+		this.pageHeight = document.documentElement.clientHeight;
+	}
+
+	if (-1 == this.pageWidth) { alert("Could not get viewport."); return; }
 
 	//----------------------------------------------------------------------------------------------
 	//	create a new window and add it to the array
 	//----------------------------------------------------------------------------------------------
+	//returns: window id on success, -1 on failure [int]
 
-	this.createWindow = function (title, frameUrl) {
-		var icon = jsServerPath + 'gui/icons/document-new.png';	// default [string]
+	this.createWindow = function (title, frameUrl, width, height, icon) {
+		var icon = jsServerPath + 'modules/live/icons/document-new.png';	// default [string]
 		wnd = new Live_Window(title, frameUrl, icon);
 		wnd.hWnd = this.windows.length;
 
-		var theMsgDiv = document.getElementById('msgDiv');
+		if (width) { wnd.width = width; }
+		if (height) { wnd.width = width; }
+		if (icon) { wnd.icon = icon; }
 
+		var theMsgDiv = document.getElementById('msgDiv');
+		if (!theMsgDiv) { alert("Window container div not found."); return -1; }
 		theMsgDiv.innerHTML = theMsgDiv.innerHTML + wnd.toHtml();
 		
 		//------------------------------------------------------------------------------------------
 		//	choose a random position on the screen and bring to front
 		//------------------------------------------------------------------------------------------
 		divWindow = document.getElementById(wnd.UID);
-		divWindow.style.left = (Math.random() * (this.pageWidth - wnd.width)) + 'px';
-		divWindow.style.top = (Math.random() * (this.pageHeight - wnd.height)) + 'px';
+		if (!divWindow) { alert("Could not access window div."); return -1; }
+		divWindow.style.left = Math.floor(Math.random() * (this.pageWidth - wnd.width)) + 'px';
+		divWindow.style.top = Math.floor(Math.random() * (this.pageHeight - wnd.height)) + 'px';
 		divWindow.style.zIndex = wnd.zIndex + 3;
 
 		hWnd = this.windows.length;
@@ -45,8 +69,23 @@ function Live_WindowManager() {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//	close a window given its UID
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	this.closeWindow = function(wUID) {
+		var hWnd = this.getIndex(wUID);
+		if (-1 == hWnd) { return false; }
+		var check = this.windows[hWnd].close();
+		if (true == check) { this.windows[hWnd].UID = ''; }		// clear the UID
+		return check;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	get the index of a window in the array given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: wUID - UID of a window [string]
+	//returns: index of window, or -1 if not found [int]
 
 	this.getIndex = function(wUID) {
 		for (var idx in this.windows) { if (wUID == this.windows[idx].UID) { return idx; } }
@@ -65,6 +104,7 @@ function Live_WindowManager() {
 		return max;
 	}
 
+
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -76,25 +116,25 @@ function Live_Window(title, frameUrl, icon) {
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
-	this.UID = createUID();		//_	not used at present [string]
-	this.top = 0;				//_ distance from top of document window, pixels [int]
-	this.left = 0;				//_ distance from left of document window, pixels [int]
-	this.width = 300;			//_	current width of window, pixels [int]
-	this.height = 500;			//_	current height of window, pixels [int]
-	this.minWidth = 200;		//_ pixels [int]
-	this.minHeight = 200;		//_	pixels [int]
+	this.UID = kutils.createUID();	//_	Unique ID of this window [string]
+	this.top = 0;					//_ distance from top of document window, pixels [int]
+	this.left = 0;					//_ distance from left of document window, pixels [int]
+	this.width = 300;				//_	current width of window, pixels [int]
+	this.height = 500;				//_	current height of window, pixels [int]
+	this.minWidth = 200;			//_ pixels [int]
+	this.minHeight = 200;			//_	pixels [int]
 
-	this.title = title;			//_	window title [string]
-	this.frameUrl = frameUrl;	//_	URL of content document [string]
-	this.icon = icon;			//_	window title [string]
-	this.hWnd = 0;				//_	index in livedesktop.windows array [int]
-	this.zIndex = 0;			//_  [int]
+	this.title = title;				//_	window title [string]
+	this.frameUrl = frameUrl;		//_	URL of content document [string]
+	this.icon = icon;				//_	window title [string]
+	this.hWnd = 0;					//_	index in livedesktop.windows array [int]
+	this.zIndex = 0;				//_  [int]
 	
-	this.state = 'hidden';		//_	may be 'show', 'max', 'min', 'hide' [string]
+	this.state = 'hidden';			//_	may be 'show', 'max', 'min', 'hide' [string]
 
 	//TODOs
-	this.hasStatusBar = false;	//_	not yet supported [bool]
-	this.hasMenu = false;		//_ not yet supported [bool]
+	this.hasStatusBar = false;		//_	not yet supported [bool]
+	this.hasMenu = false;			//_ not yet supported [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//	make HTML div of window frame
@@ -115,20 +155,25 @@ function Live_Window(title, frameUrl, icon) {
 		//			 + "<ul class='menu'><!-- menuinsert --></ul></div>";
 		//}
 
-		newHtml = "<div class='window' id='" + this.UID + "' style='z-index: -1;'>\n"
-			+ "<table noborder width='100%' cellpadding='0px' cellspacing='0px' class='window'>\n"
+		var resUrl = jsServerPath + 'modules/live/images/';
+
+		newHtml = "<div class='window' id='" + this.UID + "' style='z-index: -1; width: auto;'>\n"
+			+ "<table noborder id='title" + this.UID + "' width='" + (this.width + 2) + "' "
+			 + "cellpadding='0px' cellspacing='0px' class='window'>\n"
 			+ "<tr height='24px'>\n" 
-			+ "<td width='7px' background='" + jsServerPath + "gui/images/titlebar-left.png'></td>\n"
+			+ "<td width='7px' background='" + resUrl + "titlebar-left.png'></td>\n"
 			+ "<td class='titlebar' id='handle" + this.UID + "' "
-			 + "background='" + jsServerPath + "gui/images/titlebar-tile.png'>"
+			 + "background='" + resUrl + "titlebar-tile.png'>"
 			 + "<img src='" + icon + "' width='14px' height='14px' class='titlebaricon' />"
 			 + "&nbsp;<b><span id='txtTitle" + this.UID + "' class='titlebar'>"
-			 + this.title + "</span></b></td>\n"    
+			 + this.title + "</span></b></td>\n"
 			+ "<td width='24px'>"
-			 + "<img src='/gui/images/titlebar-close.png' id='wClose" + this.UID + "' "
-			 + "style='cursor: pointer; cursor: hand;' "
+			 + "<img src='/gui/images/titlebar-close.png' id='wClose" + this.UID + "'"
+			 + " style='cursor: pointer; cursor: hand;'"
+			 + " onClick=\"kwindowmanager.closeWindow('" + this.UID + "');\""
+			 + " />"
 			 + "</td>\n"  
-			+ "<td width='7px' background='/gui/images/titlebar-right.png'></td>\n"  
+			+ "<td width='7px' background='" + resUrl + "titlebar-right.png'></td>\n"  
 			+ "</tr>\n"
 			+ "</table>\n"
 			+ menuHtml
@@ -137,17 +182,18 @@ function Live_Window(title, frameUrl, icon) {
 			 + "height='" + (this.height - 24) + "' "
 			 + "width='" + this.width + "' scrolling='no'>"
 			+ "</iframe>"
-			+ "<div id='status" + this.UID + "' class='statusbar'>"
-			+ "<span id='statusTxt" + this.UID + "'></span>"
+			+ "<div id='status" + this.UID + "' class='statusbar' "
+			 + "style='width: " + this.width + "px'>"
+			+ "<span id='statusTxt" + this.UID + "' style='float: left;'></span>"
 			+ "<img id='sresize" + this.UID + "' " 
-			 + "src='" + jsServerPath + "gui/images/status-resize.png' "
+			 + "src='" + resUrl + "status-resize.png' "
 			 + "class='statusbarsize' />"
 			+ "</div>"
 			+ "</div>\n";
 	
 		return newHtml;	
 	}
-	
+
 	//----------------------------------------------------------------------------------------------
 	//	set window status
 	//----------------------------------------------------------------------------------------------
@@ -155,12 +201,13 @@ function Live_Window(title, frameUrl, icon) {
 	this.setStatus = function(txt) {
 		//TODO: check here whether window has a status bar
 		var spanStatus = document.getElementById('statusTxt' + this.UID);
-		spanStatus.innerHTML = txt;
+		spanStatus.innerHTML = '&nbsp;' + txt;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	close/destrot this window
+	//	close/destroy this window
 	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
 	this.close = function() {
 		//--------------------------------------------------------------------------------------
@@ -170,6 +217,16 @@ function Live_Window(title, frameUrl, icon) {
 		var divMsg = document.getElementById('msgDiv');
 		cwDiv.innerHTML = '';
 		divMsg.removeChild(cwDiv);
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	disable resize
+	//----------------------------------------------------------------------------------------------
+
+	this.disableResize = function() {
+		var statusDiv = document.getElementById("status" + this.UID);
+		statusDiv.innerHTML = "<span id='statusTxt" + this.UID + "' style='float: left;'></span>";
 	}
 
 }
@@ -177,6 +234,7 @@ function Live_Window(title, frameUrl, icon) {
 //--------------------------------------------------------------------------------------------------
 //	object to represent the mouse
 //--------------------------------------------------------------------------------------------------
+//+	initialize as kmouse
 
 function Live_Mouse() {
 	
@@ -196,7 +254,11 @@ function Live_Mouse() {
 	this.startSize = new Live_Point(0, 0);		//_ initial size of window [object]
 	this.ifStartSize = new Live_Point(0, 0);	//_ initial size of content iFrame [object]
 	this.rsMin = new Live_Point(0, 0);			//_ minimum size of current window [object]
-	this.ifResize;								//_ iframe element [object]
+
+	this.titleResize;							//_ title table of a window [obejct]
+	this.ifResize;								//_ iframe element of a window [object]
+	this.statusResize;							//_ status bar element of a window [object]
+
 	this.oldZIndex = 0;							//_ temporarily increased during drag [int]
 
 	//----------------------------------------------------------------------------------------------
@@ -241,18 +303,21 @@ function Live_Mouse() {
 			kmouse.start.y = e.clientY; 
 
 			// get the clicked element's position 
-			kmouse.offset.x = extractNumber(divWindow.style.left); 
-			kmouse.offset.y = extractNumber(divWindow.style.top); 
+			kmouse.offset.x = kmouse.extractNumber(divWindow.style.left); 
+			kmouse.offset.y = kmouse.extractNumber(divWindow.style.top); 
 
 			if ('resize' == kmouse.dragMode) {
 				// get the clicked window's height and width
-				kmouse.startSize.x = extractNumber(divWindow.clientWidth); 
-				kmouse.startSize.y = extractNumber(divWindow.clientHeight); 
+				kmouse.startSize.x = kmouse.extractNumber(divWindow.clientWidth); 
+				kmouse.startSize.y = kmouse.extractNumber(divWindow.clientHeight); 
 
 				// get the window iframe's size and width
+				kmouse.titleResize = document.getElementById('title' + windowUid);
 				kmouse.ifResize = document.getElementById('c' + windowUid);
-				kmouse.ifStartSize.x = extractNumber(kmouse.ifResize.clientWidth);
-				kmouse.ifStartSize.y = extractNumber(kmouse.ifResize.clientHeight);  
+				kmouse.statusResize = document.getElementById('status' + windowUid);
+
+				kmouse.ifStartSize.x = kmouse.extractNumber(kmouse.ifResize.clientWidth);
+				kmouse.ifStartSize.y = kmouse.extractNumber(kmouse.ifResize.clientHeight);  
 
 				// get window min width/height
 				var idxWindow = kwindowmanager.getIndex(windowUid);
@@ -280,6 +345,15 @@ function Live_Mouse() {
 			return false;
 				
 		} // end if
+	}
+
+	//--------------------------------------------------------------------------------------------------
+	//.	utility method - clumsy
+	//--------------------------------------------------------------------------------------------------
+
+	this.extractNumber = function(value) { 
+		var n = parseInt(value); 
+		return n == null || isNaN(n) ? 0 : n; 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -368,7 +442,11 @@ function Live_Mouse() {
 			var ifWidth = (kmouse.ifStartSize.x + (e.clientX - kmouse.start.x));
 			var ifHeight = (kmouse.ifStartSize.y + (e.clientY - kmouse.start.y));
 	
-			if (ifWidth >= kmouse.rsMin.x) { kmouse.ifResize.style.width = ifWidth + 'px'; }
+			if (ifWidth >= kmouse.rsMin.x) {
+				kmouse.titleResize.style.width = ifWidth + 'px';
+				kmouse.ifResize.style.width = ifWidth + 'px';
+				kmouse.statusResize.style.width = ifWidth + 'px';
+			}
 			if (ifHeight >= kmouse.rsMin.y) { kmouse.ifResize.style.height = ifHeight + 'px'; }
 		}
 
@@ -390,12 +468,3 @@ function Live_Point(startX, startY) {
 	this.y = startY;			//_	y position, pixels [int]
 	this.toString = function() { return '(' + this.x + ', ' + this.y + ')'; }
 }
-
-//--------------------------------------------------------------------------------------------------
-//	Utility, move
-//--------------------------------------------------------------------------------------------------
-
-function extractNumber(value) { 
-	var n = parseInt(value); 
-	return n == null || isNaN(n) ? 0 : n; 
-} 

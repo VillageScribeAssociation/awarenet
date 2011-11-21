@@ -23,6 +23,7 @@ class Live_Mailbox {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared = 'no';		//_ ref:Users_User [string]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -31,7 +32,9 @@ class Live_Mailbox {
 	//opt: isPage - set to true if this is a page UID and not a mailbox UID [bool]
 
 	function Live_Mailbox($UID = '', $isPage = false) {
+		global $kapenta;
 		global $db;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 
 		if ('' != $UID) { 									// try load an object from the database
@@ -42,7 +45,8 @@ class Live_Mailbox {
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
-			$this->lastChecked = time();					// when mailbox was last accessed
+			$this->lastChecked = $kapenta->time();			// when mailbox was last accessed
+			$this->shared = 'no';
 			$this->loaded = false;
 		}
 	}
@@ -93,6 +97,7 @@ class Live_Mailbox {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = 'no';
 		$this->loaded = true;
 		return true;
 	}
@@ -144,7 +149,8 @@ class Live_Mailbox {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)' );
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -183,7 +189,8 @@ class Live_Mailbox {
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => 'no'
 		);
 		return $serialize;
 	}

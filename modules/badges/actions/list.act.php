@@ -12,8 +12,8 @@
 	if (false == $user->authHas('badges', 'badges_badge', 'show'))
 		{ $page->do403('You are not authorized to see the list of badges.'); }
 
-	$pageNo = 1;			//%	first page if not specified [int]
-	$pageSize = 10;			//%	default number of items per page [int]
+	$pageNo = 1;				//%	first page if not specified [int]
+	$pageSize = 10;				//%	default number of items per page [int]
 	$orderBy = 'createdOn';		//%	default list order [string]
 
 	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
@@ -21,8 +21,8 @@
 
 	if (true == array_key_exists('by', $req->args)) {	// users may list by these fields
 		switch(strtolower($req->args['by'])) {
-			case 'createdon': $orderBy = 'createdOn';	break;
-			case 'editedon': $orderBy = 'editedOn';	break;
+			case 'createdon': 	$orderBy = 'createdOn';		break;
+			case 'editedon': 	$orderBy = 'editedOn';		break;
 		}
 	}
 

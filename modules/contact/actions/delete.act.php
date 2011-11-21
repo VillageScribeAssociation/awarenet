@@ -14,7 +14,7 @@
 	$model = new Contact_Detail($req->ref);
 	if (false == $model->loaded) { $page->do404('Contact detail not found.', true); }
 
-	$authHas = $user->authHas($model->refModule, $model->refModel, 'contacts-edit', $model->refUID);
+	$authHas = $user->authHas($model->refModule, $model->refModel, 'contact-edit', $model->refUID);
 	if (false == $authHas) { $page->do403('Not authorized', true); }
 
 	//----------------------------------------------------------------------------------------------

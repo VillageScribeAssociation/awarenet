@@ -20,7 +20,9 @@
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such refModule', true); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('no such owner', true); }
 
-	//TODO: permissions check here
+	if (false == $user->authHas($refModule, $refModel, 'contact-add', $refUID)) {
+		$page->do403('You are not authorized to edit contact details.', true);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page

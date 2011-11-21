@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/badges/models/badge.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	list all users who recieved badge
+//*	list all users who have been awarded a badge
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - alias or UID of a Bades_Badge object [string]
 //opt: badgeUID - overrides raUID if present [string]

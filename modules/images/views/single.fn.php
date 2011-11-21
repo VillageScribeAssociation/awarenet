@@ -27,9 +27,9 @@ function images_single($args) {
 	$imgUID = $im->findSingle($args['refModule'], $args['refUID'], $category);
 
 	if ($imgUID == false) { 
-		$html = "<img src='/themes/clockface/unavailable/" . $size . ".jpg' />";
+		$html = "<img src='%%serverPath%%/data/images/unavailable/" . $size . ".jpg' />";
 	} else {
-		$html = "<img src='/images/" . $size . "/" . $im->alias . "' />";
+		$html = "<img src='%%serverPath%%/images/" . $size . "/" . $im->alias . "' />";
 	}
 	return $html;
 }

@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	display a single image at a given size
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID of an image record [string]
+//arg: raUID - alias or UID of an image record [string]
 //opt: link - link to larger version (yes|no) [string]
 //opt: size - scale type, default is width300 [string]
 //opt: align - deprecated (left|right) [string]

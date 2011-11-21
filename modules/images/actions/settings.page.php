@@ -6,7 +6,7 @@
     <h1>Module Settings: Images</h1>
 	<p>Settings for the images module.</p>
 	[[:images::settings:]]</content>
-	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: admin :: user settings ::</title>
+	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: admin :: image settings ::</title>
 	<script></script>
 	<nav1></nav1>
 	<nav2></nav2>

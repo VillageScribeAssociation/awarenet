@@ -52,6 +52,14 @@ function videos_maintenance() {
 			if (true == $saved) { $fixCount++; }
 		}
 
+		$allAliases = $aliases->getAll('videos', 'videos_gallery', $objAry['UID']);
+		if (0 == count($allAliases)) {
+			$saved = $model->save();									// should reset alias
+			$errors[] = array($model->UID, $model->name, 'no alias');
+			$errorCount++;
+			if (true == $saved) { $fixCount++; }			
+		}
+
 		//------------------------------------------------------------------------------------------
 		//	check share status
 		//------------------------------------------------------------------------------------------
@@ -110,6 +118,14 @@ function videos_maintenance() {
 			$errors[] = array($model->UID, $model->title, 'non defualt alias');
 			$errorCount++;
 			if (true == $saved) { $fixCount++; }
+		}
+
+		$allAliases = $aliases->getAll('videos', 'videos_video', $objAry['UID']);
+		if (0 == count($allAliases)) {
+			$saved = $model->save();									// should reset alias
+			$errors[] = array($model->UID, $model->name, 'no alias');
+			$errorCount++;
+			if (true == $saved) { $fixCount++; }			
 		}
 
 		//------------------------------------------------------------------------------------------

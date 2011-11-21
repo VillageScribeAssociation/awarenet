@@ -35,7 +35,7 @@ function p2p_download($args) {
 	 . "<table noborder width='100%'>\n"
 	 . "\t<tr>\n"
 	 . "\t\t<td width='40px' valign='top'>"
-		 . "<img src='%%serverPath%%themes/clockface/icons/arrow_down_green.png' />"
+		 . "<img src='%%serverPath%%themes/%%defaultTheme%%/icons/arrow_down_green.png' />"
 		 . "</td>\n"
 	 . "\t\t<td>\n"
 	 . "\t\t\t$progress\n"

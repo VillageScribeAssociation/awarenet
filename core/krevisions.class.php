@@ -88,6 +88,8 @@ class KRevisions {
 		if ('' != $report) { 
 			$session->msgAdmin('revisions->recordDeletion() COULD NOT SAVE:' . $report, 'bad');
 			return false;
+		} else {
+			$session->msgAdmin('revisions->recordDeletion()', 'ok');
 		}
 		return true;
 	}

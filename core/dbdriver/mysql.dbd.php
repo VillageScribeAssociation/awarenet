@@ -467,7 +467,8 @@ class KDBDriver {
 			'dbSchema' => $dbSchema
 		);
 
-		//$kapenta->raiseEvent($module, 'object_deleted', $detail);
+		$kapenta->raiseEvent($module, 'object_deleted', $detail);
+		echo "deleting object... $module $model $UID <br/>\n";
 		return true;
 	}
 

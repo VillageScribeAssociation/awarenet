@@ -15,9 +15,13 @@
 		//------------------------------------------------------------------------------------------
 		//	log them out
 		//------------------------------------------------------------------------------------------
+		$args = array('userUID' => $session->user);
 		$check = $session->logout();
+
 		if (true == $check) { $session->msg("You are now logged out.<br/>\n", 'ok'); }
 		else { $session->msg('Logout incomplete.', 'bad'); }
+
+		$kapenta->raiseEvent('*', 'users_logout', $args);
 		$page->do302('');
 
 	}

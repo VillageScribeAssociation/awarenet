@@ -38,6 +38,7 @@
 					$session->set('user', $row['UID']);					//	set current user UID
 					$session->set('role', $row['role']);				//	set current user role
 					$session->msg('You are now logged in.', 'ok');
+					$session = new Users_Session();
 
 					$user->loadArray($row);
 

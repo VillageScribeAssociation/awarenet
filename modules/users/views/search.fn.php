@@ -83,7 +83,7 @@ function users_search($args) {
 							title=\"" . $cblabel. "\"
 						>
 						<img 
-							src='%%serverPath%%themes/clockface/icons/" . $cbicon . "' 
+							src='%%serverPath%%themes/%%defaultTheme%%/icons/" . $cbicon . "' 
 							alt=\"" . $cblabel . "\" 
 							border='0' 
 						/></a>

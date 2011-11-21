@@ -7,27 +7,37 @@
 
 function users_chatlink($args) {
 	global $db;
-	$html = '';
+	global $user;
 
+	$html = '';									//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('userUID', $args)) { return ''; }
+	if ('public' == $user->role) { return ''; }		// do not disclose online status to public
 
-	$sql = "select * from users_login where userUID='" . $db->addMarkup($args['userUID']) . "'";
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		//-----------------------------------------------------------------------------------------
-		// user is logged in to at least one awareNet server
-		//-----------------------------------------------------------------------------------------
-		$html .= "<a href='#' onClick=\"kchatclient.createDiscussion('" . $args['userUID'] . "');\">[chat]</a>";
-		//$html .= '[online]';
-		
+	//----------------------------------------------------------------------------------------------
+	//	query database
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = "status='active'";
+	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
+	$range = $db->loadRange('users_session', '*', $conditions);
+
+	//$sql = "select * from users_login where userUID='" . $db->addMarkup($args['userUID']) . "'";
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	if (0 == count($range)) {
+		$html .= '[offline]';		
 	} else {
-		//-----------------------------------------------------------------------------------------
-		// user is offline
-		//-----------------------------------------------------------------------------------------
-		$html .= '[offline]';
-				
+		$html .= ''
+		 . "<a href='#' "
+		 . "onClick=\"kchatclient.createDiscussion('" . $args['userUID'] . "');\""
+		 . ">[chat]</a>";
 	}
-
 
 	return $html;
 }

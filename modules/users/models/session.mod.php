@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	object to represent sessions of logged in users
+//*	object to represent local sessions of logged in users
 //--------------------------------------------------------------------------------------------------
 //+	this is used by features such as the chat, which need to know whether a user is logged in and 
 //+	to which peer.
@@ -79,7 +79,7 @@ class Users_Session {
 			$this->createdOn = $kapenta->datetime();
 			$this->editedBy = $this->user;
 			$this->editedOn = $kapenta->datetime();
-			$this->shared = 'yes';
+			$this->shared = 'no';
 
 			//--------------------------------------------------------------------------------------
 			// load more information from stored session if non-public user
@@ -169,6 +169,9 @@ class Users_Session {
 	function save() {
 		global $kapenta;
 		global $db;
+
+		// NB: not shared with other users via P2P (chat is more efficient)
+		$this->shared = 'no';
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }

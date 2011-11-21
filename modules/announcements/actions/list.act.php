@@ -13,7 +13,7 @@
 	}
 	
 	$school = $user->school;
-	if (array_key_exists('sc', $req->args) == true) { $school = $req->args['sc']; }
+	if (true == array_key_exists('school', $req->args)) { $school = $req->args['sc']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

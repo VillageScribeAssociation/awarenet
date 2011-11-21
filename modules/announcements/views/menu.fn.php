@@ -8,7 +8,20 @@
 
 function announcements_menu($args) {
 	global $theme;
-	$html = $theme->loadBlock('modules/announcements/menu.block.php');
+	global $user;
+	
+	$html = '';							//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and user role
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaselogn:]]'; }
+	//TODO: arguments
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$html = $theme->loadBlock('modules/announcements/views/menu.block.php');
 	return $html;
 }
 

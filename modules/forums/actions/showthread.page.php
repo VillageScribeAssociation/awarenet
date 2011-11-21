@@ -4,32 +4,35 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]threadTitle[`|pc][`|pc]</title>
-	<content>[[:theme::navtitlebox::width=570::label=Discussion:]]
-[[:forums::showthread::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
-[[:polls::showpoll::refModule=forums::refModel=forums_thread::refUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
-[[:forums::showreplies::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+	<content>
+		[[:theme::navtitlebox::width=570::label=Discussion:]]
+		[[:forums::showthread::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
+		[[:polls::showpoll::refModule=forums::refModel=forums_thread::refUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 
-[[:theme::navtitlebox::width=570::label=Reply::toggle=divAddReply::hidden=yes:]]
-[`|lt]div id=[`|sq]divAddReply[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
-</content>
+		[[:live::river::mod=forums::view=showreplies::pv=pageNo::allow=num|threadUID::threadUID=%%threadUID%%::num=3:]]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::width=570::label=Reply::toggle=divAddReply::hidden=yes:]]
+		[`|lt]div id=[`|sq]divAddReply[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Original Poster:]]
-[[:users::summarynav::userUID=[`|pc][`|pc][`|create]dBy[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Original Poster:]]
+		[[:users::summarynav::userUID=[`|pc][`|pc][`|create]dBy[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Forum::toggle=divForumStats::hidden=yes:]]
-[`|lt]div id=[`|sq]divForumStats[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:forums::summarynav::forumUID=[`|pc][`|pc]forumUID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Forum::toggle=divForumStats::hidden=yes:]]
+		[`|lt]div id=[`|sq]divForumStats[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:forums::summarynav::forumUID=[`|pc][`|pc]forumUID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Busiest Discussions:]]
-[[:forums::busiestthreads:]]
-[`|lt]br/[`|gt]</nav1>
+		[[:theme::navtitlebox::label=Busiest Discussions:]]
+		[[:forums::busiestthreads:]]
+		[`|lt]br/[`|gt]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

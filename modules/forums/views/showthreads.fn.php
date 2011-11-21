@@ -36,35 +36,38 @@ function forums_showthreads($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count all threads on this forum
 	//----------------------------------------------------------------------------------------------
-	//TODO: re-arrage this to skip pagination step if not rendered
 	$conditions = array("board='" . $model->UID . "'");
 	$totalItems = $db->countRange('forums_thread', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
-	//	show the current page
+	//	load a page of results from the database
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
 	$range = $db->loadRange('forums_thread', '*', $conditions, 'updated DESC', $num, $start);
 
-	//$sql = "select * from Forums_Thread where forum='" . $fUID . "' order by updated DESC " . $limit;	
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$rowBlock = $theme->loadBlock('modules/forums/views/threadrow.block.php');
-
 	$html .= "<table noborder>";
 	foreach ($range as $row) {
-		$thisThread = new Forums_Thread();
-		$thisThread->loadArray($row);
-		$html .= $theme->replaceLabels($thisThread->extArray(), $rowBlock);
+		$thread = new Forums_Thread();
+		$thread->loadArray($row);
+		$labels = $thread->extArray();
+		$html .= $theme->replaceLabels($labels, $rowBlock);
 	}
-
 	$html .= "</table>";
 
 	$link = '%%serverPath%%forums/show/' . $model->alias . '/';
-
 	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageno) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
-	if (0 == $totalItems) { $html = "(no threads in this forum as yet)";	}
+	if (0 == $totalItems) { 
+		$html = "<div class='inlinequote'>No threads in this board yet.</div>";
+	}
+
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
 	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
 

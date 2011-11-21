@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	make an HTML select box for choosing a forum
+//*	make an HTML select box for choosing a forum
 //-------------------------------------------------------------------------------------------------
 //opt: varname - variabnle name, default is 'forum' [string]
 //opt: default - UID of a forum for default item [string]

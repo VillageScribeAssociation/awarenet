@@ -4,14 +4,16 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc]</title>
-	<content>[[:theme::navtitlebox::width=570::label=Schools:]]
-[`|lt]h1[`|gt][`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc][`|lt]/h1[`|gt]
-[[:users::showgrade::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::grade=[`|pc][`|pc]grade[`|pc][`|pc]:]]</content>
-	<nav1>[[:theme::navtitlebox::label=This School:]]
-[[:schools::summarynav::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]
+	<content>
+		[[:theme::navtitlebox::width=570::label=Schools:]]
+		[`|lt]h1[`|gt][`|pc][`|pc]schoolName[`|pc][`|pc] [`|pc][`|pc]grade[`|pc][`|pc][`|lt]/h1[`|gt]
+		[[:users::showgrade::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::grade=[`|pc][`|pc]grade[`|pc][`|pc]:]]</content>
+	<nav1>
+		[[:theme::navtitlebox::label=This School:]]
+		[[:schools::summarynav::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]
 
-[[:theme::navtitlebox::label=Grades:]]
-[[:schools::allgrades::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</nav1>
+		[[:theme::navtitlebox::label=Grades:]]
+		[[:schools::allgrades::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

@@ -10,9 +10,12 @@
 //opt: num - max number of threads to show per board (int) [string]
 
 function forums_summarylistall($args) {
-	global $db, $user, $aliases;
+	global $db;
+	global $user;
+	global $aliases;
+
+	$num = 0;		//%	max number of threads to show per board [int]
 	$html = '';		//% return value [string]
-	$num = 0;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -23,7 +26,7 @@ function forums_summarylistall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load list of schools from database, order by weight
 	//----------------------------------------------------------------------------------------------
-	//$sql = "SELECT count(UID) as numForums, school FROM Forums_Board GROUP BY school";
+	//TODO: figure a way around this awkward query
 
 	$sql = "SELECT count(UID) as numForums, sum(weight) as totalWeight, school FROM forums_board "
 		 . "GROUP BY school "
@@ -34,7 +37,7 @@ function forums_summarylistall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	if ($db->numRows($result) == 0) { return "(no forums as yet)<br/>\n"; }
+	if (0 == $db->numRows($result)) { return "<div class='inlinequote'>no forums yet</div><br/>"; }
 
 	while ($row = $db->fetchAssoc($result)) { 
 		$row = $db->rmArray($row);

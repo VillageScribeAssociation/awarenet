@@ -36,8 +36,7 @@ function forums_editthreadform($args) {
 	$block = $theme->loadBlock('modules/forums/views/editthreadform.block.php');
 	$labels = $model->extArray();
 	$labels['UIDJsClean'] = $model->UID;
-	$labels['contentJsVar64'] = 'contentJs';
-	$labels['contentJs64'] = $utils->base64EncodeJs('contentJs', $labels['content'], true);
+	$labels['content64'] = $utils->b64wrap($labels['content']);
 	// ^ add any labels, block args, etc here
 
 	$html = $theme->replaceLabels($labels, $block);

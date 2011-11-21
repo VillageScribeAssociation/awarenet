@@ -4,11 +4,13 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]forumTitle[`|pc][`|pc] (forum)</title>
-	<content>[[:theme::navtitlebox::width=570::label=Forum:]]
-[[:forums::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[[:theme::navtitlebox::width=570::label=Discussions:]]
-[[:forums::showthreads::forumUID=[`|pc][`|pc]UID[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]::num=10:]]
-[`|lt]br/[`|gt]
+	<content>
+		[[:theme::navtitlebox::width=570::label=Forum:]]
+		[[:forums::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[[:theme::navtitlebox::width=570::label=Discussions:]]
+
+		[[:live::river::mod=forums::view=showthreads::pv=pageno::allow=forumUID|num::forumUID=%%UID%%::num=20:]]
+		[`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::width=570::label=Start a New Discussion::toggle=divNewDiscussion:]]
 [`|lt]div id=[`|sq]divNewDiscussion[`|sq][`|gt]

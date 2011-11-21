@@ -163,8 +163,11 @@ class Forums_Reply {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
-		$ary = $this->toArray();
+		global $kapenta;
+		global $user;
+		global $theme;
+
+		$ary = $this->toArray();			//%	return value [dict]
 
 		$ary['editUrl'] = '';
 		$ary['editLink'] = '';
@@ -206,15 +209,12 @@ class Forums_Reply {
 		//------------------------------------------------------------------------------------------
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
-
-		$ary['longdate'] = date('jS F, Y', strtotime($ary['createdOn']));
+		$ary['longdate'] = $kapenta->longDate($ary['createdOn']);
 
 		//------------------------------------------------------------------------------------------
 		//	summary
 		//------------------------------------------------------------------------------------------
-
 		$ary['summary'] = $theme->makeSummary($ary['content'], 400);
-
 		$ary['contentHtml'] = $ary['content'];
 
 		//------------------------------------------------------------------------------------------

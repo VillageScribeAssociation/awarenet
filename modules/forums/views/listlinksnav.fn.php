@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	list all boards in the nav as links grouped by school displaying weight
+//*	list all boards in the nav as links grouped by school displaying weight
 //--------------------------------------------------------------------------------------------------
 //TODO: opt to show with or without schools
 

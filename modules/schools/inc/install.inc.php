@@ -14,7 +14,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function schools_install_module() {
-	global $db, $user;
+	global $db, $user, $registry;
 	if ('admin' != $user->role) { return false; }
 	$dba = new KDBAdminDriver();
 	$report = '';
@@ -33,6 +33,42 @@ function schools_install_module() {
 	$count = $dba->copyAll('schools', $dbSchema, $rename); 
 	$report .= "<b>moved $count records from 'schools' table.</b><br/>";
 
+	//----------------------------------------------------------------------------------------------
+	//	install a default school if none present
+	//----------------------------------------------------------------------------------------------
+
+	$conditions = array("UID <> ''");
+	$totalSchools = $db->countRange('schools_school', $conditions);
+	
+	if (0 == $totalSchools) {
+		//------------------------------------------------------------------------------------------
+		//	create a school
+		//------------------------------------------------------------------------------------------
+		$model = new Schools_school();
+		$model->name = "First School";
+		$model->description = "Descriibe your school here.";
+		$model->region = "Eastern Cape";
+		$model->region = "South Africa";
+		$model->type = "High School";
+		$check = $model->save();
+		
+		if ('' == $check) {
+			$report .= "Created default school with UID " . $model->UID . ".<br/>";
+			$registry->set('firstrun.firstschool', $model->UID);
+		} else {
+			$report .= "Could not create default school record:<br/>\n$check<br/>\n";
+		}
+	} else {
+		//------------------------------------------------------------------------------------------
+		//	get oldest school record
+		//------------------------------------------------------------------------------------------
+		$range = $db->loadRange('schools_school', '*', '', 'createdOn', '1');
+		foreach($range as $item) {
+			$registry->set('firstrun.firstschool', $item['UID']);
+			$report .= "Set default school to oldest record: " . $item['name'] . "<br/>\n";
+		}
+	}
+	
 	//----------------------------------------------------------------------------------------------
 	//	done
 	//----------------------------------------------------------------------------------------------

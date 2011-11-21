@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	maintain the forums module
+//*	maintain the forums module
 //--------------------------------------------------------------------------------------------------
 
 function forums_maintenance() {
@@ -102,17 +102,17 @@ function forums_maintenance() {
 		//	check thread aliases
 		//------------------------------------------------------------------------------------------
 		if (false == $raAll) {
-				//---------------------------------------------------------------------------------
-				//	no recordAlias for this blog post, create one
-				//---------------------------------------------------------------------------------
-				$model = new Forums_Thread($row['UID']);
-				$model->save();
+			//--------------------------------------------------------------------------------------
+			//	no alais for this thread, create one
+			//--------------------------------------------------------------------------------------
+			$model = new Forums_Thread($row['UID']);
+			$model->save();
 	
-				$error = array($row['UID'], $row['title'], $model->alias);
-				$errors[] = $error;
+			$error = array($row['UID'], $row['title'], $model->alias);
+			$errors[] = $error;
 
-				$fixCount++;
-				$errorCount++;
+			$fixCount++;
+			$errorCount++;
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -122,15 +122,15 @@ function forums_maintenance() {
 		$numReplies = $db->countRange('forums_reply', $conditions);
 
 		if ($numReplies != (int)$row['replies']) { 
-				$model = new Forums_Thread($row['UID']);
-				$model->replies = $numReplies;
-				$model->save();
+			$model = new Forums_Thread($row['UID']);
+			$model->replies = $numReplies;
+			$model->save();
 	
-				$error = array($row['UID'], $row['title'], 'Set reply count to ' . $numReplies);
-				$errors[] = $error;
+			$error = array($row['UID'], $row['title'], 'Set reply count to ' . $numReplies);
+			$errors[] = $error;
 
-				$fixCount++;
-				$errorCount++;
+			$fixCount++;
+			$errorCount++;
 		}
 
 		$recordCount++;

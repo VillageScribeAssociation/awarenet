@@ -9,14 +9,18 @@
         <td><input type='text' name='title' value='%%title%%' size='50' /></td>
     </tr>
     </table>
-%%contentJs64%%
-[[:editor::base64::jsvar=%%contentJsVar64%%::name=content:]]<br/>
+<div class='HyperTextArea64' title='content' width='100%' height='400'>
+%%content64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 </form>
 <table noborder>
   <tr>
     <td>
-		<input type='button' value='Save' 
-			onClick='area.update(); document.editThread%%UIDJsClean%%.submit();'
+		<input 
+			type='button' 
+			value='Save' 
+			onClick='khta.updateAllAreas(); document.editThread%%UIDJsClean%%.submit();'
 		>
 	</td>
     <td>

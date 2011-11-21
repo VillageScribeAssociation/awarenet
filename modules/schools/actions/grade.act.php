@@ -21,6 +21,7 @@
 	$page->load('modules/schools/actions/grade.page.php');
 	$page->blockArgs['raUID'] = $req->ref;
 	$page->blockArgs['schoolUID'] = $model->UID;
+	$page->blockArgs['schoolRa'] = $model->alias;
 	$page->blockArgs['schoolName'] = $model->name;
 	$page->blockArgs['schoolDescription'] = $model->description;
 	$page->blockArgs['grade'] = base64_decode($req->args['grade']);

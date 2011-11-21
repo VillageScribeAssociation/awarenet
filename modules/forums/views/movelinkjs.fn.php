@@ -1,15 +1,15 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	makes a link which will make a link for moving a thread to a different forum
+//*	makes a link which will make a form for moving a thread to a different forum
 //-------------------------------------------------------------------------------------------------
 //args: UID - UID of a forum thread
 
 function forums_movelinkjs($args) {
 	global $theme;
-
 	global $user;
 	$html = '';
+
 	//TODO: make this better
 
 	//--------------------------------------------------------------------------------------------

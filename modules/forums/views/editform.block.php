@@ -21,9 +21,10 @@
 </table>
 <br/>
 <b>Description:</b> <small>what is this forum about?</small><br/>
-%%descriptionJs64%%
-[[:editor::base64::jsvar=descriptionJs64::name=description:]]
-<br/>
+<div class='HyperTextArea64' title='description' width='100%' height='400'>
+%%description64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 
 <table noborder>
   <tr>

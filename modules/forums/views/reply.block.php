@@ -1,5 +1,6 @@
 <? /*
-[[:abuse::button::refModule=forums::refModel=Forum_Reply::refUID=%%UID%%:]]
+<div id='divReply%%UID%%'><a name='#reply%%UID%%'></a>
+[[:abuse::buttonwnd::refModule=forums::refModel=forums_reply::refUID=%%UID%%:]]
 <table noborder>
   <tr>
     <td valign='top' width='300'>
@@ -12,6 +13,6 @@
     </td>
   </tr>
 </table>
-%%contentHtml%%
+</div><div id='divEditReply%%UID%%'>%%contentHtml%% %%editLinkJs%% %%editNotice%%</div>
 <hr/>
 */ ?>

@@ -47,11 +47,7 @@ function schools_image($args) {
 		}
 	}
 	
-	if ($size == 'thumb90') {	return "<img src='/themes/clockface/images/nophoto100.jpg' border='0'>"; }
-	if ($size == 'thumb') {	return "<img src='/themes/clockface/images/nophoto100.jpg' border='0'>"; }
-	if ($size == 'width100') {	return "<img src='/themes/clockface/images/nophoto100.jpg' border='0'>"; }
-	if ($size == 'width200') {	return "<img src='/themes/clockface/images/nophoto200.jpg' border='0'>"; }
-	if ($size == 'width300') {	return "<img src='/themes/clockface/images/nophoto300.jpg' border='0'>"; }
+	return "<img src='%%serverPath%%/data/images/unavailable/$size.jpg' border='0'>";
 
 }
 

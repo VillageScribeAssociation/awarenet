@@ -3,7 +3,7 @@
 	require_once($kapenta->installPath . 'modules/forums/models/thread.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//	makes a form for moving a forum thread
+//*	makes a form for moving a forum thread
 //-------------------------------------------------------------------------------------------------
 //arg: raUID - UID or recordAlias fo a forum thread
 //opt: thread - replaces raUID if present
@@ -11,7 +11,6 @@
 
 function forums_movethreadform($args) {
 	global $theme;
-
 	$html = '';	
 
 	//---------------------------------------------------------------------------------------------

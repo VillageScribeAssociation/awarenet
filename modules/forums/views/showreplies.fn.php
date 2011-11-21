@@ -8,25 +8,34 @@
 //|	display a thread and paginated replies
 //--------------------------------------------------------------------------------------------------
 //arg: threadUID - UID of a forum thread [string]
-//opt: pageno - page to display, default is 1 (int) [string]
+//opt: pageNo - page to display, default is 1 (int) [string]
 //opt: num - number of replies per page, default is 5 (int) [string]
+//opt: pagination - make / display pagination bar, default is yes (yes|no) [string]
 
 function forums_showreplies($args) {
-	global $db, $page, $theme, $user;
+	global $db;
+	global $page;
+	global $theme;
+	global $user;
 
-	$pageno = 1; 
-	$num = 5; 
-	$html = '';		//%	return value [string]
+	$pageNo = 1; 					//% results page to display [int]
+	$num = 5; 						//%	default number of items per page [int]
+	$start = 0;						//%	offset in database results [int]
+	$pagination = 'yes';			//%	show pagination bar [string]
+	$html = '';						//%	return value [string]
 
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------	
 	if (false == array_key_exists('threadUID', $args)) { return ''; }
-	if (true == array_key_exists('pageno', $args)) { $pageno = (int)$args['pageno']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }		
+	if (true == array_key_exists('pageNo', $args)) { 
+		$pageNo = (int)$args['pageNo'];
+		$start = (($pageNo - 1) * $num);
+	}
 
-	//----------------------------------------------------------------------------------------------
-	//	load thread model
-	//----------------------------------------------------------------------------------------------
 	$model = new Forums_Thread($args['threadUID']);
-	if (false == $model->loaded) { return ''; }
+	if (false == $model->loaded) { return '(thread not found)'; }
 	//TODO: check permission here
 
 	//----------------------------------------------------------------------------------------------
@@ -37,34 +46,52 @@ function forums_showreplies($args) {
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
-	//	show the current page
+	//	load a page of results from the database
 	//----------------------------------------------------------------------------------------------
-	$start = (($pageno - 1) * $num);
 	$range = $db->loadRange('forums_reply', '*', $conditions, 'createdOn ASC', $num, $start);
 
-	//$sql = "select * from Forums_Reply "
-	//	 . "where thread='" . $model->UID . "' "
-	//	 . "order by createdOn ASC " . $limit;	
-
+	//----------------------------------------------------------------------------------------------
+	//	show the current page
+	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/forums/views/reply.block.php');
 
-	foreach ($range as $row) {
+	foreach ($range as $item) {
 		$reply = new Forums_Reply();
-		$reply->loadArray($row);
+		$reply->loadArray($item);
 		$ext = $reply->extArray();
 		$ext['threadTitle'] = $model->title;
+		$ext['editLinkJs'] = '';
+
+		if ($ext['createdBy'] == $user->UID) {
+			$UID = $ext['UID'];
+			$editBlock = '[[:forums::editreplyif::replyUID=' . $UID . ':]]';
+			$editBlock64 = base64_encode($editBlock);
+			$onClick = "klive.bindDivToBlock('divEditReply" . $UID . "', '$editBlock64', true);";
+			$ext['editLinkJs'] = "<a href='#reply" . $UID . "' onClick=\"$onClick\">[edit]</a>";
+		}
+
+		$ext['editNotice'] = '';
+		if ($ext['createdOn'] != $ext['editedOn']) {
+			$ebBlock = '[[:users::namelink::userUID=' . $ext['editedBy'] . ':]]';
+			$ext['editNotice'] = '<br/>'
+			 . '<small>Edited on ' . $ext['editedOn']
+			 . ' by ' . $ebBlock . '</small>';
+		}
+
 		$html .= $theme->replaceLabels($ext, $block);
 	}
 
 	$link = '%%serverPath%%forums/showthread/' . $model->alias . '/';
 
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageno) 
+	$pagination = "[[:theme::pagination::page=" . (int)$pageNo 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
-	if (0 == $totalItems) { $html = "(no replies yet)";	}
+	if (0 == $totalItems) { $html = "<div class='inlinequote'>No replies.</div>"; }
+	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
-	return $pagination . $html . $pagination;
+	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
 
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

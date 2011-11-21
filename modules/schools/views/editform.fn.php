@@ -23,6 +23,7 @@ function schools_editform($args) {
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$ext['descriptionJs64'] = $utils->base64EncodeJs('descriptionJs64', $ext['description']);
+	$ext['description64'] = $utils->b64wrap($ext['description']);
 	$block = $theme->loadBlock('modules/schools/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 

@@ -5,13 +5,16 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - forums</title>
 	<content>
-[[:forums::summarylistall:]]</content>
+		[[:forums::summarylistall:]]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Most Active Discussions:]]
-[[:forums::busiestthreads::num=6:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=At My School:]]
-[[:forums::atmyschoolnav:]]</nav1>
+		[[:theme::navtitlebox::label=Most Active Discussions:]]
+		[[:forums::busiestthreads::num=6:]]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=At My School:]]
+		[[:forums::atmyschoolnav:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

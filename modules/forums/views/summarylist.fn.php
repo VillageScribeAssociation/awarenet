@@ -34,8 +34,13 @@ function forums_summarylist($args) {
 	if (0 == count($range)) { $html = "(no forums as yet)<br/>\n"; }
 
 	foreach($range as $row) { 
-		$html .= "[[:forums::summary::raUID=" . $row['UID'] . ":]]\n"
-			   . "[[:forums::showthreadsjs::num=3::forumUID=" . $row['UID'] . ":]]";
+		//$html .= "[[:forums::summary::raUID=" . $row['UID'] . ":]]\n"
+		//	   . "[[:forums::showthreadsjs::num=3::forumUID=" . $row['UID'] . ":]]";
+
+		$html .= ''
+		 . '[[:forums::summary::raUID=' . $row['UID'] . ':]]'
+		 . '[[:live::river::mod=forums::view=showthreads::pv=pageno::allow=num|forumUID'
+		 . '::num=3::forumUID=' . $row['UID'] . ':]]';
 	}
 
 	return $html;

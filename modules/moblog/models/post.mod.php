@@ -308,15 +308,20 @@ class Moblog_Post {
 		global $theme;
 		$notes = array();
 
-		// article must have a title
+		//------------------------------------------------------------------------------------------
+		// post must have a title
+		//------------------------------------------------------------------------------------------
 		if ('' == $this->title) { 
 			$this->title = 'Untitled Blog Post ' . $this->UID; 
 			$this->save();
-			$notes[] = "Set null title of static page to " . $this->title
-					 . ".<!-- error --><!-- fixed -->";
+			$notes[] = ''
+			 . "Set null title of static page to " . $this->title
+			 . ".<!-- error --><!-- fixed -->";
 		}
 
-		// article must have at least one alias
+		//------------------------------------------------------------------------------------------
+		// post must have at least one alias
+		//------------------------------------------------------------------------------------------
 		$als = $aliases->getAll('moblog', 'moblog_post', $this->UID);
 		if (0 == count($als)) {
 			$this->save();
@@ -324,25 +329,31 @@ class Moblog_Post {
 			if (0 == count($als)) {
 				$notes[] = "Could not create alias.<!-- error -->";
 			} else { 
-				$notes[] = "Re-saved to create alias " . $this->alias 
-						 . ".<!-- error --><!-- fixed -->";
+				$notes[] = ''
+				 . "Re-saved to create alias " . $this->alias 
+				 . ".<!-- error --><!-- fixed -->";
 			}
 		}
 
+		//------------------------------------------------------------------------------------------
 		// check that the default alias is in the list
+		//------------------------------------------------------------------------------------------
 		$foundAlias = false;
-
 		foreach($als as $alias) { 
 			if (strtolower($alias) == strtolower($this->alias)) { $foundAlias = true; } 
 		}
 
 		if (false == $foundAlias) {
 			$this->save();
-			$notes[] = "Re-saved to correct alias.<!-- error --><!-- fixed -->";
+			$notes[] = "Re-saved " . $this->UID . "to correct alias.<!-- error --><!-- fixed -->";
+		} else {
+			echo "Default alias is correct.<br/>\n";
 		}
 
+		//------------------------------------------------------------------------------------------
 		// check comment count
-
+		//------------------------------------------------------------------------------------------
+		echo "Checking comment count.<br/>\n";
 		$block = '[[:comments::count'
 				. '::refModule=moblog'
 				. '::refModel=moblog_post'
@@ -353,7 +364,7 @@ class Moblog_Post {
 			$this->commentCount = $commentCount;
 			$this->save();
 			$notes[] = "Changed comment count to $commentCount.<!-- error --><!-- fixed -->";
-		}
+		} else { /* echo "Comment count is correct...<br/>\n"; */ }
 
 		return $notes;
 	}

@@ -22,9 +22,10 @@ function moblog_maintenance() {
 	$result = $db->query($sql);
 
 	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+		$item = $db->rmArray($row);
+		echo "maintain: " . $item['UID'] . ' - ' . $item['title'] . "<br/>\n"; flush();
 		$model = new Moblog_Post();
-		$model->loadARray($row);
+		$model->loadArray($item);
 		$notes = $model->maintain();
 
 		foreach($notes as $note) { 

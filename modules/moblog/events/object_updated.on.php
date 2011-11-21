@@ -2,9 +2,9 @@
 
 	require_once($kapenta->installPath . 'modules/moblog/models/post.mod.php');
 
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //|	fired when an object is saved to database
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted object [string]
 //arg: model - type of deleted object [string]
 //arg: UID - UID of deleted object [string]
@@ -31,7 +31,7 @@ function moblog__cb_object_updated($args) {
 	//	create or append notification
 	//----------------------------------------------------------------------------------------------
 
-	if ('yes' == $model->published) {
+	if (('yes' == $model->published) && ($user->UID == $model->createdBy)) {
 		//------------------------------------------------------------------------------------------
 		//	check if this event was raised recently (within the hour)
 		//------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ function moblog__cb_object_updated($args) {
 	//----------------------------------------------------------------------------------------------
 	//	raise a microbog event for this
 	//----------------------------------------------------------------------------------------------
-	if ('yes' == $model->published) {
+	if (('yes' == $model->published) && ($user->UID == $model->createdBy)) {
 		$message = '#' . $kapenta->websiteName . ' blog - '. $model->title;
 		$mbargs = array(
 			'refModule' => 'moblog',

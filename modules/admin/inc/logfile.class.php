@@ -33,7 +33,10 @@ class Admin_LogFile {
 		///TODO: detect log type here
 
 		$this->format = $format;
-		if ('' == $outFile) { $outFile = 'data/temp/' . time() . '-' . $kapenta->createUID() . '.tmp'; }
+		if ('' == $outFile) {
+			$outFile = 'data/temp/' . $kapenta->time() . '-' . $kapenta->createUID() . '.tmp';
+		}
+
 		if ('' != $inFile) { $this->load($inFile, $outFile); }
 	}
 
@@ -163,7 +166,7 @@ class Admin_LogFile {
 	function analog() {
 		global $kapenta;
 
-		$reportFile = 'data/temp/' . time() . '-' . $kapenta->createUID() . '.html';
+		$reportFile = 'data/temp/' . $kapenta->time() . '-' . $kapenta->createUID() . '.html';
 		
 		$shellCmd = 'analog ' . $kapenta->installPath . $this->outFile
 			 . ' +O' . $kapenta->installPath . $reportFile;

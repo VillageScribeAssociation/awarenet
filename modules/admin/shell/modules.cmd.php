@@ -18,12 +18,15 @@ function admin_WebShell_modules($args) {
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists(0, $args)) {
 		switch($args[0]) {
-			case '-h':			$mode = 'help';		break;
-			case '-l':			$mode = 'list';		break;
-			case '-s':			$mode = 'status';	break;
-			case '--help':		$mode = 'help';		break;
-			case '--list':		$mode = 'list';		break;
-			case '--status':	$mode = 'status';	break;
+			case '-h':				$mode = 'help';			break;
+			case '-l':				$mode = 'list';			break;
+			case '-s':				$mode = 'status';		break;
+			case '-i':				$mode = 'install';		break;
+			case '-e':				$mode = 'everything';	break;
+			case '--help':			$mode = 'help';			break;
+			case '--list':			$mode = 'list';			break;
+			case '--status':		$mode = 'status';		break;
+			case '--everything':	$mode = 'everything';	break;
 		}
 	}
 
@@ -34,6 +37,23 @@ function admin_WebShell_modules($args) {
 	//----------------------------------------------------------------------------------------------
 	
 	switch($mode) {
+		case 'everything':
+			//--------------------------------------------------------------------------------------
+			//	reinstall all modules
+			//--------------------------------------------------------------------------------------
+			$mods = $kapenta->listModules();
+			foreach ($mods as $mod) {
+				$html .= "<b>Reinstalling: $mod </b><br/>";
+				$model = new KModule($mod);
+				if (true == $model->loaded) { 
+					$html .= $model->install();		
+				} else {
+					$html .= "Could not load module: $mod <br/>";
+				}
+			}
+
+			break;	//..............................................................................
+
 		case 'list':
 			$html = $theme->expandBlocks("[[:admin::listmodulesnav:]]", '');
 			//TODO: fix this so links work

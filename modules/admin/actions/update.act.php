@@ -3,10 +3,15 @@
 	require_once($kapenta->installPath . 'modules/admin/models/repository.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//*	update local installation from repository on kapenta.org.uk
+//*	update local installation from repository on kapenta.org.uk (DEPRECATED)
 //-------------------------------------------------------------------------------------------------
+//+	Note that this has been commented out as the new package manager is introduced.
+//+	TODO: remove as soon as new package manager is stable and deployed at .org.uk
+//+	this is only being left as a temporary backup.
 
 	if ('admin' != $user->role) { $page->do403(); }
+
+/*
 
 	//---------------------------------------------------------------------------------------------
 	//	set up repository access
@@ -202,5 +207,7 @@ function downloadFileFromRepository($item) {
 
 	return true;
 }
+
+*/
 
 ?>

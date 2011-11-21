@@ -19,6 +19,7 @@
 		$fileName = str_replace('//', '/', $fileName);
 		$contents = stripslashes($_POST['fileContents']);
 		$kapenta->filePutContents($fileName, $contents, false, false);
+		$req->args['path'] = '';
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -84,9 +85,13 @@
 
 	$editFile = '';
 	if (true == array_key_exists('file', $req->args)) { 
-		$editFile = base64_decode($req->args['file']);	
+		$editFile = base64_decode($req->args['file']);
+		if (true == array_key_exists('path', $req->args)) {
+			$editFile = base64_decode($req->args['path']) . $editFile;
+		}
+
 		if (false == $kapenta->fileExists($editFile)) { 
-			$_SESSION['sMessage'] .= "file '" . $editFile . "' does not exist.<br/>\n";
+			$session->msg("file does not exist.<br/>" . $editFile, 'bad');
 			$editFile = ''; 
 		}
 	}
@@ -108,9 +113,9 @@
 
 		$editorForm = "<form name='editTxtFile' method='POST' action='" . $editorFormAction . "'>
 			<input type='hidden' name='action' value='saveFile' />
-			<b>File:</b>
-			<input type='text' name='fileName' size='63' value='" . $editFile . "' /><br/>
-			<textarea name='fileContents' id='taFileContents' rows='30' cols='78'></textarea>
+			<b>File: $editFile</b>
+			<input type='text' name='fileName' size='40' value='" . $editFile . "' style='width: 100%;' /><br/>
+			<textarea name='fileContents' id='taFileContents' rows='30' cols='50' style='width: 100%;'></textarea>
 			<input type='submit' value='save' />
 			</form><br/>
 

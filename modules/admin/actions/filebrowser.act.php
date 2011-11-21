@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	for browsing files
+//*	iframe for browsing files
 //-------------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
@@ -13,9 +13,9 @@
 	//	get path (if present)
 	//---------------------------------------------------------------------------------------------
 	
-	$browsePath = $kapenta->installPath;
-	if (array_key_exists('path', $req->args) == true) { 
-		$browsePath = $kapenta->installPath . base64_decode($req->args['path']);
+	$browsePath = '';
+	if (true == array_key_exists('path', $req->args)) { 
+		$browsePath = base64_decode($req->args['path']);
 		$browsePath = str_replace('//', '/', $browsePath);
 		$browsePath = str_replace('..', '.', $browsePath);
 	}
@@ -26,7 +26,9 @@
 
 	$dirs = explode("/", $browsePath);
 	$discard = array_pop($dirs);
-	$parentDir = implode("/", $dirs);
+	$discard = array_pop($dirs);
+	$parentDir = implode("/", $dirs) . '/';
+	if ('/' == $parentDir) { $parentDir = ''; }
 	$parentLink = '';
 	if (($browsePath == $kapenta->installPath) OR ($parentDir . '/' == $kapenta->installPath)) {
 		// in docRoot, or parent is docroot
@@ -39,51 +41,48 @@
 	}
 
 	//---------------------------------------------------------------------------------------------
-	//	make list of items in this folder
+	//	make table of items in this folder
+	//---------------------------------------------------------------------------------------------
+	$table = array();
+	$table[] = array('', '');
+
+	//---------------------------------------------------------------------------------------------
+	//	list subfolders
 	//---------------------------------------------------------------------------------------------
 
-	$fileList = '';
-	$raw = shell_exec('ls ' . $browsePath);
-	$lines = explode("\n", $raw);
-	foreach($lines as $line) {
+	$folders = $kapenta->fileList($browsePath, '', true);
+	foreach($folders as $folder) {
+		$folder = str_replace($browsePath, '', $folder);
+		$path = $browsePath . $folder . '/';
+		$dirUrl = "admin/filebrowser/path_" . base64_encode($path);
+		$line = "<a href='%%serverPath%%" . $dirUrl . "'>" . $folder . "</a>";
+		$table[] = array('', $line);
+	}
+
+	//---------------------------------------------------------------------------------------------
+	//	list files in this folder
+	//---------------------------------------------------------------------------------------------
+	$files = $kapenta->fileList($browsePath, '', false);
+	sort($files);
+	foreach($files as $file) {
+		$file = str_replace($browsePath, '', $file);
 		$showThis = false;
+		$allow = array('php', 'txt', 'xml', 'js');
 
-		if (is_dir($browsePath . '/' . $line) == true) {
-			//-------------------------------------------------------------------------------------
-			//	directories
-			//-------------------------------------------------------------------------------------
-			$relPath = str_replace($kapenta->installPath , '', $browsePath . '/' . $line);
-			$dirUrl = "admin/filebrowser/path_" . base64_encode($relPath);
-			$line = "<a href='%%serverPath%%" . $dirUrl . "'>$line</a>";
-			$showThis = true;
-
-		} else {
-			//-------------------------------------------------------------------------------------
-			//	files
-			//-------------------------------------------------------------------------------------
-			$allow = array('php', 'txt', 'xml', 'js');
-			foreach($allow as $ext) 
-				{ if (strpos(strtolower(' ' . $line), $ext) == true) { $showThis = true; } }
-
-			$relFile = str_replace($kapenta->installPath , '', $browsePath . '/' . $line);
-			$relPath = str_replace($kapenta->installPath , '', dirname($browsePath . '/' . $line));
-		
-			if ($relPath . '/' == $kapenta->installPath) {
-				$editUrl = 'admin/txtedit/file_' . base64_encode($relFile);
-			} else {
-				$editUrl = 'admin/txtedit/file_' . base64_encode($relFile) 
-						 . '/path_' . base64_encode($relPath);
-			}
-
-			if (true == $showThis) {
-				$line = "<a href='%%serverPath%%" . $editUrl . "' target='_parent'>$line</a>";
-			} else {
-				$showThis = true;	// display, but no link			
-			}
-
+		foreach($allow as $ext) {
+			if (false != strpos(strtolower(' ' . $file), $ext)) { $showThis = true; }
 		}
 
-		if (true == $showThis) { $fileList .= $line . "<br/>\n"; }
+		$path = $browsePath . $file;
+
+		$editUrl = 'admin/txtedit/file_' . base64_encode($file);	
+		if ('' != $path) { $editUrl .=  '/path_' . base64_encode($browsePath); }
+
+		$line = "<a href='%%serverPath%%" . $editUrl . "' target='_parent'>$file</a>";
+		if (false == $showThis) { $line = $file; }
+
+		$table[] = array('', $line);
+
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -92,7 +91,7 @@
 
 	$page->load('modules/admin/actions/filebrowser.page.php');
 	$page->blockArgs['filePath'] = '~/' . str_replace($kapenta->installPath, '', $browsePath);
-	$page->blockArgs['fileList'] = $fileList;
+	$page->blockArgs['fileList'] = $theme->arrayToHtmlTable($table, true, true);
 	$page->blockArgs['parentLink'] = $parentLink;
 	$page->render();
 

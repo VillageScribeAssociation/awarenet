@@ -20,7 +20,8 @@ function admin_serversummary($args) {
 		array('Key', 'Setting'),
 		array('<b>iPath:</b>', $registry->get('kapenta.installpath')),
 		array('<b>sPath:</b>', $registry->get('kapenta.serverpath')),
-		array('<b>date:</b>', $db->datetime())
+		array('<b>date:</b>', $db->datetime()),
+		array('<b>db use:</b>', '[[:admin::dbusage:]]')
 	);
 
 	$html = $theme->arrayToHtmlTable($table, true, true);

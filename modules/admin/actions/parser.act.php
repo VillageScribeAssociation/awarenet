@@ -34,6 +34,9 @@
 
 	if ((true == array_key_exists('action', $_POST)) && ('testParser' == $_POST['action'])) {
 		$html = $_POST['raw'];
+		$mq = strtolower(ini_get('magic_quotes_gpc'));
+		if (('on' == $mq) || ('1' == $mq)) { $html = stripslashes($html); }
+
 		$parser = new KHTMLParser($html, true);
 
 		$testResult = ''

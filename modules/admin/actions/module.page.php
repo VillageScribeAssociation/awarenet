@@ -4,15 +4,24 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - module settings ([`|pc][`|pc]modulename[`|pc][`|pc])</title>
-	<content>[[:theme::navtitlebox::width=570::label=Module:]]
-[`|lt]h1[`|gt][`|pc][`|pc]modulename[`|pc][`|pc][`|lt]/h1[`|gt]
+	<content>
+		[[:theme::navtitlebox::width=570::label=Module:]]
+		[`|lt]h1[`|gt][`|pc][`|pc]modulename[`|pc][`|pc][`|lt]/h1[`|gt]
 
-[[:admin::module::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
+		[[:admin::module::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
 
-[[:theme::navtitlebox::label=Install Status:]]
-[[:admin::installstatusreport::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
-[[:admin::moduleinstallbutton::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
-</content>
+		[[:theme::navtitlebox::label=Permissions::toggle=divPermissions:]]
+		<div id='divPermissions'>
+		[[:admin::permissions::module=%%modulename%%:]]
+		</div>
+		<br/>
+
+		[[:theme::navtitlebox::label=Install Status::toggle=divInstallStatus:]]
+		<div id='divInstallStatus'>
+		[[:admin::installstatusreport::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
+		[[:admin::moduleinstallbutton::modulename=[`|pc][`|pc]modulename[`|pc][`|pc]:]]
+		</div>
+	</content>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>
 	<script></script>

@@ -5,21 +5,29 @@
 //-------------------------------------------------------------------------------------------------
 
 function admin_svnadd($args) {
-	global $user, $kapenta;
+	global $user;
+	global $registry;
+	global $kapenta;
 
-	//if ('admin' != $user->role) { return false; }
+	$html = '';								//%	return value [html]
+	$svnfiles = '';
+	$skipfiles = '';
+
+	if ('admin' != $user->role) { return ''; }
+	if ('linux' != $registry->get('kapenta.hostos')) { 
+		return 'This action is only available on Linux web hosts.<br/>';
+	}
 
 	//---------------------------------------------------------------------------------------------
 	//	define which files should not be tracked by SVN
 	//---------------------------------------------------------------------------------------------
 	$exemptions = array(
-		'setup.inc.php', 
-		'tweet.txt',
+		'setup.inc.php',
+		'tweet.txt',  
 		'morbo.gif',
-		'.kreg',
 		'modules/pages/',
-		'modules/recordalias/',
-		'modules/mods/',		
+		'.kreg',
+		'modules/recordalias/',    
 		'uploader/',
 		'data/images/',
 		'data/files/',
@@ -32,7 +40,6 @@ function admin_svnadd($args) {
 		'svnadd.sh',
 		'svndelete.sh',
 		'/drawcache/',
-		'/TODO/',
 		'~',
 		'.svn',
 		'install/',
@@ -42,10 +49,6 @@ function admin_svnadd($args) {
 	//---------------------------------------------------------------------------------------------
 	//	find all files in this project
 	//---------------------------------------------------------------------------------------------
-	$html = '';
-	$svnfiles = '';
-	$skipfiles = '';
-
 	$raw = shell_exec("find " . $kapenta->installPath);
 	$lines = explode("\n", $raw);
 	foreach($lines as $line) {		

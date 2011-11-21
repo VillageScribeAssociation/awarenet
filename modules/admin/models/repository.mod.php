@@ -3,7 +3,10 @@
 //--------------------------------------------------------------------------------------------------
 //*	object for interacting with repository
 //--------------------------------------------------------------------------------------------------
-//+ TODO: this could use some tightening up.
+//+ TODO: this has functionality has been taken over by the package manager module
+//+	this is kept only for emergency rollback, and should be deleted after the end of 2011.
+
+/*
 
 class CodeRepository {
 
@@ -340,5 +343,7 @@ class CodeRepository {
 	}
 
 }
+
+*/
 
 ?>

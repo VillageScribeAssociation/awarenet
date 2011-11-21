@@ -12,15 +12,28 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	if (false == array_key_exists('modulename', $_POST)) { $page->do404('module not specified'); }	
-	
-	$model = new KModule($_POST['modulename']);
-	if (false == $model->loaded) { $page->do404('module not found: ' . $_POST['modulename']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	install the module
 	//----------------------------------------------------------------------------------------------
+	
+	$report = '';
 
-	$report = $model->install();
+	if ('*' == $_POST['modulename']) {
+		$mods = $kapenta->listModules();
+		foreach($mods as $moduleName) {
+			$model = new KModule($moduleName);
+			if (true == $model->loaded) { 
+				$report .= $model->install();		
+			}
+		}
+
+	} else {
+		$model = new KModule($_POST['modulename']);
+		if (false == $model->loaded) { $page->do404('module not found: ' . $_POST['modulename']); }
+
+		$report = $model->install();
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

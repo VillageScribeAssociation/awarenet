@@ -4,9 +4,11 @@
 <page>
 	<template>iframe.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - file browser ::</title>
-	<content>[`|pc][`|pc]parentLink[`|pc][`|pc][`|lt]br/[`|gt]
+	<content>
+[`|lt]b[`|gt][`|pc][`|pc]filePath[`|pc][`|pc][`|lt]/b[`|gt][`|lt]br/[`|gt]
+[`|pc][`|pc]parentLink[`|pc][`|pc][`|lt]br/[`|gt]
 [`|pc][`|pc]fileList[`|pc][`|pc]
-[`|lt]b[`|gt][`|pc][`|pc]filePath[`|pc][`|pc][`|lt]/b[`|gt][`|lt]br/[`|gt]</content>
+</content>
 	<nav1></nav1>
 	<nav2></nav2>
 	<script></script>

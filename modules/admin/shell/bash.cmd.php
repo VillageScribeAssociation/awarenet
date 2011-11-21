@@ -30,7 +30,7 @@ function admin_WebShell_bash($args) {
 			break;	//..............................................................................
 
 		case 'help':
-			$html = live_WebShell_ls_help();
+			$html = live_WebShell_bash_help();
 			break;			
 
 		case 'noauth':
@@ -43,7 +43,7 @@ function admin_WebShell_bash($args) {
 }
 
 //--------------------------------------------------------------------------------------------------
-//|	manpage for the live.cat command
+//|	manpage for the admin.bash command
 //--------------------------------------------------------------------------------------------------
 //opt: short - display command summary [bool]
 

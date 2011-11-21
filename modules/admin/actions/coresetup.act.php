@@ -15,6 +15,8 @@
 
 	foreach($_POST as $key => $value) {
 		switch($key) {
+			case 'kapenta_installpath':		$registry->set('kapenta.installpath', $value);	break;
+			case 'kapenta_serverpath':		$registry->set('kapenta.serverpath', $value);	break;
 			case 'kapenta_db_host':			$registry->set('kapenta.db.host', $value);		break;
 			case 'kapenta_db_name':			$registry->set('kapenta.db.name', $value);		break;
 			case 'kapenta_db_user':			$registry->set('kapenta.db.user', $value);		break;

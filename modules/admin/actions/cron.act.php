@@ -16,6 +16,8 @@
 	$fileName = 'data/log/' . date("y-m-d") . "-cron.log.php";
 	$kapenta->filePutContents($fileName, $report, false, false, 'a+');
 
+	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');	}
+
 	//----------------------------------------------------------------------------------------------
 	//	display report if user is administrator
 	//----------------------------------------------------------------------------------------------
@@ -23,9 +25,9 @@
 		//------------------------------------------------------------------------------------------
 		//	admin report
 		//------------------------------------------------------------------------------------------
-		$page->load('modules/admin/actions/cron.page.php');
-		$page->blockArgs['report'] = $report;
-		$page->render();
+		//$page->load('modules/admin/actions/cron.page.php');
+		//$page->blockArgs['report'] = $report;
+		//$page->render();
 
 	} else {
 		//------------------------------------------------------------------------------------------
@@ -49,5 +51,15 @@
 		</table>
 		";
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	start a new p2p worker process and leave it to run
+	//----------------------------------------------------------------------------------------------
+	include $kapenta->installPath . 'modules/p2p/actions/worker.act.php';
+
+	//----------------------------------------------------------------------------------------------
+	//	fin.
+	//----------------------------------------------------------------------------------------------
+	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', '');	}
 
 ?>

@@ -32,7 +32,7 @@ function admin_runmaintenance($args) {
 	require_once($kapenta->installPath . $fileName);
 	
 	$fnName = $args['modName'] . '_maintenance';
-	if (function_exists($fnName) == false) { return '(invalid maintenance script)'; }
+	if (function_exists($fnName) == false) { return '(invalid maintenance script: ' . $fnName . ')'; }
 
 	$report = $fnName();
 

@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	install scripts for admin module
+//*	install scripts for admin module
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ function admin_install_module() {
 
 	if ('admin' != $user->role) { return false; }	// only admins can do this
 
-	$report .= "<h3>Installing Admin Module</h3>\n";
+	$report = "<h3>Installing Admin Module</h3>\n";
 
 	//------------------------------------------------------------------------------------------
 	//	admin module has no database presence at now

@@ -41,7 +41,7 @@
 <head>
 <title>awareNet - wiki - scan</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='http://awarenet.co.za/themes/clockface/css/iframe.css' rel='stylesheet' type='text/css' />
+<link href='http://awarenet.co.za/themes/%%defaultTheme%%/css/iframe.css' rel='stylesheet' type='text/css' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>

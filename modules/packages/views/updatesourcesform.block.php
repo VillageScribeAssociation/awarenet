@@ -10,7 +10,7 @@
 			value='Update Package Lists &gt;&gt;'
 			onClick="kwindowmanager.createWindow(
 				'Downloading Package Lists', '/packages/update/', 800, 400, 
-				'%%serverPath%%themes/clockface/icons/file.archive.png'
+				'%%serverPath%%themes/%%defaultTheme%%/icons/file.archive.png'
 			);"
 		/>
 

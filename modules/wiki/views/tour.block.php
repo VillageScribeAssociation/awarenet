@@ -4,7 +4,7 @@
 <br/>
 <table noborder width='100%'>
 <tr>
-<td valign='top' width='70'><img src='%%serverPath%%themes/clockface/images/info.png' /></td>
+<td valign='top' width='70'><img src='%%serverPath%%themes/%%defaultTheme%%/images/info.png' /></td>
 <td valign='top'>
 %%abstractHtml%%
 <a href='#' onClick="wiki_hideTour('%%setting%%')">[hide this]</a>&nbsp;

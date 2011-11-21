@@ -35,6 +35,7 @@ class Revisions_Revision {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_	pass to other peers via p2p module / network (yes|no) [string]
 
 	var $fields;			//_	associative [array]
 
@@ -141,7 +142,9 @@ class Revisions_Revision {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)'
+		);
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -152,11 +155,11 @@ class Revisions_Revision {
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
-			'editedBy' => '10' );
+			'editedBy' => '10'
+		);
 
 		//revision history will be kept for these fields
-		$dbSchema['diff'] = array(
-			'content' );
+		$dbSchema['diff'] = array('content');
 
 		return $dbSchema;
 		
@@ -177,7 +180,8 @@ class Revisions_Revision {
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => $this->shared
 		);
 		return $serialize;
 	}
@@ -202,6 +206,7 @@ class Revisions_Revision {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
 			. $indent . "</kobject>\n";
 
 		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}

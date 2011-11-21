@@ -24,6 +24,7 @@ class Revisions_Deleted {
 	var $createdBy;					//_ ref:Users_User [string]
 	var $editedOn;					//_ datetime [string]
 	var $editedBy;					//_ ref:Users_User [string]
+	var $shared;					//_ share with other instances via p2p module/network [string]
 
 	var $fields;					//_	associative [array]
 	var $fieldsLoaded = false;		//_	set to true when fields have been expanded from XML [bool]
@@ -78,6 +79,7 @@ class Revisions_Deleted {
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
 
 		$this->fields = $this->expandFields($this->content);
 		$this->loaded = true;
@@ -132,7 +134,9 @@ class Revisions_Deleted {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)'
+		);
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -143,7 +147,8 @@ class Revisions_Deleted {
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
-			'editedBy' => '10' );
+			'editedBy' => '10'
+		);
 
 		//revision history will be kept for these fields
 		$dbSchema['diff'] = array('content');
@@ -167,7 +172,8 @@ class Revisions_Deleted {
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => $this->shared
 		);
 		return $serialize;
 	}

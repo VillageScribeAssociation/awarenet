@@ -181,14 +181,24 @@ class KPackage {
 
 				case 'filter':
 					$this->includes = array();					// 	clear existing filter
-					$this->excludes = array('.svn', '~{end}');	//	...
+					$this->excludes = array('.svn/', '~{end}');	//	always filter svn caches
 					$filter = $doc->getChildren($childId);
 					foreach($filter as $filterId) {
 						$entity = $doc->getEntity($filterId);
-
 						switch(strtolower($entity['type'])) {
-							case 'include':	$this->includes[] = $entity['value']; break;
-							case 'exclude':	$this->excludes[] = $entity['value']; break;
+
+							case 'include':	
+								if (false == in_array($entity['value'], $this->includes)) {
+									$this->includes[] = $entity['value']; 
+								}
+								break;
+
+							case 'exclude':
+								if (false == in_array($entity['value'], $this->excludes)) {
+									$this->excludes[] = $entity['value'];
+								}
+								break;
+
 						}
 					}
 					break;		//..................................................................

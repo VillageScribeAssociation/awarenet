@@ -16,7 +16,6 @@
 <form name='editAbstract' method='POST' action='%%serverPath%%projects/saveabstract/'>
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
-
 <div class='HyperTextArea64' title='abstract' width='100%' height='400'>
 %%abstract64%%
 </div>

@@ -172,6 +172,9 @@ class Projects_Project {
 
 	function verify() {
 		$report = '';
+
+		if ('' == $this->status) { $this->status = 'open'; }
+
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 		return $report;
 	}

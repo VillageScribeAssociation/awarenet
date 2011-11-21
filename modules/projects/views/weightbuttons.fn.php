@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //|	render buttons to increment and decrement a section's weight
 //--------------------------------------------------------------------------------------------------
@@ -18,8 +20,12 @@ function projects_weightbuttons($args) {
 	if (true == array_key_exists('sectionUID', $args)) { $args['UID'] = $args['sectionUID']; }
 	if (false == array_key_exists('UID', $args)) { return '(section UID not given)'; }
 
+	$model = new Projects_Project($args['UID']);
+	if (false == $model->loaded) { return '(not found)'; }		// no such project
+	if ('open' != $model->status) { return ''; }				// project is locked or closed
+
 	if (false == $user->authHas('projects', 'projects_section', 'edit', $args['UID'])) { 
-		return '';
+		return '';												// no edit permission
 	}
 
 	//----------------------------------------------------------------------------------------------

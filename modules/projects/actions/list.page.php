@@ -5,7 +5,7 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all projects</title>
 	<content>[[:theme::navtitlebox::width=570::label=Projects:]]
-[[:live::river::rivermodule=projects::riverview=summarylist::riverpagevar=page::allow=num|pagination::num=7::pagination=no:]]
+[[:live::river::rivermodule=projects::riverview=summarylist::riverpagevar=page::allow=num|pagination|status::num=7::status=notclosed::pagination=no:]]
 </content>
 	<nav1>
 [[:theme::navtitlebox::label=Create New Project::toggle=divNewProjectForm::hidden=yes:]]

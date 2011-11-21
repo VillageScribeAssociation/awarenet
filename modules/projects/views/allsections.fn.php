@@ -44,7 +44,12 @@ function projects_allsections($args) {
 		$model = new Projects_Section();
 		$model->loadArray($section);
 		if ('yes' != $model->hidden) {
-			$html .= $theme->replaceLabels($model->extArray(), $block);
+			$ext = $model->extArray();
+			if ('open' != $project->status) {
+				$ext['editInlineLink'] = '';
+				$ext['delInlineLink'] = '';
+			}
+			$html .= $theme->replaceLabels($ext, $block);
 		}
 	}
 

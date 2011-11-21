@@ -22,7 +22,13 @@ function projects_editabstractform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
-	//if (false == $model->hasMember($user->UID)) { return ''; }
+
+	if ('open' != $model->status) {
+		$UID = $model->UID;
+		if ('locked' == $model->status) { $html .= '[[:projects::locked::raUID='. $UID .':]]'; }
+		if ('closed' == $model->status) { $html .= '[[:projects::closed::raUID='. $UID .':]]'; }
+		return $html;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

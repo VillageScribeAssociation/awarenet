@@ -5,7 +5,7 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	show a record
+//|	show project content
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID or projects entry [string]
 //opt: UID - overrides raUID if present [string]

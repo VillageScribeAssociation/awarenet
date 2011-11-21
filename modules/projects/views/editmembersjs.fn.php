@@ -13,7 +13,7 @@ function projects_editmembersjs($args) {
 	global $user;
 
 	$html = '';					//%	return value [string]
-	
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
@@ -23,8 +23,12 @@ function projects_editmembersjs($args) {
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return '(unkown project)'; }
 
+	$listOnly = '[[:projects::listmembersnav::projectUID=' . $model->UID. '::editmode=none:]]';
+
+	if ('open' != $model->status) { return $listOnly; }
+
 	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
-		return false;
+		return $listOnly;
 	}
 
 	//----------------------------------------------------------------------------------------------

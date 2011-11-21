@@ -59,7 +59,7 @@ function projects_listmembersnav($args) {
 		//--------------------------------------------------------------------------------------
 		if ((true == $isAdmin) && ('js' == $editmode)) {
 			//TODO: tidy this, perhaps make this a block
-			$imgUrl = '%%serverPath%%themes/clockface/icons/arrow_x_green.png';
+			$imgUrl = '%%serverPath%%themes/%%defaultTheme%%/icons/arrow_x_green.png';
 			$html .= "
 				<table noborder>
 					<tr>

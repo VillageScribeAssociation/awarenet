@@ -21,6 +21,8 @@
 	$project = new Projects_project($model->projectUID);
 	if (false == $project->loaded) { $page->do404('Project not found.'); }
 
+	if ('open' != $project->status) { $page->do403($project->status); }
+
 	$section = new Projects_Section();
 	if (('' != $model->sectionUID) && ('*' != $model->sectionUID)) {
 		$section->load($model->sectionUID);

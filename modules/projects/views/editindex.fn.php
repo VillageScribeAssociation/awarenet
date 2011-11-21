@@ -39,7 +39,7 @@ function projects_editindex($args) {
 	foreach($model->sections as $section) {
 		$cols = array();
 
-		$imgPath = "%%serverPath%%/themes/clockface/images/";
+		$imgPath = "%%serverPath%%/themes/%%defaultTheme%%/images/";
 		$imgStyle = "height='10' border='0'";
 		$upImg = "<img src='". $imgPath ."btn-up.png' $imgStyle alt='move up'>";
 		$dnImg = "<img src='". $imgPath ."btn-down.png' $imgStyle alt='move down'>";

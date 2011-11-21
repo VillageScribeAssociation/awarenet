@@ -221,7 +221,6 @@ class Projects_Section {
 			$onClick = "project.editSection('" . $this->UID . "');";
 
 			$ext['editInlineLink'] = "<a href='#s". $this->UID ."' onClick=\"$onClick\">[edit]</a>";
-
 		}
 
 		if (true == $user->authHas('projects', 'projects_section', 'delete', $ext['UID'])) {

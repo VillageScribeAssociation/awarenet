@@ -28,6 +28,8 @@ function projects_addsectionform($args) {
 	$model = new Projects_Project($args['raUID']);
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 
+	if ('open' != $model->status) { return ''; }	// locked or closed
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------

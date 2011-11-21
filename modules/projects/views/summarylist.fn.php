@@ -9,6 +9,7 @@
 //opt: pageNo - overrides page (int) [string]
 //opt: num - number of records per page (default is 30) [string]
 //opt: pagination - set to 'no' to disable page nav bar (yes|no) [string]
+//opt: status - show only projects with the given status (open|locked|closed) [string]
 
 function projects_summarylist($args) {
 	global $page;
@@ -23,6 +24,7 @@ function projects_summarylist($args) {
 	$html = '';					//%	return value [string]
 	$pagination = 'yes';		//%	show pagination (yes|no) [string]
 	$orderBy = 'editedOn';		//%	list order on this field [string]
+	$status = '';				//%	constrain to status, default is active && locked [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -37,10 +39,17 @@ function projects_summarylist($args) {
 		$start = ($pageNo - 1) * $num; 
 	}
 
+	if (true == array_key_exists('status', $args)) {
+		$status = $args['status'];
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//	count visible projects
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
+	if ('closed' == $status) { $conditions[] = "(status='closed' OR status='')"; }
+	if ('notclosed' == $status) { $conditions[] = "(status='open' OR status='locked')"; }
+
 	$totalItems = $db->countRange('projects_project', $conditions);
 	$totalPages = ceil($totalItems / $num);
 

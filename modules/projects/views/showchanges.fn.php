@@ -65,7 +65,7 @@ function projects_showchanges($args) {
 		$labels['content'] = '<br/><br/><br/>';
 		$labels['undo'] = '';
 
-		$icon = "%%serverPath%%themes/clockface/icons/undo.png";		//%	undo button [string]
+		$icon = "%%serverPath%%themes/%%defaultTheme%%/icons/undo.png";	//%	undo button [string]
 		$undoUrl = '%%serverPath%%projects/revertto/' . $item['UID'];	//%	revert action [string]
 		$undo = false;													//%	reversible? [bool]
 
@@ -138,6 +138,8 @@ function projects_showchanges($args) {
  			 . "<a href='$undoUrl' title='Revert to this.'>"
 			 . "<img src='$icon' width='24px' border='0'/></a>";
 		}
+
+		if ('open' != $model->status) { $labels['undo'] = ''; }	// locked or closed, can't revert
 
 		//------------------------------------------------------------------------------------------
 		//	fix any images, etc which may be too wide for the column

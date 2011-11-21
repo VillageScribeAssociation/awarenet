@@ -3,12 +3,13 @@
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//	show a project record (simple HTML, no page template)
+//*	development/debugging method show a project (simple HTML, no page template)
 //--------------------------------------------------------------------------------------------------
 	
 	//----------------------------------------------------------------------------------------------
-	//	TODO: check permissions here
+	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); }
 	if ('' == $req->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
@@ -17,7 +18,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($req->ref);
 
-	$cssUrl = $kapenta->serverPath . "/themes/clockface/css/default.css";
+	$cssUrl = $kapenta->serverPath . "/themes/%%defaultTheme%%/css/default.css";
 
 	echo "<html>"
 		 . "<link href='" . $cssUrl . "' rel='stylesheet' type='text/css' />"

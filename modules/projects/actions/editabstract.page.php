@@ -8,14 +8,15 @@
 		[[:theme::navtitlebox::width=570::label=Project Setup:]]
 		[[:projects::editabstractform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
-		[[:tags::edittags::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[[:projects::edittags::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 	</content>
 	<nav1>
 		[[:projects::editmembersjs::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-		[`|lt]br/[`|gt]
 
 		[[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-		[`|lt]br/[`|gt]
+
+		[[:projects::changestatusform::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+
 	</nav1>
 	<nav2></nav2>
 	<script></script>

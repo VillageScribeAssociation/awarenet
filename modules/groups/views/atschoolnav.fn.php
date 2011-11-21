@@ -40,8 +40,6 @@ function groups_atschoolnav($args) {
 		$html .= "[[:groups::summarynav::groupUID=" . $item['groupUID'] . ":]]\n";
 	}
 
-	$html .= "<small>$schoolUID</small>";
-
 	return $html;
 }
 

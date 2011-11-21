@@ -439,8 +439,9 @@ class Groups_Group {
 		global $theme;
 		global $db;
 		global $session;
-
-		//echo "[i] updating school index of group " . $this->name . " (" . $this->UID . ")<br/>\n";
+	
+		$xmsg = "updating school index of group " . $this->name . " (" . $this->UID . ")<br/>\n";
+		$session->msgAdmin($xmsg);
 
 		$updated = true;								//%	return value [bool]
 		$members = $this->getMembers();					//%	array of memberships [array]
@@ -456,18 +457,22 @@ class Groups_Group {
 			// look up UID of the school this member attends
 			$block = "[[:users::schooluid::userUID=" . $member['userUID'] . ":]]";
 			$schoolUID = $theme->expandBlocks($block, '');
-	
+			$nblock = '[[:schools::name::schoolUID=' . $schoolUID . ':]]';	
+
 			//echo "schoolUID: $schoolUID groupUID: " . $this->UID . "<br/>\n";
 
 			// add to list of schools if not already present
 			if (false == in_array($schoolUID, $newSchools)) { 
 				//echo "added $schoolUID to list<br/>\n";
-				$newSchools[] = $schoolUID; 
+				$newSchools[] = $schoolUID;
+
+				$session->msgAdmin($this->name . " is associated with school: $nblock " . $schoolUID);
 			}
 		
 			// associate school with this group if not already done
 			if (false == $this->hasSchool($schoolUID)) {
-				//echo "school $schoolUID not associated with group<br/>";
+				$nmsg = "school $nblock $schoolUID not yet associated with group " . $this->name . ".";
+				$session->msgAdmin($nmsg);
 
 				//----------------------------------------------------------------------------------
 				//	new association with a school
@@ -482,7 +487,7 @@ class Groups_Group {
 						 . "[[:schools::name::schoolUID=" . $schoolUID . "::link=yes:]]"
 						 . " (UID: $schoolUID)";
 					$session->msg($msg, 'ok');
-					//echo "created school index for $schoolUID<br/>";
+					$session->msg("created school index for $schoolUID<br/>");
 
 				} else {
 					$updated = false;
@@ -502,10 +507,13 @@ class Groups_Group {
 				//----------------------------------------------------------------------------------
 				//	school is associated with group but has no group members, remove
 				//----------------------------------------------------------------------------------
-				$model = new Groups_SchoolIndex();
-				$model->loadArray($schoolIndex);
+				$session->msgAdmin("Removing school " . $schoolIndex['schoolUID']);
+				$model = new Groups_SchoolIndex($schoolIndex['UID']);
 				$check = $model->delete();
-				if (false == $check) { $updated = false; }
+				if (false == $check) {
+					$session->msgAdmin("Could not remove schoolindex " . $schoolIndex['UID']);
+					$updated = false;
+				}
 			}
 		}
 

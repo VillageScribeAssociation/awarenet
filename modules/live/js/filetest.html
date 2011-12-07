@@ -1,0 +1,53 @@
+<html>
+<head>
+	<script language='Javascript'>
+
+		function testAPI(fileElemId) {
+			var fileElem = document.getElementById(fileElemId);
+
+			// Check for the various File API support.
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				writeOutput("<b>Great success! All the File APIs are supported.</b><br><br>");
+			} else {
+				writeOutput("<b>The File APIs are not fully supported in this browser.</b><br>");
+			}
+
+		}
+
+		function handleFileSelect(evt) {
+			var files = evt.target.files; 					// FileList object
+			//--------------------------------------------------------------------------------------
+			// files is a FileList of File objects. Access some properties.
+			//--------------------------------------------------------------------------------------
+			var output = [];
+			for (var i = 0, f; f = files[i]; i++) {
+				var reader = new FileReader();
+				var readerLoad = function(e) {
+					writeOutput("<textarea rows='30' style='width: 100%;'>" + e.target.result + "</textarea>");
+				}
+
+				reader.onload = readerLoad;
+				reader.readAsText(f);
+			}
+
+		}
+
+
+		function writeOutput(someTxt) {
+			var divOut = document.getElementById('output');
+			divOut.innerHTML = divOut.innerHTML + someTxt;
+		}
+		
+	</script>
+</head>
+<body>
+
+	<input type='file' id='filetest' multiple />
+	<input type='button' onClick="testAPI('filetest');" value='Test API' />
+	<div id='output'></div>
+
+	<script language='Javascript'>
+		document.getElementById('filetest').addEventListener('change', handleFileSelect, false);
+	</script>
+</body>
+</html>

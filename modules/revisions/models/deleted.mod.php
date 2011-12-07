@@ -18,6 +18,7 @@ class Revisions_Deleted {
 	var $refModule;					//_ module to which the deleted item belonged [string]
 	var $refModel;					//_ type of deleted object [string]
 	var $refUID;					//_ unique identifier of deleted object [string]
+	var $owner;						//_	unique identifier of original owner [string]
 	var $content;					//_ member variables of deleted object (xml) [string]
 	var $status;					//_ deleted, restored or purged [string]
 	var $createdOn;					//_ datetime [string]
@@ -73,6 +74,7 @@ class Revisions_Deleted {
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];
 		$this->refUID = $ary['refUID'];
+		$this->owner = $ary['owner'];
 		$this->content = $ary['content'];
 		$this->status = $ary['status'];
 		$this->createdOn = $ary['createdOn'];
@@ -129,6 +131,7 @@ class Revisions_Deleted {
 			'refModule' => 'TEXT',
 			'refModel' => 'TEXT',
 			'refUID' => 'VARCHAR(33)',
+			'owner' => 'VARCHAR(33)',
 			'content' => 'TEXT',
 			'status' => 'VARCHAR(10)',
 			'createdOn' => 'DATETIME',
@@ -144,6 +147,7 @@ class Revisions_Deleted {
 			'refModule' => '10',
 			'refModel' => '10',
 			'refUID' => '10',
+			'owner' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -167,6 +171,7 @@ class Revisions_Deleted {
 			'refModule' => $this->refModule,
 			'refModel' => $this->refModel,
 			'refUID' => $this->refUID,
+			'owner' => $this->owner,
 			'content' => $this->collapseFields($this->fields),
 			'status' => $this->status,
 			'createdOn' => $this->createdOn,
@@ -193,6 +198,7 @@ class Revisions_Deleted {
 			. $indent . "    <refModule>" . $this->refModule . "</refModule>\n"
 			. $indent . "    <refModel>" . $this->refModel . "</refModel>\n"
 			. $indent . "    <refUID>" . $this->refUID . "</refUID>\n"
+			. $indent . "    <owner>" . $this->owner . "</owner>\n"
 			. $indent . "    <content>" . $this->content . "</content>\n"
 			. $indent . "    <status>" . $this->status . "</status>\n"
 			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
@@ -257,6 +263,38 @@ class Revisions_Deleted {
 		return true;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//	restore to live database / undelete
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]	
+
+	function restore() {
+		global $db;
+		if (false == $this->fieldsLoaded) { $this->fields = $this->expandFields($this->content); }
+		if (false == $this->fieldsLoaded) { return false; }
+		if (false == $db->tableExists($this->refModel)) { return false; }
+
+		echo "restoring deleted object " . $this->refModel . '::' . $this->refUID . "<br/>\n";
+
+		//------------------------------------------------------------------------------------------
+		//	mark for restoration
+		//------------------------------------------------------------------------------------------
+		$this->status = 'restore';
+		$report = $this->save();
+		if ('' != $report) { return false; }
+	
+		//------------------------------------------------------------------------------------------
+		//	copy back to original table
+		//------------------------------------------------------------------------------------------
+		$dbSchema = $db->getSchema($this->refModel);
+		$db->save($this->fields, $dbSchema, false);
+		
+		//------------------------------------------------------------------------------------------
+		//	from from revisions_deleted
+		//------------------------------------------------------------------------------------------
+		// TODO: delete this revisions_deleted object on successful restore (ie, move, not copy)
+	}
+
 	//==============================================================================================
 	//	fields
 	//==============================================================================================
@@ -288,6 +326,23 @@ class Revisions_Deleted {
 		$xml = $utils->arrayToXml2d('fields', $fields);
 		return $xml;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover if the deleted obejct has a given property / field
+	//----------------------------------------------------------------------------------------------
+	//arg: name - name of a field / property [string]
+	//returns: true if property is present, false if not [bool]
+
+	function hasProperty($name) {
+		echo "hasProperty: $name <br/>\n";
+		if (false == $this->fieldsLoaded) { $this->fields = $this->expandFields($this->content); }
+		if (false == $this->fieldsLoaded) { return false; }
+		foreach($this->fields as $key => $value) {
+			if ($key == $name) { return true; }
+		}
+		return false;
+	}
+
 }
 
 ?>

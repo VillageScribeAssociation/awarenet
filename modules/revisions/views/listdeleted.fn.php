@@ -9,10 +9,11 @@
 
 function revisions_listdeleted($args) {
 	global $db, $user, $theme;
-	$html = '';			//%	return value [string]
-	$pageNo = 1;		//%	page number (starts at 1) [int]
-	$num = 50;			//%	number of items per page [int]
-	$objectType = '*';	//%	type of deleted object to show [string]
+	$html = '';					//%	return value [string]
+	$pageNo = 1;				//%	page number (starts at 1) [int]
+	$num = 50;					//%	number of items per page [int]
+	$objectType = '*';			//%	type of deleted object to show [string]
+	$pagination = 'yes';		//%	display pagination links (yes|no) [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
@@ -20,11 +21,18 @@ function revisions_listdeleted($args) {
 	if ('admin' != $user->role) { return ''; }
 	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
+
+	if ((true == array_key_exists('objectType', $args)) && ('*' != $args['objectType'])) {
+		if (false == $db->tableExists($args['objectType'])) { return '(unknown object type)'; }
+		$objectType = $args['objectType'];
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	count matching objects and load a page of deleted objects from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
+	if ('*' != $objectType) { $conditions[] = "refModel='" . $db->addMarkup($objectType) . "'"; }
 	//TODO: add conditions here
 
 	$totalItems = $db->countRange('revisions_deleted', $conditions);
@@ -51,6 +59,14 @@ function revisions_listdeleted($args) {
 	}
 
 	$html .= $theme->arrayToHtmlTable($table, true, true);
+
+	if ('yes' == $pagination) {
+		$paginationBlock = ''
+		 . "[[:theme::pagination::page=$pageNo::total=$totalPages::link=/revisions/listdeleted/:]]";
+
+		$pageNav = $theme->expandBlocks($paginationBlock, '');
+		$html = $pageNav . $html . $pageNav;
+	}
 
 	return $html;
 }

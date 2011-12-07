@@ -29,7 +29,6 @@
 
 <br/>
 <hr/>
-%%restoreForm%%
-
+[[:revisions::restoreform::UID=%%UID%%:]]
 
 */ ?>

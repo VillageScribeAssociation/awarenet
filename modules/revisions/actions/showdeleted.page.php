@@ -4,12 +4,24 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - admin console</title>
-	<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]
+	<content>
+		[[:theme::navtitlebox::label=Administration Console::width=570:]]
+		[[:revisions::showdeleted::UID=%%UID%%:]]
+	</content>
+	<nav1>
+		[[:theme::navtitlebox::label=Deletion History:]]
+		[[:revisions::relateddeletions::module=%%refModule%%::model=%%refModel%%::UID=%%refUID%%:]]
+		<br/>
+		<br/>
 
-[[:revisions::show[`|delete]d::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[[:theme::navtitlebox::label=Deleted Types::toggle=divDeletedTypes:]]
+		<div id='divDeletedTypes'>
+		[[:revisions::listdeletedtypes:]]
+		</div>
+		<br/>
 
-</content>
-	<nav1>[[:admin::subnav:]]</nav1>
+		[[:admin::subnav:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

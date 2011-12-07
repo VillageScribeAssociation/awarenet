@@ -20,6 +20,9 @@
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/revisions/actions/showdeleted.page.php');
 	$page->blockArgs['UID'] = $model->UID;
+	$page->blockArgs['refModule'] = $model->refModule;
+	$page->blockArgs['refModel'] = $model->refModel;
+	$page->blockArgs['refUID'] = $model->refUID;
 	$page->render();
 
 ?>

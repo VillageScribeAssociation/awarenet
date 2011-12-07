@@ -4,12 +4,19 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - admin console</title>
-	<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]
+	<content>
+		[[:theme::navtitlebox::label=Administration Console::width=570:]]
+		[[:revisions::listdeleted::pageNo=%%pageNo%%::objectType=%%objectType%%:]]
+	</content>
+	<nav1>
+		[[:theme::navtitlebox::label=Types::toggle=divDeletedTypes:]]
+		<div id='divDeletedTypes'>
+		[[:revisions::listdeletedtypes:]]
+		</div>
+		<br/>
 
-[[:revisions::list[`|delete]d::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]::objectType=[`|pc][`|pc]objectType[`|pc][`|pc]:]]
-
-</content>
-	<nav1>[[:admin::subnav:]]</nav1>
+		[[:admin::subnav:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>
@@ -19,8 +26,10 @@
 	<menu2>[[:admin::menu:]]</menu2>
 	<section></section>
 	<subsection></subsection>
-	<breadcrumb>[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
-[[:theme::breadcrumb::label=Console::link=/admin/:]]</breadcrumb>
+	<breadcrumb>
+		[[:theme::breadcrumb::label=Administration - ::link=/admin/:]]
+		[[:theme::breadcrumb::label=Console::link=/admin/:]]
+	</breadcrumb>
 </page>
 
 */ ?>

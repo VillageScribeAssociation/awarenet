@@ -3,6 +3,7 @@
 //--------------------------------------------------------------------------------------------------
 //*	object to represent user galleries
 //--------------------------------------------------------------------------------------------------
+//TODO: consider moveing school association into a separate index record.
 
 class Gallery_Gallery {
 
@@ -19,6 +20,7 @@ class Gallery_Gallery {
 	var $description;		//_ wyswyg [string]
 	var $imagecount;		//_ bigint [string]
 	var $ownerName;			//_ name of user who created this gallery [string]
+	var $schoolUID;			//_ for grouping [string]
 	var $schoolName;		//_ for sorting [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
@@ -41,6 +43,7 @@ class Gallery_Gallery {
 			$this->title = 'New Gallery ' . $this->UID;
 			$this->imagecount = 0;
 			$this->ownerName = $user->getName();			// for listing by creator
+			$this->schoolUID = $user->school;
 			$this->schoolName = $user->getSchoolName();		// for listing by school
 			$this->loaded = false;
 		}
@@ -74,6 +77,7 @@ class Gallery_Gallery {
 		$this->description = $ary['description'];
 		$this->imagecount = $ary['imagecount'];
 		$this->ownerName = $ary['ownerName'];
+		$this->schoolUID = $ary['schoolUID'];
 		$this->schoolName = $ary['schoolName'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
@@ -128,6 +132,7 @@ class Gallery_Gallery {
 			'description' => 'TEXT',
 			'imagecount' => 'BIGINT(20)',
 			'ownerName' => 'VARCHAR(255)',
+			'schoolUID' => 'VARCHAR(40)',
 			'schoolName' => 'VARCHAR(255)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -141,6 +146,7 @@ class Gallery_Gallery {
 			'title' => '10',
 			'imagecount' => '',
 			'ownerName' => '10',
+			'schoolUID' => '10',
 			'schoolName' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
@@ -167,6 +173,7 @@ class Gallery_Gallery {
 			'description' => $this->description,
 			'imagecount' => $this->imagecount,
 			'ownerName' => $this->ownerName,
+			'schoolUID' => $this->schoolUID,
 			'schoolName' => $this->schoolName,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,

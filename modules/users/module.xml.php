@@ -60,6 +60,7 @@
 		student:c|users|users_user|edit|(if)|self
 		student:c|users|users_user|editprofile|(if)|self
 		student:p|users|users_user|viewprofile
+		student:p|users|users_user|images-show
 
 		teacher:p|users|users_user|comments-add
 		teacher:c|users|users_user|images-add|(if)|self
@@ -70,6 +71,7 @@
 		teacher:c|users|users_user|edit|(if)|self
 		teacher:c|users|users_user|editprofile|(if)|self
 		teacher:p|users|users_user|viewprofile
+		teacher:p|users|users_user|images-show
     </defaultpermissions>
     <blocks>
     </blocks>

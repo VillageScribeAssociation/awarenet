@@ -1,0 +1,40 @@
+<?
+
+	require_once($kapenta->installPath . 'core/kmodule.class.php');
+
+//--------------------------------------------------------------------------------------------------
+//*	page for editing a module definition
+//--------------------------------------------------------------------------------------------------
+//+	this is mostly to ease development and should be removed in production versions
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and user role
+	//----------------------------------------------------------------------------------------------
+	if ('admin' != $user->role) { $page->do403(); }		// admins only
+
+	$moduleName = $req->ref;
+	if (false == $kapenta->moduleExists($moduleName)) { $page->do404(); }
+
+	$module = new KModule($moduleName);
+	if (false == $module->loaded) {
+		//------------------------------------------------------------------------------------------
+		//	create module definition file if none exists
+		//------------------------------------------------------------------------------------------
+		$module->modulename = $moduleName;
+		$module->version = '1';
+		$module->revision = '0';
+		$module->description = 'Describe your module here';
+		$module->save();
+
+		$session->msg("Creating module definition: $moduleName", 'ok');
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	render the page
+	//----------------------------------------------------------------------------------------------
+	$page->load('modules/admin/actions/editmodule.page.php');
+	$page->blockArgs['modulename'] = $moduleName;
+	$page->blockArgs['xmodule'] = $moduleName;
+	$page->render();
+
+?>

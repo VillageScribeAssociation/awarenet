@@ -3,7 +3,7 @@
 <table noborder>
   <tr>
     <td valign='top'>
-[[:images::default::refModule=badges::refModel=badges_badge::refUID=%%UID%%::size=thumb:]]
+[[:images::default::refModule=badges::refModel=badges_badge::refUID=%%UID%%::size=thumb90:]]
 	</td>
     <td valign='top'>
 %%description%%

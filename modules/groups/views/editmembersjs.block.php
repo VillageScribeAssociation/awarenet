@@ -111,7 +111,6 @@
 <div id='divAddmembers%%groupUID%%'>
 [[:users::usersearchbox::cbjs=memberConsole.addMemberForm::cblabel=add to group::cbicon=arrow_down_green.png:]]
 </div>
-groupUID: %%groupUID%%
 <br/>
 
 [[:theme::navtitlebox::label=All Members::toggle=divMembers%%groupUID%%:]]

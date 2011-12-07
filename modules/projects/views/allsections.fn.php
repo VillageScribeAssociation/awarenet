@@ -45,9 +45,11 @@ function projects_allsections($args) {
 		$model->loadArray($section);
 		if ('yes' != $model->hidden) {
 			$ext = $model->extArray();
+			$ext['weightbuttons'] = '[[:projects::weightbuttons::UID=' . $model->UID . ':]]';
 			if ('open' != $project->status) {
 				$ext['editInlineLink'] = '';
 				$ext['delInlineLink'] = '';
+				$ext['weightbuttons'] = '';
 			}
 			$html .= $theme->replaceLabels($ext, $block);
 		}

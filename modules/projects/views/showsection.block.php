@@ -1,7 +1,7 @@
 <? /*
 
 <div id='divSection%%UID%%'>
-[[:projects::weightbuttons::UID=%%UID%%:]]
+%%weightbuttons%%
 <h2><a name='s%%UID%%'>%%ordinal%%. %%title%%</a></h2>
 <div id='divSC%%UID%%' style='height: 100px; overflow: hidden;'>
   <p id='pSC%%UID%%'>%%content%%</p>

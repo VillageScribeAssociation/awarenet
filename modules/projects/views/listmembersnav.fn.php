@@ -12,6 +12,7 @@
 
 function projects_listmembersnav($args) {
 	global $user;
+	global $kapenta;
 
 	$editmode = 'no';		//%	for editing membership (yes|no|js) [string]
 	$isAdmin = false;		//%	set to true if current user is project admin [string]
@@ -50,7 +51,11 @@ function projects_listmembersnav($args) {
 		//	basic HTML option for removing members
 		//--------------------------------------------------------------------------------------
 		if ((true == $isAdmin) && ('yes' == $editmode)) {
-			$rmUrl = "%%serverPath%%projects/editmembers/removemember_". $userUID ."/". $model->UID;
+			$rmUrl = ''
+			 . $kapenta->serverPath . "projects/editmembers/"
+			 . "removemember_" . $userUID . "/"
+			 . $model->UID;
+
 			$html .= "<a href='" . $rmUrl . "'>[ remove member &gt;&gt; ]</a><br/>";
 		}
 
@@ -59,7 +64,10 @@ function projects_listmembersnav($args) {
 		//--------------------------------------------------------------------------------------
 		if ((true == $isAdmin) && ('js' == $editmode)) {
 			//TODO: tidy this, perhaps make this a block
-			$imgUrl = '%%serverPath%%themes/%%defaultTheme%%/icons/arrow_x_green.png';
+			$imgUrl = ''
+			 . $kapenta->serverPath . 'themes/'
+			 . $kapenta->defaultTheme . '/icons/arrow_x_green.png';
+
 			$html .= "
 				<table noborder>
 					<tr>

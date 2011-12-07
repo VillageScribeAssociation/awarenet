@@ -277,10 +277,11 @@ class Moblog_Post {
 		$ary['aboveFold'] = trim($this->content);
 		$foldPos = strpos($ary['aboveFold'], '{fold}');
 		if ($foldPos > 0) { $ary['aboveFold'] = substr($ary['aboveFold'], 0, $foldPos);	}
-		$ary['aboveFold'] = str_replace("\n", "<br/>\n", $ary['aboveFold']);
+		//$ary['aboveFold'] = str_replace("\n", "<br/>\n", $ary['aboveFold']);
 
-		$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['content']);
-		$ary['contentHtml'] = str_replace('{fold}', '', $ary['contentHtml']);
+		$ary['contentHtml'] = $ary['content'];
+		//$ary['contentHtml'] = str_replace("\n", "<br/>\n", $ary['content']);
+		//$ary['contentHtml'] = str_replace('{fold}', '', $ary['contentHtml']);
 
 		$ary['createdOnLong'] = $kapenta->longDatetime($ary['createdOn']);
 		$ary['editedOnLong'] = $kapenta->longDatetime($ary['editedOn']);		

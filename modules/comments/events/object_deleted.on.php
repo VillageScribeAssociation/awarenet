@@ -19,14 +19,14 @@ function comments__cb_object_deleted($args) {
 	//	delete any comments owned by this record
 	//----------------------------------------------------------------------------------------------
 
-	$conditions = array(	"refUID='" . $db->addMarkup($args['UID']) . "'", 
-							"refModule='" . $db->addMarkup($args['module']) . "'"	);
+	$conditions = array();
+	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
+	$condiiions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
+	$range = $db->loadRange('comments_comment', '*', $conditions, '', '', '');
 
-	$rows = $db->loadRange('comments_comment', '*', $conditions, '', '', '');
-
-	foreach($rows as $row) {
+	foreach($range as $item) {
 		$model = new Comments_Comment();
-		$model->loadArray($row);
+		$model->loadArray($item);
 		$model->delete();
 	}
 

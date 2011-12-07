@@ -15,7 +15,10 @@
 //opt: cbicon - image to use for result button [string]
 
 function users_search($args) {
-	global $db, $user, $theme;
+	global $db;
+	global $user;
+	global $theme;
+	global $kapenta;
 
 	$query = '';						//%	search terms [string]
 	$num = 10;							//%	number of results per page [int]
@@ -73,6 +76,7 @@ function users_search($args) {
 			$html .= "[[:users::summarynav::userUID=" . $item['UID'] . ":]]\n";
 
 		} else {
+			$cbIconUrl = "%%serverPath%%themes/" . $kapenta->defaultTheme . "/icons/" . $cbicon;
 			$html .= "
 			<table noborder width='100%'>
 				<tr>
@@ -83,7 +87,7 @@ function users_search($args) {
 							title=\"" . $cblabel. "\"
 						>
 						<img 
-							src='%%serverPath%%themes/%%defaultTheme%%/icons/" . $cbicon . "' 
+							src='" . $cbIconUrl . "' 
 							alt=\"" . $cblabel . "\" 
 							border='0' 
 						/></a>

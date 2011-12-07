@@ -10,6 +10,7 @@
 //opt: pageNo - page number to display, default is '1' [string]
 //opt: pagination - display pagination bars, default is 'yes' (yes|no) [string]
 //opt: num - number of items per page (int) [string]
+//opt: schoolUID - filter to ggalleries created at this school [string]
 //returns: html list [string]
 
 function gallery_summarylist($args) {
@@ -22,6 +23,7 @@ function gallery_summarylist($args) {
 	$orderBy = 'title';			//%	sort field [string]
 	$ad = 'DESC';				//%	list order (ASC|DESC) [string]
 	$pagination = 'yes';		//%	display pagination bar and order links (yes|no) [string]
+	$schoolUID = '';			//%	filter to galleries created at this school [string]
 	$html = '';					//%	return value [string]
 
 	//---------------------------------------------------------------------------------------------
@@ -32,6 +34,7 @@ function gallery_summarylist($args) {
 	if (true == array_key_exists('pageSize', $args)) { $num = (int)$args['pageSize']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
+	if (true == array_key_exists('schoolUID', $args)) { $schoolUID = $args['schoolUID']; }
 
 	if ($num <= 0) { $num = 10; }
 
@@ -49,6 +52,8 @@ function gallery_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');	// do not show galleries with no images
+	if ('' != $schoolUID) { $conditions[] = "schoolUID='" . $db->addMarkup($schoolUID) . "'"; }
+
 	$totalItems = $db->countRange('gallery_gallery', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	$start = $num * ($pageNo - 1);

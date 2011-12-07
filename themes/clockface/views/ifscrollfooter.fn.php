@@ -8,7 +8,7 @@ function theme_ifscrollfooter($args) {
 	global $theme;
 	$html = '';				//%	return value [string]
 
-	$html = $theme->loadBlock('themes/clockface/ifscrollfooter.block.php');
+	$html = $theme->loadBlock('themes/clockface/views/ifscrollfooter.block.php');
 
 	return $html;
 }

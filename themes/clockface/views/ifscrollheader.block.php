@@ -159,6 +159,6 @@
 </script>
 </head>
 <body onResize='window_onResize();'> 
-<div id='divScrollContent' style='width: 200px; height: 160px; position: absolute; overflow: auto'>
+<div id='divScrollContent' style='width: 100%; height: 100%; position: absolute; overflow: auto'>
 <script language='Javascript'>resizeWindow();</script>
 */ ?>

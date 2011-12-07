@@ -73,6 +73,8 @@ class P2P_Offers {
 		$this->members = $range;
 		$this->loaded = true;
 
+		$this->checkGifts();
+
 		return true;
 	}
 
@@ -87,6 +89,31 @@ class P2P_Offers {
 		$children = $xd->getChildren();			// children of root node [array]
 		foreach($children as $childId) { $this->members[] = $xd->getChildren2d($childId); }
 		//foreach($this->members as $idx => $a) { $this->members[$idx]['response'] = ''; }
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	perform some quick sanity checks on the loaded gift set
+	//----------------------------------------------------------------------------------------------
+	//returns: true if everything checks out, false if changed / should be reloaded [bool]
+
+	function checkGifts() {
+		global $kapenta;
+		$allOk = true;
+		foreach($this->members as $item) {	
+			//--------------------------------------------------------------------------------------
+			//	if offering a file, make sure we have that file
+			//--------------------------------------------------------------------------------------
+			if ('file' == $item['type']) {
+				if (false == $kapenta->fileExists($item['fileName'])) { 
+					$this->updateFile($item['refModel'], $item['refUID'], $item['fileName']);
+					$allOk = false;
+				}
+			}
+
+			// ...add more checks here
+
+		}
+		return $allOk;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -447,8 +474,25 @@ class P2P_Offers {
 		$giftUID = $this->getGiftUID('file', $model, $UID);		//%	ref:P2P_Gift [string]	
 		$hash = $kapenta->fileSha1($fileName);					//% sha1 hash of xml [string]
 
+		//------------------------------------------------------------------------------------------
+		//	first make sure the file exists and can be hashed
+		//------------------------------------------------------------------------------------------
+		if (false == $kapenta->fileExists($fileName)) {
+			if ('' != $giftUID) {
+				$model = new P2P_Gift($giftUID);		//	gift exists for non-existent file
+				$check = $model->delete();				//	we can't share the file, so remove gift
+				if (true == $check) { echo "<!-- deleted gift for file $fileName -->\n"; }
+				if (false == $check) { echo "<!-- could not delete gift for file $fileName -->\n"; }
+				return $check;
+			}
+		}
+
 		if ('' == $hash) { $session->msg("File cannot be hashed."); }
 		if ('' == $hash) { return false; }						//	file could not be read
+
+		//------------------------------------------------------------------------------------------
+		//	OK so far, create or update gift object
+		//------------------------------------------------------------------------------------------
 
 		if ('' != $giftUID) {
 			//--------------------------------------------------------------------------------------
@@ -556,30 +600,17 @@ class P2P_Offers {
 		global $kapenta;
 		$xml = "<offers>\n";								//%	return value [string]
 		foreach($this->members as $item) {
-			$allOk = true;
-
-			//--------------------------------------------------------------------------------------
-			//	last minute checks - do not offer files we don't have right now
-			//--------------------------------------------------------------------------------------
-			if ('file' == $item['type']) {
-				if (false == $kapenta->fileExists($item['fileName'])) { $allOk = false; }
-			}
-
-			// ...add more checks here
-		
-			if (true == $allOk) {
-				$xml .= ''
-				 . "\t<offer>\n"
-				 . "\t\t<UID>" . $item['UID'] . "</UID>\n"
-				 . "\t\t<type>" . $item['type'] . "</type>\n"
-				 . "\t\t<refModel>" . $item['refModel'] . "</refModel>\n"
-				 . "\t\t<refUID>" . $item['refUID'] . "</refUID>\n"
-				 . "\t\t<fileName>" . $item['fileName'] . "</fileName>\n"
-				 . "\t\t<hash>" . $item['hash'] . "</hash>\n"
-				 . "\t\t<updated>" . $item['updated'] . "</updated>\n"
-				 . "\t\t<status>" . $item['status'] . "</status>\n"
-				 . "\t</offer>\n";
-			}
+			$xml .= ''
+			 . "\t<offer>\n"
+			 . "\t\t<UID>" . $item['UID'] . "</UID>\n"
+			 . "\t\t<type>" . $item['type'] . "</type>\n"
+			 . "\t\t<refModel>" . $item['refModel'] . "</refModel>\n"
+			 . "\t\t<refUID>" . $item['refUID'] . "</refUID>\n"
+			 . "\t\t<fileName>" . $item['fileName'] . "</fileName>\n"
+			 . "\t\t<hash>" . $item['hash'] . "</hash>\n"
+			 . "\t\t<updated>" . $item['updated'] . "</updated>\n"
+			 . "\t\t<status>" . $item['status'] . "</status>\n"
+			 . "\t</offer>\n";
 		}
 
 		$xml .= "</offers>\n";

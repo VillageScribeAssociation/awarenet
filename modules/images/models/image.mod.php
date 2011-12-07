@@ -460,6 +460,7 @@ class Images_Image {
 
 	function delete() {
 		global $kapenta;
+		global $session;
 		global $db;
 
 		$check = false;
@@ -482,6 +483,7 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		//	remove it from the database
 		//------------------------------------------------------------------------------------------
+		$session->msg("Deleting image: " . $this->title . " (" . $this->UID . ")<br/>");
 		$check = $db->delete($this->UID, $this->dbSchema);
 		return $check;
 	}

@@ -100,7 +100,11 @@
 			. '<b>type:</b> ' . $file['type'] . '<br/>'
 			. '<b>size:</b> ' . $file['size'] . '<br/>';
 
-		if (true == file_exists($kapenta->installPath . $file['path'])) {
+		if (false == file_exists($kapenta->installPath . $file['path'])) {
+			$check = $package->updateFile($file['uid']);
+			if (true == $check) { $um->log("Downloaded: " . $file['path'], 'green'); }
+			else { $um->log("Download failed: " . $file['path'], 'red'); }
+		} else {
 			$msg .= "file exists...<br/>";
 			echo $msg;
 		}

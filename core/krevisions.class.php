@@ -9,6 +9,18 @@
 //+	This component keeps track of changes to module objects and archives them after deletion from
 //+	the live system.  Note that revision control is performed according to the 'nodiff' array
 //+	of model's dbSchema, and that objects marked 'archive' => 'no' are not kept.
+//+
+//+	New deletions of objects create new Revisions_Deleted objects which record the final state of 
+//+	the deleted item, witht he status set to delete.  There may thus be a set of Revisions_Deleted
+//+	objects for any item in the live database.
+//+
+//+	If an object is restored to the live database, the status of that Revisions_Deleted object is
+//+	set to 'restore'.  Thus, if any of the set of Revisions_Deleted objects for some item have
+//+	status 'restore' then the object is NOT currently deleted.  Any later re-deletions should reset
+//+	the 'restore' status to 'deleted', and update the Revisions_Deleted object.
+//+
+//+	Since dependant obejcts are usually deleted along with their owner (eg, comments and images on
+//+	a deleted blog post), restoring the owner will also restore dependant objects.
 
 class KRevisions {
 
@@ -61,36 +73,70 @@ class KRevisions {
 	function recordDeletion($fields, $dbSchema) {
 		global $db, $session;
 
+		//------------------------------------------------------------------------------------------
+		//	check table schema
+		//------------------------------------------------------------------------------------------
 		if (false == $db->checkSchema($dbSchema)) { 
-			$session->msgAdmin('revisions->recordDeletion() BAD SCHEMA', 'bad');
+			$session->msgAdmin('<b>Error:</b> Bad schema', 'bad');
 			return false;
 		}
 
-		// check whether objects of this type are not archived
+		//------------------------------------------------------------------------------------------
+		//	check whether objects of this type are not archived
+		//------------------------------------------------------------------------------------------
 		if ((true == array_key_exists('archive', $dbSchema)) && ('no' == $dbSchema['archive'])) {
-			$session->msgAdmin('revisions->recordDeletion() NO ARCHIVE', 'bad');
+			$session->msgAdmin('Objects of this type are not archived or revisioned.');
 			return false;
 		}
 
-		// check whether object has already been deleted
+		//------------------------------------------------------------------------------------------
+		//	check whether object has already been deleted
+		//------------------------------------------------------------------------------------------
 		if (true == $this->isDeleted($dbSchema['model'], $dbSchema['fields']['UID'])) {
-			$session->msgAdmin('revisions->recordDeletion() ALREADY DELETED', 'bad');
+			$session->msgAdmin('Object is already deleted.', 'bad');
 			return false;
 		}
 
+		//------------------------------------------------------------------------------------------
+		//	create new Revisions_Deleted object
+		//------------------------------------------------------------------------------------------
 		$model = new Revisions_Deleted();
 		$model->refModule = $dbSchema['module'];
 		$model->refModel = $dbSchema['model'];
 		$model->refUID = $fields['UID'];
 		$model->fields = $fields;
+
+		$model->shared = 'yes';
+		if (false == $db->isShared($dbSchema['model'], $fields['UID'])) { $model->shared = 'no'; }
+
 		$report = $model->save();
 
 		if ('' != $report) { 
-			$session->msgAdmin('revisions->recordDeletion() COULD NOT SAVE:' . $report, 'bad');
+			$msg = 'Could not move '. $model->refModel .'::'. $model->refUID .' to recycle bin: ';
+			$session->msgAdmin($msg . $report, 'bad');
 			return false;
 		} else {
-			$session->msgAdmin('revisions->recordDeletion()', 'ok');
+			$msg = 'Moved ' . $model->refModule . '::' . $model->refUID . ' to the recycle bin.';
+			$session->msgAdmin($msg, 'ok');
 		}
+
+		//------------------------------------------------------------------------------------------
+		//	undo any previous restore of this item
+		//------------------------------------------------------------------------------------------
+		$conditions = array();
+		$conditions[] = "refModel='" . $db->addMarkup($model->refModel) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($model->refUID) . "'";
+		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+
+		foreach($range as $item) {
+			if ('restore' == $item['status']) {
+				$deletion = new Revisions_Deletion($item['UID']);
+				$deletion->status = 'delete';
+				$report = $deletion->save();
+				if ('' != $report) { $session->msg('Could not re-delete: ' . $report, 'bad'); }
+			}
+		}
+
 		return true;
 	}
 
@@ -103,17 +149,73 @@ class KRevisions {
 
 	function isDeleted($model, $UID) {
 		global $db;
+		$retored = false;
 
 		$conditions = array();
 		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
 		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
 
-		$num = $db->countRange('revisions_deleted', $conditions);
-		if ($num > 0) { return true; }
-		return false;
+		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+		if (0 == count($range)) { return false; } // no record of being deleted
+
+		foreach($range as $item) {
+			if ('restore' == $item['status']) { return false; } // deleted and restored
+		}
+
+		return false;	// record of being deleted, but none of being undeleted
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	revert the most recent deletion of an obejct
+	//----------------------------------------------------------------------------------------------
+	//arg: model - type of deleted object [string]
+	//arg: UID - Unique identifier of deleted object [string]
+	//returns: true on success, false on failure [string]
+	//TODO: consider adding option to restore this item only (and not dependants)
+
+	function undoLastDeletion($model, $UID) {
+		global $db;
+		if (false == $this->isDeleted($model, $UID)) { return false; }
+
+		$conditions = array();
+		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
+
+		$range = $db->loadRange('revisions_deleted', '*', $conditions, 'createdOn DESC');
+		foreach($range as $item) {
+			$model = new Revisions_Deleted($item['UID']);
+			$check = $model->restore();
+			if (true == $check) {
+				$this->restoreDependant($model, $UID);
+			}
+			return $check;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	restore items belonging to some undeleted item
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	function restoreDependant($model, $UID) {
+		global $db;
+		$allOk = true;
+		$conditions = array("owner='" . $db->addMarkup($UID) . "'");
+		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+		foreach($range as $item) {
+			$model = new Revisions_Deleted($item['UID']);
+			if ($model->fields['refModel'] == $model) {
+				$check = $model->restore();
+				if (false == $check) {
+					$msg = "Could not restore deleted item: " . $item['UID'];
+					$session->msg($msg, 'bad');
+					$allOk = false;
+				}
+			}
+		}
+		return $allOk;
 	}
 
 }
-
 
 ?>

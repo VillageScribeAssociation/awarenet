@@ -1,7 +1,8 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
-	require_once($kapenta->installPath . 'modules/images/inc/images__weight.inc.php');
+	require_once($kapenta->installPath . 'modules/images/models/images.set.php');
+	//require_once($kapenta->installPath . 'modules/images/inc/images__weight.inc.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	delete an image and associated record, derivative files, etc
@@ -30,17 +31,33 @@
 	//	delete the image
 	//----------------------------------------------------------------------------------------------
 	$kapenta->logSync("deleting image " . $model->UID . "via form on images module.\n");
-	$model->delete();
+	$objAry = $model->toArray();
+	$check = $model->delete();
+
+	//----------------------------------------------------------------------------------------------
+	//	reset weight on the the set
+	//----------------------------------------------------------------------------------------------
+	if (true == $check) {
+		$session->msgAdmin('Reloading weight on sibling images.');
+		$set = new Images_Images($objAry['refModule'], $objAry['refModel'], $objAry['refUID']);
+		$set->checkWeights();
+	}
 	
+	//----------------------------------------------------------------------------------------------
+	//	done, redirect or return XML confirmation
+	//----------------------------------------------------------------------------------------------
+
 	if (true == array_key_exists('return', $_POST)) {
 		if ('xml' == $_POST['return']) {
-			echo "<?xml version=\"1.0\"?>\n";
-			echo "<notice>Image " . $model->UID . " deleted</notice>\n";
-			die();
+			if (true == $check) {
+				echo "<?xml version=\"1.0\"?>\n";
+				echo "<notice>Image " . $model->UID . " deleted</notice>\n";
+				die();
+			} else { $page->doXmlError('Could not delete image.'); }
 
 		} else { $page->do302($_POST['return']); }
 	}
 
-	$page->do302('/images/');
+	$page->do302('images/');
 
 ?>

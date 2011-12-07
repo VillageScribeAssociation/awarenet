@@ -418,7 +418,7 @@ class KDBDriver {
 	//returns: true on success, false on failure [bool]
 
 	function delete($UID, $dbSchema) {
-		global $kapenta, $aliases, $revisions;
+		global $kapenta, $aliases, $revisions, $session;
 		//echo "deleting... " . $dbSchema['model'] . '::' . "$UID<br/>";
 		$module = $dbSchema['module'];
 		$model = strtolower($dbSchema['model']);			// TODO: remove strtolower when safe
@@ -467,8 +467,8 @@ class KDBDriver {
 			'dbSchema' => $dbSchema
 		);
 
-		$kapenta->raiseEvent($module, 'object_deleted', $detail);
-		echo "deleting object... $module $model $UID <br/>\n";
+		$kapenta->raiseEvent('*', 'object_deleted', $detail);
+		//echo "deleting object... $module $model $UID <br/>\n";
 		return true;
 	}
 
@@ -932,7 +932,7 @@ class KDBDriver {
 		// in cases where share staus is explicitly noted
 		if (true == array_key_exists('shared', $objAry)) {
 			if ('no' == $objAry['shared']) { return false; }
-			else { $shared = true; }
+			return $shared;
 		}
 
 		// in cases where object inherits share status from some owner object

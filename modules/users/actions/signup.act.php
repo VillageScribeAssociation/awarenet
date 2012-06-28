@@ -99,7 +99,6 @@
 			$model->password = sha1($formvars['pass1'] . $model->UID);
 			$model->lang = 'en';
 			$model->profile = '';
-			$model->permissions = '';
 			$model->lastOnline = $db->datetime();
 			$model->createdOn = $db->datetime();
 			$model->createdBy = 'admin';
@@ -110,6 +109,8 @@
 				//	user account created, sign user in and redirect to profile
 				//----------------------------------------------------------------------------------
 				$session->user = $model->UID;
+				$session->set('user', $model->UID);					//	set current user UID
+				$session->set('role', $model->role);				//	set current user role
 				$session->msg('You are now logged in.', 'ok');
 				$user->load($model->UID);
 				$page->do302('users/profile/');			// show user his profile

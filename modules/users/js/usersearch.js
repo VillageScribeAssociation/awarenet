@@ -25,10 +25,15 @@ function renderResultsHtml(atPage) {
 	html = html + "&nbsp; Showing " + startResult + " to " + endResult + " of " + userList.length + " matches.";
 	html = html + "<table noborder>";
 	for (i = startResult; i < endResult; i++) { 
-		html = html + "<tr>"
-					+ "<td><a href='#' onClick='usrSelect(" + i + ");'><img src='/themes/clockface/icons/arrow_left.jpg' border='0' /></a></td>"
-					+ "<td>" + jsRemoveMarkup(userList[i][4]) + "</td>"
-					+ "</tr>"; 
+		html = html
+		 + "<tr>"
+			+ "<td>"
+			 + "<a href='#' onClick='usrSelect(" + i + ");'>"
+			 + "<img src='" + jsServerPath + "themes/clockface/images/icons/arrow_left.jpg' border='0' />"
+			 + "</a>"
+			 + "</td>"
+			+ "<td>" + jsRemoveMarkup(userList[i][4]) + "</td>"
+		 + "</tr>"; 
 	}
 	html = html + "</table>";
 

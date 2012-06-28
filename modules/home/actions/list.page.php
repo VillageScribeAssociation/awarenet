@@ -11,9 +11,7 @@
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>galleryNav[`|us]init()[`|sc]
-msgSubscribe([`|sq]comments-gallery-[`|pc][`|pc]imageUID[`|pc][`|pc][`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<jsinit></jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>

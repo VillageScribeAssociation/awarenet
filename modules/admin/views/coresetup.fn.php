@@ -27,7 +27,10 @@ function admin_coresetup($args) {
 		'kapenta.db.persistent' => $registry->get('kapenta.db.persistent'),
 		'kapenta.sitename' => $registry->get('kapenta.sitename'),
 		'kapenta.themes.default' => $registry->get('kapenta.themes.default'),
-		'kapenta.modules.default' => $registry->get('kapenta.modules.default')
+		'kapenta.modules.default' => $registry->get('kapenta.modules.default'),
+		'kapenta.alternate' => $registry->get('kapenta.alternate'),
+		'kapenta.snstart' => $registry->get('kapenta.snstart'),
+		'kapenta.snend' => $registry->get('kapenta.snend')
 	);
 
 	$html = $theme->replaceLabels($labels, $block);

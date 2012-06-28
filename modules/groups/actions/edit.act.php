@@ -20,8 +20,8 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/groups/actions/edit.page.php');
+	$page->blockArgs['UID'] = $model->UID;
 	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['viewGroupUrl'] = '%%serverPath%%groups/' . $model->alias;
 	$page->render();
 
 ?>

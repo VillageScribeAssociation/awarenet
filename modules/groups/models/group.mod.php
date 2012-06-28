@@ -1,8 +1,10 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
-	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
-	require_once($kapenta->installPath . 'modules/groups/models/schoolindex.mod.php');
+//	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
+//	require_once($kapenta->installPath . 'modules/groups/models/membership.mod.php');
+//	require_once($kapenta->installPath . 'modules/groups/models/schoolindex.mod.php');
+	require_once($kapenta->installPath . 'modules/groups/models/schools.set.php');
+	require_once($kapenta->installPath . 'modules/groups/models/memberships.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object representing user groups
@@ -30,11 +32,8 @@ class Groups_Group {
 	var $editedBy;				//_ ref:Users_User [string]
 	var $alias;					//_ alias [string]
 
-	var $schools;				//_	array of serialized Groups_SchoolIndex objects [array:array]
-	var $schoolsLoaded = false;	//_	set to true when schools index objects have been loaded [bool]
-
-	var $members;				//_ array of serialized Groups_Membership objects [array]
-	var $membersLoaded = false;	//_	set to true when memberships loaded [bool]
+	var $schools;				//_	a Groups_Schools set object [array:array]
+	var $members;				//_ a Groups_Memberships set object [array]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -43,14 +42,19 @@ class Groups_Group {
 
 	function Groups_Group($raUID = '') {
 		global $db;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
+
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->name = 'New Group ' . $this->UID;		// set default name
+			$this->schools = new Groups_Schools();			
+			$this->members = new Groups_Memberships();
 			$this->loaded = false;
 		}
+
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -86,9 +90,9 @@ class Groups_Group {
 		$this->editedBy = $ary['editedBy'];
 		$this->alias = $ary['alias'];
 
-		$this->membersLoaded = false;
+		$this->schools = new Groups_Schools($this->UID);			
+		$this->members = new Groups_Memberships($this->UID);
 
-		$this->members = $this->getMembers();
 		$this->loaded = true;
 		return true;
 	}
@@ -202,7 +206,7 @@ class Groups_Group {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('groups', 'groups_group', 'view', $this->UID)) { 
+		if (true == $user->authHas('groups', 'groups_group', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%groups/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
@@ -272,12 +276,8 @@ class Groups_Group {
 	//returns: range of serialized Groups_Membership objects [array]
 
 	function getMembers() {
-		if (false == $this->membersLoaded) {
-			$this->members = $this->loadMembers();
-			$this->membersLoaded = true;
-		}
-
-		return $this->members;
+		if (false == $this->members->loaded) { $this->members->load(); }
+		return $this->members->members;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -287,15 +287,8 @@ class Groups_Group {
 
 	function loadMembers() {
 		global $db;
-		if (false == $db->tableExists('groups_membership')) { return array(); }
-
-		//echo "loading members of group: " . $this->UID . "<br/>\n";
-
-		$conditions = array();
-		$conditions[] = "groupUID='" . $db->addMarkup($this->UID) . "'";
-		$range = $db->loadRange('groups_membership', '*', $conditions);
-
-		return $range;
+		$this->members->load();
+		return $this->members->members;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -307,27 +300,9 @@ class Groups_Group {
 	//returns: true on success, false on failure [bool]
 
 	function addMember($userUID, $position, $admin) {
-		global $kapenta, $db;
-		$saved = false;									//%	return value [bool]
-
-		$this->removemember($userUID);					//	clear out any previous membership
-
-		$model = new Groups_Membership();				//	(re)create with position and admin
-		$model->UID = $kapenta->createUID();			//	privileges as called.
-		$model->userUID = $userUID;
-		$model->groupUID = $this->UID;
-		$model->position = $position;
-		$model->admin = $admin;
-		$model->joined = $db->datetime();
-		$report = $model->save();
-
-		if ('' == $report) { 							//	any html report indicates db error
-			$saved = true;								//	was saved to database
-			$this->members = $this->loadMembers();		//	update members list
-			$this->updateSchoolsIndex();				//	update associations with schools
-		}
-
-		return $saved;
+		$check = $this->members->add($userUID, $position, $admin);
+		$this->updateSchoolsIndex();
+		return $check;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -336,19 +311,7 @@ class Groups_Group {
 	//arg: userUID - UID of a user [string]
 	//returns: true on success, false on failure [bool]
 
-	function removeMember($userUID) {
-		$model = new Groups_Membership();
-		$model->loadMembership($userUID, $this->UID);
-		if (false == $model->loaded) { return false; }
-		$result = $model->delete();
-
-		if (true == $result) {
-			$this->members = $this->loadMembers();		//	update members list
-			$this->updateSchoolsIndex();				//	update associations with schools
-		}
-
-		return $result;
-	}
+	function removeMember($userUID) { return $this->members->remove($userUID); }
 
 	//----------------------------------------------------------------------------------------------
 	//.	discover if a user belongs to a group
@@ -356,13 +319,7 @@ class Groups_Group {
 	//arg: userUID - UID of a Users_User object to search for [string]
 	//returns: true if membership is found for the given user, false if not [bool]
 
-	function hasMember($userUID) {
-		$members = $this->getMembers();
-		foreach($members as $membership) {
-			if ($userUID == $membership['userUID']) { return true; }
-		}
-		return false;		
-	}
+	function hasMember($userUID) { return $this->members->has($userUID); }
 
 	//----------------------------------------------------------------------------------------------
 	//.	determine if user can edit the group's membership /page (DEPRECATED) TODO: remove
@@ -378,7 +335,9 @@ class Groups_Group {
 		if ($model->role == 'admin') { return true; }
 		if ($model->role == 'teacher') { return true; }
 
-		foreach($this->members as $row) { 
+		$members = $this->members->get();
+
+		foreach($members as $row) { 
 			if (($row['userUID'] == $userUID) && ('yes' == $row['admin'])) { return true; } 	
 		}	
 
@@ -394,23 +353,8 @@ class Groups_Group {
 	//----------------------------------------------------------------------------------------------
 
 	function getSchoolsIndex() {
-		if (false == $this->schoolsLoaded) {
-			$this->schools = $this->loadSchoolsIndex();
-			$this->schoolsLoaded = true;
-		}
-		return $this->schools;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	loads the set of Groups_SchoolIndex objects belonging to this group
-	//----------------------------------------------------------------------------------------------
-	//returns: array of serialized Groups_SchoolIndex objects [array:array]
-
-	function loadSchoolsIndex() {
-		global $db;
-		$conditions = array("groupUID='" . $db->addMarkup($this->UID) . "'");
-		$range = $db->loadRange('groups_schoolindex', '*', $conditions);
-		return $range;
+		if (false == $this->schools->loaded) { $this->schools->load(); }
+		return $this->schools->members;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -419,16 +363,7 @@ class Groups_Group {
 	//arg: schoolUID - UID of a Schools_School object [string]
 	//returns: true if member(s) found, false if not [bool]
 
-	function hasSchool($schoolUID) {
-		$schools = $this->getSchoolsIndex();
-		$found = false;							//%	return value [bool]
-
-		foreach($this->schools as $schoolIndex) {
-			if ($schoolUID == $schoolIndex['schoolUID']) { $found = true; }
-		}
-
-		return $found;
-	}
+	function hasSchool($schoolUID) { return $this->schools->has($schoolUID); }
 
 	//----------------------------------------------------------------------------------------------
 	//.	updates list of schools at which this group has members
@@ -436,89 +371,7 @@ class Groups_Group {
 	//returns: true on success, false on failure [bool]
 
 	function updateSchoolsIndex() {
-		global $theme;
-		global $db;
-		global $session;
-	
-		$xmsg = "updating school index of group " . $this->name . " (" . $this->UID . ")<br/>\n";
-		$session->msgAdmin($xmsg);
-
-		$updated = true;								//%	return value [bool]
-		$members = $this->getMembers();					//%	array of memberships [array]
-		$oldSchools = $this->getSchoolsIndex();			//%	extant schools index set [array]	
-		$newSchools = array();							//%	UIDs for comparison [array]
-
-		//echo "Members: " . count($this->members) . "<br/>\n";
-
-		//------------------------------------------------------------------------------------------
-		//	for each member, discover if their school is linked to this group
-		//------------------------------------------------------------------------------------------
-		foreach($members as $member) {
-			// look up UID of the school this member attends
-			$block = "[[:users::schooluid::userUID=" . $member['userUID'] . ":]]";
-			$schoolUID = $theme->expandBlocks($block, '');
-			$nblock = '[[:schools::name::schoolUID=' . $schoolUID . ':]]';	
-
-			//echo "schoolUID: $schoolUID groupUID: " . $this->UID . "<br/>\n";
-
-			// add to list of schools if not already present
-			if (false == in_array($schoolUID, $newSchools)) { 
-				//echo "added $schoolUID to list<br/>\n";
-				$newSchools[] = $schoolUID;
-
-				$session->msgAdmin($this->name . " is associated with school: $nblock " . $schoolUID);
-			}
-		
-			// associate school with this group if not already done
-			if (false == $this->hasSchool($schoolUID)) {
-				$nmsg = "school $nblock $schoolUID not yet associated with group " . $this->name . ".";
-				$session->msgAdmin($nmsg);
-
-				//----------------------------------------------------------------------------------
-				//	new association with a school
-				//----------------------------------------------------------------------------------
-				$model = new Groups_SchoolIndex();
-				$model->groupUID = $this->UID;
-				$model->schoolUID = $schoolUID;
-				$report = $model->save();
-
-				if ('' == $report) {
-					$msg = "Group '" . $this->name . "' now active at "
-						 . "[[:schools::name::schoolUID=" . $schoolUID . "::link=yes:]]"
-						 . " (UID: $schoolUID)";
-					$session->msg($msg, 'ok');
-					$session->msg("created school index for $schoolUID<br/>");
-
-				} else {
-					$updated = false;
-					$msg = "Could not add group " . $this->UID . " to school: $schoolUID <br/>" . $report;
-					$session->msg($msg, 'bad');
-					//echo "could not create school index for $schoolUID<br/>$report<br/>";
-
-				}
-			}
-		}
-
-		//------------------------------------------------------------------------------------------
-		//	for each school this group was associated with, check it has at least one member
-		//------------------------------------------------------------------------------------------
-		foreach($oldSchools as $schoolIndex) {
-			if (false == in_array($schoolIndex['schoolUID'], $newSchools)) {
-				//----------------------------------------------------------------------------------
-				//	school is associated with group but has no group members, remove
-				//----------------------------------------------------------------------------------
-				$session->msgAdmin("Removing school " . $schoolIndex['schoolUID']);
-				$model = new Groups_SchoolIndex($schoolIndex['UID']);
-				$check = $model->delete();
-				if (false == $check) {
-					$session->msgAdmin("Could not remove schoolindex " . $schoolIndex['UID']);
-					$updated = false;
-				}
-			}
-		}
-
-		$this->schools = $this->loadSchoolsIndex();			//	update list of schools
-		return $updated;
+		return $this->schools->updateSchoolsIndex($this->members->get());
 	}
 
 }

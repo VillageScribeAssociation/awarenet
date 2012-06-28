@@ -1,5 +1,11 @@
 <? /*
-<form name='editschool' method='POST' action='%%serverPath%%schools/save/'>
+<form
+	id='frmEditSchool%%UID%%'
+	name='editschool'
+	method='POST'
+	onSubmit="khta.updateAllAreas();"
+	action='%%serverPath%%schools/save/'
+>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -44,29 +50,36 @@
 <br/>
 <b>Description of this school:</b><br/>
 
-<div class='HyperTextArea64' title='description' width='100%' height='400'>
-%%description64%%
-</div>
+<div
+	class='HyperTextArea64'
+	title='description'
+	width='-1'
+	height='400'
+	style='visibility: hidden; display: none'
+	refModule='schools'
+	refModel='schools_school'
+	refUID='%%UID%%'
+>%%description64%%</div>
 <script language='Javascript'> khta.convertDivs(); </script>
+</form>
 
 <table noborder>
   <tr>
    <td valign='top'>
-    <input type='submit' value='save' />
-    </form>
+    <input
+		type='button'
+		value='Save'
+		onClick="$('#frmEditSchool%%UID%%').submit();" />
    </td>
-   <td>
+   <td valign='top'>
+     [[:tags::editbutton::refModule=schools::refModel=schools_school::refUID=%%UID%%:]]
+   </td>
+   <td valign='top'>
    <form name='cDelete' method='GET' action='%%delUrl%%'>
    <input type='submit' value='Delete' />
    </form>
    </td>
  </tr>
 </table>
-<br/>
-
-[[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
-<div id='divEditImages'>
-[[:images::uploadmultiple::refModule=schools::refModel=schools_school::refUID=%%UID%%:]]
-</div>
 <br/>
 */ ?>

@@ -27,6 +27,11 @@
 		switch(strtolower($field)) {
 			case 'title':		$model->title = $utils->cleanTitle($value); 		break;
 			case 'description':	$model->description = $utils->cleanHtml($value);	break;
+
+			case 'origin':		
+				//TODO: make this a registry field / configurable
+				if (('user' == $value) || ('3rdparty' == $value)) { $model->origin = $value; }
+				break;
 		}
 	}
 

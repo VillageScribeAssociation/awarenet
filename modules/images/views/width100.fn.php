@@ -10,7 +10,9 @@
 //opt: imageUID - overrides raUID [string]
 //opt: link - link to larger version (yes|no) [string]
 
-function images_width100($args) { $args['size'] = 'width100'; return images_show($args); }
+function images_width100($args) {
+	$args['size'] = 'width100'; return images_show($args);
+}
 
 //--------------------------------------------------------------------------------------------------
 

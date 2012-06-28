@@ -13,24 +13,33 @@
 <br/>
 
 [[:theme::navtitlebox::label=Abstract:]]
-<form name='editAbstract' method='POST' action='%%serverPath%%projects/saveabstract/'>
+<form
+	id='frmEditAbstract%%UID%%'
+	name='editAbstract'
+	method='POST'
+	action='%%serverPath%%projects/saveabstract/'
+	onSubmit='khta.updateAllAreas();'
+>
 <input type='hidden' name='action' value='saveAbstract' />
 <input type='hidden' name='UID' value='%%UID%%' />
-<div class='HyperTextArea64' title='abstract' width='100%' height='400'>
-%%abstract64%%
-</div>
+<div
+	class='HyperTextArea64'
+	title='abstract'
+	width='100%'
+	height='400'
+	refModule='projects'
+	refModel='projects_project'
+	refUID='%%UID%%'
+>%%abstract64%%</div>
 <script language='Javascript'> khta.convertDivs(); </script>
-
+</form>
 <table noborder>
-  <tr>
-   <td valign='top'>
-    <input type='submit' value='Save Changes' />
-    </form>
-   </td>
-   <td>
-   <form name='cancelEdit' method='GET' action='%%editUrl%%'>
-   <input type='submit' value='Cancel' />
-   </form>
+	<tr>
+		<td valign='top'>
+			<input type='button' value='Save Changes' onClick="$('#frmEditAbstract%%UID%%').submit();" />
+	</td>
+	<td valign='top'>
+		[[:tags::editbutton::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
    </td>
  </tr>
 </table>

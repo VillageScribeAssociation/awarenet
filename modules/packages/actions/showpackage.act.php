@@ -22,9 +22,9 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/packages/actions/showpackage.page.php');
-	$page->blockArgs['packageUID'] = $meta['UID'];
+	$page->blockArgs['packageUID'] = $meta['uid'];
 	$page->blockArgs['packageName'] = $meta['name'];
-	$page->blockArgs['UID'] = $meta['UID'];
+	$page->blockArgs['UID'] = $meta['uid'];
 	$page->blockArgs['name'] = $meta['name'];
 	$page->blockArgs['source'] = $meta['source'];
 	$page->blockArgs['status'] = $meta['status'];

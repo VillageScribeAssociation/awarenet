@@ -50,9 +50,18 @@ function gallery_recentthumbsall($args) {
 	foreach ($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
-		$html .= "<a href='" . $viewUrl . "'>"
-			  . "<img src='" . $thumbUrl . "' title='" . $row['title']
-			  . "' border='0' vspace='2px' hspace='2px' /></a>\n";
+		$html .= ''
+		 . "<a href='" . $viewUrl . "'>"
+		 . "<img"
+		 . " src='" . $thumbUrl . "'"
+		 . " title='" . $row['title'] . "'"
+		 . " border='0'"
+		 . " vspace='2px'"
+		 . " hspace='2px'"
+		 . " width='100px'"
+		 . " height='100px'"
+		 . " class='rounded'"
+		 . " style='background-color: #aaaaaa; display: inline;'/></a>\n";
 	}
 
 	if ('yes' == $pagination) {

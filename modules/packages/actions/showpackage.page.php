@@ -27,11 +27,10 @@
 </div>
 <br/>
 
-[[:packages::commitform::packageUID=%%UID%%:]]
-<br/>
-
 </content>
-	<nav1>[[:admin::subnav:]]</nav1>
+	<nav1>
+	[[:packages::commitbutton::packageUID=%%UID%%:]]
+	[[:admin::subnav:]]</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

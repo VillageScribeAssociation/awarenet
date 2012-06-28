@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //*	Represents a single uploaded flash or MP4 video.
 //--------------------------------------------------------------------------------------------------
+//TODO:	Add fileSize property to this object, add on attach, along with file hash
 
 class Videos_Video {
 
@@ -308,21 +309,21 @@ class Videos_Video {
 		//------------------------------------------------------------------------------------------
 		if (true == $user->authHas('videos', 'videos_video', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%videos/play/' . $ext['alias'];
-			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
+			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[more &gt;gt;]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_video', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%videos/editvideo/' . $ext['alias'];
-			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
+			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[edit]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_video', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%videos/delvideo/' . $ext['alias'];
-			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
+			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[delete]</a>";
 		}
 
 		$ext['streamUrl'] = '%%serverPath%%' . $ext['fileName'];
-		$ext['browserLink'] = "<a href='" . $ext['streamUrl'] . "'>[Watch in browser]</a>";
+		$ext['browserLink'] = "<a href='" . $ext['streamUrl'] . "'>[watch in browser]</a>";
 
 		if ('private' == $ext['category']) { $ext['browserLink'] = ''; }
 
@@ -331,6 +332,11 @@ class Videos_Video {
 		//------------------------------------------------------------------------------------------
 		$ext['UIDJsClean'] = $utils->makeAlphaNumeric($ext['UID']);
 		$ext['summary'] = $theme->makeSummary($ext['caption']);
+		if ('...' == $ext['summary']) { $ext['summary'] = ''; }
+
+		$ext['extra'] = '';
+		$ext['controls'] = '';
+
 		return $ext;
 	}
 

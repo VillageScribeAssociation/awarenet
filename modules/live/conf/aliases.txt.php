@@ -9,6 +9,7 @@ cd := live.cd
 ls := live.ls
 pwd := live.pwd
 dir := live.ls
+rm := live.rm
 modules := admin.modules
 cat := live.cat
 bash := admin.bash
@@ -24,5 +25,15 @@ sources := packages.sources
 imgfiles := images.listfiles
 downloads := p2p.downloads
 share := p2p.share
+us := users.usersettings
+usersettings := users.usersettings
+reattach := admin.reattach
+migrate := schools.migrate
+newuid := live.newuid
+block := live.block
+fileowner := admin.fileowner
+fo := admin.fileowner
+manifest := p2p.manifest
+revisions := revisions.revisions
 
 */ ?>

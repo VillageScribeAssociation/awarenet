@@ -32,6 +32,9 @@
 			case 'description':		$model->description = $utils->cleanHtml($value); 	break;
 		}
 	}
+
+	$model->members->deleteDuplicates();			//	remove any duplicate memberships
+
 	$report = $model->save();
 
 	//----------------------------------------------------------------------------------------------

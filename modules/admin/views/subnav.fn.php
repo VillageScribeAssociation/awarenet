@@ -7,10 +7,22 @@
 
 function admin_subnav($args) {
 	global $theme;
-
 	global $user;
+
+	$html = '';						//	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check user role
+	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { return ''; }
-	return $theme->replaceLabels(array(), $theme->loadBlock('modules/admin/views/subnav.block.php'));
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/admin/views/subnav.block.php');
+	$html = $theme->replaceLabels(array(), $block);
+
+	return $html;
 }
 
 

@@ -75,6 +75,7 @@ class KPackage {
 	
 	var $status = '';		//_	state of the package on this kapenta instance [string]
 	var $dirty = '';		//_	if partially installed [string]
+	var $date = '';			//_	last update to package [string]
 
 	var $manifestUrl = '';	//_	location of package manifest [string]
 	var $checkoutUrl = '';	//_	location from which new updates should be downloaded [string]
@@ -98,8 +99,9 @@ class KPackage {
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
 	//arg: UID - alias or UID of a package in the repository [string]
+	//arg: lazy - if true then do not load XML immediately [bool]
 
-	function KPackage($UID = '') {
+	function KPackage($UID = '', $lazy = false) {
 		global $kapenta;
 		global $registry;
 
@@ -108,11 +110,17 @@ class KPackage {
 		$this->files = array();
 		$this->dependencies = array();
 
+		$this->UID = $UID;
+		$this->name = $registry->get('pkg.' . $UID . '.name');
+		$this->version = $registry->get('pkg.' . $UID . '.v');
+		$this->revision = $registry->get('pkg.' . $UID . '.r');
+
 		$this->source = $registry->get('pkg.' . $UID . '.source');
 		$this->status = $registry->get('pkg.' . $UID . '.status');
 		$this->username = $registry->get('pkg.' . $UID . '.user'); 
 		$this->password = $registry->get('pkg.' . $UID . '.pass');
 		$this->dirty = $registry->get('pkg.' . $UID . '.dirty');
+		$this->date = $registry->get('pkg.' . $UID . '.date');
 
 		if (('' != $UID) && ('' != $this->source)) {
 			// TODO: check trailing slash
@@ -121,7 +129,7 @@ class KPackage {
 			$this->commitUrl = $this->source . 'commit/'; 
 		}
 
-		if ('' != $UID) {
+		if (('' != $UID) && (false == $lazy)) {
 			$this->fileName = 'data/packages/' . $UID . '.xml.php';
 			if (true == $kapenta->fileExists($this->fileName)) { 
 				$this->loaded = $this->loadXml($this->fileName, true); 
@@ -168,7 +176,7 @@ class KPackage {
 					}
 					break;		//..................................................................
 
-				case 'dependancies':					
+				case 'dependancies':
 					$deps = $doc->getChildren($childId);
 					foreach($deps as $depId) {
 						$dependency = $doc->getChildren2d($depId);
@@ -327,7 +335,7 @@ class KPackage {
 		}
 
 		$ext['bgcolor'] = '';
-		if ('yes' == $ext['dirty']) { $ext['bgcolor'] = "bgcolor='#cccccc'"; }
+		if ('yes' == $ext['dirty']) { $ext['bgcolor'] = "class='title'"; }
 
 		return $ext;
 	}
@@ -335,15 +343,28 @@ class KPackage {
 	//----------------------------------------------------------------------------------------------
 	//.	download latest manifest from repository and save
 	//----------------------------------------------------------------------------------------------
+	//;	this will set dirty flag via call to getLocalDifferent()
 	//returns: true on success, false on failure [bool]
 
 	function updateFromRepository() {
 		global $utils;	
+		global $registry;
 
 		$xml = $utils->curlGet($this->manifestUrl);
 		if (false == strpos($xml, '</package>')) { return false; }
 		$this->loadXml($xml);
 		$this->saveXml($this->fileName);
+
+		$prefix = 'pkg.' . $this->UID . '.';
+
+		$registry->set($prefix . 'source', $this->url);
+		$registry->set($prefix . 'uid', $this->UID);
+		$registry->set($prefix . 'name', $this->name);
+		$registry->set($prefix . 'v', $this->version);
+		$registry->set($prefix . 'r', $this->revision);
+		$registry->set($prefix . 'date', $this->updated);
+
+		$this->getLocalDifferent();			//	check for files which do not match manifest
 		return true;
 	}
 
@@ -482,24 +503,24 @@ class KPackage {
 		global $kapenta;
 		global $registry;
 
-		$list = array();							//%	return value [array:array:string]
+		$different = array();						//%	return value [array:array:string]
 		$localFiles = $this->getLocalList();		//%	according to filter [array:array:string]
 
 		foreach($localFiles as $uid => $file) {		//	finds hash mismatches and extraneous files
-			if ('different' == $file['local']) { $list[$uid] = $file; }
+			if ('different' == $file['local']) { $different[$uid] = $file; }
 		}
 
 		foreach($this->files as $uid => $file) {	//	finds missing files
 			if (false == $kapenta->fileExists($file['path'])) { 
 				$file['local'] = 'missing';
-				$list[$uid] = $file;
+				$different[$uid] = $file;
 			}
 		}
 
-		if (0 == count($list)) { $registry->set('pkg.' . $this->UID . '.dirty', 'no'); }
+		if (0 == count($different)) { $registry->set('pkg.' . $this->UID . '.dirty', 'no'); }
 		else { $registry->set('pkg.' . $this->UID . '.dirty', 'yes'); }
 
-		return $list;
+		return $different;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -658,6 +679,7 @@ class KPackage {
 			'.on.php' => 'kapenta/event',
 			'.cmd.php' => 'kapenta/shellcmd',
 			'.dbd.php' => 'kapenta/database',
+			'.sh.php' => 'kapenta/shell',
 			'.swf' => 'application/x-shockwave-flash',
 			'.php' => 'text/php',
 			'.xml' => 'text/xml'
@@ -774,8 +796,14 @@ class KPackage {
 	function postToRepository() {
 		global $utils;
 		global $session;
+		global $registry;
 
 		$ext = $this->extArray();
+
+		//	update username and password from registry
+
+		$this->username = $registry->get('pkg.' . $this->UID . '.user');
+		$this->password = $registry->get('pkg.' . $this->UID . '.pass');
 
 		$postvars = array(
 			'mode' => 'basic',

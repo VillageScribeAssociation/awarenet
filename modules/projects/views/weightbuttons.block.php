@@ -9,7 +9,7 @@
 		<input type='hidden' name='UID' value='%%UID%%' />
 		<input 
 			type='image' 
-			src='%%serverPath%%themes/%%defaultTheme%%/icons/move_up.png' 
+			src='%%serverPath%%themes/%%defaultTheme%%/images/icons/move_up.png' 
 			alt='move up' 
 			border='0' width='24px' 
 		/>
@@ -21,7 +21,7 @@
 		<input type='hidden' name='UID' value='%%UID%%' />
 		<input
 			type='image'
-			src='%%serverPath%%themes/%%defaultTheme%%/icons/move_down.png'
+			src='%%serverPath%%themes/%%defaultTheme%%/images/icons/move_down.png'
 			border='0'
 			width='24px' />
 		</form>

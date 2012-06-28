@@ -36,7 +36,9 @@
 				if ('tel' == $field) { $confidential = true; }
 				if ('email' == $field) { $confidential = true; }
 
-				if (false == $confidential) { $diff .= "<b>$field:</b> " . $newVal . "<br/>\n"; }
+				if (false == $confidential) {
+					$diff .= "<b>$field:</b> " . $newVal . "<br/>\n";
+				}
 			}
 
 			//--------------------------------------------------------------------------------------

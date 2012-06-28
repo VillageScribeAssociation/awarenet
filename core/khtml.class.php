@@ -289,6 +289,7 @@ class KHTMLParser {
 	//----------------------------------------------------------------------------------------------
 	//.	finished with current tag, redact and add it to output
 	//----------------------------------------------------------------------------------------------
+	//returns: true if the tag was added, false if it was ignored [bool]
 
 	function addTag() {
 		global $session;
@@ -306,6 +307,26 @@ class KHTMLParser {
 		if ('/style' == $tnLower) { $this->discard = false; }
 		if (('xml' == $tnLower) && (false == $this->selfClose)) { $this->discard = true; }
 		if ('/xml' == $tnLower) { $this->discard = false; }
+
+		//------------------------------------------------------------------------------------------
+		//	check if this tag is a placeholder image for a block
+		//------------------------------------------------------------------------------------------
+
+		if (('img' == $tnLower) && (true == in_array('kblocktag', $this->tagAtName))) {
+			$this->htmlLog("Converting editor block: $tnLower");
+			foreach($this->tagAtName as $idx => $atName) {
+				if ('kblocktag' == $atName) {
+					$blockTag = strrev($this->tagAtVal[$idx]);
+					if ('"' == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					if ("'" == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					$blockTag = strrev($blockTag);
+					if ('"' == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					if ("'" == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					$this->output .= $blockTag;
+					return true;
+				}
+			}
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	check if this tag is of an allowed type
@@ -360,7 +381,11 @@ class KHTMLParser {
 			if (('' == $src) || ('%%serverPath%%' != substr($src, 0, 14))) {
 				$check = substr($src, 0, 15);
 				$src = str_replace('%%', '%~%', $src);
-				$msg = "Removed image: $src <br/>Only images uploaded to awareNet can be used.<br/>$check";
+				$msg = ''
+				 . "Removed image: $src <br/>\n"
+				 . "Only images uploaded to awareNet can be used.<br/>"
+				 . $check;
+
 				$session->msg($msg);
 				$tagStr = '';
 			}
@@ -369,8 +394,11 @@ class KHTMLParser {
 		//------------------------------------------------------------------------------------------
 		//	tag is OK, add to output
 		//------------------------------------------------------------------------------------------
-		$this->output .= $tagStr;									// we're done, add to output
+		if ('' == $tagStr) { return false;}						//	nothing to add
+		$this->output .= $tagStr;								//	we're done, add to output
 		$this->log .= "Adding tag: " . htmlentities($tagStr) . "<br/>\n";
+		return true;
+
 	} // end this.addTag
 
 
@@ -378,7 +406,7 @@ class KHTMLParser {
 	//.	discover if an attribute is allowed
 	//----------------------------------------------------------------------------------------------
 	//arg: tagType - eg, 'img', 'table', 'html' [string]
-	//arg: tagType - eg, 'img', 'table', 'html' [string]
+	//arg: attribute - eg, 'src', 'style', 'class' [string]
 	//returns: true is it's allowed, false if not [bool]
 
 	function allowAttrib($tagType, $attribute) {
@@ -392,34 +420,35 @@ class KHTMLParser {
 		switch ($tagType) {
 			case 'div':
 				switch ($attribute) {
-					case 'style': 	return true;	break;
+					case 'style': 		return true;	break;
 				}
 				break;		// .....................................................................
 
 			case 'span':
 				switch ($attribute) {
-					case 'style': 	return true;	break;
+					case 'style': 		return true;	break;
 				}
 				break;		// .....................................................................
 
 			case 'a':
 				switch ($attribute) {
-					case 'href': 	return true;	break;
-					case 'style': 	return true;	break;
+					case 'href': 		return true;	break;
+					case 'style': 		return true;	break;
 				}
 				break;		// .....................................................................
 
 			case 'img':
 				switch ($attribute) {
-					case 'src': 	return true;	break;
-					case 'border': 	return true;	break;
-					case 'alt': 	return true;	break;
-					case 'style': 	return true;	break;
+					case 'src': 		return true;	break;
+					case 'border': 		return true;	break;
+					case 'alt': 		return true;	break;
+					case 'style': 		return true;	break;
+					case 'kblocktag': 	return true;	break;
 				}
 
 			case 'p':
 				switch ($attribute) {
-					case 'style': 	return true;	break;
+					case 'style': 		return true;	break;
 				}
 
 				break;		// .....................................................................
@@ -452,9 +481,12 @@ class KHTMLParser {
 			$styleParamName = strtolower($styleParamName);
 
 			switch($styleParamName) {
-				case 'text-align':	$styleIsAllowed = true; 	break;
-				case 'color': 		$styleIsAllowed = true; 	break;
-				case 'font-size':	$styleIsAllowed = true; 	break;
+				case 'text-align':		$styleIsAllowed = true; 	break;
+				case 'color': 			$styleIsAllowed = true; 	break;
+				case 'font-size':		$styleIsAllowed = true; 	break;
+				case 'font-weight':		$styleIsAllowed = true; 	break;
+				case 'font-style':		$styleIsAllowed = true; 	break;
+				case 'text-decoration':	$styleIsAllowed = true; 	break;
 			}
 
 			if (true == $styleIsAllowed) {

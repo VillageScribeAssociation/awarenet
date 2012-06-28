@@ -19,7 +19,7 @@ base64_loadTextArea('taBlockContentJs', blockContentJs64);
       </form>
     </td>
     <td valign='top'>
-      <form name='cancelEdit' action='admin/listpages/'>
+      <form name='cancelEdit' action='%%serverPath%%admin/listpages/'>
       <input type='submit' value='cancel' />
     </td>
   </tr>

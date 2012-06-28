@@ -193,7 +193,7 @@ class Projects_Change {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_change', 'view', $ext['UID'])) {
+		if (true == $user->authHas('projects', 'projects_change', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%projects/showchange/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}

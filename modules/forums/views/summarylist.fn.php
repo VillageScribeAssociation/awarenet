@@ -23,7 +23,8 @@ function forums_summarylist($args) {
 	//	load boards from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("school='" . $db->addMarkup($args['school']) . "'");
-	$range = $db->loadRange('forums_board', '*', $conditions, 'weight DESC');
+	$range = $db->loadRange('forums_board', '*', $conditions, 'weight ASC');
+
 	//$sql = "select * from Forums_Board "
 	//	 . "where school='" . $db->addMarkup($args['school']) . "' "
 	//	 . "order by weight DESC";
@@ -40,7 +41,7 @@ function forums_summarylist($args) {
 		$html .= ''
 		 . '[[:forums::summary::raUID=' . $row['UID'] . ':]]'
 		 . '[[:live::river::mod=forums::view=showthreads::pv=pageno::allow=num|forumUID'
-		 . '::num=3::forumUID=' . $row['UID'] . ':]]';
+		 . '::num=3::forumUID=' . $row['UID'] . ':]]' . "\n<br/>\n";
 	}
 
 	return $html;

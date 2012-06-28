@@ -23,16 +23,29 @@ function badges_awarded($args) {
 
 	if (count($range) == 0) { return ''; }
 
-	$imgOpts = "size=thumb::link=no::refModule=badges::refModel=badges_badge::size=thumb90::";
+	$imgOpts = "size=thumb::link=no::refModule=badges::refModel=badges_badge::display=inline::size=thumb90::";
 
-	$html .= "[[:theme::navtitlebox::label=Badges:]]\n";
+	$html .= ''
+	 . "[[:theme::navtitlebox::label=Badges::toggle=divUserBadges:]]\n"
+	 . "<div id='divUserBadges'>"
+	 . "<div class='spacer'></div>\n";
+
 	foreach($range as $row) {
-		$block = "[[:images::default::" . $imgOpts . "refUID=" . $row['badgeUID'] . ":]]\n";
+		$block = ''
+		 . "[[:images::default"
+		 . "::link=no"
+		 . "::refModule=badges"
+		 . "::refModel=badges_badge"
+		 . "::refUID=" . $row['badgeUID']
+		 . "::display=inline"
+		 . "::size=thumb90"
+		 . ":]]\n";
+
 		$badgeUrl = '%%serverPath%%badges/' . $row['badgeUID'];
 		$html .= "<a href='$badgeUrl'>$block</a>\n";
 	}
 
-	$html .= "<br/><br/>";
+	$html .= "<div class='foot'></div>\n</div>\n<br/>";
 
 	return $html;
 }

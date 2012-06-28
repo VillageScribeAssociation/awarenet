@@ -112,6 +112,7 @@ class Twitter_Tweet {
 		$dbSchema = array();
 		$dbSchema['module'] = 'twitter';
 		$dbSchema['model'] = 'twitter_tweet';
+		$dbSchema['archive'] = 'no';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -190,7 +191,7 @@ class Twitter_Tweet {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('twitter', 'twitter_tweet', 'view', $ext['UID'])) {
+		if (true == $user->authHas('twitter', 'twitter_tweet', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = "%%serverPath%%twitter/showtweet/" . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

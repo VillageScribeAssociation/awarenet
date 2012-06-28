@@ -16,6 +16,7 @@ function projects_showchanges($args) {
 	global $db;
 	global $user;
 	global $theme;
+	global $session;
 
 	$pageNo = 1;				//%	results page to show [int]
 	$num = 20;					//%	number of results to show per page [int]
@@ -65,7 +66,8 @@ function projects_showchanges($args) {
 		$labels['content'] = '<br/><br/><br/>';
 		$labels['undo'] = '';
 
-		$icon = "%%serverPath%%themes/%%defaultTheme%%/icons/undo.png";	//%	undo button [string]
+		$icon = "%%serverPath%%themes/%%defaultTheme%%/images/icons/undo.png";
+
 		$undoUrl = '%%serverPath%%projects/revertto/' . $item['UID'];	//%	revert action [string]
 		$undo = false;													//%	reversible? [bool]
 
@@ -111,14 +113,14 @@ function projects_showchanges($args) {
 
 			case 'p.title':
 				$undo = true;
-				$labels['head'] = $labels['unl'] . " changed project title to";
+				$labels['head'] = $labels['unl'] . " changed project title to:";
 				$labels['content'] = "<h2>" . $item['value'] . "</h2>";
 				break;
 
 			case 'p.abstract':
 				$undo = true;
 				$labels['head'] = ''
-				 . $labels['unl']  . " changed the project abstract to<br/><br/>";
+				 . $labels['unl']  . " changed the project abstract to:<br/><br/>";
 				 $labels['content'] = $item['value'];
 				break;
 
@@ -163,6 +165,9 @@ function projects_showchanges($args) {
 
 	if (0 == $totalItems) { $html .= "<div class='inlinequote'>No changes recorded.</div>"; }
 	if (($num + $start) >= $totalItems) { $html .= "<!-- end of results -->"; }
+
+	if (true == $session->get('mobile')) { $html = $theme->expandBlocks($html, 'mobile'); }
+	else { $html = $theme->expandBlocks($html, 'indent'); }
 
 	return $html;
 }

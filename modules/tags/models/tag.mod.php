@@ -17,7 +17,8 @@ class Tags_Tag {
 	var $UID;				//_ UID [string]
 	var $name;				//_ title [string]
 	var $namelc;			//_ for searching [string]
-	var $objectCount;		//_ bigint [string]
+	var $objectCount;		//_ Number of objects with this tag (bigint) [string]
+	var $embedCount;		//_ Number of tagged objects which can be embedded (bigint) [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -88,6 +89,7 @@ class Tags_Tag {
 		$this->name = $ary['name'];
 		$this->namelc = strtolower(trim($ary['name']));
 		$this->objectCount = $ary['objectCount'];
+		$this->embedCount = $ary['embedCount'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -148,7 +150,8 @@ class Tags_Tag {
 			'UID' => 'VARCHAR(33)',
 			'name' => 'VARCHAR(255)',
 			'namelc' => 'VARCHAR(255)',
-			'objectCount' => 'TEXT',
+			'objectCount' => 'BIGINT(20)',
+			'embedCount' => 'BIGINT(20)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -184,6 +187,7 @@ class Tags_Tag {
 			'name' => $this->name,
 			'namelc' => strtolower($this->name),
 			'objectCount' => $this->objectCount,
+			'embedCount' => $this->embedCount,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -207,6 +211,7 @@ class Tags_Tag {
 			. $indent . "    <name>" . $this->name . "</name>\n"
 			. $indent . "    <namelc>" . $this->namelc . "</namelc>\n"
 			. $indent . "    <objectCount>" . $this->objectCount . "</objectCount>\n"
+			. $indent . "    <embedCount>" . $this->embedCount . "</embedCount>\n"
 			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
@@ -289,12 +294,39 @@ class Tags_Tag {
 	//----------------------------------------------------------------------------------------------
 	//. count objects which use this tag (exclude 'suggested' tags)
 	//----------------------------------------------------------------------------------------------
+	//:	Note that this can be made much more flexible and efficient - TODO.
+	//returns: true if count is changed, false if not (or error) [bool]
 
 	function updateObjectCount() {
 		global $db;
+
+		//------------------------------------------------------------------------------------------
+		//	count direct references	
+		//------------------------------------------------------------------------------------------
 		$conditions = array("tagUID='" . $db->addMarkup($this->UID) . "'");
-		$this->objectCount = (int)$db->countRange('tags_index', $conditions);
-		$this->save();
+		$objectCount = (int)$db->countRange('tags_index', $conditions);
+
+		//------------------------------------------------------------------------------------------
+		//	count references to embeddable objects (TODO) improve on this, registry?
+		//------------------------------------------------------------------------------------------
+		$embedCount = 0;
+		$allow = array('images_image', 'files_file', 'videos_video', 'gallery_gallery');
+
+		foreach($allow as $embeddable) {
+			$conditions = array();
+			$conditions[] = "tagUID='" . $db->addMarkup($this->UID) . "'";
+			$conditions[] = "refModel='" . $db->addMarkup($embeddable) . "'";
+			$embedCount += (int)$db->countRange('tags_index', $conditions);
+		}
+
+		if (($objectCount != (int)$this->objectCount) || ($embedCount != (int)$this->embedCount)) {
+			$this->objectCount = $objectCount;
+			$this->embedCount = $embedCount;
+			$report = $this->save();
+			if ('' == $report) { return true; }
+		}
+
+		return false; 
 	}
 
 }

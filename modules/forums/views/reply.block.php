@@ -1,18 +1,22 @@
 <? /*
 <div id='divReply%%UID%%'><a name='#reply%%UID%%'></a>
-[[:abuse::buttonwnd::refModule=forums::refModel=forums_reply::refUID=%%UID%%:]]
-<table noborder>
-  <tr>
-    <td valign='top' width='300'>
-      [[:users::summarynav::userUID=%%createdBy%%:]]
-    </td>
-    <td width='30'></td>
-    <td valign='top'>
-      <b>Re: %%threadTitle%%</b><br/>
-      <small>Written: %%longdate%%</small><br/><br/>
-    </td>
-  </tr>
+<table noborder width='100%'>
+	<tr>
+		<td valign='top' width='55'>
+			[[:users::avatar::size=thumbsm::userUID=%%createdBy%%:]]
+		</td>
+		<td valign='top'>
+			<b>[[:users::namelink::userUID=%%createdBy%%:]]</b>
+			<small>(written: %%longdate%%)</small><br/>
+			<div id='divEditReply%%UID%%'>%%contentHtml%%</div>
+			<small>
+				%%editLinkJs%%
+				[[:abuse::reportlink::refModule=forums::refModel=forums_reply::refUID=%%UID%%:]]
+				%%editNotice%%
+			</small>
+		</td>
+	</tr>
 </table>
-</div><div id='divEditReply%%UID%%'>%%contentHtml%% %%editLinkJs%% %%editNotice%%</div>
 <hr/>
+</div>
 */ ?>

@@ -39,7 +39,7 @@ function projects_tagged($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	if (0 == $db->numRows($result)) { return "(nothign with this tag at present)"; }
+	if (0 == $db->numRows($result)) { return "(nothing with this tag at present)"; }
 
 	while ($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);

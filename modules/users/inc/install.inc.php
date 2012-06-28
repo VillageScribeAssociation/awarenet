@@ -5,6 +5,8 @@
 	require_once($kapenta->installPath . 'modules/users/models/role.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/session.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/preset.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/registry.mod.php');
 	require_once($kapenta->installPath . 'core/kmodule.class.php');
 	
 //--------------------------------------------------------------------------------------------------
@@ -63,11 +65,18 @@ function users_install_module() {
 	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
-	//	import any records from previous users table
+	//	create or upgrade Users_Registry table
 	//----------------------------------------------------------------------------------------------
-	$rename = array('ofGroup' => 'role', 'recordAlias' => 'alias');
-	$count = $dba->copyAll('users', $dbSchema, $rename); 
-	$report .= "<b>moved $count records from 'users' table.</b><br/>";
+	$model = new Users_Registry();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create or upgrade Users_Preset table
+	//----------------------------------------------------------------------------------------------
+	$model = new Users_Preset();
+	$dbSchema = $model->getDbSchema();
+	$report .= $dba->installTable($dbSchema);
 
 	//----------------------------------------------------------------------------------------------
 	//	create default registry values
@@ -224,9 +233,29 @@ function users_install_status_report() {
 	$report .= $treport;
 
 	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Preset objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Users_Preset();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Session objects exists and is correct
 	//----------------------------------------------------------------------------------------------
 	$model = new Users_Session();
+	$dbSchema = $model->getDbSchema();
+	$treport = $dba->getTableInstallStatus($dbSchema);
+
+	if (false == strpos($treport, $installNotice)) { $installed = false; }
+	$report .= $treport;
+
+	//----------------------------------------------------------------------------------------------
+	//	ensure the table which stores Registry objects exists and is correct
+	//----------------------------------------------------------------------------------------------
+	$model = new Users_Registry();
 	$dbSchema = $model->getDbSchema();
 	$treport = $dba->getTableInstallStatus($dbSchema);
 

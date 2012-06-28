@@ -11,8 +11,14 @@
 //opt: num - number of records per page (default is 10) [string]
 
 function announcements_list($args) {
-	global $kapenta, $db, $theme, $user;
+	global $kapenta;
+	global $db;
+	global $theme;
+	global $user;
+
+	$pageNo = 1;
 	$num = 10;
+	$start = 0;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -29,32 +35,52 @@ function announcements_list($args) {
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner)'; }
-	if (false == $user->authHas($refModule, $refModel, 'announcements-show', $refUID))
-		{ return ''; }
+
+	if (false == $user->authHas($refModule, $refModel, 'announcements-show', $refUID)) {
+		return '';
+	}
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
+	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
+
+	if ($pageNo < 1) { $pageNo = 1; }
 
 	//----------------------------------------------------------------------------------------------
-	//	load recent announcements from the database
+	//	count announcements belonging to this item
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('announcements_announcement', '*', $conditions, 'createdOn DESC', $num);
+	$totalItems = $db->countRange('announcements_announcement', $conditions);
+
+	if (0 == $totalItems) {
+		return ''
+		 . "<div class='outline' style='color: #bbbbbb;'>"
+		 . "<small>No announcements at present.</small>"
+		 . "</div>\n"
+		 . "<!-- end of results -->";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	load recent announcements from the database
+	//----------------------------------------------------------------------------------------------
+
+	$start = ($pageNo - 1) * $num;
+
+	$range = $db->loadRange(
+		'announcements_announcement', '*', $conditions, 'createdOn DESC', $num, $start
+	);
 
 	//	$sql = "select * from Announcements_Annoucement "
 	//		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
 	//		 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
 	//		 . "order by createdOn DESC limit " . $db->addMarkup($num) . "";
 
-	$blockFile = 'modules/announcements/views/summary.block.php';
-
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-
-	if (0 == count($range)) { return "(no announcements at present)"; }
+	$blockFile = 'modules/announcements/views/summary.block.php';
 
 	foreach ($range as $row) {
 		$html .= "[[:announcements::summary::UID=" . $row['UID'] . ":]]\n";
@@ -64,6 +90,10 @@ function announcements_list($args) {
 		//$model->loadArray($row);
 		//$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
 	}  
+
+	if ($totalItems <= ($start + $num)) {
+		$html .= "<!-- end of results -->\n";
+	}
 
 	return $html;
 

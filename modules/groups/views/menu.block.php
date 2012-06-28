@@ -3,4 +3,5 @@
 %%newEntry%%
 %%editCurrentGroup%%
 %%viewCurrentGroup%%
+%%makeAnnouncement%%
 */ ?>

@@ -62,6 +62,10 @@ function forums_showreplies($args) {
 		$ext['threadTitle'] = $model->title;
 		$ext['editLinkJs'] = '';
 
+		//	force images smaller (TODO: something more elegant)
+		//$ext['contentHtml'] = str_replace('widthcontent', 'width300', $ext['contentHtml']);
+		//$ext['contentHtml'] = str_replace('width570', 'width300', $ext['contentHtml']);
+
 		if ($ext['createdBy'] == $user->UID) {
 			$UID = $ext['UID'];
 			$editBlock = '[[:forums::editreplyif::replyUID=' . $UID . ':]]';
@@ -73,7 +77,7 @@ function forums_showreplies($args) {
 		$ext['editNotice'] = '';
 		if ($ext['createdOn'] != $ext['editedOn']) {
 			$ebBlock = '[[:users::namelink::userUID=' . $ext['editedBy'] . ':]]';
-			$ext['editNotice'] = '<br/>'
+			$ext['editNotice'] = ''
 			 . '<small>Edited on ' . $ext['editedOn']
 			 . ' by ' . $ebBlock . '</small>';
 		}
@@ -90,6 +94,14 @@ function forums_showreplies($args) {
 	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
 	if ('yes' == $pagination) { $html = $pagination . $html . $pagination; }
+
+	//	correct image sizes
+	$html = $theme->expandBlocks($html);
+
+	$html = str_replace('widthcontent', 'widthindent', $html);
+	$html = str_replace('widtheditor', 'widthindent', $html);
+	$html = str_replace('width570', 'widthindent', $html);
+	$html = str_replace('s_slide', 's_slideindent', $html);
 
 	return $html;
 }

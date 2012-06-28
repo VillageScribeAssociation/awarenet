@@ -336,11 +336,15 @@ class Projects_Project {
 		//	byline
 		//------------------------------------------------------------------------------------------
 
+		/*
 		$ary['byline'] = array();
 		$members = $this->memberships->getMembers();
 		foreach($members as $userUID => $role) 
 			{ $ary['byline'][] = "[[:users::namelink::userUID=" . $userUID . ":]]"; }
 		$ary['byline'] = implode(", \n", $ary['byline']);
+		*/
+
+		$ary['byline'] = '';
 
 		//------------------------------------------------------------------------------------------
 		//	index

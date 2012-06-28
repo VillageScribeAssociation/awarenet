@@ -36,6 +36,8 @@
 	$returnUrl = str_replace($kapenta->serverPath, '', $returnUrl);
 	$returnUrl = str_replace('%%serverPath%%', '', $returnUrl);
 
+	$returnUrl .= "#question" . $question->UID;
+
 	if (true == $question->hasVoted($user->UID)) {
 		$session->msg("You have already voted in this poll.", 'bad');
 		$page->do302($returnUrl);

@@ -64,7 +64,7 @@ function groups_listmembersnav($args) {
 			//--------------------------------------------------------------------------------------
 			if ('js' == $editmode) {
 				//TODO: tidy this, perhaps make this a block
-				$imgUrl = '%%serverPath%%themes/clockface/icons/arrow_x_green.png';
+				$imgUrl = '%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_x_green.png';
 				$html .= "
 					<table noborder>
 						<tr>
@@ -101,4 +101,3 @@ function groups_listmembersnav($args) {
 //--------------------------------------------------------------------------------------------------
 
 ?>
-

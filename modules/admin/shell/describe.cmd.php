@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/live/inc/cmdaliases.class.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	commands for interacting with the registry
+//|	describe a database table
 //--------------------------------------------------------------------------------------------------
 
 function admin_WebShell_describe($args) {

@@ -10,7 +10,7 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
-	//	check defaults
+	//	check user defaults
 	//----------------------------------------------------------------------------------------------
 	if ('' == $registry->get('users.allowpublicsignup')) { 
 		$registry->set('users.allowpublicsignup', 'no');

@@ -11,6 +11,7 @@
   <li><a href='%%serverPath%%admin/coresetup/'>Core Setup</a> - core registry values and configuration.</li>
   <li><a href='%%serverPath%%admin/phpinfo/'>PHP Info</a> - displays all PHP configuration exposed by the server.</li>
   <li><a href='%%serverPath%%admin/listtempfiles/'>Temp Files</a> - find and remove extraneous junk such as file manager thumbnails, editor undo files, svn caches, etc.</li>
+  <li><a href='%%serverPath%%admin/temptables/'>Temp Tables</a> - temporary tables created by batch processes and module updates, kept to allow recovery from failed operations, but mostly they just take up space.</li>
   <li><a href='%%serverPath%%admin/parser/'>HTML Parser</a> - Test and configure the HTML parser (for sanitizing user input).</li>
   <li><a href='%%serverPath%%admin/logs/'>Page Logs</a> - View and analyze pageview logs.</li>
 </ul>

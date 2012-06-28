@@ -43,12 +43,12 @@
 			 . "[[:theme::navtitlebox::label=Result:]]\n"
 			 . "<b>Parser output:</b><br/>\n"
 			 . "<textarea rows='20' cols='80' name='result'>"
-			 . $parser->output
+			 . str_replace('[[:', '[%%delme%%[:', $parser->output)
 			 . "</textarea><br/>\n"
 			 . "<hr/><br/>\n"
 			 . "[[:theme::navtitlebox::label=Parser Debug Log::toggle=divParserDebug:]]\n"
 			 . "<div id='divParserDebug' style='visibility: hidden; display: none;'>\n"
-			 . $parser->log
+			 . str_replace('[[:', '[%%delme%%[:', $parser->log)
 			 . "</div>\n";
 
 	}

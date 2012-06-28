@@ -270,11 +270,13 @@ class Revisions_Deleted {
 
 	function restore() {
 		global $db;
+		global $session;
+
 		if (false == $this->fieldsLoaded) { $this->fields = $this->expandFields($this->content); }
 		if (false == $this->fieldsLoaded) { return false; }
 		if (false == $db->tableExists($this->refModel)) { return false; }
 
-		echo "restoring deleted object " . $this->refModel . '::' . $this->refUID . "<br/>\n";
+		$session->msg("restoring deleted object " . $this->refModel . '::' . $this->refUID);
 
 		//------------------------------------------------------------------------------------------
 		//	mark for restoration
@@ -287,12 +289,8 @@ class Revisions_Deleted {
 		//	copy back to original table
 		//------------------------------------------------------------------------------------------
 		$dbSchema = $db->getSchema($this->refModel);
-		$db->save($this->fields, $dbSchema, false);
-		
-		//------------------------------------------------------------------------------------------
-		//	from from revisions_deleted
-		//------------------------------------------------------------------------------------------
-		// TODO: delete this revisions_deleted object on successful restore (ie, move, not copy)
+		$check = $db->save($this->fields, $dbSchema, false);
+		return $check;
 	}
 
 	//==============================================================================================
@@ -328,18 +326,16 @@ class Revisions_Deleted {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	discover if the deleted obejct has a given property / field
+	//.	discover if the deleted object has a given property / field
 	//----------------------------------------------------------------------------------------------
 	//arg: name - name of a field / property [string]
 	//returns: true if property is present, false if not [bool]
+	//TODO: make mroe efficient
 
 	function hasProperty($name) {
-		echo "hasProperty: $name <br/>\n";
 		if (false == $this->fieldsLoaded) { $this->fields = $this->expandFields($this->content); }
 		if (false == $this->fieldsLoaded) { return false; }
-		foreach($this->fields as $key => $value) {
-			if ($key == $name) { return true; }
-		}
+		foreach($this->fields as $key => $value) { if ($key == $name) { return true; } }
 		return false;
 	}
 

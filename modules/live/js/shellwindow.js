@@ -6,24 +6,48 @@
 //	chat window object
 //--------------------------------------------------------------------------------------------------
 
-function Live_ShellWindow(serverPath, userName, hWnd) {
+function Live_ShellWindow() {
 
 	//----------------------------------------------------------------------------------------------
 	//	properties
 	//----------------------------------------------------------------------------------------------
 	if (!kutils) { alert('WARNING: kutils not available'); }
 	
-	this.serverPath = serverPath;		//_	URL of kapenta installation [string]
-	this.userName = userName;			//_	name of current user [string]
-	this.hWnd = hWnd;					//_	ID of this window in kwindowmanager [int]
 	this.history = new Array();			//_	array of shellCmd objects [array:string]
 	this.bufferLength = 20;				//_	number of history items to keep [int]
 	this.bufferPointer = -1;			//_	array index of last command [int]
 	this.replayPointer = -1;			//_	array index of selected command [int]
+	this.pending = 0;					//_	number of AJAX requests outstanding [int]
 
 	this.divHistory = document.getElementById('divHistory');
 	this.taPrompt = document.getElementById('content');
 	this.taPrompt.focus();
+
+	//----------------------------------------------------------------------------------------------
+	//	resize controls in response to window event
+	//----------------------------------------------------------------------------------------------
+
+	kwnd.onResize = function() {
+		var divCPS = document.getElementById('divSessionSummary');			//%	div
+		var divH = document.getElementById('divHistory');					//%	div
+		var txtBox = document.getElementById('content');					//% textarea
+
+		$('#divHistory').height($(window).height() - $('#content').height() - 6);
+		$('#divHistory').width($(window).width() - 2);
+		//divH.style.height = (vpHeight - divCPS.clientHeight - txtBox.cHeight - 25) + 'px';
+		//divH.style.width = (vpWidth - 6) + 'px';
+	
+
+		//txtBox.cHeight = extractNumberCW(txtBox.style.height)
+		//txtBox.style.top = (vpHeight - txtBox.cHeight - 8) + 'px';
+		//txtBox.style.width = (vpWidth - 6) + 'px';
+
+		$('#content').width($(window).width() - 6);
+		$('#content').css('top', $('#divHistory').height());
+	}
+
+	kwnd.onResize();
+	kwnd.setBanner("Kapenta Web Shell <span style='font-size: 8pt;'>version 0.1 alpha</span>");
 
 	//----------------------------------------------------------------------------------------------
 	//.	user has entered a command in the box and pressed enter
@@ -160,6 +184,27 @@ function Live_ShellWindow(serverPath, userName, hWnd) {
 		}
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	submit a command via JavaScript rather than typing it in the box
+	//----------------------------------------------------------------------------------------------
+	//arg: cmdTxt - a command to run as this user [string]
+
+	this.submit = function(cmdTxt) {
+		this.taPrompt.value = cmdTxt;
+		kshellwindow.cmdSubmitted();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set and clear throbber
+	//----------------------------------------------------------------------------------------------
+	//arg: byNumber - always 1 or -1 [int]
+
+	this.changePending = function(byNumber) {
+		this.pending = this.pending + byNumber;
+		if (this.pending > 0) { kwnd.setThrobber(true); }
+		else { kwnd.setThrobber(false); }
+	}
+
 	this.taPrompt.onkeyup = this.taKeyUp;
 }
 
@@ -191,7 +236,7 @@ function Live_ShellCmd(oShellWindow, cmdStr) {
 		if ('done' == this.state) { var dc = 'chatmessagegreen'; }
 
 		var throbber = jsServerPath 
-			+ 'themes/clockface/images/throbbersm.gif';
+			+ 'themes/clockface/images/throbber-inline.gif';
 
 		html = html + "<div class='" + dc + "' id='hist" + this.UID + "'>"
 			+ "<small><b>" + this.cmdStr + "</b></small><br/>"
@@ -220,7 +265,9 @@ function Live_ShellCmd(oShellWindow, cmdStr) {
 	this.send = function() {
 		var that = this;										//%	ref from clusures [string]		
 		var params = 'cmd=' + kutils.base64_encode(cmdStr);		//%	POST vars [string]
-		var sendUrl = this.oShell.serverPath + 'live/docmd/';	//%	URL to POST to [string]
+		var sendUrl = jsServerPath + 'live/docmd/';				//%	URL to POST to [string]
+
+		this.oShell.changePending(1);							//	increment outstanding requests
 
 		var cbFn = function(responseText, status) {
 			if (200 == status) {
@@ -242,8 +289,9 @@ function Live_ShellCmd(oShellWindow, cmdStr) {
 				}
 
 				if (responseText.indexOf(strCls) > 0) { that.oShell.clearHistory(); }
-				if (responseText.indexOf(strExt) > 0) { closeWindow(); }
+				if (responseText.indexOf(strExt) > 0) { kwnd.closeWindow(); }
 			}
+			that.oShell.changePending(-1);						//	decrement outstanding requests
 		}
 
 		kutils.httpPost(sendUrl, params, cbFn);					//	send it

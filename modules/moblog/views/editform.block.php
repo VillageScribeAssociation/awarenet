@@ -1,13 +1,19 @@
 <? /*
 <br/>
-<form name='editPost' method='POST' action='%%serverPath%%/moblog/save/'>
+<form
+	name='editPost'
+	id='frmEditPost%%UID%%'
+	onSubmit="khta.updateAllAreas();"
+	method='POST'
+	action='%%serverPath%%/moblog/save/'
+>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
-<table noborder>
+<table noborder style='width: 100%;'>
   <tr>
-    <td><b>Title: </b></td>
-    <td><input type='text' name='title' value='%%mbTitle%%' size='50' /></td>
+    <td><b>Title:</b></td>
+    <td width='100%'><input type='text' name='title' value='%%mbTitle%%' style='width: 100%;' /></td>
   </tr>
   <tr>
     <td><b>Published: </b></td>
@@ -21,16 +27,31 @@
 </table>
 <br/>
 <b>Post Body: </b><small>(use special {fold} marker at end of introduction)</small>
-<div class='HyperTextArea64' title='content' width='570' height='400' style='visibility: hidden; display: none'>
-%%content64%%
-</div>
-<script language='Javascript'> khta.convertDivs(); </script>
+<div
+	class='HyperTextArea64'
+	title='content'
+	width='-1'
+	height='400'
+	style='visibility: hidden; display: none'
+	refModule='moblog'
+	refModel='moblog_post'
+	refUID='%%UID%%'
+>%%content64%%</div>
+
+<script> khta.convertDivs(); </script>
+
+</form>
 <br/>
 <table noborder>
   <tr>
    <td valign='top'>
-    <input type='submit' value='Save' />
-    </form>
+   <input
+		type='button'
+		value='Save'
+		onClick="$('#frmEditPost%%UID%%').submit();" />
+   </td>
+   <td valign='top'>
+     [[:tags::editbutton::refModule=moblog::refModel=moblog_post::refUID=%%UID%%:]]
    </td>
    <td>
    <form name='cDelete' method='GET' action='%%delUrl%%'>
@@ -40,9 +61,6 @@
  </tr>
 </table>
 <br/>
-[[:theme::navtitlebox::label=Images::toggle=divBlogImages:]]
-<div id='divBlogImages'>
-[[:images::uploadmultiple::refModule=moblog::refModel=moblog_post::refUID=%%UID%%:]]
-</div>
+
 <br/>
 */ ?>

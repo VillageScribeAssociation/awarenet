@@ -6,7 +6,7 @@
 	<input type='hidden' name='refModel' value='%%refModel%%' />
 	<input type='hidden' name='refUID' value='%%refUID%%' />
 	<b>Add Tag:</b> 
-	<input type='text' name='tagName' value='' />
+	<input type='text' id='txtAddTag' name='tagName' value='' />
 	<input type='submit' value='&gt;&gt;' />
 </form>
 

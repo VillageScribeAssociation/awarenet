@@ -49,6 +49,23 @@
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//	scale down fixed width if mobile browser (try match screen size)
+	//----------------------------------------------------------------------------------------------
+
+	if ('true' == $session->get('mobile')) {
+		$maxWidth = (int)$session->get('contentWidth');
+		if (0 == $maxWidth) { $maxWidth = 320; }			//TODO: registry setting
+
+		if (true == array_key_exists($size, $model->transforms->presets)) {
+			$meta = $model->transforms->presets[$size];
+			
+			if (('fixed_width' == $meta['type']) && ($meta['width'] > $maxWidth)) {
+				$size = 'width' . $maxWidth;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//	create the transform if it does not exist
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists($size, $model->transforms->members)) {

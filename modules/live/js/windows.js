@@ -3,7 +3,7 @@
 //==================================================================================================
 //+	note that init script in the page template should create the following objects,expected by
 //+	klive.
-
+//+
 //+		kwindowmanager - a Live_WindowManager
 //+		kmouse - a Live_Mouse
 
@@ -20,57 +20,91 @@ function Live_WindowManager() {
 
 	this.windows = new Array();
 
-	this.pageWidth = -1;					//_ px, can constrain windows, eg for taskbar [int]
-	this.pageHeight = -1;					//_ px, can constrain windows, eg for taskbar [int]
-
-	if (window.innerWidth) {							
-		this.pageWidth = window.innerWidth;							// available on Firefox, Chrome
-		this.pageHeight = window.innerHeight;						// and Safari
-	}
-
-	if ((document.documentElement) && (document.documentElement.clientWidth)) {
-		this.pageWidth = document.documentElement.clientWidth;		// available on IE and Opera
-		this.pageHeight = document.documentElement.clientHeight;
-	}
-
-	if (-1 == this.pageWidth) { alert("Could not get viewport."); return; }
+	this.pageWidth = $(document).width();		//_ px, can constrain windows, eg for taskbar [int]
+	this.pageHeight = $(document).height();		//_ px, can constrain windows, eg for taskbar [int]
 
 	//----------------------------------------------------------------------------------------------
 	//	create a new window and add it to the array
 	//----------------------------------------------------------------------------------------------
+	//arg: title - window titlebar contents [string]
+	//arg: frameUrl - location of window contents, relative to jsServerPath [string]
+	//arg: width - initial width of the window (contents) in pixels [string]
+	//arg: height - initial height of the window (contents) in pixels [string]
+	//arg: modal - create modal [bool]
 	//returns: window id on success, -1 on failure [int]
 
-	this.createWindow = function (title, frameUrl, width, height, icon) {
+	this.createWindow = function (title, frameUrl, width, height, icon, modal) {
+		//------------------------------------------------------------------------------------------
+		//	create a new Live_Window object
+		//------------------------------------------------------------------------------------------
 		var icon = jsServerPath + 'modules/live/icons/document-new.png';	// default [string]
 		wnd = new Live_Window(title, frameUrl, icon);
 		wnd.hWnd = this.windows.length;
 
-		if (width) { wnd.width = width; }
-		if (height) { wnd.width = width; }
-		if (icon) { wnd.icon = icon; }
+		if (isMobile) { width = $(window).width(); }
 
+		if (width) { wnd.width = width; }
+		if (height) { wnd.height = height; }
+		if (icon) { wnd.icon = icon; }
+		if (modal) { wnd.modal = modal; }
+
+		//------------------------------------------------------------------------------------------
+		//	render into the page
+		//------------------------------------------------------------------------------------------
 		var theMsgDiv = document.getElementById('msgDiv');
 		if (!theMsgDiv) { alert("Window container div not found."); return -1; }
-		theMsgDiv.innerHTML = theMsgDiv.innerHTML + wnd.toHtml();
+
+		if (true == wnd.modal) {
+			var height = $("#jqBody").height();
+			$("#divModal").height(height); 
+			$("#divModal").css('zIndex', wnd.zIndex + 2); 
+			$("#divModal").show();
+		}
+
+		$('#msgDiv').append(wnd.toHtml());
 		
 		//------------------------------------------------------------------------------------------
 		//	choose a random position on the screen and bring to front
 		//------------------------------------------------------------------------------------------
 		divWindow = document.getElementById(wnd.UID);
 		if (!divWindow) { alert("Could not access window div."); return -1; }
-		divWindow.style.left = Math.floor(Math.random() * (this.pageWidth - wnd.width)) + 'px';
-		divWindow.style.top = Math.floor(Math.random() * (this.pageHeight - wnd.height)) + 'px';
+
+		if (true == wnd.modal) {
+			//	center modal windows (TODO: add scrollheight)
+			wnd.left = Math.floor(($(window).width() - wnd.width)  / 2);
+			wnd.top = Math.floor(($(window).height() - wnd.height)  / 2);
+
+			if (0 > wnd.top) { wnd.top = 10; }
+			wnd.top = wnd.top + $(window).scrollTop();
+
+			if (isMobile) { wnd.left = 0; }
+
+			divWindow.style.left = wnd.left + 'px';
+			divWindow.style.top = wnd.top + 'px';
+
+		} else {
+			//	scatter non-modal windows so they don't hide each other
+			wnd.left = Math.floor(Math.random() * ($(window).width() - wnd.width));
+			wnd.top = Math.floor(Math.random() * ($(window).height() - wnd.height));
+			wnd.top = wnd.top + $(document).scrollTop();
+
+			if (isMobile) { wnd.left = 0; }
+
+			divWindow.style.left = wnd.left + 'px';
+			divWindow.style.top = wnd.top + 'px';
+		}
+
 		divWindow.style.zIndex = wnd.zIndex + 3;
 
-		hWnd = this.windows.length;
-		this.windows[hWnd] = wnd;
-
-		return hWnd;
+		this.windows[wnd.hWnd] = wnd;
+		this.setFocus(wnd.UID);
+		return wnd.hWnd;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	close a window given its UID
 	//----------------------------------------------------------------------------------------------
+	//arg: wUID - UID of a window [string]
 	//returns: true on success, false on failure [bool]
 
 	this.closeWindow = function(wUID) {
@@ -78,7 +112,33 @@ function Live_WindowManager() {
 		if (-1 == hWnd) { return false; }
 		var check = this.windows[hWnd].close();
 		if (true == check) { this.windows[hWnd].UID = ''; }		// clear the UID
+		$("#divModal").hide();
 		return check;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set focus to a window given its UID
+	//----------------------------------------------------------------------------------------------
+	//arg: wUID - UID of a window [string]
+	//returns: true on success, false on failure [bool]
+
+	this.setFocus = function(wUID) {
+		var hWnd = this.getIndex(wUID);
+		if (-1 == hWnd) { return false; }
+
+		//	increment to highest Z index
+		this.windows[hWnd].setZIndex(this.getMaxZIndex() + 5);
+
+		//	cover all other windows
+		for (var i = 0; i < this.windows.length; i++) { this.windows[i].setCover(true); }
+		this.windows[hWnd].setCover(false);
+
+		//alert('set focus to: ' + hWnd)
+
+		//	remove gaps in list of indexes
+		//	TODO
+
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -104,6 +164,13 @@ function Live_WindowManager() {
 		return max;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	set the onClose event handler for a window
+	//----------------------------------------------------------------------------------------------
+
+	this.setOnClose = function(hWnd, cbFn) {
+		this.windows[hWnd].onClose = cbFn;
+	}
 
 }
 
@@ -123,18 +190,29 @@ function Live_Window(title, frameUrl, icon) {
 	this.height = 500;				//_	current height of window, pixels [int]
 	this.minWidth = 200;			//_ pixels [int]
 	this.minHeight = 200;			//_	pixels [int]
+	this.modal = false;				//_	lock background page and windows? [bool]
 
 	this.title = title;				//_	window title [string]
 	this.frameUrl = frameUrl;		//_	URL of content document [string]
 	this.icon = icon;				//_	window title [string]
 	this.hWnd = 0;					//_	index in livedesktop.windows array [int]
-	this.zIndex = 0;				//_  [int]
+	this.zIndex = 0;				//_ window focus / layer order [int]
 	
 	this.state = 'hidden';			//_	may be 'show', 'max', 'min', 'hide' [string]
 
 	//TODOs
 	this.hasStatusBar = false;		//_	not yet supported [bool]
 	this.hasMenu = false;			//_ not yet supported [bool]
+	this.menuType = 'banner';		//_	transitional
+
+	//----------------------------------------------------------------------------------------------
+	//	adjust for mobile devices
+	//----------------------------------------------------------------------------------------------
+
+	if (isMobile) {
+		this.width = 320;
+		this.height = 400;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make HTML div of window frame
@@ -150,10 +228,15 @@ function Live_Window(title, frameUrl, icon) {
 		//------------------------------------------------------------------------------------------
 	
 		var menuHtml = '';				// TODO: replace this with a menu object
-		//if ('fixedmenu' == type) {
-		//	menuHtml = "<div class='menubar' id='menubar" + windowUid + "'>"
-		//			 + "<ul class='menu'><!-- menuinsert --></ul></div>";
-		//}
+		if ('fixedmenu' == this.menuType) {
+			menuHtml = ''
+			 + "<div class='menubar' id='menubar" + this.UID + "'>"
+			 + "<ul class='menu'><!-- menuinsert --></ul>"
+			 + "</div>";
+
+		} else {
+			menuHtml = "<div id='divMenuBanner" + this.UID + "' c" + "lass='windowbanner'></div>";
+		}
 
 		var resUrl = jsServerPath + 'modules/live/images/';
 
@@ -168,7 +251,9 @@ function Live_Window(title, frameUrl, icon) {
 			 + "&nbsp;<b><span id='txtTitle" + this.UID + "' class='titlebar'>"
 			 + this.title + "</span></b></td>\n"
 			+ "<td width='24px'>"
-			 + "<img src='/gui/images/titlebar-close.png' id='wClose" + this.UID + "'"
+			 + "<img"
+			 + " id='wClose" + this.UID + "'"
+			 + " src='" + resUrl + "titlebar-close.png'"
 			 + " style='cursor: pointer; cursor: hand;'"
 			 + " onClick=\"kwindowmanager.closeWindow('" + this.UID + "');\""
 			 + " />"
@@ -185,13 +270,53 @@ function Live_Window(title, frameUrl, icon) {
 			+ "<div id='status" + this.UID + "' class='statusbar' "
 			 + "style='width: " + this.width + "px'>"
 			+ "<span id='statusTxt" + this.UID + "' style='float: left;'></span>"
-			+ "<img id='sresize" + this.UID + "' " 
-			 + "src='" + resUrl + "status-resize.png' "
-			 + "class='statusbarsize' />"
+			+ "<img"
+			 + " id='sresize" + this.UID + "'" 
+			 + " src='" + resUrl + "status-resize.png'"
+			 + " class='statusbarsize' />"
 			+ "</div>"
-			+ "</div>\n";
+			+ "</div>"
+			+ ""
+			+ "<!-- cover div is separate from window -->"
+			+ "<div"
+			 + " id='divCover" + this.UID + "'"
+			 + " class='windowoverlay'"
+			 + " style='position: absolute; display: none;'"
+			 + " onClick=\"kwindowmanager.setFocus('" + this.UID + "');\">"
+			+ "</div>"
+			+ "\n";
 	
-		return newHtml;	
+		return newHtml;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	event triggered before a window is closed
+	//----------------------------------------------------------------------------------------------
+	//;	if this is repaced with something which returns false the close() call will be cancelled.
+
+	this.onClose = function() { return true; }
+
+	//----------------------------------------------------------------------------------------------
+	//.	close/destroy this window
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	this.close = function() {
+		//------------------------------------------------------------------------------------------
+		//	allow event handler to interrupt
+		//------------------------------------------------------------------------------------------
+		if (false == this.onClose()) { return false; }
+
+		//------------------------------------------------------------------------------------------
+		//	remove the window div 
+		//------------------------------------------------------------------------------------------
+		var cwDiv = document.getElementById(this.UID);
+		var cvDiv = document.getElementById('divCover' + this.UID);
+		var divMsg = document.getElementById('msgDiv');
+		cwDiv.innerHTML = '';
+		divMsg.removeChild(cwDiv);
+		divMsg.removeChild(cvDiv);
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -205,19 +330,16 @@ function Live_Window(title, frameUrl, icon) {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	close/destroy this window
+	//	set z-index
 	//----------------------------------------------------------------------------------------------
-	//returns: true on success, false on failure [bool]
+	//arg: newIndex - new Z Index [int]
 
-	this.close = function() {
-		//--------------------------------------------------------------------------------------
-		//	remove the window div 
-		//--------------------------------------------------------------------------------------
-		var cwDiv = document.getElementById(this.UID);
-		var divMsg = document.getElementById('msgDiv');
-		cwDiv.innerHTML = '';
-		divMsg.removeChild(cwDiv);
-		return true;
+	this.setZIndex = function(newIndex) {
+		var mainDiv = document.getElementById(this.UID);
+		mainDiv.style.zIndex = newIndex;
+		this.zIndex = newIndex;
+		$('#divCover' + this.UID).css('z-index', this.zIndex + 1);
+		//this.setStatus("New Zindex: " + newIndex);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -227,6 +349,65 @@ function Live_Window(title, frameUrl, icon) {
 	this.disableResize = function() {
 		var statusDiv = document.getElementById("status" + this.UID);
 		statusDiv.innerHTML = "<span id='statusTxt" + this.UID + "' style='float: left;'></span>";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	toggle the cover div on and off
+	//----------------------------------------------------------------------------------------------
+	//;	This is used to prevent mouse events falling in to the iframe.
+	//arg: onoff - toggle the cover on or off, true is on [bool]
+
+	this.setCover = function(onoff) {
+		if (true == onoff) {
+			var ifOffset = $('#c' + this.UID).offset();
+			if (ifOffset) {
+				$('#divCover' + this.UID).css('top', ifOffset.top);
+				$('#divCover' + this.UID).css('left', ifOffset.left);
+				$('#divCover' + this.UID).width($('#c' + this.UID).width());
+				$('#divCover' + this.UID).height($('#c' + this.UID).height());
+				$('#divCover' + this.UID).show();
+			}
+		}
+		else {
+			$('#divCover' + this.UID).hide();
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	set the menu banner
+	//----------------------------------------------------------------------------------------------
+	//;	Set tio empty string to hide
+	//arg: newTxt - new txt / html content of the banner bar [string]
+
+	this.setBanner = function(newTxt) {
+		if ('' == newTxt) {
+			$('#divMenuBanner' + this.UID).hide();
+		} else {
+			newTxt = ''
+			 + '<b>&nbsp;' + newTxt + '</b>'
+			 + "<img"
+			 + " id='bthrob" + this.UID + "'"
+			 + " src='" + jsServerPath + "themes/clockface/images/throbber-window.gif'"
+			 + " style='float: right; margin-right: 12px; display: none;'>";
+
+			$('#divMenuBanner' + this.UID).html(newTxt);
+			$('#divMenuBanner' + this.UID).show();
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	show throbber in window banner
+	//----------------------------------------------------------------------------------------------
+	//arg: onoff - turn it on or off [bool]
+
+	this.setThrobber = function(onoff) {
+		if (true == onoff) {
+			//alert('throbber on: ' + $('#bthrob' + this.UID).attr('src'));
+			$('#bthrob' + this.UID).show();
+		} else {
+			//alert('throbber off');
+			$('#bthrob' + this.UID).hide();
+		}
 	}
 
 }
@@ -266,8 +447,16 @@ function Live_Mouse() {
 	//----------------------------------------------------------------------------------------------
 
 	this.onMouseDown = function(e) {
+
 		// IE is retarded and doesn't pass the event object 
 		if (e == null) { e = window.event; }
+
+		//	touch events on phones and tablets work differently
+		if (e.touches) {
+			e.clientX = e.touches[0].clientX;
+			e.clientY = e.touches[0].clientY;
+			e.srcElement = e.touches[0].target;
+		}
 		
 		// IE uses srcElement, others use target  (note to self: neat)
 		var target = e.target != null ? e.target : e.srcElement;
@@ -279,9 +468,15 @@ function Live_Mouse() {
 		//------------------------------------------------------------------------------------------
 		// for IE, left click == 1  for Firefox, left click == 0 
 		// en: if event.button = left and DOM object has class 'drag'
-			
-		if ( (e.button == 1 && window.event != null || e.button == 0) 
-			  && (target.className == 'titlebar' || target.className == 'statusbarsize' )) { 
+		
+		//if ( (e.button == 1 && window.event != null || e.button == 0 || e.touches) 
+		//	  && (target.className == 'titlebar' || target.className == 'statusbarsize' )) { 
+
+		if (!(target.className)) { return; }
+
+		if ((target.className == 'titlebar') || (target.className == 'statusbarsize' )) { 
+
+			//alert(e.clientX + ', ' + e.clientY + ', ' + target.className);
 
 			//logDebug('onmousedown()::left click on active element');
 
@@ -297,6 +492,9 @@ function Live_Mouse() {
 			divWindow = document.getElementById(windowUid);
 			kmouse.dragIdx = kwindowmanager.getIndex(windowUid);
 			//logDebug('onmousedown() - windowUid=' + windowUid);
+
+			//	set focus to the window
+			kwindowmanager.setFocus(windowUid);
 
 			// get the mouse position 
 			kmouse.start.x = e.clientX; 
@@ -328,14 +526,14 @@ function Live_Mouse() {
 				
 			// bring the clicked element to the front while it is being dragged 
 			// (reconsider this, like maybe [bring to front] button)
-			kmouse.oldZIndex = divWindow.style.zIndex; 
-			divWindow.style.zIndex = 10000; 
+			//divWindow.style.zIndex = kwindowmanager.window; 
 				
 			// we need to access the element in OnMouseMove
 			kmouse.dragElement = divWindow; 
 					
 			// tell our code to start moving the element with the mouse 
-			document.onmousemove = kmouse.onMouseMove; 
+			document.onmousemove = kmouse.onMouseMove;
+			document.ontouchmove = kmouse.onMouseMove;
 			
 			// cancel out any text selections document.body.focus(); 
 			// prevent text selection in IE 
@@ -378,10 +576,11 @@ function Live_Mouse() {
 			//	if we are presently dragging something, let it go
 			//--------------------------------------------------------------------------------------
 				
-			kmouse.dragElement.style.zIndex = kmouse.oldZIndex; // drop down to old Zindex
+			//kmouse.dragElement.style.zIndex = kmouse.oldZIndex; // drop down to old Zindex
 				
 			// remove event handlers
 			document.onmousemove = null;
+			document.ontouchmovemove = null;
 			document.onselectstart = null; 
 					
 			// this is how we know we're not dragging 
@@ -403,6 +602,11 @@ function Live_Mouse() {
 
 		if (undefined == kmouse.dragElement) {	return true; }	//TODO: research this return value
 		if (null == kmouse.dragElement) { return true; }		//TODO: research this return value
+
+		if (e.touches) {
+			e.clientX = e.touches[0].clientX;
+			e.clientY = e.touches[0].clientY;
+		}
 
 		var wnd = kwindowmanager.windows[kmouse.dragIdx];
 		//logDebug('kmouse dragindex: ' + kmouse.dragIdx);
@@ -455,9 +659,11 @@ function Live_Mouse() {
 	}
 
 	document.onmousedown = this.onMouseDown;
+	document.ontouchstart = this.onMouseDown;
 	document.onmouseup = this.onMouseUp;
+	document.ontouchend = this.onMouseUp;
 
-}
+}	
 
 //--------------------------------------------------------------------------------------------------
 //	object to represent point in 2d

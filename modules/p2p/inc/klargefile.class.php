@@ -10,6 +10,9 @@
 //+	Metadata is stored in an XML file like the following:
 //+
 //+		<klargefile>	
+//+			<module>videos</module>
+//+			<model>videos_video</model>
+//+			<UID>123456789</UID>
 //+			<path>data/videos/1/2/3/somewhere-over-the-rainbow.mp4</path>
 //+			<hash>[sha1 hash of entire file]</hash>
 //+			<size>34826104</size>
@@ -46,6 +49,11 @@ class KLargeFile {
 	var $count = 0;			//%	number of parts in file [int]
 	var $loaded = false;	//%	set to true if metadata loaded [bool]
 
+	var $module = '';		//%	module responsible for this file [string]
+	var $model = '';		//%	type of object which owns this file [string]
+	var $UID = '';			//%	UID of object which owns this file [string]
+	var $hasOwner = false;	//%	owner object is known to this instance [bool]
+
 	var $path = '';			//%	location of the file to be transferred / received [string]
 	var $metaFile = '';		//%	relative to installPath [string]
 	var $hash = '';			//%	sha1 hash of complete file [int]
@@ -61,7 +69,8 @@ class KLargeFile {
 
 	function KLargeFile($path = '') {
 		$this->parts = array();
-		$this->path = $path;
+
+		$this->path = $path;			//	TODO: checks on validity of all these
 
 		if ('' != $this->path) {
 			$this->metaFile = $this->makeMetaFileName($path);
@@ -94,6 +103,10 @@ class KLargeFile {
 		foreach($children as $childId) {
 			$child = $xd->getEntity($childId);
 			switch(strtolower($child['type'])) {
+				case 'module':		$this->module = $child['value'];			break;
+				case 'model':		$this->model = $child['value'];				break;
+				case 'uid':			$this->UID = $child['value'];				break;
+
 				case 'path':		$this->path = $child['value'];				break;
 				case 'hash':		$this->hash = $child['value'];				break;
 				case 'size':		$this->size = $child['value'];				break;
@@ -121,8 +134,15 @@ class KLargeFile {
 	function saveMetaXml() {
 		global $kapenta;
 		if (false == $this->loaded) { return false; }
+		if ('' == $this->UID) {
+			echo "Could not save file: " . $this->metaFile . " (missing UID)\n";			
+			return false;
+		}
 		$xml = $this->toXml();
 		$check = $kapenta->filePutContents($this->metaFile, $xml);
+		if (false == $check) {
+			echo "Could not save file: " . $this->metaFile . " (" . strlen($xml) . " bytes)\n";
+		}
 		return $check;
 	}
 
@@ -130,15 +150,34 @@ class KLargeFile {
 	//.	make from an extant file
 	//----------------------------------------------------------------------------------------------
 	//;	note that $this->path should be set before this is called
+	//;
+	//arg: module - name of module responsible for this file [string]
+	//arg: model - type of object which owns this file [string]
+	//arg: UID - UID of object which owns this file [string]
 	//returns: true on success, false on failure [bool]
 
 	function makeFromFile() {
 		global $kapenta;
-		if (false == $kapenta->fileExists($this->path)) { return false; }
+		global $db;
 
-		$absFile = $kapenta->installPath . $this->path;
-		$this->hash = sha1_file($absFile);
-		$this->size = filesize($absFile);
+		$owner = $kapenta->fileOwner($this->path);
+
+		if (0 == count($owner)) {
+			$this->loaded = false;
+			return false;
+		}							//	not shareable
+
+		$this->module = $owner['module'];
+		$this->model = $owner['model'];
+		$this->UID = $owner['UID'];
+
+		if (!$kapenta->fileExists($this->path)) { return false; }			//	no such file
+		if (!$kapenta->moduleExists($this->module)) { return false; }		//	no such module
+		if (!$db->objectExists($this->model, $this->UID)) { return false; }	//	no such object
+		if (!$db->isShared($this->model, $this->UID)) { return false; }		//	is not shared
+
+		$this->hash = $kapenta->fileSha1($this->path);
+		$this->size = $kapenta->fileSize($this->path);
 		$this->complete = 'yes';
 
 		$this->parts = array();
@@ -306,7 +345,7 @@ class KLargeFile {
 		}
 		$check = $kapenta->fileDelete($this->metaFile);
 		if (false == $check) { $allOk = false; }
-		else { echo "removed meta file: " . $this->metaFile . "<br/>\n"; }
+		else { /* echo "removed meta file: " . $this->metaFile . "<br/>\n"; */ }
 		return $allOk;
 	}
 
@@ -330,6 +369,9 @@ class KLargeFile {
 
 		$xml = ''
 		 . "<klargefile>\n"
+		 . "\t<module>" . $this->module . "</module>\n"
+		 . "\t<model>" . $this->model . "</model>\n"
+		 . "\t<UID>" . $this->UID . "</UID>\n"
 		 . "\t<path>" . $this->path . "</path>\n"
 		 . "\t<size>" . $this->size . "</size>\n"
 		 . "\t<complete>" . $this->size . "</complete>\n"

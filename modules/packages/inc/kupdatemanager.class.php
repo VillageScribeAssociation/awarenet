@@ -18,6 +18,10 @@
 //+		pkg.1234567890.source	- repository URL [string]
 //+		pkg.1234567890.name		- package name [string]
 //+		pkg.1234567890.status	- (available|installed|removed|nosource) [string]
+//+		pkg.1234567890.dirty	- (yes|no) [string]
+//+		pkg.1234567890.r		- Revision number (int) [string]
+//+		pkg.1234567890.v		- Version number (int) [string]
+//+		pkg.1234567890.date		- Date of last change [string]
 //+	
 //+	Optional keys, set as needed:
 //+	
@@ -33,9 +37,8 @@ class KUpdateManager {
 	//	properties
 	//----------------------------------------------------------------------------------------------
 
-	var $sources;				//_	list of software sources [array:string]
-	var $packages;				//_	set of all available packages [array:array:string]
-	var $installed;				//_	set of installed packages (UID only) [array:string]
+	var $sources;					//_	list of software sources [array:string]
+	var $packages;					//_	set of all available packages [array:array:string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -45,8 +48,7 @@ class KUpdateManager {
 		global $registry;
 
 		$this->sources = $this->listSources();				// get list of sources from registry
-		$this->packages = $this->listAllPackages();			// make list of all packages
-		$this->installed = $this->getPackageList();			// get list of installed packages 
+		$this->packages = $this->listAllPackages();			// list packages from registry
 	}
 
 	//==============================================================================================
@@ -61,8 +63,8 @@ class KUpdateManager {
 	function listSources() {
 		global $registry;
 		$sources = array();									//%	return value [array]
-		$uids = $registry->get('kapenta.sources.list');		//%	[string]
-		$ary = explode('|', $uids);							//%	[array:string]
+		$urls = $registry->get('kapenta.sources.list');		//%	[string]
+		$ary = explode('|', $urls);							//%	[array:string]
 		foreach($ary as $source) {
 			if ('' != trim($source)) { $sources[] = $source; }
 		}
@@ -111,7 +113,7 @@ class KUpdateManager {
 		//------------------------------------------------------------------------------------------
 		//	mark all installed packages from this source as 'nosource'
 		//------------------------------------------------------------------------------------------
-		$packages = $this->listInstalledPackages();
+		$packages = $this->listAllPackages();
 		foreach($packages as $pUID) {
 			if ($registry->get("pkg.$pUID.source") == $url) {
 				$registry->set("pkg.$pUID.status", 'nosource');
@@ -170,55 +172,34 @@ class KUpdateManager {
 		global $registry;
 		$packages = array();			//%	all package details [dict:dict]
 
-		$registry->load('pkg');	
-		foreach($registry->keys as $key => $val64) {
+		$keys = $registry->search('pkg', 'pkg.');
+		foreach($keys as $key => $val)
+		{
 			$parts = explode('.', $key);
-			if (('pkg' == $registry->getPrefix($key)) && (3 == count($parts))) {
+			if (3 == count($parts))
+			{
 				$UID = $parts[1];					//% package UID [string]
 				$field = $parts[2];					//% package field [string]
-				if (false == array_key_exists($UID, $packages)) { 
-					$packages[$UID] = array('source' => '', 'status' => '');
+
+				if (false == array_key_exists($UID, $packages))
+				{ 
+					$packages[$UID] = array(
+						'uid' => $UID, 
+						'source' => '', 
+						'status' => '',
+						'name' => '',
+						'r' => '',
+						'v' => '',
+						'manifest' => 'data/packages/' . $UID . '.xml.php'
+					);
 				}
-				$packages[$UID][$field] = $registry->get($key);
-			}
-		}
 
-
-		foreach($packages as $UID => $pkg) {
-			$packages[$UID]['UID'] = $UID;
-			$packages[$UID]['manifestFile'] = 'data/packages/' . $UID . '.xml.php';
-			if (true == array_key_exists('v', $packages[$UID])) { 
-				$packages[$UID]['version'] = $packages[$UID]['v'];
-			}
-			if (true == array_key_exists('r', $packages[$UID])) { 
-				$packages[$UID]['revision'] = $packages[$UID]['r'];
+				$packages[$UID][$field] = $val;
 			}
 		}
 
 		return $packages;
 	}
-	
-	//----------------------------------------------------------------------------------------------
-	//.	get set of packages installed on this system (UIDs only)
-	//----------------------------------------------------------------------------------------------
-	//returns: array of packageUID => metadata [array:array:string]
-
-	function listInstalledPackages() {
-		global $registry;
-		$packages = $this->listAllPackages();
-		$installed = array();
-
-		foreach($packages as $UID => $pkg) {
-			if (true == array_key_exists('status', $pkg)) {
-				if ('installed' == $pkg['status']) { $installed[$UID] = $pkg; }
-			} else {
-				$this->setPackageField($UID, 'status', 'available');
-			}
-		}
-
-		return $installed;
-	}
-
 
 	//----------------------------------------------------------------------------------------------
 	//.	get set of installed packages as array of UIDs
@@ -239,7 +220,6 @@ class KUpdateManager {
 	//----------------------------------------------------------------------------------------------
 	//.	download new package lists from all repositories and update and manfests which have changed
 	//----------------------------------------------------------------------------------------------
-	//TODO: break this up into multiple functions
 
 	function updateAllLists() {
 		global $registry;
@@ -252,109 +232,15 @@ class KUpdateManager {
 		//	try update all package lists
 		//------------------------------------------------------------------------------------------
 
-		echo "<h1>Updating all packages</h1>\n";
-
 		foreach($sources as $url) {
 			$source = new KSource($url);
 			$this->log('<h2>' . $source->url . '</h2>', 'black');
-			$check = $source->update();
 
-			if (true == $check) {
-				$msg = 'Downloaded new package list from:<br/>' . $url;
-				$session->msg($msg, 'ok');
-				$this->log($msg, 'green');
+			$report = $source->update(true);
+			//$this->log($report);
 
-				foreach($source->packages as $uid => $meta) {
-					//------------------------------------------------------------------------------
-					//	copy metadata to registry
-					//------------------------------------------------------------------------------
-					$registry->set("pkg.$uid.name", $meta['name']);
-					$registry->set("pkg.$uid.source", $url);
-
-					if ('installed' != $registry->get("pkg.$uid.status")) {
-						$registry->set("pkg.$uid.status", 'available');
-					}
-
-					//------------------------------------------------------------------------------
-					//	get new manifest for any installed packages which have changed
-					//------------------------------------------------------------------------------
-					if (true == $this->isInstalled($uid)) {
-						$package = new KPackage($uid);
-						if (true == $package->loaded) {
-							$registry->set('pkg.' . $package->UID . '.v', $package->version);
-							$registry->set('pkg.' . $package->UID . '.r', $package->revision);
-
-							if ($package->revision != $meta['revision']) { 
-								//------------------------------------------------------------------
-								//	package has changed, update our manifest
-								//------------------------------------------------------------------
-								$check = $package->updateFromRepository();
-								if (true == $check) { 
-									$msg = ''
-									 . 'Package updated: ' . $package->name . '<br/>'
-									 . 'Our version: ' . $package->revision . '<br/>'
-									 . 'Latest version: ' . $meta['revision'] . '<br/>';
-	
-									$session->msg($msg, 'ok'); 
-									$this->log($msg, 'green');
-
-									//TODO: check 'updated' field, 
-									// set registry key if updates available
-
-								} else { 
-									$msg = "Could not download manifest: " . $package->$name;
-									$session->msg($msg, 'bad');
-									$this->log($msg, 'red');
-								}
-
-							} else {
-								//------------------------------------------------------------------
-								//	package has not changed
-								//------------------------------------------------------------------
-								$msg = $package->name . ": package is up to date.";
-								$this->log($msg, 'green');
-							}
-		
-							//----------------------------------------------------------------------
-							//	check if this package is dirty (files to be added, removed, updated)
-							//----------------------------------------------------------------------
-							$different = $package->getLocalDifferent();
-							if (0 == count($different)) {
-								$msg = 'Package ' . $package->name . ' is cleanly installed.';
-								$this->log($msg, 'green');
-							} else {
-								$registry->set('pkg.' . $package->UID . '.dirty', 'yes');
-								$msg = 'Package '. $package->name .' requires updates or cleaning.';
-								$this->log($msg, 'red');
-								foreach($different as $item) { 
-									echo '(' . $item['local'] . ') ' . $item['path'] . "<br/>\n";
-								}
-							}
-
-						} else {
-							//----------------------------------------------------------------------
-							//	package could not be loaded
-							//----------------------------------------------------------------------
-							$msg = 'Package could not be loaded: ' . $uid;
-							$check = $package->updateFromRepository();
-							if (true == $check) {
-								$msg .= "<br>Re-downloaded, please rerun updates.";
-							} else {
-								$msg .= "<br/>Could not download manifest.";
-							}
-							$this->log($msg, 'red');
-
-						} // end if is loaded
-					} // end if isInstalled
-				} // end foreach package
-
-
-			} else {
-				$msg = 'Could not downloaded package list from:<br/>' . $url;
-				$session->msg($msg, 'bad');
-				$this->log($msg, 'red');
-			}
 		} // end foreach source
+
 		$this->log('<h3>Done.</h3>', 'black');
 	}
 
@@ -380,20 +266,21 @@ class KUpdateManager {
 		if ('status' == $field) { $this->updatePackageList(); }
 	}
 
-	//----------------------------------------------------------------------------------------------
-	//.	discover if a package is installed on this system
-	//----------------------------------------------------------------------------------------------
-	//arg: packageUID - UID of a kapenta package [string]
-	//returns: True if package is configured on this system, false if not [bool]
-
-	function isInstalled($packageUID) {
-		if (true == in_array($packageUID, $this->installed)) { return true; }
-		return false;
-	}
-
 	//==============================================================================================
 	//	ADDING AND REMOVING PACKAGES
 	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	check if a package is marked as 'installed' in the registry
+	//----------------------------------------------------------------------------------------------
+	//arg: UID - UID of a KPackage
+
+	function isInstalled($UID) {
+		global $registry;
+
+		if ('installed' == $registry->get('pkg.' . $UID . '.status')) { return true; }
+		return false;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	add a package to the registry
@@ -454,7 +341,7 @@ class KUpdateManager {
 	function log($msg, $color = 'black') {
 		echo ''
 		 . "<div class='chatmessage" . $color . "'>$msg</div>"
-		 . "<script>scrollToEnd();</script>\n";
+		 . "<script>scrollToBottom();</script>\n";
 		flush();
 	}
 

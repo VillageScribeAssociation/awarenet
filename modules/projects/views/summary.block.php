@@ -9,8 +9,9 @@
     <td valign='top'>
       <h3><a class='black' href='/projects/%%alias%%'>%%projectTitle%%</a></h3>
       %%summary%% %%viewLink%%  %%editLink%%<br/>
+      <div class='spacer'></div>
 	  <div class='inlinequote'>
-      	<b>By:</b> %%byline%% <br/>
+		[[:projects::summarybyline::projectUID=%%UID%%:]]
 	  	[[:tags::listflat::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]<br/>
 	  	<b>Started:</b> %%createdOnLong%%<br/>
 	  	<b>Last Update:</b> %%editedOnLong%% 

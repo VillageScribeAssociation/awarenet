@@ -11,11 +11,25 @@
 
 function forums_showthread($args) {
 	global $theme;
+	global $user;
 
-	// TODO: auth
-	if (array_key_exists('threadUID', $args) == false) { return false; }
+	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('threadUID', $args)) { return '(thread UID not given)'; }
+
 	$model = new Forums_Thread($args['threadUID']);
-	$html = $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/forums/views/showthread.block.php'));
+	if (false == $model->loaded) { return '(thread nto found)'; }
+	// TODO: permissions check here
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/forums/views/showthread.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+
 	return $html;
 }
 

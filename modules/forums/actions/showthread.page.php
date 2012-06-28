@@ -7,9 +7,9 @@
 	<content>
 		[[:theme::navtitlebox::width=570::label=Discussion:]]
 		[[:forums::showthread::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
-		[[:polls::showpoll::refModule=forums::refModel=forums_thread::refUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
+		[[:polls::showall::refModule=forums::refModel=forums_thread::refUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 
-		[[:live::river::mod=forums::view=showreplies::pv=pageNo::allow=num|threadUID::threadUID=%%threadUID%%::num=3:]]
+		[[:live::river::mod=forums::view=showreplies::pv=pageNo::allow=num|threadUID::threadUID=%%threadUID%%::num=30:]]
 		[`|lt]br/[`|gt]
 
 		[[:theme::navtitlebox::width=570::label=Reply::toggle=divAddReply::hidden=yes:]]

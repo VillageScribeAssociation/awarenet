@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//	this object represents the HTTP request made of the web server
+//*	this object represents the HTTP request made of the web server
 //--------------------------------------------------------------------------------------------------
 
 class KRequest { 
@@ -10,13 +10,16 @@ class KRequest {
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $raw;		// the REQUEST_URI as reported by Apache [string]
-	var $parts;		// separated by forwardslash [array]
-	var $module;	// module requested [string]
-	var $TOaction;	// action to take on this module [string]
-	var $ref;		// object on which the action is taken [string]
-	var $args;		// arguments [array]
-	var $mvc;		// module, model, action parts [array]
+	var $raw;				//_	the REQUEST_URI as reported by Apache [string]
+	var $parts;				//_	separated by forwardslash [array]
+	var $module;			//_	module requested [string]
+	var $action;			//_	action to take on this module [string]
+	var $ref;				//_	object on which the action is taken [string]
+	var $args;				//_	arguments [array]
+	var $mvc;				//_	module, model, action parts [array]
+	var $local = false;		//_	set to true if client is on same subnet as server [bool]
+	var $agent = '';		//_ requesting user agent [string]
+	var $mobile = false;	//_ detected mobile browser [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	constructor (breaks up request)
@@ -48,7 +51,16 @@ class KRequest {
 
 		$this->getRequestArguments();								// trim out arguments
 		$this->splitRequestURI();									// interpret the rest
+		$this->local = $this->checkIfLocal();						// check subnet of client
 
+		//------------------------------------------------------------------------------------------
+		//	try to handle mobile browsers
+		//------------------------------------------------------------------------------------------
+
+		$this->agent = $_SERVER['HTTP_USER_AGENT'];
+		if (preg_match('/iPhone|Android|Blackberry/i', $this->agent)) {
+			$this->mobile = true;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -110,6 +122,54 @@ class KRequest {
 		if ($partNum < $mvcCount){					//if there are more parts it must be a reference
 			$this->ref = $this->mvc[$partNum];
 		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover if the client IP is within our network
+	//----------------------------------------------------------------------------------------------
+	//returns: true if client is local, false if not or on error [bool]
+
+	function checkIfLocal() {
+		global $registry;
+
+		if ('127.0.0.1' == $_SERVER['REMOTE_ADDR']) { return true; }
+		if ('127.0.1.1' == $_SERVER['REMOTE_ADDR']) { return true; }
+
+		$snStart = $registry->get('kapenta.snstart');
+		$snEnd = $registry->get('kapenta.snend');
+
+		if (('' == $snStart) || ('' == $snEnd)) { return false; }
+
+		$snIStart = $this->ipToInt($snStart);
+		$snIEnd = $this->ipToInt($snEnd);
+
+		$clientI = $this->ipToInt($_SERVER['REMOTE_ADDR']);
+
+		if (($clientI >= $snIStart) && ($clientI <= $snIEnd)) { return true; }
+
+		$snIStart = $this->ipToInt('196.23.167.0');
+		$snIEnd = $this->ipToInt('196.23.167.255');
+
+		if (($clientI >= $snIStart) && ($clientI <= $snIEnd)) { return true; }
+
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	convert an IP address to integer format
+	//----------------------------------------------------------------------------------------------
+	//arg: ip - IP address in dotted decimal notation, four octets, eg 127.0.0.1 [string]
+	//returns: ip address as a base 10 integer [int]
+
+	function ipToInt($ip) {
+		$parts = explode('.', trim($ip));
+		if (4 != count($parts)) { return 0; }
+		$num = 0
+		 + ((int)trim($parts[3]))
+		 + ((int)trim($parts[2]) * 256)
+		 + ((int)trim($parts[1]) * 65536)
+		 + ((int)trim($parts[0]) * 16777216);
+		return $num;
 	}
 
 	/*

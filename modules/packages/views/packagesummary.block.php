@@ -3,7 +3,7 @@
 <table noborder width='100%'>
   <tr>
 	<td valign='top' width='50' %%bgcolor%%>
-		<img src='%%serverPath%%themes/%%defaultTheme%%/icons/file.archive.png' />
+		<img src='%%serverPath%%themes/%%defaultTheme%%/images/icons/file.archive.png' />
 	</td>
 	<td valign='top' %%bgcolor%%>
 		<b>%%name%% (version: %%version%% revision: %%revision%%)</b><br/>

@@ -1,21 +1,39 @@
 //--------------------------------------------------------------------------------------------------
 //*	object for uploading large files via AJAX, sending a file as small hashed parts one at a time
 //--------------------------------------------------------------------------------------------------
+//+
+//+	Basic operation:
+//+	
+//+		User drags and drops files into the droptarget ('#divDropTarget').  This causes a list of
+//+		files to be read from the drop event.  A Live_Upload object is created for each file, and
+//+		the file is divided into a set of chunks (Live_UploadPart) and a sha1 hash calculated for
+//+		each chunk.
+//+
+//+		Once all chunks have been hashed a manifest is sent to the server, detailing the set of
+//+		chunks and file metadata (http://../live/uploadmanifest/).  The server will respond with 
+//+		either a list of parts to upload (some may have been uploaded already) or an error message
+//+		indicating that the upload must not proceed.
+//+
+//+		Reasons the server may refuse an upload include invalid file type, lack of user permissions,
+//+		hdd full, etc.
+//+
+//+		Once all parts have been sent, a call is made to http://../live/uploadcomplete/ and
+//+		the parts uplaoded parts are stiched together on the server.  A response code is returned
+//+		and the uploader then moves on to the next file.
+//+
 //+	NOTE: this object expects itself to be called kupload
 
 //arg: divId - id of a div to render the drop target into [string]
-//arg: notifyUrl - URL to POOST details of newly uploaded files to [string]
-//arg: refModule - name of a kapenta module to which files will be uploader [string]
+//arg: refModule - name of a kapenta module to which files will handle file attachment [string]
 //arg: refModel - type of object which will own files [string]
 //arg: refUID - UID of object which will own files [string]
 
-function Live_Uploader(divId, fileType, refModule, refModel, refUID) {
+function Live_Uploader(divId, refModule, refModel, refUID) {
 
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 	this.divId = divId;							//_	id of drop target div [string]
-	this.fileType = fileType;					//_	may be 'video', 'image' or 'all' [string]
 	this.refModule = refModule;					//_	module to attach to [string]
 	this.refModel = refModel;					//_	type of owner [string]
 	this.refUID = refUID;						//_	UID of owner [string]
@@ -28,6 +46,20 @@ function Live_Uploader(divId, fileType, refModule, refModel, refUID) {
 	this.active = false;						//_	controls regular timer [bool]
 	this.uploading = false;						//_	set to true while upload is in progress [bool]
 	this.hashing = false;						//_	set to true while hash is in progress [bool]
+	this.supported = false;						//_	all APIs supported by browser [bool]
+
+	//----------------------------------------------------------------------------------------------
+	//.	check if required functionality is supported by the browser
+	//----------------------------------------------------------------------------------------------
+
+	if (
+		(window.File) && 
+		(window.FileReader) &&
+		(window.FileList) &&
+		(window.Blob) && 
+		(window.Uint8Array) &&
+		(window.ArrayBuffer)
+	) { this.supported = true; }	
 
 	//----------------------------------------------------------------------------------------------
 	//.	render the drag/drop div
@@ -46,8 +78,10 @@ function Live_Uploader(divId, fileType, refModule, refModel, refUID) {
 		 + "<div id='divDropConsole' class='inlinequote'></div>\n"
 		 + "<img \n"
 		 + "	id='imgPreview'\n"
-		 + "	src='" + jsServerPath + "themes/clockface/icons/no.png'\n"
-		 + "	width='50' />Drop Files Here<br/>\n"
+		 + "	src='" + jsServerPath + "themes/clockface/images/icons/no.png'\n"
+		 + "	width='50' />"
+		 + "Drag and drop files here, or switch to "
+		 + "<a href='javascript:kupload.useBasic();'>basic uploader</a>.<br/>\n"
 		 + "</div>\n"
 		 + "<div id='divProgress'></div>\n"
 		 + "<div id='divUploaderLog'></div>\n"
@@ -58,18 +92,32 @@ function Live_Uploader(divId, fileType, refModule, refModel, refUID) {
 
 		//------------------------------------------------------------------------------------------
 		//	add drop target
-		//------------------------------------------------------------------------------------------
-		if ('undefined' === typeof FileReader) { 
-			log('Browser does not support this feature.'); 
+		//------------------------------------------------------------------------------------------		
+		if (false || (typeof(window['FileReader']) == 'undefined')) { 
 			var divDT = document.getElementById('divDropTarget');
-			divDT.innerHTML = "<b>Your browser does not support drag and drop for files.</b><br/>"
-				+ "This feature is known to work with recent versions of Mozilla FireFox, "
-				+ "Chromium and Google Chrome, though necessary features are planned "
-				+ "for upcoming versions of Microsoft Internet Explorer and Apple Safari.";
+			divDT.innerHTML = "<br/><br/>"
+			    + "<b>Your browser does not support drag and drop for files.</b><br/>"
+				+ "This feature is known to work with recent versions of "
+				 + "<a href='http://getfirefox.com/'>Mozilla FireFox</a>, "
+				 + "<a href='http://www.opera.com/download/'>Opera</a>, "
+				 + "<a href='http://www.getchromium.org/'>Chromium</a> and "
+				 + "<a href='http://www.google.com/chrome'>Google Chrome</a>, "
+				 + "though necessary features are planned "
+				 + "for upcoming versions of Microsoft Internet Explorer and Apple Safari.";
+
+			divDT.innerHTML = '';
+
+			this.log('File uploads are more reliable on Firefox, use that if you have it.');
 
 			return false;
 		} else {
 			this.log('FileReader API present...');
+			var switchAdvanced = ''
+			 + "Or use <a href='javascript:kupload.useAdvanced()'>drag and drop uploader</a> "
+			 + "(faster and more reliable).";
+
+			$('#divAttachBasic').hide();
+			$('#divSwichAdvanced').html(switchAdvanced)
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -126,8 +174,26 @@ function Live_Uploader(divId, fileType, refModule, refModel, refUID) {
 		dropbox.addEventListener('drop', drop, false);
 
 		this.log('init complete');
-
+		this.log('');
 		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	show basic uploader
+	//----------------------------------------------------------------------------------------------
+
+	this.useBasic = function() {
+		$('#divAttachBasic').show();
+		$('#divAttachDragDrop').hide();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	show AJAX uploader
+	//----------------------------------------------------------------------------------------------
+
+	this.useAdvanced = function() {
+		$('#divAttachBasic').hide();
+		$('#divAttachDragDrop').show();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -325,35 +391,6 @@ function Live_Upload(oUploader, oFile) {
 	//alert('File Extension: ' + this.extension);
 
 	//----------------------------------------------------------------------------------------------
-	//.	check that the extension matches what we are expecting
-	//----------------------------------------------------------------------------------------------
-
-	this.checkExtension = function() {
-		if ('video' == this.oUploader.fileType) {	// flash videos only
-			if (
-				('flv' == this.extension) ||
-				('mp3' == this.extension) ||
-				('mp4' == this.extension)
-			) { return true; }
-			return false;
-		}
-
-		if ('image' == this.oUploader.fileType) {	// images only
-			if (
-				('jpg' == this.extension) ||
-				('jpeg' == this.extension) ||
-				('gif' == this.extension) ||    
-				('png' == this.extension)
-			) { return true; }
-			return false;
-		}
-
-		return false;								// no restriction on type
-	}
-
-	if (false == this.checkExtension()) { this.status = 'invalid'; }
-
-	//----------------------------------------------------------------------------------------------
 	//.	populate parts array
 	//----------------------------------------------------------------------------------------------
 	//arg: someFile - a File object, from which a FileReader can be made [object]
@@ -372,7 +409,7 @@ function Live_Upload(oUploader, oFile) {
 	this.hashNextPart = function() {
 		if (true == this.oUploader.hashing) { return; }		// one at a time
 		for (var i in this.parts) {
-			if ('new' == this.parts[i].status) { 
+			if ('new' == this.parts[i].status) {
 				this.parts[i].calcHash();
 				return;										// found part to hash
 			}
@@ -444,6 +481,7 @@ function Live_Upload(oUploader, oFile) {
 		 + '&refModule=' + this.oUploader.refModule
 		 + '&refModel=' + this.oUploader.refModel
 		 + '&refUID=' + this.oUploader.refUID
+		 + '&path=' + kutils.base64_encode(this.name)
 		 + '&manifest64=' + kutils.base64_encode(manifest);
 
 		cbFn = function(responseText, status) { 
@@ -453,6 +491,7 @@ function Live_Upload(oUploader, oFile) {
 				that.oUploader.uploading = false;
 				that.readBitmap(responseText);
 			} else {
+				alert(responseText);
 				that.status = 'error';
 				that.oUploader.log('WARNING:<br/>' + status + "\n" + responseText);
 				that.oUploader.uploading = false;
@@ -522,16 +561,23 @@ function Live_Upload(oUploader, oFile) {
 
 		cbFn = function(responseText, status) { 
 			if (200 == status) {
+				if ('<ok/>' !== responseText) { alert(responseText); }
 				that.oUploader.log('Finished uploading file: ' + that.oFile.name + '<br/>');
 				that.status = 'complete';
 				that.oUploader.log('/live/uploadcomplete/:<br/>' + kutils.htmlEntities(responseText));
 				that.oUploader.uploading = false;
 				that.oUploader.renderFiles();
 				that.oUploader.checkAllDone();
+
+				if ((window.parent) && (window.parent.Live_ReloadAttachments)) {
+					window.parent.Live_ReloadAttachments();
+				}
+
 				//TODO: deactiviate oUploader if all files have been uploaded
 
 			} else {
 				that.status = 'sent';
+				alert('WARNING: ' + status + "\n" + responseText);
 				that.oUploader.log('WARNING:<br/>' + status + "\n" + responseText);
 				that.oUploader.uploading = false;
 				that.oUploader.checkAllDone();
@@ -549,7 +595,7 @@ function Live_Upload(oUploader, oFile) {
 	this.render = function() {
 		var invalidMsg = '';				//%	for when users select files of wrong type [string]
 		var complete = 0;					//%	number of complete parts [int]
-		var fileImgUrl = jsServerPath + 'themes/clockface/icons/file.document.png';
+		var fileImgUrl = jsServerPath + 'themes/' + jsTheme + '/images/icons/file.document.png';
 
 		//------------------------------------------------------------------------------------------
 		//	check progress of all parts

@@ -41,8 +41,11 @@
     </models>
     <defaultpermissions>
 		student:p|groups|groups_group|show
+		student:p|groups|groups_group|comments-add
+		student:p|groups|groups_group|comments-show
 		student:c|groups|groups_group|edit|(if)|groupadmin
 		student:c|groups|groups_group|edit|(if)|creator
+		student:p|groups|groups_group|announcements-show
 		student:c|groups|groups_group|announcements-add|(if)|groupadmin
 		student:c|groups|groups_group|announcements-edit|(if)|groupadmin
 		student:c|groups|groups_group|announcements-delete|(if)|groupadmin
@@ -51,9 +54,12 @@
 		student:c|groups|groups_group|images-delete|(if)|groupadmin
 
 		teacher:p|groups|groups_group|show
+		teacher:p|groups|groups_group|comments-add
+		teacher:p|groups|groups_group|comments-show
 		teacher:c|groups|groups_group|edit|(if)|groupadmin
 		teacher:c|groups|groups_group|edit|(if)|creator
 		teacher:p|groups|groups_group|new
+		teacher:p|groups|groups_group|announcements-show
 		teacher:p|groups|groups_group|announcements-add
 		teacher:p|groups|groups_group|announcements-edit
 		teacher:p|groups|groups_group|announcements-delete

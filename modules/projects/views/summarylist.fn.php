@@ -17,6 +17,7 @@ function projects_summarylist($args) {
 	global $user;
 	global $theme;
 	global $page;
+	global $session;
 
 	$start = 0;					//%	index of first item in result set [int]
 	$num = 5;					//%	number of items per page [int]
@@ -61,18 +62,26 @@ function projects_summarylist($args) {
 	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
 	$range = $db->loadRange('projects_project', '*', $conditions, 'editedOn DESC', $num, $start);
-	$block = $theme->loadBlock('modules/projects/views/summary.block.php');
+
+	if ('true' == $session->get('mobile')) { 
+		$block = $theme->loadBlock('modules/projects/views/summary.m.block.php');
+	} else {
+		$block = $theme->loadBlock('modules/projects/views/summary.block.php');
+	}
 
 	foreach($range as $UID => $row) {
 		$model = new Projects_Project();
 		$model->loadArray($row);
 		$labels = $model->extArray();
-		$labels['rawblock64'] = base64_encode('[[:projects::summary::UID=' . $row['UID'] . ':]]');
+
+		//DEPRECATED
+		//$labels['rawblock64'] = base64_encode('[[:projects::summary::UID=' . $row['UID'] . ':]]');
 
 		$html .= $theme->replaceLabels($labels, $block);
 
-		$channel = 'project-' . $model->UID;
-		$page->setTrigger('projects', $channel, "[[:projects::summary::UID=" . $row['UID'] . ":]]");
+		//DEPRECATED
+		//$channel = 'project-' . $model->UID;
+		//$page->setTrigger('projects', $channel, "[[:projects::summary::UID=" . $row['UID'] . ":]]");
 	}
 
 	if (($start + $num) > $totalItems) { $html .= "<!-- end of results -->"; }

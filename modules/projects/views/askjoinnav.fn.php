@@ -15,9 +15,10 @@ function projects_askjoinnav($args) {
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
-	//----------------------------------------------------------------------------------------------	
-	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return '[[:users::pleaslogin:]]'; }
+	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
+	if (false == array_key_exists('raUID', $args)) { return false; }
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }

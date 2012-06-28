@@ -1,6 +1,6 @@
 <? /*
 <h3>Your Picture</h3>
-[[:images::single::refModule=%%refModule%%::refUID=%%refUID%%::size=width290:]]
+[[:images::default::refModule=%%refModule%%::refModel=%%refModel%%::refUID=%%refUID%%::size=width290:]]
 
 <h3>Change Picture</h3>
 <form enctype='multipart/form-data' action='%%serverPath%%images/upload/' method='POST'>

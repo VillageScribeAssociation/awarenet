@@ -4,10 +4,23 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - my user account</title>
-	<content>[[:theme::navtitlebox::width=570::label=Change Password:]]
-[`|lt]div class=[`|sq]indent[`|sq][`|gt]
-[[:users::changepassform::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]</content>
+	<content>
+		[[:theme::navtitlebox::label=Change Password::toggle=divChangePass:]]
+		[`|lt]div id='divChangePass' class=[`|sq]block[`|sq][`|gt]
+		[[:users::changepassform::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		<div class='foot'></div>
+		<br/>
+
+
+		[[:theme::navtitlebox::label=Themes and Appearance::toggle=divThemes:]]
+		<div class='block' id='divThemes'>
+			[[:users::themeprefs:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+
+	</content>
 	<nav1></nav1>
 	<nav2></nav2>
 	<script></script>

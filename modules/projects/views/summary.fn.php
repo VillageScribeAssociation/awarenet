@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID if present [string]
 
 function projects_summary($args) {
-	global $db, $theme, $user;
+	global $db, $theme, $user, $session;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -26,7 +26,12 @@ function projects_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/projects/views/summary.block.php');
+	if ('true' == $session->get('mobile')) { 
+		$block = $theme->loadBlock('modules/projects/views/summary.m.block.php');		
+	} else {
+		$block = $theme->loadBlock('modules/projects/views/summary.block.php');
+	}
+	
 	$html = $theme->replaceLabels($model->extArray(), $block);
 	return $html;
 }

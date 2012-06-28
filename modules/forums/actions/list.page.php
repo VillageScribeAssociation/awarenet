@@ -24,8 +24,10 @@
 	<menu2>[[:forums::menu:]]</menu2>
 	<section></section>
 	<subsection></subsection>
-	<breadcrumb>[[:theme::breadcrumb::label=Forums - ::link=/forums/:]]
-[[:theme::breadcrumb::label=All::link=/forums/:]]</breadcrumb>
+	<breadcrumb>
+		[[:theme::breadcrumb::label=Forums - ::link=/forums/:]]
+		[[:theme::breadcrumb::label=All::link=/forums/:]]
+	</breadcrumb>
 </page>
 
 */ ?>

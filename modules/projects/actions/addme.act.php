@@ -37,7 +37,7 @@
 	} else { $session->msg('Error: request could not be processed.', 'warn'); }
 					
 	//----------------------------------------------------------------------------------------------
-	//	notify admins of request, cc to user making it  //TODO: handle with event
+	//	notify admins of request, cc to user making it  //TODO: handle with an event
 	//----------------------------------------------------------------------------------------------
 	$ext = $project->extArray();
 
@@ -51,7 +51,7 @@
 
 	$nUID = $notifications->create(
 		'projects', 'projects_project', $project->UID, 'projects_newmemberadded', 
-		$title, $content, $url
+		$title, $content, $url, true
 	);
 
 	$members = $project->memberships->getMembers();

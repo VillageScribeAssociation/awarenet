@@ -10,13 +10,13 @@
 //                                                                           	Version 2.0 Beta
 //--------------------------------------------------------------------------------------------------
 
-	
 //--------------------------------------------------------------------------------------------------
 //	initialize the registry and system object
 //--------------------------------------------------------------------------------------------------
 
-	include 'core/kregistry.class.php';
-	include 'core/ksystem.class.php';
+	set_time_limit(900);
+	require_once('core/kregistry.class.php');
+	require_once('core/ksystem.class.php');
 
 	$registry = new KRegistry();					//	settings registry
 	$kapenta = new KSystem();						//	kapenta core
@@ -24,7 +24,7 @@
 	$request_uri = array_key_exists('q', $_GET) ? $_GET['q'] : '';
 
 //--------------------------------------------------------------------------------------------------
-//	include the kapenta core functions (database access, templating system, etc)
+//	include and instantiate the core global objects (database access, templating system, etc)
 //--------------------------------------------------------------------------------------------------
 
 	include 'core/core.inc.php';
@@ -51,7 +51,7 @@
 	$role = new Users_Role($user->role, true);		//	object with user's permissions
 	
 	if ('public' != $user->role) {					//	only logged in users can be addressed
-		$session->updateLastSeen();					//	record that this user is still active
+		$session->updateLastSeen();					//	record that this session is still active
 	}
 
 //--------------------------------------------------------------------------------------------------
@@ -63,12 +63,43 @@
 		if (sha1($req->args['recover']) == $pass) {	$session->set('recover', 'yes'); }
 	}
 	
-	if ('yes' == $session->get('recover')) {
-		$user->role = 'admin';
+	if ('yes' == $session->get('recover')) { $user->role = 'admin'; }
+
+//--------------------------------------------------------------------------------------------------
+//	check if user originates in our subnet, may redirect others to a central instance
+//--------------------------------------------------------------------------------------------------
+
+	if ((false == $req->local) && ('p2p' != $req->module)) {
+		$altInstance = $registry->get('kapenta.alternate');
+		if (true == array_key_exists('alternate', $req->args)) {
+			$session->set('usealternate', $req->args['alternate']);
+		}
+
+		if (('' != $altInstance) && ('no' != $session->get('usealternate'))) {
+			$URI = str_replace('//', '/', $altInstance . $_SERVER['REQUEST_URI']);
+			$URI = str_replace('http:/', 'http://', $URI);
+	 		header("HTTP/1.1 301 Moved Permanently");
+	 		header("Location: " . $URI); 
+			echo "The page you requested moved <a href='" . $URI  . "'>here</a>.";
+			die();
+		}
 	}
 
 //--------------------------------------------------------------------------------------------------
-//	set up the debugger (only admins can toggle debug mode, will persist across multiple logins)
+//	check fopr mobile browser
+//--------------------------------------------------------------------------------------------------
+
+    if ($req->mobile && (false == $session->get('firstdetect'))) {
+		$session->set('firstdetect', 'true');
+		$session->set('mobile', 'true');
+		$session->set('contentWidth', '320');
+		$session->msg('Session now in mobile compatability mode.', 'ok');
+	} else {
+		//	not mobile
+	}
+
+//--------------------------------------------------------------------------------------------------
+//	set up the debugger
 //--------------------------------------------------------------------------------------------------
 
 	if (true == array_key_exists('debug', $req->args)) {
@@ -89,12 +120,13 @@
 //	kapenta environment is set up, load the action requested by the user and pass control
 //--------------------------------------------------------------------------------------------------
 
-	$actionFile = $kapenta->installPath
-			 . 'modules/' . $req->module
-			 . '/actions/' . $req->action . '.act.php';
+	$actionFile = ''
+	 . $kapenta->installPath
+	 . 'modules/' . $req->module
+	 . '/actions/' . $req->action . '.act.php';
 
-	if (false == file_exists($actionFile)) { $page->do404('Unkown action'); }
+	if (false == file_exists($actionFile)) { $page->do404('Unknown action'); }
 
-	include $actionFile;
+	require_once($actionFile);
 
 ?>

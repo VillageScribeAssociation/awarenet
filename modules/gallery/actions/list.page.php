@@ -21,11 +21,18 @@
 		[`|lt]/div[`|gt]
 		[`|lt]br/[`|gt]
 
+		[[:sketchpad::tip_introduction:]]
+
 		[[:theme::navtitlebox::label=Galleries:]]
 		[[:gallery::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 		[`|lt]br/[`|gt]
-		[[:theme::navtitlebox::label=Unsorted Images:]]
-		[[:gallery::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=30:]]
+
+		[[:theme::navtitlebox::label=Gallery Tags::toggle=divTagCloud:]]
+		[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
+		[[:tags::modelcloud::refModule=gallery::refModel=gallery[`|us]gallery:]]
+		[`|lt]/div[`|gt]
+		<br/>
+
 	</nav1>
 	<nav2></nav2>
 	<script></script>

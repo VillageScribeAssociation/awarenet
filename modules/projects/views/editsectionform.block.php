@@ -1,45 +1,78 @@
 <? /*
-<form name='editSection' method='POST' action='%%serverPath%%projects/savesection/' target='_parent'>
+<hr/>
+<form
+	id='frmEditSection%%UID%%'
+	name='editSection%%UID%%'
+	method='POST'
+	action='%%serverPath%%projects/savesection/'
+	onSubmit='khta.updateAllAreas();'
+>
 <input type='hidden' name='action' value='saveSection' />
 <input type='hidden' name='UID' value='%%sectionUID%%' />
 
 <h2>%%title%%</h2>
 
-<table noborder>
-  <tr>
-    <td><b>Title:</b></td>
-	<td><input type='text' name='title' value='%%title%%' size='50' style='width: 100%;'/></td>
-  </tr>
+<table noborder width='100%'>
+	<tr>
+		<td><b>Title:</b></td>
+		<td>
+			<input
+				type='text'
+				name='title%%UID%%'
+				id='txtTitle%%UID%%'
+				value='%%title%%'
+				size='50'
+				style='width: 100%;'
+			/>
+		</td>
+	</tr>
 </table>
-<div class='HyperTextArea64' title='content' width='100%' height='400'>
-%%content64%%
-</div>
-<script language='Javascript'> khta.convertDivs(); </script>
-
+<div
+	id='htaSection%%UID%%'
+	class='HyperTextArea64'
+	title='content%%UID%%'
+	width='-1'
+	height='400'
+	refModule='projects'
+	refModel='projects_project'
+	refUID='%%projectUID%%'
+>%%content64%%</div>
+</form>
 <table noborder>
-  <tr>
-    <td valign='top'>
-     <input type='submit' value='Save Changes' />
-     </form>
-    </td>
-    <td>
-    <form name='cancelEdit' method='GET' action='%%editUrl%%'>
-    <input type='submit' value='Cancel' />
-    </form>
-    </td>
-    <td>
-    <form name='deleteSection' method='GET' 
-          action='%%serverPath%%projects/confirmdeletesection/UID_%%projectUID%%/section_%%sectionUID%%/' >
-      <input type='submit' value='Delete This Section' />
-    <form>
+	<tr>
+		<td valign='top'>
+			<input
+				type='button'
+				value='Save Changes'
+				onClick="
+					khta.updateAllAreas();
+					project.save(
+						'%%UID%%',
+						$('#txtTitle%%UID%%').val(),
+						$('#hdncontent%%UID%%').val()
+					);
+				"
+			/>
+		</td>
+		<td>
+			<input
+				type='button'
+				value='Cancel'
+				onClick="project.cancelEdit('%%UID%%');"
+			/>
+		</td>
+		<td>
+			<input
+				type='submit'
+				value='Delete This Section'
+				onClick="project.deleteSection('%%UID%%', '%%title%%');"
+			/>
     </td>
  </tr>
 </table>
 <br/>
-
-[[:theme::navtitlebox::label=Images::toggle=divEditImages:]]
-<div id='divEditImages' style='visibility: hidden; display: none;'>
-[[:images::uploadmultiple::refModule=projects::refModel=projects_project::refUID=%%projectUID%%:]]
-</div>
-<br/>
+<script>
+	khta.convertDivs();
+</script>
+<hr/>
 */ ?>

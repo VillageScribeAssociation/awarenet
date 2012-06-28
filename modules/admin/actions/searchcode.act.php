@@ -1,7 +1,7 @@
 <?php
 
 //--------------------------------------------------------------------------------------------------
-//	search entire codebase
+//*	search entire codebase
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 	if (true == array_key_exists('exclude', $_POST)) { $excludeq = stripslashes($_POST['exclude']); }
 
 	echo "
-    <form name='searchCode' method='POST' action='/scaffold/searchcode/'>
+    <form name='searchCode' method='POST' action='/admin/searchcode/'>
 	<b>Search: <input type='text' name='search' size='20' value='$searchq' /></b>
 	<b>Exclude: <input type='text' name='exclude' size='20' value='$excludeq' /></b>
 	<input type='submit' value='search' />

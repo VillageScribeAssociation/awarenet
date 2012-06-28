@@ -31,7 +31,7 @@ function users_menu($args) {
 
 		$labels['profile'] = "[[:theme::submenu::label=Profile::link=/users/profile/%%userRa%%::alt=:]]\n";
 		$labels['blog'] = "[[:theme::submenu::label=Blog::link=/moblog/blog/%%userRa%%::alt=:]]\n";
-		$labels['grade'] = "[[:theme::submenu::label=Classmates::link=/users/grade/%%userRa%%::alt=:]]\n";
+		$labels['grade'] = "[[:theme::submenu::label=Class::link=/users/grade/%%userRa%%::alt=:]]\n";
 		$labels['friends'] = "[[:theme::submenu::label=Friends::link=/users/friends/%%userRa%%::alt=:]]\n";
 		$labels['pictures'] = "[[:theme::submenu::label=Pictures::link=/gallery/list/%%userRa%%::alt=:]]\n";
 

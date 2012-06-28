@@ -68,15 +68,40 @@
 	$meta->saveMetaXml();
 
 	//----------------------------------------------------------------------------------------------
-	//	if complete then stitch together, delete manifest andremvoe from downloads list
+	//	if complete then stitch together, delete manifest and remove from downloads list
 	//----------------------------------------------------------------------------------------------
 	if (true == $meta->checkCompletion()) {
+		//	stitch together
 		$check = $meta->stitchTogether();
 		if (false == $check) { $page->doXmlError('Could not join file parts'); }
 		
+		//	raise an event on receipt of file (triggers sharing with other peers)
+
+		$args = array(
+			'module' => $meta->module,
+			'model' => $meta->model,
+			'UID' => $meta->UID,
+			'fileName' => $meta->path,
+			'peer' => $peer->UID
+		);
+
+		/*
+		echo ''
+		 . "raising file_received event:"
+		 . " module:" . $args['module']
+		 . " model:" . $args['model']
+		 . " UID:" . $args['UID']
+		 . " fileName: " . $args['fileName']
+		 . " peer: " . $args['peer'] . "<br/>\n";
+		*/
+
+		$kapenta->raiseEvent('*', 'file_received', $args);		
+
+		//	delete the manifest
 		$check = $meta->delete();
 		if (false == $check) { $page->doXmlError('Could not remove meta file.'); }
 
+		//	remove file from download list
 		$downloads = new P2P_Downloads($peer->UID);
 		$check = $downloads->remove($detail['path']);
 		if (false == $check) { $page->doXmlError('Could not remove completed download.'); }

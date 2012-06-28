@@ -4,17 +4,17 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit video gallery</title>
-	<content>[[:theme::navtitlebox::width=570::label=Edit Gallery:]]
-[`|lt]h1[`|gt]Edit Gallery[`|lt]/h1[`|gt]
+	<content>
+		[[:theme::navtitlebox::width=570::label=Edit Gallery:]]
+		[`|lt]h1[`|gt]Edit Gallery[`|lt]/h1[`|gt]
 
-[[:videos::editgalleryform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+		[[:videos::editgalleryform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::width=570::label=Videos:]]
-[[:videos::uploadmultiple::refModule=videos::refModel=videos[`|us]gallery::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-
-</content>
-	<nav1></nav1>
+	</content>
+	<nav1>
+		[[:live::manageattachments::refModule=videos::refModel=videos_gallery::refUID=%%UID%%:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

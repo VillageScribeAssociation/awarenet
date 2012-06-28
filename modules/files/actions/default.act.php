@@ -5,6 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 //TODO: create alternate default views, switch with registry
 
+	//temporarily disabled:
+	$page->do404();
+
 	if ('' == $req->ref) {
 		include $kapenta->installPath . 'modules/files/actions/showall.act.php';
 	} else {

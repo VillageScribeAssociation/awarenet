@@ -68,7 +68,7 @@ function files_filesetdetail($args) {
 		</form>
 		";
 
-		$labels['thumbUrl'] = '%%serverPath%%themes/%%defaultTheme%%/icons/arrow_down.png';
+		$labels['thumbUrl'] = '%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_down.png';
 
 		$html .= $theme->replaceLabels($labels, $block);
 	}

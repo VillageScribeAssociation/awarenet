@@ -18,6 +18,7 @@ class Videos_Gallery {
 	var $title;				//_ title [string]
 	var $description;		//_ wyswyg [string]
 	var $videocount;		//_ bigint [string]
+	var $origin;			//_	(user|3rdparty) [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
@@ -42,6 +43,7 @@ class Videos_Gallery {
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Gallery ' . $this->UID;		// set default title
+			$this->origin = 'user';
 			$this->loaded = false;
 		}
 	}
@@ -73,6 +75,7 @@ class Videos_Gallery {
 		$this->title = $ary['title'];
 		$this->description = $ary['description'];
 		$this->videocount = $ary['videocount'];
+		$this->origin = $ary['origin'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -109,8 +112,9 @@ class Videos_Gallery {
 		$report = '';
 
 		$this->videocount = $this->countVideos();
-
+		if ('' == $this->origin) { $this->origin = 'user'; }
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
 		return $report;
 	}
 
@@ -131,6 +135,7 @@ class Videos_Gallery {
 			'title' => 'VARCHAR(255)',
 			'description' => 'MEDIUMTEXT',
 			'videocount' => 'TEXT',
+			'origin' => 'VARCHAR(10)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
@@ -142,6 +147,7 @@ class Videos_Gallery {
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
 			'UID' => '10',
+			'origin' => '3',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -170,6 +176,7 @@ class Videos_Gallery {
 			'title' => $this->title,
 			'description' => $this->description,
 			'videocount' => $this->videocount,
+			'origin' => $this->origin,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -196,6 +203,7 @@ class Videos_Gallery {
 			. $indent . "    <title>" . $this->title . "</title>\n"
 			. $indent . "    <description><![CDATA[" . $this->description . "]]></description>\n"
 			. $indent . "    <videocount>" . $this->videocount . "</videocount>\n"
+			. $indent . "    <origin>" . $this->origin . "</origin>\n"
 			. $indent . "    <createdOn>" . $this->createdOn . "</createdOn>\n"
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
@@ -227,18 +235,18 @@ class Videos_Gallery {
 		//	links
 		//------------------------------------------------------------------------------------------
 		if (true == $user->authHas('videos', 'videos_gallery', 'show', $this->UID)) {
-			$ext['viewUrl'] = '%%serverPath%%Videos/showgallery/' . $ext['alias'];
-			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
+			$ext['viewUrl'] = '%%serverPath%%videos/showgallery/' . $ext['alias'];
+			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[more &gt;&gt;]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_gallery', 'edit', $this->UID)) {
-			$ext['editUrl'] = '%%serverPath%%Videos/editgallery/' . $ext['alias'];
-			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
+			$ext['editUrl'] = '%%serverPath%%videos/editgallery/' . $ext['alias'];
+			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[edit gallery]</a>";
 		}
 
 		if (true == $user->authHas('videos', 'videos_gallery', 'edit', $this->UID)) {
-			$ext['delUrl'] = '%%serverPath%%Videos/confirmdelete/UID_' . $ext['UID'] . '/';
-			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
+			$ext['delUrl'] = '%%serverPath%%videos/confirmdelete/UID_' . $ext['UID'] . '/';
+			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[delete]</a>";
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -298,6 +306,7 @@ class Videos_Gallery {
 
 	function countVideos() {
 		if (false == $this->videosLoaded) { $this->loadVideos(); }
+		if (false == $this->videosLoaded) { return false; }
 		$count = count($this->videos);
 		return $count;
 	}

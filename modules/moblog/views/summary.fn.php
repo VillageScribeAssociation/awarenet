@@ -10,7 +10,10 @@
 //opt: UID - overrides raUID if present [string]
 
 function moblog_summary($args) {
-	global $theme, $user, $page;
+	global $theme;
+	global $user;
+	global $page;
+
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -33,8 +36,11 @@ function moblog_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	set AJAX triggers
 	//----------------------------------------------------------------------------------------------
-	$channel = 'post-' . $model->UID;
-	$page->setTrigger('moblog', $channel, $args['rawblock']);
+	//$channel = 'post-' . $model->UID;
+	//$page->setTrigger('moblog', $channel, $args['rawblock']);
+
+	$html = $theme->expandBlocks($html, $args['area']);
+	$html = str_replace('[1 comments]', '[1 comment]', $html);
 
 	return $html;
 }

@@ -4,8 +4,10 @@
 <page>
 	<template>iframe.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit section</title>
-	<content>[[:theme::navtitlebox::width=570::label=Edit Section:]]
-[[:projects::editsectionform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::sectionUID=[`|pc][`|pc]sectionUID[`|pc][`|pc]:]]</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=Edit Section:]]
+		[[:projects::editsectionform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]::sectionUID=[`|pc][`|pc]sectionUID[`|pc][`|pc]:]]
+	</content>
 	<nav1>
 </nav1>
 	<nav2></nav2>
@@ -17,8 +19,7 @@
 	<menu2>[[:projects::menu::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</menu2>
 	<section></section>
 	<subsection></subsection>
-	<breadcrumb>[[:theme::breadcrumb::label=Projects - ::link=/projects/:]]
-[[:theme::breadcrumb::label=Edit Section::link=/projects/editsection/section[`|us][`|pc][`|pc]sectionUID[`|pc][`|pc]/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
+	<breadcrumb></breadcrumb>
 </page>
 
 */ ?>

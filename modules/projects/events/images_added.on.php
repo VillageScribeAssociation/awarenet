@@ -1,6 +1,6 @@
-<?
+<?php
 
-require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
+	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //|	fired when an image is added 
@@ -12,6 +12,7 @@ require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 //arg: imageTitle - title of new image [string]
 
 function projects__cb_images_added($args) {
+	global $kapenta;
 	global $db;
 	global $user;
 	global $notifications;
@@ -29,6 +30,19 @@ function projects__cb_images_added($args) {
 
 	$model = new Projects_Project($args['refUID']);
 	if (false == $model->loaded) { return false; }	
+
+	//----------------------------------------------------------------------------------------------
+	//	automatically tag the image with the name of the project
+	//----------------------------------------------------------------------------------------------
+
+	$detail = array(
+		'refModule' => 'images',
+		'refModel' => 'images_image',
+		'refUID' => $args['imageUID'],
+		'tagName' => $model->title
+	);
+
+	$kapenta->raiseEvent('tags', 'tags_add', $detail);
 
 	//----------------------------------------------------------------------------------------------
 	//	create notification

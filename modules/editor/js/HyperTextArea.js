@@ -37,23 +37,32 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
-	this.isRichText = false;						//_	design mode is available? [bool]
-	this.rng = null;								//_	active range [range]
-	this.name = name;								//_ frame id and TA name [string]
-	this.html = html || '';							//_	contents? [string]
-	this.width = width;								//_ pixels [int]
-	this.height = height;							//_	pixels [int]
-	this.resourcePath = '';							//_	location for resources [string]
-	this.styleSheetUrl = '';						//_	location of stylesheet [string]
-	this.delayRender = delayRender || false;		//_	true cancels initial render [bool]
-	this.controlNames = [];							//_	set of control names [array]	
-	this.controlsByName = [];						//_	set of control obejcts [array]
-	this.toolbarNames = [];							//_	set of toolbar names [array]
-	this.designModeRetryCount = 0;					//_	TODO: investigate [int]
-	this.isSrcView = false;							//_ toggles plain vs rich text [bool]
-	this.divId = divId || '';						//_	div in which area is rendered [string]
+	this.isRichText = false;					//_	design mode is available? [bool]
+	this.rng = null;							//_	active range [range]
+	this.name = name;							//_ frame id and TA name [string]
+	this.html = html || '';						//_	contents? [string]
+	this.width = width;							//_ pixels [int]
+	this.height = height;						//_	pixels [int]
+	this.resourcePath = '';						//_	location for resources [string]
+	this.styleSheetUrl = '';					//_	location of stylesheet [string]
+	this.delayRender = delayRender || false;	//_	true cancels initial render [bool]
+	this.controlNames = [];						//_	set of control names [array]	
+	this.controlsByName = [];					//_	set of control obejcts [array]
+	this.toolbarNames = [];						//_	set of toolbar names [array]
+	this.designModeRetryCount = 0;				//_	TODO: investigate [int]
+	this.isSrcView = false;						//_ toggles plain vs rich text [bool]
+	this.divId = divId || '';					//_	div in which area is rendered [string]
+	this.karea = 'content';						//_	name of column this editor is in [bool]
+
+	//	reference - used for attachments
+	this.refModule = '';						//_	owning kapenta module [string]
+	this.refModel = '';							//_	type of object this content belongs to [string]
+	this.refUID = '';							//_	UID of object this content belongs to [string]
+	this.hasRef = false;						//_	set to true if this has a reference [bool]
 
 	this.html = this.html.replace(/%%serverPath%%/g, jsServerPath);		// fixes images
+
+	if (isMobile) { this.width = 320; }			//_	temporary hack TODO fixme
 
 	//----------------------------------------------------------------------------------------------
 	//.	default control set
@@ -74,10 +83,26 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	 [ 'c', 'indent',  'Indent',  'post_button_indent.gif',  'indent'  ],
 	 [ 's' ],
 	 [ 'b', 'insertHorizontalRule', 'post_button_hr.gif', 'Insert Horizontal Rule','addHr' ],
+	 [ 'b', 'attachImages', 'post_button_imagecolor.gif', 'Attachments','showAttach' ],
 	 [ 'c', 'link',  'Create Link', 'post_button_hyperlink.gif',  'createlink'  ],
+	 [ 'b', 'toggleHTMLSrc',  'post_button_source.gif',  'View Source', 'toggleHTMLSrc' ],
 	 [ 's' ],
 	 [ 'p' ]
 	];
+
+	if (this.width < 400) {
+		this.controls = [
+		 ['t', 'toolbar1'],
+		 [ 'c',	'bold',		'Bold',			'post_button_bold.gif',		'bold'			],
+		 [ 'c',	'italic',	'Italic',		'post_button_italic.gif',	'italic'		],
+		 [ 's' ],
+		 [ 'c',	'orderedlist',   'Ordered List',   'post_button_ol.gif', 'insertorderedlist'   ],
+		 [ 'c', 'unorderedlist', 'Unordered List', 'post_button_ul.gif', 'insertunorderedlist' ],
+		 [ 's' ],
+		 [ 'b', 'attachImages', 'post_button_imagecolor.gif', 'Attachments','showAttach' ],
+		 [ 'c', 'link',  'Create Link', 'post_button_hyperlink.gif',  'createlink'  ]
+		];
+	}
 
 	this.fonts = [
 	 ["","Font"],
@@ -103,6 +128,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//----------------------------------------------------------------------------------------------
 
 	this.init = function() {
+
 		//khta.areas[this.name] = this;					// set link to self?
 
 		//------------------------------------------------------------------------------------------
@@ -134,8 +160,8 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		//------------------------------------------------------------------------------------------
 		//	add controls
 		//------------------------------------------------------------------------------------------
-		this.addEditorControls();	
-		
+		this.addEditorControls();
+
 	} // end this.init
 
 	//==============================================================================================
@@ -143,18 +169,28 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
+	//.	return the iframe document object
+	//----------------------------------------------------------------------------------------------
+	//returns: document object
+
+	this.getRTE = function() {
+		if (document.all) {	return frames['ifHt' + this.name]; }
+		var ifHt = document.getElementById('ifHt' + this.name)
+
+		if (ifHt) { return ifHt.contentWindow; }
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	change content of editable iframe
 	//----------------------------------------------------------------------------------------------
 	//arg: html - content to be used for iframe body [string]
 
 	this.setContent = function(html) {
-		HyperTextArea.activeArea = this;
-		var oRTE;										//%	iframe DOM root [object:document]		
-		if (document.all) {	oRTE = frames[this.name].document; }
-		else { oRTE = document.getElementById(this.name).contentWindow.document; }
-		body = oRTE.getElementsByTagName("body");		// when is this needed, why not oRTE.body?
-		this.html = html;
-		body.innerHTML = this.html;						// set body only (not head)
+		khta.activeArea = this;
+		var oRTE = this.getRTE();								//%	iframe's window [object]		
+		body = oRTE.document.getElementsByTagName("body");		//%	iframe's document body [object]
+		this.html = html;										//%	maps to hidden form field?
+		body.innerHTML = this.html;								//%	set body only (not head) [string]
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -163,14 +199,11 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//returns: raw html [string]
 
 	this.getContent = function() {
-		alert('getContent');
 		khta.activeArea = this;
-		var oRTE;										//%	iframe DOM root [object:document]
-		if (document.all) {	oRTE = frames[this.name].document; }
-		else { oRTE = document.getElementById(this.name).contentWindow.document; }
-		body = oRTE.getElementsByTagName("body");		// when is this needed, why not oRTE.body?
-		return this.htmlEncode(body[0].innerHTML);		// get body only (not head), sanitize
-
+		if (isMobile) { return $('#txtHta' + this.name).val(); }
+		var oRTE = this.getRTE();							//%	iframe DOM root [object:document]
+		body = oRTE.document.getElementsByTagName("body");
+		return this.htmlEncode(body[0].innerHTML);			//% get body only (not head) [string]
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -179,11 +212,11 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 
 	this.setContent = function(html) {
 		khta.activeArea = this;
-		var oRTE;										//%	iframe DOM root [object:document]
-		if (document.all) {	oRTE = frames[this.name].document; }
-		else { oRTE = document.getElementById(this.name).contentWindow.document; }
-		body = oRTE.getElementsByTagName("body");		// when is this needed, why not oRTE.body?
-		body.innerHTML = html;							// get body only (not head)
+		if (isMobile) { $('#txtHta' + this.name).val(html); return; }
+
+		var oRTE = this.getRTE();							//%	iframe's window [object]
+		body = oRTE.document.getElementsByTagName("body");	//%	iframe's document body [object]
+		body.innerHTML = html;								//% get body only (not head) [string]
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -193,34 +226,40 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	this.update = function() {
 		this.setViewMode(false);
 		var oHdnMessage = document.getElementById('hdn' + this.name);
-		var oRTE = document.getElementById(this.name);
+		var oRTE = this.getRTE();
 	
 		//------------------------------------------------------------------------------------------
 		//	get a clean version of iframe content (not copy)
 		//------------------------------------------------------------------------------------------
 		//TODO: PARSE CONTENT FOR STORAGE/TRANSMISSION HERE 	*********************
-		//replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only
-		//replaceImagesWithBlocks(oRTE.contentWindow.document);  // kapenta only - TODO why twice?
+		//replaceImagesWithBlocks(oRTE.document);  // kapenta only
+		//replaceImagesWithBlocks(oRTE.document);  // kapenta only - TODO why twice?
 	
 		// strip any newlines and carriage returns
-		var raw = oRTE.contentWindow.document.body.innerHTML;		// TODO: is this necessary at this point?
+		var raw = oRTE.document.body.innerHTML;		// TODO: is this necessary at this point?
 		raw = raw.replace(new RegExp("\\n", "g"), '');				// have the parser do it
 		raw = raw.replace(new RegExp("\\r", "g"), '');
-		raw = oRTE.contentWindow.document.body.innerHTML;
+		raw = oRTE.document.body.innerHTML;
 
 		//------------------------------------------------------------------------------------------
 		//	make the update to hidden form field
 		//------------------------------------------------------------------------------------------
 		if (this.isRichText) {
 			if (null == oHdnMessage.value) oHdnMessage.value = "";
+
+			oHdnMessage.value = oRTE.document.body.innerHTML;
+
+			//	commented out 2012-06-14, caused problems on IE7
+			/*
 			if (document.all) {
 				oHdnMessage.value = frames[this.name].document.body.innerHTML;
 			} else {
-				oHdnMessage.value = oRTE.contentWindow.document.body.innerHTML;
+				oHdnMessage.value = oRTE.document.body.innerHTML;
 			}
+			*/
 			// if there is no content (other than formatting) set value to nothing
-			if ('' == stripHTML(oHdnMessage.value.replace("&nbsp;", " "))) 
-				{ oHdnMessage.value = ""; }
+			//if ('' == stripHTML(oHdnMessage.value.replace("&nbsp;", " "))) 
+			//	{ oHdnMessage.value = ""; }
 
 			// set this editor's HTML (NB: also set in/by constructor)
 			this.html = oHdnMessage.value;
@@ -270,6 +309,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//----------------------------------------------------------------------------------------------
 
 	this.addEditorControls = function() {
+		if (isMobile) { return false; }
 		for (var i in this.controls) {
 			var ary = this.controls[i];
 			switch(ary[0]) {
@@ -384,7 +424,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	}
 
 	//==============================================================================================
-	//	CONTROLS
+	//	CONTENT RENDERING
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
@@ -414,9 +454,10 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			var rDiv = document.getElementById(this.divId);
 			if (!rDiv) {
 				document.writeln("<div id='" + this.divId + "'></div>");
-				rDiv = document.getElementById(this.divId);
+				//rDiv = document.getElementById(this.divId);
 			}
-			rDiv.innerHTML = rDiv.innerHTML + txt;
+			//rDiv.innerHTML = rDiv.innerHTML + txt;
+			$('#' + this.divId).append(txt)
 		}
 		
 	}
@@ -444,7 +485,13 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//TODO: work out how this knows where to add them, consider improving that
 	
 	this._renderControls = function() {
-		text = "";
+		text = ''
+		 + "<div"
+		 + " id='divFloatAttach" + this.name + "'"
+		 + " style='position: absolute; display: none; width: 200; background-color: #ffff00;'"
+		 + ">"
+		 + "</div>";
+
 		for(var x = 0; x < this.controlNames.length; x++){
 			control = this.controlsByName[this.controlNames[x]];
 			//TODO: better check for null, undefined, etc
@@ -462,6 +509,15 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 
 	this._renderRTE = function() {
 		//------------------------------------------------------------------------------------------
+		//	add simple text area for mobile clients
+		//------------------------------------------------------------------------------------------
+		if (isMobile) {
+			this.writeln("<textarea id='txtHta" + this.name + "' name='" + this.name + "' rows='10' style='width: 100%'></textarea>");
+			this.writeln("<input type='hidden' name='" + this.name + "format' value='plaintext'>");
+			return;
+		}
+
+		//------------------------------------------------------------------------------------------
 		//	add mouse style for buttons  (TODO: consider adding this style def to theme css.)
 		//------------------------------------------------------------------------------------------
 		this.writeln("<style type='text/css'>.btnImage {cursor: pointer; cursor: hand; }</style>");
@@ -471,22 +527,35 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		//------------------------------------------------------------------------------------------
 		this._renderControls();
 
+		this.writeln(
+			"<div id='divViewHtml" + this.name + "' style='display: none;'>"
+			 + "<img"
+			 + " src='" + jsServerPath + "modules/editor/images/post_button_source.gif'"
+			 + " onClick=\"khta.getArea('" + this.name + "').toggleHTMLSrc();\"/>"
+			 + "</div>"
+		);
+
 		//------------------------------------------------------------------------------------------
 		//	add content (editable) iframe
 		//------------------------------------------------------------------------------------------
+		var width = this.width > 0 ? this.width + 'px' : '100%';
+
 		var ifHtml = ''
-			 + "<iframe id='" + this.name + "' "
-			 + "width='" + this.width + "px' "
-			 + "height='" + this.height + "px' "
-			 + "frameborder='1' "
-			 + "style='border:1px dashed gray;'>"
+			 + "<iframe"
+			 + " id='ifHt" + this.name + "'"
+			 + " width='" + width + "'"
+			 + " height='" + this.height + "px'"
+			 + " frameborder='1'"
+			 + " style='border:1px dashed gray;'>"
 			 + "</iframe>";
+
 
 		this.writeln(ifHtml);
 
 		//------------------------------------------------------------------------------------------
 		//	add 'view source' checkbox
 		//------------------------------------------------------------------------------------------
+		/*
 		var cbHtml = "<br/>"
 			+ "<input type='checkbox' "
 			 + "id='chkSrc" + this.name + "' "
@@ -494,6 +563,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			 + "&nbsp;View Source";
 
 		this.writeln(cbHtml);
+		*/
 
 		//------------------------------------------------------------------------------------------
 		//	add hidden iframe, not yet sure what this is for (TODO)
@@ -535,7 +605,15 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//; adds content stylesheet, uses default iframe stylesheet for now
 
 	this.initializeContent = function(html) {
-		HyperTextArea.activeArea = this;									// this confuses me
+		khta.activeArea = this;
+
+		if (isMobile) {
+			var txtArea = document.getElementById('txtHta' + this.name);
+			txtArea.value = html;
+			return;
+		}
+
+		var oRTE = this.getRTE();											//%	document object	
 		var useSSUrl = jsServerPath + "themes/clockface/css/iframe.css";	//%	default css [string]
 		var frameHtml = '';													//% content [string]
 		var styleSheet = '';												//%	[string]
@@ -557,16 +635,33 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		  + "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n"
 		 + "<html>\n"
 		 + "<head>\n"
-		 + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
+		 + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />\n"
+		 + "<script src='" + jsServerPath + "themes/clockface/js/jquery.js'></script>\n"
 		 + styleSheet
 		 + "</head>\n"
-		 + "<body>" + html + "</body>\n"
+		 + "<body>"
+		 + html
+		 + "</body>\n"
 		 + "</html>";
 
 		//------------------------------------------------------------------------------------------
 		//	insert frameHtml into the content-editable iframe
 		//------------------------------------------------------------------------------------------
 
+		//var oRTE = frames[this.name].document;	
+
+		oRTE.document.open();					//	oRTE is now a document object
+		oRTE.document.write(frameHtml);			//	write new document
+		oRTE.document.close();					//	perhaps this triggers onLoad?
+
+		if (oRTE.document.addEventListener) {
+			//attach a keyboard handler for Mozilla to make keyboard shortcuts for formatting text
+			oRTE.addEventListener("keypress", kb_handler, true);
+			// this doesn't seem to work, TODO: test, then remove
+			oRTE.document.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
+		}
+
+		/*
 		if (document.all) {							// internet explorer check?
 			var oRTE = frames[this.name].document;	
 			oRTE.open();							// oRTE is now a document object
@@ -589,6 +684,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 				oRTE.addEventListener("DOMNodeInserted", nodeinsert_handler, false); // kapenta
 			}
 		}
+		*/
 	}
 
 
@@ -598,11 +694,24 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//arg: isVisible - truthy? [bool]
 
 	this.setToolbarsVisible = function(isVisible) {
-		var visibleStyle = isVisible ? "visible" : "hidden";		// TODO: remove ?:
+		//var visibleStyle = isVisible ? "visible" : "hidden";		// TODO: remove ?:
+		//for (var i = 0; i < this.toolbarNames.length; i++) {
+		//	var toolBar = document.getElementById(this.toolbarNames[i] + "_" + this.name);
+		//	toolBar.style.visibility = visibleStyle;
+		//}
+
 		for (var i = 0; i < this.toolbarNames.length; i++) {
-			var toolBar = document.getElementById(this.toolbarNames[i] + "_" + this.name);
-			toolBar.style.visibility = visibleStyle;
+			if (isVisible) {
+				$('#' + this.toolbarNames[i] + "_" + this.name).show();
+				//toolBar.style.visibility = 'visible';
+				$('#divViewHtml' + this.name).hide();
+			} else {
+				$('#' + this.toolbarNames[i] + "_" + this.name).hide();
+				//toolBar.style.visibility = 'hidden';
+				$('#divViewHtml' + this.name).show();
+			}
 		}
+
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -612,19 +721,16 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//TODO: consider replacing blocks here to make them more easily editable
 
 	this.setViewMode = function(isSrcView) {
-		var oRTE;
-		HyperTextArea.activeArea = this;		// this confuses me
+		if (isMobile) { return; }
+		khta.activeArea = this;
 
-		//------------------------------------------------------------------------------------------
-		//	set oRTE to be the iframe's document object
-		//------------------------------------------------------------------------------------------
-		//contributed by Bob Hutzel (thanks Bob!)
-		if (document.all) { oRTE = frames[this.name].document; }	
-		else { oRTE = document.getElementById(this.name).contentWindow.document; }
-		
+		var oRTE = this.getRTE();		//%	iframe's window [object]
+		var oRTEd = oRTE.document;		//%	iframe's document [object]
+
 		//------------------------------------------------------------------------------------------
 		//only change the view if it is different than the current state
 		//------------------------------------------------------------------------------------------
+		//contributed by Bob Hutzel (thanks Bob!)
 		if (isSrcView && !this.isSrcView) {
 			//--------------------------------------------------------------------------------------
 			//	toggle source view ON (content-editable HTML to content-editable text)
@@ -632,11 +738,11 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			this.isSrcView = true;				// record new state
 			this.setToolbarsVisible(false);		// hide the toolbars
 
-			if (document.all) { oRTE.body.innerText = oRTE.body.innerHTML; }
+			if (document.all) { oRTEd.body.innerText = oRTEd.body.innerHTML; }
 			else {
-				var htmlSrc = oRTE.createTextNode(oRTE.body.innerHTML);
-				oRTE.body.innerHTML = "";
-				oRTE.body.appendChild(htmlSrc);
+				var htmlSrc = oRTEd.createTextNode(oRTEd.body.innerHTML);
+				oRTEd.body.innerHTML = "";
+				oRTEd.body.appendChild(htmlSrc);
 			}
 
 		} else if (!isSrcView && this.isSrcView) {
@@ -645,11 +751,11 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			//--------------------------------------------------------------------------------------
 			this.isSrcView = false;				// record new state
 			this.setToolbarsVisible(true);		// show all toolbars
-			if (document.all) { oRTE.body.innerHTML = oRTE.body.innerText; }
+			if (document.all) { oRTEd.body.innerHTML = oRTEd.body.innerText; }
 			else {
-				var htmlSrc = oRTE.body.ownerDocument.createRange();	// ownerDocument?
-				htmlSrc.selectNodeContents(oRTE.body);
-				oRTE.body.innerHTML = htmlSrc.toString();
+				var htmlSrc = oRTEd.body.ownerDocument.createRange();	// ownerDocument?
+				htmlSrc.selectNodeContents(oRTEd.body);
+				oRTEd.body.innerHTML = htmlSrc.toString();
 			}
 		}
 	}
@@ -659,8 +765,8 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//----------------------------------------------------------------------------------------------
 	
 	this.toggleHTMLSrc = function() {
-		if (document.getElementById("chkSrc" + this.name).checked) { this.setViewMode(true); }
-		else { this.setViewMode(false); }
+		if (this.isSrcView) { this.setViewMode(false); }
+		else { this.setViewMode(true); }
 	}
 
 	//==============================================================================================
@@ -675,15 +781,14 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//ability to launch a wizard, and then insert arbitrary text at the insertion point
 
 	this.formatText = function(command,option) {
-		var oRTE;
-
-		HyperTextArea.activeArea = this;			// not entirely sure what this accomplishes
+		khta.activeArea = this;			// not entirely sure what this accomplishes
+		var oRTE = this.getRTE();
 
 		//------------------------------------------------------------------------------------------
 		//	set oRTE to be the iframe's document object
 		//------------------------------------------------------------------------------------------
-		if (document.all) { oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow; }
+		//if (document.all) { oRTE = frames[this.name]; }
+		//else { oRTE = document.getElementById(this.name).contentWindow; }
 
 		//------------------------------------------------------------------------------------------
 		//	maybe a switch here?
@@ -732,14 +837,9 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//arg: imagePath - URL of image [string]
 
 	this.setColor = function(color) {
-		var oRTE;						//% iframe document [object]
-
 		khta.activeArea = this;
+		var oRTE = this.getRTE();						//% iframe's document window [object]
 		
-		if (document.all) {	oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow; }
-		
-		//var parentCommand = parent.command;
 		//------------------------------------------------------------------------------------------
 		//	retrieve selected range
 		//------------------------------------------------------------------------------------------
@@ -765,15 +865,9 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//.	insert an hr into the rich text editor (oRTE)
 	//----------------------------------------------------------------------------------------------
 
-	this.addHr = function(){
-		var oRTE;											//%	iframe's document window [object]
+	this.addHr = function() {
+		var oRTE = this.getRTE();							//%	iframe's document window [object]
 		khta.activeArea = this;
-
-		//------------------------------------------------------------------------------------------
-		//	set oRTE to be the iframe's document object
-		//------------------------------------------------------------------------------------------
-		if (document.all) {	oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow;	}
 
 		//------------------------------------------------------------------------------------------
 		//	have the browser insert the image
@@ -784,22 +878,95 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	show floating attachments div
+	//----------------------------------------------------------------------------------------------
+
+	this.showAttach = function() {
+
+		if ((this.refModule) && (this.refModel) && (this.refUID)) {
+
+			//--------------------------------------------------------------------------------------
+			//	toggle visibility of floating attachments div
+			//--------------------------------------------------------------------------------------
+			$('#divFloatAttach' + this.name).show();
+
+			//	toggle closed if already open
+			if ($('#divFloatAttach' + this.name).html().length > 0) {
+				$('#divFloatAttach' + this.name).html('');
+				return;
+			}
+
+			//--------------------------------------------------------------------------------------
+			//	show attachments if bound to some object
+			//--------------------------------------------------------------------------------------
+			var loadHtml = ''
+				 + "<div id='divFloatIA" + this.name + "' syle='background-color: #aaffaa; width: 400px;'>"
+				 + "Loading..."
+				 + "<img src='" + jsServerPath + "themes/clockface/images/throbber-inline.gif' />"
+				 + "</div>";
+	
+			$('#divFloatAttach' + this.name).html(loadHtml);
+			$('#divFloatAttach' + this.name).css('left', $('#btnshowAttach' + this.name).offset().left);
+			$('#divFloatAttach' + this.name).css('top', $('#btnshowAttach'+ this.name).offset().top + 30);
+
+			var attBlock = ''
+			 + '[[:live::listattachmentshta'
+			 + '::refModule=' + this.refModule
+			 + '::refModel=' + this.refModel
+			 + '::refUID=' + this.refUID
+			 + '::hta=' + this.name
+			 + ':]]';
+
+			klive.removeBlock(attBlock, false);							//	clear cache
+			klive.bindDivToBlock('divFloatIA' + this.name, attBlock);	//	load from server
+
+		} else {
+			//--------------------------------------------------------------------------------------
+			//	open a tag search window if not bound to anything
+			//--------------------------------------------------------------------------------------
+			var hWnd = kwindowmanager.createWindow(
+				'Insert Media',
+				jsServerPath + 'tags/insert/hta_' + this.name + '/display/images,files,videos/',
+				570, 400,
+				'',						/* TODO: add icon */
+				true					/* modal */
+			);
+
+			kwindowmanager.windows[hWnd].setBanner('Find media by tag...');
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	close floating attachments div
+	//----------------------------------------------------------------------------------------------
+
+	this.hideAttach = function() {
+		$('#divFloatAttach' + this.name).html('');
+		$('#divFloatAttach' + this.name).hide();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	fix dragged images (for old versions of IE which do not support the events to detect this)
+	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: no longer using the button-drag system
+
+	this.fixImages = function() {
+		//var oRTE = this.getRTE();						//%	iframe's window object [object]
+		//khta.activeArea = this;							//	this is the active HTA	
+		//replaceImageButtons(oRTE);						//	DEPRECATED!
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	insert an image into the rich text editor (oRTE)
 	//----------------------------------------------------------------------------------------------
 	//arg: imagePath - URL of image [string]
 	//TODO: integrate with images module
 
 	this.addImage = function(imagePath) {
-		var oRTE;											//%	iframe's document window [object]
+		var oRTE = this.getRTE();						//%	iframe's window object [object]
 		khta.activeArea = this;
 
 		if (!imagePath) { imagePath = prompt('Enter Image URL:', 'http://'); }
-
-		//------------------------------------------------------------------------------------------
-		//	set oRTE to be the iframe's document object
-		//------------------------------------------------------------------------------------------
-		if (document.all) {	oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow;	}
 
 		//------------------------------------------------------------------------------------------
 		//	have the browser insert the image
@@ -809,6 +976,46 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			oRTE.document.execCommand('InsertImage', false, imagePath);
 		}
 		oRTE.focus();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	insert an image into the rich text editor (oRTE)
+	//----------------------------------------------------------------------------------------------
+	//;	blockTag should be a kapenta block tag with an 'editimg' attribute
+	//;	the business of attaching custom attributes is a mess,
+	//;	see compatability notes here: http://www.quirksmode.org/dom/w3c_core.html#attributes
+	//returns: true if block tag was injected, false if not [bool]
+
+	this.addBlock = function(blockTag) {
+		var oRTE = this.getRTE();						//%	iframe's window object [object]
+		var relUrl = '';								//%	image to show block in editor [string]
+		var blockParts = blockTag.split('::');			//%	used to find editimg [string]
+		
+		khta.activeArea = this;
+		oRTE.focus();
+
+		for (var i = 0; i < blockParts.length; i++) {
+			if (blockParts[i].indexOf('=') > 0) {
+				atParts = blockParts[i].split('=');
+				if ('editimg' == atParts[0]) { relUrl = atParts[1].replace(':]]', ''); }
+			}
+		}
+
+		if ('' == relUrl) { return false; }
+
+		blockAtt = oRTE.document.createAttribute('kblocktag');
+		blockAtt.value = blockTag;
+
+		classAtt = oRTE.document.createAttribute('class');
+		classAtt.value = 'rounded';
+
+		newImg = oRTE.document.createElement("img");
+		newImg.src = jsServerPath + relUrl;
+		newImg.setAttributeNode(blockAtt);
+		newImg.setAttributeNode(classAtt);
+
+		this.insertElement(newImg);
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -841,11 +1048,11 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//arg: cmd - the chosen command [?]
 
 	this.select = function(menu, cmd) {
-		var oRTE;											//%	iframe's document window [object]
+		var oRTE = this.getRTE();							//%	iframe's document window [object]
 		khta.activeArea = this;
 
-		if (document.all) { oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow; }
+		//if (document.all) { oRTE = frames[this.name]; }
+		//else { oRTE = document.getElementById(this.name).contentWindow; }
 		
 		var idx = menu.selectedIndex;
 		// First one is always a label
@@ -877,10 +1084,9 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//TODO: this is hella clunky, integrate with kapenta or remove, preferably remove	
 
 	this.insertTable = function(rows, cols, spacing, padding, border) {
-		var oRTE;											//%	iframe's document window [object]
-		if (document.all) { oRTE = frames[this.name]; }						
-		else { oRTE = document.getElementById(this.name).contentWindow; }
-		doc = oRTE.document;								// why? TODO: fix
+		var oRTE = this.getRTE();							//%	iframe's document window [object]
+		//if (document.all) { oRTE = frames[this.name]; }						
+		//else { oRTE = document.getElementById(this.name).contentWindow; }
 
 		//------------------------------------------------------------------------------------------
 		//	check arguments
@@ -895,17 +1101,17 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		//------------------------------------------------------------------------------------------
 		//	make table element and insert
 		//------------------------------------------------------------------------------------------
-		table = doc.createElement("table");
+		table = oRTE.document.createElement("table");
 		table.setAttribute("border", border);
 		table.setAttribute("cellpadding", padding);
 		table.setAttribute("cellspacing", spacing);
 		table.setAttribute("class", "hyperTable");
 		
 		for (var i=0; i < rows; i++) {
-			var tr = doc.createElement("tr");
+			var tr = oRTE.document.createElement("tr");
 			for (var j=0; j < cols; j++) {
-				var td = doc.createElement("td");
-				var content = doc.createTextNode('\u00a0');
+				var td = oRTE.document.createElement("td");
+				var content = oRTE.document.createTextNode('\u00a0');
 				td.appendChild(content);
 				tr.appendChild(td);
 			}
@@ -921,14 +1127,13 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//TODO: document this
 	
 	this.insertElement = function(el) {
-		var oRTE;											//%	iframe's document window [object]
+		var oRTE = this.getRTE();					//%	iframe's document window [object]
 
-		if (document.all) {	oRTE = frames[this.name]; }
-		else { oRTE = document.getElementById(this.name).contentWindow; }
+		//if (document.all) {	oRTE = frames[this.name]; }
+		//else { oRTE = document.getElementById(this.name).contentWindow; }
 
-		doc = oRTE.document;
 		if (document.all) {
-			selection = doc.selection;
+			selection = oRTE.document.selection;
 			var html = el.outerHTML;
 			var range = selection.createRange();
 			try {
@@ -1047,6 +1252,7 @@ function Button(name, icon, title, methodName) {
 		 + "<div id=\"' + name + '\">"
 		 + "<img"
 		 + " class='btnImage'"
+		 + " id='btn" + this.methodName + this.area.name + "'"
 		 + " src='" + khta.resourcePath + 'images/' + icon + "'"
 		 + " width='25' height='24'"
 		 + " alt='" + title + "' title='" + title + "'"
@@ -1071,10 +1277,11 @@ function Spacer(name){
 //	OBJECT represnting toolbars
 //--------------------------------------------------------------------------------------------------
 
-function Toolbar(name, isFirstToolbar){
+function Toolbar(name, isFirstToolbar) {
 	this.name = name
 	this.isFirstToolbar = isFirstToolbar||false;
-	this.getRenderedText = function(){
+
+	this.getRenderedText = function() {
 		this.area.toolbarNames[this.area.toolbarNames.length] = this.name;
 		text = '<table id="' + this.name + '_' + this.area.name + '" cellpadding="1" cellspacing="0"><tr>'
 		if(this.isFirstToolbar){
@@ -1163,7 +1370,6 @@ function KHyperTextAreas() {
 	this.forms = new Array();								//_	TODO: investigate [array]
 	this.resourcePath = jsServerPath + 'modules/editor/';	//_	reource images, etc [string]
 	this.activeArea = null;									//_	TODO: investigate [object]
-	this.log = '';											//_	debug log [string]
 	this.logEnabled = true;									//_	for now [bool]
 
 	//----------------------------------------------------------------------------------------------
@@ -1178,27 +1384,7 @@ function KHyperTextAreas() {
 
 	this.create = function(name, html, width, height, divId) {
 		var delayRender = false;
-		newArea = new HyperTextArea(name, html, width, height, delayRender, divId);
-		this.areas[this.areas.length] = newArea;
-		return newArea;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	create a new HyperTextArea and set its content to that of an existing div
-	//----------------------------------------------------------------------------------------------
-	//arg: name - name of HTA and HTML form field [string]
-	//arg: contentDivId - id of a (hidden) div containg HTML to be edited [string]
-	//arg: width - width of editor [int]
-	//arg: height - heightof editor [int]
-	//arg: editorDivId - id of div into which editor will be rendered [string]
-	//returns: new HyperTextArea object [object]
-
-	this.createFromDiv = function(name, contentDivId, width, height, editorDivId) {
-		var delayRender = false;
-		var html = '';
-		var contentDiv = document.getElementById(divId);
-		if (contentDiv) { html = contentDiv.innerHTML; }
-
+		html = replaceEditorBlocks(html);
 		newArea = new HyperTextArea(name, html, width, height, delayRender, divId);
 		this.areas[this.areas.length] = newArea;
 		return newArea;
@@ -1232,6 +1418,25 @@ function KHyperTextAreas() {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	remove an HTA from this.areas
+	//----------------------------------------------------------------------------------------------
+	//arg: name - name of HyperTextArea [string]
+	//returns: true on success, false if not found [string]
+
+	this.destroy = function(name) {
+		var found = false;
+		var newAreas = new Array();
+
+		for (var i in this.areas) {	
+			if (name == this.areas[i].name) { found = true; }
+			else { newAreas[newAreas.length] = this.areas[i]; }
+		}
+
+		this.areas = newAreas;
+		return found;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	get a HTA given it's name
 	//----------------------------------------------------------------------------------------------
 	//arg: name - name of HyperTextArea [string]
@@ -1246,6 +1451,7 @@ function KHyperTextAreas() {
 	//. iterate over all areas and call update (sets hidden form field?)
 	//--------------------------------------------------------------------------------------------------
 	this.updateAllAreas = function () {
+		if (isMobile) { return; }
 		for (i in this.areas) { area = this.areas[i].update(); }
 	}
 
@@ -1255,13 +1461,35 @@ function KHyperTextAreas() {
 
 	this.enableDesignMode = function(areaName) {
 		try {
-			if (document.all) { frames[areaName].document.designMode = "On"; }
+			var oArea = this.getArea(areaName);
+			if (oArea) {
+
+				var oRTE = oArea.getRTE();
+
+				if (oRTE) {
+					oRTE.document.designMode = 'On';
+
+					self.status = "";
+					oArea.setContent(oArea.html)
+
+				} else { alert('problem: oRTE is null'); }
+			} else { alert('problem: oArea is null'); }
+
+			//	Original version, causes problems on IE7
+			/*
+			if (document.all) {
+				alert('setting designmode');
+				for (var i in frames) { alert(i); }
+				frames[areaName].document.designMode = "On";
+				alert('done setting design mode');
+			}
 			else {
-				contentDocument = document.getElementById(areaName).contentDocument;
+				contentDocument = document.getElementById('ifHt' + areaName).contentDocument;
 				contentDocument.designMode = "on";
 			}	
 			self.status = "";
 			area.setContent(area.html)
+			*/
 
 		} catch(e) {
 			//--------------------------------------------------------------------------------------
@@ -1294,6 +1522,7 @@ function KHyperTextAreas() {
 	//note: field name will be div ID
 	
 	this.convertDivs = function() {
+		this.log('Converting divs...');
 		var allDivs = document.getElementsByTagName('DIV');		// get all divs
 		for (i = 0; i < allDivs.length; i++) {
 			var currDiv = allDivs[i];
@@ -1301,10 +1530,14 @@ function KHyperTextAreas() {
 			//--------------------------------------------------------------------------------------
 			//	if editor class
 			//--------------------------------------------------------------------------------------
-			var className = currDiv.getAttribute('class');
+			var className = null;
+			if (currDiv.getAttribute('class')) { className = currDiv.getAttribute('class'); }
+			if (currDiv.getAttribute('className')) { className = currDiv.getAttribute('className'); }
 			if (className) {
 				className = className.toLowerCase();
 				if (('hypertextarea' == className) || ('hypertextarea64' == className)) {
+					this.log('Found class: ' + className);
+
 					//------------------------------------------------------------------------------	
 					//	get all properties of new HTA
 					//------------------------------------------------------------------------------
@@ -1312,14 +1545,35 @@ function KHyperTextAreas() {
 					var title = currDiv.getAttribute('title');
 					var width = currDiv.getAttribute('width');
 					var height = currDiv.getAttribute('height');
-					var divId = currDiv.getAttribute('id');	
+					var divId = currDiv.getAttribute('id');
+					var karea = currDiv.getAttribute('karea');
+					var skipthisone = false;
 
 					if (!title) { title = 'content'; }
-					if (!divId) { divId = 'divHta'; }
-					if (!width) { width = 500; }
-					if (!height) { width = 400; }
+					if (!divId) { divId = 'divHta' + title; }
+					if (!width) { width = -1; }
+					if (!height) { height = 400; }
+					if (!karea) { karea = 'content'; }
+
+					//------------------------------------------------------------------------------	
+					//	check if we've already added an HTA by this name, skip if we have
+					//------------------------------------------------------------------------------
+
+					for (var j in this.areas) {	
+						if (title == this.areas[j].name) {
+							this.log("Found existing HTA: " + title + " (skipping)");
+							skipthisone = true;
+						}
+					}
+
+					if (true == skipthisone) { continue; }
+
+					//------------------------------------------------------------------------------	
+					//	decode HTA contents
+					//------------------------------------------------------------------------------
 
 					if ('hypertextarea64' == className ) { 
+						this.log('Decoding initial content of HTA (base64)');
 						html = base64.decode(html, 1, false, true); 
 					}
 
@@ -1332,7 +1586,7 @@ function KHyperTextAreas() {
 					 + "Content: " + html + "<br/>\n"
 					;
 
-					//alert(msg);
+					this.log(msg);
 					currDiv.innerHTML = '';
 
 					//------------------------------------------------------------------------------	
@@ -1340,12 +1594,34 @@ function KHyperTextAreas() {
 					//------------------------------------------------------------------------------
 					var temp = this.create(title, html, width, height, divId);
 
+					var refModule = currDiv.getAttribute('refModule');
+					var refModel = currDiv.getAttribute('refModel');
+					var refUID = currDiv.getAttribute('refUID');
+
+					msg = ''
+					 + "<b>Creating HyperTextArea:</b><br/>\n"
+					 + "refModule: " + refModule + "<br/>\n"
+					 + "refModel: " + refModel + "<br/>\n"
+					 + "refUID: " + refUID + "<br/>\n"
+					;
+
+					this.log(msg);
+
+					temp.refModule = refModule;
+					temp.refModel = refModel;
+					temp.refUID = refUID;
+					temp.karea = karea;
+
+					if ((refModule) && (refModel) && (refUID)) { temp.hasRef = true; }
+
 					//------------------------------------------------------------------------------	
 					//	prevent re-rendering
 					//------------------------------------------------------------------------------
 					currDiv.setAttribute('class', 'HyperTextAreaLoaded');
 					currDiv.style.visibility = 'visible'; 
-					currDiv.style.display = 'block'; 
+					currDiv.style.display = 'block';
+
+					if (isMobile) { temp.setContent(html); } 
 				}
 			}
 		}
@@ -1356,8 +1632,9 @@ function KHyperTextAreas() {
 	//----------------------------------------------------------------------------------------------
 
 	this.log = function(msg) {
-		var logDiv = document.getElementById('divLog');
-		if (logDiv) { logDiv.innerHTML = logDiv.innerHTML + msg + "<br>\n";	}
+		//alert(msg);
+		//var logDiv = document.getElementById('divLog');
+		//if (logDiv) { logDiv.innerHTML = logDiv.innerHTML + msg + "<br>\n";	}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -1381,6 +1658,33 @@ function KHyperTextAreas() {
 		return area.setContent(html);		
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	inject a block into the editor
+	//----------------------------------------------------------------------------------------------
+	//;	the image should be replaced by the block on submission, and back again on edit
+	//arg: htaName - name of an HTA managed by this object [string]
+	//arg: blockTag - a kapenta block tag with an editimg attribute [string]
+
+	this.inject = function(htaName, blockTag) {
+		for (var i = 0; i < this.areas.length; i++) {
+			if (this.areas[i].name == htaName) {
+				//alert('injecting: ' + relUrl + ' mapto: ' + blockTag);
+				this.areas[i].addBlock(blockTag);
+				this.areas[i].hideAttach();
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set automatic image replacement on IE6 & IE7, since they don't listen for node events
+	//----------------------------------------------------------------------------------------------
+
+	this.checkImages = function() {
+		for (i in this.areas) { area = this.areas[i].fixImages(); }
+		if (document.all) { window.setTimeout("khta.checkImages();", 1000); }
+	}
+
+	this.checkImages();
 }
 
 //==================================================================================================
@@ -1436,12 +1740,13 @@ function kb_handler(evt) {
 //	on node insert check to see that images have been added correctly
 //	kapenta only! - remove if you're not using this to manage block insertions
 //--------------------------------------------------------------------------------------------------
+//DEPRECATED: TODO - remove this
 
 function nodeinsert_handler(evt) {
 	var oRTE = getEditorDocument(evt.target);
 
 	if ('IMG' == evt.target.tagName) {		
-		replaceImageButtons(oRTE);
+		//replaceImageButtons(oRTE);
 
 	} else {
 		//	remove any images which were not added by dragging a button
@@ -1681,233 +1986,76 @@ function getEditorDocument(someNode) {
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
-//	replace buttons with the images they represent
-//	kapenta only! - remove if you're not using this to manage block insertions
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//	function / object to parse HTML for editor blocks
+//--------------------------------------------------------------------------------------------------
 
-function replaceImageButtons(oRTE) {
-	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
+function replaceEditorBlocks(fromHtml) {
+	this.html = fromHtml;
 
-	for (i = 0; i < imgs.length; i++) {				// look for instructions in button alt
-		var img = imgs[i];
-		if ((img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
-			// get plugin details from alt
-			var args = img.alt.split('|');
-			var plugin = args[0];
+	//----------------------------------------------------------------------------------------------
+	//	utility method to HTML and extract block tags
+	//----------------------------------------------------------------------------------------------
 
-			//-------------------------------------------------------------------------------------
-			//	replace button with image
-			//-------------------------------------------------------------------------------------
-			if (plugin == 'images') {
-				var size = '';
-				var raUID = '';
+	this.parseHtml = function() {
+		var blockStart = 0;							//%	index at which current block starts [int]
+		var blockEnd = 0;							//%	index at which current block ends [int]
+		var blockTag = '';							//%	current block tag [string]
+		var replaceTag = '';						//%	HTML to replace it with [string]
 
-				// get image details
-				for (j = 1; j < args.length; j++) {
-					if (args[j].indexOf('=') > 0) {
-						parts = args[j].split('=');
-						switch(parts[0]) {
-							case 'raUID': 	raUID = parts[1];	break;
-							case 'size': 	size = parts[1];	break;
-						}
-					}
-				}
+		while (true) {
+			blockStart = this.html.indexOf('[[:', blockEnd)
+			if (-1 == blockStart) { return; }	//..............................................
 
-				// set image src and alt
-				var newSrc = jsServerPath + 'images/' + size + '/' + raUID;
-				img.src = newSrc;
-				img.alt = 'imageexpanded|raUID=' + raUID + '|size=' + size + '|';
+			blockEnd = this.html.indexOf(':]]', blockStart)
+			if (-1 == blockEnd) { return; }			//..............................................
+			blockEnd = blockEnd + 3;
 
-			}
-		}
-	}	
-}
+			blockTag = html.substring(blockStart, blockEnd);
+			//alert('blockTag: ' + blockTag);
+			replaceTag = this.parseBlock(blockTag);
+			//alert('replaceTag: ' + replaceTag);
 
-//-------------------------------------------------------------------------------------------------
-//	remove images added incorrectly (they won't have an alt beginning with 'imageexpanded')
-//	kapenta only! - remove if you're not using this to manage block insertions
-//-------------------------------------------------------------------------------------------------
-
-function removeSimpleImages(oRTE) {
-	var imgs = oRTE.getElementsByTagName('IMG');
-	var srcStr = '';
-	for (var i in imgs) {
-		var img = imgs[i];
-		if (img != undefined) {
-			if ((img.alt == undefined) || (img.alt == null) || (img.alt == '')) {
-				// no alt
-				if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
-			} else {
-				// alt must begin imageexpanded or some other plugin name
-				var rmThis = true;
-				if ((img.alt.length > 13) && (img.alt.substring(0, 14) == 'imageexpanded|')) { rmThis = false; }
-				if (true == rmThis) {
-					if (undefined != img.parentNode) { img.parentNode.removeChild(img);	}
-				}
-			}
-		} // end if img undefined
-	} // end for
-}
-
-//-------------------------------------------------------------------------------------------------
-//	replace images with blocks before saving
-//	kapenta only! - remove if you're not using this to manage block insertions
-//-------------------------------------------------------------------------------------------------
-
-function replaceImagesWithBlocks(oRTE) {
-	var imgs = oRTE.getElementsByTagName('IMG');	// get all images in this rich text editor
-	for (var i in imgs) {							// look for instructions in button alt
-		img = imgs[i];
-		if ((img != undefined) && (img.alt != undefined) && (img.alt != null) && (img.alt != '')) { 
-			// get plugin details from alt
-			var args = img.alt.split('|');
-			var plugin = args[0];
-
-			//-------------------------------------------------------------------------------------
-			//	replace image with block tag
-			//-------------------------------------------------------------------------------------
-			if (plugin == 'imageexpanded') {
-				var size = '';
-				var raUID = '';
-
-				// get image details
-				for (j = 1; j < args.length; j++) {
-					if (args[j].indexOf('=') > 0) {
-						parts = args[j].split('=');
-						switch(parts[0]) {
-							case 'raUID': 	raUID = parts[1];	break;
-							case 'size': 	size = parts[1];	break;
-						}
-					}
-				}
-
-				// replace DOM image node with text node
-				if (size == 'widtheditor') { size = 'width570'; }
-				var block = '[[:images::' + size + '::raUID=' + raUID + ':]]';
-				var txtNode = oRTE.createTextNode(block);
-				img.parentNode.replaceChild(txtNode, img);
-
-			} 
-		}
-	}	
-}
-
-//-------------------------------------------------------------------------------------------------
-//	find all blocks in a piece of text/html
-//-------------------------------------------------------------------------------------------------
-//TODO: remove this, parse on server side [string]
-
-function editorProcessBlocks(html) {
-	return html;
-	var blocks = editorFindBlocks(html);
-	for (var i in blocks) {
-		var block = blocks[i];
-		cblock = block.replace(/\[\[:/g, '');	// remove wrapper
-		cblock = cblock.replace(/:\]\]/g, '');
-
-		var args = cblock.split('::');
-
-		switch(args[0]) {
-			case 'images':
-				if ( (args[1] == 'slideshow') || 
-					 (args[1] == 'swapbutton') ||
-					 (args[1] == 'thumb') ||  
-					 (args[1] == 'default') ) {
-					// leave it be (block as editable text)
-				} else {
-					// replace with actual image tag
-					var imgtag = editorMkImageFromBlock(args);
-					html = editorReplaceAll(html, block, imgtag);
-					break;
-				}
-		}
-	}
-
-	return html;
-}
-
-//-------------------------------------------------------------------------------------------------
-//	ugly, but better than screwing with RegEx
-//-------------------------------------------------------------------------------------------------
-//TODO: move to HyperTextArea
-
-function editorReplaceAll(html, find, repl) {
-	if (find.length < 3) { return html; }
-	while (html.indexOf(find) >= 0) {
-		var startPos = html.indexOf(find);
-		var strBefore = html.substring(0, startPos);
-		var strAfter = html.substring((startPos + find.length), html.length);
-		html = strBefore + repl + strAfter;
-	}
-	return html;	
-}
-
-//-------------------------------------------------------------------------------------------------
-//	make an html image tag from an image block tag
-//-------------------------------------------------------------------------------------------------
-//TODO: remove, this can be done server-side
-
-function editorMkImageFromBlock(args) {
-	var imgtag = '';
-	var size = args[1];
-	var raUID = '';
-
-	//---------------------------------------------------------------------------------------------
-	//	get any arguments (at present only UID) TODO: add arguments for caption, etc
-	//---------------------------------------------------------------------------------------------
-	for(var i in args) {
-		var arg = args[i];
-		if (arg.indexOf('=') > 0) {
-			var parts = arg.split('=');
-			switch(parts[0]) {
-				case 'raUID':		raUID = parts[1]; 	break;
-				case 'imageUID':	raUID = parts[1]; 	break;
+			if ('' == replaceTag) {	/* literal block, has no cover image, left alone */ }
+			else {
+				//----------------------------------------------------------------------------------
+				//	replace this block with a cover image (original block tag will be an attribute)
+				//----------------------------------------------------------------------------------
+				var prefix = this.html.substring(0, blockStart);	//%	HTML before this block [string]
+				var suffix = this.html.substring(blockEnd);		//%	HTML after this block [string]
+				this.html = prefix + replaceTag + suffix;
 			}
 		}
 	}
 
-	//---------------------------------------------------------------------------------------------
-	//	assemble into HTML, alt property allows image to be converted back to block tag
-	//---------------------------------------------------------------------------------------------
-	if ('width570' == size) { size = 'widtheditor'; }
-	var src = jsServerPath + 'images/' + size + '/' + raUID;
-	var alt = 'imageexpanded|size=' + size + '|raUID=' + raUID + '|';
-	imgtag = "<img class='im" + size + "' src='" + src + "' border='0' alt='" + alt + "' blockTag='[[:blocktag:]]' />";
-	return imgtag;
-}
+	//----------------------------------------------------------------------------------------------
+	//	utility method to parse kapenta block tags
+	//----------------------------------------------------------------------------------------------
+	this.parseBlock = function(blockTag) {
+		var replaceTag = '';
+		blockTag = blockTag.replace('[[:', '');
+		blockTag = blockTag.replace(':]]', '');
 
-//-------------------------------------------------------------------------------------------------
-//	find all blocks in a piece of text/html
-//-------------------------------------------------------------------------------------------------
-//TODO: remove
-
-function editorFindBlocks(html) {
-	var blocks = new Array();
-
-	html = html.replace(/\r/g, '');				// strip newlines
-	html = html.replace(/\n/g, '');
-	html = html.replace(/\[\[:/g, "\n[[:");		// place blocks on their own line
-	html = html.replace(/:\]\]/g, ":]]\n");
-
-	var lines = html.split("\n");				// for each line which might be a block
-	var idx = 0;
-
-	for (i = 0; i < lines.length; i++) {
-		line = lines[i];						
-		if (line.length > 8) {
-			//--------------------------------------------------------------------------------------
-			//	if this line begins with [[:: and ends with ::]]
-			//--------------------------------------------------------------------------------------
-			if ((line.substring(0, 3) == '[[:') && (line.substring((line.length - 3), line.length) == ':]]')) {
-				blocks[idx] = line;
-				idx++;
+		var parts = blockTag.split('::');
+		for (var i = 0; i < parts.length; i++) {
+			if (parts[i].indexOf('=') > 0) {
+				attr = parts[i].split('=');				//	[0] => attrib name [1] => value
+				if ('editimg' == attr[0]) {
+					replaceTag = ''
+					 + "<img"
+					 + " src='" + jsServerPath + attr[1] + "'"
+					 + " kblocktag='[" + "[:" + blockTag + ":]]'"
+					 + " class='rounded'"
+					 + " />";
+				}
 			}
+		}
 
-	  }
+		return replaceTag;
 	}
-	
-	return blocks;
+
+	this.parseHtml();
+	return this.html;
 }
 
 //==================================================================================================

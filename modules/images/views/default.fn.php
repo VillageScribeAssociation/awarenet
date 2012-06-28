@@ -9,15 +9,20 @@
 //opt: altUser - UID of a Users_User object [string]
 //opt: size - width100, width200, width300, width570, thumb, thumbsm or thumb90 [string]
 //opt: link - link to larger image (yes|no) [string]
+//opt: display - css display type (inline|block) [string]
 //: if there is no default image, a user's default image may be used instead by filling altUser
 //TODO: add refModule and refModel checks
 
 function images_default($args) {
-	global $kapenta, $db;
-	$size = 'width300';
-	$link = 'yes';
-	$altUser = '';
-	$html = '';
+	global $kapenta;
+	global $db;
+
+	$size = 'width300';				//%	default size [string]
+	$link = 'yes';					//%	link to image (yes|no) [string]
+	$altUser = '';					//%	UID of a Users_User object (for fallback image) [string]
+	$display = 'block';				//%	css element type [string]
+	$style = '';					//%	per-element style [string]
+	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
@@ -37,6 +42,8 @@ function images_default($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
+	if (true == array_key_exists('display', $args)) { $display = $args['display']; }
+
 	//----------------------------------------------------------------------------------------------
 	//	find default (lowest weight image), if any
 	//----------------------------------------------------------------------------------------------
@@ -49,13 +56,21 @@ function images_default($args) {
 			// no images found for this item
 			//--------------------------------------------------------------------------------------
 			$imgUrl = $kapenta->serverPath . 'data/images/unavailable/' . $size . '.jpg';
-			$html = "[[:images::unavailable::size=" . $size . ":]]"; 
+			$html = "[[:images::unavailable::size=" . $size . "::display=$display:]]"; 
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			// try the user's image
 			//--------------------------------------------------------------------------------------
-			$html = '[[:images::default::size=' . $size. '::link=no::refUID=' . $altUser . ':]]';
+			$html = ''
+			 . '[[:images::default'
+			 . '::size=' . $size
+			 . '::display=' . $display
+			 . '::link=no'
+			 . '::refModule=users'
+			 . '::refModule=users_user'
+			 . '::refUID=' . $altUser
+			 . ':]]';
 		}
 
 	} else {
@@ -64,7 +79,17 @@ function images_default($args) {
 		//------------------------------------------------------------------------------------------
 		$row = array_pop($range);
 		$imgUrl = "%%serverPath%%images/s_" . $size . "/" . $row['alias'];
-		$html = "<img src='" . $imgUrl . "' border='0' alt='" . $row['title'] . "' />";
+
+		if ('inline' == $display) { $style = " style='display: inline;'"; }
+
+		$html = ''
+		 . "<img"
+		 . " src='" . $imgUrl . "'"
+		 . " border='0'"
+		 . " alt='" . $row['title'] . "'"
+		 . " class='rounded'"
+		 . $style
+		 . " />";
 
 		if ($link == 'yes') {
 			//--------------------------------------------------------------------------------------
@@ -74,6 +99,9 @@ function images_default($args) {
 			$html = "<a href='" . $fullUrl . "'>$html</a>";
 		}
 	}
+
+	// for AJAX blocks which are served directly
+	$html = str_replace('%%serverPath%%', $kapenta->serverPath, $html);
 
 	return $html;
 }

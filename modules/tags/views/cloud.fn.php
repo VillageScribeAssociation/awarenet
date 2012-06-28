@@ -7,9 +7,13 @@
 //opt: refModel - if present owner must be this type of object [string]
 //opt: refUID -UID of an object which may have tags [string]
 //opt: num - maximum number of tags to display, default is 20 (int)[string]
+//opt: channel - RESERVED [string]
 
 function tags_cloud($args) {
-	global $db, $theme, $kapenta;
+	global $db;
+	global $theme;
+	global $kapenta;
+
 	$html = '';
 	$num = 20;
 

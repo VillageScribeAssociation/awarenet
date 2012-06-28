@@ -17,10 +17,13 @@
 		<div id='divAllMembers'>
 		[[:projects::listmembersnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 		</div>
-		[`|lt]br/[`|gt]
+		<div class='foot'></div>
+		<br/>
 
 		[[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 		[[:projects::askjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+
+		[[:live::manageattachments::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
 
 		[[:theme::navtitlebox::label=Add A Comment::toggle=divAddCommentNav::hidden=yes:]]
 		[`|lt]div id=[`|sq]divAddCommentNav[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
@@ -38,26 +41,25 @@
 
 		[[:projects::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1::label=Last Edit:]]
 
-[[:theme::navtitlebox::label=Tags (this project)::toggle=divTagsNav:]]
-[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
-[[:tags::cloud::url=projects/tag/::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Tags (this project)::toggle=divTagsNav:]]
+		[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
+		[[:tags::cloud::url=projects/tag/::refModule=projects::refModel=projects[`|us]project::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Their Other Projects::toggle=divOtherProjects::hidden=yes:]]
-<div id='divOtherProjects' style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq]>
-[[:projects::listsamembersanav::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-</div>
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Their Other Projects::toggle=divOtherProjects::hidden=yes:]]
+		<div id='divOtherProjects' style='visibility: hidden; display: none;'>
+		[[:projects::listsamembersanav::UID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		</div>
+		[`|lt]br/[`|gt]
 
+		[[:theme::navtitlebox::label=Tags (all projects)::toggle=divTagsAllNav:]]
+		[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
+		[[:tags::modelcloud::refModule=projects::refModel=projects[`|us]project:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Tags (all projects)::toggle=divTagsAllNav:]]
-[`|lt]div id=[`|sq]divTagsNav[`|sq][`|gt]
-[[:tags::modelcloud::refModule=projects::refModel=projects[`|us]project:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
-
-</nav1>
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>
@@ -67,8 +69,10 @@
 	<menu2>[[:projects::menu::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]</menu2>
 	<section></section>
 	<subsection></subsection>
-	<breadcrumb>[[:theme::breadcrumb::label=Projects - ::link=/projects/:]]
-[[:theme::breadcrumb::label=[`|pc][`|pc]projectTitle[`|pc][`|pc]::link=/projects/[`|pc][`|pc]projectRa[`|pc][`|pc]:]]</breadcrumb>
+	<breadcrumb>
+		[[:theme::breadcrumb::label=Projects - ::link=/projects/:]]
+		[[:theme::breadcrumb::label=[`|pc][`|pc]projectTitle[`|pc][`|pc]::link=/projects/[`|pc][`|pc]projectRa[`|pc][`|pc]:]]
+	</breadcrumb>
 </page>
 
 */ ?>

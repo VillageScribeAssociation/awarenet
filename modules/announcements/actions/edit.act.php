@@ -25,6 +25,7 @@
 	//----------------------------------------------------------------------------------------------
 	$page->load('modules/announcements/actions/edit.page.php');
 	$page->blockArgs['raUID'] = $req->ref;
+	$page->blockArgs['UID'] = $model->UID;
 	$page->render();
 
 ?>

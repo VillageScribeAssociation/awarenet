@@ -48,7 +48,7 @@ function projects_showalllocks($args) {
 
 	$html = $theme->arrayToHtmlTable($table, true, true);
 
-	$cronTimestamp = $registry->get('kapenta.cron.tenmins');
+	$cronTimestamp = $registry->get('cron.tenmins');
 	$cronDateTime = $kapenta->datetime((int)$cronTimestamp);
 	$html .= "<b>Most recent cron:</b> " . $cronDateTime . " (" . $cronTimestamp . ")<br/>";
 

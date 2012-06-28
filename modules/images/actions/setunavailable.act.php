@@ -39,7 +39,7 @@
 
 	foreach($image->transforms->presets as $preset) {
 		$check = $image->transforms->make($preset['label']);
-		if (true == $check) {
+		if ((true == $check) && ('full' !== $preset['label'])) {
 			$srcFile = $image->transforms->members[$preset['label']];
 			$destFile = 'data/images/unavailable/unavailable_' . $preset['label'] . '.jpg';
 			$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
@@ -49,6 +49,18 @@
 			$session->msg("Could not create transform: " . $preset['label'] . "<br/>\n", 'bad');
 		}
 	}
+
+	$srcFile = $image->fileName;
+	$destFile = 'data/images/unavailable/unavailable.jpg';
+	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
+	$check = $kapenta->fileCopy($srcFile, $destFile);
+	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
+
+	$srcFile = $image->fileName;
+	$destFile = 'data/images/unavailable/unavailable_full.jpg';
+	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
+	$check = $kapenta->fileCopy($srcFile, $destFile);
+	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to image settings page

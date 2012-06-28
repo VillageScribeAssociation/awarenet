@@ -55,7 +55,7 @@ class Users_Settings {
 		$thirty = str_repeat(' ', 30);			//%	blank key name [string]
 
 		foreach($this->members as $k => $v) {
-			$serialized .= substr($k . $thirty, 0, 30) . $v . "\n";
+			if ('' != $v) { $serialized .= substr($k . $thirty, 0, 30) . $v . "\n"; }
 		}
 
 		return $serialized;	
@@ -68,6 +68,17 @@ class Users_Settings {
 
 	function toString() {
 		return $this->collapse();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	export as clean dict
+	//----------------------------------------------------------------------------------------------
+	//returns: key => value pairs [dict]
+
+	function toArray() {
+		$dict = array();
+		foreach($this->members as $key => $value) { $dict[$key] = base64_decode($value); }
+		return $dict;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -90,10 +101,10 @@ class Users_Settings {
 	//arg: value - value to store [string]
 	//returns: true on success, false on failure [bool]
 
-	function store($key, $value) {
-		if ('public' == $this->role) { return false; }
+	function set($key, $value) {
+		global $user;
+		if ('public' == $user->role) { return false; }
 		$this->members[$key] = base64_encode($value);
-		$this->save();
 		return true;
 	}
 

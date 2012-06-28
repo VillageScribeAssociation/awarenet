@@ -13,12 +13,13 @@ class KSession {
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
-	var $UID;			//_ UID of current session [string]
-	var $user;			//_ UID of current user [string]
-	var $message;		//_ message to user, displayed on next page render [string]
-	var $captcha;		//_ array of captcha solutions (UID => value) [array]
-	var $msgBlock = '';	//_ block template of session messages [string]
-	var $debug = false;	//_	set to true to enable live debug (call any page with /debug_on/)
+	var $UID;				//_ UID of current session [string]
+	var $user;				//_ UID of current user [string]
+	var $message;			//_ message to user, displayed on next page render [string]
+	var $captcha;			//_ array of captcha solutions (UID => value) [array]
+	var $msgBlock = '';		//_ block template of session messages [string]
+	var $debug = false;		//_	set to true to enable debug (call any page with /debug_on/) [bool]
+	var $mobile = false;	//_	set to true to enable mobile mode [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -43,6 +44,10 @@ class KSession {
 		// sMessage - this is used for passing information for the user between pages
 		if (array_key_exists('sMessage', $_SESSION)) { $this->message = $_SESSION['sMessage']; }
 
+		// sMobile - toggle mobile browser mode (assume webkit browser (android/iphone/etc)
+		if (array_key_exists('sMobile', $_SESSION)) { $this->mobile = $_SESSION['sMobile']; }
+		else { $this->mobile = $this->isMobile(); }
+
 		// sCaptcha - for storing the correct answers to captchas
 		if (array_key_exists('sCaptcha', $_SESSION)) { $this->captcha = $_SESSION['sCaptcha']; }
 
@@ -59,6 +64,7 @@ class KSession {
 		$_SESSION['sUID'] = $this->UID;
 		$_SESSION['sUser'] = $this->user;
 		$_SESSION['sMessage'] = $this->message;
+		$_SESSION['sMobile'] = $this->mobile;
 		$_SESSION['sCaptcha'] = $this->captcha;
 		$_SESSION['sDebug'] = $this->debug;
 	}
@@ -88,6 +94,20 @@ class KSession {
 		global $user;
 		if ((true == isset($user)) && ('admin' != $user->role)) { return false; }
 		$this->msg($message, $icon);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	detect mobile browsers
+	//----------------------------------------------------------------------------------------------
+	//;	Mobile browsers which are not autodetected can visit /mobile/ link to set this
+	//returns: true if mobile browser, false if probably not [bool]
+
+	function isMobile() {
+		$match = array('iPhone', 'Android', 'Opera Mobi', 'Blackberry', 'IEMobile', 'Windows CE');
+		$ua = $_SESSION['HTTP_USER_AGENT'];
+		foreach($match as $fragment) {
+			
+		}	
 	}
 
 }

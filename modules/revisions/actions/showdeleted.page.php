@@ -14,6 +14,10 @@
 		<br/>
 		<br/>
 
+		[[:theme::navtitlebox::label=Deleted Dependants:]]
+		[[:revisions::listdependantnav::ownerUID=%%refUID%%:]]
+		<br/>
+
 		[[:theme::navtitlebox::label=Deleted Types::toggle=divDeletedTypes:]]
 		<div id='divDeletedTypes'>
 		[[:revisions::listdeletedtypes:]]

@@ -88,6 +88,9 @@
 		student:c|projects|projects_project|edit|(if)|projectmember
 		student:c|projects|projects_project|edit|(if)|projectadmin
 		student:c|projects|projects_project|tags-manage|(if)|projectmember
+		student:c|projects|projects_project|tags-add|(if)|projectmember
+		student:c|projects|projects_project|tags-remove|(if)|projectmember
+		student:p|projects|projects_project|tags-show
 		student:c|projects|projects_project|images-add|(if)|projectmember
 		student:c|projects|projects_project|images-add|(if)|projectadmin
 		student:c|projects|projects_project|edit|(if)|projectadmin
@@ -113,6 +116,9 @@
 		teacher:c|projects|projects_project|edit|(if)|projectmember
 		teacher:c|projects|projects_project|edit|(if)|projectadmin
 		teacher:c|projects|projects_project|tags-manage|(if)|projectmember
+		teacher:c|projects|projects_project|tags-add|(if)|projectmember
+		teacher:c|projects|projects_project|tags-remove|(if)|projectmember
+		teacher:p|projects|projects_project|tags-show
 		teacher:c|projects|projects_project|images-add|(if)|projectmember
 		teacher:c|projects|projects_project|images-add|(if)|projectadmin
 		teacher:c|projects|projects_project|edit|(if)|projectadmin

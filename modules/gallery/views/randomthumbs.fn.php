@@ -11,8 +11,11 @@
 //: note the direct use of images table - TODO: work around this
 
 function gallery_randomthumbs($args) {
-		global $db;
-	$limit = ''; $html = ''; $size = 'thumbsm';
+	global $db;
+
+	$limit = '';
+	$html = '';
+	$size = 'thumb90';
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments
@@ -34,9 +37,19 @@ function gallery_randomthumbs($args) {
 	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
-		$html .= "<a href='" . $viewUrl . "'>"
-			  . "<img src='" . $thumbUrl . "' title='" . $row['title']
-			  . "' border='0' vspace='2px' hspace='2px' /></a>\n";
+		$html .= ''
+		 . "<a href='" . $viewUrl . "'>"
+		 . "<img"
+		 . " src='" . $thumbUrl . "'"
+		 . " title='" . $row['title'] . "'"
+		 . " border='0'"
+		 . " vspace='3px'"
+		 . " hspace='3px'"
+		 . " height='90px'"
+		 . " width='90px'"
+		 . " class='rounded'"
+		 . " style='background-color: #aaaaaa; display: inline;'"
+		 . "/></a>\n";
 	}
 
 	return $html;

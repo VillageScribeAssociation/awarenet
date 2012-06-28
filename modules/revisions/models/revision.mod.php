@@ -117,7 +117,7 @@ class Revisions_Revision {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 		if ('revisions_revision' == $this->refModel) { $report .= "Revisions not kept for this."; }
-		if ('p2p_gift' == $this->refModel) { $report .= "Revisions not kept for this."; }
+		if ('p2p_gift' == $this->refModel) { $report .= "Revisions not kept for P2P objects."; }
 		return $report;
 	}
 

@@ -11,7 +11,13 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
-	//	check defaults exist
+	//	define default file associations
+	//----------------------------------------------------------------------------------------------
+
+	$assoc = array('jpg', 'jpeg', 'png', 'gif');
+
+	//----------------------------------------------------------------------------------------------
+	//	check default preset sizes exist
 	//----------------------------------------------------------------------------------------------
 	$defaults = array(
 		'full' => '*x*',
@@ -24,11 +30,22 @@
 		'width200' => '200x*',
 		'width290' => '290x*',
 		'width300' => '300x*',
+		'width320' => '300x*',
 		'width560' => '560x*',
 		'width570' => '570x*',
 		'widtheditor' => '530x*',
 		'widthcontent' => '570x*',
-		'slide' => '560x300'
+		'widthindent' => '515x*',
+		'widthmax' => '1024x*',
+		'widthnav' => '296x*',
+		'slide' => '560x300',
+		'slideindent' => '520x300',
+		'mobile' => '320x*',
+		'mobileslide' => '320x180',
+		'content' => '570x*',
+		'indent' => '500x*',
+		'nav1' => '300x*',
+		'nav2' => '300x*'
 	);
 
 	foreach($defaults as $label => $value) {
@@ -75,6 +92,22 @@
 		if (false == array_key_exists('label', $_POST)) { $page->do404('Label not given'); }	
 		$label = trim(strtolower($_POST['label']));		//TODO: better sanitzation
 		$registry->delete('images.size.' . $label);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	set default file associations with this module
+	//----------------------------------------------------------------------------------------------
+
+	if ((true == array_key_exists('action', $_POST)) && ('resetFileAssoc' == $_POST['action'])) {
+		$reg = $registry->search('live', 'live.file.');
+
+		//	delete existing file associations with this module
+		foreach($reg as $key => $value) {
+			if ('images' == $value) { $registry->delete($key); }
+		}
+
+		//	recreate defaults
+		foreach($assoc as $ext) { $registry->set('live.file.' . $ext, 'images'); }
 	}
 
 	//----------------------------------------------------------------------------------------------

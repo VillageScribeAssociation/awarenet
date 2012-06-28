@@ -8,12 +8,16 @@ function packages_addsourceform($args) {
 	global $user;
 	global $theme;
 
-	$html = '';			//%	return value [string]
+	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
-	//	check user role and load the block
+	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	$html = $theme->loadBlock('modules/packages/views/addsourceform.block.php');
 
 	return $html;

@@ -5,12 +5,18 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit group</title>
 	<content>
-		[[:theme::navtitlebox::width=570::label=About:]]
+		[[:theme::navtitlebox::width=570::label=About::toggle=divEditGroup:]]
+		<div id='divEditGroup'>
 		[`|lt]h1[`|gt]Edit Group[`|lt]/h1[`|gt]
 		[[:groups::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+
+		[[:groups::editmembersjs:]]
 	</content>
 	<nav1>
-		[[:groups::editmembersjs:]]
+		[[:live::manageattachments::refModule=groups::refModel=groups_group::refUID=%%UID%%:]]
 	</nav1>
 	<nav2></nav2>
 	<script></script>
@@ -18,7 +24,7 @@
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>
-	<menu2>[[:groups::menu:]]</menu2>
+	<menu2>[[:groups::menu::action=edit::UID=%%UID%%:]]</menu2>
 	<section></section>
 	<subsection></subsection>
 	<breadcrumb>

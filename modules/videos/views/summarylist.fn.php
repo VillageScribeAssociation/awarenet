@@ -22,15 +22,17 @@ function videos_summarylist($args) {
 	$orderBy = 'editedOn';			//%	order field [string]
 	$ad = 'DESC';					//%	list order [string]
 	$pagination = 'yes';			//%	show order links and pagination (yes|no) [string]
+	$origin = 'user';				//% videos from (user|3rdparty) [string]
 	$html = '';
 
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	check arguments
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('orderBy', $args)) { $orderBy = $args['orderBy']; }
 	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pagination', $args)) { $pageSize = (int)$args['pagination']; }
+	if (true == array_key_exists('origin', $args)) { $origin = $args['origin']; }
 
 	if ($pageSize <= 0) { $pageSize = 10; }
 
@@ -42,19 +44,22 @@ function videos_summarylist($args) {
 		default:			return ''; // no such sortable column
 	}
 
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	count galleries, set start and end rows and load the recordset
-	//---------------------------------------------------------------------------------------------
-	$conditions = array('videocount > 0');	// do not show galleries with no images
+	//----------------------------------------------------------------------------------------------
+	$conditions = array();
+	$conditions[] = 'videocount > 0';								//	do not show empty galleries
+	$conditions[] = "origin='" . $db->addMarkup($origin) . "'";		//	divide by content source
+
 	$totalItems = $db->countRange('videos_gallery', $conditions);
 	$totalPages = ceil($totalItems / $pageSize);
 	$start = $num * ($pageNo - 1);
 
 	$range = $db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $num, $start);
 
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//	make the block
-	//---------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	$linkBase = '%%serverPath%%videos/listallgalleries/orderby_';
 	$pagination = "[[:theme::pagination::page=" . $pageNo 
 				 . "::total=" . $totalPages . "::link=" . $linkBase . $orderBy . '/' . ":]]\n";

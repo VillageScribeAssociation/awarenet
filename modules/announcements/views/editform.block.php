@@ -1,6 +1,12 @@
 <? /*
 <br/>
-<form name='editPost' method='POST' action='%%serverPath%%announcements/save/'>
+<form
+	id='frmEditAnnouncement%%UID%%'
+	name='editAnnouncement'
+	method='POST'
+	action='%%serverPath%%announcements/save/'
+	onSubmit="khta.updateAllAreas();"
+>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -12,16 +18,25 @@
 </table>
 <br/>
 
-
-<div class='HyperTextArea64' title='content' width='100%' height='400'>
-%%content64%%
-</div>
+<div
+	class='HyperTextArea64'
+	title='content'
+	width='-1'
+	height='400'
+	style='visibility: hidden; display: none'
+	refModule='announcements'
+	refModel='announcements_announcement'
+	refUID='%%UID%%'
+>%%content64%%</div>
 <script language='Javascript'> khta.convertDivs(); </script>
+</form>
 <table noborder>
   <tr>
    <td valign='top'>
-    <input type='submit' value='Save' />
-    </form>
+   <input
+		type='button'
+		value='Save'
+		onClick="$('#frmEditAnnouncement%%UID%%').submit();" />
    </td>
    <td>
    <form name='cDelete' method='GET' action='%%delUrl%%'>
@@ -31,6 +46,4 @@
  </tr>
 </table>
 
-<h2>Images</h2>
-[[:images::uploadmultiple::refModule=announcements::refModel=announcements_announcement::refUID=%%UID%%:]]
 */ ?>

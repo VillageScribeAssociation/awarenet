@@ -7,9 +7,10 @@
 	<content>
 		[[:theme::navtitlebox::label=Blog::width=570:]]
 
-		[[:moblog::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[[:moblog::show::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 		[`|lt]br/[`|gt]
 
+		<a name='comments'></a>
 		[[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddBlogComment::hidden=yes:]]
 		[`|lt]div id=[`|sq]divAddBlogComment[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 		[[:comments::addcommentform::refModule=moblog::refModel=moblog[`|us]post::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=moblog/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
@@ -17,10 +18,10 @@
 		[`|lt]br/[`|gt]
 
 		[[:theme::navtitlebox::label=Comments::width=570::toggle=divMoblogComments:]]
-		[`|lt]div id=[`|sq]divMoblogComments[`|sq][`|gt]
-		[[:live::river::mod=comments::view=list::pv=pageNo::allow=num|refModel|refModule|refUID::refModule=moblog::refModel=moblog[`|us]post::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		<div id='divMoblogComments'>
+		[[:comments::river::refModule=moblog::refModel=moblog_post::refUID=%%UID%%::num=10:]]
+		</div>
+		<br/>
 
 </content>
 	<nav1>[`|pc][`|pc]newPostForm[`|pc][`|pc]

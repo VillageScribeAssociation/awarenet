@@ -25,7 +25,12 @@ function tags_addtagform($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 
-	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) { return ''; }
+	if (
+		(false == $user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
+		(false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
+	) {
+		return '';
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

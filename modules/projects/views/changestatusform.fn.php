@@ -22,7 +22,7 @@ function projects_changestatusform($args) {
 	if (false == $model->loaded) { return '(project not found)'; }
 
 	if (false == $user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
-		$page->do403("You are not permitted to change this project's status."); 
+		return "<small>(You are not permitted to change this project's status.)</small>"; 
 	}
 
 	//----------------------------------------------------------------------------------------------

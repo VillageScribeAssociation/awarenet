@@ -7,14 +7,19 @@
 //|	show
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID of a post [string]
+//opt: UID - overrides raUID if present [string]
 
 function moblog_show($args) {
-	global $theme, $user, $page;
+	global $theme;
+	global $user;
+	global $page;
+
 	$html = '';				//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions	
 	//----------------------------------------------------------------------------------------------
+	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }

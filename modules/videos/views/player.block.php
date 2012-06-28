@@ -1,21 +1,23 @@
 <? /*
 
-<script src="%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js"></script>
+<script src='%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js'></script>
 
 <a
 	href="%%serverPath%%%%fileName%%"
-	style="display:block;width:100%;height:%%height%%px;"
-	id="player%%UID%%">
+	style="display:block;width:%%width%%px;height:%%height%%px;"
+	id="player%%UID%%r%%rand%%">
 </a>
 
 <script language="JavaScript">
 flowplayer(
-	"player%%UID%%", 
-	"%%serverPath%%modules/videos/flash/flowplayer-3.2.7.swf", 
+	"player%%UID%%r%%rand%%", 
+	{
+		src:"%%serverPath%%modules/videos/flash/flowplayer-3.2.7.swf", 
+		wmode:"opaque"
+	},
 	{
 		plugins: {
 		},
-
 
 		clip: { 
 		   autoPlay: false,
@@ -28,6 +30,6 @@ flowplayer(
 );
 </script>
 
-%%browserLink%%
-
+%%browserLink%% %%like%% %%extra%%
+<br/>
 */ ?>

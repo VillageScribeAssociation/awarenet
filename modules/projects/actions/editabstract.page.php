@@ -7,8 +7,6 @@
 	<content>
 		[[:theme::navtitlebox::width=570::label=Project Setup:]]
 		[[:projects::editabstractform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-
-		[[:projects::edittags::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 	</content>
 	<nav1>
 		[[:projects::editmembersjs::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
@@ -17,6 +15,7 @@
 
 		[[:projects::changestatusform::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
+		[[:live::manageattachments::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]	
 	</nav1>
 	<nav2></nav2>
 	<script></script>

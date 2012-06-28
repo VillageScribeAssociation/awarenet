@@ -43,6 +43,11 @@
 				$line = str_replace("\t", ',', $line);
 				$parts = explode(',', trim($line));
 
+				$parts[0] = trim($parts[0]);
+				$parts[1] = trim($parts[1]);
+				$parts[2] = trim($parts[2]);
+				$parts[3] = trim($parts[3]);
+
 				//echo "line: $line <br/>\n";
 				//foreach($parts as $i => $part) { echo "part $i - $part <br/>\n"; }
 
@@ -60,8 +65,6 @@
 					$model->password = sha1($parts[3] . $model->UID);
 
 					$model->lang = 'en';
-					$model->profile = '';
-					$model->permissions = '';
 					$model->lastOnline = $db->datetime();
 					$model->createdOn = $db->datetime();
 					$model->createdBy = $user->UID;

@@ -1,5 +1,7 @@
 <? /*
-%%titlebar%%
+
+[[:theme::navtitlebox::label=Make Friend Request::toggle=divFriendRequest::hidden=yes:]]
+<div id='divFriendRequest' style='display: none;'>
 <form name='friendRequest' method='POST' action='%%serverPath%%users/addfriendrequest/' >
 <input type='hidden' name='action' value='addFriendReq' />
 <input type='hidden' name='friendshipUID' value='%%friendshipUID%%' />
@@ -21,4 +23,8 @@ What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?
 </select><br/>
 <input type='submit' value='ask to be added to friend list' />
 </form>
+</div>
+<div class='foot'></div>
+<br/>
+
 */ ?>

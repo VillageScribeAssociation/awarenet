@@ -2,7 +2,7 @@
 
 <h2>Bulk User Signup</h2>
 
-<p><b>Important:</b> Use with caution, once created user accounts cannot be deleted, and must be manually disbaled one
+<p><b>Important:</b> Use with caution, once created user accounts cannot be deleted, and must be manually disabled one
 at a time.  Student records may be tab or comma separated values, one per line with the following format:</p>
 <div class='inlinequote'>firstname, surname, username, password</div>
 <br/>

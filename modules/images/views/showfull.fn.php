@@ -41,11 +41,10 @@ function images_showfull($args) {
 		 . "<br/><br/>\n"
 		 . "[[:theme::navtitlebox::label=Edit::toggle=divEditImage::hidden=yes:]]\n"
 		 . "<div id='divEditImage' style='visibility: hidden; display: none;'>\n"
-		 . "[[:images::editform::return=show::imageUID=" . $model->UID . ":]]\n"
+		 . "[[:images::editform::return=show::imageUID=" . $model->UID . "::edittags=yes:]]\n"
 		 . $labels['rotateBlock']
-		 . "<hr/>\n"
-
-		 . "</div>\n<br/>\n";
+		 . "</div>\n"
+		 . "<div class='foot'></div>\n";
 	}	//TODO: user permission for this
 
 	$block = $theme->loadBlock('modules/images/views/showfull.block.php');

@@ -15,5 +15,17 @@ sizes you have created will be unaffected.</p>
 <hr/>
 
 %%setUnavailableForm%%
+<hr/>
+
+<h2>File Associations</h2>
+<p>This module is registered to handle attachments of the following files.</p>
+[[:live::listfileassoc::module=images:]]
+<form name='frmResetAssoc' method='POST' action='%%serverPath%%images/settings/'>
+	<input type='hidden' name='action' value='resetFileAssoc' />
+	<input type='submit' value='Reset to defaults (images module only)' />
+</form>
+<br/>
+<a href='%%serverPath%%live/settings/%%'>[ edit file associations &gt;&gt; ]</a>
+<hr/>
 
 */ ?>

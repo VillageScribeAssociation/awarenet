@@ -56,7 +56,7 @@ function moblog__cb_object_updated($args) {
 			//	new event set, notify user's friends
 			//--------------------------------------------------------------------------------------
 			$ext = $model->extArray();
-			$title = "Blog update: " . $ext['nameLink'];
+			$title = "Blog update: " . $ext['title'];
 
 			$nUID = $notifications->create(
 				'moblog', 'moblog_post', $model->UID, 'moblog_editpost', 
@@ -85,6 +85,7 @@ function moblog__cb_object_updated($args) {
 	//---------------------------------------------------------------------------------------------
 	//	pull page triggers (DEPRECATED)
 	//---------------------------------------------------------------------------------------------
+	/*
 	if ('moblog' == $args['module']) {
 		$kapenta->logLive('in moblog callback, setting triggers ');
 		$page->doTrigger('moblog', 'post-any');
@@ -93,6 +94,7 @@ function moblog__cb_object_updated($args) {
 			$page->doTrigger('moblog', 'post-by-' . $args['data']['createdBy']);
 		}
 	}
+	*/
 
 	return true;
 }

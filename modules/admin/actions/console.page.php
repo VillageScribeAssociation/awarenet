@@ -4,11 +4,11 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - admin console</title>
-	<content>[[:theme::navtitlebox::label=Administration Console::width=570:]]
+	<content>
 
-[[:admin::moduleconsole:]]
+		[[:admin::moduleconsole::ntb=yes::title=Administration Console:]]
 
-</content>
+	</content>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>
 	<script></script>

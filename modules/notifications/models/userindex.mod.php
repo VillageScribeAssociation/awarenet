@@ -15,7 +15,7 @@ class Notifications_UserIndex {
 	var $loaded = false;	//_	set to true when an object has been loaded [bool]
 
 	var $UID;				//_ UID [string]
-	var $userUID;			//_ ref:Users_User [string]
+	var $userUID;			//_ ref:Users_User or category [string]
 	var $notificationUID;	//_ ref:Notifications_Notification [string]
 	var $status;			//_	notification status/visibility (show|hide) [string]
 	var $createdOn;			//_ datetime [string]
@@ -120,7 +120,8 @@ class Notifications_UserIndex {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)'
+		);
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -132,8 +133,17 @@ class Notifications_UserIndex {
 			'editedOn' => '',
 			'editedBy' => '10' );
 
-		//revision history will be kept for these fields
-		$dbSchema['nodiff'] = array();
+		//revision history will not be kept for these fields
+		$dbSchema['nodiff'] = array(
+			'UID',
+			'userUID',
+			'notificationUID',
+			'status',
+			'createdOn',
+			'createdBy',
+			'editedOn',
+			'editedBy'
+		);
 
 		return $dbSchema;
 		
@@ -220,6 +230,14 @@ class Notifications_UserIndex {
 		//------------------------------------------------------------------------------------------
 		//	javascript
 		//------------------------------------------------------------------------------------------
+		$ext['hideJsLink'] = '';
+		if (('admin' == $user->role) || ($user->UID == $ext['userUID'])) { 
+			$ext['hideJsLink'] = ''
+		 	. "<a href='javascript:void(0);' "
+				. "onClick=\"notifications_hide('" . $ext['UID'] . "')\""
+				. ">[hide]</a>";		// users can hide their own notifications
+		}
+		
 		$ext['UIDJsClean'] = $utils->makeAlphaNumeric($ext['UID']);
 		return $ext;
 	}

@@ -76,7 +76,12 @@ function users_search($args) {
 			$html .= "[[:users::summarynav::userUID=" . $item['UID'] . ":]]\n";
 
 		} else {
-			$cbIconUrl = "%%serverPath%%themes/" . $kapenta->defaultTheme . "/icons/" . $cbicon;
+			$cbIconUrl = ''
+			 . "%%serverPath%%themes/"
+			 . $kapenta->defaultTheme
+			 . "/images/icons/"
+			 . $cbicon;
+
 			$html .= "
 			<table noborder width='100%'>
 				<tr>

@@ -10,14 +10,12 @@
 	[[:users::editprofileform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 	<br/>
 
-	[[:theme::navtitlebox::label=Profile Pictures:]]
-	[[:images::uploadmultiple::refModule=users::refModel=users_user::refUID=%%UID%%:]]
-
 </content>
 	<nav1>
 	[[:theme::navtitlebox::label=My Profile Picture:]]
 	[[:users::chooseavatar:]]
 	<hr/>
+	[[:live::manageattachments::refModule=users::refModel=users_user::refUID=%%UID%%:]]
 	<br/>
 [[:theme::navtitlebox::label=Info:]]
 [`|lt]h3[`|gt]How to Write a Profile[`|lt]/h3[`|gt]

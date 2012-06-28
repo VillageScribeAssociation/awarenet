@@ -34,6 +34,10 @@ class KUtils {
 		$mq = strtolower(ini_get('magic_quotes_gpc'));
 		if (('on' == $mq) || ('1' == $mq)) { $html = stripslashes($html); }
 
+		//	disallow non-breaking spaces, some users leave thousands of them at the end of blog
+		//	posts and forum posts, and it screws up the layout.
+		$html = str_replace('&nbsp;', ' ', $html);
+
 		$parser = new KHTMLParser($html);
 		return $parser->output;
 	}
@@ -47,6 +51,8 @@ class KUtils {
 	function cleanTitle($txt) {
 		$txt = $this->stripHtml($txt);
 		$txt = htmlentities($txt);
+		$txt = str_replace("'", '&#39;', $txt);
+		$txt = str_replace("\"", '&quot;', $txt);
 		return $txt;
 	}
 
@@ -250,6 +256,26 @@ class KUtils {
 		$txt = str_replace("\n", '--newline--', $txt);
 		$txt = str_replace("\r", '', $txt);
 		$txt = str_replace("[[:", '[[%%delme%%:', $txt);
+		return $txt;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	convert file size in bytes to approximate summary size
+	//----------------------------------------------------------------------------------------------
+	//arg: bytes - size of something in bytes [int]
+
+	function printFileSize($bytes) {
+		$txt = (string)$bytes . ' bytes';
+
+		$magnitude = 1024;
+		if ($bytes > $magnitude) { $txt = (string)floor(($bytes / $magnitude)) . 'kb'; }
+
+		$magnitude *= 1024;
+		if ($bytes > $magnitude) { $txt = (string)floor(($bytes / $magnitude)) . 'mb'; }
+
+		$magnitude *= 1024;
+		if ($bytes > $magnitude) { $txt = (string)floor(($bytes / $magnitude)) . 'gb'; }
+
 		return $txt;
 	}
 

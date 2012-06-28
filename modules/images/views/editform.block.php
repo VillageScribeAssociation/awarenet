@@ -1,4 +1,15 @@
 <? /*
+
+<script language='Javascript'>
+	function Images_ShowLicenceFields() {
+		$('#linkShowLF').hide();
+		$('#trLicence').show();
+		$('#trAttrib').show();
+		$('#trSource').show();
+		kwnd.onResize();
+	}
+</script>
+
 <form name='editImage' method='POST' action='%%serverPath%%images/save/' >
 <input type='hidden' name='action' value='saveImage' />
 <input type='hidden' name='UID' value='%%UID%%' />
@@ -9,10 +20,14 @@
 
 <table noborder width='100%'>
   <tr>
-    <td><b>Title:</b></td>
+    <td valign='top'><b>Title:</b></td>
     <td><input type='text' size='40' name='title' value='%%title%%' style='width: 100%;' /></td>
   </tr>
   <tr>
+    <td valign='top'><b>Caption:</b></td>
+    <td><textarea name='caption' rows='5' cols='40' style='width: 100%;'>%%caption%%</textarea></td>
+  </tr>
+  <tr id='trLicence' style='display: none;'>
     <td><b>Licence:</b></td>
     <td>
       <select name='licence'>
@@ -30,21 +45,28 @@
       </select>
     </td>
   </tr>
-  <tr>
-    <td><b>Attribution:    </b></td>
-    <td><input type='text' size='40' 
-         name='attribName' value='%%attribName%%' style='width: 100%;' /></td>
+  <tr id='trAttrib' style='display: none;'>
+    <td><b>Attribution:</b></td>
+    <td><input type='text' size='40' name='attribName' value='%%attribName%%' style='width: 100%;' /></td>
+  </tr>
+  <tr id='trSource' style='display: none;'>
+    <td><b>Source URL:</b></td>
+    <td><input type='text' size='40' name='attribURL' value='%%attribUrl%%' style='width: 100%;' /></td>
   </tr>
   <tr>
-    <td><b>Source URL:</b></td>
-    <td><input type='text' size='40' 
-         name='attribURL' value='%%attribUrl%%' style='width: 100%;' /></td>
+    <td><b></b></td>
+    <td>
+		<table noborder>
+		  <tr>
+			<td><input type='submit' value='Save' /></td>
+			<td><a id='linkShowLF' href='javascript:Images_ShowLicenceFields();'>[edit licence]</a></td>
+			<td>%%editTagsLink%%</td>
+		  </tr>
+		</table>
+	</td>
   </tr>
 </table>
 <br/>
-<b>Caption:</b><br/>
-<textarea name='caption' rows='5' cols='40' style='width: 100%;'>%%caption%%</textarea>
-<input type='submit' value='Save' />
 </form>
 <br/>
 %%returnLink%%

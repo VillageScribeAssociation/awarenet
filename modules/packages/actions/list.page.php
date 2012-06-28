@@ -13,6 +13,7 @@
 <p><b>Sources</b> or repositories are sites from which packages can be downloaded and updated.</p>
 </blockquote>
 </div>
+<div class='foot'></div>
 <br/>
 
 [[:theme::navtitlebox::label=Installed Packages::toggle=divInstalledPackages:]]
@@ -20,9 +21,12 @@
 <h2>Installed Packages</h2>
 [[:packages::updatesourcesform:]]
 <br/>
+<div id='divInstalledList'>
 [[:packages::installedpackages:]]
+</div>
 <hr/>
 </div>
+<div class='foot'></div>
 <br/>
 
 [[:theme::navtitlebox::label=Available Packages::toggle=divAvailablePackages:]]
@@ -31,9 +35,10 @@
 <p><b>Note:</b> Package lists should be automatically updated from the repositories every night, and can be manually refreshed using the button below.</p>
 [[:packages::updatesourcesform:]]
 <br/>
-[[:packages::allpackages:]]
+[[:packages::allpackages::status=available:]]
 <hr/>
 </div>
+<div class='foot'></div>
 <br/>
 
 </content>
@@ -42,15 +47,15 @@
 		<div id='divManageSources'>
 		[[:packages::listsources:]]
 		[[:packages::addsourceform:]]
-		<hr/>
 		</div>
+		<div class='foot'></div>
 		<br/>
 
 		[[:theme::navtitlebox::label=Add Package::toggle=divAddManual:]]
 		<div id='divAddManual'>
 		[[:packages::addpackageform:]]
-		<hr/>
 		</div>
+		<div class='foot'></div>
 		<br/>
 		
 		[[:admin::subnav:]]

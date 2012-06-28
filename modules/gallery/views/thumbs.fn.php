@@ -47,8 +47,17 @@ function gallery_thumbs($args) {
 
 		$html .= ''
 		 . "<a href='" . $viewUrl . "'>"
-		 . "[[:images::show::size=$size::imageUID=" . $item['UID'] . "::pad=2::link=no:]]"
+		 . "<img"
+		 . " src='%%serverPath%%images/s_$size/" . $item['UID'] . "'"
+		 . " width='100px'"
+		 . " height='100px'"
+		 . " class='rounded'"
+		 . " border='0'"
+		 . " style='background-color: #aaaaaa; display: inline;'"
+		 . " />"
 		 . "</a>\n";
+
+	//	 . "[[:images::show::size=$size::imageUID=" . $item['UID'] . "::pad=2::link=no::inline=yes:]]"
 	}
 
 	//---------------------------------------------------------------------------------------------

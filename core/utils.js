@@ -79,9 +79,9 @@ function Kapenta_Utility() {
 	//	NETWORK IO
 	//==============================================================================================
 
-	//-------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//.	make an XMLHTTPRequest GET
-	//-------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//arg: url - url to get [string]
 	//arg: callback - a function to invoke when request completes [function]
 
@@ -89,38 +89,131 @@ function Kapenta_Utility() {
 		//TODO:
 	}
 
-	//-------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//.	make an XMLHTTPRequest POST
-	//-------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------
 	//arg: url - url to get [string]
 	//arg: params - urlencoded from values [string]
 	//arg: callback - a function to invoke when request completes [function]
 
 	this.httpPost = function(sendUrl, params, callback) {
-		//------------------------------------------------------------------------------------------
-		//	create XMLHttpRequest object
-		//------------------------------------------------------------------------------------------
-		var req = new XMLHttpRequest();  
-		req.open('POST', sendUrl, true);  
-		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		req.setRequestHeader('Content-length', params.length);
-		req.setRequestHeader('Connection', 'close');
 
-		//------------------------------------------------------------------------------------------
-		//	create handler for returned content
-		//------------------------------------------------------------------------------------------ 
-		req.kapentaCallback = callback;
-		req.onreadystatechange = function (aEvt) {  
-			//klive.log('loading: ' + req.status);
-			if (4 == req.readyState) {
-				req.kapentaCallback(req.responseText, req.status);
+		$.ajax({
+			type: "POST",
+			url: sendUrl,
+			data: params
+		}).done(function(msg) {
+			callback(msg, '200');
+		}).fail(function(jqXHR, textStatus) {
+			callback(jqXHR.responseText, textStatus);
+			//alert("Request failed: " + textStatus );
+		});
+
+		/* -- code used prior to jQuery integration, remove once tested
+		var req;
+
+		if (window.XMLHttpRequest) {
+			//--------------------------------------------------------------------------------------
+			//	create XMLHttpRequest object (Modern Browsers)
+			//--------------------------------------------------------------------------------------
+			req = new XMLHttpRequest();
+
+			req.open('POST', sendUrl, true);
+			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			req.setRequestHeader('Content-length', params.length);
+			req.setRequestHeader('Connection', 'close');
+
+			//--------------------------------------------------------------------------------------
+			//	create handler for returned content
+			//--------------------------------------------------------------------------------------
+			req.kapentaCallback = callback;
+			req.onreadystatechange = function (aEvt) {  
+				//klive.log('loading: ' + req.status);
+				if (4 == req.readyState) {
+					req.kapentaCallback(req.responseText, req.status);
+				}
+			}
+
+			//--------------------------------------------------------------------------------------
+			//	send the request
+			//--------------------------------------------------------------------------------------
+			req.send(params);
+
+		} else {
+			//--------------------------------------------------------------------------------------
+			//	create XMLHttpRequest object (IE6)
+			//--------------------------------------------------------------------------------------
+			//req = new ActiveXObject("Microsoft.XMLHTTP");
+			req = new ActiveXObject("Msxml2.XMLHTTP.6.0");
+
+			req.Open('POST', sendUrl, true);
+			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			req.setRequestHeader('Content-length', params.length);
+			req.setRequestHeader('Connection', 'close');
+
+			//--------------------------------------------------------------------------------------
+			//	create handler for returned content
+			//--------------------------------------------------------------------------------------
+
+			var handleChange = function () {
+				//klive.log('loading: ' + req.status);
+				if (4 == req.readyState) {
+					req.kapentaCallback(req.responseText, req.status);
+				}
+			}
+
+			req.kapentaCallback = callback;
+			req.onReadyStateChange = handleChange;
+
+			//--------------------------------------------------------------------------------------
+			//	send the request
+			//--------------------------------------------------------------------------------------
+			req.Send(params);
+
+
+		}
+
+		if (!req) {
+			alert("Your browser does not support AJAX, please upgrade to use this site.");
+		}
+		*/
+	}
+
+	//-------------------------------------------------------------------------------------------------
+	//.	set element content from a block
+	//-------------------------------------------------------------------------------------------------
+	//arg: elemId - ID of an HTML element [string]
+	//arg: block - a kapenta block tag / view [string]
+	//arg: throbber - replace block content with throbber [bool]
+	//returns: true if async request sent, false if not [bool]
+
+	this.loadBlock = function(elemId, block, throbber) {
+		var theElem = document.getElementById(elemId);
+		if (!theElem) { return false; }
+
+		theElem.style.backgroundColor = '#444444';
+		if (true == throbber) {
+			theElem.innerHTML = ''
+			 + "<img"
+			 + " style='float: right;'"
+			 + " src='" + this.serverPath + "themes/clockface/images/throbber-inline.gif'"
+			 + " />"
+		}
+
+		var block64 = kutils.base64_encode(block);
+		var params = 'b=' + escape(block64);
+
+		var cbFn = function(responseText, status) {
+			if (200 == status) { theElem.innerHTML = responseText; }
+			else {
+				theElem.style.backgroundColor = '#ffffff';
+				theElem.innerHTML = ''
+				 + "<span class='ajaxerror'>" + status + '<br/>' + responseText + '</span>';
 			}
 		}
 
-		//------------------------------------------------------------------------------------------
-		//	send the request
-		//------------------------------------------------------------------------------------------ 
-		req.send(params);
+		this.httpPost(kutils.serverPath + 'live/getblock/', params, cbFn);
+		return true;
 	}
 
 	//==============================================================================================
@@ -500,29 +593,69 @@ function Kapenta_Utility() {
 	//----------------------------------------------------------------------------------------------
 	//;	source: kapenta.org.uk
 
-	this.toggleNTVisible = function(navImgId, divId) {
-		var theDiv = document.getElementById(divId);
-		var theImg = document.getElementById(navImgId);
+	this.toggleNTVisible = function(navImgId, divId) {					//function(navImgId, divId) {
+		
+		var cbFn = function() { if (window.parent) { kutils.resizeIFrame(); } }
+		var icoDir = jsServerPath + 'themes/' + jsTheme;
+
+		if ($('#' + divId).is(':hidden')) {
+			$('#' + divId).css('visibility', 'visible');
+			$('#' + navImgId).attr('src', icoDir + '/images/icons/btn-minus.png');
+			$('#' + divId).show('fast', cbFn);
+		} else {
+			$('#' + divId).hide('fast', cbFn);
+			$('#' + navImgId).attr('src', icoDir + '/images/icons/btn-plus.png');
+		}
+
+		//	-- version used before introduction of jQuery, delete once stable
+		//var theDiv = document.getElementById(divId);
+		//var theImg = document.getElementById(navImgId);
 
 		//----------------------------------------------------------------------------------------------
 		//	make the target div visible or not
 		//----------------------------------------------------------------------------------------------
 
-		if (theDiv.style.visibility == 'hidden') { 
-			theDiv.style.visibility = 'visible'; 
-			theDiv.style.display = 'block'; 
-			theImg.src = jsServerPath + 'themes/clockface/icons/btn-minus.png';
-			theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+		//if (theDiv.style.visibility == 'hidden') { 
+		//	this.show(divId);
+		//	theImg.src = jsServerPath + 'themes/clockface/images/icons/btn-minus.png';
+		//	theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+		//
+		//} else {
+		//	this.hide(divId);
+		//	theImg.src = jsServerPath + 'themes/clockface/images/icons/btn-plus.png';
+		//	theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+		//
+		//}
+		//
+		//this.resizeAllIFrames();
+	}
 
-		} else {
-			theDiv.style.visibility = 'hidden'; 
-			theDiv.style.display = 'none'; 
-			theImg.src = jsServerPath + 'themes/clockface/icons/btn-plus.png';
-			theImg.onclick = "toggleVisible('" + navImgId + "', '" + divId + "');";
+	//----------------------------------------------------------------------------------------------
+	//.	hide a div or other block element
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
 
-		}
+	this.hide = function(divId) {
+		$('#' + divId).hide('slow'); 
+		//var theDiv = document.getElementById(divId);
+		//if (!theDiv) { return false; }
+		//theDiv.style.visibility = 'hidden'; 
+		//theDiv.style.display = 'none'; 		
+		//return true;
+	}
 
-		this.resizeAllIFrames();
+	//----------------------------------------------------------------------------------------------
+	//.	make a hidden div visible (or other block element)
+	//----------------------------------------------------------------------------------------------
+
+	this.show = function(divId) {
+		var theDiv = document.getElementById(divId);
+		if (!theDiv) { return false; }
+		//alert('show: ' + divId);
+		//$('#' . divId).show('slow'); 
+		theDiv.style.visibility = 'visible'; 
+		theDiv.style.display = 'block'; 		
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------

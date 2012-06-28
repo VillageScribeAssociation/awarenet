@@ -6,7 +6,7 @@
 //*	create a new static page
 //--------------------------------------------------------------------------------------------------------------
 
-	//if ($user->authHas('home', 'home_static', 'create', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if (false == $user->authHas('home', 'home_static', 'new')) { $page->do403(); }
 	
 	$model = new Home_Static();
 	$model->menu1 = '[[:home::menu:]]';

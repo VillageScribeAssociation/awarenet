@@ -96,6 +96,11 @@ class Projects_Sections {
 				// going to ignore hidden/'deleted' sections
 			}
 		}
+
+		foreach($this->members as $row) { 
+			if ($row['weight'] > $this->maxWeight) { $this->maxWeight = $row['weight']; }
+		}
+
 		if (true == $dirty) { $this->load(); }
 		return true;
 	}
@@ -243,6 +248,38 @@ class Projects_Sections {
 			$table .= "||" . $s['UID'] . "||" . $s['weight'] . "||" . $s['title'] . '||' . "\n";
 		}
 		return $table;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get weight of heaviest section
+	//----------------------------------------------------------------------------------------------
+	//returns: weight (positive integer) on success, -1 on failure [int]
+
+	function getMaxWeight() {
+		if (false == $this->loaded) { $this->load(); }
+		if (false == $this->loaded) { return -1; }
+		return $this->maxWeight;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	debugging report
+	//----------------------------------------------------------------------------------------------
+	//returns: HTML table or error message [string]
+
+	function toHtml() {
+		global $theme;
+		$html = '';
+
+		if (false == $this->loaded) { $this->load(); }
+		if (false == $this->loaded) { return '(Could not load sections).'; }
+
+		$table = array(array('UID', 'Title', 'Weight', 'Hidden'));
+		foreach ($this->members as $row) {
+			$table[] = array($row['UID'], $row['title'], $row['weight'], $row['hidden']);
+		}
+
+		$html = $theme->arrayToHtmlTable($table, true, true);
+		return $html;
 	}
 
 }

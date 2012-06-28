@@ -21,15 +21,26 @@ class KNotifications {
 	//----------------------------------------------------------------------------------------------
 	//.	create a new notification
 	//----------------------------------------------------------------------------------------------
-	//arg: title - title of notification (html) [string]
+	//arg: refModule - name of kapenta module to which notification pertains [string]
+	//arg: refModel - type of object this notification is about [string]
+	//arg: refUID - UID of object this notification is about [string]
+	//arg: refEvent - type of event this notification is about [string]
+	//arg: title - title of notification (plaintext) [string]
 	//arg: content - body of notification (html) [string]
-	//arg: url - link to subject of notification [string]
-	//arg: imgUID - UID of an image for thumbnail [string]
-	//returns: UID of new notification, or false on failure [string][bool]
+	//opt: url - link to subject of notification [string]
+	//opt: private - not to be shared in global or category feeds [string]
+	//returns: UID of new notification, or empty string on failure [string]
 
-	function create($refModule, $refModel, $refUID, $refEvent, $title, $content, $url = '') {
+	function create(
+		$refModule, $refModel, $refUID, $refEvent, 
+		$title, $content, $url = '', 
+		$private = false
+	) {
 		global $kapenta;
+		global $user;
+
 		$model = new Notifications_Notification();
+
 		$model->refModule = $refModule;
 		$model->refModel = $refModel;
 		$model->refUID = $refUID;
@@ -38,8 +49,16 @@ class KNotifications {
 		$model->content = $content;
 		$model->refUrl = str_replace($kapenta->serverPath, '%%serverPath%%', $url);
 		$report = $model->save();
-		if ('' == $report) { return $model->UID; }
-		return false;
+
+		if ('' == $report) {
+			if (false == $private) { 
+				$this->addUser($model->UID, 'everyone');
+				if ('teacher' == $user->role) { $this->addUser($model->UID, 'teachers'); }
+			}
+			return $model->UID;
+		}
+
+		return '';
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -191,8 +210,9 @@ class KNotifications {
 		$allOk = true;		//%	return value [bool]
 
 		$range = $db->loadRange('users_user', '*', array("role='admin'"));
-		foreach($range as $row) 
-			{ if (false == $this->addUser($notificationUID, $row['UID'])) { $allOk = false; } }
+		foreach($range as $row) {
+			if (false == $this->addUser($notificationUID, $row['UID'])) { $allOk = false; }
+		}
 
 		return $allOk;
 	}
@@ -209,7 +229,6 @@ class KNotifications {
 		$range = $db->loadRange('users_user', '*', $conditions);
 		foreach ($range as $item) { $this->addUser($notificationUID, $item['UID']); }
 	}
-
 
 	//----------------------------------------------------------------------------------------------
 	//.	add all admins of a project

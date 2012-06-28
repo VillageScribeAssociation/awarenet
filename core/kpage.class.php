@@ -64,8 +64,11 @@ class KPage {
 	//returns: true on success, false on failure [bool]
 
 	function load($fileName) {
-		global $db, $utils, $kapenta;
+		global $db, $utils, $kapenta, $session;
 
+		//------------------------------------------------------------------------------------------
+		//	load the page template and parse XML
+		//------------------------------------------------------------------------------------------
 		$this->fileName = $fileName;
 		$xmlDoc = new KXmlDocument($fileName, true);
 		if (false == $xmlDoc->loaded) { 
@@ -95,6 +98,18 @@ class KPage {
 				case 'section':		$this->section = $val;		break;
 				case 'subsection':	$this->subsection = $val;	break;
 				case 'breadcrumb':	$this->breadcrumb = $val;	break;
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	handle mobile browsers
+		//------------------------------------------------------------------------------------------
+		if ('true' == $session->get('mobile')) {
+			if ('twocol-rightnav.template.php' == $this->template) {
+				$this->template = 'mobile.template.php';
+			}
+			if ('twocol-leftnav.template.php' == $this->template) {
+				$this->template = 'mobile.template.php';
 			}
 		}
 
@@ -145,77 +160,97 @@ class KPage {
 
 	function render() {
 		global $kapenta, $session, $theme, $request, $user;
-		//------------------------------------------------------------------------------------------
-		//	set some universals
-		//------------------------------------------------------------------------------------------
-		$d = $this->toArray();
-		$d['websiteName'] = $kapenta->websiteName;
-		$d['serverPath'] = $kapenta->serverPath;
-		$d['moduleName'] = $request['module'];
-		$d['defaultTheme'] = $kapenta->defaultTheme;
-		$d['pageInstanceUID'] = $this->UID;
-		$d['jsUserUID'] = $user->UID;
-		$d['sMessage'] = '';
-		//$d['debug'] = '';
 
 		//------------------------------------------------------------------------------------------
-		//	session messages
+		//	page / environment variables to be replaced in template
 		//------------------------------------------------------------------------------------------
-		$d['sMessage'] = $session->messagesToHtml();
-		$session->clearMessages();
+		$env = array(
+			'%%websiteName%%' => $kapenta->websiteName,
+			'%%serverPath%%' => $kapenta->serverPath,
+			'%%moduleName%%' => $request['module'],
+			'%%defaultTheme%%' => $kapenta->defaultTheme,
+			'%%pageInstanceUID%%' => $this->UID,
+			'%%jsUserUID%%' => $user->UID,
+			'%%jsUserName%%' => $user->getName(),
+			'%%jsTheme%%' => $kapenta->defaultTheme,
+			'%%jsMobile%%' => $session->get('mobile') ? 'true' : 'false',
+			'%%title%%' => $this->title
+		);
+
+		foreach($this->blockArgs as $arg => $value) { 
+			if (false == array_key_exists($arg, $env)) { $env['%%' . $arg . '%%'] = $value; }
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	load the template
 		//------------------------------------------------------------------------------------------
-		$templateFile = 'themes/' . $theme->name . '/' . $d['template'];
+		if (true == $session->get('mobile')) {
+			$this->template = str_replace('twocol-rightnav', 'mobile', $this->template);
+			$this->template = str_replace('twocol-leftnav', 'mobile', $this->template);
+			$this->template = str_replace('onecol', 'mobile', $this->template);
+		} else {
+			//echo "<textarea rows='2' cols='80'>not mobile</textarea><br/>\n";
+		}
+
+		$templateFile = 'themes/' . $theme->name . '/templates/' . $this->template;
+
+		if (false == $kapenta->fileExists($templateFile)) {
+			$templateFile = 'themes/' . $theme->name . '/' . $this->template;
+		}
+
 		$template = $kapenta->fileGetContents($templateFile, false, true);
 
-		//------------------------------------------------------------------------------------------
-		//	decide on a menu
-		//------------------------------------------------------------------------------------------
-
-		$adminCl = '';
-		if ('admin' == $user->role) 
-			{ $adminCl = "<a href='%%serverPath%%admin/' class='menu'>Admin</a>"; }
-
-		$this->blockArgs['adminConsoleLink'] = $adminCl;
-
-		$menuFile = '/views/usermenu.block.php';
-		if ('public' == $user->role) { $menuFile = '/views/publicmenu.block.php'; }
-		$d['menu1'] = $theme->loadBlock('/themes/' . $kapenta->defaultTheme . $menuFile);
+		$template = str_replace(array_keys($env), array_values($env), $template);
 
 		//------------------------------------------------------------------------------------------
-		//	perform the replacements
+		//	awareNet only
 		//------------------------------------------------------------------------------------------
-		foreach($d as $f => $r)	// replace an all page components except template
-			{ if ($f != 'template') { $template = str_replace('%%' . $f . '%%', $r, $template); } }
-
-		$template = $this->replaceLabels($this->blockArgs, $template);
+		$this->menu1 = "[[:home::usermenu:]]";
 
 		//------------------------------------------------------------------------------------------
-		//	execute blocks
+		//	execute blocks in template and page sections
 		//------------------------------------------------------------------------------------------
+
+		$template = str_replace(
+			array(
+				'%%content%%',
+				'%%nav1%%',
+				'%%nav2%%',
+				'%%menu1%%',
+				'%%menu2%%',
+				'%%breadcrumb%%',
+				'%%sMessage%%',
+				'%%debug%%',
+			),
+			array(
+				$theme->expandBlocks($this->content, 'content'),
+				$theme->expandBlocks($this->nav1, 'nav1'),
+				$theme->expandBlocks($this->nav2, 'nav2'),
+				$theme->expandBlocks($this->menu1, 'menu1'),
+				$theme->expandBlocks($this->menu2, 'menu2'),
+				$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
+				$session->messagesToHtml(),
+				$this->debugToHtml()
+			),
+			$template
+		);
+
+		$session->clearMessages();
+
+		$template = str_replace(array_keys($env), array_values($env), $template);
 		$template = $theme->expandBlocks($template, '');
-		//------------------------------------------------------------------------------------------
-		//	style 
-		//------------------------------------------------------------------------------------------		
-		if (false == $theme->styleLoaded) { $theme->readStyle(); }
-		$template = $this->replaceLabels($theme->style, $template);
 
 		//------------------------------------------------------------------------------------------
-		//	include debug report if enabled
+		//	update jsinit, script and head (may have been modified by expanding blocks)
 		//------------------------------------------------------------------------------------------
-		
-		if (true == $this->logDebug) { $d['debug'] = $this->debugToHtml(); }
-		else { $d['debug'] = ''; }
+		$template = str_replace('%%head%%', $this->head, $template);
+		$template = str_replace('%%script%%', $this->script, $template);
+		$template = str_replace('%%jsinit%%', $this->jsinit, $template);
 
 		//------------------------------------------------------------------------------------------
-		//	perform replacements again after blocks
+		//	perform env replacements again after blocks
 		//------------------------------------------------------------------------------------------
-		foreach($d as $f => $r) // replace an all page components except template
-			{ if ($f != 'template') { $template = str_replace('%%' . $f . '%%', $r, $template); } }
-
-		$template = $this->replaceLabels($this->blockArgs, $template);
+		$template = str_replace(array_keys($env), array_values($env), $template);
 		$template = str_replace('%%' . 'delme%%', '', $template);
 
 		//------------------------------------------------------------------------------------------
@@ -232,6 +267,7 @@ class KPage {
 		//	log the page view and send the page
 		//------------------------------------------------------------------------------------------
 		$kapenta->logPageView();	// log this page view
+
 		echo $template;
 	}
 
@@ -272,6 +308,35 @@ class KPage {
 	}
 
 	//==============================================================================================
+	//	conditionally included files
+	//==============================================================================================
+	//	these are added by blocks as they need them
+
+	//----------------------------------------------------------------------------------------------
+	//.	add a CSS file (once)
+	//----------------------------------------------------------------------------------------------
+	//arg: $url - absolute location of CSS / JS file
+
+	function requireCss($url) {
+		global $kapenta;
+		$url = str_replace('%%serverPath%%', $kapenta->serverPath, $url);
+		$link = "\t<link href='$url' rel='stylesheet' type='text/css' />\n";
+		if (false === strpos($this->head, $link)) { $this->head .= $link; }
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	add a Javascript file (once)
+	//----------------------------------------------------------------------------------------------
+	//arg: $url - absolute location of CSS / JS file
+
+	function requireJs($url) {
+		global $kapenta;
+		$url = str_replace('%%serverPath%%', $kapenta->serverPath, $url);
+		$link = "\t<script src='$url'></script>\n";
+		if (false === strpos($this->head, $link)) { $this->head .= $link; }
+	}
+
+	//==============================================================================================
 	//	errors and redirects
 	//==============================================================================================
 
@@ -283,6 +348,7 @@ class KPage {
 	function do301($URI) {
 		global $kapenta, $session;
 		$URI = $kapenta->serverPath . $URI;	
+		$URI = str_replace($kapenta->serverPath . '/', $kapenta->serverPath, $URI);
  		header( "HTTP/1.1 301 Moved Permanently" );
  		header( "Location: " . $URI ); 
 		echo "The page you requested moved <a href='" . $URI  . "'>here</a>.";
@@ -294,11 +360,34 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function do403($message = '', $iframe = false) {
+		global $user;
 		header( "HTTP/1.1 403 Forbidden" );
 
 		$fileName = 'modules/home/actions/403.page.php';
 		if (true == $iframe) { 	$fileName = 'modules/home/actions/403if.page.php'; }
 		if ('' != $message) { $message = "<span class='ajaxerror'>$message</span>"; }
+
+		if ('public' == $user->role) {
+			$message = ''
+			 . "<h1>Your session has expired.  Please log in again.</h1>\n"
+			 . $message . "\n"
+			 . "<p>You must be logged in to perform the requested action.  This probably just means "
+			 . "that your session has expired, in which case you'll just need to log in "
+			 . "again.</p>\n"
+			 . "<h2>Log in</h2>\n"
+			 . "[[:users::loginform::redirectSelf=yes:]]\n";
+
+		} else {
+			$message = ''
+			 . "<h1>Not allowed.</h1>\n"
+			 . $message . "\n"
+			 . "<p>Some actions on awareNet need special permissions - only certain people should "
+			 . "be able to take them.  For example: only you should be able to edit your profile, "
+			 . "and only teachers should be able to use the teacher tools.  Your account is not "
+			 . "cleared to perform the requested action.  If you think this is incorrect please "
+			 . "contact an admin and we'll check.</p>\n";
+
+		}
 
 		$this->load($fileName);
 		$this->blockArgs['message'] = $message;
@@ -315,6 +404,7 @@ class KPage {
 	function do302($URI) {
 		global $kapenta, $session;
 		$URI = $kapenta->serverPath . $URI;
+		$URI = str_replace($kapenta->serverPath . '/', $kapenta->serverPath, $URI);
  		header( "HTTP/1.1 302 Moved Temporarily" );
  		header( "Location: " . $URI ); 
 		echo "The page you requested has moved <a href='" . $URI . "'>here</a>.";
@@ -328,8 +418,9 @@ class KPage {
 	//opt: iframe - set to true to use iframe version [bool]
 
 	function do404($message = '', $iframe = false) {
+		global $user;
  		header( "HTTP/1.1 404 Not Found" );
-	
+
 		// choose which page template to use
 		$fileName = 'modules/home/actions/404.page.php';
 		if (true == $iframe) { $fileName = 'modules/home/actions/404if.page.php'; }
@@ -337,11 +428,27 @@ class KPage {
 		if ('' == $message) { 
 			// no message specified, show default 404 message
 			//TODO: make this is an editable block
-			$message = "<h1>404 - Not Found</h1>\n"
-				 . "<p>The page you requested could not be found.  It may have been removed or "
-				 . "deleted, check for typos in the link you followed to get here.</p>\n";
+			$message = "";
+		} else {
+			$message = "<span class='ajaxerror'>$message</span>";
+		}
 
-		} else { $message = "<span class='ajaxerror'>$message</span>"; }
+		if ('public' == $user->role) {
+			$message = ''
+			 . "<h1>Oops, something went wrong</h1>"
+			 . "<p>Please reload the page and try again.  If you keep experiencing this problem "
+			 . "please send a message to an admin.</p>"
+			 . "<h2>Log in</h2>"
+			 . "You are not logged in, please try logging in again.<br/><br/>"
+			 . "[[:users::loginform:]]"
+			 . $message;
+		} else {
+			$message = ''
+			 . "<h1>Oops, something went wrong</h1>"
+			 . "Please reload the page and try again.  If you keep experiencing this problem "
+			 . "please send a message to an admin.<br/><br/>"
+			 . $message;
+		}
 
 		$this->load($fileName);
 		$this->blockArgs['message'] = $message;
@@ -429,6 +536,8 @@ class KPage {
 
 	function debugToHtml() {
 		global $kapenta, $user, $role, $theme, $page;
+
+		if (false == $this->logDebug) { return ''; }
 
 		$report = '';
 		$block = $theme->loadBlock('themes/' . $kapenta->defaultTheme . '/views/debug.block.php');

@@ -23,15 +23,18 @@ class KRegistry {
 
 	var $keys;									//_	registry keys [array:dict]
 	var $files;									//_	array of loaded registry files [array:string]
-	var $path = 'core/registry/';				//_	location of registry files [string]
+	var $path = 'data/registry/';				//_	location of registry files [string]
+	var $lockTTL = 3;							//_	number of seconds before locks expire [string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//arg: baseDir - optional absolute location of kapenta install [string]
 
-	function KRegistry() {
+	function KRegistry($baseDir = '') {
 		$this->keys = array();
 		$this->files = array();
+		$this->path = $baseDir . $this->path;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -45,12 +48,56 @@ class KRegistry {
 
 	function load($prefix) {
 		$regFile = $this->path . $prefix . ".kreg.php";
+
 		if (false == file_exists($regFile)) { 
-			$regFile = $this->path . $prefix . ".kreg";
+			//--------------------------------------------------------------------------------------
+			//	check that registry directory exists
+			//--------------------------------------------------------------------------------------
+			if (false == file_exists('data/')) { @mkdir('data/'); }
+			if (false == file_exists('data/registry/')) { @mkdir('data/registry/'); }
+
+			//--------------------------------------------------------------------------------------
+			//	unknown prefix, try previous locations where this might be stored
+			//--------------------------------------------------------------------------------------
+			$oldFile = 'core/registry/' . $prefix . ".kreg";
+			if (file_exists($oldFile)) {
+				$moved = copy($oldFile, $regFile);
+				if (false == $moved) { return false; }
+			}
+
+			$oldFile = 'core/registry/' . $prefix . ".kreg.php";
+			if (file_exists($oldFile)) {
+				$moved = copy($oldFile, $regFile);
+				if (false == $moved) { return false; }
+			}
+
 			if (false == file_exists($regFile)) { return false; }
 		}
 
-		$lines = file($regFile);
+		$lines = array();
+		$waiting = true;
+
+		while (true == $waiting) {
+			$lock = $this->getLock($prefix);
+
+			if (('none' == $lock['type']) || ('read' == $lock['type'])) {
+				if ('none' == $lock['type']) { $this->setLock($prefix, 'read'); }	//	lock file
+				$lines = file($regFile);											//	read file
+
+				$lock = $this->getLock($prefix);				//	check lock after read
+
+				if ('read' == $lock['type']) {
+					$this->setLock($prefix, 'none');			//	clear our read lock
+					$waiting = false;
+				}
+
+				//	if not locked then continue (another concurrent read should not affect us)
+				if ('none' == $lock['type']) { $waiting = false; }
+			}
+			
+			if (true == $waiting) { sleep(1); }		//	wait one second before trying again
+		}
+
 		foreach($lines as $line) {
 			if ((strlen($line) >= 30) && ('#' != substr($line, 0, 1))) {
 				$key = trim(substr($line, 0, 30));
@@ -81,20 +128,117 @@ class KRegistry {
 
 	function save($prefix) {
 		if ('' == trim($prefix)) { return false; }
-		$raw = "<?php /*\n";										//%	raw file contents [string]
+
+		$regFile = $this->path . $prefix . ".kreg.php";		//%	disk file for this prefix [string]
+		$waiting = true;									//%	still waiting for lock [bool]
+
+		//------------------------------------------------------------------------------------------
+		//	make the raw file
+		//------------------------------------------------------------------------------------------
+
+		$raw = "<?php /*\n";								//%	raw file contents [string]
+
 		foreach($this->keys as $key => $value) {
 			if ($prefix == $this->getPrefix($key)) { 
 				$raw .= substr($key . str_repeat(' ', 30), 0, 30) . $value . "\n";
 			}
 		}
+
 		$raw .= "*/ ?>";
 
-		if (false == file_exists($this->path)) { mkdir($this->path); } 
+		//------------------------------------------------------------------------------------------
+		//	get a write lock on the registry file
+		//------------------------------------------------------------------------------------------
+		while(true == $waiting) {
+			$lock = $this->getLock($prefix);
+			if ('none' == $lock['type']) {
+				$this->setLock($prefix, 'write');
+				$waiting = false;
+			}
+		}
 
-		$regFile = $this->path . $prefix . ".kreg.php";
+		//------------------------------------------------------------------------------------------
+		//	write new contents of this prefix
+		//------------------------------------------------------------------------------------------
 		$fH = fopen($regFile, 'w+');
 		fwrite($fH, $raw);
 		fclose($fH);
+
+		//------------------------------------------------------------------------------------------
+		//	remove the lock
+		//------------------------------------------------------------------------------------------
+		$this->setLock($prefix, 'none');
+
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	check for and return any file lock
+	//----------------------------------------------------------------------------------------------
+	//arg: prefix - name of a registry section [string]
+
+	function getLock($prefix) {
+		global $kapenta;
+
+		$lock = array(
+			'type' => 'none',
+			'expires' => time() + $this->lockTTL,
+			'check' => 'bad'
+		);
+		$lockFile = $this->path . $prefix . '.lock.php';
+
+		if (true == file_exists($lockFile)) {
+			$raw = @file_get_contents($lockFile);
+			if (false === $raw) {
+				//	file was deleted as we loaded it, try again
+				sleep(1);
+				return $this->getLock($prefix);
+
+			} else {
+				$parts = explode("\n", $raw);
+				if (array_key_exists(0, $parts)) { $lock['type'] = $parts[0]; }
+				if (array_key_exists(1, $parts)) { $lock['expires'] = $parts[1]; }
+				if (array_key_exists(2, $parts)) { $lock['check'] = $parts[2]; }
+
+				if ('bad' == $lock['check']) {
+					// file was partially written, try again
+					sleep(1);
+					$lock = $this->getLock($prefix);
+				}
+
+			}
+		}
+
+		//	clear any expired lock while we're at it
+		if ((time() > (int)$lock['expires']) && ('none' != $lock['type'])) {
+			$this->setLock($prefix, 'none');
+		}
+
+		return $lock;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	create a lock file for a precified prefix
+	//----------------------------------------------------------------------------------------------
+	//:	note that setting a lock of type 'none' will delete any existing lock file
+	//arg: prefix - registry section name [string]
+	//arg: type - may be 'read', 'write' or 'none'
+	//returns: true on success, false on failure [bool]
+
+	function setLock($prefix, $type) {
+		$lockFile = $this->path . $prefix . '.lock.php';
+
+		//------------------------------------------------------------------------------------------
+		//	clear the lock
+		//------------------------------------------------------------------------------------------
+		if ('none' == $type) {
+			if (file_exists($lockFile)) { return @unlink($lockFile); }
+			return false;
+		}
+
+		$raw = $type . "\n" . (string)(time() + $this->lockTTL) . "\nOK\n";
+		$check = $this->filePutContents($lockFile, $raw);
+		return $check;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -140,6 +284,8 @@ class KRegistry {
 		$this->keys[$key] = base64_encode($value);
 		$check = $this->save($prefix);
 		
+		$this->log($prefix, 'set', $key, $value);
+
 		if (true == isset($session)) {
 			$msg = 'Set registry key: ' . $key . '<br/>' . 'Value: ' . $value;
 			$session->msgAdmin($msg, 'ok');
@@ -168,6 +314,7 @@ class KRegistry {
 		}
 
 		if (true == $found) {
+			$this->log($prefix, 'delete', $key, '');
 			$this->keys = $newKeys;
 			$this->save($prefix);
 			return true;
@@ -242,6 +389,35 @@ class KRegistry {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	log a registry change
+	//----------------------------------------------------------------------------------------------
+
+	function log($prefix, $event, $key, $value) {
+		global $user;
+
+		$logFile = $this->path . $prefix . '.hist.php';
+
+		$userName = 'unknown';
+		if (isset($user)) { $userName = $user->username; }
+
+		$value = str_replace("\r", '\r', $value);
+		$value = str_replace("\r", '\n', $value);
+
+		$line = ''
+		 . (isset($user) ? $user->username : 'unknown') . ' '
+		 . gmdate("Y-m-d H:i:s", time()) . ' '
+		 . 'prefix:' . $prefix . ' '
+		 . 'event:' . $event . ' '
+		 . 'key:' . $key . ' '
+		 . 'value:' . $value . ' '
+		 . "\n";
+
+		$fH = fopen($logFile, 'a+');
+		fwrite($fH, $line);
+		fclose($fH);
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	print a registry section as an html table
 	//----------------------------------------------------------------------------------------------
 	//arg: prefix - section of the registry we wish to display [string]
@@ -267,6 +443,45 @@ class KRegistry {
 		$html .= "</table>\n";
 
 		return $html;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the contents of a file, will create directories if they do not exist
+	//----------------------------------------------------------------------------------------------
+	//:	note that this should only be used by registry object.
+	//
+	//arg: fileName - relative to installPath [string]
+	//arg: contents - new file contents [string]
+	//opt: inData - if true the file must be somewhere in ../data/ [bool]
+	//opt: phpWrap - protective wrapper [bool]
+	//opt: m - file mode [string]
+	//returns: true on success, false on failure [bool]
+
+	function filePutContents($fileName, $contents, $inData = false, $phpWrap = false, $m = 'wb+') {
+		// add php wrapper to file
+		if (true == $phpWrap) { $contents = $this->wrapper . $contents . "\n*/ ?>"; }
+
+		// note that file_put_contents() was added in PHP 5, we do it this way to support PHP 4.x
+		$fH = fopen($fileName, $m);							//	specify binary for Windows
+		if (false === $fH) { return false; }				//	can fH ever be 0?
+
+		//	wait for lock
+		$lock = false;
+		$counter = 20;										//	make registry setting?
+		while (false == $lock) {
+			$lock = flock($fH, LOCK_EX);
+			if (false == $lock) { sleep(1); }
+			$counter--;
+			if (0 == $counter) {
+				$session->msgAdmin('Could not lock file: ' . $regFile, 'bad');
+				return false;
+			}
+		}
+
+		fwrite($fH, $contents);
+		$lock = flock($fH, LOCK_UN);
+		fclose($fH);
+		return true;
 	}
 
 }

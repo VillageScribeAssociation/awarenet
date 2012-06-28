@@ -32,11 +32,16 @@ function tags_name($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	$html = $model->name;
+	$html = "<span class='tag'>&nbsp;&nbsp;" . $model->name . "&nbsp;</span>";
 
 	if ('yes' == $link) { 
 		$showUrl = "%%serverPath%%tags/show/" . $model->name;
-		$html = "<a href='" . $showUrl . "'>" . $model->name . "</a>"; 
+		$html = ''
+		 . "<span class='tag'>"
+		 . "<a href='" . $showUrl . "' class='tag'>"
+		 . "&nbsp;&nbsp;" . $model->name . "&nbsp;"
+		 . "</a>"
+		 . "</span>"; 
 	}
 
 	// some modules may provide their own tag interface
@@ -44,7 +49,13 @@ function tags_name($args) {
 		if (false == array_key_exists('module', $args)) { return '(no module)'; }
 		if (false == $kapenta->moduleExists($args['module'])) { return '(no such module)'; }
 		$showUrl = "%%serverPath%%" . $args['module'] .  "/tag/" . $model->name;
-		$html = "<a href='" . $showUrl . "'>" . $model->name . "</a>"; 
+
+		$html = ''
+		 . "<span class='tag'>"
+		 . "<a href='" . $showUrl . "' class='tag'>"
+		 . "&nbsp;&nbsp;" . $model->name . "&nbsp;"
+		 . "</a>"
+		 . "</span>"; 
 	}
 
 	return $html;

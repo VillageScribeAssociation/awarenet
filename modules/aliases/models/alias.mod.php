@@ -193,7 +193,7 @@ class Aliases_Alias {
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('aliases', 'Aliases_Alais', 'delete', $ext['UID'])) {
+		if (true == $user->authHas('aliases', 'aliases_alias', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%alias/delalias/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

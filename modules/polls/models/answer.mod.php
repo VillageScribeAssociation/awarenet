@@ -173,7 +173,7 @@ class Polls_Answer {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('polls', 'polls_answer', 'view', $ext['UID'])) {
+		if (true == $user->authHas('polls', 'polls_answer', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%polls/showanswer/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

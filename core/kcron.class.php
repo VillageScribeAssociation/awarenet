@@ -43,9 +43,9 @@ class KCron {
 
 	function load() {
 		global $kapenta, $registry;
-		$this->tenmins = (int)$registry->get('kapenta.cron.tenmins');
-		$this->hourly = (int)$registry->get('kapenta.cron.hourly');
-		$this->daily = (int)$registry->get('kapenta.cron.daily');
+		$this->tenmins = (int)$registry->get('cron.tenmins');
+		$this->hourly = (int)$registry->get('cron.hourly');
+		$this->daily = (int)$registry->get('cron.daily');
 		$this->loaded = true;
 		return true;
 	}
@@ -56,9 +56,9 @@ class KCron {
 
 	function save() {
 		global $kapenta, $registry, $db;
-		$registry->set('kapenta.cron.tenmins', $this->tenmins);
-		$registry->set('kapenta.cron.hourly', $this->hourly);
-		$registry->set('kapenta.cron.daily', $this->daily);
+		$registry->set('cron.tenmins', $this->tenmins);
+		$registry->set('cron.hourly', $this->hourly);
+		$registry->set('cron.daily', $this->daily);
 	}
 
 	//----------------------------------------------------------------------------------------------

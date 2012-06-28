@@ -14,6 +14,7 @@
 function users_avatar($args) {
 	global $db;
 	global $kapenta;
+
 	$size = 'width300';				//%	image width [string]
 	$link = 'yes';					//%	link to full size image [string]
 	$html = '';						//%	return value [string]
@@ -21,10 +22,10 @@ function users_avatar($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	if (array_key_exists('link', $args) == 'no') { $link = 'no'; }
-	if (array_key_exists('size', $args)) {	$size = $args['size']; }
+	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
+	if (false == array_key_exists('raUID', $args)) { return false; }
+	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
+	if (true == array_key_exists('size', $args)) {	$size = $args['size']; }
 
 	$model = new Users_User($args['raUID']);
 	if (false == $model->loaded) { return '(unknown user)'; }
@@ -32,14 +33,19 @@ function users_avatar($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
+
 	$html = ''
 	 . '[[:images::default'
 	 . '::refModule=users'
 	 . '::refModel=users_user'
 	 . '::refUID=' . $model->UID
 	 . '::size=' . $size
-	 . '::link=' . $link
+	 . '::link=no'
 	 . ':]]';
+
+	if ('yes' == $link) { 
+		$html = "<a href='%%serverPath%%users/profile/" . $model->alias . "'>$html</a>";		
+	}
 
 	return $html;
 }

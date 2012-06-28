@@ -5,48 +5,57 @@
 //--------------------------------------------------------------------------------------------------
 	if ('cli' != strtolower(PHP_SAPI)) { die("This script must be run from the console.\n"); }
 
-	include 'core/kregistry.class.php' ;
-	include 'core/ksystem.class.php' ;
-
-	$registry = new KRegistry();					//	system settings
-	$kapenta = new KSystem();						//	object for interacting with core	
-
-	include 'core/core.inc.php';
-
 //--------------------------------------------------------------------------------------------------
 //	spoof a web server (clumsily)
 //--------------------------------------------------------------------------------------------------
 	
-	//TODO: this
+	$_SERVER['HTTP_HOST'] = '127.0.0.1';
+	$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+//--------------------------------------------------------------------------------------------------
+//	load kapenta environment
+//--------------------------------------------------------------------------------------------------
+
+	include dirname(__FILE__) . '/core/kregistry.class.php';
+	include dirname(__FILE__) . '/core/ksystem.class.php';
+
+	$registry = new KRegistry(dirname(__FILE__) . '/');		//	system settings
+	$kapenta = new KSystem();						//	object for interacting with core	
+
+	#echo "kapenta.installpath: " . $registry->get('kapenta.installpath') . "\n";
+	#echo "kapenta.serverpath: " . $registry->get('kapenta.serverpath') . "\n";	
+
+	include dirname(__FILE__) . '/core/core.inc.php';
 
 //--------------------------------------------------------------------------------------------------
 //	important global objects
 //--------------------------------------------------------------------------------------------------
-	$session = new KSession();						//	current user session
 	$db = new KDBDriver();							//	database wrapper
-	$req = new KRequest('/shell/');					//	interpret HTTP request
+	$req = new KRequest('/admin/shell/');				//	interpret HTTP request
 	$theme = new KTheme($kapenta->defaultTheme);	//	the current theme
 	$page = new KPage();							//	document to be returned
 	$aliases = new KAliases();						//	handles object aliases
 	$notifications = new KNotifications();			//	user notification of events
 	$revisions = new KRevisions();					//	object revision history and recycle bin
 	$utils = new KUtils();							//	miscellaneous
-	$sync = new KSync();							//	P2P subsystem
+
+	$request = $req->toArray();						//	(DEPRECATED)
+	$ref = $req->ref;								//	(DEPRECATED)
 
 //--------------------------------------------------------------------------------------------------
-//	load the current user (public if not logged in)
+//	load the current user (admin at shell)
 //--------------------------------------------------------------------------------------------------
-	$user = new Users_User($kapenta->shellUser);	//	the user record itself
-	$role = new Users_Role($user->role, true);		//	object with user's permissions
-	$userlogin = new Users_Login();					//	user's session on the P2P system
-
+	session_start();
+	$session = new Users_Session();					//	user's session
+	$user = new Users_User($session->user);			//	the user record itself
+	$role = new Users_Role('admin', true);			//	object with user's permissions
+	
 	if ('public' != $user->role) {					//	only logged in users can be addressed
-		$userlogin->loadUser($user->UID);			
-		if (false == $userlogin->loaded) { 			//	create new session is none found
-			$userlogin->userUID = $user->UID;
-			$userlogin->save();
-		}
-		$userlogin->updateLastSeen();				//	record that this user is still active
+		$session->updateLastSeen();					//	record that this session is still active
 	}
+	
+//--------------------------------------------------------------------------------------------------
+//	kapenta environment is set up, ready to run shell script
+//--------------------------------------------------------------------------------------------------
 
 ?>

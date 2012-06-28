@@ -11,7 +11,7 @@
 
 function forums_busiestthreads($args) {
 	global $db, $theme, $user;
-	$num = 10;
+	$num = 6;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -32,6 +32,7 @@ function forums_busiestthreads($args) {
 			$thisThread = new Forums_Thread();
 			$thisThread->loadArray($db->rmArray($row));
 			$html .= $theme->replaceLabels($thisThread->extArray(), $block);
+			$num--;
 
 		} else { break; }
 	}

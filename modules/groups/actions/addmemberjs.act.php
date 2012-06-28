@@ -52,6 +52,8 @@
 	//----------------------------------------------------------------------------------------------
 	$model->addMember($userUID, $position, $isAdmin);		//	this also updates school index
 
+	$model->members->deleteDuplicates();					//	remove any duplicate memberships
+
 	$args = array(
 		'module' => 'groups',
 		'groupUID' => $model->UID,

@@ -18,8 +18,13 @@
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('No such object.', true); }
 
-	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) 
-		{ $page->do403("You dont have permissions to edit tags on this item.", true); }
+	if (
+		(false == $user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
+		(false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
+	) {
+		echo "$refModule::$refModel::$refUID<br/>";
+		$page->do403("You dont have permissions to edit tags on this item.", true);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	show the iframe

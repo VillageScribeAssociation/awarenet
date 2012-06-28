@@ -7,21 +7,24 @@
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - alias or UID of an image record [string]
 //opt: link - link to larger version (yes|no) [string]
+//opt: onClick - contents of onClick handler, if any [string]
 //opt: size - scale type, default is width300 [string]
 //opt: align - deprecated (left|right) [string]
+//opt: display - css display mode (inline|block) [string]
 //opt: caption - display caption, deprecated (yes|no) [string]
 //opt: imageUID - overrides raUID [string]
-//opt: pad - blank space to elave around image [string]
-//TODO: discover if this is used by anything, remove if not
 
 function images_show($args) {
 	global $kapenta;
+	global $page;
+	global $session;
 
+	$display = 'block';			//%	css display mode (inline|block) [string]
 	$link = 'yes';	
 	$caption = 'no'; 
-	$size = 'width300'; 
+	$size = 'widthnav'; 
 	$align = '';
-	$pad = '';
+	$style = '';				//%	additional, per image style [string]
 	$html = ''; 				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -36,13 +39,34 @@ function images_show($args) {
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 	if (true == array_key_exists('align', $args)) { $align = $args['align']; }	
 
-	if (true == array_key_exists('pad', $args)) {
-		$pad = "vspace='" . (int)$args['pad'] . "px' hspace='" . (int)$args['pad'] . "px'";
-	}
-
 	$model = new Images_Image($args['raUID']);
 	if (false == $model->loaded) { return '(image not found)'; }
 	if (false == $model->transforms->presetExists($size)) { return '(no such preset)'; }
+
+	if (true == array_key_exists('display', $args)) { $display = $args['display']; }
+
+	//----------------------------------------------------------------------------------------------
+	//	scale down on mobile
+	//----------------------------------------------------------------------------------------------
+
+	//echo ''
+	//	 . "area size: " . $args['area'] . ':=' . $model->transforms->getWidth($args['area'])
+	//	 . " image size: $size := " . $model->transforms->getWidth($size) . "<br/>\n"; 
+
+	if ($model->transforms->getWidth($args['area']) < $model->transforms->getWidth($size)) {
+		if ('' !== $args['area']) { $size = $args['area']; }
+	}
+
+	if (true == $session->get('mobile')) {
+		switch($size) {
+			case 'width570':		$size = 'mobile';			break;
+			case 'width560':		$size = 'mobile';			break;
+			case 'widthcontent':	$size = 'mobile';			break;
+			case 'widthindent':		$size = 'mobile';			break;
+			case 'slide':			$size = 'mobileslide';		break;
+			case 'slideindent':		$size = 'mobileslide';		break;
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -50,21 +74,28 @@ function images_show($args) {
 	$linkUrl = '%%serverPath%%images/' . $model->alias;
 	$imgUrl = '%%serverPath%%images/s_' . $size . '/' . $model->alias;
 
-	$html =  "<img src='" . $imgUrl . "' border='0' $pad />";	
+	if ('inline' == $display) { $style = " style='display: inline;'"; }
+
+	$html .= "<img src='" . $imgUrl . "' class='rounded' border='0' $style/>";
+
 	if ('yes' == $link) { $html = "<a href='" . $linkUrl . "'>$html</a>"; }
 
 	if ('yes' == $caption) {
-		if (strtolower($align) == 'left') { $align = "style='float: left;'"; }
-		if (strtolower($align) == 'right') { $align = "style='float: right;'"; }
+		//(TODO)
+		//if (strtolower($align) == 'left') { $align = "style='float: left;'"; }
+		//if (strtolower($align) == 'right') { $align = "style='float: right;'"; }
 
-		$html = "<div class='caption' $align>$html<br/><small>"
-			  . $model->caption . "</small></div>";
+		$title = $model->title;
+		if (strlen($title) > 30) { $title = substr($title, 0, 30) . '...'; }
 
-		//DEPRECATED: TODO: improve this feature
-		if ('width300' == $size) {
-			$html = str_replace("class='caption'", "class='captionpad'", $html);
-		}
+		$html = ''
+		 . "<div class='imagesframe' >"
+		 . "$html<br/>"
+		 . "<small><b>" . $title . "</b> " . $model->caption . "</small></div>";
+
 	}
+
+	$page->requireCss('%%serverPath%%modules/images/css/images.css');
 
 	return $html;
 }

@@ -8,7 +8,8 @@
 //opt: num - number of objects per page, default is 50 (int) [string]
 
 function revisions_listdeleted($args) {
-	global $db, $user, $theme;
+	global $db, $user, $theme, $revisions;
+
 	$html = '';					//%	return value [string]
 	$pageNo = 1;				//%	page number (starts at 1) [int]
 	$num = 50;					//%	number of items per page [int]
@@ -47,7 +48,7 @@ function revisions_listdeleted($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$table = array();
-	$table[] = array('Module', 'Model', 'UID');
+	$table[] = array('Module', 'Model', 'UID', 'Rs', 'Deleted');
 	foreach($range as $row) {
 		$typeUrl = '%%serverPath%%revisions/listdeleted/type_' . $row['refModel'];
 		$typeLink = "<a href='" . $typeUrl . "'>" . $row['refModel'] . "</a>";
@@ -55,7 +56,14 @@ function revisions_listdeleted($args) {
 		$itemUrl = '%%serverPath%%revisions/showdeleted/' . $row['UID'];
 		$itemLink = "<a href='" . $itemUrl . "'>" . $row['refUID'] . "</a>";
 
-		$table[] = array($row['refModule'], $typeLink, $itemLink);
+		$restored = 'no';
+		if (true == $revisions->isDeleted($row['refModel'], $row['refUID'])) {
+			$restored = "<span class='ajaxerror'>no</span>";
+		} else {
+			$restored = "<span class='ajaxmsg'>yes</span>";
+		}
+
+		$table[] = array($row['refModule'], $typeLink, $itemLink, $restored, $row['createdOn']);
 	}
 
 	$html .= $theme->arrayToHtmlTable($table, true, true);

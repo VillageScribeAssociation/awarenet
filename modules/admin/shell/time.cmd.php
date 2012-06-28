@@ -27,10 +27,14 @@ function admin_WebShell_time($args) {
 	
 	switch($mode) {
 		case 'show':
-			$check = $kapenta->datetime($kapenta->strtotime($kapenta->datetime()));
+			$timestamp = $kapenta->time();
+
+			if (true == array_key_exists(0, $args)) { $timestamp = $args[0]; }
+			
+			$check = $kapenta->datetime($kapenta->strtotime($kapenta->datetime($timestamp)));
 			$html .= ''
-			 . "Current datetime: " . $kapenta->datetime() . "<br/>\n"
-			 . "Current timestamp: " . $kapenta->time() . "<br/>\n"
+			 . "Current datetime: " . $kapenta->datetime($timestamp) . "<br/>\n"
+			 . "Current timestamp: " . $timestamp . "<br/>\n"
 			 . "Converted back: " . $check . "<br/>\n";
 			break;	//..............................................................................
 
@@ -56,8 +60,8 @@ function admin_WebShell_time_help($short = false) {
 	if (true == $short) { return "Display kapenta network time."; }
 
 	$html = "
-	<b>usage: admin.time</b><br/>
-	Displays current Kapenta p2p network time.
+	<b>usage: admin.time <i>[timestamp]</i></b><br/>
+	Displays current Kapenta p2p network time, or value of given timestamp.
 	<br/>
 	<b>[--help|-h]</b><br/>
 	Displays this manpage.<br/>

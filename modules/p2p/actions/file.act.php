@@ -32,7 +32,10 @@
 	if (false == $kapenta->fileExists($message)) { $page->doXmlError('File not found.'); }
 
 	$meta = new KLargeFile($message);
-	$meta->makeFromFile();
+	$check = $meta->makeFromFile();
+
+	if (false == $check) { $page->doXmlError('Could not create manifest from file.'); }
+
 	$xml = $meta->toXml();
 	echo $xml;
 

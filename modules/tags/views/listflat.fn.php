@@ -8,8 +8,13 @@
 //arg: refUID - UID of object which may have tags [string]
 
 function tags_listflat($args) {
-	global $kapenta, $db, $theme, $user;
-	$html = '';		//%	return value [string]
+	global $kapenta;
+	global $db;
+	global $theme;
+	global $user;
+
+	$link = 'module';		//%	by default allow owner to display tagged items [string]
+	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -25,6 +30,8 @@ function tags_listflat($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) { return ''; }
+
+	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load any tags from database
@@ -43,10 +50,13 @@ function tags_listflat($args) {
 
 	$blocks = array();
 	foreach($range as $row) {
-		$blocks[] = "[[:tags::name::tagUID=". $row['tagUID'] ."::link=module::module=$refModule:]]";
+		$blocks[] = "[[:tags::name::tagUID=". $row['tagUID'] ."::link=$link::module=$refModule:]]";
 	}
-	
-	$html = "<b>Tags:</b> " . implode(", ", $blocks);
+
+	$html = ''
+	 . "<div id='divTags$refUID' style='text-align: right; padding-top: 5px; padding-bottom: 3px;'>"
+	 . implode(" ", $blocks)
+	 . "</div>";
 
 	return $html;
 }

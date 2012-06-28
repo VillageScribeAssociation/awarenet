@@ -3,26 +3,24 @@
 /* main body ------------------------------------------------------------------------------------ */
 
 body {
-	background: #dddddd;
+	background: %%theme.c.lighter%%;  /* #dddddd */
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: smaller;
-	color: #303030;
+	color: %%theme.c.text%%; /* #303030 */
 }
 
-a { text-decoration: none; color: #365a10 }
+a { text-decoration: none; color: %%theme.c.link%%; /* #365a10 */ }
 
-a h1 {
-	color: #303030;
-}
+a h1 { color: %%theme.c.dark%%; /* #303030 */ }
 
 a h2 {
-	color: #303030;
+	color: %%theme.c.text%%; /* #303030 */
 }
 
 hr {
-	border-top: 1px dashed #527d26;
-	color: #fff;
-	background-color: #fff;
+	border-top: 1px dashed %%theme.c.action%%; /* #527d26 */
+	color: %%theme.c.lightest%%;
+	background-color: %%theme.c.lightest%%;
 	height: 1px;
 }
 
@@ -60,6 +58,13 @@ img.navboxbtn {
 	left: -5px; 
 }
 
+img.navboxbtnie {
+	float: right;
+	position: relative;
+	top: -22px;
+	left: -5px;  
+}
+
 /* images --------------------------------------------------------------------------------------- */
 
 img.imthumb {
@@ -80,21 +85,12 @@ img.imwidtheditor {
 div.inlinequote {
 	margin: 4px 4px 4px 4px;
 	display: block;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #ddd;
-	border-right-color: #ddd;
-	border-bottom-color: #ddd;
-	border-left-color: #ddd;
-	background-color: #EEEEEE;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ddd;
+	background-color: %%theme.c.lighter%%;  /* #eeeeee */
 	font-family: Geneva, Arial, Helvetica, sans-serif;
-	color: #333333;
+	color: %%theme.c.dark%%;
 	font-size: 12px;
 	text-decoration: none;
 	font-weight: 200;
@@ -103,7 +99,7 @@ div.inlinequote {
 /* ajax messages -------------------------------------------------------------------------------- */
 
 span.ajaxmsg {
-	background-color: green;
+	background-color: green;		/* constant for now */
 	padding-right: 10px;
 	padding-left: 10px;
 }
@@ -132,7 +128,7 @@ table.wireframe {
 	border-spacing: 0px;
 	padding: 0px 0px 0px 0px;
 	border-style: solid solid solid solid;
-	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	border-color: %%theme.c.light%%;
 	-moz-border-radius: 0px 0px 0px
 }
 
@@ -140,7 +136,7 @@ td.wireframe {
 	border-width: 1px 1px 1px 0px;
 	padding: 1px 1px 1px 1px;
 	border-style: solid solid solid solid;
-	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
+	border-color: %%theme.c.light%%;
 	-moz-border-radius: 0px 0px 0px 0px;
 }
 
@@ -148,8 +144,8 @@ td.title {
 	border-width: 1px 1px 0px 0px;
 	padding: 1px 1px 1px 1px;
 	border-style: solid solid solid solid;
-	border-color: #aaaaaa #aaaaaa #aaaaaa #aaaaaa;
-	background: #aaaaaa;
+	border-color: %%theme.c.light%%;
+	background: %%theme.c.light%%;
 	-moz-border-radius: 0px 0px 0px 0px;
 }
 
@@ -163,7 +159,7 @@ span.mychat {
 frame.consoleif {
 	width: 100%;
 	height: 5px;
-	border: 0px solid #ffffff; :
+	border: 0px solid %%theme.c.lightest%%; 
 }
 
 /* chat windows --------------------------------------------------------------------------------- */
@@ -175,7 +171,7 @@ div.cwtext {
 	text-align: left;
 }
 
-/* chat and console messages -------------------------------------------------------------------- */
+/* chat and console messages (fixed colors for now) --------------------------------------------- */
 
 div.chatmessagegray {
 	background-color: #fff;

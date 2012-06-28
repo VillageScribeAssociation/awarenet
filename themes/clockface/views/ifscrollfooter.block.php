@@ -1,6 +1,8 @@
 <? /*
 
-<!-- TODO: stop throbber here -->
+<script>
+	startThrobber(false);
+</script>
 </div>
 </body>
 </html>

@@ -86,4 +86,36 @@ paths) and on the network (for constructing URLs).  Both should end with a trail
   </table>
 </form>
 
+<h2>Local Subnet</h2>
+
+<p>Clients connecting from outside of you local network can be redirected to a different awareNet instance to conserve
+bandwidth.  Clear or leave blank to disable this feature.</p>
+
+<form name='csKapentaSite' method='POST' action='%%serverPath%%admin/coresetup/'>
+  <table noborder>
+    <tr>
+	  <td><b>Redirect to:</b></td>
+	  <td><input type='text' name='kapenta_alternate' value='%%kapenta.alternate%%' size='30' /></td>
+    </tr>
+    <tr>
+	  <td><b>Local subnet start:</b></td>
+	  <td>
+        <input type='text' name='kapenta_snstart' value='%%kapenta.snstart%%' size='10' /> 
+		<small>Start of IPv4 range, dotted decimal notation, four octets.</small>
+      </td>
+    </tr>
+    <tr>
+	  <td><b>Local subnet end:</b></td>
+	  <td>
+        <input type='text' name='kapenta_snend' value='%%kapenta.snend%%' size='10' /> 
+		<small>End of IPv4 range, dotted decimal notation, four octets.</small>
+      </td>
+    </tr>
+    <tr>
+	  <td><b></b></td>
+	  <td><input type='submit' value='Set' /></td>
+    </tr>
+  </table>
+</form>
+
 */ ?>

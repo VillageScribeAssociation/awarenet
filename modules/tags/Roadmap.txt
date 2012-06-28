@@ -1,0 +1,27 @@
+
+Planned changes / improvements to the tags module
+
+(*)	Add a precache for object counts of abritrary categories - at present Tags_Tag objects have
+	objectCount and embedCount properties to record the number of objects indexed to the tag, and
+	the number of those which can be embedded into user content (images, videos, slideshows, etc).
+
+	In time, more categories will likely need to be recorded and it is inefficient to continue
+	to add more fields and indexes to this table.  It is also logistically difficult as changes to
+	table schema must be made simultaneously on peers run by different organizations.  Further, when
+	ranking tags indexed to obejcts	of some type (projects, say), a sum operation is made on the
+	index table.  This suffices for now but will not scale indefinitely, it is O(n) where an indexed
+	precache would be O(log(n)).
+
+(*)	Planned precache table:
+
+		channel (VARCHAR(50))		- Precache label, eg, "embeddable objects"
+		tagUID (VARCHAR(40))		- ref:Tags_Tag
+		tagName	(VARCHAR(255))		- literal copy, to avoid join to second query
+		objectCount (BIGINT)		- number of objects in this channel with this tag
+		[default fields]
+		shared						- no - tag precache applies to this peer only
+
+(*)	Sharing: since different peers may have different collections of unshared objects which may
+	be tagged, aggregate counts of available objects with that tag will differ between peers.  Thus
+	the precache must be built and maintained separately on each peer in response to the creation
+	and removal of Tags_Index objects.  Recounts should be triggered by database and p2p events.

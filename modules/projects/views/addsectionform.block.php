@@ -14,7 +14,7 @@
 	<td><input type='text' name='title' value='' size='20' style='width: 100%;' /></td>
   </tr>
 </table>
-[[:editor::add::name=content:]]
+[[:editor::add::name=content::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
 <input type='submit' value='Add Section >>' />
 </form>
 </div>

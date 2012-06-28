@@ -4,9 +4,9 @@
 <head>
 <title>%%title%%</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='%%serverPath%%themes/%%defaultTheme%%/css/default.css' rel='stylesheet' type='text/css' />
-<link href='%%serverPath%%themes/%%defaultTheme%%/css/windows.css' rel='stylesheet' type='text/css' />
-<link href='%%serverPath%%themes/clockface/icons/favicon.ico' rel='shortcut icon' type='image/x-icon' />
+<link href='%%serverPath%%home/css/windows.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%home/css/default.css' rel='stylesheet' type='text/css' />
+<link href='%%serverPath%%themes/clockface/icons/faviconpink.ico' rel='shortcut icon' type='image/x-icon' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>
@@ -27,6 +27,7 @@
 <script src='%%serverPath%%modules/live/js/windows.js'></script>
 <script src='%%serverPath%%modules/editor/js/HyperTextArea.js'></script>
 <script src='%%serverPath%%modules/live/js/chat.js'></script>
+<script src='%%serverPath%%modules/like/js/like.js'></script>
 
 %%head%%
 
@@ -81,16 +82,21 @@
 	<table border=0 cellspacing=0 cellpadding=0 valign='top' width='900'>
 
 	  <tr>
-	    <td width='900' height='41' background='/themes/%%defaultTheme%%/images/menuTop.png'>
-			%%menu1%%
+	    <td width='900' height='41' class='menu1'>
+			[[:home::usermenu:]]
 		</td>
 	  </tr>
 
+
 	  <tr>
-	    <td width='900' height='28' background='%%serverPath%%themes/clockface/images/menuBottom.png'>
-			<span style='float: left;'><small>&nbsp;</small>%%menu2%%</span>
+	    <td height="25" width="900">
+		  <div class='submenu'>
+			<small>&nbsp;</small>
+			%%menu2%%
+		  </div>
 		</td>
 	  </tr>	
+
 	  <tr><td><br/></td></tr>
 
 	  <tr>
@@ -136,7 +142,7 @@
 	<!-- white border -->
 	<td width='40'></td>
 	<!-- footer -->
-    <td bgcolor='%%clrMenu1bg%%' height='%%pxxMenu2height%%' align='center'>
+    <td class='footer' height='%%pxxMenu2height%%' align='center'>
 		<small>
 			<span style='color: #eee;'>
 				&nbsp;awareNet is developed by <a href='http://ekhayaICT.com' class='menu'>eKhaya ICT</a>
@@ -152,7 +158,7 @@
 <br/>
 <table noborder cellpadding='0' cellspacing='0' width='250'>
   <tr>
-    <td bgcolor='%%clrMenu1bg%%' height='%%pxxMenu2height%%' align='center'>
+    <td class='footer' height='%%pxxMenu2height%%' align='center'>
 			<span style='color: #eee;'>
 				<small>
 				&nbsp; 

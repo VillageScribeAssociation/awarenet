@@ -16,23 +16,26 @@
 function tags_maintenance() {
 	global $db, $aliases, $user, $theme;
 	if ('admin' != $user->role) { return false; }
-	$recordCount = 0;
-	$errorCount = 0;
-	$fixCount = 0;
 	$report = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check all Index objects
 	//----------------------------------------------------------------------------------------------
+	$recordCount = 0;
+	$errorCount = 0;
+	$fixCount = 0;
+
 	$errors = array();
 	$errors[] = array('UID', 'UID', 'error');
+
 	$model = new Tags_Index();
 	$dbSchema = $model->getDbSchema();
+
 	$sql = "select * from tags_index";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objArray);		// remove database markup
+		$objAry = $db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -72,21 +75,31 @@ function tags_maintenance() {
 	//----------------------------------------------------------------------------------------------
 	//	add Index objects to report
 	//----------------------------------------------------------------------------------------------
-	$report .= $theme->arrayToHtmlTable($errors, true, true);
+	$report .= ''
+	 . $theme->arrayToHtmlTable($errors, true, true)
+	 . "<b>Checked:</b> $recordCount objects<br/>\n"
+	 . "<b>Errors:</b> $errorCount<br/>\n"
+	 . "<b>Fixed:</b> $fixCount<br/>\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	check all Tag objects
 	//----------------------------------------------------------------------------------------------
+	$recordCount = 0;
+	$errorCount = 0;
+	$fixCount = 0;
+
 	$errors = array();
 	$errors[] = array('UID', 'name', 'error');
+
 	$model = new Tags_Tag();
 	$dbSchema = $model->getDbSchema();
+
 	$sql = "select * from tags_tag";
 	$handle = $db->query($sql);
 
 	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objArray);		// remove database markup
-		$model->loadArray($objAry);		// load into model
+		$objAry = $db->rmArray($objAry);		// remove database markup
+		$model->loadArray($objAry);				// load into model
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
@@ -104,14 +117,26 @@ function tags_maintenance() {
 			$errorCount++;
 		}
 
+		//------------------------------------------------------------------------------------------
+		//	update object counts (direct references)
+		//------------------------------------------------------------------------------------------
+		$updatedCount = $model->updateObjectCount();
+		if (true == $updatedCount) {
+			$errors[] = array($model->UID, $model->name, 'Corrected object counts.');
+			$errorCount++;
+			$fixCount++;
+		}
 		
 	} // end while Tags_Tag
 
 	//----------------------------------------------------------------------------------------------
 	//	add Tag objects to report
 	//----------------------------------------------------------------------------------------------
-	$report .= $theme->arrayToHtmlTable($errors, true, true);
-	
+	$report .= ''
+	 . $theme->arrayToHtmlTable($errors, true, true)
+	 . "<b>Checked:</b> $recordCount objects<br/>\n"
+	 . "<b>Errors:</b> $errorCount<br/>\n"
+	 . "<b>Fixed:</b> $fixCount<br/>\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	done

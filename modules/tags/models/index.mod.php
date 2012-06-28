@@ -24,6 +24,7 @@ class Tags_Index {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ share with other peers on the network (yes|no) [string]
 
 	//----------------------------------------------------------------------------------------------
 	//. constructor
@@ -33,7 +34,7 @@ class Tags_Index {
 	function Tags_Index($UID = '') {
 		global $db;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $UID) { $this->load($UID); }			// try load an object from the database
+		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
 			$this->data = $db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
@@ -126,7 +127,9 @@ class Tags_Index {
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
-			'editedBy' => 'VARCHAR(33)' );
+			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)'
+		);
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(
@@ -139,12 +142,14 @@ class Tags_Index {
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
-			'editedBy' => '10' );
+			'editedBy' => '10'
+		);
 
 		//revision history will be kept for these fields
 		$dbSchema['nodiff'] = array(
 			'status',
-			'tagUID' );
+			'tagUID'
+		);
 
 		return $dbSchema;
 		
@@ -166,7 +171,8 @@ class Tags_Index {
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
-			'editedBy' => $this->editedBy
+			'editedBy' => $this->editedBy,
+			'shared' => $this->shared
 		);
 		return $serialize;
 	}
@@ -192,6 +198,7 @@ class Tags_Index {
 			. $indent . "    <createdBy>" . $this->createdBy . "</createdBy>\n"
 			. $indent . "    <editedOn>" . $this->editedOn . "</editedOn>\n"
 			. $indent . "    <editedBy>" . $this->editedBy . "</editedBy>\n"
+			. $indent . "    <shared>" . $this->shared . "</shared>\n"
 			. $indent . "</kobject>\n";
 
 		if (true == $xmlDec) { $xml = "<?xml version='1.0' encoding='UTF-8' ?>\n" . $xml;}

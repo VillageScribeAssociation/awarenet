@@ -23,6 +23,10 @@
     <td><b>editedOn:</b></td>
 	<td>%%editedOn%%</td>
   </tr>
+  <tr>
+    <td><b>owner:</b></td>
+	<td>%%owner%%</td>
+  </tr>
 </table>
 <br/>
 %%fieldsTable%%

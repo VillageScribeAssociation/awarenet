@@ -15,6 +15,11 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $req->ref) { echo "ERROR: no UID given\n"; die(); }
 	
+	if ('public' != $user->role) {
+		$pingArgs = array('user' => $user->UID, 'role' => $user->role);
+		$kapenta->raiseEvent('*', 'live_ping', $pingArgs);
+	}
+
 	$model = new Live_Mailbox($req->ref, true);
 	if (false == $model->loaded) { 
 		//------------------------------------------------------------------------------------------

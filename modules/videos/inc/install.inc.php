@@ -15,7 +15,10 @@
 //returns: html report or false if not authorized [string][bool]
 
 function videos_install_module() {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $registry;
+
 	if ('admin' != $user->role) { return false; }
 	$dba = new KDBAdminDriver();
 	$report = '';
@@ -33,6 +36,18 @@ function videos_install_module() {
 	$model = new Videos_Video();
 	$dbSchema = $model->getDbSchema();
 	$report .= $dba->installTable($dbSchema);
+
+	//----------------------------------------------------------------------------------------------
+	//	create file associations
+	//----------------------------------------------------------------------------------------------
+
+	$assoc = array('flv', 'mp4', 'mp3');
+	foreach($assoc as $ext) {
+		if ('videos' != $registry->get('live.file.' . $ext)) {
+			$registry->set('live.file.' . $ext, 'videos');
+			$report .= "<b>Added file association:</b> $ext<br/>";
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	done

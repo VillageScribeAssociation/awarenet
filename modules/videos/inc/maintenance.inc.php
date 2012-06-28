@@ -39,6 +39,8 @@ function videos_maintenance() {
 	while ($objAry = $db->fetchAssoc($handle)) {
 		$objAry = $db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);				// load into model
+		$model->videosLoaded = false;
+		$model->loadVideos();		
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
@@ -68,7 +70,18 @@ function videos_maintenance() {
 			$saved = $model->save();		// should reset alias
 			$errors[] = array($model->UID, $model->title, 'Fixed share status.');
 			$errorCount++;
-			if (true == $saved) { $fixCount++; }
+			if ('' == $saved) { $fixCount++; }
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check content origin
+		//------------------------------------------------------------------------------------------
+		if ('' == $model->origin) {
+			$model->origin = 'user';
+			$saved = $model->save();
+			$errors[] = array($model->UID, $model->title, 'Added default origin.');
+			$errorCount++;
+			if ('' == $saved) { $fixCount++; }
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -86,7 +99,20 @@ function videos_maintenance() {
 			$errorCount++;
 		}
 
-		
+		//------------------------------------------------------------------------------------------
+		//	check video count
+		//------------------------------------------------------------------------------------------
+
+		if ($model->videocount != $model->countVideos()) {
+			$model->videocount = $model->countVideos();
+			$saved = $model->save();
+			$errors[] = array($model->UID, $model->title, 'Reset video count.');
+			$errorCount++;
+			if ('' == $saved) { $fixCount++; }			
+		} else {
+			$report .= "Video counts match " . $model->title . "<br/>\n";
+		}
+
 	} // end while Videos_Gallery
 
 	//----------------------------------------------------------------------------------------------
@@ -123,7 +149,7 @@ function videos_maintenance() {
 		$allAliases = $aliases->getAll('videos', 'videos_video', $objAry['UID']);
 		if (0 == count($allAliases)) {
 			$saved = $model->save();									// should reset alias
-			$errors[] = array($model->UID, $model->name, 'no alias');
+			$errors[] = array($model->UID, $model->title, 'no alias');
 			$errorCount++;
 			if (true == $saved) { $fixCount++; }			
 		}
@@ -169,7 +195,6 @@ function videos_maintenance() {
 			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
 		}
-
 		
 	} // end while Videos_Video
 

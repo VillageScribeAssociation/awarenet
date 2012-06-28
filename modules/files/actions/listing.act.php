@@ -35,7 +35,7 @@
 			$f = name File();
 			$f->loadArray($row);
 			$labels = $f->extArray();
-			$labels['thumbUrl'] = '/themes/clockface/images/arrow_down.jpg';
+			$labels['thumbUrl'] = '/themes/%%defaultTheme%%/images/arrow_down.jpg';
 			$labels['dnUrl'] = '/files/dn/' . sqlRemoveMarkup($row['title']);
 			$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/files/listing.block.php'));
 		}

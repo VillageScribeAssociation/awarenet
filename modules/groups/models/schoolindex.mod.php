@@ -16,6 +16,7 @@ class Groups_SchoolIndex {
 	var $UID;				//_ UID [string]
 	var $groupUID;			//_ uid [string]
 	var $schoolUID;			//_ title [string]
+	var $memberCount;		//_ number of members at this school [int]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:users_user [string]
 	var $editedOn;			//_ datetime [string]
@@ -60,6 +61,7 @@ class Groups_SchoolIndex {
 		$this->UID = $ary['UID'];
 		$this->groupUID = $ary['groupUID'];
 		$this->schoolUID = $ary['schoolUID'];
+		$this->memberCount = (int)$ary['memberCount'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
@@ -125,6 +127,7 @@ class Groups_SchoolIndex {
 			'UID' => 'VARCHAR(30)',
 			'groupUID' => 'VARCHAR(30)',
 			'schoolUID' => 'VARCHAR(255)',
+			'memberCount' => 'BIGINT(10)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(30)',
 			'editedOn' => 'DATETIME',
@@ -160,6 +163,7 @@ class Groups_SchoolIndex {
 			'UID' => $this->UID,
 			'groupUID' => $this->groupUID,
 			'schoolUID' => $this->schoolUID,
+			'memberCount' => (string)$this->memberCount,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
@@ -185,7 +189,7 @@ class Groups_SchoolIndex {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('groups', 'groups_schoolindex', 'view', $ext['UID'])) {
+		if (true == $user->authHas('groups', 'groups_schoolindex', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%groups/showschoolindex/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

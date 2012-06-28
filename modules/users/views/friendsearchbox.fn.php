@@ -10,7 +10,7 @@
 function users_friendsearchbox($args) {
 	global $user;
 
-	if (false == $user->authHas('users', 'users_user', 'view')) { return ''; }
+	if (false == $user->authHas('users', 'users_user', 'show')) { return ''; }
 
 	$html = "<iframe name='friendSearch' id='ifFSearch'
 			 src='%%serverPath%%users/find/' 

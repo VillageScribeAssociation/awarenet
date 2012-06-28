@@ -11,14 +11,6 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$args = array(
-		'model' => 'videos_video',
-		'UID' => '103777956719437350',
-		'fileName' => 'data/images/1/4/5/145231102916237171.jpg'
-	);
-
-	$kapenta->raiseEvent('*', 'p2p_filedone', $args);
-
-	echo "raised event";
+	
 
 ?>

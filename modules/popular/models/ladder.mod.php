@@ -212,7 +212,7 @@ class Popular_Ladder {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('popular', 'popular_ladder', 'view', $ext['UID'])) {
+		if (true == $user->authHas('popular', 'popular_ladder', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%popular/showladder/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

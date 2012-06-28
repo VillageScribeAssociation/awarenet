@@ -44,6 +44,8 @@ class KSystem {
 	var $coreclass;		//_	flat array describing all class files in the kapenta core [array]
 	var $corejs;		//_	flat array describing all javascript files in the kapenta core [array]
 
+	var $loadtime = 0;	//_	used as start time or framework for benchmarking
+
 	var $wrapper = "<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*\n";
 
 	//----------------------------------------------------------------------------------------------
@@ -51,13 +53,15 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 
 	function KSystem() {
+		global $_SERVER;
 		global $registry;
-
 		global $installPath, $serverPath, $websiteName;
 		global $defaultModule, $defaultTheme, $useBlockCache;
 		global $rsaKeySize, $rsaPublicKey, $rsaPrivateKey;
 		global $logLevel;
 		global $hostInterface, $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass;
+
+		$this->loadtime = (float)microtime(true);			//	note start time of framework
 
 		//-----------------------------------------------------------------------------------------
 		//	get site config from the registry
@@ -442,6 +446,32 @@ class KSystem {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
+	//.	discover which object owns a file
+	//----------------------------------------------------------------------------------------------
+	//arg: path - location of file relative to installPath [string]
+	//returns: dict of 'module', 'model' and 'UID', empty array on failure [array]
+
+	function fileOwner($path) {
+		$owner = array();				//%	return value [dict]
+
+		$mods = $this->listModules();
+		foreach($mods as $modName) {
+			$incFile = 'modules/' . $modName . '/inc/files.inc.php';
+			$fnName = $modName . '_fileOwner';
+			if (true == $this->fileExists('modules/' . $modName . '/inc/files.inc.php')) {
+
+				include_once $incFile;
+				if (true == function_exists($fnName)) {
+					$owner = $fnName($path);
+					if (count($owner) > 0) { return $owner; }
+				}
+			}
+		}
+
+		return $owner;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	check whether a file exists
 	//----------------------------------------------------------------------------------------------
 	//arg: fileName - relative to installPath [string]
@@ -569,7 +599,22 @@ class KSystem {
 		// note that file_put_contents() was added in PHP 5, we do it this way to support PHP 4.x
 		$fH = fopen($this->installPath . $fileName, $m);		//	specify binary for Windows
 		if (false === $fH) { return false; }					//	can fH ever be 0?
+
+		//	wait for lock
+		$lock = false;
+		$counter = 20;											//	make registry setting?
+		while (false == $lock) {
+			$lock = flock($fH, LOCK_EX);
+			if (false == $lock) { sleep(1); }
+			$counter--;
+			if (0 == $counter) {
+				$session->msgAdmin('Could not lock file: ' . $regFile, 'bad');
+				return false;
+			}
+		}
+
 		fwrite($fH, $contents);
+		$lock = flock($fH, LOCK_UN);
 		fclose($fH);
 		return true;
 	}
@@ -583,6 +628,17 @@ class KSystem {
 		if (false == $this->fileCheckName($fileName, $inData)) { return false; }
 		if (false == $this->fileExists($fileName)) { return false; }
 		$check = @unlink($this->installPath . $fileName);
+		return $check;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	delete a directory
+	//----------------------------------------------------------------------------------------------
+
+	function fileRmDir($directory, $inData = false) {
+		if (false == $this->fileCheckName($directory, $inData)) { return false; }
+		if (false == $this->fileExists($directory)) { return false; }
+		$check = @rmdir($this->installPath . $directory);
 		return $check;
 	}
 
@@ -733,7 +789,7 @@ class KSystem {
 		$dest = $this->fileCheckName($dest);
 		if ((false == $src) || (false == $dest)) { return $check; }
 		if (false == $this->fileExists($src)) { return $check; }
-		$check = $this->filemakeSubDirs($dest);
+		$check = $this->fileMakeSubDirs($dest);
 		if (false == $check) { return false; }
 		$check = copy($this->installPath . $src, $this->installPath . $dest);
 		return $check;
@@ -744,35 +800,52 @@ class KSystem {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	//.	sends an event to a specific module
+	//.	broadcast an event to a specific module, or to all which support it
 	//----------------------------------------------------------------------------------------------
 	//arg: module - name of module to notify, or '*' for all [string]
 	//arg: event - name of event [string]
 	//arg: args - details of event [array]
-	//returns: reserved [array]
+	//returns: array of status strings, empty string indicates success [array]
 
 	function raiseEvent($module, $event, $args) {
 		global $kapenta, $session, $user, $page, $theme, $req, $revisions;
+
+		$outcome = array();
+
 		if (('*' == $module) || ('' == $module)) {
 			//--------------------------------------------------------------------------------------
 			//	sends event to all modules
 			//--------------------------------------------------------------------------------------
 			$mods = $this->listModules();
-			foreach($mods as $mod) { $this->raiseEvent($mod, $event, $args); }
+			foreach($mods as $mod) {
+				$result = $this->raiseEvent($mod, $event, $args);
+				foreach($result as $modName => $errmsg) { $outcome[$modName] = $errmsg; }
+			}
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	check if there is an event handler for the module 
 			//--------------------------------------------------------------------------------------
 			$cbFile = 'modules/' . $module . '/events/' . $event . '.on.php'; 
-			if (false == $this->fileExists($cbFile)) { return false; }	
+
+			if (false == $this->fileExists($cbFile)) {
+				$outcome[$module] = '';						//	module does not support this event
+				return $outcome;							//	and that's OK
+			}
+
 			require_once($this->installPath . $cbFile);
 	
 			$cbFn = $module . "__cb_" . $event;
-			if (false == function_exists($cbFn)) { return false; }		// handles this event?
-			$result = $cbFn($args);
-			return array($result);										// do it
+
+			if (false == function_exists($cbFn)) {			//	event handler malformed
+				$outcome[$module] = 'No event handler.';	//	treat as error
+				return $outcome;
+			}
+
+			$outcome[$module] = (string)$cbFn($args);		// do it
 		}
+
+		return $outcome;
 	}
 
 	//==============================================================================================
@@ -815,6 +888,16 @@ class KSystem {
 		if (true == array_key_exists('HTTP_REFERER', $_SERVER))
 			{ $referer = $_SERVER['HTTP_REFERER']; }
 
+		$performance = ''
+		 . 'time=' . (microtime(true) - $this->loadtime)
+		 . '|queries=' . $db->count
+		 . '|db_time=' . $db->time;
+
+		if (true == function_exists('memory_get_peak_usage')) {
+			$peakMemory = memory_get_peak_usage(true);
+			$performance .= "|mem=" . $peakMemory . '';
+		}
+
 		$entry = "<entry>\n"
 			. "\t<timestamp>" . $this->time() . "</timestamp>\n"
 			. "\t<mysqltime>" . $this->datetime() . "</mysqltime>\n"
@@ -824,10 +907,16 @@ class KSystem {
 			. "\t<request>" . $_SERVER['REQUEST_URI'] . "</request>\n"
 			. "\t<referrer>" . $referer . "</referrer>\n"
 			. "\t<useragent>" . $_SERVER['HTTP_USER_AGENT'] . "</useragent>\n"
+			. "\t<performace>$performance</performance>\n"
 			. "\t<uid>" . $page->UID . "</uid>\n"
 			. "</entry>\n";
 
 		$result = $this->filePutContents($fileName, $entry, true, false, 'a+');
+
+		if ((microtime(true) - $this->loadtime)	> 5) {
+			$msg = 'request=' . $_SERVER['REQUEST_URI'] . '|' . $performance;
+			$this->logEvent('page-slow', 'system', 'pageview', $msg);
+		}
 
 		//notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
 		//$entry = $kapenta->datetime() . " - " . $user->username . ' - ' . $_SERVER['REQUEST_URI'];
@@ -878,12 +967,15 @@ class KSystem {
 		//------------------------------------------------------------------------------------------
 		//	add a new entry to the log file
 		//------------------------------------------------------------------------------------------
+		$sessUID = isset($session) ? $session->UID : 'undefined' ;
+		$userUID = isset($user) ? $user->UID : 'public';
+
 		$entry = "<event>\n";
 		$entry .= "\t<datetime>" . $this->datetime() . "</datetime>\n";
-		$entry .= "\t<session>" . $session->UID . "</session>\n";
+		$entry .= "\t<session>" . $sessUID . "</session>\n";
 		$entry .= "\t<ip>" . $remoteAddr . "</ip>\n";
 		$entry .= "\t<system>" . $subsystem . "</system>\n";
-		$entry .= "\t<user>" . $user->UID . "</user>\n";
+		$entry .= "\t<user>" . $userUID . "</user>\n";
 		$entry .= "\t<function>" . $fn . "</function>\n";
 		$entry .= "\t<msg>$msg</msg>\n";
 		$entry .= "</event>\n";

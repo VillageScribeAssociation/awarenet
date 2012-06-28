@@ -12,9 +12,16 @@
 [`|lt]div id=[`|sq]divAddEditPolls[`|sq] [`|gt]
 [[:polls::addeditpoll::refModule=forums::refModel=forums[`|us]thread::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::height=400:]]
 [`|lt]/div[`|gt]</content>
-	<nav1>[[:forums::addthreadnav:]]
-
-</nav1>
+	<nav1>
+		[[:theme::navtitlebox::label=Attachments::toggle=divAttachments:]]
+		<div id='divAttachments' class='block'>
+			[[:live::attach::refModule=forums::refModel=forums[`|us]thread::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+			<hr/>
+			[[:live::listattachmentsnav::refModule=forums::refModel=forums[`|us]thread::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

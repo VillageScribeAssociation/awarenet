@@ -41,6 +41,10 @@ function projects_allsections($args) {
 	if (0 == $project->sections->count) { return ''; }
 
 	foreach($project->sections->members as $sUID => $section) {
+
+		//	Direct render of sections (DEPRECATED)
+		/*
+
 		$model = new Projects_Section();
 		$model->loadArray($section);
 		if ('yes' != $model->hidden) {
@@ -52,6 +56,12 @@ function projects_allsections($args) {
 				$ext['weightbuttons'] = '';
 			}
 			$html .= $theme->replaceLabels($ext, $block);
+		}
+
+		*/
+
+		if ('yes' != $section['hidden']) {
+			$html .= '[[:projects::showsection::sectionUID=' . $sUID . ':]]';
 		}
 	}
 

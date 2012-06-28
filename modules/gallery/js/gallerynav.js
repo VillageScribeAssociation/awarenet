@@ -24,10 +24,10 @@ function galleryNav_refresh() {
 	var html = "";
 
 	var prevButton = "<a href='#' onClick='galleryNavCurrIdx--; galleryNav_refresh();'>"
-				   + "<img src='" + jsServerPath + "themes/clockface/icons/arrow_left.jpg' border='0' /></a>";
+				   + "<img src='" + jsServerPath + "themes/clockface/images/icons/arrow_left.jpg' border='0' /></a>";
 
 	var nextButton = "<a href='#' onClick='galleryNavCurrIdx++; galleryNav_refresh();'>"
-				   + "<img src='" + jsServerPath + "themes/clockface/icons/arrow_right.jpg' border='0' /></a>";
+				   + "<img src='" + jsServerPath + "themes/clockface/images/icons/arrow_right.jpg' border='0' /></a>";
 
 	html = html + "<table noborder>\n";
 	html = html + "  <tr>\n";

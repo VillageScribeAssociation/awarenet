@@ -13,7 +13,7 @@
 	if (false == $model->loaded) { $page->do404('no such user'); }
 
 	$authorised = false;
-	if ($UID = $user->UID) { $authorised = true; }
+	if ($UID == $user->UID) { $authorised = true; }
 	if ('admin' == $user->role) { $authorised = true; }
 	if (false == $authorised) { $page->do403('you cannot edit this profile'); } 
 

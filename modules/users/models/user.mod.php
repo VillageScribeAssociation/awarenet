@@ -2,6 +2,8 @@
 
 	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/registry.mod.php');
+	require_once($kapenta->installPath . 'modules/users/models/settings.set.php');
 	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
 	require_once($kapenta->installPath . 'modules/users/models/settings.set.php');
 	require_once($kapenta->installPath . 'modules/users/models/friendships.set.php');
@@ -11,9 +13,22 @@
 //*	object to represent site users.  This module is required.
 //--------------------------------------------------------------------------------------------------
 //+
+//+	TODO: rename $this->settings to $this->registry
 //+	TODO: consider a better way for admins to decide on profile fields
 //+	TODO: make profile expansion explicit, current method is wasteful, parses XML that is 
 //+	almost never used.
+//+	
+//+	SETTINGS
+//+
+//+	Per-user regisry keys (key/value pairs) are stored in Users_Registry objects, accessed by the
+//+	set() and get() methods respectively.  The Users_Settings collection object handles encoding
+//+	and decoding of the individual values.
+//+
+//+	The UID of the Users_Registry object for a given user is stored in the 'settings' field
+//+	of this object.
+//+
+//+	This set of values is lazily initialized - ie, it is only loaded from the database on the
+//+	first get() call, or on an explicit loadSettings() call.
 
 class Users_User {
 
@@ -25,24 +40,27 @@ class Users_User {
 	var $dbSchema;			//_	database structure [array]
 	var $loaded = false;	//_	set to true when an object has been loaded [bool] 
 
-	var $UID;				// UID
-	var $role;				// title
-	var $school;			// varchar(30)
-	var $grade;				// varchar(30)
-	var $firstname;			// varchar(100)
-	var $surname;			// varchar(100)
-	var $username;			// varchar(50)
-	var $password;			// varchar(50)
-	var $lang;				// varchar(30)
-	var $profile;			// stored as XML in a text field [array]
-	var $permissions;		// object:Users_Permissions [array]
-	var $settings;			// object:Users_Settings per-user configuration options [array]
-	var $lastOnline;		// datetime
-	var $createdOn;			// datetime
-	var $createdBy;			// ref:users-user
-	var $editedOn;			// datetime
-	var $editedBy;			// ref:users-user
-	var $alias;				// alias
+	var $UID;				//_	UID
+	var $role;				//_	title
+	var $school;			//_	varchar(30)
+	var $grade;				//_	varchar(30)
+	var $firstname;			//_	varchar(100)
+	var $surname;			//_	varchar(100)
+	var $username;			//_	varchar(50)
+	var $password;			//_	varchar(50)
+	var $lang;				//_	varchar(30)
+	var $profile;			//_	stored as XML in a text field [array]
+	var $permissions;		//_	object: Users_Permissions [array]
+	var $settings;			//_	ref: Users_Registry [string]
+	var $lastOnline;		//_	datetime [string]
+	var $createdOn;			//_	datetime [string]
+	var $createdBy;			//_	ref:Users_User [string]
+	var $editedOn;			//_	datetime [string]
+	var $editedBy;			//_	ref:Users_User [string]
+	var $alias;				//_	alias [string]
+
+	var $registry;			//_	Registry keys collection object [object:Users_Settings]
+	var $registryLoaded;	//_ Set to true when user registry scetion loaded [bool]
 
 	//TODO: make this a registry setting
 	var $profileFields = 'interests|hometown|music|goals|books|also|birthyear|tel|email';
@@ -57,7 +75,7 @@ class Users_User {
 		global $db;
 
 		$this->dbSchema = $this->getDbSchema();				//	initialise table schema
-		$this->settings = new Users_Settings();				//	create user registry
+		$this->registry = new Users_Settings();				//	create user registry
 		$this->permissions = new Users_Permissions();		//	create permission set		
 		$this->friendships = new Users_Friendships();		//	this user's friends
 
@@ -127,7 +145,7 @@ class Users_User {
 		$this->lang = $ary['lang'];
 		$this->profile = $this->expandProfile($ary['profile']);
 		$this->permissions->expand($ary['permissions']);
-		$this->settings->expand($ary['settings']);
+		$this->settings = $ary['settings'];
 		$this->lastOnline = $ary['lastOnline'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
@@ -225,7 +243,7 @@ class Users_User {
 			'lang' => 'VARCHAR(30)',
 			'profile' => 'TEXT',
 			'permissions' => 'TEXT',
-			'settings' => 'TEXT',
+			'settings' => 'VARCHAR(33)',
 			'lastOnline' => 'VARCHAR(255)',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -269,7 +287,7 @@ class Users_User {
 			'lang' => $this->lang,
 			'profile' => $this->collapseProfile(),
 			'permissions' => $this->permissions->collapse(),
-			'settings' => $this->settings->collapse(),
+			'settings' => $this->settings,
 			'lastOnline' => $this->lastOnline,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
@@ -542,6 +560,7 @@ class Users_User {
 
 		$doc = new KXMLDocument($xml);	//%	parse XML [class:KXMLDocument]
 		$keys = $doc->getChildren2d();	//%	all children of root node [array]
+
 		if (false == $keys) { return $profile; }
 
 		foreach($keys as $field => $value) 
@@ -565,6 +584,94 @@ class Users_User {
 
 		$xml = "<profile>\n$xml</profile>\n";
 		return $xml;
+	}
+
+
+	//==============================================================================================
+	//	SETTINGS / USER REGISTRY
+	//==============================================================================================
+	
+	//----------------------------------------------------------------------------------------------
+	//.	load user registry settings into memory
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	function loadRegistry() {
+		global $kapenta;
+		global $db;
+		global $session;
+
+		if (false == $this->loaded) { return false; }
+
+		//------------------------------------------------------------------------------------------
+		//	create a new user registry section if one does not exist for this user
+		//------------------------------------------------------------------------------------------
+		if ('' == $this->settings) {
+			$this->settings = $kapenta->createUID();
+			$report = $this->save();
+			if ('' != $report) { return false; }
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	(re)create the object is not present
+		//------------------------------------------------------------------------------------------
+		if (false == $db->objectExists('users_registry', $this->settings)) {
+			$model = new Users_Registry();
+			$model->UID = $this->settings;
+			$model->userUID = $this->UID;
+			$report = $model->save();
+			if ('' != $report) { 
+				$session->msg("Could not create user registry " . $this->settings . ".");
+				//echo "Could not create user registry " . $this->settings . "<br/>\n";
+				return false;
+			} else {
+				$session->msg("Created new user registry " . $this->settings . ".");
+				//echo "Created new user registry " . $this->settings . "<br/>\n";	
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	try to load the Users_Registry object
+		//------------------------------------------------------------------------------------------
+		$model = new Users_Registry($this->settings);
+		if (false == $model->loaded) { return false; }
+
+		$this->registry = new Users_Settings($model->settings);
+		$this->registryLoaded = true;
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	create / update a user setting
+	//----------------------------------------------------------------------------------------------
+	//arg: key - name of a registry key in the user section [string]
+	//arg: value - valuse to set this to [string]
+	//returns: true on success, false on failure [bool]	
+
+	function set($key, $value) {
+		if (false == $this->registryLoaded) { $this->loadRegistry(); }
+		if (false == $this->registryLoaded) { return false; }
+
+		$model = new Users_Registry($this->settings);
+		if (false == $model->loaded) { return false; }
+		$this->registry->set($key, $value);
+
+		$model->settings = $this->registry->toString();
+		$report = $model->save();
+		if ('' != $report) { return false; }
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	read a user setting
+	//----------------------------------------------------------------------------------------------
+	//arg: key - name of a registry key in the user section [string]
+	//returns: value of the key, or empty string if it does not exist [string]
+
+	function get($key) {
+		if (false == $this->registryLoaded) { $this->loadRegistry(); }
+		if (false == $this->registryLoaded) { return ''; }
+		return $this->registry->get($key);	
 	}
 
 	//==============================================================================================

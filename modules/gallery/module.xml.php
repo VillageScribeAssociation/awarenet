@@ -40,6 +40,11 @@
 		student:c|gallery|gallery_gallery|images-add|(if)|creator
 		student:c|gallery|gallery_gallery|images-remove|(if)|creator
 		student:c|gallery|gallery_gallery|images-edit|(if)|creator
+		student:c|gallery|gallery_gallery|tags-add|(if)|creator
+		student:c|gallery|gallery_gallery|tags-remove|(if)|creator
+		student:c|gallery|gallery_gallery|tags-edit|(if)|creator
+		student:c|gallery|gallery_gallery|tags-manage|(if)|creator
+		student:p|gallery|gallery_gallery|tags-show
 		student:c|gallery|gallery_gallery|delete|(if)|creator
 
 		teacher:p|gallery|gallery_gallery|new
@@ -52,6 +57,11 @@
 		teacher:c|gallery|gallery_gallery|images-add|(if)|creator
 		teacher:c|gallery|gallery_gallery|images-remove|(if)|creator
 		teacher:c|gallery|gallery_gallery|images-edit|(if)|creator
+		teacher:c|gallery|gallery_gallery|tags-add|(if)|creator
+		teacher:c|gallery|gallery_gallery|tags-remove|(if)|creator
+		teacher:c|gallery|gallery_gallery|tags-edit|(if)|creator
+		teacher:c|gallery|gallery_gallery|tags-manage|(if)|creator
+		teacher:p|gallery|gallery_gallery|tags-show
 		teacher:c|gallery|gallery_gallery|delete|(if)|creator
     </defaultpermissions></module>
 */ ?>

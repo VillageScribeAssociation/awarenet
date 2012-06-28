@@ -8,7 +8,7 @@
     </small>
   </td>
   <td width='30'></td>
-  <td valign='top'>
+  <td valign='top' width='250'>
     By: [[:users::namelink::userUID=%%createdBy%%:]]<br/>
     <small>
 		%%userSchoolLink%% %%userGrade%%

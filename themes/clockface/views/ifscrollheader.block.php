@@ -1,164 +1,66 @@
 <? /*
-
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
 <head>
-<title>%%pageTitle%%</title>
-<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='%%serverPath%%themes/clockface/css/iframe.css' rel='stylesheet' type='text/css' />
-<style type='text/css'>
-.style1 {font-size: 9px}
-</style>
+	<title>%%pageTitle%%</title>
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 
-<script language='javascript'>
-	var kapentaLoaded = false;
-	var hasParentFrame = false;
-	var awareNetChat = true;
-	var jsServerPath = '%%serverPath%%';
-	var jsPageUID = '%%pageInstanceUID%%';
-	var jsUserUID = '%%jsUserUID%%';
-	var jsUserName = '%%jsUserName%%';
-	var formChecks = new Array();
-	var kchatclient = 0;
+	<script src='%%serverPath%%themes/%%defaultTheme%%/js/jquery.js'></script>
 
-	var windowUID = '';
-	var windowIdx = 0;
-	var kshellwindow = 0;
+	<style type='text/css'>
+	%%css%%
+	.style1 {font-size: 9px}
+	</style>
 
-</script>
-
-<script language='javascript'>
-
-	//----------------------------------------------------------------------------------------------
-	//	onLoad
-	//----------------------------------------------------------------------------------------------
-
-	function kPageInit() {
-		//------------------------------------------------------------------------------------------
-		//	create shell window object
-		//------------------------------------------------------------------------------------------
-		windowUID = window.name.replace('ifc', '');
-		windowIdx = window.parent.kwindowmanager.getIndex(windowUID)
-
-		//window.parent.kwindowmanager.windows[windowIdx].disableResize();
-		window.parent.kwindowmanager.windows[windowIdx].setStatus('');
+	<script>
 
 		//------------------------------------------------------------------------------------------
-		//	register events (TODO: should ony be registered during drag)
+		//	resize this window
 		//------------------------------------------------------------------------------------------
-		document.onmousemove = function(e) {
-			var e = e || window.event;
-			var wndThis = window.parent.kwindowmanager.windows[windowIdx];
-			var ifThis = window.parent.document.getElementsByName(window.name);	//%	this iframe
-			var txtBox = document.getElementById('content');					//% textarea
 
-			docX = e.clientX + ifThis[0].offsetLeft + wndThis.left;
-			docY = e.clientY + ifThis[0].offsetTop + wndThis.top;
+		function window_onResize() {
+			$('#divScrollContent').width($(window).width());
+			$('#divScrollContent').height($(window).height());
+		}
 
-			// only these properties neede by the window manager
-			var newEvt = function() { 
-				this.clientX = 0;	
-				this.clientY = 0; 
+		//------------------------------------------------------------------------------------------
+		//	scroll to bottom of window
+		//------------------------------------------------------------------------------------------
+
+		function scrollToBottom() {
+			$("#divScrollContent").prop({ scrollTop: $("#divScrollContent").prop("scrollHeight") });
+			$("#divScrollContent").animate(
+				{ scrollTop: $('#divScrollContent').prop("scrollHeight") }, "fast"
+			);
+		}
+
+		function startThrobber(onoff) {
+
+			if ((window.parent) && (window.parent.kwindowmanager)) {
+				thisUID = window.name.replace('ifc', '');							//	has a UID		
+				thisHWnd = window.parent.kwindowmanager.getIndex(thisUID);
+				window.parent.kwindowmanager.windows[thisHWnd].setThrobber(onoff);
 			}
 
-			newEvt.clientX = docX;
-			newEvt.clientY = docY;
-
-			//txtBox.value = (docX) + ', ' + (docY) + ' -- ' + wndThis.top + ', ' + wndThis.left;
-			window.parent.kmouse.onMouseMove(newEvt);
 		}
 
-		//------------------------------------------------------------------------------------------
-		//	resize controls
-		//------------------------------------------------------------------------------------------
-		resizeWindow();
-		if (window_onLoad) { window_onLoad(); }
-	}
+		startThrobber(true);
 
-	//----------------------------------------------------------------------------------------------
-	//	re/scale controls to fit inside iFrame
-	//----------------------------------------------------------------------------------------------
+	</script>
 
-	function resizeWindow() {
-		//------------------------------------------------------------------------------------------
-		//	resize controls
-		//------------------------------------------------------------------------------------------
-		if (window_onResize) { window_onResize(); }		// user defined 
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	close this window
-	//----------------------------------------------------------------------------------------------
-
-	function closeWindow() { window.parent.kwindowmanager.closeWindow(windowUID); }
-
-	//----------------------------------------------------------------------------------------------
-	//	scroll to bottom of display
-	//----------------------------------------------------------------------------------------------
-
-	function scrollToEnd() { 
-		divSC = document.getElementById('divScrollContent');
-		divSC.scrollTop = divSC.scrollHeight;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//	remove 'px' from numbers //TODO: add this to /core/utils.js
-	//----------------------------------------------------------------------------------------------	
-	function extractNumberCW(value) { 
-		var n = parseInt(value); 
-		return n == null || isNaN(n) ? 0 : n; 
-	} 
-
-	//----------------------------------------------------------------------------------------------
-	//	resize this window
-	//----------------------------------------------------------------------------------------------
-	function window_onResize() {
-		//------------------------------------------------------------------------------------------
-		//	resize controls
-		//------------------------------------------------------------------------------------------
-		var divSC = document.getElementById('divScrollContent');			//%	div
-
-		if (window.innerWidth) {
-			vpWidth = window.innerWidth;				// modern browsers
-			vpHeight = window.innerHeight;
-		}
-
-		if ((document.documentElement) && (document.documentElement.clientWidth)) {
-			vpWidth = document.documentElement.clientWidth;		// available on old IE and Opera
-			vpHeight = document.documentElement.clientHeight;
-		}
-
-		if (-1 == vpWidth) { alert('Cannot get viewport size'); }
-
-		divSC.style.top = '0px';
-		divSC.style.left = '5px';
-		divSC.style.height = (vpHeight) + 'px';
-		divSC.style.width = (vpWidth - 5) + 'px';
-		//alert(divSC.style.width + 'x' + divSC.style.height + "\n" + divSC.innerHTML);
-
-	}
-
-</script>
-<script src='%%serverPath%%core/utils.js'></script>
-
-<script language='javascript'>
-
-	var kapentaLoaded = false;
-
-	function kPageInit() {
-		resizeFrame();
-		kapentaLoaded = true;
-		//TODO: start throbber here
-	}
-
-	ifMaxHeight = -1;
-
-	//----------------------------------------------------------------------------------------------
-	//	called by window manager -> window template
-	//----------------------------------------------------------------------------------------------
-
-</script>
 </head>
-<body onResize='window_onResize();'> 
-<div id='divScrollContent' style='width: 100%; height: 100%; position: absolute; overflow: auto'>
-<script language='Javascript'>resizeWindow();</script>
+<body onResize="window_onResize();" id='jqBody'>
+
+<div 
+	id='divScrollContent' 
+	style='
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		overflow: auto;
+		z-index: 500
+	'>
+
+	<script>window_onResize();</script>
+<br/>
+
 */ ?>

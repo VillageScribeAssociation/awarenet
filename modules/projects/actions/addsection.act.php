@@ -37,9 +37,10 @@
 	}
 
 	$sections = new Projects_Sections($project->UID);
+	if (false == $sections->loaded) { $session->msg("Could not load project sections."); }
 
 	$model->projectUID = $project->UID;
-	$model->weight = $sections->maxWeight;
+	$model->weight = $sections->getMaxWeight() + 1;
 	$report = $model->save();
 
 	if ('' == $report) {

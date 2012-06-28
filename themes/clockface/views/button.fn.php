@@ -28,7 +28,7 @@ function theme_button($args) {
 	//	choose a filename
 	//----------------------------------------------------------------------------------------------
 	$fileName = 'button_' . $utils->makeAlphaNumeric($label) . '_' . $selected .  '.png';
-	$fileName =  'themes/' . $kapenta->defaultTheme . '/drawcache/' . $fileName;
+	$fileName =  'themes/' . $kapenta->defaultTheme . '/images/drawcache/' . $fileName;
 
 	//----------------------------------------------------------------------------------------------
 	//	create the graphic if it does not exist

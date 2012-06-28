@@ -4,26 +4,30 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]galleryTitle[`|pc][`|pc] (image gallery)</title>
-	<content>[[:theme::navtitlebox::width=570::label=Image Gallery:]]
-[[:gallery::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=Image Gallery:]]
+		[[:gallery::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
 	<nav1>
-[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
-[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:gallery::newgalleryform:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
+		[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:gallery::newgalleryform:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Unsorted Images:]]
-[[:gallery::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=30:]]
-[`|lt]br/[`|gt]
+		[[:sketchpad::tip_introduction:]]
 
-[[:theme::navtitlebox::label=Made By:]]
-[[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Unsorted Images:]]
+		[[:gallery::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=30:]]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Galleries:]]
-[[:gallery::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]</nav1>
+		[[:theme::navtitlebox::label=Made By:]]
+		[[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=Galleries:]]
+		[[:gallery::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit>galleryNav[`|us]init()[`|sc]

@@ -21,6 +21,11 @@
 
 	$interpreter = new Live_CmdInterpreter($raw);
 
-	echo $kapenta->shellExecCmd($interpreter->cmd, $interpreter->arguments);
+	$result = $kapenta->shellExecCmd($interpreter->cmd, $interpreter->arguments);
+
+	$result = str_replace('%%serverPath%%', $kapenta->serverPath, $result);
+	$result = str_replace('%%defaultTheme%%', $kapenta->defaultTheme, $result);
+
+	echo $result;
 
 ?>

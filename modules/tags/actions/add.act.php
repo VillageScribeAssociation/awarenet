@@ -4,7 +4,7 @@
 	require_once($kapenta->installPath . 'modules/tags/models/index.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//*	tag an existing object
+//*	tag an existing object (ie, create in index between a tag and and object)
 //--------------------------------------------------------------------------------------------------
 
 	$refModule = '';
@@ -48,6 +48,8 @@
 		$page->do302($return);
 	}
 
+	/*
+
 	//----------------------------------------------------------------------------------------------
 	//	check if this tag exists, create it if it does not
 	//----------------------------------------------------------------------------------------------
@@ -88,6 +90,17 @@
 
 	$tag->updateObjectCount();
 	$tag->save();
+
+	*/
+
+	$args = array(
+		'refModule' => $refModule,
+		'refModel' => $refModel,
+		'refUID' => $refUID,
+		'tagName' => $tagName
+	);
+
+	$kapenta->raiseEvent('*', 'tags_add', $args);
 
 	$page->do302($return);
 

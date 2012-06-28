@@ -62,15 +62,16 @@ function moblog_summarylist($args) {
 	$block = $theme->loadBlock('modules/moblog/views/summary.block.php');
 
 	foreach($range as $UID => $row) {
-		$model = new Moblog_Post();
-		$model->loadArray($row);
-		$labels = $model->extArray();
-		$labels['rawblock64'] = base64_encode('[[:moblog::summary::UID=' . $row['UID'] . ':]]');
+		//$model = new Moblog_Post();
+		//$model->loadArray($row);
+		//$labels = $model->extArray();
+		//$labels['rawblock64'] = base64_encode('[[:moblog::summary::UID=' . $row['UID'] . ':]]');
+		//$html .= $theme->replaceLabels($labels, $block);
+		//$channel = 'post-' . $model->UID;
+		//$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 
-		$html .= $theme->replaceLabels($labels, $block);
+		$html .= "[[:moblog::summary::UID=" . $row['UID'] . ":]]";
 
-		$channel = 'post-' . $model->UID;
-		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
 	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }

@@ -13,7 +13,7 @@ function images__cb_object_deleted($args) {
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }
 
-	$session->msgAdmin("Deleting images belonging to " . $args['module'] . " " . $args['UID']);
+	//$session->msgAdmin("Deleting images belonging to " . $args['module'] . " " . $args['UID']);
 
 	//----------------------------------------------------------------------------------------------
 	//	delete any images owned by this record

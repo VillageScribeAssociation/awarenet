@@ -51,6 +51,8 @@
 	$msg = "Updated $changeCount files, $ignoreCount unchanged, " . count($toRetry) . " failed.";
 	$session->msg($msg, 'ok');	
 
+	$package->getLocalDifferent();		//	reset dirty flag in registry for this package
+
 	//----------------------------------------------------------------------------------------------
 	//	retry any which failed
 	//----------------------------------------------------------------------------------------------

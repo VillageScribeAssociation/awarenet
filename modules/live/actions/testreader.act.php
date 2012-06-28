@@ -35,8 +35,8 @@
 <head>
 <title>awareNet - blogs - everyone</title>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-<link href='http://andev.co.za/themes/%%defaultTheme%%/css/default.css' rel='stylesheet' type='text/css' />
-<link href='http://andev.co.za/themes/%%defaultTheme%%/css/windows.css' rel='stylesheet' type='text/css' />
+<link href='http://andev.co.za/home/css/default.css' rel='stylesheet' type='text/css' />
+<link href='http://andev.co.za/home/css/windows.css' rel='stylesheet' type='text/css' />
 <style type='text/css'>
 .style1 {font-size: 9px}
 </style>

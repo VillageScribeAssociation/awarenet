@@ -4,19 +4,39 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all image galleries</title>
-	<content>[[:theme::navtitlebox::label=Video Galleries (everyone)::width=570:]]
-	[[:videos::orderlinks:]]
-	[[:live::river::mod=videos::view=summarylist::pv=pageNo::allow=orderBy|pagination|num::pagination=no::orderBy=%%orderBy%%::num=5:]]
+	<content>
+		[[:theme::navtitlebox::label=Video Galleries (%%originlabel%%)::width=570:]]
+		[[:videos::orderlinks:]]
+		[[:live::river::mod=videos::view=summarylist::pv=pageNo::allow=orderBy|pagination|num|origin::pagination=no::orderBy=%%orderBy%%::origin=%%origin%%::num=5:]]
 
 	</content>
-	<nav1>[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
-[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:videos::newgalleryform:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+	<nav1>
 
-[[:theme::navtitlebox::label=Unsorted Videos:]]
-[[:videos::randomthumbs::num=12:]]</nav1>
+		[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
+		[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:videos::newgalleryform:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=Gallery Tags::toggle=divTagCloud:]]
+		[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
+		[[:tags::modelcloud::refModule=videos::refModel=videos[`|us]gallery:]]
+		[`|lt]/div[`|gt]
+		<br/>
+
+		[[:theme::navtitlebox::label=Popular Videos::toggle=divPopularVideos:]]
+		<div id='divPopularVideos'>
+		[[:videos::listpopularvideosnav::num=10:]]
+		</div>
+		<br/>
+
+		[[:theme::navtitlebox::label=Recently Added::toggle=divRecentVideos:]]
+		<div id='divRecentVideos'>
+		[[:videos::listrecentvideosnav::num=10:]]
+		</div>
+		<br/>
+
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

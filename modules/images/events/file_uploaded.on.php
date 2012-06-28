@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	fired when an image has been uploaded by the live module
 //--------------------------------------------------------------------------------------------------
+//DEPRECATED: all files should now be uploaded via the live module and use 'file_attach.on.php'
 
 function images__cb_file_uploaded($args) {
 	global $kapenta;

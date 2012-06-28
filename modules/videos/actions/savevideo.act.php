@@ -70,6 +70,10 @@
 			$returnUrl = 'videos/play/' . $model->alias;
 			break;		//..........................................................................
 
+		case 'editmodal':
+			$returnUrl = 'videos/editvideo/' . $model->alias;
+			break;		//..........................................................................
+
 		default:
 			$page->do302('videos/edit/' . $model->alias);
 			break;

@@ -8,18 +8,27 @@
 		<input
 			type='button'
 			value='Update Package Lists &gt;&gt;'
-			onClick="kwindowmanager.createWindow(
-				'Downloading Package Lists', '/packages/update/', 800, 400, 
-				'%%serverPath%%themes/%%defaultTheme%%/icons/file.archive.png'
-			);"
-		/>
+			onClick="
+				var tempHWnd = kwindowmanager.createWindow(
+					'Downloading Package Lists',
+					'/packages/update/',
+					800, 400, 
+					'%%serverPath%%themes/%%defaultTheme%%/images/icons/file.archive.png',
+					true
+				);
 
-		<!-- 
-		<form name='updateSources' method='POST' action='%%serverPath%%packages/update/' />
-		<input type='hidden' name='action' value='updateSources' />
-		<input type='submit' value='Update Package Lists &gt;&gt;' />
-		</form>
-		-->
+				var tempFn = function() {
+					klive.bindDivToBlock(
+						'divInstalledList',
+						'[' + '[:packages::installedpackages:]]',
+						false
+					);
+				}
+
+				kwindowmanager.windows[tempHWnd].setBanner('Updating all packages');
+				kwindowmanager.setOnClose(tempHWnd,tempFn);
+			"
+		/>
 
     </td>
     <td>

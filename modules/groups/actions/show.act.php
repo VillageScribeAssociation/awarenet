@@ -18,6 +18,8 @@
 	$model = new Groups_Group($UID);
 	if (false == $model->loaded) { $page->do404('Could not load group.'); }
 
+	//$model->schools->updateSchoolsIndex($model->members->get());
+
 	if (true == $user->authHas('groups', 'groups_group', 'edit', $model->UID)) 
 		{ $editUrl = '%%serverPath%%groups/edit/' . $model->alias; }
 

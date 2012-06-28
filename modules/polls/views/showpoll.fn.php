@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 //|	display the poll for users to vote on / see results
 //--------------------------------------------------------------------------------------------------
-//arg: refModule - name of a Kapenta module [string]
-//arg: refModel - type of object which will own poll question [string]
-//arg: refUID - UID of object which will own poll question [string]
+//arg: UID - UID of a Poll_Question object [string]
+//opt: questionUID - overrides UID if present [string]
+//opt: width - widthof result bar chart [string]
 
 function polls_showpoll($args) {
 	global $kapenta;
@@ -15,28 +15,21 @@ function polls_showpoll($args) {
 	global $user;
 	global $theme;	
 
+	$width = 500;			//%	max width of bars in chart [int]
 	$html = '';				//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $args)) { return '(refModule not given)'; }
-	if (false == array_key_exists('refModel', $args)) { return '(refModel not given)'; }
-	if (false == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
+	if (true == array_key_exists('questionUID', $args)) { $args['UID'] = $args['questionUID']; }
+	if (true == array_key_exists('width', $args)) { $width = (int)$args['width']; }
+	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 
-	$refModule = $args['refModule'];
-	$refModel = $args['refModel'];
-	$refUID = $args['refUID'];
-
-	$model = new Polls_Question();
-	$questionUID = $model->hasQuestion($refModule, $refModel, $refUID);
-	if ('' == $questionUID) { return ''; }
-
-	$model->load($questionUID);
+	$model = new Polls_Question($args['UID']);
 	if (false == $model->loaded) { return '(could not load question)'; }
 
 	if (true == $model->hasVoted($user->UID)) { 
-		return "[[:polls::showpollresults::refModule=$refModule::refModel=$refModel::refUID=$refUID:]]";
+		return "[[:polls::showpollresults::questionUID=" . $model->UID . "::width=$width:]]";
 	}
 
 	//----------------------------------------------------------------------------------------------

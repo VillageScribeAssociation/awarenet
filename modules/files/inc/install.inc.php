@@ -15,7 +15,10 @@
 //returns: html report or false if not authorized [string][bool]
 
 function files_install_module() {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $registry;
+
 	if ('admin' != $user->role) { return false; }
 	$dba = new KDBAdminDriver();
 	$report = '';
@@ -49,6 +52,28 @@ function files_install_module() {
 	$report .= "<b>moved $count records from 'folders' table.</b><br/>";
 
 	//----------------------------------------------------------------------------------------------
+	//	create file associations
+	//----------------------------------------------------------------------------------------------
+
+	$assoc = array(			//	Allowed file types:
+		'doc',				//	Microsoft Word Documents
+		'odt',				//	OpenOffice Documents
+		'pdf',				//	Adobe Portable Document Format
+		'ppt',				//	Microsoft Powerpoint Slide Decks
+		'tar',				//	Tarballs
+		'tar.gz',			//	Gzipped Tarballs
+		'txt',				//	Plain Text Documents
+		'zip'				//	ZIP archives
+	);
+
+	foreach($assoc as $ext) {
+		if ('files' != $registry->get('live.file.' . $ext)) {
+			$registry->set('live.file.' . $ext, 'files');
+			$report .= "<b>Added file association:</b> $ext<br/>";
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//	done
 	//----------------------------------------------------------------------------------------------
 	return $report;
@@ -62,6 +87,7 @@ function files_install_module() {
 
 function files_install_status_report() {
 	global $user;
+
 	if ('admin' != $user->role) { return false; }
 
 	$dba = new KDBAdminDriver();

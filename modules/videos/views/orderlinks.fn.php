@@ -8,7 +8,7 @@ function videos_orderlinks($args) {
 	$linkBase = '%%serverPath%%videos/listallgalleries/orderby_';
 
 	$html = ''
-	 . "<table noborder width='100%'><tr><td bgcolor='#dddddd'>" 
+	 . "<table noborder width='100%'><tr><td class='title'>" 
 		. "&nbsp;&nbsp; list by: "
 		. "<a href='" . $linkBase . "title'>[title]</a> "
 		. "<a href='" . $linkBase . "videocount'>[number of videos]</a> "

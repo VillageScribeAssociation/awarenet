@@ -14,8 +14,6 @@
 </nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>msgSubscribe([`|sq]comments-projects-[`|pc][`|pc]UID[`|pc][`|pc]-nav[`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>

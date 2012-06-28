@@ -102,11 +102,20 @@ class P2P_Gift {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$report = '';
+		global $db;
+		global $session;
+
+		$report = '';							//% return value [string]
+
+		//------------------------------------------------------------------------------------------
+		//	check properties
+		//------------------------------------------------------------------------------------------
+
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 		if ('' == $this->refUID) { $report .= "No refUID.<br/>\n"; }
 		if ('' == $this->refModel) { $report .= "No refModel.<br/>\n"; }
 		if ('' == $this->status) { $report .= "Status not set.<br/>\n"; }
+		if ('' == $this->peer) { $report .= "Peer not specified.<br/>\n"; }
 
 		if ('file' == $this->type) {
 			if ('' == $this->fileName) { $report .= "No filename."; }
@@ -117,6 +126,42 @@ class P2P_Gift {
 		if ('0000-00-00 00:00:00' == $this->updated) { $report .= "Update time not set."; }
 
 		if ('p2p_gift' == $this->refModel) { $report .= "Tried to save share P2P_Gift object."; }
+
+		//------------------------------------------------------------------------------------------
+		//	check for temporary and disallowed tables
+		//------------------------------------------------------------------------------------------
+
+		if ('tmp_' === substr($this->refModel, 0, 4)) {
+			$report .= "Tried to share item from temporary table.";
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	check database for duplicates
+		//------------------------------------------------------------------------------------------
+		$conditions = array();
+		$conditions[] = "peer='" . $db->addMarkup($this->peer) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($this->refUID) . "'";
+		$conditions[] = "refModel='" . $db->addMarkup($this->refModel) . "'";
+		$conditions[] = "type='" . $db->addMarkup($this->type) . "'";
+		$range = $db->loadRange('p2p_gift', '*', $conditions);
+
+		if (count($range) > 1) {
+			foreach($range as $item) {
+				//	Remove duplicate			
+				$check = $db->delete($this->UID, $this->dbSchema);
+
+				if (true == $check) {
+					$msg = 'Removed duplicate gift entry for ' . $this->refModel . '::' . $this->refUID;
+					$session->msgAdmin($msg);
+				} else {
+					$msg = 'Error: duplicate gift entry for ' . $this->refModel . '::' . $this->refUID;
+					$session->msgAdmin($msg);
+				}
+
+				//	Overwrite existing record
+				$this->UID = $item['UID'];
+			}
+		}
 
 		return $report;
 	}
@@ -130,6 +175,7 @@ class P2P_Gift {
 		$dbSchema = array();
 		$dbSchema['module'] = 'p2p';
 		$dbSchema['model'] = 'p2p_gift';
+		$dbSchema['archive'] = 'no';
 
 		//table columns
 		$dbSchema['fields'] = array(
@@ -164,7 +210,7 @@ class P2P_Gift {
 		);
 
 		//revision history will be kept for these fields
-		$dbSchema['diff'] = array(
+		$dbSchema['nodiff'] = array(
 			'peer',
 			'type',
 			'model',
@@ -222,7 +268,7 @@ class P2P_Gift {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('p2p', 'p2p_gift', 'view', $ext['UID'])) {
+		if (true == $user->authHas('p2p', 'p2p_gift', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%p2p/showgift/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

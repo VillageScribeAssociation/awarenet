@@ -157,6 +157,9 @@ class Images_Image {
 
 	function verify() {
 		global $kapenta;
+		global $registry;
+		global $session;
+
 		$report = '';				//%	return value [string]
 
 		//------------------------------------------------------------------------------------------
@@ -198,12 +201,28 @@ class Images_Image {
 		if ('' == $this->refModel) { $report .= "No refModel.<br/>\n"; }
 		if ('' == $this->refUID) { $report .= "No refUID.<br/>\n"; }
 
-		// add hash if missing and the file is available
-		if (('' == $this->hash) && (true == $kapenta->fileExists($this->fileName))) {
-			$this->hash = sha1_file($kapenta->installPath . $this->fileName);
-		}
+		if (true == $kapenta->fileExists($this->fileName)) 
+			//--------------------------------------------------------------------------------------
+			// add hash if missing and the file is available
+			//--------------------------------------------------------------------------------------
+			if ('' == $this->hash) { $this->hash = $kapenta->fileSha1($this->fileName); }
 
-		return $report;
+			//--------------------------------------------------------------------------------------
+			// check that this falls within the max filesize (half a MB by default)
+			//--------------------------------------------------------------------------------------
+			$fileSize = $kapenta->fileSize($this->fileName);
+			$maxSize = $registry->get('images.maxsize');
+			if (($maxSize > 0) && ($fileSize > $maxSize)) {
+				$check = $this->transforms->reduce();
+				if (true == $check) {
+					$newSize = $kapenta->fileSize($this->fileName);
+					$session->msg("Image '". $this->title ."' reduced from $fileSize to $newSize.");
+				} else {
+					$report .= "Could not reduce image " . $this->UID . ".";
+				}
+			}
+
+			return $report;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -359,17 +378,17 @@ class Images_Image {
 		//	links
 		//------------------------------------------------------------------------------------------
 		if (true == $user->authHas('images', 'images_image', 'show', $this->UID)) {
-			$ext['viewUrl'] = "";
+			$ext['viewUrl'] = "%%serverPath%%images/show/" . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
 		if (true == $user->authHas('images', 'images_image', 'edit', $this->UID)) {
-			$ext['editUrl'] = '%~%serverPath%~%images/edit/' . $ext['alias'];
+			$ext['editUrl'] = '%%serverPath%%images/edit/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
 		if (true == $user->authHas('images', 'images_image', 'delete', $this->UID)) {
-			$ext['delUrl'] = '%~%serverPath%~%images/delimage/' . $ext['alias'];
+			$ext['delUrl'] = '%%serverPath%%images/delimage/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
 
@@ -468,10 +487,12 @@ class Images_Image {
 		if (false == $this->loaded) { return $check; }
 
 		//------------------------------------------------------------------------------------------
-		//	remove file and database record
+		//	remove file
 		//------------------------------------------------------------------------------------------
 		if (true == $kapenta->fileExists($this->fileName)) {
-			$kapenta->fileDelete($this->fileName, true);
+			//$kapenta->fileDelete($this->fileName, true);
+			//NOTE: disabled as a safety precaution, and to allow undelete of images_image obejcts
+			//TODO: create admin action / display for deleting these files permenantly
 		}
 
 		//------------------------------------------------------------------------------------------

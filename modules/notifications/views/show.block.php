@@ -1,5 +1,6 @@
 <? /*
 
+<div id='divN%%userIndexUID%%'>
 <table noborder width='100%'>
   <tr>
     <td valign='top' width='50px'>
@@ -13,10 +14,11 @@
 	  %%content%%<br/>
 	  <small>
 		Sent on %%createdOnLong%% by [[:users::namelink::userUID=%%createdBy%%:]] 
-		<a href='%%serverPath%%notifications/hide/%%userIndexUID%%'>[hide]</a>
+		%%hideJsLink%%
 	  </small>
     </td>
   </tr>
 </table>
+</div>
 
 */ ?>

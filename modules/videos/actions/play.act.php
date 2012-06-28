@@ -17,9 +17,22 @@
 	if (('public' == $user->role) && ('public' != $model->category)) { $page->do403(); }
 
 	// temporarily disabled while permissions are in flux  TODO: add this back in when stable
-	//if (false == $user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
-	//	$page->do403(); 
-	//}
+	if (false == $user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
+		$page->do403(); 
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	bump popularity of this item if viewed by someone other than the creator
+	//----------------------------------------------------------------------------------------------
+	if (('videos_gallery' == $model->refModel) && ($model->createdBy != $user->UID)) {
+		// popularity overall
+		$args = array('ladder' => 'videos.all', 'item' => $model->UID);
+		$kapenta->raiseEvent('popular', 'popularity_bump', $args);
+		
+		// popularity within this gallery
+		$args = array('ladder' => 'videos.g' . $model->refUID, 'item' => $model->UID);
+		$kapenta->raiseEvent('popular', 'popularity_bump', $args);
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	block for inline editing if permitted

@@ -20,10 +20,10 @@
 				<permission>show</permission>
 				<permission>list</permission>
 				<permission>delete</permission>
-				<export>announcement-add</export>
-				<export>announcement-edit</export>
-				<export>announcement-show</export>
-				<export>announcement-delete</export>
+				<export>announcements-add</export>
+				<export>announcements-edit</export>
+				<export>announcements-show</export>
+				<export>announcements-delete</export>
 			</permissions>
 			<relationships>
 				<relationship>creator</relationship>

@@ -6,7 +6,7 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - friends or [`|pc][`|pc]userName[`|pc][`|pc]</title>
 	<content>[[:theme::navtitlebox::width=570::label=Friends:]]
 [`|lt]h2[`|gt]Friends of: [[:users::namelink::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]][`|lt]/h2[`|gt]
-[[:users::listfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+[[:users::listfriendsgrouped::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]</content>
 	<nav1>[[:theme::navtitlebox::label=Search for friends:]]
 [[:users::friendsearchbox:]]

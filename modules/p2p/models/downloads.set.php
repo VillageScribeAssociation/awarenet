@@ -123,6 +123,7 @@ class P2P_Downloads {
 	//----------------------------------------------------------------------------------------------
 	//.	discover if a download has a manifest
 	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location of file relative to installPath [string]
 	//returns: true if manifest exists, false if not [bool]
 
 	function hasManifest($fileName) {
@@ -133,6 +134,7 @@ class P2P_Downloads {
 	//----------------------------------------------------------------------------------------------
 	//.	pull manifest from this peer
 	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location of file on remote peer relative to its installPath [string]
 	//returns: true on sucess, false on failure [bool]
 
 	function pullManifest($fileName) {
@@ -317,16 +319,22 @@ class P2P_Downloads {
 
 	function toXml() {
 		$xml = "<downloads>\n";					//%	return value [string]
+		$fragments = array();					//%	individual entries [array]
+		$sizes = array();						//%	for sorting [array]
 
 		foreach($this->members as $fileName) {
 			$manifest = 'no';
 			$parts = '';	
+			$size = 0;
+			$hash = 0;
+
 			if (true == $this->hasManifest($fileName)) {
 				$manifest = 'yes';
 				$outstanding = array();
 				$klf = new KLargeFile($fileName);
 
 				if (true == $klf->loaded) {
+					$size = $klf->size;		
 					foreach($klf->parts as $part) {
 						if ('ok' != $part['status']) { $outstanding[] = $part['index']; }
 					}
@@ -335,7 +343,9 @@ class P2P_Downloads {
 				$parts = implode('|', $outstanding);
 			}
 
-			$xml .= ''
+			$sizes[$fileName] = (int)$size;			
+
+			$fragments[$fileName] = ''
 			 . "\t<download>\n"
 			 . "\t\t<fileName>$fileName</fileName>\n"
 			 . "\t\t<manifest>$manifest</manifest>\n"
@@ -343,6 +353,8 @@ class P2P_Downloads {
 			 . "\t</download>\n";
 		}
 
+		asort($sizes);
+		foreach($sizes as $fileName => $size) { $xml .= $fragments[$fileName]; }
 		$xml .= "</downloads>";
 		return $xml;
 	}
@@ -356,7 +368,9 @@ class P2P_Downloads {
 		$downloads = array();					//%	return value [array]
 		$xd = new KXmlDocument($xml);
 		$kids = $xd->getChildren(1);
-		foreach ($kids as $childId) { $downloads[] = $xd->getChildren2d($childId); }
+		if (true == is_array($kids)) {
+			foreach ($kids as $childId) { $downloads[] = $xd->getChildren2d($childId); }
+		}
 		return $downloads;
 	}
 

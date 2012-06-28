@@ -49,12 +49,28 @@ class KTheme {
 	//returns: block template, or null string on failure [string]
 
 	function loadBlock($fileName) {
-		global $kapenta, $user, $session;
+		global $kapenta;
+		global $user;
+		global $session;
+
+		//------------------------------------------------------------------------------------------
+		//	check for mobile template
+		//------------------------------------------------------------------------------------------
+		if ('true' == $session->get('mobile')) {
+			$mobileBlock = str_replace('.block.php', '.m.block.php', $fileName);
+			if (true == $kapenta->fileExists($mobileBlock)) { $fileName = $mobileBlock; }			
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	get the file contents
+		//------------------------------------------------------------------------------------------
 	
 		if ($kapenta->fileExists($fileName)) {
 		  	$raw = $kapenta->fileGetContents($fileName, false, true);
 	
+			//--------------------------------------------------------------------------------------
 			// special admin option TODO: make this a setting
+			//--------------------------------------------------------------------------------------
 			/*
 			if (('admin' == $user->role) AND (substr($fileName, 0, 8) == 'modules/')) {
 			  if ($request['module'] != 'blocks') {
@@ -135,6 +151,9 @@ class KTheme {
 	function makeSummary($html, $length = 300) {
 		global $utils;
 		$length = (int)$length;
+
+		$html = str_replace(array('<br/>', '<br>', '</p>'), array(' ', ' ', ' '), $html);
+
 		$html = $this->stripBlocks($html);								// remove blocks
 		$html = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $html);		// remove HTML
 
@@ -280,20 +299,64 @@ class KTheme {
 
 		} else { return false; }
 
-		$ba['args']['rawblock'] = $original;						// spacial magic block argument
-		//$ba['args']['rawblock64'] = base64_encode($original);		// ...
 		return $ba;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	expand all blocks within a string
 	//----------------------------------------------------------------------------------------------
-	//arg: txt - text containing block tags to be expanded [string]
-	//arg: calledBy - newline delimited list of parents, set to empty string [string]
-	//returns: txt with blocks recusively expanded [string]
 	//: calledBy is used to prevent infinite recursion, newline delimited list of parents
+	//arg: txt - text containing block tags to be expanded [string]
+	//opt: calledBy - newline delimited list of parents, set to empty string [string]
+	//opt: area - area of the page this block is on, default is 'content' [string]
+	//returns: txt with blocks recusively expanded [string]
 
-	function expandBlocks($txt, $calledBy = '') {
+	function expandBlocks($txt, $area = 'content') {
+		global $page;
+		global $session;
+
+		$continue = true;
+
+		if (true == $session->get('mobile')) {
+			switch($area) {
+				case 'indent':		$area = 'mobileindent'; 	break;
+				case 'content':		$area = 'mobile'; 			break;
+				case 'nav1':		$area = 'mobile'; 			break;
+				case 'nav2':		$area = 'mobile'; 			break;
+			}
+		}
+
+		foreach($page->blockArgs as $find => $replace) {
+			$txt = str_replace('%%' . $find . '%%', $replace, $txt);
+		}
+
+		while (true == $continue) {
+			$startPos = strpos($txt, '[[:');
+			$endPos = strpos($txt, ':]]', (int)$startPos);
+
+			if ((false === $startPos) || (false === $endPos)) {
+				$continue = false;
+			} else {
+
+				$endPos = $endPos + 3;
+				$block = substr($txt, $startPos, $endPos - $startPos);
+
+				$ba = $this->blockToArray($block);
+	
+				$ba['args']['area'] = $area;							// spacial magic block argument
+				$ba['args']['rawblock'] = $block;				// ... ditto ...
+
+				$result = $this->runBlock($ba);
+
+				$txt = substr($txt, 0, $startPos) . $result . substr($txt, $endPos);
+			}
+		}
+
+		return $txt;
+	}
+
+	/*
+	function expandBlocks($txt, $area = 'content') {
 		//------------------------------------------------------------------------------------------
 		//	filter out any calling blocks - prevent infinite recursion
 		//------------------------------------------------------------------------------------------
@@ -323,6 +386,7 @@ class KTheme {
 
 		return $txt;
 	}
+	*/
 
 	//==============================================================================================
 	//	UTILITY
@@ -362,6 +426,64 @@ class KTheme {
 		return $html;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	wrap a snippet of HTML in a content title box / section heading
+	//----------------------------------------------------------------------------------------------
+	//arg: html - html snippet to wrap in a block [string]
+	//arg: title - title of box [string]
+	//arg: divId - id of the div to wrap this in [string]
+	//opt: toggle - (hide|show|off), default is off [string]
+
+	function tb($html, $title, $divId, $toggle = 'off') {
+		$tg = '::toggle=' . $divId;;
+		$style = '';
+
+		if ('hide' == $toggle) {
+			$tg = '::hidden=yes::toggle=' . $divId;
+			$style = " style='visibility: hidden; display: none;'";
+		}
+
+		$html = ''
+		 . "[[:theme::titlebox::label=$title" . $tg . ":]]\n"
+		 . "<div id='$divId' class='block'$style>\n"
+		 . $html
+		 . "</div>\n"
+		 . "<div class='foot'></div>\n"
+		 . "<br/>\n";
+
+		return $html;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	wrap a snippet of HTML in a nav title box / section heading
+	//----------------------------------------------------------------------------------------------
+	//arg: html - html snippet to wrap in a block [string]
+	//arg: title - title of box [string]
+	//arg: divId - id of the div to wrap this in [string]
+	//opt: toggle - (hide|show|off), default is off [string]
+
+	function ntb($html, $title, $divId, $toggle = 'off') {
+
+		$style = '';
+
+		$tg = '';
+		if ('show' == $toggle) { $tg = '::toggle=' . $divId; }
+		if ('hide' == $toggle) {
+			$tg = '::hidden=yes::toggle=' . $divId;
+			$style = "style='display: none;'";
+		}
+
+		$html = ''
+		 . "[[:theme::navtitlebox::label=$title" . $tg . ":]]\n"
+		 . "<div id='$divId' class='navblock' $style>\n"
+		 . $html
+		 . "</div>\n"
+		 . "<div class='foot'></div>\n"
+		 . "<br/>\n";
+
+		return $html;
+	}
+
 	//==============================================================================================
 	//	TAGS
 	//==============================================================================================
@@ -381,8 +503,10 @@ class KTheme {
 
 		foreach($tags as $tag) {
 			$size = floor((5 / $max) * $tag['weight']);
-			$html .= "<a href='" . $tag['link'] . "' style='color: #444444;'>"
-				   . "<font size='" . $size . "'>" . $tag['name'] . "</font></a>\n";
+			$html .= ''
+			 . "<a href=\"" . $tag['link'] . "\" style='color: #444444;'>"
+			 . "<font size='" . $size . "'>" . $tag['name'] . "</font>"
+			 . "</a>\n";
 		}
 
 		return $html;

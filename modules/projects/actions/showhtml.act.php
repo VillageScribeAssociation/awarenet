@@ -18,7 +18,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($req->ref);
 
-	$cssUrl = $kapenta->serverPath . "/themes/%%defaultTheme%%/css/default.css";
+	$cssUrl = $kapenta->serverPath . "/home/css/default.css";
 
 	echo "<html>"
 		 . "<link href='" . $cssUrl . "' rel='stylesheet' type='text/css' />"

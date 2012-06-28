@@ -50,7 +50,7 @@ function forums_showthreads($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$rowBlock = $theme->loadBlock('modules/forums/views/threadrow.block.php');
-	$html .= "<table noborder>";
+	$html .= "<table noborder width='100%'>";
 	foreach ($range as $row) {
 		$thread = new Forums_Thread();
 		$thread->loadArray($row);

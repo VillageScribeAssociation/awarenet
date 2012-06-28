@@ -15,7 +15,7 @@
 		<input
 			type='image'
 			alt='Rotate 90 degrees anticlockwise.'
-			src='%%serverPath%%themes/%%defaultTheme%%/icons/rotate-clockwise.png' />
+			src='%%serverPath%%themes/%%defaultTheme%%/images/icons/rotate-clockwise.png' />
 	</form>
 	</td>
     <td valign='top'>
@@ -26,7 +26,7 @@
 		<input
 			type='image' 
 			alt='Rotate 90 degrees clockwise.'
-			src='%%serverPath%%themes/%%defaultTheme%%/icons/rotate-anticlockwise.png' />
+			src='%%serverPath%%themes/%%defaultTheme%%/images/icons/rotate-anticlockwise.png' />
 	</form>
 	</td>
   </tr>

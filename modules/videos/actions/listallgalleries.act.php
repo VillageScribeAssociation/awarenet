@@ -17,9 +17,14 @@
 	$pageNo = 1;
 	$orderBy = 'createdOn';
 	$orderLabel = '';
+	$origin = 'user';
+	$originLabel = 'by awareNet users';
 
-	if (array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
-	if (array_key_exists('orderby', $req->args)) { $orderBy = $req->args['orderby']; }
+	if (true == array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
+	if (true == array_key_exists('orderby', $req->args)) { $orderBy = $req->args['orderby']; }
+	if (true == array_key_exists('origin', $req->args)) { $origin = $req->args['origin']; }
+
+	if ('3rdparty' == $origin) { $originLabel = 'by awareNet partners'; }
 
 	switch($orderBy) {
 		case 'createdOn':	$orderLabel = 'by creation date';	break;
@@ -37,6 +42,8 @@
 	$page->blockArgs['orderLabel'] = $orderLabel;
 	$page->blockArgs['userUID'] = $user->UID;
 	$page->blockArgs['userRa'] = $user->alias;
+	$page->blockArgs['origin'] = $origin;
+	$page->blockArgs['originlabel'] = $originLabel;
 	$page->title = 'awareNet - all video galleries ' . $orderLabel . ' (page ' . $pageNo . ')';
 	$page->render();													
 

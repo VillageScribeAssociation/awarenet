@@ -32,6 +32,21 @@
 	$page->blockArgs['userRa'] = $model->alias;
 	$page->blockArgs['userName'] = $model->getName();
 	$page->blockArgs['pageNo'] = $pageNo;
+
+	if (true == $session->get('mobile')) {
+		//------------------------------------------------------------------------------------------
+		//	require javascript and css which may be needed by mobile clients (AJAX)
+		//------------------------------------------------------------------------------------------
+		$page->requireCss('%%serverPath%%modules/images/css/pikachoose.mobile.css');
+		$page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
+	} else {
+		//------------------------------------------------------------------------------------------
+		//	require javascript and css which may be needed by dynamically loaded content
+		//------------------------------------------------------------------------------------------
+		$page->requireCss('%%serverPath%%modules/images/css/pikachoose.css');
+		$page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
+	}
+
 	$page->render()
 
 ?>

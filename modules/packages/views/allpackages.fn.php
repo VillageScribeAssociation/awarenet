@@ -35,8 +35,13 @@ function packages_allpackages($args) {
 		$source = new KSource($pkg['source']);
 		$meta = $source->getPackageDetails($UID);
 		foreach($meta as $key => $value) { $pkg[$key] = $value; }
+		$pkg['UID'] = $UID;
 
-		$html .= $theme->replaceLabels($pkg, $block); 
+		if (('' !== $status) && ($status == $pkg['status'])) {
+
+			$html .= $theme->replaceLabels($pkg, $block); 
+
+		}
 	}
 
 	if (0 == count($packages)) {

@@ -1,5 +1,5 @@
 <? /*
-<div class='inlinequote'>
+<div class='outline'>
 <form name='siteLogin' method='POST' action='%%serverPath%%users/login/'>
 <input type='hidden' name='action' value='login' />
 %%redirectUrl%%

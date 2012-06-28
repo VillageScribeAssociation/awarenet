@@ -5,7 +5,9 @@
 	[[:theme::navtitlebox::label=Settings:]]
     <h1>Module Settings: Images</h1>
 	<p>Settings for the images module.</p>
-	[[:images::settings:]]</content>
+	[[:images::settings:]]
+
+	</content>
 	<title>:: [`|pc][`|pc]websiteName[`|pc][`|pc] :: admin :: image settings ::</title>
 	<script></script>
 	<nav1></nav1>

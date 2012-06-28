@@ -4,28 +4,31 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]schoolName[`|pc][`|pc]</title>
-	<content>[[:theme::navtitlebox::width=570::label=About:]]
-[[:schools::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::width=570::label=Announcements::toggle=divAnnouncements:]]
-[`|lt]div id=[`|sq]divAnnouncements[`|sq][`|gt]
-[`|lt]br/[`|gt]
-[[:announcements::list::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]::num=10:]]
-[[:announcements::newlink::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]</content>
-	<nav1>
-[[:theme::navtitlebox::label=All School Categories::toggle=divTags:]]
-[`|lt]div id=[`|sq]divTags[`|sq][`|gt]
-[[:tags::modelcloud::refModule=schools::refModel=schools[`|us]school:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+	<content>
+		[[:theme::navtitlebox::width=570::label=About:]]
+		[[:schools::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools::hidden=yes:]]
-[`|lt]div id=[`|sq]divAllSchools[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:schools::geographicnav:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::width=570::label=Announcements::toggle=divAnnouncements:]]
+		[`|lt]div id=[`|sq]divAnnouncements[`|sq][`|gt]
+		[`|lt]br/[`|gt]
+
+		[[:announcements::list::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]::num=10:]]
+		[[:announcements::newlink::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]</content>
+	<nav1>
+		[[:theme::navtitlebox::label=All School Categories::toggle=divTags:]]
+		[`|lt]div id=[`|sq]divTags[`|sq][`|gt]
+		[[:tags::modelcloud::refModule=schools::refModel=schools[`|us]school:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=All Schools::toggle=divAllSchools::hidden=yes:]]
+		[`|lt]div id=[`|sq]divAllSchools[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:schools::geographicnav:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
 		[[:theme::navtitlebox::label=Students And Teachers::toggle=divStudentsAndTeachers::hidden=yes:]]
 		[`|lt]div id=[`|sq]divStudentsAndTeachers[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]

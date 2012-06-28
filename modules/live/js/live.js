@@ -16,8 +16,8 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	//	properties
 	//----------------------------------------------------------------------------------------------	
 
-	this.interval = 5000;				//_ default initial interval, milliseconds [int]
-	this.maxinterval = 20000;			//_	max interval between poll, milliseconds [int]
+	this.interval = 30000;				//_ default initial interval, milliseconds [int]
+	this.maxinterval = 200000;			//_	max interval between poll, milliseconds [int]
 
 	this.UID = jsPageUID;				//_	Unique identifier of this page [string]
 	this.serverPath = jsServerPath;		//_	URL of a kapenta installation [string]
@@ -302,9 +302,8 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				var theDiv = document.getElementById(this.divs[idx].divId);
 				//TODO: check the div was found
 				theDiv.innerHTML = content;
-				//if ('' != this.divs[idx].bgColor) {
-					theDiv.style.backgroundColor = '#ffffff';
-				//}
+				this.runJs(content);
+				theDiv.style.backgroundColor = '#ffffff';
 			}
 		}
 	}
@@ -361,15 +360,43 @@ function Live_Pump(jsPageUID, jsServerPath) {
 	}
 
 	//----------------------------------------------------------------------------------------------
+	//.	run javascript embedded in loaded blocks
+	//----------------------------------------------------------------------------------------------
+	//; this is mostly to get videos working when loaded by AJAX
+	//TODO: security review of this functionality
+
+	this.runJs = function(rawHtml) {
+		var start = 0;
+		var end = 1;
+		var done = false;
+					
+		while (start != -1) {
+			start = rawHtml.indexOf("<script", start);
+			if (-1 != start) { end = rawHtml.indexOf("</script>", start); }
+
+			if ((start > -1) && (end > start)) {
+				start = rawHtml.indexOf('>', start) + 1;
+				var evStr = rawHtml.substring(start, end);
+				if (evStr.length > 5) {
+					//alert('start: ' + start + ' end: ' + end + "\n" + evStr);
+					eval(evStr);
+				}
+			}
+
+		}
+
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	log a message to the js debug console
 	//----------------------------------------------------------------------------------------------
 	//arg: msg - message to log to the console [string]
 
 	this.log = function(msg) {
 		//console.log(msg);
-		var theDiv = document.getElementById('pumpDiv');
-		theDiv.align = 'left';
-		if (theDiv.innerHTML.length > 4000) { this.clearLog(); }
+		//var theDiv = document.getElementById('pumpDiv');
+		//theDiv.align = 'left';
+		//if (theDiv.innerHTML.length > 4000) { this.clearLog(); }
 		//theDiv.innerHTML = theDiv.innerHTML + msg + "<br/>\n"
 	}
 

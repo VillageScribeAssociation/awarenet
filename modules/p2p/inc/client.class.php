@@ -100,11 +100,22 @@ class P2P_Client {
 					 . $item['refModel'] . '::' . $item['refUID'] . "<br/>";
 
 					$tempXml = $db->getObjectXml($item['refModel'], $item['refUID']);
-					$objectsXml .= $tempXml;
-					$report .= "ADDING: " . $tempXml . "<br/>";
-				}
 
-				//TODO: collect files here
+					if ('' != $tempXml) {
+						// item loaded and serialized
+						$objectsXml .= $tempXml;
+						$report .= "ADDING:<br/>" . htmlentities($tempXml) . " (" . $item['UID'] . ")<br/>";
+					} else {
+						// item could not ne loaded, delete the gift object
+						$report .= "Could not load object of gift: " . $item['UID'] . "<br/>\n";
+						if (false == $db->objectExists($item['refModel'], $item['refUID'])) {
+							$rmGift = new P2p_Gift($item['UID']);
+							$check = $rmGift->delete();
+							if (true == $check) { $report .= "Gift removed.<br/>"; }
+							else { $report .= "Could not delete gift: ". $item['UID'] ."<br/>\n"; }
+						}
+					}
+				}
 			}
 		}
 
@@ -146,6 +157,7 @@ class P2P_Client {
 
 		} else {
 			$report .= "<h3>Peer does not want any of the offered objects.</h3>";
+			$report .= "<textarea rows='10' style='width: 100%'>" . $response . "</textarea><br/>\n";
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -156,15 +168,19 @@ class P2P_Client {
 
 		foreach($newSet->members as $idx => $item) {
 			$model = new P2P_Gift($item['UID']);
-			if ((true == $model->loaded) && ($model->status != $item['status'])) {
-				$model->status = $item['status'];
-				$model->save();
-				$report .= ''
-				 . "updated gift: " . $item['status']
-				 . " (" . $item['refModel'] . '::' . $item['refUID'] . ")<br/>\n";
+			if (true == $model->loaded) {			
+				if ($model->status != $item['status']) {
+					$model->status = $item['status'];
+					$model->save();
+					$report .= ''
+					 . "updated gift " . $item['UID'] . ": " . $item['status']
+					 . " (" . $item['refModel'] . '::' . $item['refUID'] . ")<br/>\n";
 
+				} else {
+					$report .= "gift " . $item['UID'] . " statuses match, unchanged<br/>\n";
+				}
 			} else {
-				$report .= "could not load gift: " . $item['UID'] . "<br/>\n";
+				$report .= "could not load P2P_Gift object: " . $item['UID'] . "<br/>\n";
 			}
 		}
 
@@ -202,7 +218,7 @@ class P2P_Client {
 		//------------------------------------------------------------------------------------------
 		$xml = $model->sendMessage('offers', 'both|' . $kapenta->time());
 
-		$report .= $theme->expandBlocks('[[:theme::ifscrollheader:]]');
+		//$report .= $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 		$report .= "<textarea rows='10' cols='80' style='width: 100%;'>$xml</textarea>";
 
 		$report .= "<h2>Offers</h2>";
@@ -281,7 +297,9 @@ class P2P_Client {
 				}
 
 			} else {	
-				$report .= "<b>object not stored, database error</b><br/>";
+				$report .= ''
+				 . "<b>object not stored, database error</b><br/>\n"
+				 . $db->lasterr;
 			}
 		}
 
@@ -365,21 +383,35 @@ class P2P_Client {
 							//----------------------------------------------------------------------
 							//	we now have the file :-) delete the meta and remove from downloads
 							//----------------------------------------------------------------------
-							$report .= "File stitched together... removing manifest<br/>";
+							$report .= "File stitched together... removing manifest<br/>\n";
 							$downloads->remove($fileName);
-							$report .= "File stitched together... removing from downloads<br/>";
+							$report .= "File stitched together... removing from downloads<br/>\n";
 							$klf->delete();
 
 							//----------------------------------------------------------------------
 							//	note it in the log
 							//----------------------------------------------------------------------
-							$msg = "Completed download of file: " . $klf->path;
+							$msg = "Completed download of file: " . $klf->path  . "<br/>\n";
 
 							//----------------------------------------------------------------------
 							//	raise an event so the module can claim it
 							//----------------------------------------------------------------------
 							$args = array('fileName' => $klf->path);
 							$kapenta->raiseEvent('*', 'p2p_filedone', $args);
+
+							//----------------------------------------------------------------------
+							//	raise an event on receipt of file (triggers sharing with others)
+							//----------------------------------------------------------------------
+							$msg = "Re-sharing with peers...<br/>\n" . $klf->path;
+
+							$args = array(
+								'module' => $klf->module,
+								'model' => $klf->model,
+								'UID' => $klf->UID,
+								'fileName' => $klf->path,
+								'peer' => $this->peerUID
+							);
+							$kapenta->raiseEvent('*', 'file_received', $args);
 
 						} else {
 							//----------------------------------------------------------------------
@@ -424,7 +456,7 @@ class P2P_Client {
 		$peer = new P2p_Peer($this->peerUID);
 		if (false == $peer->loaded) { return '<b>Error:</b> Peer not found.'; }
 
-		$xml = 	$peer->sendMessage('downloads', $kapenta->time());
+		$xml = $peer->sendMessage('downloads', $kapenta->time());
 		$report .= "<b>Download list:</b><br/>\n";
 		$report .= "<textarea rows='10' style='width:100%;'>$xml</textarea><br/>\n";
 
@@ -448,13 +480,18 @@ class P2P_Client {
 				$report .= "<b>Sending Manifest for:</b> " . $dn['fileName'] . "<br/>";
 				$klf = new KLargeFile($dn['fileName']);
 				$klf->makeFromFile();
-				foreach($klf->parts as $idx => $part) { $klf->parts[$idx]['status'] = 'pending'; }
-				$manifest = $klf->toXml();
-				$report .= "<textarea rows='10' style='width:100%;'>$manifest</textarea><br/>\n";
 
-				$result = $peer->sendMessage('givemanifest', $manifest);
-				$report .= "<b>p2p/givemanifest/</b> responds<br/>\n";
-				$report .= "<textarea rows='10' style='width:100%;'>$result</textarea><br/>\n";	
+				if (true == $klf->loaded) {
+					foreach($klf->parts as $idx => $part) { $klf->parts[$idx]['status'] = 'pending'; }
+					$manifest = $klf->toXml();
+					$report .= "<textarea rows='10' style='width:100%;'>$manifest</textarea><br/>\n";
+
+					$result = $peer->sendMessage('givemanifest', $manifest);
+					$report .= "<b>p2p/givemanifest/</b> responds<br/>\n";
+					$report .= "<textarea rows='10' style='width:100%;'>$result</textarea><br/>\n";	
+				} else {
+					$report .= "<b>Could not create manifest for this file.</b><br/>\n";
+				}
 			}
 
 			//--------------------------------------------------------------------------------------

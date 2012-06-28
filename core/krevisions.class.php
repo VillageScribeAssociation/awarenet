@@ -64,20 +64,21 @@ class KRevisions {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	record deleteion of an object
+	//.	record deletion of an object
 	//----------------------------------------------------------------------------------------------
 	//arg: changes - associative array of fields and values [array]
 	//arg: dbSchema - a database table definition [array]		
+	//opt: isShared - object was shared with other peers so share the deletion, true [bool]
 	//returns: true on success, false on failure [bool]
 
-	function recordDeletion($fields, $dbSchema) {
+	function recordDeletion($fields, $dbSchema, $isShared = true) {
 		global $db, $session;
 
 		//------------------------------------------------------------------------------------------
 		//	check table schema
 		//------------------------------------------------------------------------------------------
 		if (false == $db->checkSchema($dbSchema)) { 
-			$session->msgAdmin('<b>Error:</b> Bad schema', 'bad');
+			$session->msgAdmin('<b>Error:</b> Bad schema - ' . $dbSchema['model'], 'bad');
 			return false;
 		}
 
@@ -107,7 +108,7 @@ class KRevisions {
 		$model->fields = $fields;
 
 		$model->shared = 'yes';
-		if (false == $db->isShared($dbSchema['model'], $fields['UID'])) { $model->shared = 'no'; }
+		if (false == $isShared) { $model->shared = 'no'; }
 
 		$report = $model->save();
 
@@ -116,7 +117,7 @@ class KRevisions {
 			$session->msgAdmin($msg . $report, 'bad');
 			return false;
 		} else {
-			$msg = 'Moved ' . $model->refModule . '::' . $model->refUID . ' to the recycle bin.';
+			$msg = 'Moved ' . $model->refModel . '::' . $model->refUID . ' to the recycle bin.';
 			$session->msgAdmin($msg, 'ok');
 		}
 
@@ -130,7 +131,7 @@ class KRevisions {
 
 		foreach($range as $item) {
 			if ('restore' == $item['status']) {
-				$deletion = new Revisions_Deletion($item['UID']);
+				$deletion = new Revisions_Deleted($item['UID']);
 				$deletion->status = 'delete';
 				$report = $deletion->save();
 				if ('' != $report) { $session->msg('Could not re-delete: ' . $report, 'bad'); }
@@ -162,7 +163,7 @@ class KRevisions {
 			if ('restore' == $item['status']) { return false; } // deleted and restored
 		}
 
-		return false;	// record of being deleted, but none of being undeleted
+		return true;	// record of being deleted, but none of being undeleted
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -199,20 +200,30 @@ class KRevisions {
 
 	function restoreDependant($model, $UID) {
 		global $db;
-		$allOk = true;
+		global $session;
+		$allOk = true;				//%	return value [bool]
+
 		$conditions = array("owner='" . $db->addMarkup($UID) . "'");
 		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+		$session->msgAdmin("Restoring " . count($range) . " deleted items for $model $UID");
+
 		foreach($range as $item) {
 			$model = new Revisions_Deleted($item['UID']);
-			if ($model->fields['refModel'] == $model) {
+			$session->msg('Loaded ' . $item['UID'] . ' refModel: ' . $model->fields['refModel']);
+			if (true == $model->loaded) {
 				$check = $model->restore();
 				if (false == $check) {
 					$msg = "Could not restore deleted item: " . $item['UID'];
 					$session->msg($msg, 'bad');
 					$allOk = false;
+				} else {
+					$session->msg('Restored ' . $model->refModel . '::' . $model->refUID, 'ok');
 				}
+			} else {
+				$session->msg('Could not load: revisions_deleted::' . $item['UID']);
 			}
 		}
+
 		return $allOk;
 	}
 

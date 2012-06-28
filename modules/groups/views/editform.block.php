@@ -1,18 +1,22 @@
 <? /*
-<form name='editschool' method='POST' action='%%serverPath%%groups/save/'>
+<form
+	id='frmEditGroup%%UID%%'
+	name='editschool'
+	method='POST'
+	action='%%serverPath%%groups/save/'
+	onClick='khta.updateAllAreas();'
+>
 <input type='hidden' name='action' value='saveRecord' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
-<table noborder>
+<table noborder width='100%'>
   <tr>
-    <td><b>Name:</b></td>
-    <td><input type='text' name='name' value='%%name%%' size='50' /></td>
+    <td width='60px'><b>Name:</b></td>
+    <td><input type='text' name='name' value='%%name%%' style='width: 100%;' /></td>
   </tr>
   <tr>
-    <td><b>School:</b></td>
+    <td><b>Type:</b></td>
     <td>
-      [[:schools::select::default=%%school%%:]] &nbsp;
-      <b>Type:</b> 
       <select name='type'>
         <option value='%%type%%'>%%type%%</option>
         <option value='Club'>Club</option>
@@ -27,24 +31,30 @@
 </table>
 <br/>
 <b>Description of this group:</b><br/>
-<div class='HyperTextArea64' title='description' width='100%' height='400'>
-%%description64%%
-</div>
+<div
+	class='HyperTextArea64'
+	title='description'
+	width='-1'
+	height='400'
+	refModule='groups'
+	refModel='groups_group'
+	refUID='%%UID%%'
+>%%description64%%</div>
 <script language='Javascript'> khta.convertDivs(); </script>
-<table noborder>
-  <tr>
-   <td valign='top'>
-    <input type='submit' value='Save' />
-    </form>
-   </td>
-   <td>
-   <form name='cDelete' method='GET' action='%%delUrl%%'>
-   <input type='submit' value='Delete' />
-   </form>
-   </td>
- </tr>
-</table>
+</form>
 
-<h2>Images</h2>
-[[:images::uploadmultiple::refModule=groups::refModel=groups_group::refUID=%%UID%%:]]
+<table noborder>
+	<tr>
+		<td valign='top'>
+			<input type='button' value='Save' onClick="$('#frmEditGroup%%UID%%').submit();" />
+		</td>
+		<td valign='top'>
+			<form name='cDelete' method='GET' action='%%delUrl%%'>
+			<input type='submit' value='Delete' />
+			</form>
+		</td>
+	</tr>
+</table>
+<br/>
+
 */ ?>

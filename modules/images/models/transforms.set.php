@@ -134,6 +134,18 @@ class Images_Transforms {
 		return $check;
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	get the width of an image preset
+	//----------------------------------------------------------------------------------------------
+	//arg: label - name of image size [string]
+	//returns: width in pixels, or -1 on failure [bool]
+
+	function getWidth($label) {
+		if (false == $this->loaded) { $this->loadPresets(); }
+		if (false == array_key_exists($label, $this->presets)) { return -1; }
+		return $this->presets[$label]['width'];
+	}
+
 	//==============================================================================================
 	//	actual transforms
 	//==============================================================================================
@@ -152,6 +164,7 @@ class Images_Transforms {
 				$this->members[$preset['label']] = $fileName;
 			}
 		}
+		$this->loaded = true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -164,6 +177,8 @@ class Images_Transforms {
 		global $session;
 		if (false == $this->presetExists($label)) { return false; }
 		//$session->msgAdmin("Making image: $label<br/>");
+
+		if ('full' == $label) { return true; }	//	magic, original image
 
 		$check = false;							//%	return value [bool]
 		$preset = $this->presets[$label];		//%	shortcut [array]
@@ -199,11 +214,13 @@ class Images_Transforms {
 		$check = false;												//%	return value [bool]
 		$raw = $kapenta->fileGetContents($this->sourceFile);		//%	raw file contents [string]
 		if (false === $raw) { return $check; }
+
 		$this->image = imagecreatefromstring($raw);					//%	GD handle [int]
 
-		if (false === $this->image) { 
+		if (false === $this->image) {
 			$this->image = -1;
 			$this->aspect = -1;
+			$check = false;
 		} else {
 			$this->width = imagesx($this->image);
 			$this->height = imagesy($this->image);
@@ -314,7 +331,57 @@ class Images_Transforms {
 		}
 
 		//$session->msgAdmin($log);
+		//echo $log;
 		return $check;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	enforce filsize / resolution limits on this image
+	//----------------------------------------------------------------------------------------------
+	//;	assumes that 'widthmax' preset exists (by default 1024px)
+	//;
+	//returns: true if reduced, false if not [string]
+
+	function reduce() {
+		global $kapenta;
+		global $registry;
+		global $session;
+
+		$fileSize = $kapenta->fileSize($this->sourceFile);
+		$maxSize = (int)$registry->get('images.maxsize');
+
+		if (false == $this->loaded) { return false; }				//	no object loaded
+
+		if ($fileSize < $maxSize) { return true; }					//	no need to reduce
+
+		if (false == $this->loadImage()) { return false; }			//	invalid image
+
+		if ($this->width <= 1024) { return false; }					//	(TODO) use registry
+
+		if ('' == $registry->get('images.size.widthmax')) {
+			$session->msg("Please review image settings for 'widthmax' preset.");
+			return false;
+		}
+
+		//	scale down
+		$check = $this->make('widthmax');
+		if (false == $check) { return false; }
+
+		//	swap the new transform for the original
+		$newFile = $this->fileName('widthmax');
+
+		if (false == $kapenta->fileExists($newFile)) { return false; }
+		if (false == $kapenta->fileExists($this->sourceFile)) { return false; }
+
+		$kapenta->fileDelete($this->sourceFile, true);
+		$kapenta->fileCopy($newFile, $this->sourceFile);
+
+		$msg = ''
+		 . "Reduced image '" . $this->imageUID . "' to maximum width.  "
+		 . "<a href='" . $kapenta->serverPath . $this->sourceFile . "'>[see]</a>";
+
+		$session->msg($msg, 'ok');
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -352,6 +419,8 @@ class Images_Transforms {
 	//----------------------------------------------------------------------------------------------
 	//.	display as HTML table (for settings page, debugging, etc)
 	//----------------------------------------------------------------------------------------------
+	//returns: html report of image presets [string]
+
 	function toHtml() {
 		global $theme;
 

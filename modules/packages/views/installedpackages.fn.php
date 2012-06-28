@@ -20,16 +20,21 @@ function packages_installedpackages($args) {
 	if ('admin' != $user->role) { return ''; }
 
 	$updateManager = new KUpdateManager();
-	$installed = $updateManager->listInstalledPackages();		//%	[array:string]
+	$packages = $updateManager->listAllPackages();		//%	[array:string]
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/packages/views/packagesummary.block.php');
 
-	foreach($installed as $UID => $package) {
-		$package = new KPackage($UID);
-		$html .= $theme->replaceLabels($package->extArray(), $block);
+	foreach($packages as $UID => $pkg) {
+		if (('installed' == $pkg['status']) && ('' !== trim($pkg['uid'])))
+		{
+			$package = new KPackage($pkg['uid'], true);
+			$labels = $package->extArray();
+			$labels['UID'] = $pkg['uid'];
+			$html .= $theme->replaceLabels($labels, $block);
+		}
 	}
 
 	return $html;

@@ -5,15 +5,16 @@
 //--------------------------------------------------------------------------------------------------
 //|	display the poll for users to vote on / see results
 //--------------------------------------------------------------------------------------------------
-//arg: refModule - name of a Kapenta module [string]
-//arg: refModel - type of object which will own poll question [string]
-//arg: refUID - UID of object which will own poll question [string]
+//arg: UID - UID of a Polls_Question object [string]
+//opt: questionUID - overrides UID of present [string]
+//opt: width - width of result table, pixels (int) [string]
+//opt: title - optional navtitlebox caption [string]
 
 function polls_showpollresults($args) {
 	global $kapenta;
 	global $db;
 	global $user;
-	global $theme;	
+	global $theme;
 
 	$html = '';				//%	return value [string:html]
 	$width = 500;
@@ -21,17 +22,16 @@ function polls_showpollresults($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check args and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $args)) { return '(refModule not given)'; }
-	if (false == array_key_exists('refModel', $args)) { return '(refModel not given)'; }
-	if (false == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
-	if (true == array_key_exists('width', $args)) { $width = (int)$args['wdith']; }
+	if (true == array_key_exists('questionUID', $args)) { $args['UID'] = $args['questionUID']; }
+	if (false == array_key_exists('UID', $args)) { return 'UID not given'; }
+	if (true == array_key_exists('width', $args)) { $width = (int)$args['width']; }
 
-	$model = new Polls_Question();
-	$questionUID = $model->hasQuestion($args['refModule'], $args['refModel'], $args['refUID']);
-	if ('' == $questionUID) { return ''; }
-
-	$model->load($questionUID);
+	$model = new Polls_Question($args['UID']);
 	if (false == $model->loaded) { return '(could not load question)'; }
+
+	if (true == array_key_exists('title', $args)) {
+		$html .= "[[:theme::navtitlebox::label=" .$args['title'] . ":]]\n";
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

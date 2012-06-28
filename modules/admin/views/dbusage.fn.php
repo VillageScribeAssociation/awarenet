@@ -7,6 +7,7 @@
 function admin_dbusage($args) {
 	global $user;
 	global $db;
+	global $registry;
 
 	$sizeStr = '(unknown)';				//%	return value [string]
 
@@ -14,6 +15,8 @@ function admin_dbusage($args) {
 	//	check user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { return ''; }	
+
+	if ('no' == $registry->get('kapenta.db.measure')) { return $sizeStr; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get database size

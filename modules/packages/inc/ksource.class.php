@@ -1,7 +1,9 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/packages/inc/kpackage.class.php');
+
 //--------------------------------------------------------------------------------------------------
-//*	object to reporesent a kapenta software source / list of packages
+//*	object to represent a kapenta software source / list of packages
 //--------------------------------------------------------------------------------------------------
 //+	Package listing is an XML document with the following format
 //+
@@ -153,29 +155,111 @@ class KSource {
 	//----------------------------------------------------------------------------------------------
 	//.	update from repository listing
 	//----------------------------------------------------------------------------------------------
-	//returns: true on success, false on failure [bool]
+	//opt: print - print progress directly to output [string]
+	//returns: html report of update [html]
 
-	function update() {
+	function update($print = false) {
 		global $kapenta;
+		global $registry;
 		global $utils;
 		global $session;
-		
+
 		$url = $this->url . 'listxml/';		//%	location of package list document [string]
 		$xml = $utils->curlGet($url);		//%	raw XML [string]
 		$session->msg("$url <br/>" . strlen($xml) . " bytes");
 		$result = false;					//% return value [bool]
 
-		if (false != strpos($xml, '</source>')) {
-			$this->loadXml($xml, false);
-			$this->checked = gmdate("Y-m-d H:i:s", $kapenta->time());
-			$check = $this->saveXml();
-			return $check;
+		$report = ''
+		 . "<b>$url</b>\n"
+		 . "Downloading package list... " . strlen($xml) . " bytes.<br/>"
+		 . "<textarea rows='10' style='width: 100%;'>" . htmlentities($xml) . "</textarea>";
 
-		} else {
-			//$session->msgAdmin('Could not load package list from: ' . $url, 'bad');
+		if (true == $print) { $this->printchat($report); }
+
+		if (false == strpos($xml, '</source>')) { 
+			$report .= "<span class='ajaxerror'>Skipping this software source.</span><br/>\n";
+			if (true == $print) { $this->printchat($report); }
+			return $report;
 		}
+
+		$this->loadXml($xml, false);
+		$this->checked = gmdate("Y-m-d H:i:s", $kapenta->time());
+		$check = $this->saveXml();
+
+		foreach($this->packages as $uid => $pkg)
+		{
 	
-		return false;
+			$pkgreport = '';
+			$pkgcolor = 'green';
+
+			$prefix = 'pkg.' . $uid . '.';
+			if ('dirty' == $registry->get($prefix . 'status'))
+			{
+				$registry->set($prefix . 'status', 'installed');
+			}
+
+			if (
+				($registry->get($prefix . 'date') != $pkg['updated']) ||
+				(false == $kapenta->fileExists('data/packages/' . $uid . '.xml.php')) ||
+				('unknown' == $registry->get($prefix . 'name'))
+			) {
+				//----------------------------------------------------------------------------------
+				//	add to / update registry						
+				//----------------------------------------------------------------------------------
+
+				$registry->set($prefix . 'source', $this->url);
+				$registry->set($prefix . 'uid', $pkg['uid']);
+				$registry->set($prefix . 'name', $pkg['name']);
+				$registry->set($prefix . 'v', $pkg['version']);
+				$registry->set($prefix . 'r', $pkg['revision']);
+				$registry->set($prefix . 'date', $pkg['updated']);
+
+				if ('' == $registry->get($prefix . 'status'))
+				{
+					$registry->set($prefix . 'status', 'available');
+				}
+
+				$pkgreport .= "Updating package: " . $pkg['name'] . " ($uid)<br/>";
+
+				//----------------------------------------------------------------------------------
+				//	download new manifest
+				//----------------------------------------------------------------------------------
+				$package = new KPackage($uid);
+				$check = $package->updateFromRepository();
+
+				if (true == $check) {
+					$pkgreport .= "<span class='ajaxmsg'>Manifest updated.</span><br/>";
+				} else {
+					$pkgreport .= "<span class='ajaxerror'>Could not download manifest.</span><br/>";
+				}
+
+			} else {
+				$pkgreport .= $pkg['name'] . " manifest is up to date.<br/>\n";
+			}
+
+			//--------------------------------------------------------------------------------------
+			//	check for dirty files
+			//--------------------------------------------------------------------------------------
+			if ('installed' == $registry->get($prefix . 'status'))
+			{
+				$package = new KPackage($uid);
+				$dirtyFiles = $package->getLocalDifferent();	//	sets .dirty in registry
+				foreach($dirtyFiles as $file) {
+					$pkgcolor = 'red';
+					$pkgreport .= ''
+					 . "<small>"
+					 . $file['path'] . ' (hash: ' . $file['hash'] . ') '
+					 . "<span class='ajaxwarn'>" . $file['local'] . "</span>"
+					 . "</small><br/>";
+				}
+			}
+
+			if (true == $print) { $this->printchat($pkgreport, $pkgcolor); }
+			$report .= $pkgreport;
+
+		} // end foreach ($packages
+
+		return $report;	
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -206,6 +290,32 @@ class KSource {
 		}
 
 		return $package;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	make a flat list of packages (UID => name v.r)
+	//----------------------------------------------------------------------------------------------
+
+	function listPackages() {
+		$pkgs = array();
+
+		foreach($this->packages as $uid => $pkg) {
+			$pkgs[$uid] = $pkg['name'] . " v" . $pkg['version'] . "." . $pkg['revision'];
+		}
+
+		return $pkgs;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	print directly to browser
+	//----------------------------------------------------------------------------------------------
+
+	function printchat($msg, $color = 'black') {
+		echo ''
+		 . "<div class='chatmessage" . $color . "'>\n"
+		 . $msg
+		 . "</div>\n"
+		 . "<script>scrollToBottom();</script>";
 	}
 
 }

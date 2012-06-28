@@ -4,22 +4,26 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit announcement</title>
-	<content>[[:theme::navtitlebox::label=Edit Announcement::width=570:]]
-[[:announcements::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]</content>
-	<nav1></nav1>
+	<content>
+		[[:theme::navtitlebox::label=Edit Announcement::width=570:]]
+		[[:announcements::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+	</content>
+	<nav1>
+		[[:live::manageattachments::refModule=announcements::refModel=announcements_announcement::refUID=%%UID%%:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>galleryNav[`|us]init()[`|sc]
-msgSubscribe([`|sq]comments-gallery-[`|pc][`|pc]imageUID[`|pc][`|pc][`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<jsinit></jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>
 	<menu2>[[:announcements::menu:]]</menu2>
 	<section></section>
 	<subsection></subsection>
-	<breadcrumb>[[:theme::breadcrumb::label=Announcements - ::link=/announcements/:]]
-[[:theme::breadcrumb::label=Edit::link=/announcements/edit/[`|pc][`|pc]raUID[`|pc][`|pc]:]]</breadcrumb>
+	<breadcrumb>
+		[[:theme::breadcrumb::label=Announcements - ::link=/announcements/:]]
+		[[:theme::breadcrumb::label=Edit::link=/announcements/edit/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+	</breadcrumb>
 </page>
 
 */ ?>

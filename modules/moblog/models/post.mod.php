@@ -219,11 +219,23 @@ class Moblog_Post {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
+	
+		$ary['commentCount'] = ''
+		 . "[[:comments::count"
+		 . "::refModule=moblog"
+		 . "::refModel=moblog_post"
+		 . "::refUID=" . $ary['UID']
+		 . ":]]";
 
 		if (true == $user->authHas('moblog', 'moblog_post', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%moblog/' . $this->alias;
-			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>";
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
+
+			$ary['viewLink'] = ''
+			 . "<a href='" . $ary['viewUrl'] . "#comments'>"
+			 . "[" . $ary['commentCount'] . " comments]"
+			 . "</a>";
+
 		}
 
 		if ($editAuth) {

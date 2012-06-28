@@ -109,6 +109,11 @@ class Notifications_Notification {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
+		$this->content = str_replace('widthcontent', 'widthindent', $this->content);
+		$this->content = str_replace('widtheditor', 'widthindent', $this->content);
+		$this->content = str_replace('width570', 'widthindent', $this->content);
+
 		return $report;
 	}
 

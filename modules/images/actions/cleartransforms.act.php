@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	delete all transforms of all images
 //--------------------------------------------------------------------------------------------------
@@ -9,19 +11,44 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
+	echo $theme->expandBlocks('[[:theme::ifscrollheader::title=Clearing image transforms:]]');
+
 	//----------------------------------------------------------------------------------------------
 	//	delete all transforms 
 	//----------------------------------------------------------------------------------------------
 	$result = $db->query("select * from images_image");
-	while($row = $db->fetchAssoc($result) {
+	while($row = $db->fetchAssoc($result)) {
 		$row = $db->rmArray($row);
 		$model = new Images_Image($row['UID']);
-		//TODO
+
+		$msg = ''
+		 . "<b>" . $model->title . "</b><br/>\n"
+		 . "Clearing transforms for images_image::" . $model->UID . " (1)<br/>\n";
+
+		$removed = '';
+
+		foreach($model->transforms->presets as $label => $definition) {
+			$fileName = str_replace('.jpg', '_' . $label . '.jpg', $model->fileName);
+			if (true == $kapenta->fileExists($fileName)) {
+				$removed .= $label . ' --> ' . $fileName . "<br/>\n";
+				$kapenta->fileDelete($fileName, true);
+			}
+		}
+
+		if ('' !== $removed) {
+			echo ''
+			 . "<div class='chatmessagegreen'>\n"
+			 . $msg
+			 . $removed
+			 . "</div>\n";
+			flush();
+		}
+
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to admin console
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/');
+	echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]');
 
 ?>

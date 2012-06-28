@@ -14,39 +14,75 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not supplied'); }
-	if ('commit' != $_POST['action']) { $page->do404('Action not supported'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given'); }
-	if (false == array_key_exists('message', $_POST)) { $page->do404('message not given'); }
+	$packageUID = '';
+	$message = '';
 
-	$package = new KPackage($_POST['UID']);
+	if ('admin' != $user->role) { $page->do403(); }
+
+	if (true == array_key_exists('message', $_POST)) { $message = $_POST['message']; }
+	if (true == array_key_exists('UID', $req->args)) { $packageUID = $req->args['UID']; }
+
+	if ('' == $packageUID) { $page->do404('Package UID not given.'); }
+
+	$package = new KPackage($packageUID);
 	$um = new KUpdateManager();
 
-	$message = trim($_POST['message']);
+	//----------------------------------------------------------------------------------------------
+	//	if nothing POSTed, display the commit form and quit
+	//----------------------------------------------------------------------------------------------
+
 	if ('' == $message) {
-		$session->msg('No commit message, not updating repository.', 'bad');
-		$page->do302('packages/show/' . $package->UID);
+
+		if (array_key_exists('action', $_POST)) {
+			$session->msg('No changelog message given, not updating repository.', 'bad');
+		}
+
+		$page->load('modules/packages/actions/commit.page.php');
+		$page->blockArgs['UID'] = $packageUID;
+		$page->render();
+		die();
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	if nothing POSTed, display the commit form
+	//----------------------------------------------------------------------------------------------
 
 	$ext = $package->extArray();
 	if ('' == $ext['username']) {
-		$session->msg('No credentials, cannot update repository.', 'bad');
-		$page->do302('packages/show/' . $package->UID);		
+		$page->do404('No credentials, cannot update repository.', true);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	start HTML output
 	//----------------------------------------------------------------------------------------------
 	echo $theme->expandBlocks('[[:theme::ifscrollheader::title=Commit Package:]]', ''); flush();
-	echo "<h1>Committing package: " . $package->name . " (" . $package->UID . ")</h1>";
+	$um->log("<h2>Committing package: " . $package->name . " (" . $package->UID . ")</h2>");
 	$um->log('Repository: ' . $package->source);
 
-	//----------------------------------------------------------------------------------------------
-	//	get list of files which are different to manifest's versions
-	//----------------------------------------------------------------------------------------------
-	$toCommit = $package->getLocalDifferent();
+	echo "<div class='chatmessageblack'><pre>";
+	print_r($_POST);
+	echo "</pre></div>";
 
+	//----------------------------------------------------------------------------------------------
+	//	get list of files from $_POST
+	//----------------------------------------------------------------------------------------------
+	$toCommit = array();
+	$localFiles = $package->getLocalList();
+
+	foreach($_POST as $key => $val) {
+		if ('file' == substr($key, 0, 4)) {
+			echo "<div class='chatmessageblack'>" . $key . ' := ' . $val . "</div>";
+			foreach($localFiles as $item) {
+				if ($val == $item['path']) {
+					echo "<div class='chatmessageblack'><pre>";
+					print_r($item);
+					echo "</pre></div>";
+					$toCommit[] = $item;
+				}
+			}
+		}
+	}
+	
 	if (0 == count($toCommit)) {
 		$um->log('No changes to commit.', 'red');
 		echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', ''); 
@@ -204,8 +240,10 @@
 	} else {
 		$msg = 'Could not update manifest.';
 		$um->log($msg, 'red');
-		echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', ''); 
-		die();
 	}
+
+	echo "<h2>Done.</h2>\n";
+	echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', ''); 
+	die();
 
 ?>

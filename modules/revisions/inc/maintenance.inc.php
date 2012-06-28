@@ -45,11 +45,11 @@ function revisions_maintenance() {
 
 		$recordCount++;
 	}
-
+	echo "checked revisions<br/>\n"; flush();
 	//----------------------------------------------------------------------------------------------
 	//	check revisions_revision table
 	//----------------------------------------------------------------------------------------------
-	$report = "<h2>Checking revisions table...</h2>";
+	$report .= "<h2>Checking revisions table...</h2>";
 	$sql = "select * from revisions_revision";
 	$result = $db->query($sql);
 

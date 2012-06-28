@@ -5,7 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_geographicnav($args) {
-	global $db, $user;
+	global $db;
+	global $user;
+
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -43,7 +45,7 @@ function schools_geographicnav($args) {
 			$countries[$country][$region] = array(); 
 		}
 
-		$countries[$country][$region][] = "[[:schools::name::link=yes::schoolUID=" . $row['UID'] . ":]]";
+		$countries[$country][$region][] = "[[:schools::name::link=yes::UID=" . $row['UID'] . ":]]\n";
 		$counts[$country] = $counts[$country] + 1;
 	}
 

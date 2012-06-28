@@ -5,6 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 //*	add a new announcement
 //--------------------------------------------------------------------------------------------------
+//reqarg: refModule - name of a kapenta module [string]
+//reqarg: refModel - type of object which may have announcements [string]
+//reqarg: refUID - UID of object which may have announcements [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check request args and user permissions
@@ -21,8 +24,9 @@
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('Unkonwn module.'); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('Unkonwn module.'); }
 
-	if (false == $user->authHas($refModule, $refModel, 'announcements-add', $refUID))
-		{ $page->do403('You are not aothorized to make new announcements.'); }
+	if (false == $user->authHas($refModule, $refModel, 'announcements-add', $refUID)) {
+		$page->do403('You are not aothorized to make new announcements.');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	OK then, create it

@@ -98,7 +98,7 @@ function Projects_MemberConsole(projectUID) {
 		 + '&userUID=' + memberUID
 		 + '&projectUID=' + this.UID;
 
-		cbFn = function(responseText, status) { 
+		var cbFn = function(responseText, status) { 
 			if (200 == status) {
 				var sDiv = document.getElementById(statusDivId);
 				sDiv.innerHTML = responseText;

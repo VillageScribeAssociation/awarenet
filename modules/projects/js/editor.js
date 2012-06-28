@@ -70,9 +70,45 @@ function Projects_Editor(UID) {
 
 	this.editSection = function(sectionUID) {
 		var divId = 'divSection' + sectionUID;
-		var blockTag = '[[:projects::editsectioninline::sectionUID=' + sectionUID + ':]]';
+		var blockTag = '[[:projects::editsectionform::sectionUID=' + sectionUID + ':]]';
 		klive.removeBlock(blockTag, false);						// clear block cache
 		klive.bindDivToBlock(divId, blockTag, false);			// force reload		
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	cancel edit form
+	//----------------------------------------------------------------------------------------------
+
+	this.cancelEdit = function(sectionUID) {
+		var divId = 'divSection' + sectionUID;
+		var blockTag = '[[:projects::showsection::sectionUID=' + sectionUID + ':]]';
+		klive.removeBlock(blockTag, false);						// clear block cache
+		klive.bindDivToBlock(divId, blockTag, false);			// force reload
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	save by AJAX
+	//----------------------------------------------------------------------------------------------
+
+	this.save = function(sectionUID, title, content) {
+		var params = ''
+		 + 'UID=' + sectionUID + '&'
+		 + 'title=' + encodeURIComponent(title) + '&'
+		 + 'content=' + encodeURIComponent(content);
+
+		var cbFn = function(responseText, status) {
+			if ('<ok/>' == responseText) {
+				var divId = 'divSection' + sectionUID;
+				var blockTag = '[[:projects::showsection::sectionUID=' + sectionUID + ':]]';
+				klive.removeBlock(blockTag, false);						// clear block cache
+				klive.bindDivToBlock(divId, blockTag, false);			// force reload
+				khta.destroy('content' + sectionUID);
+			} else {
+				alert(status + ' ' + responseText);
+			}
+		}
+
+		kutils.httpPost(jsServerPath + 'projects/savesectionjs/', params, cbFn)
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -88,7 +124,7 @@ function Projects_Editor(UID) {
 			var projectUID = this.UID;			
 
 			var cbFn = function(responseText, status) {
-				alert('Deleted section, reloading the page: ' + responseText);
+				//alert('Deleted section, reloading the page: ' + responseText);
 				var divId = 'divProject' + projectUID;
 				var blockTag = '[[:projects::show::UID=' + projectUID + ':]]';
 				klive.removeBlock(blockTag, false);						// clear block cache

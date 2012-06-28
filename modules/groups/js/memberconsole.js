@@ -54,7 +54,7 @@ function Groups_MemberConsole(groupUID) {
 		 + '&userUID=' + memberUID
 		 + '&groupUID=' + this.UID
 		 + '&position=' + position
-		 + '&admin=' + position;
+		 + '&admin=' + isAdmin;
 
 		cbFn = function(responseText, status) { 
 			if (200 == status) {

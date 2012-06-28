@@ -20,18 +20,19 @@ function twitter__cb_microblog_event($args) {
 	if (false == $kapenta->moduleExists($args['refModule'])) { return false; }
 	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return false; }
 
+	$message = substr($args['message'], 0, 140);
+
 	$model = new Twitter_Tweet();
 	$model->refModule = $args['refModule'];
 	$model->refModel = $args['refModel'];
 	$model->refUID = $args['refUID'];
-	$model->content = substr($args['message'], 0, 140);
+	$model->content = $message;
 	$model->status = 'new';
 	$report = $model->save();
 
 	if ('' != $report) { return false; }
 	return true;
 }
-
 
 //-------------------------------------------------------------------------------------------------
 ?>

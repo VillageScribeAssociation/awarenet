@@ -40,7 +40,7 @@ function tags_edittags($args) {
 		<div id='divET" . $refUID . "'>
 		<iframe name='editTags" . $refUID . "' id='ifEdittags" . $refUID . "'
 			src='" . $ifUrl . "'
-			width='570' height='300' frameborder='no'>
+			width='100%' height='300' frameborder='no'>
 		</iframe>
 		</div>
 		";

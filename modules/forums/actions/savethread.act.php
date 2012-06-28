@@ -16,7 +16,7 @@
 	$model = new Forums_Thread($_POST['UID']);
 	if (false == $model->loaded) { $page->do404("could not load Thread $UID");}
 
-	if (false == $user->authHas('forums', 'Forums_Thread', 'edit', $model->UID))
+	if (false == $user->authHas('forums', 'forums_thread', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this Thread.'); }
 
 	//----------------------------------------------------------------------------------------------

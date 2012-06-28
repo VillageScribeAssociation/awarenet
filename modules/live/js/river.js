@@ -51,10 +51,21 @@ function Live_River(riverUID, divId, blockTemplate) {
 			//--------------------------------------------------------------------------------------
 			//	set the loading notification
 			//--------------------------------------------------------------------------------------
-			theDiv.innerHTML = theDiv.innerHTML
+
+			var appendHtml = ''
 				 + "<div id='" + nextDivId + "'>"
-				 + "<div style='background-color: #b1d27e;'>loading more...</div>"
+				 + "<div class='action'>"
+				 + "&nbsp;loading more..."
+				 + "<span style='float: right'>"
+				 + "<img src='" + jsServerPath + "themes/clockface/images/throbber-inline.gif' />"
+				 + "&nbsp;</span>"
+				 + "</div>"
 				 + "</div>";
+
+
+			//theDiv.innerHTML = theDiv.innerHTML + appendHtml;
+
+			$('#' + this.divId).append(appendHtml)
 
 			//--------------------------------------------------------------------------------------
 			//	load the next page of results

@@ -43,12 +43,22 @@ function tags_addcommontags($args) {
 			. '/refUID_' . $refUID
 			. '/tagName_' . $item['name'];
 
-		$tags[$item['name']] = "<a href='$link'>" . $item['name'] . "</a>";
+		$tags[$item['name']] = ''
+		 . "<span class='tag'>"
+		 . "<a href='$link' class='tag'>"
+		 . '&nbsp;&nbsp;' . $item['name'] . '&nbsp;'
+		 . "</a>"
+		 . "</span>\n";
 	}
 
 	asort($tags);
 
-	$html = implode(', ', $tags) . "<br/><small>Click to attach common tags.</small>";
+	$html = ''
+	 . "<div class='indent' style='line-height: 2.0;'>\n"
+	 . "<div class='spacer'></div>"
+	 . implode(' ', $tags) . "<br/>\n"
+	 . "<small>Click to attach common tags.</small>\n"
+	 . "</div>\n";
 	return $html;
 }
 

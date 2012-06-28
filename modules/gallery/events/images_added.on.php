@@ -11,7 +11,12 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 //arg: imageTitle - text/html of comment
 
 function gallery__cb_images_added($args) {
-	global $db, $user, $notifications, $theme;
+	global $kapenta;
+	global $db;
+	global $user;
+	global $notifications;
+	global $theme;
+
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('imageUID', $args)) { return false; }
@@ -27,14 +32,28 @@ function gallery__cb_images_added($args) {
 	$model->updateImageCount();
 
 	//----------------------------------------------------------------------------------------------
+	//	tag with gallery name
+	//----------------------------------------------------------------------------------------------
+
+	$eventArgs = array(
+		'refModule' => 'images',
+		'refModel' => 'images_image',
+		'refUID' => $args['imageUID']
+	);
+
+	$eventArgs['tagName'] = $model->title;
+	$kapenta->raiseEvent('tags', 'tags_add', $eventArgs);
+
+	//----------------------------------------------------------------------------------------------
 	//	discover if notification has been sent by this object today
 	//----------------------------------------------------------------------------------------------
-	$block = '[[:notifications::notifiedtoday' 
-		. '::refModule=gallery'
-		. '::refModel=gallery_gallery'
-		. '::refUID=' . $args['refUID']
-		. '::refEvent=images_added'
-		. ':]]';
+	$block = ''
+	 . '[[:notifications::notifiedtoday' 
+	 . '::refModule=gallery'
+	 . '::refModel=gallery_gallery'
+	 . '::refUID=' . $args['refUID']
+	 . '::refEvent=images_added'
+	 . ':]]';
 
 	$recentUID = $theme->expandBlocks($block, '');
 
@@ -47,8 +66,12 @@ function gallery__cb_images_added($args) {
 		$link = "<a href='" . $url . "'>" . $model->title . "</a>";
 		$title = $user->getName() . ' added a new image.';
 		$refUID = $model->UID;
-		$content = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
-			 . "[[:images::width300::raUID=" . $args['imageUID'] . "::link=no:]]"
+		$content = "<a href='%%serverPath%%gallery/image/" . $args['imageUID'] . "'>"
+			 . "[[:images::show"
+			 . "::size=widthindent"
+			 . "::raUID=" . $args['imageUID']
+			 . "::display=inline"
+			 . "::link=no:]]"
 			 . "</a>\n<!-- more images -->"
 			 . "<br/><a href='" . $url . "'>[ view gallery &gt;&gt; ]</a>";
 
@@ -70,7 +93,11 @@ function gallery__cb_images_added($args) {
 		$content = str_replace('width300', 'width100', $content);
 
 		$newImg = "<a href='/gallery/image/" . $args['imageUID'] . "'>"
-			. "[[:images::width100::raUID=" . $args['imageUID'] . "::link=no:]]</a>\n";
+			. "[[:images::show"
+			 . "::size=width100"
+			 . "::display=inline"
+			 . "::raUID=" . $args['imageUID']
+			 . "::link=no:]]</a>\n";
 
 		// temp fix
 		if (false == strpos($content, '<!-- more images -->')) {

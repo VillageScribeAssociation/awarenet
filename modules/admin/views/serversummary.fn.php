@@ -14,6 +14,25 @@ function admin_serversummary($args) {
 	if ('admin' != $user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
+	//	check PHP extensions
+	//----------------------------------------------------------------------------------------------
+	$extTests = array(
+		'cURL' => 'curl_init',
+		'OpenSSL' => 'openssl_encrypt',
+		'GD' => 'imagecreatetruecolor',
+		'bzip' => 'bzcompress',
+	);
+	$exts = '';
+
+	foreach($extTests as $extName => $fnName) {
+		if (true == function_exists($fnName)) {
+			$exts .= "<span class='ajaxmsg'>$extName</span> ";
+		} else {
+			$exts .= "<span class='ajaxerror'>$extName</span> ";
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$table = array(
@@ -21,7 +40,8 @@ function admin_serversummary($args) {
 		array('<b>iPath:</b>', $registry->get('kapenta.installpath')),
 		array('<b>sPath:</b>', $registry->get('kapenta.serverpath')),
 		array('<b>date:</b>', $db->datetime()),
-		array('<b>db use:</b>', '[[:admin::dbusage:]]')
+		array('<b>db use:</b>', '[[:admin::dbusage:]]'),
+		array('<b>extensions:</b>', $exts)
 	);
 
 	$html = $theme->arrayToHtmlTable($table, true, true);

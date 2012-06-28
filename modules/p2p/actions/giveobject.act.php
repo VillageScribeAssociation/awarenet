@@ -44,7 +44,9 @@
 	$message = base64_decode($_POST['message']);
 	$signature = base64_decode($_POST['signature']);
 
-	if (false == $model->checkMessage($message, $signature)) { $page->doXmlError('Bad signature.'); }
+	if (false == $model->checkMessage($message, $signature)) {
+		$page->doXmlError('Bad signature.');
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	parse into array and store in database
@@ -60,7 +62,7 @@
 		$objAry = $db->objectXmlToArray($objXml);
 		$state = '';
 
-		if (0 == count($objAry)) { $add = false; echo "COULD NOT PARSE XML<br/>\n"; }
+		if (0 == count($objAry)) { $add = false; echo "<!-- COULD NOT PARSE XML -->\n"; }
 
 		if (true == $db->objectExists($objAry['model'], $objAry['fields']['UID'])) {
 			//--------------------------------------------------------------------------------------
@@ -70,7 +72,10 @@
 			$localTime = $kapenta->strtotime($local['editedOn']);
 			$newTime = $kapenta->strtotime($objAry['fields']['editedOn']);
 
-			if ($localTime > $newTime) { $add = false; /* echo "OURS IS MORE RECENT."; */ }
+			if ($localTime > $newTime) {
+				$add = false; 
+				$response .= "<!-- Ours is more recent. -->\n";
+			}
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -78,8 +83,13 @@
 		//--------------------------------------------------------------------------------------
 		if (true == $add) {
 			$check = $db->storeObjectXml($objXml, false, false, false);
-			if (true == $check) { $state = 'has'; }			// we now have it
-			else { $state = 'want'; }						// we still want it
+			if (true == $check) {
+				$state = 'has'; }							// we now have it
+			else {
+				//$state = 'want';							// we still want it
+				$state = 'dnw';								// but fail this for now
+				$reponse .= "<!-- could not store object XML -->\n";
+			}						
 		} else { $state = 'dnw'; }							// we didn't want it
 
 		//--------------------------------------------------------------------------------------

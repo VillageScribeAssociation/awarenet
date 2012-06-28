@@ -1,5 +1,6 @@
 <?
 
+/*
 	require_once($kapenta->installPath . 'modules/live/inc/upload.class.php');
 
 //--------------------------------------------------------------------------------------------------
@@ -30,5 +31,9 @@
 	echo "<h2>file</h2>\n";
 	echo "<textarea rows='10' style='width: 100%'>$all</textarea><br/>\n";
 	*/
+
+	for ($i = 0; $i < 20; $i++) {
+		echo substr($kapenta->createUID(), 0, 5) . "<br/>\n";
+	}
 
 ?>

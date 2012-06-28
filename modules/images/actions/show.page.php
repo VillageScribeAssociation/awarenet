@@ -36,7 +36,7 @@
 	<section></section>
 	<subsection></subsection>
 	<breadcrumb>
-		[[:theme::breadcrumb::label=Images - ::link=/images/supergallery/:]]
+		[[:theme::breadcrumb::label=Images - ::link=/gallery/supergallery/:]]
 		[[:theme::breadcrumb::label=%%title%%::link=/images/show/%%raUID%%:]]
 	</breadcrumb>
 </page>

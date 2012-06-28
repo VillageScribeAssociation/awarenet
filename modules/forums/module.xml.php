@@ -72,16 +72,20 @@
 
 		teacher:p|forums|forums_board|show
 		teacher:p|forums|forums_board|makethread
-		teacher:p|forums|forums_thread|show
-		student:p|forums|forums_thread|new
-		teacher:p|forums|forums_reply|show
-		teacher:p|forums|forums_reply|new
+		teacher:p|forums|forums_board|new
+		teacher:c|forums|forums_board|edit|(if)|creator
+		teacher:c|forums|forums_board|delete|(if)|creator
 		teacher:p|forums|forums_board|images-add
 		teacher:p|forums|forums_board|images-show
 		teacher:p|forums|forums_board|images-list
+
+		teacher:p|forums|forums_thread|show
+		teacher:p|forums|forums_thread|new
 		teacher:c|forums|forums_thread|images-add|(if)|creator
 		teacher:p|forums|forums_thread|images-show
 		teacher:p|forums|forums_thread|images-list
+		teacher:p|forums|forums_reply|show
+		teacher:p|forums|forums_reply|new
 		teacher:c|forums|forums_reply|images-add|(if)|creator
 		teacher:p|forums|forums_reply|images-show
 		teacher:p|forums|forums_reply|images-list

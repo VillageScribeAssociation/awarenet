@@ -9,14 +9,22 @@
 		[[:live::river::mod=gallery::view=recentthumbsall::pv=page::allow=num|pagination::pagination=no::num=25:]]
 	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=yes:]]
-[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-[[:gallery::newgalleryform:]]
-[`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:sketchpad::tip_introduction:]]
 
-[[:theme::navtitlebox::label=Random Galleries:]]
-[[:gallery::randomgalleriesnav::num=10:]]</nav1>
+		[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=yes:]]
+		[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
+		[[:gallery::newgalleryform:]]
+		[`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=Gallery Tags::toggle=divTagCloud:]]
+		[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
+		[[:tags::modelcloud::refModule=gallery::refModel=gallery[`|us]gallery:]]
+		[`|lt]/div[`|gt]
+		<br/>
+
+		[[:theme::navtitlebox::label=Random Galleries:]]
+		[[:gallery::randomgalleriesnav::num=10:]]</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

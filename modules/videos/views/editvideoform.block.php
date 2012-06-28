@@ -1,5 +1,15 @@
 <? /*
 
+<script language='Javascript'>
+	function Videos_ShowLicenceForm() {
+		$('#linkShowLicence').hide();
+		$('#trLicence').show();
+		$('#trAttrib').show();
+		$('#trSource').show();
+		kutils.resizeIFrame();
+	}
+</script>
+
 <form name='editVideo' method='POST' action='%%serverPath%%videos/savevideo/' >
 <input type='hidden' name='action' value='saveVideo' />
 <input type='hidden' name='UID' value='%%UID%%' />
@@ -14,7 +24,7 @@
     <td><input type='text' size='30' name='title' value='%%title%%' style='width: 100%;' /></td>
   </tr>
   <tr>
-    <td><b>Caption:</b></td>
+    <td valign='top'><b>Caption:</b></td>
     <td>
       <textarea name='caption' rows='5' cols='47' style='width: 100%;'>%%caption%%</textarea></td>
   </tr>
@@ -24,8 +34,8 @@
 		[[:videos::selectcategory::default=%%category%%::fieldname=category:]]
 	</td>
   </tr>
-  <tr>
-    <td><b>Licence:</b></td>
+  <tr id='trLicence' style='display: none;'>
+    <td valign='top'><b>Licence:</b></td>
     <td>
       <select name='licence'>
         <option value='%%licence%%'>%%licence%%</option>
@@ -44,29 +54,25 @@
       <b>Weight:</b> %%weight%%
     </td>
   </tr>
-  <tr>
-    <td><b>Attribution:    </b></td>
+  <tr id='trAttrib' style='display: none;'>
+    <td valign='top'><b>Attribution:    </b></td>
     <td><input type='text' size='30' style='width: 100%;'
          name='attribName' value='%%attribName%%'/></td>
   </tr>
-  <tr>
+  <tr id='trSource' style='display: none;'>
     <td><b>Source URL:</b></td>
     <td><input type='text' size='30' style='width: 100%;'
          name='attribURL' value='%%attribUrl%%' /></td>
   </tr>
   <tr>
     <td></td>
-    <td><input type='submit' value='Save' /></td>
+    <td>
+		<input type='submit' value='Save' />
+		<a id='linkShowLicence' href='javascript:Videos_ShowLicenceForm();'>[edit licence]</a>
+	</td>
   </tr>
 </table>
 </form>
 <br/>
 
-[[:theme::navtitlebox::label=Video Thumbnail::toggle=divVideoThumbnail::hidden=yes:]]
-<div id='divVideoThumbnail' style='visibility: hidden; display: none;'>
-<iframe name='videoThumb' class='consoleif' id='ifVideoThumb'
-  src='%%serverPath%%/images/uploadsingle/refModule_videos/refModel_videos_video/refUID_%%UID%%/category_thumb/'
-  width='100%' height='400' frameborder='0' ></iframe>
-</div>
-%%returnLink%%
 */ ?>

@@ -14,7 +14,7 @@
 //+  'indices' -> array of fieldname -> size (index name is derived from fieldname)
 //+	 'nodiff' -> array of field names which are not versioned (eg, hitcount)
 //+
-//+ NOTE: additional database functionality is provides in mysqladmin, this functionality was moved
+//+ NOTE: additional database functionality is provided in mysqladmin, this functionality was moved
 //+	to this file because most user actions will not need it, and it keeps the default loaded
 //+ codebase down.
 
@@ -31,10 +31,16 @@ class KDBDriver {
 
 	var $cache;					//_	cache of objects loaded from database [array]
 	var $aliases;				//_	cache of alias => object mappings [array]
-	var $cacheSize = 200;		//_	maximum bumber of objects to cache [int]
+	var $cacheSize = 200;		//_	maximum number of objects to cache [int]
 
 	var $tables;				//_	set of tables in this database [array]
 	var $tablesLoaded = false;	//_	set to true when list of tables has been loaded [bool]
+
+	var $count = 0;				//_	number of queries executed over the life of this object [int]
+	var $time = 0.00;			//_	total time spent in database queries, in seconds [float]
+
+	var $lasterr = '';			//_	message describe last failed operation [string]
+	var $lastquery = '';		//_	last query operation run on the database [string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -52,6 +58,19 @@ class KDBDriver {
 		$this->pass = $registry->get('kapenta.db.password');
 		$this->name = $registry->get('kapenta.db.name');
 
+		//	recovery / backup store of this information
+		if ('' == $this->name) {
+			$this->host = $registry->get('db.host');
+			$this->user = $registry->get('db.user');
+			$this->pass = $registry->get('db.password');
+			$this->name = $registry->get('db.name');
+
+			if ('' != $this->host) { $registry->set('kapenta.db.host', $this->host); }
+			if ('' != $this->user) { $registry->set('kapenta.db.user', $this->user); }
+			if ('' != $this->pass) { $registry->set('kapenta.db.password', $this->pass); }
+			if ('' != $this->name) { $registry->set('kapenta.db.name', $this->name); }
+		}
+
 		$this->cache = array();
 		$this->aliases = array();
 		$this->tables = array();
@@ -68,12 +87,17 @@ class KDBDriver {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $session, $page, $registry;
+		global $kapenta, $session, $page, $registry;
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
 		$result = false;							//%	recordset handle [int]
 
-		$page->logDebug('query', $query);
+		$this->lasterr = '';						//	clear any previous error message
+		$this->lastquery = $query;					//	record this query for debugging
+
+		$page->logDebug('query', $query);			//	add to debug log
+		$this->count++;								//	increment query count for this page view
+		$startTime = microtime(true);				//	record start time
 
 		//------------------------------------------------------------------------------------------
 		// connect to database server and select database
@@ -104,14 +128,27 @@ class KDBDriver {
 		if (false === $result) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
 			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			$this->lasterr = 'mysql_query returned FALSE.';
 			return false;
+		}
+
+		//------------------------------------------------------------------------------------------
+		// log this query
+		//------------------------------------------------------------------------------------------
+		$endTime = microtime(true);
+		$diff = $endTime - $startTime;
+		$this->time += $diff;
+
+		if ($diff > 1) {
+			$msg = $diff . ' - ' . $query;
+			$kapenta->logEvent('db-slow', 'mysql', 'query', $msg);
 		}
 
 		return $result;		// handle to results
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//|	get a row from a recordset,
+	//.	get a row from a recordset,
 	//----------------------------------------------------------------------------------------------
 	//arg: handle - handle to a MySQL query result [int]
 	//returns: associative array of field names and values, database markup not removed [array]
@@ -122,7 +159,7 @@ class KDBDriver {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//|	get number of rows in recordset
+	//.	get number of rows in recordset
 	//----------------------------------------------------------------------------------------------
 	//arg: handle - handle to a MySQL query result [int]
 	//returns: number of rows or false on failure [int] [bool]
@@ -293,26 +330,44 @@ class KDBDriver {
 
 		$changes = array();								//%	fields which have changed [dict]
 		$dirty = false;									//%	if changes need to be saved [bool]
+		$this->lasterr = '';
 
-		if (false == is_array($data)) { return false; }
-		if (false == array_key_exists('UID', $data)) { return false; }		// must have a UID
-		if (strlen(trim($data['UID'])) < 4) { return false; }				// and it must be good
+		if (false == is_array($data)) {
+			$this->lasterr = 'No object array given.';
+			return false;		// must include and object to save
+		}
+
+		if ((false == array_key_exists('UID', $data)) || (strlen(trim($data['UID'])) < 4)) {
+			$this->lasterr = 'No valid UID for given object.';
+			return false;		// object must have a UID, and it must be > 4 chars
+		}
+
 		$dbSchema['model'] = strtolower($dbSchema['model']);				// temporary
 
-		if (false == $this->tableExists($dbSchema['model'])) { return false; }
-		//TODO: check schema and consider auto table installation
+		if (false == $this->tableExists($dbSchema['model'])) {
+			$this->lasterr = 'Table does not exist.';
+			return false;
+		}
+
+		//	adds support for primary keys for tables which must have both UID and Pi Key
+		if (false == array_key_exists('prikey', $dbSchema)) { $dbSchema['prikey'] = ''; }
 
 		// do not save objects which have been deleted
-		if (true == $revisions->isDeleted($dbSchema['model'], $data['UID'])) { return false; }
+		if (true == $revisions->isDeleted($dbSchema['model'], $data['UID'])) {
+			$this->lasterr = 'This object is deleted, must be undeleted before saving.';
+			return false;
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	set editedBy, editedOn if present in schema
 		//------------------------------------------------------------------------------------------
 		if ((true == $setdefaults) && (true == isset($user))) {
-			if (true == array_key_exists('editedBy', $dbSchema['fields']))
-				{ $data['editedBy'] = $user->UID; }
-			if (true == array_key_exists('editedOn', $dbSchema['fields']))
-				{ $data['editedOn'] = $this->datetime(); }
+			if (true == array_key_exists('editedBy', $dbSchema['fields'])) {
+				$data['editedBy'] = $user->UID;
+			}
+			if (true == array_key_exists('editedOn', $dbSchema['fields'])) {
+				$data['editedOn'] = $this->datetime();
+			}
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -335,20 +390,33 @@ class KDBDriver {
 					{ $value = $this->addMarkup($data[$fName]); }		// prevent SQL injection
 				if (true == $this->quoteType($fType)) 
 					{ $value = "\"" . $value . "\""; }					// quote string values
-				$newFields[$fName] = $value;
+
+				if ($fName !== $dbSchema['prikey']) { $newFields[$fName] = $value; }
 			}
 
 			// assemble the query
-			$sql = "INSERT INTO ". $dbSchema['model'] ." values (". implode(', ', $newFields) .");";
+			$sql = ''
+			 . "INSERT INTO ". $dbSchema['model']
+			 . " (" . implode(', ', array_keys($newFields)) . ")"
+			 . " VALUES"
+			 . " (" . implode(', ', $newFields) . ");";
+
 			$result = $this->query($sql);								// run it...
-			if (false === $result) { return false; }					// could not save
+			if (false === $result) {
+				$this->lasterr = "Insert operation failed:<br/>\n" . $this->lasterr;
+				return false;											// could not save
+			}
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	pervious version does exist, find if/where it differs from this one
 			//--------------------------------------------------------------------------------------
 			foreach($current as $fName => $fVal) {
-			    if ((true == array_key_exists($fName, $data)) && ($fVal != $data[$fName])) {	
+			    if (
+					(true == array_key_exists($fName, $data)) &&			//	field exists
+					($fVal != $data[$fName]) &&								//	and data has changed
+					($fName != $dbSchema['prikey'])							//	and not the prikey
+				) {	
 					$changes[$fName] = $this->addMarkup($data[$fName]); 	//	this has changed
 
 					if (
@@ -362,20 +430,21 @@ class KDBDriver {
 
 			if (0 == count($changes)) { return true; }						// nothing to do
 
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
 			//	make changes to stored record
-			//------------------------------------------------------------------------------------------
+			//--------------------------------------------------------------------------------------
+			$setter = array();
 			foreach($changes as $fName => $fVal) {
 				if (
 					(true == array_key_exists($fName, $dbSchema['fields'])) &&
 					(true == $this->quoteType($dbSchema['fields'][$fName])) 
-				) {$fVal = "\"" . $fVal . "\""; }
+				) { $fVal = "\"" . $fVal . "\""; }
 
-				$changes[$fName] = "`" . $fName . "`" . '=' . $fVal;
+				$setter[$fName] = "`" . $fName . "`" . '=' . $fVal;
 			}
 
 			$sql = "UPDATE " . $dbSchema['model'] 
-				 . " SET " . implode(', ', $changes)
+				 . " SET " . implode(', ', $setter)
 				 . " WHERE UID='" . $this->addMarkup($data['UID']) . "';";
 
 			$result = $this->query($sql);
@@ -383,19 +452,13 @@ class KDBDriver {
 			if (false === $result) {
 				$msg = 'could not update record: ' . $dbSchema['model'] . " " . $data['UID'];
 				$session->msgAdmin($msg, 'bad');
+				$this->lasterr = "Update operation failed:<br/>\n" . $this->lasterr;
 				return false;
 			}
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	record revisions to any fields for which we track changes
-		//------------------------------------------------------------------------------------------
-		if ((true == $revision) && (true == $dirty)) {
-			$revisions->storeRevision($changes, $dbSchema, $data['UID']);
-		}
-
-		//------------------------------------------------------------------------------------------
-		//	allow other modules to respond to this event	//TODO: consider expanding args
+		//	allow other modules to respond to this event
 		//------------------------------------------------------------------------------------------		
 		$args = array(
 			'module' => $dbSchema['module'],
@@ -403,7 +466,8 @@ class KDBDriver {
 			'UID' => $data['UID'],
 			'data' => $data,
 			'changes' => $changes,
-			'dbSchema' => $dbSchema
+			'dbSchema' => $dbSchema,
+			'revision' => ($revision ? 'yes' : 'no')
 		);
 
 		$kapenta->raiseEvent('*', 'object_updated', $args);
@@ -414,29 +478,47 @@ class KDBDriver {
 	//.	delete an object (if it exists)
 	//----------------------------------------------------------------------------------------------
 	//arg: model - object type / name of database table [string]
-	//arg: UID - UID of a record [string]
+	//arg: dbSchema - Database table schema [array]
 	//returns: true on success, false on failure [bool]
 
 	function delete($UID, $dbSchema) {
 		global $kapenta, $aliases, $revisions, $session;
-		//echo "deleting... " . $dbSchema['model'] . '::' . "$UID<br/>";
+
+		$this->lasterr = '';								//	clear any previous error message
+
 		$module = $dbSchema['module'];
-		$model = strtolower($dbSchema['model']);			// TODO: remove strtolower when safe
+		$model = strtolower($dbSchema['model']);			//	TODO: remove strtolower when safe
 
 		// this also checks that table exists:
-		if (false == $this->objectExists($model, $UID)) { return false; }	
+		if (false == $this->objectExists($model, $UID)) {
+			$this->lasterr = '';
+			return false;
+		}
 		
-		if ('users_user' == $model) { return false; }		//	SPECIAL CASE, security
-		if ('schools_school' == $model) { return false; }	//	SPECIAL CASE, security
+		if (('users_user' == $model) || ('schools_school' == $model)) {
+			$this->lasterr = 'Refusing to delete protected object.';
+			return false;									//	SPECIAL CASE, security
+		}
+
+		$isShared = $this->isShared($model, $UID);
 
 		$objAry = $this->load($UID, $dbSchema);
-		if (false == $objAry) { return false ; }			//	nothing to do
+
+		if ((false == is_array($objAry)) || (0 == count($objAry))) {
+			$this->lasterr = 'Object not available for deletetion.';
+			return false;									//	nothing to do
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	remove from original table
 		//------------------------------------------------------------------------------------------
 		$sql = "DELETE FROM " . $model . " WHERE UID='" . $this->addMarkup($UID) . "'";
-		$this->query($sql);
+		$check = $this->query($sql);
+
+		if (false == $check) {
+			$this->lasterr = "DELETE operation failed:<br/>\n" . $this->lasterr;
+			return false;
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	remove from cache
@@ -464,7 +546,8 @@ class KDBDriver {
 			'model' => $model,
 			'UID' => $UID, 
 			'data' => $objAry,
-			'dbSchema' => $dbSchema
+			'dbSchema' => $dbSchema,
+			'isShared' => $isShared
 		);
 
 		$kapenta->raiseEvent('*', 'object_deleted', $detail);
@@ -763,7 +846,7 @@ class KDBDriver {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	//|	determine is a field should be quoted in SQL queries, given its type
+	//.	determine is a field should be quoted in SQL queries, given its type
 	//----------------------------------------------------------------------------------------------
 	//arg: dbType - MySQL field type [int]
 	//returns: true if fields of this type should be quoted [array]
@@ -880,11 +963,22 @@ class KDBDriver {
 	//returns: true on success, false on failure [bool]
 
 	function storeObjectXml($xml, $setdefaults = true, $broadcast = true, $revision = true) {
+		$this->lasterr = '';
 		$objAry = $this->objectXmlToArray($xml);
-		if (0 == count($objAry)) { return false; }
+		if (0 == count($objAry)) {
+			$this->lasterr .= "Failed to parse XML.<br/>\n";
+			return false;
+		}
 
 		$dbSchema = $this->getSchema($objAry['model']);
+		if (false == is_array($dbSchema)) {
+			$this->lasterr = 'Could not load db schema.';
+			return false;
+		}
+
 		$check = $this->save($objAry['fields'], $dbSchema, $setdefaults, $broadcast, $revision);
+		
+		if (false == $check) { $this->lasterr = 'Could not save object.'; }
 		return $check;
 	}
 
@@ -1031,7 +1125,7 @@ class KDBDriver {
 
 	function amArray($ary) {
 		$retVal = array();
-		if (is_array($ary) == true) 
+		if (true == is_array($ary)) 
 			{ foreach ($ary as $key => $val) { $retVal[$key] = $this->addMarkup($val); } }
 
 		return $retVal;

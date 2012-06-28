@@ -8,10 +8,19 @@
 [`|lt]h1[`|gt]Edit school Record[`|lt]/h1[`|gt]
 [[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [[:contact::editdetails::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:tags::edittags::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+
 </content>
-	<nav1>[[:theme::navtitlebox::label=Groups:]]
-[[:groups::newgroupform::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]</nav1>
+	<nav1>
+		[[:theme::navtitlebox::label=Groups::toggle=divGroups:]]
+		<div id='divGroups'>
+		[[:groups::newgroupform::schoolUID=[`|pc][`|pc]schoolUID[`|pc][`|pc]:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+
+		[[:live::manageattachments::refModule=schools::refModel=schools_school::refUID=%%UID%%:]]
+
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

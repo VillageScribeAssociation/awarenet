@@ -11,7 +11,7 @@ class Polls_Question {
 	//----------------------------------------------------------------------------------------------
 
 	var $dbSchema;				//_	database table definition [array]
-	var $loaded;				//_	set to true when an object has been loaded [bool]
+	var $loaded = false;		//_	set to true when an object has been loaded [bool]
 
 	var $UID;					//_ UID [string]
 	var $refModule;				//_ module [string]
@@ -40,6 +40,7 @@ class Polls_Question {
 		if ('' != $UID) { $this->load($UID); }	// try load an object from the database
 		if (false == $this->loaded) {			// check if we did
 			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize
+			$this->loaded = false;
 		}
 	}
 
@@ -201,7 +202,7 @@ class Polls_Question {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('polls', 'polls_question', 'view', $ext['UID'])) {
+		if (true == $user->authHas('polls', 'polls_question', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%polls/showquestion/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

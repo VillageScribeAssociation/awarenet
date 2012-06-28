@@ -7,9 +7,9 @@
     </td>
     <td width='5'>
     <td valign='top'>
-	<a href='%%viewUrl%%'><b>%%fullName%%</b></a><br/>
+	<a href='%%viewUrl%%'><b>%%fullName%%</b></a> %%extra%%<br/>
         <a href='%%schoolUrl%%'>%%schoolName%% (%%schoolCountry%%)</a>
-	%%grade%% %%chatLink%% %%extra%% %%editProfileLink%%
+	%%grade%% %%editProfileLink%%
     </td>
   </tr>
 </table>

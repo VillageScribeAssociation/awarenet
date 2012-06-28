@@ -5,14 +5,23 @@
 //--------------------------------------------------------------------------------------------------
 
 function forums_menu($args) {
-	global $theme, $user;
+	global $theme;
+	global $user;
 
-	$labels = array();
-	if ($user->authHas('forums', 'forums_board', 'new') == true) {
-		$labels['newEntry'] = '[[:theme::submenu::label=Create New Forum::link=/forums/new/:]]';
-	} else { $labels['newEntry'] = ''; }
+	$labels = array();			//%	block variables [string]
+	$html = '';					//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check permission of current user to perform possible menu actions
+	//----------------------------------------------------------------------------------------------
+	$labels['newEntry'] = '[[:theme::submenu::label=Create New Forum::link=/forums/new/:]]';
+	if (false == $user->authHas('forums', 'forums_board', 'new')) { $labels['newEntry'] = ''; }
 	
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/forums/views/menu.block.php'));
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/forums/views/menu.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;	
 }
 

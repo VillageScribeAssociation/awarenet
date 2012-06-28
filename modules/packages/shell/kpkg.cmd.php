@@ -14,6 +14,7 @@ function packages_WebShell_kpkg($args) {
 	global $user;
 	global $shell;
 	global $registry;
+	global $theme;
 
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
@@ -21,11 +22,22 @@ function packages_WebShell_kpkg($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	//if ('admin' != $user->role) { $mode = 'noauth'; }
-	if (true == in_array('--help', $args)) { $mode = 'help'; }
-	if (true == in_array('-h', $args)) { $mode = 'help'; }
+	if (true == in_array('-c', $args)) { $mode = 'clean'; }
+	if (true == in_array('--clean', $args)) { $mode = 'clean'; }
+	if (true == in_array('-d', $args)) { $mode = 'delete'; }
+	if (true == in_array('--delete', $args)) { $mode = 'delete'; }
 	if (true == in_array('--fix', $args)) { $mode = 'fix'; }
 	if (true == in_array('-f', $args)) { $mode = 'fix'; }
+	if (true == in_array('--help', $args)) { $mode = 'help'; }
+	if (true == in_array('-h', $args)) { $mode = 'help'; }
+	if (true == in_array('--installed', $args)) { $mode = 'installed'; }
+	if (true == in_array('-i', $args)) { $mode = 'installed'; }
+	if (true == in_array('--sources', $args)) { $mode = 'sources'; }
+	if (true == in_array('-s', $args)) { $mode = 'sources'; }
+	if (true == in_array('--update', $args)) { $mode = 'update'; }
+	if (true == in_array('-u', $args)) { $mode = 'update'; }
+
+	if ('admin' != $user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check if a package name was given
@@ -38,12 +50,73 @@ function packages_WebShell_kpkg($args) {
 	//----------------------------------------------------------------------------------------------
 	
 	switch($mode) {
-		case 'list':
-			
-			break;	//..............................................................................
 
-		case 'show':
-			$html .= "TODO: this";
+		case 'clean':
+			//--------------------------------------------------------------------------------------
+			//	remove extraneous junk from registry, also clears stored usernames and passwords
+			//--------------------------------------------------------------------------------------
+			$keys = $registry->search('pkg', 'pkg');
+			foreach($keys as $key => $val) {
+				$del = false;
+				if (false !== strpos($key, '.user')) { $del = true; }
+				if (false !== strpos($key, '.pass')) { $del = true; }
+				if (false !== strpos($key, '.versio')) { $del = true; }
+				if (false !== strpos($key, '.revisio')) { $del = true; }
+
+
+				if (true == $del) {
+					$html .= "Removing... <span class='ajaxwarn'>$key</span><br/>";
+					$registry->delete($key);
+				}
+
+				if ((false !== strpos($key, '.status')) && ('dirty' === $val)) {
+					$registry->set($key, 'installed');
+				}
+
+			}
+
+			break;		//..........................................................................
+		case 'delete':
+			//--------------------------------------------------------------------------------------
+			//	delete cached manifests and package lists
+			//--------------------------------------------------------------------------------------
+			$files = $kapenta->fileList('data/packages/', '.xml.php');
+			
+			foreach($files as $file) {
+				$check = $kapenta->fileDelete($file);
+				$status = "<span class='ajaxmsg'>OK</span>";
+				if (false == $check) { $status = "<span class='ajaxwarn'>could not delete</span>"; }
+				$html .= "Removing: $file $status<br/>\n";
+			}
+
+			break;		//..........................................................................
+
+		case 'list':
+			//--------------------------------------------------------------------------------------
+			//	list all packages available from all sources
+			//--------------------------------------------------------------------------------------
+			$updateManager = new KUpdateManager();
+			$sources = $updateManager->listSources();
+
+			foreach($sources as $sourceUrl) {
+				$html .= "<b>$sourceUrl</b><br/>";
+		
+				$source = new KSource($sourceUrl);
+				if (false == $source->loaded) {
+					$html .= "<span class='ajaxerror'>Could not load package list.</span><br/>\n";
+				} else {
+					$pkgs = $source->listPackages();
+					foreach($pkgs as $pkgUID => $pkgName) {
+						$installed = "<span class='ajaxwarn'>not installed</span>";
+						if ('installed' == $registry->get('pkg.' . $pkgUID . '.status')) { 
+							$installed = "<span class='ajaxmsg'>installed</span>";
+						}
+						$html .= "$pkgName ($pkgUID) $installed<br/>\n";
+					}
+				}
+
+			}
+
 			break;	//..............................................................................
 
 		case 'fix':
@@ -86,14 +159,49 @@ function packages_WebShell_kpkg($args) {
 					if (false == in_array($pkg['source'], $sources)) { $sources[] = $pkg['source'];	}
 					$html .= "package: $UID (installed from " . $pkg['source'] . ")<br/>";
 				}
+
+				if ('dirty' == $registry->get('pkg.' . $UID . '.status')) {
+					$registry->set('pkg.' . $UID . '.status', 'installed');
+				}
 			}
 
 			$registry->set('kapenta.sources.list', implode('|', $sources));
 			break;	//..............................................................................
 
+
 		case 'help':
 			$html = packages_WebShell_kpkg_help();
 			break;			
+
+		case 'installed':
+			//--------------------------------------------------------------------------------------
+			//	list installed packages
+			//--------------------------------------------------------------------------------------
+			$html = $theme->expandBlocks('[[:packages::installedpackages:]]');
+			break;	//..............................................................................
+
+		case 'sources':
+			//--------------------------------------------------------------------------------------
+			//	display list of software sources
+			//--------------------------------------------------------------------------------------
+		
+			$updateManager = new KUpdateManager();
+			$sources = $updateManager->listSources();
+
+			foreach($sources as $sourceUrl) {
+				$html .= "$sourceUrl<br/>\n";
+			}
+
+			break;	//..............................................................................
+
+		case 'show':
+			$html .= "TODO: this";
+			break;	//..............................................................................
+
+		case 'update':
+			$updateManager = new KUpdateManager();
+			$updateManager->updateAllLists();
+			break;	//..............................................................................
 
 		case 'noauth':
 			$html = "Admin permissions required to perform this operation.";
@@ -116,11 +224,26 @@ function packages_WebShell_kpkg_help($short = false) {
 	<b>usage: pakages.kpkg [-s|--show] [UID|Name]</b><br/>
 	Displays contents of an installed kapenta package.
 	<br/>
+	<b>[--clean|-c]</b><br/>
+	Clean registry of dev options and other junk.<br/>
+	<br/>
+	<b>[--delete|-d]</b><br/>
+	Delete cached package manifests, will force re-download on next update.<br/>
+	<br/>
 	<b>[--fix|-f]</b><br/>
 	Attempt to repair broken metadata and registry entries.<br/>
 	<br/>
 	<b>[--help|-h]</b><br/>
 	Displays this manpage.<br/>
+	<br/>
+	<b>[--installed|-i]</b><br/>
+	List installed packages.<br/>
+	<br/>
+	<b>[--sources|-s]</b><br/>
+	Show software source(s) used by this package manager.<br/>
+	<br/>
+	<b>[--update|-u]</b><br/>
+	Update package lists and manifests from repository.<br/>
 	<br/>
 	";
 

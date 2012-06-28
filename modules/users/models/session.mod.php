@@ -82,6 +82,12 @@ class Users_Session {
 			$this->shared = 'no';
 
 			//--------------------------------------------------------------------------------------
+			// try to detect mobile browsers
+			//--------------------------------------------------------------------------------------
+
+			
+
+			//--------------------------------------------------------------------------------------
 			// load more information from stored session if non-public user
 			//--------------------------------------------------------------------------------------
 			if ('public' != $this->role) { $this->loadUser($this->user); }
@@ -425,6 +431,8 @@ class Users_Session {
 
 	function messagesToHtml() {
 		global $registry;
+		global $theme;
+
 		$html = '';								//%	return value [string]
 
 		$messages = $this->get('messages');
@@ -434,16 +442,10 @@ class Users_Session {
 		if (0 == $count) { return $html; }
 
 		if ($count > $maxMessages) {
-			$html = ''
-			 . "[[:theme::navtitlebox::label=$count Notices::toggle=divSMessage::hidden=yes:]]"
-			 . "<div id='divSMessage' style='visibility: hidden; display: none;'>"
-			 . $messages
-			 . "</div><br/>\n";
+			$html = $theme->tb($messages, $count . ' Notices', 'divSMessage', 'hide');
 
 		} else {
-			$html = ''
-			 . "[[:theme::navtitlebox::label=$count Notices::toggle=divSMessage:]]"
-			 . "<div id='divSMessage'>" . $messages . "</div><br/>\n";
+			$html = $theme->tb($messages, $count . ' Notices', 'divSMessage', 'show');
 		}
 
 		return $html;
@@ -456,6 +458,15 @@ class Users_Session {
 	function clearMessages() {
 		$this->set('messages', '');
 		$this->set('msgcount', '0');
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	examine user agent and try to detect mobile browsers
+	//----------------------------------------------------------------------------------------------
+	//returns: true if mobile device suspected [string]
+
+	function guessMobile() {
+		return false;
 	}
 
 }

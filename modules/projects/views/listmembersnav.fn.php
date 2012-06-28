@@ -66,7 +66,7 @@ function projects_listmembersnav($args) {
 			//TODO: tidy this, perhaps make this a block
 			$imgUrl = ''
 			 . $kapenta->serverPath . 'themes/'
-			 . $kapenta->defaultTheme . '/icons/arrow_x_green.png';
+			 . $kapenta->defaultTheme . '/images/icons/arrow_x_green.png';
 
 			$html .= "
 				<table noborder>

@@ -6,11 +6,9 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - projects - history</title>
 	<content>
 		[[:theme::navtitlebox::width=570::label=History:]]
-		[`|lt]div class=[`|sq]indent[`|sq][`|gt]
 		[`|lt]h1[`|gt]Revision History: [`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
 		[[:live::river::mod=projects::view=showchanges::pv=pageNo::allow=UID|num::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
-		[`|lt]/div[`|gt]
-		</content>
+	</content>
 	<nav1>
 		[[:theme::navtitlebox::label=Details:]]
 		[[:projects::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
@@ -18,8 +16,7 @@
 	</nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>msgSubscribe([`|sq]comments-projects-[`|pc][`|pc]UID[`|pc][`|pc]-nav[`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<jsinit></jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>

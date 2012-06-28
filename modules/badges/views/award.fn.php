@@ -6,8 +6,13 @@
 //arg: userUID - UID of a Users_User object [string]
 
 function badges_award($args) {
-	global $db, $user, $theme;
-	$html = '';		//%	return value [string]
+	global $db;
+	global $user;
+	global $theme;
+
+	$title = 'Award Badge';			//%	default title [string]
+	$html = '';						//%	return value [string]
+
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
@@ -23,6 +28,9 @@ function badges_award($args) {
 	$block = $theme->loadBlock('modules/badges/views/award.block.php');
 	$labels = array('userUID' => $model->UID);
 	$html = $theme->replaceLabels($labels, $block);
+
+	$html = $theme->ntb($html, $title, 'divAward', 'hide');
+
 	return $html;
 }
 

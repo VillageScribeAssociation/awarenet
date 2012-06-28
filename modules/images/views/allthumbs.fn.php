@@ -67,7 +67,12 @@ function images_allthumbs($args) {
 	//	make the table
 	//----------------------------------------------------------------------------------------------
 	foreach($range as $item) {
-		$html .= "[[:images::thumb::imageUID=" . $item['UID'] . "::link=no:]]\n";
+		$html .= ''
+		 . "[[:images::show"
+		 . "::size=thumb"
+		 . "::display=inline"
+		 . "::imageUID=" . $item['UID']
+		 . "::link=no:]]\n";
 	}
 
 	//$link = 'images/listimage/';	//% relative to serverPath [string]

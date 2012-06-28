@@ -184,7 +184,7 @@ class P2P_Deleted {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('p2p', 'p2p_deleted', 'view', $ext['UID'])) {
+		if (true == $user->authHas('p2p', 'p2p_deleted', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%p2p/showdeleted/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

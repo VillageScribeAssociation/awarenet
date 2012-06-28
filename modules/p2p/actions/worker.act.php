@@ -63,7 +63,7 @@
 						if ($UID == $registry->get('p2p.worker', true)) {
 							echo "p2p.worker: cleant->push()<br/>\n"; flush();
 							$report = $client->push();
-							$cron->log($report, 'black');
+							//$cron->log($report, 'black');
 							if ('admin' == $user->role) { echo $report; }
 						}	
 
@@ -71,7 +71,7 @@
 						if ($UID == $registry->get('p2p.worker', true)) {
 							echo "p2p.worker: cleant->pull()<br/>\n"; flush();
 							$report = $client->pull();
-							$cron->log($report, 'black');
+							//$cron->log($report, 'black');
 							if ('admin' == $user->role) { echo $report; }
 						}
 
@@ -79,7 +79,7 @@
 						if ($UID == $registry->get('p2p.worker', true)) {
 							echo "p2p.worker: cleant->pushFiles()<br/>\n"; flush();
 							$report = $client->pushFiles();
-							$cron->log($report, 'black');
+							//$cron->log($report, 'black');
 							if ('admin' == $user->role) { echo $report; }
 						}
 
@@ -87,7 +87,7 @@
 						if ($UID == $registry->get('p2p.worker', true)) {
 							echo "p2p.worker: cleant->pullFiles()<br/>\n"; flush();
 							$report = $client->pullFiles();
-							$cron->log($report, 'black');
+							//$cron->log($report, 'black');
 							if ('admin' == $user->role) { echo $report; }
 						}
 					} // end if outstanding > 0
@@ -116,10 +116,10 @@
 		$maxIterations--;
 
 		//------------------------------------------------------------------------------------------
-		//	sleep for ten seconds
+		//	sleep for three minutes
 		//------------------------------------------------------------------------------------------
 		echo "Sleeping: ";
-		for ($i = 0; $i < 10; $i++) { echo '.'; sleep(1); flush(); }
+		for ($i = 0; $i < 180; $i++) { echo '.'; sleep(1); flush(); }
 		echo "..."; flush();
 
 		//------------------------------------------------------------------------------------------

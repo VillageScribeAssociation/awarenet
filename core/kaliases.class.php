@@ -44,7 +44,7 @@ class KAliases {
 	//arg: refModel - class of object which will own the alias [string]
 	//arg: refUID - UID of object which will own the alias [string]
 	//arg: plainText - from which alias will be dericed [string]
-	//returns: alias assigned to this object [string]
+	//returns: alias assigned to this object, empty string on failure [string]
 
 	function create($refModule, $refModel, $refUID, $plainText) {
 		global $kapenta;
@@ -58,7 +58,7 @@ class KAliases {
 
 		if ('' == $default) {		 						// no plainText
 			$default = $refUID;								// no refUID
-			if ('' == trim($default)) { return false; } 	// no service
+			if ('' == trim($default)) { return ''; } 	// no service
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class KAliases {
 			//	this record has no alias yet, find an unused record by appending a number
 			//--------------------------------------------------------------------------------------
 			$available = $this->findAvailable($refModule, $refModel, $default, 0);
-			if ($available == false) { return false; }
+			if ($available == false) { return ''; }
 			$this->saveAlias($refModule, $refModel, $refUID, $available);
 			return $available;			
 
@@ -108,7 +108,7 @@ class KAliases {
 
 		}
 
-		return false; // just in case
+		return ''; // just in case
 	}
 
 	//----------------------------------------------------------------------------------------------

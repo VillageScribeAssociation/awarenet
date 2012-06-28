@@ -40,7 +40,7 @@ function images_dragdropjs($args) {
 		<div id='divDropConsole'></div>
 		<img 
 			id='imgPreview'
-			src='%%serverPath%%themes/%%defaultTheme%%/icons/no.png' 
+			src='%%serverPath%%themes/%%defaultTheme%%/images/icons/no.png' 
 			width='50' />Drop Files Here<br/>
 		<div id='divProgress'></div>
 	</div>

@@ -22,7 +22,7 @@
 		<table noborder>
 		  <tr>
 			<td>
-				<img src='%%serverPath%%themes/%%defaultTheme%%/icons/arrow_left.jpg' />
+				<img src='%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_left.jpg' />
 			</td>
 			<td>
 			<b>Return to video gallery.</b>

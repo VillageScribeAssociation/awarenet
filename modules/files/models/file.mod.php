@@ -12,7 +12,7 @@ class Files_File {
 
 	var $data;				//_	currently loaded database record [array]
 	var $dbSchema;			//_	database table definition [array]
-	var $loaded;			//_	set to true when an object has been loaded [bool]
+	var $loaded = false;	//_	set to true when an object has been loaded [bool]
 
 	var $UID;				//_ UID [string]
 	var $refModule;			//_ module [string]
@@ -23,6 +23,8 @@ class Files_File {
 	var $attribName;		//_ varchar(255) [string]
 	var $attribUrl;			//_ varchar(255) [string]
 	var $fileName;			//_ varchar(255) [string]
+	var $fileSize;			//_ large integer [string]
+	var $hash;				//_ sha1 hash of file contents [string]
 	var $format;			//_ varchar(255) [string]
 	var $transforms;		//_ plaintext [string]
 	var $caption;			//_ plaintext [string]
@@ -31,6 +33,7 @@ class Files_File {
 	var $createdBy;			//_ ref:Users_User [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:Users_User [string]
+	var $shared;			//_ shared with other peers (yes|no) [string]
 	var $alias;				//_ alias [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -80,14 +83,17 @@ class Files_File {
 		$this->attribName = $ary['attribName'];
 		$this->attribUrl = $ary['attribUrl'];
 		$this->fileName = $ary['fileName'];
+		$this->fileSize = $ary['fileSize'];
+		$this->hash = $ary['hash'];
 		$this->format = $ary['format'];
-		$this->transforms = $this->expandTransforms($ary['transforms']);
+		$this->transforms = $ary['transforms'];
 		$this->caption = $ary['caption'];
 		$this->weight = $ary['weight'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
 		$this->editedOn = $ary['editedOn'];
 		$this->editedBy = $ary['editedBy'];
+		$this->shared = $ary['shared'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
 		return true;
@@ -115,8 +121,21 @@ class Files_File {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		$report = '';
+		global $kapenta;
+
+		$report = '';			//%	return value [string]
+
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
+		if ($kapenta->fileExists($this->fileName)) {
+			if (0 == (int)$this->fileSize) {
+				$this->fileSize = $kapenta->fileSize($this->fileName);
+			}
+			if ('' == $this->hash) {
+				$this->hash = $kapenta->fileSha1($this->fileName);
+			}
+		}
+
 		return $report;
 	}
 
@@ -141,6 +160,8 @@ class Files_File {
 			'attribName' => 'VARCHAR(255)',
 			'attribUrl' => 'VARCHAR(255)',
 			'fileName' => 'VARCHAR(255)',
+			'fileSize' => 'BIGINT(20)',
+			'hash' => 'VARCHAR(50)',
 			'format' => 'VARCHAR(255)',
 			'transforms' => 'TEXT',
 			'caption' => 'TEXT',
@@ -149,6 +170,7 @@ class Files_File {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
+			'shared' => 'VARCHAR(3)',
 			'alias' => 'VARCHAR(255)' );
 
 		//these fields will be indexed
@@ -161,6 +183,7 @@ class Files_File {
 			'createdBy' => '10',
 			'editedOn' => '',
 			'editedBy' => '10',
+			'shared' => '1',
 			'alias' => '10' );
 
 		//revision history will be kept for these fields
@@ -186,14 +209,17 @@ class Files_File {
 			'attribName' => $this->attribName,
 			'attribUrl' => $this->attribUrl,
 			'fileName' => $this->fileName,
+			'fileSize' => $this->fileSize,
+			'hash' => $this->hash,
 			'format' => $this->format,
-			'transforms' => implode("\n", $this->transforms),
+			'transforms' => $this->transforms,
 			'caption' => $this->caption,
 			'weight' => $this->weight,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
 			'editedOn' => $this->editedOn,
 			'editedBy' => $this->editedBy,
+			'shared' => $this->shared,
 			'alias' => $this->alias
 		);
 		return $serialize;
@@ -206,6 +232,8 @@ class Files_File {
 
 	function extArray() {
 		global $user;
+		global $utils;
+
 		$ary = $this->toArray();	
 		
 		$ary['editUrl'] = '';
@@ -217,11 +245,11 @@ class Files_File {
 		$ary['delUrl'] = '';
 		$ary['delLink'] = '';
 
-		//----------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 		//	links
-		//----------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('files', 'files_file', 'view', $this->UID)) { 
+		if (true == $user->authHas('files', 'files_file', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%files/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
@@ -239,41 +267,11 @@ class Files_File {
 		$ary['dnUrl'] = "%%serverPath%%files/dn/" . $this->alias;
 		$ary['dnLink'] = "<a href='" . $ary['dnUrl'] . "'>[download]</a>";
 		
-		$ary['thumbUrl'] = '%%serverPath%%/themes/%%defaultTheme%%/icons/arrow_down.png';
+		$ary['thumbUrl'] = '%%serverPath%%/themes/%%defaultTheme%%/images/icons/arrow_down.jpg';
+
+		$ary['printFileSize'] = $utils->printFileSize((int)$ary['fileSize']);
 	
 		return $ary;
-	}
-
-	//------------------------------------------------------------------------------------------------------
-	//.	expand transforms
-	//------------------------------------------------------------------------------------------------------
-
-	function expandTransforms($serialized) {
-		$transforms = array();
-		$lines = explode("\n", $serialized);
-		foreach($lines as $line) {
-		  $pipe = strpos($line, '|');
-		  if ($pipe != false) {
-			$transName = substr($line, 0, $pipe);
-			$transFile = substr($line, $pipe + 1);
-			$transforms[$transName] = $transFile;
-		  }
-		}
-		return $transforms;
-	}
-
-	//------------------------------------------------------------------------------------------------------
-	//.	check if a given transform exists
-	//------------------------------------------------------------------------------------------------------
-	//arg: transName - transform name [string]
-	//returns: location of transform if it exists, false if it does not [string][bool]
-
-	function hasTrasform($transName) {
-		global $kapenta;
-		if (array_key_exists($transName, $this->transforms) == false) { return false; }
-		if (true == $kapenta->fileExists($this->transforms[$transName])) { 
-			return $this->transforms[$transName];
-		}
 	}
 
 	//------------------------------------------------------------------------------------------------------

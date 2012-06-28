@@ -6,42 +6,52 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]imageTitle[`|pc][`|pc] (image)</title>
 	<content>
 		[[:images::showfull::raUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
-		[`|lt]br/[`|gt]
 
 		[[:theme::navtitlebox::label=Add A Comment::width=570::toggle=divAddCommentForm::hidden=yes:]]
-		[`|lt]div id=[`|sq]divAddCommentForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
-		[[:comments::addcommentform::refModule=images::refModel=images[`|us]image::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]::return=/gallery/image/[`|pc][`|pc]imageRa[`|pc][`|pc]:]]
-		[`|lt]/div[`|gt]
-		[`|lt]br/[`|gt]
+		<div id='divAddCommentForm' style='visibility: hidden; display: none;'>
+		[[:comments::addcommentform::refModule=images::refModel=images_image::refUID=%%imageUID%%::return=/gallery/image/%%imageRa%%:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
 
-		[[:theme::navtitlebox::label=Comments::width=570:]]
+		[[:theme::navtitlebox::label=Comments::width=570::toggle=divComments:]]
+		<div id='divComments'>
 		[[:comments::list::refModule=images::refModel=images[`|us]image::refUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
-		[`|lt]br/[`|gt]
+		</div>
+		<div class='foot'></div>
+		<br/>
 	</content>
 	<nav1>
 		[[:theme::navtitlebox::label=About:]]
 		[[:images::metadata::imageUID=%%imageUID%%:]]
 		[[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Navigation:]]
-[[:gallery::gallerynav::galleryUID=[`|pc][`|pc]galleryUID[`|pc][`|pc]::imageUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Unsorted Images:]]
-[[:gallery::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=30:]]
-[`|lt]br/[`|gt]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Galleries:]]
-[[:gallery::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:gallery::movetogallery::imageUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+		[[:theme::navtitlebox::label=Navigation:]]
+		[[:gallery::gallerynav::galleryUID=[`|pc][`|pc]galleryUID[`|pc][`|pc]::imageUID=[`|pc][`|pc]imageUID[`|pc][`|pc]:]]
+		<br/>
 
-</nav1>
+		[[:sketchpad::tip_introduction:]]
+
+		[[:theme::navtitlebox::label=Unsorted Images::toggle=divRandomImages:]]
+		<div id='divRandomImages'>
+		[[:gallery::randomthumbs::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::num=9:]]
+		</div>
+		<div class='foot'></div>
+		[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Galleries::toggle=divUserGalleries:]]
+		<div id='divUserGalleries'>
+		[[:gallery::navlist::userUID=%%userUID%%:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+
+		[[:gallery::movetogallery::imageUID=%%imageUID%%:]]
+
+	</nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit>galleryNav[`|us]init()[`|sc]
-msgSubscribe([`|sq]comments-gallery-[`|pc][`|pc]imageUID[`|pc][`|pc][`|sq], msgh[`|us]comments)[`|sc]
-msgh[`|us]commentsRefresh()[`|sc]</jsinit>
+	<jsinit>galleryNav[`|us]init()[`|sc]</jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>

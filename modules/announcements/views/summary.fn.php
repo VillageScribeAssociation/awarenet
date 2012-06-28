@@ -9,7 +9,7 @@
 //opt: UID - overrides raUID [string]
 
 function announcements_summary($args) {
-	global $theme, $user, $page;
+	global $theme, $user, $page, $session;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ function announcements_summary($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
 	$model = new Announcements_Announcement($args['raUID']);
-	if (false == $model->loaded) { return ''; }
+	if (false == $model->loaded) { return '(announcement not found)'; }
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'show', $model->UID))
 		{ return ''; }
 
@@ -29,6 +29,7 @@ function announcements_summary($args) {
 	$labels = $model->extArray();
 	$labels['rawblock64'] = base64_encode($args['rawblock']);
 	$block = $theme->loadBlock('modules/announcements/views/summary.block.php');
+	
 	$html = $theme->replaceLabels($labels, $block);
 
 	//----------------------------------------------------------------------------------------------

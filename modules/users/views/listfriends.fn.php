@@ -39,7 +39,7 @@ function users_listfriends($args) {
 		}
 			
 		$html .= "[[:users::summarynav::userUID=" . $item['friendUID'] . "::"
-				 . "extra= $rmLink (relationship; " . $item['relationship'] . "):]]\n"; 
+				 . "extra=<small>Relationship: " . $item['relationship'] . " $rmLink</small>:]]\n"; 
 	}
 
 	return $html;

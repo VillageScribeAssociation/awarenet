@@ -49,26 +49,18 @@ class P2P_Offers {
 		//------------------------------------------------------------------------------------------
 
 		$conditions = array();
-		$conditions[] = "peer='" . $db->addmarkup($this->peerUID) . "'";
-		$conditions[] = "(status='waiting' OR status='want' OR status='')";
-		$conditions[] = "refModel != '" . $db->addMarkup('revisions_revision') . "'";
-		if ('files' == $type) { $conditions[] = "type='file'"; }
-		if ('objects' == $type) { $conditions[] = "type='object'"; }
+		$conditions[0] = "peer='" . $db->addmarkup($this->peerUID) . "'";
+		$conditions[1] = "(status='waiting' OR status='want' OR status='')";
+		$conditions[2] = "refModel != '" . $db->addMarkup('revisions_revision') . "'";
+		if ('files' == $type) { $conditions[3] = "type='file'"; }
+		if ('objects' == $type) { $conditions[3] = "type='object'"; }
 
 		$totalItems = $db->countRange('p2p_gift', $conditions);
 
-		if (0 == $totalItems) {
-			//--------------------------------------------------------------------------------------
-			//	nothing else waiting send revisions
-			//--------------------------------------------------------------------------------------
-			$conditions = array();
-			$conditions[] = "peer='" . $db->addmarkup($this->peerUID) . "'";
-			$conditions[] = "(status='waiting' OR status='want' OR status='')";
-			if ('files' == $type) { $conditions[] = "type='file'"; }
-			if ('objects' == $type) { $conditions[] = "type='object'"; }
-		}
+		if (0 == $totalItems) { $conditions[2] = '1=1'; }	//	nothing else waiting, send revisions
 
-		$range = $db->loadRange('p2p_gift', '*', $conditions, 'createdOn', $this->maxGifts);
+		$ob = "refModel='" . $db->addMarkup('aliases_alias') . "', createdOn";	//	aliases first
+		$range = $db->loadRange('p2p_gift', '*', $conditions, $ob, $this->maxGifts);
 
 		$this->members = $range;
 		$this->loaded = true;
@@ -101,10 +93,16 @@ class P2P_Offers {
 		$allOk = true;
 		foreach($this->members as $item) {	
 			//--------------------------------------------------------------------------------------
-			//	if offering a file, make sure we have that file
+			//	if offering a file, make sure we have that file and its owner
 			//--------------------------------------------------------------------------------------
 			if ('file' == $item['type']) {
 				if (false == $kapenta->fileExists($item['fileName'])) { 
+					$this->updateFile($item['refModel'], $item['refUID'], $item['fileName']);
+					$allOk = false;
+				}
+
+				$owner = $kapenta->fileOwner($item['fileName']);
+				if (0 == count($owner)) {
 					$this->updateFile($item['refModel'], $item['refUID'], $item['fileName']);
 					$allOk = false;
 				}
@@ -123,7 +121,8 @@ class P2P_Offers {
 	function evaluate() {
 		global $db;
 		global $kapenta;
-	
+		global $revisions;	
+
 		$dnset = new P2P_Downloads($this->peerUID);
 
 		foreach($this->members as $idx => $offer) {
@@ -136,11 +135,16 @@ class P2P_Offers {
 			if ('object' == $offer['type']) {				
 				$item = $db->getObject($offer['refModel'], $offer['refUID']);
 				if (0 == count($item)) {
-					if (true == $db->tableExists($offer['refModel'])) { 
+
+					if (
+						(true == $db->tableExists($offer['refModel'])) &&
+						(false == $revisions->isDeleted($offer['refModel'], $offer['refUID']))
+					) {
 						$this->members[$idx]['status'] = 'want';
 					} else {
 						$this->members[$idx]['status'] = 'dnw';
 					}
+
 				}
 				else {
 					$xml = $db->getObjectXml($offer['refModel'], $offer['refUID']);
@@ -489,6 +493,22 @@ class P2P_Offers {
 
 		if ('' == $hash) { $session->msg("File cannot be hashed."); }
 		if ('' == $hash) { return false; }						//	file could not be read
+
+		//------------------------------------------------------------------------------------------
+		//	then make sure that we know what owns this
+		//------------------------------------------------------------------------------------------
+
+		$owner = $kapenta->fileOwner($fileName);
+
+		if (0 == count($owner)) {
+			if ('' != $giftUID) {
+				$model = new P2P_Gift($giftUID);		//	gift exists for non-existent owner
+				$check = $model->delete();				//	we can't share the file, so remove gift
+				if (true == $check) { echo "<!-- deleted gift for file $fileName -->\n"; }
+				if (false == $check) { echo "<!-- could not delete gift for file $fileName -->\n"; }
+				return $check;
+			}
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	OK so far, create or update gift object

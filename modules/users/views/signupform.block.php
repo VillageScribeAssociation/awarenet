@@ -1,28 +1,28 @@
 <? /*
 <form name='signup' method='POST' action='%%serverPath%%users/signup/'>
 <input type='hidden' name='action' value='userSignup' />
-<div class='inlinequote'>
+<div class='block'>
 
-<table noborder>
+<table noborder width='100%'>
   <tr>
     <td><b>First Name:</b></td>
-    <td><input type='text' name='firstname' size='20' value='%%firstname%%' /></td>
+    <td><input type='text' name='firstname' value='%%firstname%%' style='width: 100%' /></td>
   </tr>
   <tr>
     <td><b>Surname:</b></td>
-    <td><input type='text' size='20' name='surname' value='%%surname%%' /></td>
+    <td><input type='text' name='surname' value='%%surname%%' style='width: 100%' /></td>
   </tr>
   <tr>
     <td><b>User Name:</b></td>
-    <td><input type='text' name='username' size='20' value='%%username%%' /></td>
+    <td><input type='text' name='username' value='%%username%%' style='width: 100%' /></td>
   </tr>
   <tr>
     <td><b>Password:</b></td>
-    <td><input type='password' size='20' name='pass1' value='%%pass1%%' /></td>
+    <td><input type='password' name='pass1' value='%%pass1%%'  style='width: 100%' /></td>
   </tr>
   <tr>
     <td><b>Password:</b></td>
-    <td><input type='password' size='20' name='pass2' value='%%pass2%%' /></td>
+    <td><input type='password' name='pass2' value='%%pass2%%' style='width: 100%' /></td>
   </tr>
   <tr>
     <td><b>School:</b></td>
@@ -76,7 +76,7 @@
   </tr>
   <tr>
     <td><b>Human?</b></td>
-    <td><input type='text' name='human' value='' /><br/>
+    <td><input type='text' name='human' value='' size='3' /><br/>
     <small>Please answer yes or no.</small>
     </td>
   </tr>
@@ -86,6 +86,5 @@
   </tr>
 </table>
 </div>
-<br/><br/>
 </form>
 */ ?>

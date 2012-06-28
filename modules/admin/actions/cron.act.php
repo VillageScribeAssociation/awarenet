@@ -38,15 +38,15 @@
 		<table noborder>
 			<tr>
 				<td>ten minutes</td>
-				<td>" . $registry->get('kapenta.cron.tenmins') . "</td>
+				<td>" . $registry->get('cron.tenmins') . "</td>
 			</tr>
 			<tr>
 				<td>hourly</td>
-				<td>" . $registry->get('kapenta.cron.hourly') . "</td>
+				<td>" . $registry->get('cron.hourly') . "</td>
 			</tr>
 			<tr>
 				<td>daily</td>
-				<td>" . $registry->get('kapenta.cron.daily') . "</td>
+				<td>" . $registry->get('cron.daily') . "</td>
 			</tr>
 		</table>
 		";

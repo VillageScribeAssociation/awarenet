@@ -58,11 +58,24 @@ class KDBAdminDriver {
 		$table = $dbSchema['model'];
 
 		//------------------------------------------------------------------------------------------
+		//	check for a primary key
+		//------------------------------------------------------------------------------------------
+		$prikey = '';
+		if (true == array_key_exists('prikey', $dbSchema)) {
+			if (true == array_key_exists($dbSchema['prikey'], $dbSchema['fields'])) {
+				$prikey = ", PRIMARY KEY (" . $dbSchema['prikey'] . ")";
+				$dbSchema['fields'][$dbSchema['prikey']] .= " NOT NULL AUTO_INCREMENT";
+			} else {
+				$session->msgAdmin("Primary key not present.");
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
 		//	create the table
 		//------------------------------------------------------------------------------------------
 		$fields = array();
 		foreach($dbSchema['fields'] as $fName => $fType) { $fields[] = '  '. $fName .' '. $fType; }
-		$sql = "CREATE TABLE " . $table . " (\n" . implode(",\n", $fields) . ");\n";
+		$sql = "CREATE TABLE " . $table . " (\n" . implode(",\n", $fields) . $prikey . ");\n";
 		$db->query($sql);
 
 		$db->loadTables();

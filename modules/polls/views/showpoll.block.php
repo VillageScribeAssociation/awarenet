@@ -1,6 +1,5 @@
 <? /*
 
-[[:theme::navtitlebox::label=Poll:]]
 <br/>
 %%questionHtml%%
 <br/>
@@ -10,6 +9,5 @@
 %%answerTable%%
 <input type='submit' value='Vote' />
 </form>
-<hr/><br/>
 
 */ ?>

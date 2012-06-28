@@ -7,15 +7,24 @@
 //|	site login form
 //--------------------------------------------------------------------------------------------------
 //opt: redirectSelf - redirect back to the same page after login (yes|no) [string]
+//opt: return - URL to redirect to [string]
+//opt: tb - wrap in titlebox, default is no (yes|no) [string]
+//TODO: sanitize return URLs
 
 function users_loginform($args) { 
-	global $user, $theme;
-	$html = '';					//%	return value [string]
-	$redirectSelf = 'no';
+	global $user;
+	global $theme;
 
-	if ('public' != $user->role) { return '(you are already logged in)'; }
-	if (true == array_key_exists('redirectSelf', $args)) 
-		{ if ('yes' == strtolower($args['redirectSelf'])) { $redirectSelf = 'yes'; } }
+	$redirectSelf = 'no';		//%	return to the current page after login (yes|no) [string]
+	$tb = 'no';					//%	wrap in titlebox block [string]
+	$html = '';					//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and user role
+	//----------------------------------------------------------------------------------------------
+	if ('public' != $user->role) { return ''; }
+	if (true == array_key_exists('redirectSelf', $args)) { $redirectSelf = $args['redirectSelf']; }
+	if (true == array_key_exists('tb', $args)) { $tb = $args['tb']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -29,7 +38,23 @@ function users_loginform($args) {
 		$labels['redirectUrl'] = "<input type='hidden' name='redirect' value='$redirectUrl' />";
 	}
 
+	if (true == array_key_exists('return', $args)) {
+		$redirectUrl = $args['return'];
+		$labels['redirectUrl'] = "<input type='hidden' name='redirect' value='$redirectUrl' />";
+	}
+
 	$html = $theme->replaceLabels($labels, $block);
+
+	if ('yes' == $tb) {
+		$html = ''
+		 . "[[:theme::navtitlebox::label=Log In::toggle=divLogIn:]]\n"
+		 . "<div id='divLogIn'>\n"
+		 . $html
+		 . "</div>\n"
+		 . "<div class='foot'></div>\n"
+		 . '<br/>';
+	}
+
 	return $html;
 }
 

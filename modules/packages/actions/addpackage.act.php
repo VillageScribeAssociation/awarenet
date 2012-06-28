@@ -186,6 +186,7 @@
 	//	set registry keys
 	//----------------------------------------------------------------------------------------------
 	if (true == $allOk) {
+		$um->setPackageField($package->UID, 'name', $package->name);
 		$um->setPackageField($package->UID, 'status', 'installed');
 	}
 

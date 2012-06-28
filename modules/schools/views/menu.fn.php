@@ -11,7 +11,11 @@ function schools_menu($args) {
 
 	$labels = array('newEntry' => '', 'allContactDetails' => '');
 
-	if ($user->authHas('schools', 'schools_school', 'edit', 'TODO:UIDHERE')) {
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+
+	if (true == $user->authHas('schools', 'schools_school', 'new')) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Add School::link=/schools/new/:]]';
 	}
 
@@ -20,8 +24,12 @@ function schools_menu($args) {
 			 . '[[:theme::submenu::label=All Contact Details'
 			 . '::link=/schools/schoolcontacts/:]]';
 	}
-	
-	$html = $theme->replaceLabels($labels, $theme->loadBlock('modules/schools/views/menu.block.php'));
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------	
+	$block = $theme->loadBlock('modules/schools/views/menu.block.php');
+	$html = $theme->replaceLabels($labels, $block);
 	return $html;	
 }
 

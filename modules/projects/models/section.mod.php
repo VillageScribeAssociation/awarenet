@@ -208,7 +208,7 @@ class Projects_Section {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_section', 'view', $ext['UID'])) {
+		if (true == $user->authHas('projects', 'projects_section', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%projects/show/'. $ext['projectUID'] .'#s'. $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 			$ext['titleLink'] = "<a href='" . $ext['viewUrl'] . "'>" . $ext['title'] . "</a>";

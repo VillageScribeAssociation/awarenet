@@ -176,8 +176,10 @@ class Files_Folder {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
+		global $kapenta;
 		global $user;
-		$ary = $this->toArray();
+
+		$ary = $this->toArray();				//%	return value [array]
 
 		$ary['editUrl'] = '';
 		$ary['editLink'] = '';
@@ -222,7 +224,7 @@ class Files_Folder {
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
 
-		$ary['longdate'] = date('jS F, Y', strtotime($ary['date']));
+		$ary['longdate'] = $kapenta->longDate($ary['date']);
 		$ary['titleUpper'] = strtoupper($ary['title']);
 
 		//------------------------------------------------------------------------------------------

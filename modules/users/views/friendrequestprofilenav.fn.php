@@ -28,7 +28,6 @@ function users_friendrequestprofilenav($args) {
 	if (true == $user->friendships->hasConfirmed($args['userUID'])) { return ''; } 
 	//TODO:	perhaps add 'remove from friends' option in this case?
 	
-	$titlebar = "[[:theme::navtitlebox::label=Friend Request:]]\n";
 	$return = '';
 	if (array_key_exists('notitle', $args) == true) { 
 		$titlebar = ''; 
@@ -45,18 +44,22 @@ function users_friendrequestprofilenav($args) {
 
 		$withdrawBlock = '';	//TODO
 
-		$html = $titlebar 
+		$html = ''
+		 . "[[:theme::navtitlebox::label=Friend Request::toggle=divFriendRequest:]]\n"
+		 . "<div id='divFriendRequest'>\n"
 		 . "You have requested to add " 
 		 . "[[:users::namelink::userUID=" . $model->friendUID . ":]] as a friend \n"
 		 . "(relationship: " . $model->relationship . "), they must approve your request "
 		 . "before they will appear on your friends list.<br/><br/>\n"
 		 . "<form name='withdrawFriendRequest' method='POST'"
-		 . " action='%%serverPath%%users/removefriend/'>"
-		 . "<input type='hidden' name='action' value='withdrawRequest' />"
-		 . "<input type='hidden' name='friendUID' value='" . $model->friendUID . "' />"
-		 . "<input type='submit' value='Widthdraw Request' />"
-		 . "</form>"
-		 . "<hr/>";
+		 . " action='%%serverPath%%users/removefriend/'>\n"
+		 . "<input type='hidden' name='action' value='withdrawRequest' />\n"
+		 . "<input type='hidden' name='friendUID' value='" . $model->friendUID . "' />\n"
+		 . "<input type='submit' value='Widthdraw Request' />\n"
+		 . "</form>\n"
+		 . "</div>\n"
+		 . "<div class='foot'></div>\n"
+		 . "<br/>\n";
 
 		return $html;
 	}
@@ -67,7 +70,6 @@ function users_friendrequestprofilenav($args) {
 	$block = $theme->loadBlock('modules/users/views/friendrequestform.block.php');
 	$labels = array(
 		'friendUID' => $args['userUID'],
-		'titlebar' => $titlebar,
 		'return' => $return
 	);
 

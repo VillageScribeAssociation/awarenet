@@ -2,13 +2,18 @@
 
 	require_once($kapenta->installPath . 'modules/live/inc/cmdaliases.class.php');
 	require_once($kapenta->installPath . 'modules/twitter/inc/twitteroauth.class.php');
+	require_once($kapenta->installPath . 'modules/twitter/inc/send.inc.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	simple utility to caclulate and return a SHA1 hash
 //--------------------------------------------------------------------------------------------------
 
 function twitter_WebShell_tweet($args) {
-	global $kapenta, $user, $shell;
+	global $kapenta;
+	global $registry;
+	global $user;
+	global $shell;
+
 	$html = '';								//%	return value [string]
 	$mode = 'tweet';						//%	operation [string]
 
@@ -33,39 +38,8 @@ function twitter_WebShell_tweet($args) {
 		case 'tweet':
 			$ok = true;
 
-			// Read in our saved access token/secret
-			$accessToken = $registry->get('twitter.accesstoken');
-			$accessTokenSecret = $registry->get('twitter.accesstokensecret');
-
-			$consumerKey = $registry->get('twitter.consumerkey');
-			$consumerSecret = $registry->get('twitter.consumersecret');
-
-			if (('' == trim($consumerKey)) || ('' == trim($consumerSecret))) {
-				$html .= 'Please complete consumer key and secret<br/>';
-				$ok = false;
-			}
-
-			if (('' == trim($accessToken)) || ('' == trim($accessTokenSecret))) {
-				$html .= 'Please complete access token and secret<br/>';
-				$ok = false;
-			}
-
-			if (true == $ok) {
-				// Create our twitter API object	
-				$oauth = new TwitterOAuth(
-					$consumerKey, $consumerSecret, 
-					$accessToken, $accessTokenSecret
-				);
-
-				// Send an API request to verify credentials
-				$credentials = $oauth->get("account/verify_credentials");
-				$html .= "Connected as @" . $credentials->screen_name;
-
-				$tweet = 'awareNet: ' . implode(' ', $args);
-
-				// Post our new "hello world" status
-				$oauth->post('statuses/update', array('status' => $tweet));
-			}
+			$tweet = 'awareNet: ' . implode(' ', $args);
+			$html .= twitter_send($tweet);
 
 			break;	//..............................................................................
 

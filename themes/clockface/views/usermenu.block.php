@@ -10,7 +10,9 @@
 				<span style='vertical-align: bottom; background-color: black;'>
 					<a href='%%serverPath%%users/profile/' class='menu'>My Pages</a><small>&nbsp</small>
 					<a href='%%serverPath%%notifications/' class='menu'>My Feed</a><small>&nbsp</small>
-					<a href='%%serverPath%%messages/inbox/' class='menu'>Inbox ([[:messages::inboxcount:]])</a><small>&nbsp</small>		
+					<a href='%%serverPath%%messages/inbox/' class='menu'>Inbox ([[:messages::inboxcount:]])</a>
+					<a href='%%serverPath%%chat/' class='menu'>Chat ([[:chat::inboxcount:]])</a>
+					<small>&nbsp</small>		
 					%%adminConsoleLink%%
 				</span>
 			</div>

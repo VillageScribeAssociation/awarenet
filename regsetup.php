@@ -85,7 +85,7 @@
 				'websiteName'	=>	'kapenta.sitename',
 				'defaultTheme'	=>	'kapenta.themes.default',
 				'logLevel'		=>	'kapenta.loglevel',
-				'cronInterval'	=>	'kapenta.cron.interval',
+				'cronInterval'	=>	'cron.interval',
 				'hostInterface'	=>	'kapenta.network.interface',
 				'proxyEnabled'	=>	'kapenta.proxy.enabled',
 				'proxyAddress'	=>	'kapenta.proxy.address',

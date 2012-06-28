@@ -31,14 +31,29 @@ function videos_thumbs($args) {
 
 	$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC', $limit, '');
 
-	foreach($range as $row) {
-		$viewUrl = '%%serverPath%%videos/play/' . $row['alias'];
-		//$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['UID'];
-		//	  . "<img src='" . $thumbUrl . "' title='" . $row['title'] . "' border='0' vspace='2px' hspace='2px' /></a>\n";
-		$html .= "<a href='" . $viewUrl . "'>"
-			   . "[[:images::default::size=thumb::refModule=videos::refModel=videos_video"
-				 . "::refUID=" . $row['UID'] . "::pad=2::link=no:]]"
-			   . "</a>\n";
+	foreach($range as $item) {
+		$viewUrl = '%%serverPath%%videos/play/' . $item['alias'];
+
+		$thumbUrl = ''
+		 . '%%serverPath%%images/showdefault'
+		 . '/refModule_videos'
+		 . '/refModel_videos_video'
+		 . '/refUID_' . $item['UID']
+		 . '/size_' . $size . '/';
+
+		$html .= ''
+		 . "<a href='" . $viewUrl . "'>"
+	 	 . "<img"
+		 . " src='" . $thumbUrl . "'"
+		 . " border='0'"
+		 . " width='100'"
+		 . " height='100'"
+		 . " class='rounded'"
+		 . " style='background-color: #aaaaaa; display: inline;'"
+		 . " />"
+		 . "</a>\n";
+		
+
 	}
 
 	return $html;

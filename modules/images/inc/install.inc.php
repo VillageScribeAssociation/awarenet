@@ -14,7 +14,10 @@
 //returns: html report or false if not authorized [string][bool]
 
 function images_install_module() {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $registry;
+
 	if ('admin' != $user->role) { return false; }
 	$dba = new KDBAdminDriver();
 	$report = '';
@@ -32,6 +35,18 @@ function images_install_module() {
 	$rename = array('record');
 	$count = $dba->copyAll('images', $dbSchema, $rename); 
 	$report .= "<b>moved $count records from 'images' table.</b><br/>";
+
+	//----------------------------------------------------------------------------------------------
+	//	create file associations
+	//----------------------------------------------------------------------------------------------
+
+	$assoc = array('jpg', 'jpeg', 'png', 'gif');
+	foreach($assoc as $ext) {
+		if ('images' != $registry->get('live.file.' . $ext)) {
+			$registry->set('live.file.' . $ext, 'images');
+			$report .= "<b>Added file association:</b> $ext<br/>";
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	done

@@ -1,5 +1,7 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/images/models/transforms.set.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	renders the 'not found' image at the specified size
 //--------------------------------------------------------------------------------------------------
@@ -8,6 +10,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the image
 	//----------------------------------------------------------------------------------------------
-	
+	$size = 'width300';
+
+	$set = new Images_Transforms();
+
+	if (
+		(true == array_key_exists('s', $req->args)) &&
+		(true == array_key_exists($req->args['s'], $set->presets))
+	) {
+			$testFile = 'data/images/unavailable/unavailable_' . $req->args['s'] . '.jpg';
+			if (true == $kapenta->fileExists($testFile)) { $size = $req->args['s']; }
+	}
+
+	$page->do302('data/images/unavailable/unavailable_' . $size . '.jpg');
 
 ?>

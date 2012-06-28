@@ -70,6 +70,7 @@
 		teacher:c|videos|videos_gallery|videos-edit|(if)|creator
 		teacher:c|videos|videos_gallery|delete|(if)|creator
 
+		student:p|videos|videos_video|show
 		student:p|videos|videos_video|comments-add
 		student:p|videos|videos_video|comments-retract|(if)|creator
 		student:p|videos|videos_video|comments-show
@@ -77,6 +78,7 @@
 		student:c|videos|videos_video|images-add|(if)|creator
 		student:c|videos|videos_video|images-edit|(if)|creator
 
+		teacher:p|videos|videos_video|show
 		teacher:c|videos|videos_video|images-add|(if)|creator
 		teacher:c|videos|videos_video|images-edit|(if)|creator
 

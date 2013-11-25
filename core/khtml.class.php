@@ -74,16 +74,16 @@ class KHTMLParser {
 		$thisHtmlCharNo = 0;				//%	char position we're scanning from [int]
 		$buffer = '';						//%	piece of the document being worked on [string]
 		$mode = 'outside';					//%	state of state machine [string]
-		$len = strlen($this->html);			//%	length of input HTML [int]
+		$len = mb_strlen($this->html);			//%	length of input HTML [int]
 
 		//------------------------------------------------------------------------------------------
 		//	consider each character in source HTML
 		//------------------------------------------------------------------------------------------
 		for ($thisHtmlCharNo = 0; $thisHtmlCharNo < $len; $thisHtmlCharNo++) {
-			$thisChar = substr($this->html, $thisHtmlCharNo, 1);			// current char
+			$thisChar = mb_substr($this->html, $thisHtmlCharNo, 1);			// current char
 			$nextChar = '';
 			if (($thisHtmlCharNo + 1) < $len) { 				
-				$nextChar = substr($this->html, $thisHtmlCharNo + 1, 1);	// next char, if any
+				$nextChar = mb_substr($this->html, $thisHtmlCharNo + 1, 1);	// next char, if any
 			}
 
 			//--------------------------------------------------------------------------------------
@@ -95,16 +95,13 @@ class KHTMLParser {
 					//	not inside an html tag change state when we encounter '<'
 					//------------------------------------------------------------------------------
 					if ('<' == $thisChar) {							// start of a tag
+						$buffer = htmlentities($buffer, ENT_QUOTES, "UTF-8");
 						$this->throwToken($buffer, 'outside');		// throw anything in buffer
 						$buffer = '';								// clear the buffer
 						$mode = 'tag';								// change mode
 						$thisHtmlCharNo--;							// reprocess this in tag mode
 
 					} else {
-						switch ($thisChar) {						// disallow quotes
-							case "'":	$thisChar = "&apos;";	break;
-							case "\"":	$thisChar = "&quot;";	break;
-						}
 						$buffer .= $thisChar;				// add current char to buffer
 					}
 					break;	// .....................................................................
@@ -212,7 +209,7 @@ class KHTMLParser {
 		//------------------------------------------------------------------------------------------
 		//	throw whatever is left in the buffer, assume it's outside
 		//------------------------------------------------------------------------------------------
-		$this->throwToken($buffer, 'outside');
+		$this->throwToken(htmlentities($buffer, ENT_QUOTES, "UTF-8"), 'outside');
 
 	} // end this.parseTags
 
@@ -251,7 +248,7 @@ class KHTMLParser {
 
 					} else {
 						$tagAtIdx = count($this->tagAtVal);
-						$tkVal = strtolower($tkVal);					// lowercase is tidier
+						$tkVal = mb_strtolower($tkVal);					// lowercase is tidier
 						$this->tagAtName[$tagAtIdx] = $tkVal;			// this is an attrib name
 						$this->tagAtVal[$tagAtIdx] = '';				// set blank value
 					}
@@ -295,7 +292,7 @@ class KHTMLParser {
 		global $session;
 
 		$allowed = false;							//%	if this tag is allowed [bool]
-		$tnLower = strtolower($this->tagType);		//%	for comparison below [string]
+		$tnLower = mb_strtolower($this->tagType);		//%	for comparison below [string]
 		$tagStr = '<' . $this->tagType . ' ';		//%	redacted/rebuilt HTML tag [string]
 
 		//------------------------------------------------------------------------------------------
@@ -317,11 +314,11 @@ class KHTMLParser {
 			foreach($this->tagAtName as $idx => $atName) {
 				if ('kblocktag' == $atName) {
 					$blockTag = strrev($this->tagAtVal[$idx]);
-					if ('"' == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
-					if ("'" == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					if ('"' == mb_substr($blockTag, 0, 1)) { $blockTag = mb_substr($blockTag, 1); }
+					if ("'" == mb_substr($blockTag, 0, 1)) { $blockTag = mb_substr($blockTag, 1); }
 					$blockTag = strrev($blockTag);
-					if ('"' == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
-					if ("'" == substr($blockTag, 0, 1)) { $blockTag = substr($blockTag, 1); }
+					if ('"' == mb_substr($blockTag, 0, 1)) { $blockTag = mb_substr($blockTag, 1); }
+					if ("'" == mb_substr($blockTag, 0, 1)) { $blockTag = mb_substr($blockTag, 1); }
 					$this->output .= $blockTag;
 					return true;
 				}
@@ -369,17 +366,17 @@ class KHTMLParser {
 		if ('img' == $tnLower) {
 			$src = '';
 			for ($i = 0; $i < count($this->tagAtName); $i++) { 
-				if ('src' == strtolower($this->tagAtName[$i])) { $src = $this->tagAtVal[$i]; }
+				if ('src' == mb_strtolower($this->tagAtName[$i])) { $src = $this->tagAtVal[$i]; }
 			}
 
 			$src = str_replace("\"", '', $src);
 			$src = str_replace("\'", '', $src);
-			if ('\\' == substr($src, 0, 1)) { $src = substr($src, 1); }
-			if ('../../' == substr($src, 0, 6)) { $src = '%%serverPath%%' . substr($src, 6); }
+			if ('\\' == mb_substr($src, 0, 1)) { $src = mb_substr($src, 1); }
+			if ('../../' == mb_substr($src, 0, 6)) { $src = '%%serverPath%%' . mb_substr($src, 6); }
 			$src = trim($src);
 
-			if (('' == $src) || ('%%serverPath%%' != substr($src, 0, 14))) {
-				$check = substr($src, 0, 15);
+			if (('' == $src) || ('%%serverPath%%' != mb_substr($src, 0, 14))) {
+				$check = mb_substr($src, 0, 15);
 				$src = str_replace('%%', '%~%', $src);
 				$msg = ''
 				 . "Removed image: $src <br/>\n"
@@ -396,7 +393,7 @@ class KHTMLParser {
 		//------------------------------------------------------------------------------------------
 		if ('' == $tagStr) { return false;}						//	nothing to add
 		$this->output .= $tagStr;								//	we're done, add to output
-		$this->log .= "Adding tag: " . htmlentities($tagStr) . "<br/>\n";
+		$this->log .= "Adding tag: " . htmlentities($tagStr, ENT_QUOTES, "UTF-8") . "<br/>\n";
 		return true;
 
 	} // end this.addTag
@@ -410,8 +407,8 @@ class KHTMLParser {
 	//returns: true is it's allowed, false if not [bool]
 
 	function allowAttrib($tagType, $attribute) {
-		$tagType = strtolower($tagType);
-		$attribute = strtolower($attribute);
+		$tagType = mb_strtolower($tagType);
+		$attribute = mb_strtolower($attribute);
 		if ('class' == $attribute) { return true; }	// any tag may have any class
 
 		//--------------------------------------------------------------------------------------
@@ -478,7 +475,7 @@ class KHTMLParser {
 			$parts = explode(":", $thisStyleLine);
 			$styleIsAllowed = false;
 			$styleParamName = $parts[0];
-			$styleParamName = strtolower($styleParamName);
+			$styleParamName = mb_strtolower($styleParamName);
 
 			switch($styleParamName) {
 				case 'text-align':		$styleIsAllowed = true; 	break;

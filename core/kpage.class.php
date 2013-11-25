@@ -1,8 +1,5 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/live/models/mailbox.mod.php');
-	require_once($kapenta->installPath . 'modules/live/models/trigger.mod.php');
-
 //--------------------------------------------------------------------------------------------------
 //*	object for reading, writing and rendering pages and other response documents
 //--------------------------------------------------------------------------------------------------
@@ -67,9 +64,21 @@ class KPage {
 		global $db, $utils, $kapenta, $session;
 
 		//------------------------------------------------------------------------------------------
+		//	check for a page matching alternative device profiles
+		//------------------------------------------------------------------------------------------
+		$profile = $kapenta->session->get('deviceprofile');
+
+		if ('desktop' !== $profile) {
+			$altFile = str_replace('.page.php', ".{$profile}.page.php", $fileName);
+			if (true == $kapenta->fileExists($altFile)) { $fileName = $altFile; }
+		}
+
+		$this->fileName = $fileName;
+
+		//------------------------------------------------------------------------------------------
 		//	load the page template and parse XML
 		//------------------------------------------------------------------------------------------
-		$this->fileName = $fileName;
+
 		$xmlDoc = new KXmlDocument($fileName, true);
 		if (false == $xmlDoc->loaded) { 
 			$kapenta->logErr('KPage', 'load()', 'could not load: ' . $fileName);
@@ -104,7 +113,7 @@ class KPage {
 		//------------------------------------------------------------------------------------------
 		//	handle mobile browsers
 		//------------------------------------------------------------------------------------------
-		if ('true' == $session->get('mobile')) {
+		if ('true' == $kapenta->session->get('mobile')) {
 			if ('twocol-rightnav.template.php' == $this->template) {
 				$this->template = 'mobile.template.php';
 			}
@@ -122,11 +131,15 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-		global $kapenta, $db, $utils;
+		global $kapenta;
 
 		$clean = $this->toArray();
-		foreach($clean as $key => $value) { $clean[$key] = $db->addMarkup(stripslashes($value)); }
-		$xml = $utils->arrayToXml2d('page', $clean, true);
+
+		foreach($clean as $key => $value) {
+			$clean[$key] = $kapenta->db->addMarkup(stripslashes($value));
+		}
+
+		$xml = $kapenta->utils->arrayToXml2d('page', $clean, true);
 		$kapenta->filePutContents($this->fileName, $xml, false, true);
 	}
 
@@ -184,7 +197,8 @@ class KPage {
 		//------------------------------------------------------------------------------------------
 		//	load the template
 		//------------------------------------------------------------------------------------------
-		if (true == $session->get('mobile')) {
+
+		if ('desktop' !== $session->get('deviceprofile')) {
 			$this->template = str_replace('twocol-rightnav', 'mobile', $this->template);
 			$this->template = str_replace('twocol-leftnav', 'mobile', $this->template);
 			$this->template = str_replace('onecol', 'mobile', $this->template);
@@ -194,11 +208,13 @@ class KPage {
 
 		$templateFile = 'themes/' . $theme->name . '/templates/' . $this->template;
 
+		//echo "<h2>" . $this->template . "</h2>\n";
+
 		if (false == $kapenta->fileExists($templateFile)) {
 			$templateFile = 'themes/' . $theme->name . '/' . $this->template;
 		}
 
-		$template = $kapenta->fileGetContents($templateFile, false, true);
+		$template = $kapenta->fs->get($templateFile, false, true);
 
 		$template = str_replace(array_keys($env), array_values($env), $template);
 
@@ -211,29 +227,59 @@ class KPage {
 		//	execute blocks in template and page sections
 		//------------------------------------------------------------------------------------------
 
-		$template = str_replace(
-			array(
-				'%%content%%',
-				'%%nav1%%',
-				'%%nav2%%',
-				'%%menu1%%',
-				'%%menu2%%',
-				'%%breadcrumb%%',
-				'%%sMessage%%',
-				'%%debug%%',
-			),
-			array(
-				$theme->expandBlocks($this->content, 'content'),
-				$theme->expandBlocks($this->nav1, 'nav1'),
-				$theme->expandBlocks($this->nav2, 'nav2'),
-				$theme->expandBlocks($this->menu1, 'menu1'),
-				$theme->expandBlocks($this->menu2, 'menu2'),
-				$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
-				$session->messagesToHtml(),
-				$this->debugToHtml()
-			),
-			$template
-		);
+		if ('desktop' == $session->get('deviceprofile')) {
+
+			$template = str_replace(
+				array(
+					'%%content%%',
+					'%%nav1%%',
+					'%%nav2%%',
+					'%%menu1%%',
+					'%%menu2%%',
+					'%%breadcrumb%%',
+					'%%sMessage%%',
+					'%%debug%%',
+				),
+				array(
+					$theme->expandBlocks($this->content, 'content'),
+					$theme->expandBlocks($this->nav1, 'nav1'),
+					$theme->expandBlocks($this->nav2, 'nav2'),
+					$theme->expandBlocks($this->menu1, 'menu1'),
+					$theme->expandBlocks($this->menu2, 'menu2'),
+					$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
+					$session->messagesToHtml(),
+					$this->debugToHtml()
+				),
+				$template
+			);
+
+		} else {
+
+			$template = str_replace(
+				array(
+					'%%content%%',
+					'%%nav1%%',
+					'%%nav2%%',
+					'%%menu1%%',
+					'%%menu2%%',
+					'%%breadcrumb%%',
+					'%%sMessage%%',
+					'%%debug%%',
+				),
+				array(
+					$theme->expandBlocks($this->content, 'mobile'),
+					$theme->expandBlocks($this->nav1, 'nav1'),
+					$theme->expandBlocks($this->nav2, 'nav2'),
+					$theme->expandBlocks($this->menu1, 'menu1'),
+					$theme->expandBlocks($this->menu2, 'menu2'),
+					$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
+					$session->messagesToHtml(),
+					$this->debugToHtml()
+				),
+				$template
+			);
+
+		}
 
 		$session->clearMessages();
 
@@ -264,11 +310,14 @@ class KPage {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	log the page view and send the page
+		//	output to browser
+		//------------------------------------------------------------------------------------------
+		echo $template;
+
+		//------------------------------------------------------------------------------------------
+		//	log the page view (gethostbyaddr introduces a delay, start sending output first)
 		//------------------------------------------------------------------------------------------
 		$kapenta->logPageView();	// log this page view
-
-		echo $template;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -523,11 +572,18 @@ class KPage {
 	//opt: msg - an error message or response code [string]
 	//returns true on success, false on failure [bool]
 
-	function logDebug($system, $msg) {
+	function logDebugItem($system, $msg) {
 		if (false == $this->logDebug) { return false; }
 		if (false == array_key_exists($system, $this->debug)) { $this->debug[$system] = array(); }
-		$this->debug[$system][] = $msg;
+		$this->debug[$system][] = str_replace('[[:', '[[%%delme%%:', $msg);
 		return true;
+	}
+
+	//	DEPRECATED: function name is the same as property name, presently need for Kapmed support
+	//	strix 2012-08-30
+
+	function logDebug($system, $msg) {
+		return $this->logDebugItem($system, $msg);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -579,13 +635,37 @@ class KPage {
 
 		if (true == array_key_exists('query', $this->debug)) {
 			$queries = '';
-			foreach($this->debug['query'] as $query) 
-				{ $queries .= "<div class='inlinequote'>$query</div>\n"; }
 
-			$report .= "[[:theme::navtitlebox::label=Database Queries::toggle=debugDbQueries:]]\n"
-					. "<div id='debugDbQueries'>" . $queries . "</div><br/>\n";
+			foreach($this->debug['query'] as $query) {
+				$queries .= "<div class='inlinequote'>$query</div>\n";
+			}			
+
+			$report .= ''
+			 . "[[:theme::navtitlebox"
+			 . "::label=" . count($this->debug['query']) . " Database Queries"
+			 . "::toggle=debugDbQueries"
+			 . ":]]\n"
+			 . "<div id='debugDbQueries'>" . $queries . "</div><br/>\n";
 		}
 
+		//------------------------------------------------------------------------------------------		
+		//	add memcached activity
+		//------------------------------------------------------------------------------------------
+
+		if (true == array_key_exists('memcached', $this->debug)) {
+			$mca = '';
+
+			foreach($this->debug['memcached'] as $query) {
+				$mca .= "<div class='inlinequote'>$query</div>\n";
+			}			
+
+			$report .= ''
+			 . "[[:theme::navtitlebox"
+			 . "::label=" . count($this->debug['memcached']) . " Memcached Activity "
+			 . "::toggle=debugMemcached"
+			 . ":]]\n"
+			 . "<div id='debugMemcached'>" . $mca . "</div><br/>\n";
+		}
 		//------------------------------------------------------------------------------------------		
 		//	substitute into block
 		//------------------------------------------------------------------------------------------

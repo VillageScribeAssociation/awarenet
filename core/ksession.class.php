@@ -3,6 +3,10 @@
 //--------------------------------------------------------------------------------------------------
 //*	object to maintain session data
 //--------------------------------------------------------------------------------------------------
+//+
+//+		DEPRECATED: this has been replaced by user session objects
+//+		../modules/users/models/session.mod.php
+//+
 //+	Message icons may be:
 //+		info - informational
 //+		warn - warning

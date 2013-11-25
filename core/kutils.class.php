@@ -7,6 +7,12 @@
 class KUtils {
 
 	//----------------------------------------------------------------------------------------------
+	//	properties
+	//----------------------------------------------------------------------------------------------
+
+	var $maxDeprecatedNotices = 1024;			//%	prevent excessive memory use [int]
+
+	//----------------------------------------------------------------------------------------------
 	//.	make a random number, compatability with older PHP versions
 	//----------------------------------------------------------------------------------------------
 	//opt: min - bottom of range [float]
@@ -31,7 +37,7 @@ class KUtils {
 	//TODO: more configuration options
 
 	function cleanHtml($html) {
-		$mq = strtolower(ini_get('magic_quotes_gpc'));
+		$mq = mb_strtolower(ini_get('magic_quotes_gpc'));
 		if (('on' == $mq) || ('1' == $mq)) { $html = stripslashes($html); }
 
 		//	disallow non-breaking spaces, some users leave thousands of them at the end of blog
@@ -39,7 +45,11 @@ class KUtils {
 		$html = str_replace('&nbsp;', ' ', $html);
 
 		$parser = new KHTMLParser($html);
-		return $parser->output;
+		$html = $parser->output;
+
+		$html = $this->trimHtml($html);
+
+		return $html;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -50,7 +60,7 @@ class KUtils {
 
 	function cleanTitle($txt) {
 		$txt = $this->stripHtml($txt);
-		$txt = htmlentities($txt);
+		$txt = htmlentities($txt, ENT_QUOTES, "UTF-8");
 		$txt = str_replace("'", '&#39;', $txt);
 		$txt = str_replace("\"", '&quot;', $txt);
 		return $txt;
@@ -63,7 +73,7 @@ class KUtils {
 	//returns: 'yes' or 'no' [string]
 
 	function cleanYesNo($yesno) {
-		$yesno = trim(strtolower($yesno));
+		$yesno = trim(mb_strtolower($yesno));
 		switch($yesno) {
 			case 'false':		$yesno = 'no';		break;
 			case 'true':		$yesno = 'yes';		break;
@@ -103,6 +113,34 @@ class KUtils {
 		return preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $someText);
 	}
 
+	//----------------------------------------------------------------------------------------------
+	//.	remove leading and trailing whitespace, line breaks and paragraphs from HTML
+	//----------------------------------------------------------------------------------------------
+	//arg: html - cleaned HTML [string]
+
+	function trimHtml($html) {
+		$continue = true;
+		$remove = array('<br/>', '<br>', '<p></p>', '&nbsp;');		
+
+		while (true == $continue) {
+			$continue = false;
+			$html = trim($html);
+			foreach($remove as $find) {
+				if (mb_substr($html, 0, mb_strlen($find)) == $find) {
+					$html = mb_substr($html, mb_strlen($find));
+					$continue = true;
+				}
+
+				if (mb_substr($html, (0 - mb_strlen($find))) == $find) {
+					$html = mb_substr($html, 0, (mb_strlen($html) - mb_strlen($find)));
+					$continue = true;
+				}
+			}
+		}
+
+		return $html;
+	}
+
 	//==============================================================================================
 	//	TEXT FORMATTING
 	//==============================================================================================
@@ -116,10 +154,10 @@ class KUtils {
 	
 	function makeAlphaNumeric($txt, $allow = '') {
 		$clean = '';
-		$numChars = strlen($txt);											// loop invariant
-		$numAllow = strlen($allow);
+		$numChars = mb_strlen($txt);											// loop invariant
+		$numAllow = mb_strlen($allow);
 		for($i = 0; $i < $numChars; $i++) {
-			$currChar = substr($txt, $i, 1);
+			$currChar = mb_substr($txt, $i, 1);
 			$oCC = ord($currChar);
 		
 			if (($oCC >= 48) AND ($oCC <= 57)) { $clean .= $currChar; } 	// 0-9
@@ -128,7 +166,7 @@ class KUtils {
 
 			if ($numAllow > 0) {
 				for($j = 0; $j < $numAllow; $j++) {						// specified by caller
-					$allowChar = substr($allow, $j, 1);
+					$allowChar = mb_substr($allow, $j, 1);
 					if ($currChar == $allowChar) { $clean .= $allowChar; }
 				}
 			}
@@ -174,9 +212,12 @@ class KUtils {
 	//returns: same string, with entities replaced [string]
 
 	function addHtmlEntities($txt) {
-		$txt = str_replace('&', '&amp;', $txt);
-		$txt = str_replace('<', '&lt;', $txt);
-		$txt = str_replace('>', '&gt;', $txt);
+		//$txt = str_replace('&', '&amp;', $txt);
+		//$txt = str_replace('<', '&lt;', $txt);
+		//$txt = str_replace('>', '&gt;', $txt);
+
+		//TODO: redo this
+
 		return $txt;
 	}
 
@@ -187,9 +228,12 @@ class KUtils {
 	//returns: same string, with entities replaced [string]
 
 	function removeHtmlEntities($txt) {
-		$txt = str_replace('&lt;', '<', $txt);
-		$txt = str_replace('&gt;', '>', $txt);
-		$txt = str_replace('&amp;', '&', $txt);
+		//$txt = str_replace('&lt;', '<', $txt);
+		//$txt = str_replace('&gt;', '>', $txt);
+		//$txt = str_replace('&amp;', '&', $txt);
+
+		//TODO: redo this
+
 		return $txt;
 	}
 
@@ -217,7 +261,7 @@ class KUtils {
 	function base64EncodeJs($varName, $text, $scriptTags = true) {
 		$b64 = base64_encode($text);										// encode
 		$b64 = wordwrap($b64, 80, "\n", true);								// break into lines, 80c
-		$break = "\"\n" . str_repeat(' ', strlen($varName) + 5) . "+ \"";	// indent pattern
+		$break = "\"\n" . str_repeat(' ', mb_strlen($varName) + 5) . "+ \"";	// indent pattern
 		$b64 = str_replace("\n", $break, $b64);								// apply pattern
 		$b64 = "var $varName = \"" . $b64 . "\";\n";						// add js varname
 		if (true == $scriptTags) 
@@ -226,21 +270,21 @@ class KUtils {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	get a substring delimited by start and end strings
+	//.	get a mb_substring delimited by start and end strings
 	//----------------------------------------------------------------------------------------------
 	//arg: start - string begins with [string]
 	//arg: end - string ends with [string]
 
 	function strdelim($str, $start, $end) {
 		$str = ' ' . $str;
-		$substr = '';
-		$startPos = strpos($str, $start);
+		$mb_substr = '';
+		$startPos = mb_strpos($str, $start);
 		if (false != $startPos) {
-			$startPos = $startPos + strlen($start);
-			$endPos = strpos($str, $end, $startPos);
-			if (false != $endPos) { $substr = substr($str, $startPos, $endPos - $startPos); }
+			$startPos = $startPos + mb_strlen($start);
+			$endPos = mb_strpos($str, $end, $startPos);
+			if (false != $endPos) { $mb_substr = mb_substr($str, $startPos, $endPos - $startPos); }
 		}
-		return $substr;
+		return $mb_substr;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -381,6 +425,23 @@ class KUtils {
 		//------------------------------------------------------------------------------------------
 		$result = curl_exec($ch);
 		return $result;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	note when a method has been deprecated
+	//----------------------------------------------------------------------------------------------
+
+	function noteDeprecated($component, $method) {
+		global $session;
+
+		$this->maxDeprecatedNotices--;
+		if (0 <= $this->maxDeprecatedNotices) { return; }
+
+		//$session->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
+		echo 'Deprecated: ' . $component . '::' . $method . "<br/>\n";
+		echo "<small>";
+		debug_print_backtrace();
+		echo "</small><br/>\n";
 	}
 
 }

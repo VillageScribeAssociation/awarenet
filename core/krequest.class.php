@@ -19,7 +19,6 @@ class KRequest {
 	var $mvc;				//_	module, model, action parts [array]
 	var $local = false;		//_	set to true if client is on same subnet as server [bool]
 	var $agent = '';		//_ requesting user agent [string]
-	var $mobile = false;	//_ detected mobile browser [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	constructor (breaks up request)
@@ -53,14 +52,6 @@ class KRequest {
 		$this->splitRequestURI();									// interpret the rest
 		$this->local = $this->checkIfLocal();						// check subnet of client
 
-		//------------------------------------------------------------------------------------------
-		//	try to handle mobile browsers
-		//------------------------------------------------------------------------------------------
-
-		$this->agent = $_SERVER['HTTP_USER_AGENT'];
-		if (preg_match('/iPhone|Android|Blackberry/i', $this->agent)) {
-			$this->mobile = true;
-		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -237,6 +228,43 @@ class KRequest {
 		
 	}
 	*/
+
+	//----------------------------------------------------------------------------------------------
+	//.	guess browser profile on first request
+	//----------------------------------------------------------------------------------------------
+	//returns: device profile name [string]
+
+	function guessDeviceProfile() {
+		$deviceProfile = 'desktop';
+
+		$specific = array();
+
+		$specific['colpad2'] = ''
+		 . "Mozilla/5.0 (Linux; U; Android 4.0.3; en-us; Full AOSP on Rk29sdk Build/IML74K)"
+		 . " AppleWebKit/534.30 (KHTML, like Gecko)"
+		 . " Version/4.0 Safari/534.30";
+
+
+
+		if (true == array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+			$this->agent = $_SERVER['HTTP_USER_AGENT'];
+			if (preg_match('/iPhone|Android|Blackberry/i', $this->agent)) {
+				$deviceProfile = 'mobile';
+			}
+		}
+
+		foreach($specific as $profile => $ua) {
+			if ($ua == $this->agent) { $deviceProfile = $profile; }
+		}
+
+		$specific['colpad2'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.34 Safari/534.24";
+
+		foreach($specific as $profile => $ua) {
+			if ($ua == $this->agent) { $deviceProfile = $profile; }
+		}
+
+		return $deviceProfile;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	make array as used by previous Kapenta versions

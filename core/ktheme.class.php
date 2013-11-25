@@ -34,7 +34,7 @@ class KTheme {
 
 	function load($theme) {
 		$this->name = $theme;
-		$this->readStyle();
+		//$this->readStyle();
 		$this->loaded = true;
 	}
 
@@ -50,29 +50,30 @@ class KTheme {
 
 	function loadBlock($fileName) {
 		global $kapenta;
-		global $user;
-		global $session;
+		//global $user;
+		//global $session;
 
 		//------------------------------------------------------------------------------------------
-		//	check for mobile template
+		//	check for block customized to this device profile
 		//------------------------------------------------------------------------------------------
-		if ('true' == $session->get('mobile')) {
-			$mobileBlock = str_replace('.block.php', '.m.block.php', $fileName);
-			if (true == $kapenta->fileExists($mobileBlock)) { $fileName = $mobileBlock; }			
+		$profile = $kapenta->session->get('deviceprofile');
+		if ('desktop' != $profile) {
+			$altBlock = str_replace('.block.php', '.' . $profile . '.block.php', $fileName);
+			if (true == $kapenta->fs->exists($altBlock)) { $fileName = $altBlock; }			
 		}
 
 		//------------------------------------------------------------------------------------------
 		//	get the file contents
 		//------------------------------------------------------------------------------------------
 	
-		if ($kapenta->fileExists($fileName)) {
-		  	$raw = $kapenta->fileGetContents($fileName, false, true);
+		if ($kapenta->fs->exists($fileName)) {
+		  	$raw = $kapenta->fs->get($fileName, false, true);
 	
 			//--------------------------------------------------------------------------------------
 			// special admin option TODO: make this a setting
 			//--------------------------------------------------------------------------------------
 			/*
-			if (('admin' == $user->role) AND (substr($fileName, 0, 8) == 'modules/')) {
+			if (('admin' == $user->role) AND (mb_substr($fileName, 0, 8) == 'modules/')) {
 			  if ($request['module'] != 'blocks') {
 				$parts = explode('/', $fileName);
 				$raw .= "<small><a href='/blocks/edit/module_" . $parts[1] . '/'
@@ -85,7 +86,7 @@ class KTheme {
 
 		} else { 
 			$msg = 'Could not load requested block file:<br/>' . $fileName;
-			$session->msgAdmin($msg, 'bad');
+			$kapenta->session->msgAdmin($msg, 'bad');
 			return ''; 
 		}
 	}
@@ -99,8 +100,10 @@ class KTheme {
 
 	function replaceLabels($labels, $txt) {
 		global $kapenta;
+
 		$labels['serverPath'] = $kapenta->serverPath;
 		$labels['websiteName'] = $kapenta->websiteName;
+
 		if (false == is_array($labels)) { return $txt; }	// no. because no.
 
 		foreach ($labels as $label => $val) { 
@@ -119,7 +122,7 @@ class KTheme {
 
 	function saveBlock($fileName, $raw) {
 		global $kapenta;
-		$result = $kapenta->filePutContents($fileName, $raw, false, true);
+		$result = $kapenta->fs->put($fileName, $raw, false, true);
 		return $result;
 	}
 
@@ -160,7 +163,7 @@ class KTheme {
 		$srch = array('<', '>', '&nbsp;');
 		$repl = array('&lt;', '&gt;', ' ');
 
-		$html = substr($html, 0, $length) . '...';						// cut down to length
+		$html = mb_substr($html, 0, $length) . '...';						// cut down to length
 		return $html;
 	}
 
@@ -172,20 +175,42 @@ class KTheme {
 	//: this is quite an old function, from before views were separated into their own files
 
 	function runBlock($ba) {
-		global $kapenta, $session;
+		global $kapenta;
+
+		if (
+			(false == array_key_exists('api', $ba)) ||
+			(false == array_key_exists('method', $ba))
+		) {
+			if (false == array_key_exists('rawblock', $ba)) { $ba['rawblock'] = ''; }
+			$kapenta->session->msgAdmin("No api or method given: " . $ba['rawblock']);
+			return '';
+		}
 
 		$apiFile = $this->getBlockApiFile($ba['api'], $ba['method']);
 		$fnName = $ba['api'] . '_' . $ba['method'];
 
-		if ($kapenta->fileExists($apiFile)) {
+		if ($kapenta->fs->exists($apiFile)) {
 			require_once($kapenta->installPath . $apiFile);
 			if (function_exists($fnName)) {
-				return call_user_func($fnName, ($ba['args']));
+				//----------------------------------------------------------------------------------
+				//	view loaded, run it
+				//----------------------------------------------------------------------------------
+				$startTime = $kapenta->time();
+				$html = call_user_func($fnName, ($ba['args']));
+				$endTime = $kapenta->time();
+
+				$diff = ($endTime - $startTime);
+				if ($diff > 1) {
+					$logMsg = $diff . ' - ' . $ba['args']['rawblock'];
+					$kapenta->logEvent('slow-views', 'theme', 'block', $logMsg);
+				}
+
+				return $html;
 
 			} else { 
 				$msg = "called function $fnName does not exist in $apiFile";
 				$kapenta->logErr('blocks', 'runBlock', $msg); 
-				$session->msgAdmin($msg);
+				$kkapenta->session->msgAdmin($msg);
 
 			}
 		} else {
@@ -193,7 +218,8 @@ class KTheme {
 			$kapenta->logErr('blocks', 'runBlock', $msg);
 			//$session->msgAdmin("api file does not exist: " . $apiFile);
 
-		}	
+		}
+
 		return '';
 	}
 
@@ -232,11 +258,11 @@ class KTheme {
 		$lines = explode("\n", $txt);				//%	[array:string]
 		foreach($lines as $line) {					//	for each line which might be a block
 		  $line = trim($line);
-		  if (strlen($line) > 8) {
+		  if (mb_strlen($line) > 8) {
 			//--------------------------------------------------------------------------------------
 			//	if this line begins with [[:: and ends with ::]]
 			//--------------------------------------------------------------------------------------
-			if ((substr($line, 0, 3) == '[[:') AND (substr(strrev($line), 0, 3) == ']]:')) 
+			if ((mb_substr($line, 0, 3) == '[[:') AND (mb_substr(strrev($line), 0, 3) == ']]:')) 
 				{ $blocks[] = $line; }
 
 		  }
@@ -287,12 +313,12 @@ class KTheme {
 			//--------------------------------------------------------------------------------------
 
 			foreach($parts as $part) {
-				$eqPos = strpos($part, '=');
+				$eqPos = mb_strpos($part, '=');
 				if (false == $eqPos) {
 					$ba['args'][$part] = true;
 				} else {
-					$argName = substr($part, 0, $eqPos);
-					$argValue = substr($part, ($eqPos + 1));
+					$argName = mb_substr($part, 0, $eqPos);
+					$argValue = mb_substr($part, ($eqPos + 1));
 					$ba['args'][$argName] = $argValue;
 				}
 			}
@@ -317,7 +343,7 @@ class KTheme {
 
 		$continue = true;
 
-		if (true == $session->get('mobile')) {
+		if ('mobile' == $session->get('mobile')) {
 			switch($area) {
 				case 'indent':		$area = 'mobileindent'; 	break;
 				case 'content':		$area = 'mobile'; 			break;
@@ -331,24 +357,24 @@ class KTheme {
 		}
 
 		while (true == $continue) {
-			$startPos = strpos($txt, '[[:');
-			$endPos = strpos($txt, ':]]', (int)$startPos);
+			$startPos = mb_strpos($txt, '[[:');
+			$endPos = mb_strpos($txt, ':]]', (int)$startPos);
 
 			if ((false === $startPos) || (false === $endPos)) {
 				$continue = false;
 			} else {
 
 				$endPos = $endPos + 3;
-				$block = substr($txt, $startPos, $endPos - $startPos);
+				$block = mb_substr($txt, $startPos, $endPos - $startPos);
 
 				$ba = $this->blockToArray($block);
 	
-				$ba['args']['area'] = $area;							// spacial magic block argument
+				$ba['args']['area'] = $area;					// spacial magic block argument
 				$ba['args']['rawblock'] = $block;				// ... ditto ...
 
 				$result = $this->runBlock($ba);
 
-				$txt = substr($txt, 0, $startPos) . $result . substr($txt, $endPos);
+				$txt = mb_substr($txt, 0, $startPos) . $result . mb_substr($txt, $endPos);
 			}
 		}
 
@@ -362,7 +388,7 @@ class KTheme {
 		//------------------------------------------------------------------------------------------
 		$ban = explode("\n", $calledBy);
 		foreach($ban as $killThis) 
-			{ if (strlen($killThis) > 3) { $txt = str_replace($killThis, '', $txt); } }
+			{ if (mb_strlen($killThis) > 3) { $txt = str_replace($killThis, '', $txt); } }
 
 		//------------------------------------------------------------------------------------------
 		//	replace each block with result from the appropriate blocks API
@@ -443,12 +469,17 @@ class KTheme {
 			$style = " style='visibility: hidden; display: none;'";
 		}
 
+		//	 . "::divid=" . $divId . "tb"
+
 		$html = ''
-		 . "[[:theme::titlebox::label=$title" . $tg . ":]]\n"
-		 . "<div id='$divId' class='block'$style>\n"
+		 . "<div class='block'>\n"
+		 . "[[:theme::titlebox"
+			 . "::label=$title" . $tg . ":]]\n"
+		 . "<div id='$divId'$style>\n"
 		 . $html
 		 . "</div>\n"
 		 . "<div class='foot'></div>\n"
+		 . "</div>\n"
 		 . "<br/>\n";
 
 		return $html;
@@ -474,11 +505,13 @@ class KTheme {
 		}
 
 		$html = ''
+		 . "<div class='block'>\n"
 		 . "[[:theme::navtitlebox::label=$title" . $tg . ":]]\n"
-		 . "<div id='$divId' class='navblock' $style>\n"
+		 . "<div id='$divId' $style>\n"
 		 . $html
 		 . "</div>\n"
 		 . "<div class='foot'></div>\n"
+		 . "</div>\n"
 		 . "<br/>\n";
 
 		return $html;

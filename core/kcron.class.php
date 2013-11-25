@@ -37,7 +37,7 @@ class KCron {
 	}	
 
 	//----------------------------------------------------------------------------------------------
-	//.	load the last run tomes from the registry
+	//.	load the last run times from the registry
 	//----------------------------------------------------------------------------------------------
 	//returns: true on success, fals on failure [bool]
 
@@ -114,11 +114,17 @@ class KCron {
 		global $kapenta, $db, $user, $theme, $page, $session, $cron;
 		$report = '';
 
+		echo "Running task set.. $interval<br/>\n"; flush();
+
 		$session->msgAdmin('running task set: ' . $interval);
 
 		$mods = $kapenta->listModules();
 		foreach($mods as $modName) {
 			$incFile = 'modules/' . $modName . '/inc/cron.inc.php';
+
+			echo "including cron script: " . $incFile . "<br/>\n"; flush();
+			
+
 			if (true == $kapenta->fileExists($incFile)) {
 				require_once($kapenta->installPath . $incFile);
 				$fnName = $modName . '_cron_' . $interval;

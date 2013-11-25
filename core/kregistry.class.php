@@ -25,6 +25,7 @@ class KRegistry {
 	var $files;									//_	array of loaded registry files [array:string]
 	var $path = 'data/registry/';				//_	location of registry files [string]
 	var $lockTTL = 3;							//_	number of seconds before locks expire [string]
+	var $maxFailures = 5;							//_	failed locks [int]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -192,6 +193,7 @@ class KRegistry {
 			if (false === $raw) {
 				//	file was deleted as we loaded it, try again
 				sleep(1);
+				//echo "sleeeping...<br/>"; flush();
 				return $this->getLock($prefix);
 
 			} else {
@@ -203,7 +205,13 @@ class KRegistry {
 				if ('bad' == $lock['check']) {
 					// file was partially written, try again
 					sleep(1);
-					$lock = $this->getLock($prefix);
+					$this->maxFailures--;
+					if ($this->maxFailures > 0) {
+						$lock = $this->getLock($prefix);
+					} else {
+						// delete the lock file
+						unlink($lockFile);
+					}
 				}
 
 			}
@@ -425,7 +433,7 @@ class KRegistry {
 
 	function toHtml($prefix) {
 		$html = '';				//%	return value [string:html]
-
+		
 		$html .= "<table noboder width='100%'>\n" 
 			. "<tr><td class='title'>Key</td><td class='title'>Value</td></tr>\n";
 

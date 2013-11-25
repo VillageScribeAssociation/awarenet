@@ -1,7 +1,7 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/revisions/models/deleted.mod.php');
-	require_once($kapenta->installPath . 'modules/revisions/models/revision.mod.php');
+	require_once(dirname(__FILE__) . '/../modules/revisions/models/deleted.mod.php');
+	require_once(dirname(__FILE__) . '/../modules/revisions/models/revision.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	interface to revisioning system
@@ -106,6 +106,7 @@ class KRevisions {
 		$model->refModel = $dbSchema['model'];
 		$model->refUID = $fields['UID'];
 		$model->fields = $fields;
+		$model->status = 'deleted';
 
 		$model->shared = 'yes';
 		if (false == $isShared) { $model->shared = 'no'; }

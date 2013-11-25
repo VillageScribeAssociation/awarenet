@@ -593,7 +593,7 @@ function Kapenta_Utility() {
 	//----------------------------------------------------------------------------------------------
 	//;	source: kapenta.org.uk
 
-	this.toggleNTVisible = function(navImgId, divId) {					//function(navImgId, divId) {
+	this.toggleNTVisible = function(navImgId, divId) {
 		
 		var cbFn = function() { if (window.parent) { kutils.resizeIFrame(); } }
 		var icoDir = jsServerPath + 'themes/' + jsTheme;
@@ -602,6 +602,9 @@ function Kapenta_Utility() {
 			$('#' + divId).css('visibility', 'visible');
 			$('#' + navImgId).attr('src', icoDir + '/images/icons/btn-minus.png');
 			$('#' + divId).show('fast', cbFn);
+
+			
+
 		} else {
 			$('#' + divId).hide('fast', cbFn);
 			$('#' + navImgId).attr('src', icoDir + '/images/icons/btn-plus.png');
@@ -627,7 +630,7 @@ function Kapenta_Utility() {
 		//
 		//}
 		//
-		//this.resizeAllIFrames();
+		this.resizeAllIFrames();
 	}
 
 	//----------------------------------------------------------------------------------------------

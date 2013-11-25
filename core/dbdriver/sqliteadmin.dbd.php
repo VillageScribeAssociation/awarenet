@@ -18,7 +18,21 @@
 //+	 'nodiff' -> array of field names which are not versioned (eg, hitcount)
 
 
-class KDBAdminDriver_MySQL {
+class KDBAdminDriver_SQLite {
+
+	//----------------------------------------------------------------------------------------------
+	//	properties
+	//----------------------------------------------------------------------------------------------
+
+	var $db;				//_	database connection to use [object]
+
+	//----------------------------------------------------------------------------------------------
+	//.	constructor
+	//----------------------------------------------------------------------------------------------
+
+	function KDBAdminDriver_SQLite($dbd) {
+		$this->db = $dbd;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	make a database (consider removing this, live sites should not need this functionality)
@@ -27,19 +41,12 @@ class KDBAdminDriver_MySQL {
 	//returns: true on success or false on error [bool]
 
 	function create($database) {
-		global $db, $user;
-
-		if ('admin' == $user->role) {
-		$query = 'CREATE DATABASE ' . $database;
-		$connect = @mysql_pconnect($db->host, $db->user, $db->pass);
-
-		if (false == $connect) { return false; }		
-
-		//$connect = mysql_connect($db->host, $db->user, $db->pass) or die("no connect");
-		$result = @mysql_query($query, $connect);
+		$this->db->name = $database;
+		if ('admin' != $user->role) { return false; }
+		$sql = 'CREATE TABLE IF NOT EXISTS test_canary';
+		$result = $this->db->query($sql);
 		if (false == $result) { return false; }
 		return true;
-	  }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -49,12 +56,16 @@ class KDBAdminDriver_MySQL {
 	//returns: true on success, false on failure [bool]
 
 	function createTable($dbSchema) {
-		global $user, $db, $session;
+		global $user, $session;
+
 		//------------------------------------------------------------------------------------------
 		//	checks
 		//------------------------------------------------------------------------------------------
-		//if ('admin' != $user->role) { return false; }						// admins only
-		if (true == $db->tableExists($dbSchema['model'])) { return false; }	// table already exists
+		if (true == $this->db->tableExists($dbSchema['model'])) {
+			echo "Table already exists...<br/>\n";
+			return false;
+		}
+
 		$table = $dbSchema['model'];
 
 		//------------------------------------------------------------------------------------------
@@ -76,19 +87,21 @@ class KDBAdminDriver_MySQL {
 		$fields = array();
 		foreach($dbSchema['fields'] as $fName => $fType) { $fields[] = '  '. $fName .' '. $fType; }
 		$sql = "CREATE TABLE " . $table . " (\n" . implode(",\n", $fields) . $prikey . ");\n";
-		$db->query($sql);
+		$this->db->query($sql);
 
-		$db->loadTables();
-		if (false == $db->tableExists($table)) { return false; }	// check it worked
+		$this->db->loadTables();
+		if (false == $this->db->tableExists($table)) { return false; }	// check it worked
 
 		//------------------------------------------------------------------------------------------
 		//	create indices
 		//------------------------------------------------------------------------------------------
+		//	note that SQLite does not have a concept of index size, but does require an index order
+		//	in some cases.
+	
 		foreach($dbSchema['indices'] as $idxField => $idxSize) {
 			$idxName = 'idx' . $table . $idxField;
-			$sql = "CREATE INDEX $idxName ON $table ($idxField($idxSize));";
-			if ('' == $idxSize) { $sql = "CREATE INDEX $idxName ON $table ($idxField);"; }
-			$db->query($sql);
+			$sql = "CREATE INDEX IF NOT EXISTS $idxName ON $table ($idxField ASC);";
+			$result = $this->db->query($sql);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -99,9 +112,8 @@ class KDBAdminDriver_MySQL {
 		foreach($dbSchema['indices'] as $idxField => $idxSize) {
 			$idxName = 'idx' . $dbSchema['model'] . $idxField;
 			$found = false;
-			foreach($indexes as $index) {
-				if ($index['Key_name'] == $idxName) { $found = true; }
-			}
+
+			foreach($indexes as $index) { if ($index['name'] == $idxName) { $found = true; } }
 			if (false == $found) { $session->msgAdmin('Could not make index: ' . $idxName, 'bad'); }
 		}
 
@@ -117,11 +129,13 @@ class KDBAdminDriver_MySQL {
 	function getIndexes($tableName) {
 		global $db;		
 		$indexes = array();		//	return value [array]
-		if (false == $db->tableExists($tableName)) { return false; }
+		if (false == $this->db->tableExists($tableName)) { return false; }
 
-		$sql = "SHOW INDEXES FROM " . $tableName;
-		$result = $db->query($sql);
-		while($row = $db->fetchAssoc($result)) { $indexes[] = $row;	}
+		//$sql = "SHOW INDEXES FROM " . $tableName;
+		$sql = "PRAGMA index_list($tableName);";
+
+		$result = $this->db->query($sql);
+		while($row = $this->db->fetchAssoc($result)) { $indexes[] = $row;	}
 		return $indexes;
 	}
 
@@ -137,12 +151,18 @@ class KDBAdminDriver_MySQL {
 		global $db;
 		$count = 0;			//%	return value, number of records copied [int]
 
-		if (false == $db->tableExists($fromTable)) { return false; }
-		if (false == $db->tableExists($toSchema['model'])) { return false; }		
+		if (false == $this->db->tableExists($fromTable)) { return false; }
+		if (false == $this->db->tableExists($toSchema['model'])) { return false; }		
 
-		$range = $db->loadRange($fromTable, '*', '');
-		foreach($range as $row) {
-			if (false == $db->objectExists($toSchema['model'], $row['UID'])) {
+		$endTrans = $db->transactionStart();
+
+		$result = $db->query("SELECT * FROM `" . $fromTable . "`");
+
+		while($row = $db->fetchAssoc($result)) {
+
+			$row = $db->rmArray($row);
+
+			if (false == $this->db->objectExists($toSchema['model'], $row['UID'])) {
 				$newObj = array();
 
 				// default values
@@ -151,7 +171,7 @@ class KDBAdminDriver_MySQL {
 						case 'bigint':		$newObj[$fName] = '0';	break;
 						case 'int':			$newObj[$fName] = '0';	break;
 						case 'float':		$newObj[$fName] = '0';	break;
-						case 'datetime':	$newObj[$fName] = $db->datetime();	break;
+						case 'datetime':	$newObj[$fName] = $this->db->datetime();	break;
 						default:			$newObj[$fName] = '';	break;
 					}
 					if (true == array_key_exists($fName, $row)) { $newObj[$fName] = $row[$fName]; }
@@ -160,25 +180,14 @@ class KDBAdminDriver_MySQL {
 				// rename fields
 				foreach($rename as $fromName => $toName) { $newObj[$toName] = $row[$fromName]; }
 
-				$db->save($newObj, $toSchema);	
+				$this->db->save($newObj, $toSchema);	
 				$count++;
 			}
 		}
+
+		if (true == $endTrans) { $endTrans = $db->transactionEnd(); }
+
 		return $count;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	make a list of all tables in database
-	//----------------------------------------------------------------------------------------------
-	//returns: array of table names [array]
-
-	function listTables() {
-		global $db;
-
-		$tables = array();
-		$result = $db->query("SHOW TABLES FROM " . $db->name);
-		while ($row = $db->fetchAssoc($result)) { foreach ($row as $table) { $tables[] = $table; } }
-		return $tables;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -234,14 +243,14 @@ class KDBAdminDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	indices need not be in same order
 		//------------------------------------------------------------------------------------------
+		//	Note that index size cannot be compared on SQLite
+
 		foreach($dbSchema1['indices'] as $field => $size) {
 			if (array_key_exists($field, $dbSchema2['indices']) == false) { return false; }
-			if ($dbSchema2['indices'][$field] != $size) { return false; }
 		}
 
 		foreach($dbSchema2['indices'] as $field => $size) {
 			if (array_key_exists($field, $dbSchema1['indices']) == false) { return false; }
-			if ($dbSchema1['indices'][$field] != $size) { return false; }
 		}
 
 		return true;	// nothing turned out to be incorrect
@@ -250,7 +259,7 @@ class KDBAdminDriver_MySQL {
 	//----------------------------------------------------------------------------------------------
 	//.	recreate a table to a given schema
 	//----------------------------------------------------------------------------------------------
-	//: this is mostly for debugging and administrative display
+	//: used when changing database schema
 	//arg: tableName - name of a database table / model name [string]
 	//arg: dbSchema - a database table schema [array]
 	//returns: true on success, false if it fails [bool]
@@ -284,10 +293,13 @@ class KDBAdminDriver_MySQL {
 		//	copy all records into temp table
 		//------------------------------------------------------------------------------------------
 		$sql = 'SELECT * FROM ' . $tableName;
-		$result = $db->query($sql);
+		$result = $this->db->query($sql);
 		//TODO: more intelligence here
-		while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
+
+		$this->db->transactionStart();
+
+		while ($row = $this->db->fetchAssoc($result)) { 
+			$row = $this->db->rmArray($row);
 			foreach($dbSchema['fields'] as $fName => $fType) {
 				switch(strtolower($fType)) {
 					case 'bigint':
@@ -302,8 +314,10 @@ class KDBAdminDriver_MySQL {
 
 				}
 			}
-			$db->save($row, $tmpSchema); 
+			$this->db->save($row, $tmpSchema, false, false, false); 
 		}
+
+		$this->db->transactionEnd();
 
 		//------------------------------------------------------------------------------------------
 		//	delete the original table and its indices
@@ -311,29 +325,29 @@ class KDBAdminDriver_MySQL {
 		$indexes = $this->getIndexes($tableName);
 		if ($indexes != false) {
 			foreach($indexes as $row) { 
-				$db->query("DROP INDEX " . $row['Key_name'] . " ON " . $tableName); 
+				$this->db->query("DROP INDEX " . $row['name']); 
 			}
 		}
 
-		$db->query('DROP TABLE ' . $tableName);
-		$db->loadTables();
+		$this->db->query('DROP TABLE ' . $tableName);
+		$this->db->loadTables();
 
 		//------------------------------------------------------------------------------------------
 		//	create new table with indices and copy all records from temporary table
 		//------------------------------------------------------------------------------------------
 		$this->createTable($dbSchema);
 		$sql = "select * from " . $tmpSchema['model'];
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
-			$db->save($row, $dbSchema); 
+		$result = $this->db->query($sql);
+		while ($row = $this->db->fetchAssoc($result)) { 
+			$row = $this->db->rmArray($row);
+			$this->db->save($row, $dbSchema); 
 		}
 
 		//------------------------------------------------------------------------------------------
 		//	delete the temp table
 		//------------------------------------------------------------------------------------------
-		//$db->query('DROP TABLE ' . $tmpSchema['model']);
-		//$db->loadTables();
+		//$this->db->query('DROP TABLE ' . $tmpSchema['model']);
+		//$this->db->loadTables();
 
 		return true;
 	}
@@ -349,11 +363,11 @@ class KDBAdminDriver_MySQL {
 		global $db;
 
 		$report = '';
-		if (false == $db->tableExists($tableName)) { 
+		if (false == $this->db->tableExists($tableName)) { 
 			$report .= "[*] Database table '$tableName' is not installed.<br/>\n";
 		} else {
 			$report .= "[*] Database table '$tableName' exists.<br/>\n";
-			$liveSchema = $db->getSchema($tableName);
+			$liveSchema = $this->db->getSchema($tableName);
 			if (false == $this->compareSchema($dbSchema, $liveSchema)) {
 				$report .= "[*] Table '$tableName' exists but does not match schema.<br/>\n";
 			} else {
@@ -374,7 +388,7 @@ class KDBAdminDriver_MySQL {
 		if ('admin' != $user->role) { return false; }	// only admins can do this
 		$report = '';
 
-		if ($db->tableExists($dbSchema['model']) == false) {	
+		if ($this->db->tableExists($dbSchema['model']) == false) {	
 			//--------------------------------------------------------------------------------------
 			//	no such table, create it
 			//--------------------------------------------------------------------------------------
@@ -388,7 +402,7 @@ class KDBAdminDriver_MySQL {
 			//	table exists, check if its up to date
 			//--------------------------------------------------------------------------------------
 			$report .= $dbSchema['model'] . " table already exists...";	
-			$extantSchema = $db->getSchema($dbSchema['model']);	// get specifics of extant table
+			$extantSchema = $this->db->getSchema($dbSchema['model']);	// get specifics of extant table
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == true) {
 				$report .= "<span class='ajaxmsg'>all correct</span><br/>";
@@ -418,11 +432,11 @@ class KDBAdminDriver_MySQL {
 		$installed = true;
 		$report = '';
 
-		if ($db->tableExists($dbSchema['model']) == true) {
+		if ($this->db->tableExists($dbSchema['model']) == true) {
 			//--------------------------------------------------------------------------------------
 			//	table present
 			//--------------------------------------------------------------------------------------
-			$extantSchema = $db->getSchema($dbSchema['model']);
+			$extantSchema = $this->db->getSchema($dbSchema['model']);
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == false) {
 				//----------------------------------------------------------------------------------
@@ -469,9 +483,9 @@ class KDBAdminDriver_MySQL {
 	function findByUID($UID) {
 		global $db;
 
-		$tables = $db->loadTables();
+		$tables = $this->db->loadTables();
 		foreach($tables as $tableName) { 
-			if (true == $db->objectExists($tableName, $UID)) { return $tableName; }
+			if (true == $this->db->objectExists($tableName, $UID)) { return $tableName; }
 		}
 
 		return false;

@@ -1,26 +1,31 @@
 <? 
 
+	require_once(dirname(__FILE__) . '/../modules/aliases/models/alias.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	aliases are SEO-friendly strings used to identify objects
 //--------------------------------------------------------------------------------------------------
-//
-//	All objects are identified by their UID.  Additionally, objects may have multiple aliases.
-//
-//	http://mysite.org/widgets/234987023495 -(301)-> http://mysite.org/widgets/Cat-Polishing-Machine
-//
-//	Objects which cannot use their preferred alias will be assigned another.  The default alias is 
-//	the one stored on the object itself. Alternate aliases 302 to the default alias.
-//
-//	The function findRedirect($model) returns the UID of an object, or redirects to the default
-//	alias if a non-default one is used.
-
-//--------------------------------------------------------------------------------------------------
-//	decides on an alias for a record and stores it in the recordalias table, returns UID
-//--------------------------------------------------------------------------------------------------
-//	Note: this is called by save() methods on objects which have an alias field, returns the value 
-//	for that field.  $plainText is a title field or the like from which an alias is derived.
-
-require_once($kapenta->installPath . 'modules/aliases/models/alias.mod.php');
+//+
+//+	All objects are identified by their UID.  Additionally, objects may have multiple aliases.
+//+
+//+	http://mysite.org/widgets/234987023495 -(301)-> http://mysite.org/widgets/Cat-Polishing-Machine
+//+
+//+	All objects have a canonical alias stored in the 'alias' field on the object itself.  All
+//+	other aliases recorded in the aliases_alias table should recirect to the canonical alias.
+//+
+//+	Objects which cannot use their preferred alias will be assigned another.  The default alias is 
+//+	the one stored on the object itself. Alternate aliases 302 to the default alias.
+//+
+//+	The function findRedirect($model) returns the UID of an object, or redirects to the default
+//+	alias if a non-default one is used.
+//+
+//+	Where Memcached is available aliases are opportunistically cached.  For canonical aliases:
+//+	
+//+		alias::model_name::lower-case-alias => UID of owner object
+//+
+//+	For alternate aliases:
+//+
+//+		aliasalt::model_name::lower-case-not-canonical => Canonical-Alias
 
 class KAliases {
 
@@ -73,27 +78,27 @@ class KAliases {
 		}
 	
 		//------------------------------------------------------------------------------------------
-		//	check if record (#refUID) already owns its default recordAlias - if so then we're done
+		//	check if object (#refUID) already owns its default alias - if so then we're done
 		//------------------------------------------------------------------------------------------
 		$defaultOwner = $this->getOwner($refModule, $refModel, $default);
 	
 		if ($defaultOwner == $refUID) { return $default; }
 		if ($defaultOwner == false) {
 			//--------------------------------------------------------------------------------------
-			//	alias is not owned, it can be assigned to this record
+			//	alias is not owned, it can be assigned to this object
 			//--------------------------------------------------------------------------------------
 			$this->saveAlias($refModule, $refModel, $refUID, $default);
 			return $default;
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	the default alias is already owned by another record
+		//	the default alias is already owned by another object
 		//------------------------------------------------------------------------------------------
 		$currAliases = $this->getAll($refModule, $refModel, $refUID);
 
-		if ($currAliases == false) {
+		if (0 == count($currAliases)) {
 			//--------------------------------------------------------------------------------------
-			//	this record has no alias yet, find an unused record by appending a number
+			//	this object has no aliases yet, find an unused object by appending a number
 			//--------------------------------------------------------------------------------------
 			$available = $this->findAvailable($refModule, $refModel, $default, 0);
 			if ($available == false) { return ''; }
@@ -102,7 +107,7 @@ class KAliases {
 
 		} else {
 			//--------------------------------------------------------------------------------------
-			//	the default is owned by another record, return the first alias the record registered
+			//	the default is owned by another object, return the first alias the object registered
 			//--------------------------------------------------------------------------------------
 			foreach ($currAliases as $caUID => $caAlias) { return $caAlias; }
 
@@ -115,54 +120,110 @@ class KAliases {
 	//	checks that the alias supplied is the (object) default, redirects to the default if not
 	//----------------------------------------------------------------------------------------------
 	//arg: model - type of object which owns this alias [string]
-	//returns: UID of object owning the alias given, or it 404s [string]
+	//returns: UID of object owning the alias given, 301 to correct alias, or it 404s [string]
 
 	function findRedirect($model) {
-		global $kapenta, $req, $page, $db, $session;
-		$safeAlias = strtolower($db->addMarkup($req->ref));	
+		global $kapenta;
+		global $req;
+		global $page;
+		global $db;
+		global $session;
+
+		$model = strtolower($model);
+		$safeAlias = strtolower($db->addMarkup($req->ref));
 
 		//------------------------------------------------------------------------------------------
-		//	look for this record in the Aliases_Alias table
+		//	look for this object in memcache
+		//------------------------------------------------------------------------------------------
+		if (true == $kapenta->mcEnabled) {
+			//	try as canonical alias
+			$aliasKey = 'alias::' . $model . '::' . strtolower($req->ref);
+			
+			if (true == $kapenta->cacheHas($aliasKey)) {
+				$cachedUID = $kapenta->cacheGet($aliasKey);
+				if ('s:' === substr($cachedUID, 0, 2)) { $cachedUID = unserialize($cachedUID); }
+				//echo "Cached: " . $cachedUID . "<br/>\n";
+				return $cachedUID;		//......................................
+			}
+
+			//	try as alternate alias
+			$redirectKey = 'aliasalt::' . $model . '::' . strtolower($req->ref);
+			if (true == $kapenta->cacheHas($redirectKey)) {
+				//TODO: use $request object to reconstruct URI, include args
+				$URI = $req->module . '/' . $req->action . '/' . $default;
+				$URI = str_replace('//', '/', $URI);
+				$page->do301($URI);
+
+				return '';		//..................................................................
+			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	look for this object in the aliases_alias table
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "(aliaslc='" . $safeAlias . "' OR refUID='" . $safeAlias . "')";
+		$conditions[] = "aliaslc='" . $safeAlias . "'";
 		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-		$range = $db->loadRange('aliases_alias', '*', $conditions);
+		$range = $db->loadRange('aliases_alias', '*', $conditions, 'createdOn', 1);
 
-		if (count($range) > 0) {
+		foreach($range as $item) {
 			//--------------------------------------------------------------------------------------
-			//	we have a record(s), find the default and compare
+			//	we have an alias object, find canonical and compare
 			//--------------------------------------------------------------------------------------
-			$found = array_pop($range);		// pop serialized alias of ennd of array
-			$default = $this->getDefault($model, $found['refUID']);
-			if ($default == false) { $page->do404(); }
+			$canonical = $this->getDefault($model, $item['refUID']);
+			if ($canonical == '') { $page->do404(); }							//	no such object
 	
-			if (strtolower($req->ref) == strtolower($default)) {
+			//--------------------------------------------------------------------------------------
+			//	cache for next time
+			//--------------------------------------------------------------------------------------
+			if (true == $kapenta->mcEnabled) {
+				$aliasKey = 'alias::' . $model . '::' . strtolower($canonical);
+				$kapenta->cacheSet($aliasKey, $item['refUID']);					//	canonical alias
+
+				if (strtolower($req->ref) != strtolower($canonical)) {
+					$redirectKey = 'aliasalt::' . $model . '::' . strtolower($item['alias']);
+					$kapenta->cacheSet($redirectKey, $canonical);				//	alternate alias
+				}
+			}
+
+			if (strtolower($req->ref) == strtolower($canonical)) {
 				//----------------------------------------------------------------------------------
 				//	default alias was used, return the UID and we're done
 				//----------------------------------------------------------------------------------
-				//$session->msg("findRedirect default: ". $found['refUID'] . "<br/>\n");
-				return $found['refUID'];
+				return $item['refUID'];
 
 			} else {
 				//----------------------------------------------------------------------------------
 				//	alias used is not default or wrong case (mr-smith -(301)-> Mr-Smith)
 				//----------------------------------------------------------------------------------
 				//TODO: use $request object to reconstruct URI, include args
-				$URI = $req->module . '/' . $req->action . '/' . $default;
+				$URI = $req->module . '/' . $req->action . '/' . $canonical;
 				$URI = str_replace('//', '/', $URI);
 				$page->do301($URI);
 
 			}
 	
-		} else {
-			//--------------------------------------------------------------------------------------
-			//	no matches found, but this is a valid UID
-			//--------------------------------------------------------------------------------------
-			if (true == $db->objectExists($model, $req->ref)) { return $req->ref;}
-			$page->do404('');
+		} // end foreach aliases_alias object
 
+		//------------------------------------------------------------------------------------------
+		//	no matches found, perhaps this is a valid UID
+		//------------------------------------------------------------------------------------------
+		if (true == $db->objectExists($model, $req->ref)) { return $req->ref;}
+
+		//------------------------------------------------------------------------------------------
+		//	not a UID, search directly
+		//------------------------------------------------------------------------------------------
+		if ('' != trim($req->ref)) {
+			$conditions = array("alias='" . $db->addMarkup(trim($req->ref)) . "'");
+			$range = $db->loadRange($model, '*', $conditions);
+			if (count($range) > 0) {
+				$item = array_pop($range);
+				return $item['UID'];
+			}
 		}
+
+		$page->do404('Could not find aliased item');
+		return '';
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -175,13 +236,23 @@ class KAliases {
 	//returns: UID of new alias, or false on failure [string][bool]	
 
 	function saveAlias($refModule, $refModel, $refUID, $alias) {
+		global $kapenta;
+		global $session;
+
 		$model = new Aliases_Alias();
 		$model->refModule = $refModule;
 		$model->refModel = $refModel;
 		$model->refUID = $refUID;
 		$model->alias = $alias;
 		$model->alias = strtolower($alias);
-		$model->save();
+		$report = $model->save();
+
+		if ('' != $report) {
+			$session->msgAdmin('Error: could not create alias:<br/>' . $report, 'bad');
+			return '';
+		}
+
+		return $model->UID;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -254,7 +325,7 @@ class KAliases {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	delete all aliases for a record
+	//.	delete all aliases for an object and remove from memcache
 	//----------------------------------------------------------------------------------------------
 	//arg: refModule - module to which owner belongs [string]
 	//arg: refModel - type of object this is [string]
@@ -286,10 +357,11 @@ class KAliases {
 	//----------------------------------------------------------------------------------------------
 	//arg: model - object type / db table name [string]
 	//arg: UID - unique identifier of object [string]
-	//returns: default alias of object, or false on error [string][bool]
+	//returns: default alias of object, empty string error [string]
 
 	function getDefault($model, $UID) {
-		global $db, $session;
+		global $db;
+		global $session;
 
 		//------------------------------------------------------------------------------------------
 		//	check that model is a valid table
@@ -302,21 +374,16 @@ class KAliases {
 		//------------------------------------------------------------------------------------------
 		//	try load the object from the database
 		//------------------------------------------------------------------------------------------
-		$conditions = array();
-		$conditions[] = "UID='" . $db->addMarkup($UID) . "'";
-		$range = $db->loadRange($model, '*', $conditions);		
-		if (0 == count($range)) { return false; }								// no aliases found
+		$objAry = $db->getObject($model, $UID);
+		if (0 == count($objAry)) { return ''; }
 
 		//------------------------------------------------------------------------------------------
 		//	return the alias, if it has one
 		//------------------------------------------------------------------------------------------
-		foreach($range as $item) {
-			if (false == array_key_exists('alias', $item)) { return false; } 	// no alias field
-			if ('' == trim($item['alias'])) { return false; }					// alias field blank 
-			return $item['alias'];												// OK.
-		}
+		if (false == array_key_exists('alias', $objAry)) { return ''; } 	// no alias field
+		if ('' == trim($objAry['alias'])) { return ''; }					// alias field blank 
 
-		return false;															//	unreachable
+		return trim($objAry['alias']);										// OK.
 	}
 
 	//--------------------------------------------------------------------------------------------------

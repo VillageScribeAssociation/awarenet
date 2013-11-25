@@ -1,7 +1,7 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/notifications/models/notification.mod.php');
-	require_once($kapenta->installPath . 'modules/notifications/models/userindex.mod.php');
+	require_once(dirname(__FILE__) . '/../modules/notifications/models/notification.mod.php');
+	require_once(dirname(__FILE__) . '/../modules/notifications/models/userindex.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object representing the notifications system
@@ -31,11 +31,7 @@ class KNotifications {
 	//opt: private - not to be shared in global or category feeds [string]
 	//returns: UID of new notification, or empty string on failure [string]
 
-	function create(
-		$refModule, $refModel, $refUID, $refEvent, 
-		$title, $content, $url = '', 
-		$private = false
-	) {
+	function create($refModule, $refModel, $refUID, $refEvent, $title, $content, $url = '', $private = false) {
 		global $kapenta;
 		global $user;
 

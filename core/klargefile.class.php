@@ -115,7 +115,7 @@ class KLargeFile {
 		global $kapenta;
 		if (false == $this->loaded) { return false; }
 		$xml = $this->toXml();
-		$check = $kapenta->filePutContents($this->metaFile, $xml);
+		$check = $kapenta->fs->put($this->metaFile, $xml);
 		return $check;
 	}
 
@@ -127,7 +127,7 @@ class KLargeFile {
 
 	function makeFromFile() {
 		global $kapenta;
-		if (false == $kapenta->fileExists($this->path)) { return false; }
+		if (false == $kapenta->fs->exists($this->path)) { return false; }
 
 		$absFile = $kapenta->installPath . $this->path;
 		$this->hash = sha1_file($absFile);
@@ -187,7 +187,7 @@ class KLargeFile {
 		if (false == $fH) { return false; }							//	if cannot create
 
 		foreach($this->parts as $part) {
-			$part64 = $kapenta->fileGetContents($part['fileName']);
+			$part64 = $kapenta->fs->get($part['fileName']);
 			$partBin = base64_decode($part64);
 			fwrite($fH, $partBin);
 		}
@@ -241,7 +241,7 @@ class KLargeFile {
 		if ($hash != $this->parts[$index]['hash']) { echo "hash mismatch<br/>"; return false; }
 		$fileName = $this->parts[$index]['fileName'];
 
-		$check = $kapenta->filePutContents($fileName, $content64, true, true);
+		$check = $kapenta->fs->put($fileName, $content64, true, true);
 		if (false == $check) { echo "file could not be saved<br/>"; return false; }
 
 		$this->parts[$index]['status'] = 'ok';

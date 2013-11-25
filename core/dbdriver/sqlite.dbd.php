@@ -1,11 +1,11 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	database driver (abstraction object) for mysql
+//*	database driver (abstraction object) for SQLite3
 //--------------------------------------------------------------------------------------------------
 //+ These are wrapper functions to allow the same function names (and thus code) on different DBMS.
 //+ Note that % (sql wildcard) is stripped from UIDs from some functions as a security precaution.
-//+ Field values are generally escaped to prevent SQL injection.
+//+ Field values are generally escaped to prevent SQL injection by sqlMarkup
 //+
 //+ Table schema are passed as nested associative arrays:
 //+
@@ -14,17 +14,17 @@
 //+  'indices' -> array of fieldname -> size (index name is derived from fieldname)
 //+	 'nodiff' -> array of field names which are not versioned (eg, hitcount)
 //+
-//+ NOTE: additional database functionality is provided in mysqladmin, this functionality was moved
+//+ NOTE: additional database functionality is provided in sqliteadmin, this functionality was moved
 //+	to this file because most user actions will not need it, and it keeps the default loaded
 //+ codebase down.
 
-class KDBDriver_MySQL {
+class KDBDriver_SQLite {
 
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
 
-	var $type = 'MySQL';		//_	database type [string]
+	var $type = 'SQLite';		//_	database type [string]
 
 	var $host = '';				//_	database host [string]
 	var $user = '';				//_ database user name [string]
@@ -40,6 +40,10 @@ class KDBDriver_MySQL {
 	var $lasterr = '';			//_	message describe last failed operation [string]
 	var $lastquery = '';		//_	last query operation run on the database [string]
 
+	var $dbh;					//_	database handle [object]
+	var $connected = false;		//_	set to true when $this->dbh is set up [bool]
+	var $inTransaction = false;	//_	set to true when in a transaction [bool]
+
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
@@ -48,25 +52,18 @@ class KDBDriver_MySQL {
 	//opt: dbPass - database password, no default [string]
 	//opt: dbName - database name, default is 'kapenta' [string]
 
-	function KDBDriver_MySQL() {
-		global $registry;			// perhaps get these from $kapenta
+	function KDBDriver_SQLite() {
+		global $kapenta;			// perhaps get these from $kapenta
 
-		$this->host = $registry->get('db.mysql.host');
-		$this->user = $registry->get('db.mysql.user');
-		$this->pass = $registry->get('db.mysql.password');
-		$this->name = $registry->get('db.mysql.name');
+		$this->host = 'localhost';
+		$this->user = 'kapenta';
+		$this->pass = '';
+		$this->name = $kapenta->registry->get('db.sqlite.name');
 
 		//	recovery / backup store of this information
 		if ('' == $this->name) {
-			$this->host = $registry->get('kapenta.db.host');
-			$this->user = $registry->get('kapenta.db.user');
-			$this->pass = $registry->get('kapenta.db.password');
 			$this->name = $registry->get('kapenta.db.name');
-
-			if ('' != $this->host) { $registry->set('db.mysql.host', $this->host); }
-			if ('' != $this->user) { $registry->set('db.mysql.user', $this->user); }
-			if ('' != $this->pass) { $registry->set('db.mysql.password', $this->pass); }
-			if ('' != $this->name) { $registry->set('db.mysql.name', $this->name); }
+			if ('' != $this->name) { $registry->set('db.sqlite.name', $this->name); }
 		}
 
 		$this->tables = array();
@@ -84,6 +81,7 @@ class KDBDriver_MySQL {
 
 	function query($query) {
 		global $kapenta, $session, $page, $registry;
+
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
 		$result = false;							//%	recordset handle [int]
@@ -99,35 +97,56 @@ class KDBDriver_MySQL {
 		}
 
 		//------------------------------------------------------------------------------------------
-		// connect to database server and select database
+		// open database file on first query
 		//------------------------------------------------------------------------------------------
-		if ('yes' == $registry->get('kapenta.db.persistent')) {
-			$connect = @mysql_pconnect($this->host, $this->user, $this->pass);
-		} else {
-			$connect = @mysql_connect($this->host, $this->user, $this->pass);
+
+		if (false == $this->connected) {
+			try {
+
+				$this->dbh = new PDO('sqlite:' . $this->name . '.sq3');
+				$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->connected = true;
+
+			} catch(PDOException  $e) {
+
+				$msg = "SQLite PDO Connection failed: " . $e->getMessage();
+				if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+				else { echo $msg . "<br/>\n"; }
+				return false;
+
+			}
+
 		}
 
-		if (false === $connect) { 
-			$msg = 'Could not connect to database server.';
+		//------------------------------------------------------------------------------------------
+		//	prepare the query
+		//------------------------------------------------------------------------------------------
+		//echo "SQLite: $query <br/>\n";
+		try { $sth = $this->dbh->prepare($query); }
+		catch(PDOException $e) {
+			$msg = "Failed to prepare SQL Statement: $query<br/>\n" . $e->getMessage();
 			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
-			return false; 
-		}
-
-		$selected = @mysql_select_db($this->name, $connect);
-		if (false == $selected) {
-			$msg = "Connected to database server but could not select database: " . $this->name;
-			if (true == isset($session)) { $session->msgAdmin($msg , 'bad'); }
+			else { echo $msg . "<br/>\n"; }
+			$this->lasterr = $msg;
 			return false;
 		}
 
 		//------------------------------------------------------------------------------------------
-		// execute the query
+		//	execute the query
 		//------------------------------------------------------------------------------------------
-		$result = @mysql_query($query, $connect);
-		if (false === $result) {
+		try { $check = $sth->execute(); }
+		catch(PDOException $e) {
+			$msg = "Failed to execute SQL Statement: $query<br/>\n" . $e->getMessage();
+			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			else { echo $msg . "<br/>\n"; }
+			$this->lasterr = $msg;
+			return false;
+		}
+
+		if (false === $check) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
 			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
-			$this->lasterr = 'mysql_query returned FALSE.';
+			$this->lasterr = $msg;
 			return false;
 		}
 
@@ -140,29 +159,37 @@ class KDBDriver_MySQL {
 
 		if ($diff > 1) {
 			$msg = $diff . ' - ' . $query;
-			$kapenta->logEvent('db-slow', 'mysql', 'query', $msg);
+			$kapenta->logEvent('db-slow', 'sqlite', 'query', $msg);
 		}
 
-		return $result;		// handle to results
+		return $sth;		// result object
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	begin a transaction
 	//----------------------------------------------------------------------------------------------
-	//retuns: true (not implemented for MySQL) [bool]
+	//retuns: true if transaction started, false if one is already in progress [bool]
 
 	function transactionStart() {
+		if (false == $this->connected) { return false; }
+		if (true == $this->inTransaction) { return false; }
+		$this->query('BEGIN TRANSACTION;');
+		$this->inTransaction = true;
 		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	end a transaction
 	//----------------------------------------------------------------------------------------------
-	//retuns: true (not implemented for MySQL) [bool]
+	//retuns: true if transaction ended, false if transaction not in progress [bool]
 
 	function transactionEnd() {
+		if (false == $this->connected) { return false; }
+		if (false == $this->inTransaction) { return false; }
+		$this->query('COMMIT TRANSACTION;');
+		$this->inTransaction = false;
 		return true;
-	}	
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	get a row from a recordset,
@@ -172,18 +199,31 @@ class KDBDriver_MySQL {
 
 	function fetchAssoc($handle) { 
 		if (false === $handle) { return false; }
-		return mysql_fetch_assoc($handle); 
+		$row = $handle->fetch();
+		return $row;
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//.	get number of rows in recordset
 	//----------------------------------------------------------------------------------------------
+	//DEPRECATED: note that this does NOT return the number or rows underSQLite
 	//arg: handle - handle to a MySQL query result [int]
 	//returns: number of rows or false on failure [int] [bool]
 
-	function numRows($handle) { 
+	function numRows($handle) {
+		global $session;
+
+		$session->msgAdmin("DEPRECATED: \$db->numRows() does not work on SQLite");
+
 		if (false === $handle) { return false; }
-		return mysql_num_rows($handle); 
+		$num = 0;
+		try { $num = $handle->rowCount(); }
+		catch (PDOException $e) {
+			$msg = "Failed to count rows in query:<br/>\n" . $e->getMessage();
+			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			else { echo $msg . "<br/>\n"; }
+		}
+		return $num;
 	}
 
 	//==============================================================================================
@@ -212,8 +252,8 @@ class KDBDriver_MySQL {
 	//returns: return associative array of field names and values or false on failure [array][bool]
 
 	function load($UID, $dbSchema) {
-		global $page;
 		global $kapenta;
+		global $page;
 
 		$model = strtolower($dbSchema['model']);
 		if (false == $this->tableExists($model)) { return false; }
@@ -223,10 +263,14 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		$cacheKey = $model . '::' . $UID;
 		if (true == $kapenta->cacheHas($cacheKey)) {
-			return unserialize($kapenta->cacheGet($cacheKey)); 
-			$page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
+			if ((true == isset($page)) && (true == $page->logDebug)) {
+				$page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
+			}
+			return unserialize($kapenta->cacheGet($cacheKey));
 		} else {
-			$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
+			if ((true == isset($page)) && (true == $page->logDebug)) {
+				$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
+			}
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -236,7 +280,7 @@ class KDBDriver_MySQL {
 		$sql = "SELECT * FROM " . $model . " where UID='" . $this->addMarkup($UID) . "'";
 		$recordSet = $this->query($sql);
 		if (false == $recordSet) { return false; }
-		while ($record = mysql_fetch_assoc($recordSet))	 {
+		while ($record = $recordSet->fetch()) {
 			//--------------------------------------------------------------------------------------
 			// object found - strip database markup, store in cache and return
 			//--------------------------------------------------------------------------------------
@@ -246,21 +290,19 @@ class KDBDriver_MySQL {
 
 			if (true == array_key_exists('alias', $objAry)) {
 				$aliasKey = 'alias::' . $model . '::' . strtolower($objAry['alias']);
-				$kapenta->cacheSet($aliasKey, serialize($objAry['UID']));
+				$kapenta->cacheSet($aliasKey, $objAry['UID']);
 			}
-
 			return $objAry;
 		}
 
 		if ((true == isset($page)) && (true == $page->logDebug)) {
 			$page->logDebugItem('dbLoad', "no such object: $model::$UID");
 		}
-
 		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	load a record from a table supporting recordAliases, return associative array
+	//.	load a record from a table supporting object Aliases, return associative array
 	//----------------------------------------------------------------------------------------------
 	//arg: raUID - UID or alias of an object [string]
 	//arg: dbSchema - database table definition [array]
@@ -272,6 +314,7 @@ class KDBDriver_MySQL {
 		global $session;
 
 		$model = strtolower($dbSchema['model']);
+
 		if (false == $this->tableExists($model)) { return false; }
 
 		if (true == $kapenta->mcEnabled) {
@@ -312,7 +355,6 @@ class KDBDriver_MySQL {
 				}
 				return $this->loadAlias($canonical, $dbSchema);
 			}
-
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -419,7 +461,7 @@ class KDBDriver_MySQL {
 
 	function save($data, $dbSchema, $setdefaults = true, $broadcast = true, $revision = true) {
 		global $user;
-		global $revisions;
+		global $revisions;	
 		global $session;
 		global $kapenta;
 
@@ -427,14 +469,18 @@ class KDBDriver_MySQL {
 		$dirty = false;									//%	if changes need to be saved [bool]
 		$this->lasterr = '';
 
+		//------------------------------------------------------------------------------------------
+		//	check arguments
+		//------------------------------------------------------------------------------------------
+
 		if (false == is_array($data)) {
 			$this->lasterr = 'No object array given.';
-			return false;		// must include and object to save
+			return false;								// must include and object to save
 		}
 
 		if ((false == array_key_exists('UID', $data)) || (strlen(trim($data['UID'])) < 4)) {
 			$this->lasterr = 'No valid UID for given object.';
-			return false;		// object must have a UID, and it must be > 4 chars
+			return false;								// object must have a UID, 4 chars or more
 		}
 
 		$dbSchema['model'] = strtolower($dbSchema['model']);				// temporary
@@ -444,7 +490,7 @@ class KDBDriver_MySQL {
 			return false;
 		}
 
-		//	adds support for primary keys for tables which must have both UID and Pi Key
+		//	adds support for primary keys for tables which must have both UID and Pri Key
 		if (false == array_key_exists('prikey', $dbSchema)) { $dbSchema['prikey'] = ''; }
 
 		// do not save objects which have been deleted
@@ -468,12 +514,10 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	try load previous version of this record, replace any previously cached version
 		//------------------------------------------------------------------------------------------
-		$current = $this->load($data['UID'], $dbSchema);
+		$current = $this->load($data['UID'], $dbSchema);			//%	previous version [array]
+		$cacheKey = $dbSchema['model'] . '::' . $data['UID'];		//%	cache identifier
+		$kapenta->cacheSet($cacheKey, serialize($data));				
 
-		$cacheKey = $dbSchema['model'] . '::' . $data['UID'];
-
-		$kapenta->cacheSet($cacheKey, serialize($data));
-		
 		if (true == array_key_exists('alias', $data)) {
 			$aliasKey = 'alias::' . $dbSchema['model'] . '::' . strtolower($data['alias']);
 			$kapenta->cacheSet($aliasKey, $data['UID']);
@@ -571,7 +615,8 @@ class KDBDriver_MySQL {
 			'data' => $data,
 			'changes' => $changes,
 			'dbSchema' => $dbSchema,
-			'revision' => ($revision ? 'yes' : 'no')
+			'revision' => ($revision ? 'yes' : 'no'),
+			'broadcast' => ($broadcast ? 'yes' : 'no')
 		);
 
 		$kapenta->raiseEvent('*', 'object_updated', $args);
@@ -586,10 +631,7 @@ class KDBDriver_MySQL {
 	//returns: true on success, false on failure [bool]
 
 	function delete($UID, $dbSchema) {
-		global $kapenta;
-		global $aliases;
-		global $revisions;
-		global $session;
+		global $kapenta, $revisions, $session;
 
 		$this->lasterr = '';								//	clear any previous error message
 
@@ -628,11 +670,10 @@ class KDBDriver_MySQL {
 		}
 
 		//------------------------------------------------------------------------------------------
-		//	remove from memory cache
+		//	remove from cache
 		//------------------------------------------------------------------------------------------
 		$cacheKey = $model . '::' . $UID;
 		if (true == $kapenta->cacheHas($cacheKey)) {
-			$objAry = $this->load($UID, $dbSchema);			
 			$kapenta->cacheDelete($cacheKey);
 			if (true == array_key_exists('alias', $objAry)) { 
 				$aliasKey = 'alias::' . $model . '::' . strtolower($objAry['alias']);
@@ -653,7 +694,7 @@ class KDBDriver_MySQL {
 		);
 
 		$kapenta->raiseEvent('*', 'object_deleted', $detail);
-		$kapenta->raiseEvent('*', 'cache_invalidate', $detail);
+		//echo "deleting object... $module $model $UID <br/>\n";
 		return true;
 	}
 
@@ -673,20 +714,9 @@ class KDBDriver_MySQL {
 
 	function updateQuiet($model, $UID, $field, $value) {	
 		global $session;
-
 		$session->msg("DEPRECATED: db::updateQuiet($model, $UID, $field, $value)", 'warn');
 		$model = strtolower($model);									// temporary
 		if (false == $this->tableExists($model)) { return false; }
-
-		//------------------------------------------------------------------------------------------
-		//	update in-memory cache
-		//------------------------------------------------------------------------------------------
-		$cacheKey = $model . '::' . $UID;
-		$kapenta->cacheDelete($cacheKey);
-
-		//------------------------------------------------------------------------------------------
-		//	update database
-		//------------------------------------------------------------------------------------------
 
 		//TODO: improve this
 
@@ -694,6 +724,7 @@ class KDBDriver_MySQL {
 			 . "SET " . $this->addMarkup($field) . "='" . $this->addMarkup($value) . "' "
 			 . "WHERE UID='" . $this->addMarkup($UID) . "'";
 
+		//TODO: update cache
 		//TODO: process triggers
 
 		$this->query($sql);
@@ -764,19 +795,19 @@ class KDBDriver_MySQL {
 			$retVal[$row['UID']] = $row;
 
 			//--------------------------------------------------------------------------------------
-			//	opportunistically cache to memory any complete records which are loaded from the db
+			//	cache any complete records we have loaded
 			//--------------------------------------------------------------------------------------
 			if (('*' == $fields) && (true == array_key_exists('UID', $row))) {
-
 				$cacheKey = $model . '::' . $row['UID'];
+
 				$kapenta->cacheSet($cacheKey, serialize($row));
 
-				if (true == array_key_exists('alais', $row)) {
+				if (true == array_key_exists('alias', $row)) {
 					$aliasKey = 'alias::' . $model . '::' . strtolower($row['alias']);
 					$kapenta->cacheSet($aliasKey, $row['UID']);
 				}
-				
 			}
+
 		}	
 		return $retVal;
 	}
@@ -825,16 +856,37 @@ class KDBDriver_MySQL {
 	//.	make a list of all tables in database and store in $this->tables
 	//----------------------------------------------------------------------------------------------
 	//;	this is deprecated in favor of listTables()
+	//;	SQLite3 does not support SHOW TABLES as of 2012-07-24
 	//returns: array of table names [array]
 
 	function loadTables() {
-		$this->tables = array();
+		global $kapenta;
 
-		$result = $this->query("SHOW TABLES FROM " . $this->name);
-		while ($row = $this->fetchAssoc($result)) {
-			// we don't know the column name in advance, so we do this:
-			foreach ($row as $table) { $this->tables[] = $table; } 
+		$this->tables = array();
+		
+		//------------------------------------------------------------------------------------------
+		//	try load from memcached
+		//------------------------------------------------------------------------------------------
+		$cacheKey = 'db::sqlite::tables';
+		if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
+			$this->tables = explode('|', $kapenta->cacheGet($cacheKey));
 		}
+
+		//------------------------------------------------------------------------------------------
+		//	try load from database master
+		//------------------------------------------------------------------------------------------
+		if (0 == count($this->tables)) {
+			//	No PRAGMA in current version to do this, strix 2012-08-01
+			$result = $this->query("SELECT * FROM sqlite_master WHERE type='table';");
+			while ($row = $this->fetchAssoc($result)) { $this->tables[] = $row['name'];}
+
+			//	keep this for next time
+			if (true == $kapenta->mcEnabled) {
+				$kapenta->cacheSet($cacheKey, implode('|', $this->tables));
+			}
+		}
+
+		if (0 == count($this->tables)) { return false; }
 
 		$this->tablesLoaded = true;
 		return $this->tables;
@@ -883,7 +935,8 @@ class KDBDriver_MySQL {
 						$continue = false;
 					} else {
 						//	this should never happen
-						//	echo "UID collision in table: " . $dbSchema['model'] . "::$newUID<br/>\n";
+						echo "UID collision in table: " . $dbSchema['model'] . "::$newUID<br/>\n";
+						$continue = false;
 					}
 				}
 			}
@@ -933,18 +986,30 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	add fields
 		//------------------------------------------------------------------------------------------
-		$sql = "describe " . $tableName;
+		$sql = "PRAGMA table_info($tableName);";
 		$result = $this->query($sql);
-		while ($row = $this->fetchAssoc($result)) 
-			{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
+		while ($row = $this->fetchAssoc($result)) {
+			$dbSchema['fields'][$row['name']] = strtoupper($row['type']);
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	add indices
 		//------------------------------------------------------------------------------------------
-		$sql = "show indexes from " . $tableName;
+
+		/* -- alternative form, less efficient,use if PRAGMA is dropped in future
+		$sql = ''
+		 . "SELECT * FROM `sqlite_master`"
+		 . " WHERE `type`='index'"
+		 . " AND `tbl_name`='" . $tableName . "'";
+		*/		
+
+		$sql = "PRAGMA index_list($tableName);";
+
 		$result = $this->query($sql);
-		while ($row = $this->fetchAssoc($result)) 
-			{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
+		while ($row = $this->fetchAssoc($result)) {
+			$colName = str_replace('idx' . strtolower($tableName), '', $row['name']);
+			$dbSchema['indices'][$colName] = '*';
+		}
 
 		return $dbSchema;
 	}
@@ -1027,6 +1092,8 @@ class KDBDriver_MySQL {
 
 		$model = strtolower($model);								// temporary
 
+		if (('' == trim($model)) || ('' == trim($UID))) { return false; }
+
 		//------------------------------------------------------------------------------------------
 		//	if we already have this object in the cache, assume it exists
 		//------------------------------------------------------------------------------------------
@@ -1037,29 +1104,33 @@ class KDBDriver_MySQL {
 		//	not in cache, try database
 		//------------------------------------------------------------------------------------------
 		if (false == $this->tableExists($model)) { return false; }	// prevent SQL injection
-		$sql = "SELECT * FROM $model WHERE UID='" . $this->addMarkup($UID) . "'";		
+		$sql = "SELECT * FROM `$model` WHERE `UID`='" . $this->addMarkup($UID) . "';";		
 		$result = $this->query($sql);
 		if (false === $result) { return false; } 					// bad table name?
-		if (0 == mysql_num_rows($result)) { return false; }			// no such object
 
 		//------------------------------------------------------------------------------------------
 		// object exists, may as well cache it
 		//------------------------------------------------------------------------------------------
-		$row = mysql_fetch_assoc($result);
-		$row = $this->rmArray($row);
-		$cacheKey = $model . '::' . $row['UID'];
-		$kapenta->cacheSet($cacheKey, serialize($row));
+		while ($row = $result->fetch()) {
+			$row = $result->fetch();
+			$row = $this->rmArray($row);
 
-		if (true == array_key_exists('alias', $row)) {
-			$aliasKey = 'alias::' . $model . '::' . strtolower($row['alias']);
-			$kapenta->cacheSet($aliasKey, $row['UID']);
+			if (true == array_key_exists('UID', $row)) {
+				$cacheKey = $model . '::' . $row['UID'];
+				$kapenta->cacheSet($cacheKey, serialize($row));
+				if (true == array_key_exists('alias', $row)) {
+					$aliasKey = 'alias::' . $model . '::' . strtolower($row['alias']);
+					$cacheSet($aliasKey, $row['UID']);
+				}
+			}
+
+			return true;
 		}
-
-		return true;
+		return false;
 	}
 
 	//==============================================================================================
-	//	NON-SCHEMA IO - are in now wrappers 
+	//	NON-SCHEMA IO - are now wrappers 
 	//==============================================================================================
 	//TODO: consider whether the get and store methods are really necessary, remove if possible
 	// but leave the serialization to and from XML
@@ -1092,9 +1163,9 @@ class KDBDriver_MySQL {
 		$range = $this->loadRange($model, '*', $conditions, 'createdOn', '1');
 
 		foreach($range as $item) {
-			//--------------------------------------------------------------------------------------
+			//------------------------------------------------------------------------------------------
 			//	memcache the object for next time
-			//--------------------------------------------------------------------------------------
+			//------------------------------------------------------------------------------------------
 			if (true == $kapenta->mcEnabled) {
 				$kapenta->cacheSet($cacheKey, serialize($item));
 				if (true == array_key_exists('alias', $item)) {
@@ -1347,7 +1418,9 @@ class KDBDriver_MySQL {
 	function serialize($fields) {
 		$fields64 = '';
 		foreach($fields as $field => $value) {
-			$fields64 .= "\t" . $field . ':' . base64_encode($value) . "\n";
+			if (false == is_numeric($field)) {
+				$fields64 .= "\t" . $field . ':' . base64_encode($value) . "\n";
+			}
 		}
 		return $fields64;
 	}

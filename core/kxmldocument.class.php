@@ -56,7 +56,7 @@ class KXmlDocument {
 
 		if ((true == $isFile) && ('' != $raw)) {
 			// try to load XML from file
-			$raw = $kapenta->fileGetContents($raw, false, true);
+			$raw = $kapenta->fs->get($raw, false, true);
 			if (false == $raw) { $raw = ''; }
 		}
 

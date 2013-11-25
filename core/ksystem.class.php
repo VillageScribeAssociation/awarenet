@@ -1,11 +1,69 @@
-<?
+<?php
+
+//--------------------------------------------------------------------------------------------------
+//	include core component files
+//--------------------------------------------------------------------------------------------------
+
+	$coreDir = dirname(__FILE__);
+
+	require_once($coreDir . '/kfilesystem.class.php');		//	access to filesystem
+	require_once($coreDir . '/kregistry.class.php');		//	system settings
+	require_once($coreDir . '/klog.class.php');				//	logging subsystem
+	require_once($coreDir . '/kmemcache.class.php');		//	in-memory cache
+	require_once($coreDir . '/krequest.class.php');			//	HTTP request interpreter
+	require_once($coreDir . '/kpage.class.php');			//	response document
+	require_once($coreDir . '/ktheme.class.php');			//	interface to theme
+	require_once($coreDir . '/knotifications.class.php');	//	user notification of events
+	require_once($coreDir . '/krevisions.class.php');		//	object revision history and recycle bin
+	require_once($coreDir . '/kutils.class.php');			//	miscellaneous utilities
+	require_once($coreDir . '/khtml.class.php');			//	html parser
+	require_once($coreDir . '/kcache.class.php');			//	block cache
+	require_once($coreDir . '/kaliases.class.php');			//	object aliases system
+
+	require_once($coreDir . '/kxmldocument.class.php');		//	xml parser
+
+	//	user, session, role
+	require_once($coreDir . '/../modules/users/models/session.mod.php');
+	require_once($coreDir . '/../modules/users/models/user.mod.php');
+	require_once($coreDir . '/../modules/users/models/role.mod.php');
+	require_once($coreDir . '/dbdriver/legacy.class.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	model of kapenta system
 //--------------------------------------------------------------------------------------------------
-//TODO:	consider adding special permission to allow regular users to write files outside of /data/
 
 class KSystem {
+
+	//----------------------------------------------------------------------------------------------
+	//	system components
+	//----------------------------------------------------------------------------------------------
+
+	var $components;	//_	array of registered components [array:bool]
+
+	var $fs;			//_	filesystem [object]
+	var $db;			//_	database [object]
+	var $registry;		//_	stores system and module settings [object]
+	var $utils;			//_	various utility methods [object]
+	var $blockcache;	//_	database cache (of rendered views) [object]
+	var $memcache;		//_	memory cache (reduce disk seeks) [object]
+	var $log;			//_	logging subsystem [object]
+
+	//----------------------------------------------------------------------------------------------
+	//	CMS components
+	//----------------------------------------------------------------------------------------------	
+
+	var $aliases;		//_	human and SEO friendly object references [object]
+	var $user;			//_	represents current user [object]
+	var $role;			//_	represents user's role and permissions [object]
+	var $session;		//_	represents current session [object]
+
+	//----------------------------------------------------------------------------------------------
+	//	http mode objects
+	//----------------------------------------------------------------------------------------------
+
+	var $request;		//_	interprets browser request [object]
+	var $page;			//_	represents response sent to browser [object]
+	var $theme;			//_	handles page styles and templating [object]
 
 	//----------------------------------------------------------------------------------------------
 	//	member variables
@@ -22,10 +80,10 @@ class KSystem {
 
 	var $hostInterface;	//_	ip address to use when opening sockets [string]
 	var $proxyEnabled;	//_ use a web proxy [bool]
-	var	$proxyAddress;	//_	proxy address (IP or domain name) [string]
-	var	$proxyPort;		//_	port number [integer]
-	var	$proxyUser;		//_	proxy credentials [string]
-	var	$proxyPass;		//_	proxy credentials [string]
+	var $proxyAddress;	//_	proxy address (IP or domain name) [string]
+	var $proxyPort;		//_	port number [integer]
+	var $proxyUser;		//_	proxy credentials [string]
+	var $proxyPass;		//_	proxy credentials [string]
 
 	var $rsaKeySize;	//_	default to 1024 [int]
 	var $rsaPublicKey;	//_	plain text of this server's public key [string]
@@ -46,42 +104,177 @@ class KSystem {
 
 	var $loadtime = 0;	//_	used as start time or framework for benchmarking
 
-	var $wrapper = "<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*\n";
+	var $mc;					//_	holds Memcached client [object]
+	var $mcEnabled = false;		//_	set to true if memcached endabled [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
+	//arg: installPath - location of this kapenta installation on disk [string]
+	//opt: opts - framework options [string]
 
-	function KSystem() {
-		global $_SERVER;
-		global $registry;
-		global $installPath, $serverPath, $websiteName;
-		global $defaultModule, $defaultTheme, $useBlockCache;
-		global $rsaKeySize, $rsaPublicKey, $rsaPrivateKey;
-		global $logLevel;
-		global $hostInterface, $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass;
-
+	function KSystem($installPath, $opts = '') {
 		$this->loadtime = (float)microtime(true);			//	note start time of framework
+		$this->installPath = $installPath;
+		$this->components = array();						//	included after this
+		$this->options = explode(',', $opts);
+
+		$this->register('registry', 'KRegistry');
+		$this->register('revisions', 'KRevisions');
+		$this->register('blockcache', 'KCache');
+		$this->register('aliases', 'KAliases');
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	register a component
+	//----------------------------------------------------------------------------------------------
+	//arg: $component - name fo component [string]
+	//arg: $className - name of PHP class implementing this core component [string]
+
+	function register($component, $className) {
+		$this->components[$component] = array(
+			'class' => $className,
+			'loaded' => false
+		);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	test if a component is initialized
+	//----------------------------------------------------------------------------------------------
+	//arg: $component - friendly name of component, used for instantiation on $this [string]
+
+	function isLoaded($component) {
+		if (
+			(true == array_key_exists($component, $this->components)) && 
+			(true == $this->components[$component]['loaded'])
+		) {
+			return true;
+		}
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	initialize a component
+	//----------------------------------------------------------------------------------------------
+	//arg: $component - friendly name of component, used for instantiation on $this [string]
+
+	function req($component) {
+		if (true === $this->isLoaded($component)) { return true; }
+
+		if (false === array_key_exists($component, $this->components)) {
+			echo "Unknown core component: $component<br/>\n";
+			return false;
+		}
+
+		//TODO: return false
+
+		$className = $this->components[$component]['class'];
+		$this->$component = new $className;
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	initialize framework once $kapenta object has been created
+	//----------------------------------------------------------------------------------------------
+
+	function init() {
+		$this->initFramework();
+		$this->initDb();
+		$this->initoptions();
+	}	
+
+	//----------------------------------------------------------------------------------------------
+	//.	create basic components (filesystem, registry, etc)
+	//----------------------------------------------------------------------------------------------
+
+	function initFramework() {
+		$this->fs = new KFilesystem($this->installPath);
+		//$this->registry = new KRegistry();
+		$this->req('registry');
+		$this->utils = new KUtils();
+		$this->mc = new KMemcache();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	select and load the database driver
+	//----------------------------------------------------------------------------------------------
+
+	function initDb() {
+		$dbDriver = $this->registry->get('db.driver');
+		if ('' === $dbDriver) { $dbDriver = 'SQLLite'; }
+		$this->db = $this->getDbDriver($dbDriver);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	load optional components
+	//----------------------------------------------------------------------------------------------
+
+	function initOptions() {
+		foreach($this->options as $opt) {
+			switch($opt) {
+
+				case 'cms':			$this->initCms();				break;				
+				case 'user':		$this->initUserSession();		break;
+				case 'recovery':	$this->initRecovery();			break;
+
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	check for recovery mode
+	//----------------------------------------------------------------------------------------------
+
+	function initRecovery() {
+
+		if (true == array_key_exists('recover', $this->request->args)) {
+			$pass = $this->registry->get('kapenta.recoverypassword');
+			if (sha1($this->request->args['recover']) == $pass) {
+				$this->session->set('recover', 'yes');
+			}
+		}
+	
+		if ('yes' == $this->session->get('recover')) { $this->user->role = 'admin'; }
+	}
+
+
+	//----------------------------------------------------------------------------------------------
+	//.	initialize CMS components
+	//----------------------------------------------------------------------------------------------
+
+	function initCms() {
+		global $_SERVER;
+
+		$request_uri = array_key_exists('q', $_GET) ? $_GET['q'] : '';
+		$this->request = new KRequest($request_uri);
+
+		//TODO: remove these globals
+		/* global 
+			$defaultModule, $defaultTheme, $useBlockCache,
+			$rsaKeySize, $rsaPublicKey, $rsaPrivateKey,
+			$hostInterface, $proxyEnabled, $proxyAddress, $proxyPort, $proxyUser, $proxyPass,
+			$logLevel;
+		*/
 
 		//-----------------------------------------------------------------------------------------
 		//	get site config from the registry
 		//-----------------------------------------------------------------------------------------
 
-		$this->installPath = $registry->get('kapenta.installpath');		
-		$this->serverPath = $registry->get('kapenta.serverpath');
-
-		$this->websiteName = $registry->get('kapenta.sitename');
-		$this->defaultModule = $registry->get('kapenta.modules.default');
-		$this->defaultTheme = $registry->get('kapenta.themes.default');
-		$this->useBlockCache = $registry->get('kapenta.blockcache.enabled');
-		$this->logLevel = (int)$registry->get('kapenta.loglevel');
+		$this->installPath = $this->registry->get('kapenta.installpath');		
+		$this->serverPath = $this->registry->get('kapenta.serverpath');
+		$this->websiteName = $this->registry->get('kapenta.sitename');
+		$this->defaultModule = $this->registry->get('kapenta.modules.default');
+		$this->defaultTheme = $this->registry->get('kapenta.themes.default');
+		$this->useBlockCache = $this->registry->get('kapenta.blockcache.enabled');
+		$this->logLevel = (int)$this->registry->get('kapenta.loglevel');
 
 		//-----------------------------------------------------------------------------------------
 		//	guess any missing values
 		//-----------------------------------------------------------------------------------------
 		if ('' == $this->installPath) { 
-			$this->installPath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
-			$registry->set('kapenta.installpath', $this->installPath); 
+			$thisPath = dirname(__FILE__);
+			$this->installPath = mb_substr($thisPath, 0, mb_strlen($thisPath) - 5);
+			$this->registry->set('kapenta.installpath', $this->installPath); 
 		}
 
 		if ('' == $this->serverPath) { 
@@ -89,40 +282,40 @@ class KSystem {
 				. 'http://' . $_SERVER['HTTP_HOST'] 
 				. str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
 
-			$registry->set('kapenta.serverpath', $this->serverPath); 
+			$this->registry->set('kapenta.serverpath', $this->serverPath); 
 		}
 
 		if ('' == $this->websiteName) { 
 			$this->websiteName = 'awareNet';
-			$registry->set('kapenta.sitename', $this->websiteName); 
+			$this->registry->set('kapenta.sitename', $this->websiteName); 
 		}
 
 		if ('' == $this->defaultTheme) { 
 			$this->defaultTheme = 'clockface';
-			$registry->set('kapenta.themes.default', $this->defaultTheme); 
+			$this->registry->set('kapenta.themes.default', $this->defaultTheme); 
 		}
 
 		if ('' == $this->defaultModule) { 
 			$this->defaultModule = 'home';
-			$registry->set('kapenta.modules.default', $this->defaultModule); 
+			$this->registry->set('kapenta.modules.default', $this->defaultModule); 
 		}
 
 		//-----------------------------------------------------------------------------------------
 		//	set up interface (optional config)
 		//-----------------------------------------------------------------------------------------
-		$this->hostInterface = $registry->get('kapenta.network.interface');
-		$this->proxyEnabled = $registry->get('kapenta.proxy.enabled');
-		$this->proxyAddress = $registry->get('kapenta.proxy.address');
-		$this->proxyPort = $registry->get('kapenta.proxy.port');
-		$this->proxyUser = $registry->get('kapenta.proxy.user');
-		$this->proxyPass = $registry->get('kapenta.proxy.password');;
+		$this->hostInterface = $this->registry->get('kapenta.network.interface');
+		$this->proxyEnabled = $this->registry->get('kapenta.proxy.enabled');
+		$this->proxyAddress = $this->registry->get('kapenta.proxy.address');
+		$this->proxyPort = $this->registry->get('kapenta.proxy.port');
+		$this->proxyUser = $this->registry->get('kapenta.proxy.user');
+		$this->proxyPass = $this->registry->get('kapenta.proxy.password');;
 
 		//-----------------------------------------------------------------------------------------
 		//	set up encryption (TODO)
 		//-----------------------------------------------------------------------------------------
-		$this->rsaKeySize = (int)$registry->get('kapenta.rsa.keysize');
-		$this->rsaPublicKey = $registry->get('kapenta.rsa.publickey');
-		$this->rsaPrivate = $registry->get('kapenta.rsa.privatekey');
+		$this->rsaKeySize = (int)$this->registry->get('kapenta.rsa.keysize');
+		$this->rsaPublicKey = $this->registry->get('kapenta.rsa.publickey');
+		$this->rsaPrivate = $this->registry->get('kapenta.rsa.privatekey');
 
 		//-----------------------------------------------------------------------------------------
 		//	set up module and theme arrays
@@ -131,6 +324,37 @@ class KSystem {
 		$this->modulesLoaded = false;
 		$this->themes = array();
 		$this->themesLoaded = false;
+
+		//-----------------------------------------------------------------------------------------
+		//	initialize core components
+		//-----------------------------------------------------------------------------------------
+
+		$this->req('revisions');
+		$this->req('blockcache');
+		$this->req('aliases');
+		$this->theme = new KTheme();
+		$this->page = new KPage();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	initialize user session
+	//----------------------------------------------------------------------------------------------
+
+	function initUserSession() {
+
+		session_start();
+
+		$this->session = new Users_Session();					//	user's session
+		$this->user = new Users_User($this->session->user);		//	the user record itself
+		$this->role = new Users_Role($this->user->role, true);	//	object with user's permissions
+	
+		if ('public' != $this->user->role) {		//	only for logged in users
+			$this->session->updateLastSeen();		//	record that session is still active
+		}
+
+		if ('' == $this->session->get('deviceprofile')) {
+			$this->session->set('deviceprofile', $this->request->guessDeviceProfile());
+		}
 	}
 
 	//==============================================================================================
@@ -143,13 +367,68 @@ class KSystem {
 	//returns: a new UID, 18 chars long [string]
 
 	function createUID() {
+		global $session;
+
+
 		$tempUID = "";
-		list($usec, $sec) = explode(' ', microtime());				//	make a seed for rand() ...
-		$seed = (float) $sec + ((float) $usec * 100000);			//	is only needed for older PHP
-		srand($seed);												//	seed it
-		for ($i = 0; $i < 16; $i++) { $tempUID .= "" . rand(); }
+		$msg = '';
+		$isPHP4 = ('4' == substr(phpversion(), 0, 1));
+		$start = microtime(true);		
+
+		list($usec, $sec) = explode(' ', microtime());
+		$nano_interval = (int)strrev($sec) % 10000;
+
+		for ($i = 0; $i < 18; $i++) {
+
+			$digit = (int)mt_rand(0, 35);
+
+			if ($digit < 10) { $tempUID .= $digit; }		//	[0-9] ASCII
+			else { $tempUID .= chr(87 + $digit); }			//	[a-z] ASCII
+
+		}
+
+		$end = microtime(true);
+		$msg .= "Calculation time: " . ($end - $start) . " seconds<br/>";
+
 		$tempUID = substr($tempUID, 0, 18);
+
+		//$msg .= "New UID: $tempUID<br/>\n";
+		//echo $msg;
+
 		return $tempUID;
+	}
+
+	//==============================================================================================
+	//	database
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	instantiate a database connection	//	TODO: more checks here
+	//----------------------------------------------------------------------------------------------
+	//returns: database driver [object]
+
+	function getDBDriver($dbType = 'mysql') {
+		global $registry;
+		
+		if ('' == $dbType) { $this->registry->set('db.driver', 'MySQL'); $dbType = 'MySQL'; }
+		include_once($this->installPath . 'core/dbdriver/' . strtolower($dbType) . '.dbd.php');
+		$driverName = 'KDBDriver_' . $dbType;
+		return new $driverName();
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	instantiate a database connection
+	//----------------------------------------------------------------------------------------------
+	//returns: database driver [object]
+
+	function getDBAdminDriver() {
+		global $registry;
+		global $db;
+
+		$dbType = $this->registry->get('db.driver');
+		$driverName = 'KDBAdminDriver_' . $dbType;
+		include_once($this->installPath . 'core/dbdriver/' . strtolower($dbType) . 'admin.dbd.php');
+		return new $driverName($db);
 	}
 
 	//==============================================================================================
@@ -159,7 +438,6 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 	//.	list all modules (enabled/installed or otherwise)
 	//----------------------------------------------------------------------------------------------
-	//;	Note that static data chould be used on production sites for a slight performance increase?
 	//returns: array of modules [array]
 
 	function listModules() {
@@ -242,11 +520,17 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 	//.	list files of a particular extension (usually .act.php, .view.php, .block.php)
 	//----------------------------------------------------------------------------------------------
+	//	
+	//	Note that maxfiles arg is recently introduced to limit slowdown if directories have very
+	//	large numbers of entries, eg serialized events
+	//
 	//arg: path - path relative to installPath [string]
 	//opt: ext - file extension	to list, eg '.block.php' [string]
+	//opt: maxFiles - maximum number of files to list per directory [int]
 
-	function listFiles($path, $ext = '') {
+	function listFiles($path, $ext = '', $maxFiles = 1024) {
 		$fileList = array();
+		$maxFiles = 1024;
 
 		$path = str_replace('%%installPath%%', '', $path);
 		$path = str_replace($this->installPath, '', $path);
@@ -254,7 +538,7 @@ class KSystem {
 		if (false == file_exists($this->installPath . $path)) { return array(); }
 		$d = dir($this->installPath . $path);
 
-		while (false !== ($entry = $d->read())) {
+		while ((false !== ($entry = $d->read())) && ($maxFiles > 0)) {
 		  	$entryLen = strlen($entry);
 			if ('' != $ext) {
 		  		if ( ($entryLen > ($extLen + 1)) AND
@@ -262,7 +546,8 @@ class KSystem {
 						{ $fileList[] = strtolower($entry); }
 			} else {
 				$fileList[] = $entry;
-			}	
+			}
+			$maxFiles --;
 		}
 
 		sort($fileList);
@@ -396,7 +681,7 @@ class KSystem {
 			date_default_timezone_set('UTC');
 		}
 		
-		$adjust = (int)$registry->get('kapenta.timedelta');
+		$adjust = (int)$this->registry->get('kapenta.timedelta');
 		$utcTime = time();
 		$networkTime = $utcTime + $adjust;
 
@@ -439,360 +724,6 @@ class KSystem {
 		if ('' == $datetime) { $datetime = $this->datetime(); }
 		$longDatetime = date('F jS Y h:i', $this->strtotime($datetime));
 		return $longDatetime;
-	}
-
-	//==============================================================================================
-	//	filesystem methods
-	//==============================================================================================
-
-	//----------------------------------------------------------------------------------------------
-	//.	discover which object owns a file
-	//----------------------------------------------------------------------------------------------
-	//arg: path - location of file relative to installPath [string]
-	//returns: dict of 'module', 'model' and 'UID', empty array on failure [array]
-
-	function fileOwner($path) {
-		$owner = array();				//%	return value [dict]
-
-		$mods = $this->listModules();
-		foreach($mods as $modName) {
-			$incFile = 'modules/' . $modName . '/inc/files.inc.php';
-			$fnName = $modName . '_fileOwner';
-			if (true == $this->fileExists('modules/' . $modName . '/inc/files.inc.php')) {
-
-				include_once $incFile;
-				if (true == function_exists($fnName)) {
-					$owner = $fnName($path);
-					if (count($owner) > 0) { return $owner; }
-				}
-			}
-		}
-
-		return $owner;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	check whether a file exists
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - relative to installPath [string]
-	//returns: true if file exists, false if not [bool]
-
-	function fileExists($fileName) {
-		$fileName = $this->fileCheckName($fileName);
-		if (true == file_exists($this->installPath . $fileName)) { return true; }
-		return false;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	check a fileName (path) before use
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - relative to installPath [string]
-	//opt: inData - if true, fileName must be inside ../data/ [bool]
-	//returns: clean fileName, or false on failure [string][bool]
-	
-	function fileCheckName($fileName, $inData = false) {
-		$fileName = str_replace('//', '/', $fileName);
-		$ipLen = strlen($this->installPath);
-		$fileNameLc = strtolower($fileName);		
-
-		//	Unicode directory traversal, see: http://www.schneier.com/crypto-gram-0007.html
-		$fileNameLc = str_replace("%c0%af", '/', $fileNameLc);
-		$fileNameLc = str_replace("%c0%9v", '/', $fileNameLc);
-		$fileNameLc = str_replace("%c1%1c", '/', $fileNameLc);
-
-		//	Precent encoded
-		$fileNameLc = str_replace("%2f", '/', $fileNameLc);
-		$fileNameLc = str_replace("%5c", '/', $fileNameLc);
-		$fileNameLc = str_replace("%2e", '.', $fileNameLc);
-
-		//	Classic directory traversal
-		if (strpos(' ' . $fileNameLc, '../') != false) { return false; }
-		if (strpos(' ' . $fileNameLc, '..\\') != false) { return false; }
-
-		//	Make absolute locations relative to installPath, case insentitive
-		if (strlen($fileName) >= $ipLen) {
-			if (strtolower($this->installPath) == substr($fileNameLc, 0, $ipLen)) { 
-				$fileName = substr($fileName, $ipLen);
-			}
-		}
-
-		//	Check that location is inside of ../data/ if required
-		if ((true == $inData) && ('data/' != substr($fileNameLc, 0, 5))) { return false; }
-
-		return $fileName;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	ensure that a directory exists
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - path relative to installPath [string]
-	//opt: inData - if true the file must be somewhere in ../data/ [bool]
-	//returns: true on success, false on failure [bool]
-
-	function fileMakeSubdirs($fileName, $inData = false) {
-		$fileName = $this->fileCheckName($fileName, $inData);
-		if (false == $fileName) { return false; }
-		$dirName = dirname($fileName);
-
-		if (true == file_exists($this->installPath . $dirName . '/')) { 
-			// already exists
-			return true; 
-
-		} else {
-			// doesn't exist, check for and add missing subdirs one at a time
-			$base = $this->installPath;
-			$subDirs = explode('/', $dirName);
-			foreach($subDirs as $sdir) {
-				//	note that 'recursive' option for mkdir was only added in PHP 5.0.0
-				$base = $base . $sdir . '/';
-				if (false == file_exists($base)) {
-					$created = mkdir($base); 
-					if (false == $created) { return false; }
-				}
-			}
-		}
-
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get the contents of a file (entire file returned as string)
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - relative to installPath [string]
-	//opt: inData - if true the file must be somewhere in ../data/ [bool]
-	//opt: phpWrap - if true any php wrapper will be removed [bool]
-	//returns: entire file contents, or false on failure [string][bool]
-
-	function fileGetContents($fileName, $inData = false, $phpWrap = false) {
-		$fileName = $this->fileCheckName($fileName, $inData);
-		if (false == $fileName) { return false; }
-
-		// note that file_get_contents() was added in PHP 4.3, we do it this way to support PHP 4.x
-		$fH = @fopen($this->installPath . $fileName, 'rb');		//	specify binary for Windows
-		if (false === $fH) { return false; }					//	check that file was opened
-		$fileSize = filesize($this->installPath . $fileName);
-		if (0 == $fileSize) { return ''; }
-		$contents = fread($fH, $fileSize);
-		fclose($fH);
-		if (true == $phpWrap) { $contents = $this->fileRemovePhpWrapper($contents); }
-		return $contents;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	set the contents of a file, will create directories if they do not exist
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - relative to installPath [string]
-	//arg: contents - new file contents [string]
-	//opt: inData - if true the file must be somewhere in ../data/ [bool]
-	//opt: phpWrap - protective wrapper [bool]
-	//opt: m - file mode [string]
-	//returns: true on success, false on failure [bool]
-
-	function filePutContents($fileName, $contents, $inData = false, $phpWrap = false, $m = 'wb+') {
-		$fileName = $this->fileCheckName($fileName, $inData);
-		if (false == $fileName) { return false; }
-		if (false == $this->fileMakeSubdirs($fileName, $inData)) { return false; }
-
-		// add php wrapper to file
-		if (true == $phpWrap) { $contents = $this->wrapper . $contents . "\n*/ ?>"; }
-
-		// note that file_put_contents() was added in PHP 5, we do it this way to support PHP 4.x
-		$fH = fopen($this->installPath . $fileName, $m);		//	specify binary for Windows
-		if (false === $fH) { return false; }					//	can fH ever be 0?
-
-		//	wait for lock
-		$lock = false;
-		$counter = 20;											//	make registry setting?
-		while (false == $lock) {
-			$lock = flock($fH, LOCK_EX);
-			if (false == $lock) { sleep(1); }
-			$counter--;
-			if (0 == $counter) {
-				$session->msgAdmin('Could not lock file: ' . $regFile, 'bad');
-				return false;
-			}
-		}
-
-		fwrite($fH, $contents);
-		$lock = flock($fH, LOCK_UN);
-		fclose($fH);
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	delete a file
-	//----------------------------------------------------------------------------------------------
-	//returns: true on success, false on failure [bool]
-
-	function fileDelete($fileName, $inData = false) {
-		if (false == $this->fileCheckName($fileName, $inData)) { return false; }
-		if (false == $this->fileExists($fileName)) { return false; }
-		$check = @unlink($this->installPath . $fileName);
-		return $check;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	delete a directory
-	//----------------------------------------------------------------------------------------------
-
-	function fileRmDir($directory, $inData = false) {
-		if (false == $this->fileCheckName($directory, $inData)) { return false; }
-		if (false == $this->fileExists($directory)) { return false; }
-		$check = @rmdir($this->installPath . $directory);
-		return $check;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	list the contents of a directory, excluding subdirectories
-	//----------------------------------------------------------------------------------------------
-	//arg: dir - directory path relative to $kapenta->installPath [string]
-	//opt: ext - filter to this file extension, case insensitive [string]
-	//opt: onlySubDirs - only returns subdirectories if true [bool]
-	//returns: array of file paths relative to installPath [array:string]
-
-	function fileList($dir, $ext = '', $onlySubDirs = false) {
-		$list = array();									//%	return value [array:string]
-
-		if (('' == $dir) || ('/' != substr($dir, strlen($dir) - 1))) { $dir = $dir . '/'; }
-		$fullPath = $this->installPath . $dir;				//%	relative to root [string]
-		$dir = $this->fileCheckName($fullPath);
-		$ext = strtolower($ext);
-		$extLen = strlen($ext);								//%	length of ext, if any [int]
-
-		$d = dir($fullPath);								//%	directory [object:directory]
-		$continue = true;									//%	loop control [bool]
-		while (true == $continue) {
-			$entry = $d->read();
-			$ok = true;
-
-			if (false == $entry) { 
-				$ok = false;
-				$continue = false;
-			}
-
-			if ((true == $ok) && (('.' == $entry) || ('..' == $entry))) { $ok = false; }
-
-			if (true == $ok) {
-				$isDir = is_dir($fullPath . $entry);
-				if (true == $isDir) { $entry = $entry . '/'; }
-				if ($isDir != $onlySubDirs) { $ok = false; }
-			} 
-
-			if ((true == $ok) && ('' != $ext) && (strlen($entry) >= $extLen)) {
-				$entryLen = strlen($entry);									//%	[int]
-				$match = strtolower(substr($entry, $entryLen - $extLen));	//%	[string]
-				if ($ext != $match) { $ok = false; }
-			}
-
-			if (true == $ok) { $list[] = $dir . $entry; }
-		}
-
-		return $list;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	search for files with a given extension, optionally in some subdirectory
-	//----------------------------------------------------------------------------------------------
-	//opt: dir - starting directory [string]
-	//opt: ext - file extension, eg '.block.php' [string]
-	//opt: folders - add directories to the results, default is false [bool]
-	//returns: array of file locations [array:string]
-	//;	not very efficient, could be improved
-
-	function fileSearch($dir = '', $ext = '', $folders = false) {
-		$list = $this->fileList($dir, $ext, false);			//%	return value [array:string]
-		$subDirs = $this->fileList($dir, '', true);
-		//echo "<pre>\n"; print_r($subDirs); echo "</pre><br/>\n";
-		foreach ($subDirs as $subDir) {
-			$more = $this->fileSearch($subDir, $ext);
-			foreach($more as $item) { $list[] = $item; }
-			if (true == $folders) { $list[] = $subDir; }
-		}
-		return $list;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//|	determines if a file/dir exists and is readable + writeable
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - relative to installPath [string]
-	//returns: true if exists, else false [bool]
-
-	function fileIsExtantRW($fileName) {
-		$fileName = $this->fileCheckName($fileName);
-		if (false == $fileName) { return false; }		// bad file name
-		$absolute = $this->installPath . $fileName;
-		if (file_exists($absolute)) {
-			if (false == is_readable($absolute)) { return false; }
-			if (false == is_writable($absolute)) { return false; }
-		} else { return false; }
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	remove php wrapper
-	//----------------------------------------------------------------------------------------------
-	//arg: content - string to remove wrapper from [string]
-	//returns: content without wrapper [string]
-
-	function fileRemovePhpWrapper($content) {
-		$content = trim($content);
-		$cL = strlen($content);
-		if ($cL < 10) { return $content; }	// too short to be wrapped
-		if ("\n*/ ?>" == substr($content, $cL - 6)) { $content = substr($content, 0, ($cL - 6)); }
-		if ("\\n*/ ?>" == substr($content, $cL - 7)) { $content = substr($content, 0, ($cL - 7)); }
-		if ("<? /*\n" == substr($content, 0, 6)) { $content = substr($content, 6); }
-		if ("<? /*\r" == substr($content, 0, 6)) { $content = substr($content, 6); }
-		if ($this->wrapper == substr($content, 0, strlen($this->wrapper))) 
-			{ $content = substr($content, strlen($this->wrapper)); }
-
-		return $content;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get sha1 hash of file
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - location relative to installPath [string]
-	//returns: sha1 hash of file, empty string on failure [string]
-
-	function fileSha1($fileName) {
-		$hash = '';
-		if (true == $this->fileExists($fileName)) {
-			$hash = sha1_file($this->installPath . $fileName);
-		}
-		return $hash;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	get size of file 
-	//----------------------------------------------------------------------------------------------
-	//arg: fileName - location relative to installPath [string]
-	//returns: size of file in bytes, -1 on failure [int]
-
-	function fileSize($fileName) {		
-		$size = -1;														//%	return value [int]
-		if (true == $this->fileExists($fileName)) {
-			$size = filesize($this->installPath . $fileName);
-		}
-		return $size;
-	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	copy a file
-	//----------------------------------------------------------------------------------------------
-	//arg: src - location relative to installPath [string]
-	//arg: dest - location relative to installPath [string]
-	//returns: true on success, false on failure [bool]
-
-	function fileCopy($src, $dest) {
-		$check = false;								//%	return false [bool]
-		$src = $this->fileCheckName($src);
-		$dest = $this->fileCheckName($dest);
-		if ((false == $src) || (false == $dest)) { return $check; }
-		if (false == $this->fileExists($src)) { return $check; }
-		$check = $this->fileMakeSubDirs($dest);
-		if (false == $check) { return false; }
-		$check = copy($this->installPath . $src, $this->installPath . $dest);
-		return $check;
 	}
 
 	//==============================================================================================
@@ -868,6 +799,55 @@ class KSystem {
 		return $result;												// do it
 	}
 
+	//==============================================================================================
+	//	in-memory caching - DEPRECATED, legacy support only, remove when direct calls implemented
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	store an object in the cache
+	//----------------------------------------------------------------------------------------------
+	//arg: key - reference to stored object [string]
+	//arg: objStr - any string, may be a serialized array [string]
+
+	function cacheSet($key, $objStr) {
+		return $this->mc->set($key, $objStr);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	retrieve an object from the cache
+	//----------------------------------------------------------------------------------------------
+	//arg: key - reference to stored object [string]
+	//returns: string reporesentation of the cached item [string]
+
+	function cacheGet($key) {	
+		return $this->mc->get($key);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover if an object exists in the cache
+	//----------------------------------------------------------------------------------------------
+
+	function cacheHas($key) {
+		return $this->mc->has($key);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	remove an item from the cache
+	//----------------------------------------------------------------------------------------------
+	//arg: key - reference to stored object [string]
+
+	function cacheDelete($key) {
+		return $this->mc->delete($key);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	clear the entire memcache
+	//----------------------------------------------------------------------------------------------
+	//arg: key - reference to stored object [string]
+
+	function cacheFlush() {
+		return $this->mc->flush();
+	}
 
 	//==============================================================================================
 	//	logging
@@ -879,7 +859,7 @@ class KSystem {
 	//TODO: consider adding some of these local variables as members of $kapemta
 
 	function logPageView() {
-		global $db, $page, $user;
+		global $db, $page, $user, $session;
 
 		$fileName = 'data/log/' . date("y-m-d") . "-pageview.log.php";
 		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
@@ -898,15 +878,33 @@ class KSystem {
 			$performance .= "|mem=" . $peakMemory . '';
 		}
 
+		$remoteHost = $this->session->get('remotehost');
+		if ('' == $remoteHost) {
+
+			if (
+				('10.' == substr($_SERVER['REMOTE_ADDR'], 0, 3)) ||
+				('192.' == substr($_SERVER['REMOTE_ADDR'], 0, 4))
+			) {
+				$this->session->set('remotehost', $_SERVER['REMOTE_ADDR']);			
+			} else {
+				$this->session->set('remotehost', gethostbyaddr($_SERVER['REMOTE_ADDR']));
+			}
+		}
+
+		$userAgent = '';
+		if (true == array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+			$userAgentt = $_SERVER['HTTP_USER_AGENT'];
+		}
+
 		$entry = "<entry>\n"
 			. "\t<timestamp>" . $this->time() . "</timestamp>\n"
 			. "\t<mysqltime>" . $this->datetime() . "</mysqltime>\n"
-			. "\t<user>" . $user->username . "</user>\n"
-			. "\t<remotehost>" . gethostbyaddr($_SERVER['REMOTE_ADDR']) . "</remotehost>\n"
+			. "\t<user>" . $this->user->username . "</user>\n"
+			. "\t<remotehost>" . $remoteHost . "</remotehost>\n"
 			. "\t<remoteip>" . $_SERVER['REMOTE_ADDR'] . "</remoteip>\n"
 			. "\t<request>" . $_SERVER['REQUEST_URI'] . "</request>\n"
 			. "\t<referrer>" . $referer . "</referrer>\n"
-			. "\t<useragent>" . $_SERVER['HTTP_USER_AGENT'] . "</useragent>\n"
+			. "\t<useragent>" . $userAgent . "</useragent>\n"
 			. "\t<performace>$performance</performance>\n"
 			. "\t<uid>" . $page->UID . "</uid>\n"
 			. "</entry>\n";
@@ -919,7 +917,7 @@ class KSystem {
 		}
 
 		//notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
-		//$entry = $kapenta->datetime() . " - " . $user->username . ' - ' . $_SERVER['REQUEST_URI'];
+		//$entry = $kapenta->datetime() . " - " . $this->user->username . ' - ' . $_SERVER['REQUEST_URI'];
 		//notifyChannel('admin-syspagelogsimple', 'add', base64_encode($entry));
 
 		return $result;
@@ -967,8 +965,8 @@ class KSystem {
 		//------------------------------------------------------------------------------------------
 		//	add a new entry to the log file
 		//------------------------------------------------------------------------------------------
-		$sessUID = isset($session) ? $session->UID : 'undefined' ;
-		$userUID = isset($user) ? $user->UID : 'public';
+		$sessUID = isset($this->session) ? $this->session->UID : 'undefined' ;
+		$userUID = isset($this->user) ? $this->user->UID : 'public';
 
 		$entry = "<event>\n";
 		$entry .= "\t<datetime>" . $this->datetime() . "</datetime>\n";
@@ -1057,7 +1055,7 @@ class KSystem {
 		$msg = ''
 		 . "<event>\n"
 		 . "\t<time>" . $this->datetime() . "</time>\n"
-		 . "\t<msg>" . htmlentities($msg) . "</msg>\n"
+		 . "\t<msg>" . htmlentities($msg, ENT_QUOTES, "UTF-8") . "</msg>\n"
 		 . "</event>\n";
 		$result = $this->filePutContents($fileName, $msg, true, false, 'a+');
 		return $result;
@@ -1237,6 +1235,193 @@ class KSystem {
 
 		return $report;
 	}
+
+	//==============================================================================================
+	//	filesystem methods / DEPRECATED, legacy support only
+	//==============================================================================================
+
+	//----------------------------------------------------------------------------------------------
+	//.	discover which object owns a file (DEPRECATED)
+	//----------------------------------------------------------------------------------------------
+	//arg: path - location of file relative to installPath [string]
+	//returns: dict of 'module', 'model' and 'UID', empty array on failure [array]
+
+	function fileOwner($path) {
+		$this->session->msg('DEPRECATED: KSystem::fileOwner');
+		return $this->fs->owner($fileName);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	check whether a file exists
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - relative to installPath [string]
+	//returns: true if file exists, false if not [bool]
+
+	function fileExists($fileName) {
+		if (true == $this->isLoaded('session')) {
+			$this->session->msg('DEPRECATED: KSystem::fileCheckName');
+		}
+
+		return $this->fs->exists($fileName);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	check a fileName (path) before use
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - relative to installPath [string]
+	//opt: inData - if true, fileName must be inside ../data/ [bool]
+	//returns: clean fileName, or false on failure [string][bool]
+	
+	function fileCheckName($fileName, $inData = false) {
+		if (true == $this->isLoaded('session')) {
+			$this->session->msg('DEPRECATED: KSystem::fileCheckName');
+		}		
+		return $this->fs->checkName($fileName, $inData);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	ensure that a directory exists
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - path relative to installPath [string]
+	//opt: inData - if true the file must be somewhere in ../data/ [bool]
+	//returns: true on success, false on failure [bool]
+
+	function fileMakeSubdirs($fileName, $inData = false) {
+		$this->session->msg('DEPRECATED: KSystem::fileMakeSubdirs');
+		return $this->fs->makePath($fileName, $inData);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get the contents of a file (entire file returned as string)
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - relative to installPath [string]
+	//opt: inData - if true the file must be somewhere in ../data/ [bool]
+	//opt: phpWrap - if true any php wrapper will be removed [bool]
+	//returns: entire file contents, or false on failure [string][bool]
+
+	function fileGetContents($fileName, $inData = false, $phpWrap = false) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileGetContents');
+		return $this->fs->get($fileName, $inData, $phpWrap);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	set the contents of a file, will create directories if they do not exist
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - relative to installPath [string]
+	//arg: contents - new file contents [string]
+	//opt: inData - if true the file must be somewhere in ../data/ [bool]
+	//opt: phpWrap - protective wrapper [bool]
+	//opt: m - file mode [string]
+	//returns: true on success, false on failure [bool]
+
+	function filePutContents($fileName, $contents, $inData = false, $phpWrap = false, $m = 'wb+') {
+		if (true == $this->isLoaded('session')) {
+			$this->session->msgAdmin('DEPRECATED: KSystem::filePutContents');
+		}		
+		return $this->fs->put($fileName, $contents, $inData, $phpWrap, $m);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	delete a file
+	//----------------------------------------------------------------------------------------------
+	//returns: true on success, false on failure [bool]
+
+	function fileDelete($fileName, $inData = false) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileDelete');
+		return $this->fs->delete($fileName, $inData);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	delete a directory
+	//----------------------------------------------------------------------------------------------
+
+	function fileRmDir($directory, $inData = false) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileDelete');
+		return $this->rmDir($directory, $inData);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	list the contents of a directory, excluding subdirectories
+	//----------------------------------------------------------------------------------------------
+	//arg: dir - directory path relative to $kapenta->installPath [string]
+	//opt: ext - filter to this file extension, case insensitive [string]
+	//opt: onlySubDirs - only returns subdirectories if true [bool]
+	//returns: array of file paths relative to installPath [array:string]
+
+	function fileList($dir, $ext = '', $onlySubDirs = false) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileList');
+		return $this->fs->listDir($dir, $ext, $onlySubDirs);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	search for files with a given extension, optionally in some subdirectory
+	//----------------------------------------------------------------------------------------------
+	//opt: dir - starting directory [string]
+	//opt: ext - file extension, eg '.block.php' [string]
+	//opt: folders - add directories to the results, default is false [bool]
+	//returns: array of file locations [array:string]
+
+	function fileSearch($dir = '', $ext = '', $folders = false) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileSearch');
+		return $this->fs->search($dir, $ext, $folders);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//|	determines if a file/dir exists and is readable + writeable
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - relative to installPath [string]
+	//returns: true if exists, else false [bool]
+
+	function fileIsExtantRW($fileName) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileIsExtantRW');
+		return $this->fs->isExtantRW($fileName);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	remove php wrapper
+	//----------------------------------------------------------------------------------------------
+	//arg: content - string to remove wrapper from [string]
+	//returns: content without wrapper [string]
+
+	function fileRemovePhpWrapper($content) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileRemovePhpWrapper');
+		return $this->fs->removePhpWrapper($content);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get sha1 hash of file
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location relative to installPath [string]
+	//returns: sha1 hash of file, empty string on failure [string]
+
+	function fileSha1($fileName) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileSha1');
+		return $this->fs->sha1($fileName);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	get size of file 
+	//----------------------------------------------------------------------------------------------
+	//arg: fileName - location relative to installPath [string]
+	//returns: size of file in bytes, -1 on failure [int]
+
+	function fileSize($fileName) {		
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileSize');
+		return $this->fs->size($fileName);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	copy a file
+	//----------------------------------------------------------------------------------------------
+	//arg: src - location relative to installPath [string]
+	//arg: dest - location relative to installPath [string]
+	//returns: true on success, false on failure [bool]
+
+	function fileCopy($src, $dest) {
+		$this->session->msgAdmin('DEPRECATED: KSystem::fileCopy');
+		return $this->fs->copy($src, $dest);
+	}
+
 
 }
 

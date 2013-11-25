@@ -274,6 +274,8 @@ class KModule {
 	function install() {
 		global $kapenta;
 
+		$kapenta->cacheDelete('modstatus::' . $this->modulename);
+
 		$incFile = 'modules/' . $this->modulename . '/inc/install.inc.php';
 		if (false == $kapenta->fileExists($incFile)) { return 'no install script'; }
 

@@ -10,7 +10,7 @@
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
@@ -50,19 +50,19 @@
 	//----------------------------------------------------------------------------------------------
 	// eg /groups/editmembers/removemember_8237146489/Some-group
 
-	if ( (true == array_key_exists('removemember', $req->args))
-		AND (true == $db->objectExists('users_user', $req->args['removemember'])) ) {
+	if ( (true == array_key_exists('removemember', $kapenta->request->args))
+		AND (true == $db->objectExists('users_user', $kapenta->request->args['removemember'])) ) {
 
-		$model->removeMember($req->args['removemember']);
+		$model->removeMember($kapenta->request->args['removemember']);
 		$session->msg("Removed member from " . $model->name . ".", 'ok');
 	}
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/groups/actions/editmembers.if.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->render();
+	$kapenta->page->load('modules/groups/actions/editmembers.if.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->render();
 
 ?>

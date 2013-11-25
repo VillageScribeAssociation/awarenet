@@ -90,8 +90,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/schools/actions/bumpgrades.page.php');
-	$page->blockArgs['bumpContent'] = $bumpContent;
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/bumpgrades.page.php');
+	$kapenta->page->blockArgs['bumpContent'] = $bumpContent;
+	$kapenta->page->render();
 
 ?>

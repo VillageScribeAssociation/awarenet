@@ -9,25 +9,25 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('grade', $req->args)) { $page->do404('grade not given'); }
-	if ('' == $req->ref) { $page->do404(); }
+	if (false == array_key_exists('grade', $kapenta->request->args)) { $page->do404('grade not given'); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 
-	$model = new Schools_School($req->ref);
+	$model = new Schools_School($kapenta->request->ref);
 	//TODO: permission check here
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/schools/actions/grade.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['schoolUID'] = $model->UID;
-	$page->blockArgs['schoolRa'] = $model->alias;
-	$page->blockArgs['schoolName'] = $model->name;
-	$page->blockArgs['schoolDescription'] = $model->description;
-	$page->blockArgs['grade'] = base64_decode($req->args['grade']);
+	$kapenta->page->load('modules/schools/actions/grade.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
+	$kapenta->page->blockArgs['schoolRa'] = $model->alias;
+	$kapenta->page->blockArgs['schoolName'] = $model->name;
+	$kapenta->page->blockArgs['schoolDescription'] = $model->description;
+	$kapenta->page->blockArgs['grade'] = base64_decode($kapenta->request->args['grade']);
 
-	//TODO: sanitize $req->args['grade']
-	$page->blockArgs['gradeLink'] = "grade_" . $req->args['grade'] . '/' . $model->alias;
-	$page->render();
+	//TODO: sanitize $kapenta->request->args['grade']
+	$kapenta->page->blockArgs['gradeLink'] = "grade_" . $kapenta->request->args['grade'] . '/' . $model->alias;
+	$kapenta->page->render();
 
 ?>

@@ -14,14 +14,14 @@
 	if (false == $user->authHas('schools', 'schools_school', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Schools.'); }
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load('modules/schools/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['UID'] = $UID;
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/edit.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->render();
 
 ?>

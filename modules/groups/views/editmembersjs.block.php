@@ -107,15 +107,21 @@
 
 </script>
 
+<div class='block'>
 [[:theme::navtitlebox::label=Add Members::toggle=divAddmembers%%groupUID%%:]]
-<div id='divAddmembers%%groupUID%%'>
-[[:users::usersearchbox::cbjs=memberConsole.addMemberForm::cblabel=add to group::cbicon=arrow_down_green.png:]]
+<div id='divAddmembers%%groupUID%%' class='outline'>
+[[:users::searchbox::cbjs=memberConsole.addMemberForm::cblabel=add to group::cbicon=arrow_down_green.png:]]
+</div>
+<div class='foot'></div>
 </div>
 <br/>
 
+<div class='block'>
 [[:theme::navtitlebox::label=All Members::toggle=divMembers%%groupUID%%:]]
-<div id='divMembers%%groupUID%%'>
+<div id='divMembers%%groupUID%%' class='outline'>
 [[:groups::listmembersnav::groupUID=%%groupUID%%::editmode=js:]]
+</div>
+<div class='foot'></div>
 </div>
 <br/>
 

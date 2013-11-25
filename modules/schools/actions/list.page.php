@@ -9,20 +9,28 @@
 		[[:schools::listall::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]:]]
 	</content>
 	<nav1>
+		<div class='block'>
 		[[:theme::navtitlebox::label=All School Categories::toggle=divTags:]]
 		[`|lt]div id=[`|sq]divTags[`|sq][`|gt]
 		[[:tags::modelcloud::refModule=schools::refModel=schools[`|us]school:]]
 		[`|lt]/div[`|gt]
+		<div class='foot'></div>
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Schools By Region::toggle=divAllSchools:]]
 		[`|lt]div id=[`|sq]divAllSchools[`|sq][`|gt]
 		[[:schools::geographicnav:]]
 		[`|lt]/div[`|gt]
+		<div class='foot'></div>
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=All schools:]]
 		[[:images::allthumbs::refModule=schools:]]
+		</div>
 	</nav1>
 	<nav2></nav2>
 	<script></script>

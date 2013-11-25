@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/schools/actions/geographic.page.php');
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/geographic.page.php');
+	$kapenta->page->render();
 
 ?>

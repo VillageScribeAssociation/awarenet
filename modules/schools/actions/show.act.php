@@ -14,24 +14,24 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $req->ref = $user->school; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->school; }
 	$aliases->findRedirect('schools_school');
 
 	//----------------------------------------------------------------------------------------------
 	//	load model
 	//----------------------------------------------------------------------------------------------
-	$model = new Schools_School($req->ref);
-	if (false == $model->loaded) { $page->do404('could not find school: ' . $req->ref); }
+	$model = new Schools_School($kapenta->request->ref);
+	if (false == $model->loaded) { $page->do404('could not find school: ' . $kapenta->request->ref); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/schools/actions/show.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['schoolName'] = $model->name;
-	$page->blockArgs['schoolRa'] = $model->alias;
-	$page->blockArgs['schoolUID'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['schoolName'] = $model->name;
+	$kapenta->page->blockArgs['schoolRa'] = $model->alias;
+	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('UID', $req->args)) { $page->do404('Group not specified.'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('Group not specified.'); }
 
-	$model = new Groups_Group($req->args['UID']);
+	$model = new Groups_Group($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Group not found.'); }
 	if (false == $user->authHas('groups', 'groups_group', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this group.'); }	

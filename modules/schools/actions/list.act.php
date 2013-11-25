@@ -11,10 +11,10 @@
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('schools', 'schools_school', 'show')) { $page->do403(); }
 
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
-	$page->load('modules/schools/actions/list.page.php');
-	$page->blockArgs['pageNo'] = $pageNo;
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/list.page.php');
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;
+	$kapenta->page->render();
 
 ?>

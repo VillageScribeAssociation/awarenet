@@ -4,10 +4,16 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit school</title>
-	<content>[[:theme::navtitlebox::width=570::label=Schools:]]
-[`|lt]h1[`|gt]Edit school Record[`|lt]/h1[`|gt]
-[[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[[:contact::editdetails::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Schools:]]
+		[`|lt]h1[`|gt]Edit school Record[`|lt]/h1[`|gt]
+		[[:schools::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
+		<br/>
+		<div class='block'>
+		[[:contact::editdetails::refModule=schools::refModel=schools[`|us]school::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		</div>
 
 </content>
 	<nav1>

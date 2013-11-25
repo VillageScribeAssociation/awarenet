@@ -12,7 +12,7 @@
 	//	check arguments and permissions (no public users)
 	//----------------------------------------------------------------------------------------------
 	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
@@ -26,11 +26,11 @@
 	//----------------------------------------------------------------------------------------------	
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load('modules/groups/actions/show.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['groupName'] = $model->name;
-	$page->blockArgs['editGroupUrl'] = $editUrl;
-	$page->render();
+	$kapenta->page->load('modules/groups/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['groupName'] = $model->name;
+	$kapenta->page->blockArgs['editGroupUrl'] = $editUrl;
+	$kapenta->page->render();
 
 ?>

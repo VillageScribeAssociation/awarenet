@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$page->load('modules/schools/actions/listhidden.page.php');
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/listhidden.page.php');
+	$kapenta->page->render();
 
 
 ?>

@@ -39,7 +39,7 @@ function groups_listusergroupsnav($args) {
 		$html .= "[[:groups::summarynav::groupUID=" . $item['groupUID'] . "::extra=$extra:]]";
 	}
 
-	if ('yes' == $ntb) { $theme->ntb($html, 'Groups', 'divUserGroups'); }
+	if ('yes' == $ntb) { $html = $theme->ntb($html, 'Groups', 'divUserGroups', 'show'); }
 
 	return $html;
 }

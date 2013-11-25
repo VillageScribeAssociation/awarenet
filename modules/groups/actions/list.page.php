@@ -4,19 +4,28 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all groups</title>
-	<content>[[:theme::navtitlebox::width=570::label=groups:]]
-[[:groups::listall:]]</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=groups:]]
+		<div class='spacer'></div>
+		[[:groups::listall:]]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Groups active at my school::toggle=divAtMySchool:]]
-<div id='divAtMySchool'>
-[[:groups::atschoolnav:]]
-</div>
-<br/>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Groups active at my school::toggle=divAtMySchool:]]
+		<div id='divAtMySchool'>
+		[[:groups::atschoolnav:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		<br/>
 
-[[:theme::navtitlebox::label=Recent announcements::toggle=divRecentAnnouncements:]]
-<div id='divRecentAnnouncements'>
-[[:announcements::listnav::refModule=groups:]]
-</div>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Recent announcements::toggle=divRecentAnnouncements:]]
+		<div id='divRecentAnnouncements'>
+		[[:announcements::listnav::refModule=groups:]]
+		<div class='foot'></div>
+		</div>
+		</div>
 
 </nav1>
 	<nav2></nav2>

@@ -14,10 +14,16 @@
 //returns: html report or false if not authorized [string][bool]
 
 function schools_install_module() {
-	global $db, $user, $registry;
+	global $db;
+	global $user;
+	global $kapenta;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Schools_School table
@@ -54,7 +60,7 @@ function schools_install_module() {
 		
 		if ('' == $check) {
 			$report .= "Created default school with UID " . $model->UID . ".<br/>";
-			$registry->set('firstrun.firstschool', $model->UID);
+			$kapenta->registry->set('firstrun.firstschool', $model->UID);
 		} else {
 			$report .= "Could not create default school record:<br/>\n$check<br/>\n";
 		}
@@ -64,7 +70,7 @@ function schools_install_module() {
 		//------------------------------------------------------------------------------------------
 		$range = $db->loadRange('schools_school', '*', '', 'createdOn', '1');
 		foreach($range as $item) {
-			$registry->set('firstrun.firstschool', $item['UID']);
+			$kapenta->registry->set('firstrun.firstschool', $item['UID']);
 			$report .= "Set default school to oldest record: " . $item['name'] . "<br/>\n";
 		}
 	}
@@ -83,12 +89,15 @@ function schools_install_module() {
 
 function schools_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores School objects exists and is correct

@@ -12,13 +12,13 @@
 	if (false == $user->authHas('groups', 'groups_group', 'show')) { $page->do403(); }
 	
 	$schoolUID = $user->school;
-	if (true == array_key_exists('sc', $req->args)) { $schoolUID = $req->args['sc']; }
+	if (true == array_key_exists('sc', $kapenta->request->args)) { $schoolUID = $kapenta->request->args['sc']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/groups/actions/list.page.php');
-	$page->blockArgs['schoolUID'] = $schoolUID;
-	$page->render();
+	$kapenta->page->load('modules/groups/actions/list.page.php');
+	$kapenta->page->blockArgs['schoolUID'] = $schoolUID;
+	$kapenta->page->render();
 
 ?>

@@ -13,7 +13,7 @@
 	//	load the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/schools/actions/schoolcontacts.page.php');
-	$page->render();
+	$kapenta->page->load('modules/schools/actions/schoolcontacts.page.php');
+	$kapenta->page->render();
 
 ?>

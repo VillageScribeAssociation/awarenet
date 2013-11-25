@@ -5,12 +5,13 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit group</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::width=570::label=About::toggle=divEditGroup:]]
 		<div id='divEditGroup'>
 		[`|lt]h1[`|gt]Edit Group[`|lt]/h1[`|gt]
 		[[:groups::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 		</div>
-		<div class='foot'></div>
+		</div>
 		<br/>
 
 		[[:groups::editmembersjs:]]

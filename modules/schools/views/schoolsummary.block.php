@@ -1,4 +1,6 @@
 <? /*
+
+<div class='block'>
 <table noborder>
   <tr>
     <td valign='top'>
@@ -16,4 +18,7 @@
     </td>
   </tr>
 </table>
+</div>
+<div class='spacer'></div>
+
 */ ?>

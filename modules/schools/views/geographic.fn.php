@@ -62,8 +62,11 @@ function schools_geographic($args) {
 
 		// print list of schools in each region
 		foreach($rCounts as $region => $count) {
+			$html .= "<div class='block'>";
 			$html .= "<h2>$region (" . $count . ")</h2>\n";
 			foreach($countries[$country][$region] as $sch) { $html .= $sch . "<br/>\n"; }
+			$html .= "</div>";
+			$html .= "<div class='spacer'></div>";
 		}
 	}
 

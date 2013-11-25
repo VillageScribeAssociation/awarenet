@@ -1,0 +1,5 @@
+<? /*
+
+migrate := schools.migrate
+
+*/ ?>

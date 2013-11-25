@@ -1,5 +1,8 @@
 <?php
 
+	require_once(dirname(__FILE__) . '/core/ksystem.class.php');
+	require_once(dirname(__FILE__) . '/core/klegacy.class.php');
+
 //--------------------------------------------------------------------------------------------------
 //		 _                          _                                _    
 //		| | ____ _ _ __   ___ _ __ | |_ __ _   ___  _ __ __ _  _   _| | __
@@ -7,63 +10,87 @@
 //		|   < (_| | |_) |  __/ | | | || (_| || (_) | | | (_| || |_| |   < 
 //		|_|\_\__,_| .__/ \___|_| |_|\__\__,_(_)___/|_|  \__, (_)__,_|_|\_\
 //		          |_|                                   |___/     
-//                                                                           	Version 2.0 Beta
+//                                                                           	Version 3.0 Beta
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-//	initialize the registry and system object
+//	initialize the kapenta framework in CMS mode
 //--------------------------------------------------------------------------------------------------
 
 	set_time_limit(900);
-	require_once('core/kregistry.class.php');
-	require_once('core/ksystem.class.php');
 
-	$registry = new KRegistry();					//	settings registry
-	$kapenta = new KSystem();						//	kapenta core
+	$kapenta = new KSystem(
+		dirname(__FILE__) . '/',					//	install path
+		'cms,session,user,role,recovery'			//	franework options
+	);
 
-	$request_uri = array_key_exists('q', $_GET) ? $_GET['q'] : '';
+//--------------------------------------------------------------------------------------------------
+//	direct aliases of core components
+//--------------------------------------------------------------------------------------------------
+
+	$registry = new KLegacy_registry();
+	$db = new KLegacy_db();
+	$cache = new KLegacy_blockcache();					//	view/block cache
+	$utils = new KLegacy_utils();					//	miscellaneous
+	$revisions = new KLegacy_revisions();			//	object revision history and recycle bin
+
+	$session = new KLegacy_session();
+	$user = new KLegacy_user();
+	$role = new KLegacy_role();
+
+	$theme = new KLegacy_theme();
+	$req = new KLegacy_request();
+	$page = new KLegacy_page();
+
+
+	$aliases = new KLegacy_aliases;					//	handles object aliases
+	$notifications = new KLegacy_notifications;		//	user notification of events
+
+	$kapenta->init();
+
+//--------------------------------------------------------------------------------------------------
+//	begin performance profiling if enabled
+//--------------------------------------------------------------------------------------------------
+
+/*
+	if ('yes' == $registry->get('xhprof.enabled')) {
+		if (mt_rand(1, (int)$registry->get('xhprof.samplesize')) == 1) {
+			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_lib.php';
+			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_runs.php';
+			//xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
+			xhprof_enable(XHPROF_FLAGS_MEMORY + XHPROF_FLAGS_CPU);  
+		}
+	}
+*/
 
 //--------------------------------------------------------------------------------------------------
 //	include and instantiate the core global objects (database access, templating system, etc)
 //--------------------------------------------------------------------------------------------------
 
-	include 'core/core.inc.php';
-
-	$db = new KDBDriver();							//	database wrapper
-	$req = new KRequest($request_uri);				//	interpret HTTP request
-	$theme = new KTheme($kapenta->defaultTheme);	//	the current theme
-	$page = new KPage();							//	document to be returned
-	$aliases = new KAliases();						//	handles object aliases
-	$notifications = new KNotifications();			//	user notification of events
-	$revisions = new KRevisions();					//	object revision history and recycle bin
-	$utils = new KUtils();							//	miscellaneous
 
 	$request = $req->toArray();						//	(DEPRECATED)
 	$ref = $req->ref;								//	(DEPRECATED)
 
-//--------------------------------------------------------------------------------------------------
-//	load the current user (public if not logged in)
-//--------------------------------------------------------------------------------------------------
+	if ('securesync/api/status' == $kapenta->request->raw or
+		'securesync/api/info' == $kapenta->request->raw) {
+		$requestURI = $_SERVER['REQUEST_URI'];
+		$requestQuery = $_SERVER['QUERY_STRING'];
+		$remoteAddr = $_SERVER['REMOTE_ADDR'];
+		$remotePort = $_SERVER['REMOTE_PORT'];
+		$args = array(
+			'uri' => $requestURI,
+			'query' => $requestQuery,
+			'remoteAddr' => $remoteAddr,
+			'remotePort' => $remotePort,
+			'method' => $_SERVER['REQUEST_METHOD']
+		);
 
-	session_start();
-	$session = new Users_Session();					//	user's session
-	$user = new Users_User($session->user);			//	the user record itself
-	$role = new Users_Role($user->role, true);		//	object with user's permissions
-	
-	if ('public' != $user->role) {					//	only logged in users can be addressed
-		$session->updateLastSeen();					//	record that this session is still active
+		$kapenta->raiseEvent('lessons', 'khanlite_request', $args);
+
+		//$kapenta->request->module = 'lessons';
+		//$kapenta->request->action = 'updatekhan';
+
 	}
-
-//--------------------------------------------------------------------------------------------------
-//	check for recovery mode
-//--------------------------------------------------------------------------------------------------
-
-	if (true == array_key_exists('recover', $req->args)) {
-		$pass = $registry->get('kapenta.recoverypassword');
-		if (sha1($req->args['recover']) == $pass) {	$session->set('recover', 'yes'); }
-	}
-	
-	if ('yes' == $session->get('recover')) { $user->role = 'admin'; }
 
 //--------------------------------------------------------------------------------------------------
 //	check if user originates in our subnet, may redirect others to a central instance
@@ -86,19 +113,6 @@
 	}
 
 //--------------------------------------------------------------------------------------------------
-//	check fopr mobile browser
-//--------------------------------------------------------------------------------------------------
-
-    if ($req->mobile && (false == $session->get('firstdetect'))) {
-		$session->set('firstdetect', 'true');
-		$session->set('mobile', 'true');
-		$session->set('contentWidth', '320');
-		$session->msg('Session now in mobile compatability mode.', 'ok');
-	} else {
-		//	not mobile
-	}
-
-//--------------------------------------------------------------------------------------------------
 //	set up the debugger
 //--------------------------------------------------------------------------------------------------
 
@@ -107,26 +121,51 @@
 		if ('admin' == $user->role) { $auth = true; }
 		if (
 			(array_key_exists('password', $req->args)) && 
-			(sha1($req->args['password']) == $registry->get('kapenta.recoverypassword'))
+			(sha1($kapenta->request->args['password']) == $kapenta->registry->get('kapenta.recoverypassword'))
 		) { $auth = true; }
 
-		if ((true == $auth) && ('on' == $req->args['debug'])) { $session->debug = true; }
+		if ((true == $auth) && ('on' == $kapenta->request->args['debug'])) { $kapenta->session->debug = true; }
 		else { $session->debug = false; }
 	}
 
-	$page->logDebug = $session->debug;
+	$kapenta->page->logDebug = $kapenta->session->debug;
 	
 //--------------------------------------------------------------------------------------------------
 //	kapenta environment is set up, load the action requested by the user and pass control
 //--------------------------------------------------------------------------------------------------
+//		$date = new DateTime();
+//		$kapenta->fs->put("data/lessons/scraper/test" . $date->format('U') . ".txt", $kapenta->request->raw);
 
 	$actionFile = ''
-	 . $kapenta->installPath
-	 . 'modules/' . $req->module
-	 . '/actions/' . $req->action . '.act.php';
+	 . 'modules/' . $kapenta->request->module
+	 . '/actions/' . $kapenta->request->action . '.act.php';
 
-	if (false == file_exists($actionFile)) { $page->do404('Unknown action'); }
+	if (false == $kapenta->fs->exists($actionFile)) { $page->do404('Unknown action'); }
 
 	require_once($actionFile);
+
+//--------------------------------------------------------------------------------------------------
+//	record profile
+//--------------------------------------------------------------------------------------------------
+
+/*
+	if ('yes' == $registry->get('xhprof.enabled')) {
+		$skip = false;
+		//TODO: registry key
+
+		if (
+			(('live' == $req->module) && ('getmessages' == $req->action)) ||
+			(('images' == $req->module) && ('full' == $req->action)) ||
+			(('images' == $req->module) && ('default' == $req->action)) ||
+			(('home' == $req->module) && ('css' == $req->action)) 
+		) { $skip = true; }
+
+		if (false == $skip) {
+			$xHProfData = xhprof_disable();
+			$xHProfRuns = new XHProfRuns_Default();
+			$xHProfRuns->save_run($xHProfData, $kapenta->websiteName);
+		}
+	}
+*/
 
 ?>

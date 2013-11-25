@@ -1,0 +1,16 @@
+<?php /*
+theme.c.darkest               IzFGMjYyMQ==
+theme.c.dark                  I0MzQ0RENw==
+theme.c.medium                IzY2NjY2Ng==
+theme.c.light                 IzgxOTZBNw==
+theme.c.lighter               I0VERURFRA==
+theme.c.lightest              I0ZGRkZGRg==
+theme.c.text                  IzMzMzMzMw==
+theme.c.link                  IzAxMDUxMA==
+theme.c.action                IzQ2NTk0Mw==
+theme.c.background            IzNkNDI0Ng==
+theme.i.logo                  YXdhcmVOZXRMb2dvLnBuZw==
+theme.colors                  ZGFya2VzdHxkYXJrfG1lZGl1bXxsaWdodHxsaWdodGVyfGxpZ2h0ZXN0fHRleHR8YmFja2dyb3VuZHxsaW5rfGFjdGlvbg==
+theme.images                  bG9nb3xiYWNrZ3JvdW5k
+theme.i.background            aW1hZ2VzL2Z1bGwvRFNDTjc2MDUuanBn
+*/ ?>

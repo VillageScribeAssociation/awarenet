@@ -1,6 +1,6 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
+	require_once(dirname(__FILE__) . '/friendship.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object helper object representing a user's friendships
@@ -51,7 +51,7 @@ class Users_Friendships {
 	//returns: true on success, false on failure [string]
 
 	function hasConfirmed($friendUID) {
-		if ('' == $this->userUID) { return $range; }
+		if ('' == $this->userUID) { return false; }
 		if (false == $this->loaded) { $this->load(); }
 
 		foreach($this->members as $item) {
@@ -70,7 +70,7 @@ class Users_Friendships {
 	//returns: true on success, false on failure [string]
 
 	function hasUnconfirmed($friendUID) {
-		if ('' == $this->userUID) { return $range; }
+		if ('' == $this->userUID) { return false; }
 		if (false == $this->loaded) { $this->load(); }
 
 		foreach($this->members as $item) {

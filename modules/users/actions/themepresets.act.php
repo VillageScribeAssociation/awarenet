@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/themepresets.page.php');
-	$page->render();
+	$kapenta->page->load('modules/users/actions/themepresets.page.php');
+	$kapenta->page->render();
 
 ?>

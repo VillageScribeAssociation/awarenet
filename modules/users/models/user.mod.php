@@ -1,13 +1,12 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/users/models/login.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/registry.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/settings.set.php');
-	require_once($kapenta->installPath . 'modules/schools/models/school.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/settings.set.php');
-	require_once($kapenta->installPath . 'modules/users/models/friendships.set.php');
-	require_once($kapenta->installPath . 'modules/users/models/permissions.set.php');
+	require_once(dirname(__FILE__) . '/login.mod.php');
+	require_once(dirname(__FILE__) . '/friendship.mod.php');
+	require_once(dirname(__FILE__) . '/registry.mod.php');
+	require_once(dirname(__FILE__) . '/settings.set.php');
+	require_once(dirname(__FILE__) . '/../../schools/models/school.mod.php');
+	require_once(dirname(__FILE__) . '/friendships.set.php');
+	require_once(dirname(__FILE__) . '/permissions.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object to represent site users.  This module is required.
@@ -72,7 +71,7 @@ class Users_User {
 	//opt: byName - set to true to load by username and not raUID [string]
 
 	function Users_User($raUID = '', $byName = false) {
-		global $db;
+		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();				//	initialise table schema
 		$this->registry = new Users_Settings();				//	create user registry
@@ -91,9 +90,9 @@ class Users_User {
 			$this->role = 'public';							// set default role
 			$this->firstname = 'public';
 			$this->firstname = 'user';
-			$this->createdOn = $db->datetime();
+			$this->createdOn = $kapenta->datetime();
 			$this->createdBy = 'public';
-			$this->editedOn = $db->datetime();
+			$this->editedOn = $kapenta->datetime();
 			$this->editedBy = 'public';
 		}
 	}
@@ -458,7 +457,7 @@ class Users_User {
 		if (false == $role->loaded) { return false; }			//	no such role
 		$model = strtolower($model);							//	fixes some calls
 
-		$page->logDebug('auth', "Checking: $module - $model - $permission - $UID <br/>\n");
+		$page->logDebugItem('auth', "Checking: $module - $model - $permission - $UID <br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	check role permisisons first
@@ -471,7 +470,7 @@ class Users_User {
 						//--------------------------------------------------------------------------
 						//	user has permission on all objects of this type
 						//--------------------------------------------------------------------------
-						$page->logDebug('auth', "Role has blanket permission.<br/>\n");
+						$page->logDebugItem('auth', "Role has blanket permission.<br/>\n");
 						return true; 		
 					}
 
@@ -488,7 +487,7 @@ class Users_User {
 						);
 
 						if (true == $met) {
-							$page->logDebug('auth', "Condition met: ". $p['condition'] ."<br/>\n");
+							$page->logDebugItem('auth', "Condition met: ". $p['condition'] ."<br/>\n");
 							return true;
 						}
 					}
@@ -496,7 +495,7 @@ class Users_User {
 			}
 		}
 
-		$page->logDebug('auth', "Role does not support permission.<br/>\n");
+		$page->logDebugItem('auth', "Role does not support permission.<br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	if role does not authorize action, try user-specific permissions

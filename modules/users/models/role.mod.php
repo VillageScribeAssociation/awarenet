@@ -1,6 +1,6 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/users/models/permissions.set.php');
+	require_once(dirname(__FILE__) . '/permissions.set.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	object to represent site roles
@@ -70,14 +70,32 @@ class Users_Role {
 	//returns: true on success, false on failure [bool]
 
 	function loadByName($name) {
-		global $db;
+		global $kapenta;
 
-		$conditions = array("name='" . $db->addMarkup($name) . "'");
-		$range = $db->loadRange('users_role', '*', $conditions);
+		//------------------------------------------------------------------------------------------
+		//	try load from memcached
+		//------------------------------------------------------------------------------------------
+		$cacheKey = 'role::name::' . $name;
+		if (true == $kapenta->mc->has($cacheKey)) {
+			$UID = $kapenta->mc->get($cacheKey);
+			return $this->load($UID);
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	try load from database
+		//------------------------------------------------------------------------------------------
+		$conditions = array("name='" . $kapenta->db->addMarkup($name) . "'");
+		$range = $kapenta->db->loadRange('users_role', '*', $conditions);
 		if (false == $range) { return false; }						// query failed
 		if (0 == count($range)) { return false; }					// no role with this name
 
-		foreach($range as $row) { return $this->loadArray($row); }
+		foreach($range as $row) {
+			//--------------------------------------------------------------------------------------
+			//	memcache it for next time
+			//--------------------------------------------------------------------------------------
+			if (true == $kapenta->mcEnabled) { $kapenta->cacheSet($cacheKey, $row['UID']); }
+			return $this->loadArray($row);
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -87,8 +105,10 @@ class Users_Role {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
+
 		$this->UID = $ary['UID'];
 		$this->name = $ary['name'];
 		$this->description = $ary['description'];
@@ -99,6 +119,7 @@ class Users_Role {
 		$this->editedBy = $ary['editedBy'];
 		$this->alias = $ary['alias'];
 		$this->loaded = true;
+
 		return true;
 	}
 
@@ -109,14 +130,24 @@ class Users_Role {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+		global $kapenta;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
+
 		$this->alias = $aliases->create('users', 'users_role', $this->UID, $this->name);
+
 		$ary = $this->toArray();
 		//echo "<textarea rows='10' cols='80'>{$ary['permissions']}</textarea>";
 		$check = $db->save($ary, $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
+
+		//	invalidate memcached entry
+		$cacheKey = 'role::name::' . $this->name;
+		$kapenta->cacheDelete($cacheKey);
+
 		return '';
 	}
 
@@ -274,6 +305,11 @@ class Users_Role {
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+
+		//	invalidate memcached entry
+		$cacheKey = 'role::name::' . $this->name;
+		$kapenta->cacheDelete($cacheKey);
+
 		return true;
 	}
 

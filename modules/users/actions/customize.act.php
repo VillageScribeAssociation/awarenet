@@ -19,7 +19,7 @@
 	//	dev / admin option to reset the user registry
 	//----------------------------------------------------------------------------------------------
 
-	if ('reset' == $req->ref) {
+	if ('reset' == $kapenta->request->ref) {
 		$user->set('info.comments.policy', 'show');
 		$user->set('info.sketchpad.intro', 'show');
 		$session->msg('Reset user registry.');

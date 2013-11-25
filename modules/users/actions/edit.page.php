@@ -4,10 +4,15 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit user account</title>
-	<content>[[:theme::navtitlebox::width=570::label=Edit Basic Record:]]
-[[:users::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[[:theme::navtitlebox::width=570::label=Change Password:]]
-[[:users::changepassform::raUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]</content>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Edit Basic Record:]]
+		[[:users::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
+		<br/>
+
+		[[:users::changepassform::raUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+	</content>
 	<nav1></nav1>
 	<nav2></nav2>
 	<script></script>

@@ -67,7 +67,7 @@ class Users_Preset {
 	//returns: true on success or false on failure [bool]
 
 	function loadUserTheme($raUID) {
-		global $registry;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	load the user
@@ -79,19 +79,19 @@ class Users_Preset {
 		//	registry values are default and may be overridden by per-user settings
 		//------------------------------------------------------------------------------------------
 
-		$colors = explode('|', $registry->get('theme.colors'));		//% [array]
-		$images = explode('|', $registry->get('theme.images'));		//% [array]
+		$colors = explode('|', $kapenta->registry->get('theme.colors'));		//% [array]
+		$images = explode('|', $kapenta->registry->get('theme.images'));		//% [array]
 
 		foreach($colors as $color) {
 			$key = 'theme.c.' . $color;
-			$this->registry->set($key, $registry->get($key));
+			$this->registry->set($key, $kapenta->registry->get($key));
 			$check = $fromuser->get('ut.c.' . $color);
 			if ('' != $check) { $this->registry->set($key, $check); }
 		}
 
 		foreach($images as $image) {
 			$key = 'theme.i.' . $image;
-			$this->registry->set($key, $registry->get($key));
+			$this->registry->set($key, $kapenta->registry->get($key));
 			$check = $fromuser->get('ut.i.' . $image);
 			if ('' != $check) { $this->registry->set($key, $check); }
 		}
@@ -330,11 +330,11 @@ class Users_Preset {
 	//returns: true on success, false on failure [bool]
 
 	function makeDefault() {
-		global $registry;
+		global $kapenta;
 		if (false == $this->registryLoaded) { return false; }
 		$settings = $this->registry->toArray();
-		$registry->set('theme.i.background', '');
-		foreach($settings as $key => $value) { $registry->set($key, $value); }
+		$kapenta->registry->set('theme.i.background', '');
+		foreach($settings as $key => $value) { $kapenta->registry->set($key, $value); }
 		return true;		
 	}
 

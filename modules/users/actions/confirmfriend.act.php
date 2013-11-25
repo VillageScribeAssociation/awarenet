@@ -57,40 +57,17 @@
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	send notification to friend
+	//	raise event for notifications, etc
 	//----------------------------------------------------------------------------------------------
-	/*
-	$title = $user->getName() . " confirmed your friend request.";
 
-	$content = "Your relationship on their profile is: " . $relationship . ".";
+	$args = array(
+		'userUID' => $recip->friendUID,
+		'friendUID' => $recip->userUID,
+		'relationship' => $recip->relationship
+	);
 
-	$url = '/users/friends/';
-	$fromUrl = '/users/profile/' . $user->UID;
-	$imgRow = imgGetDefault('users', $user->UID);
-	$imgUID = '';
-	if (false != $imgRow) { $imgUID = $imgRow['UID']; }
+	$kapenta->raiseEvent('*', 'friendship_created', $args);
 
-	notifyUser(	$friendUID, kapenta->createUID(), $user->getName(), 
-				$fromUrl, $title, $content, $url, $imgUID );
-	*/
-
-	//----------------------------------------------------------------------------------------------
-	//	send notification to user who confirmed
-	//----------------------------------------------------------------------------------------------
-	/*
-	$title = "You confirmed a friend request from [[:users::name::UID=". $friendUID .":]].";
-
-	$content = "Your relationship on their profile is: " . $recip->relationship . ".";
-
-	$url = '/users/friends/';
-	$fromUrl = '/users/profile/' . $friendUID;
-	$imgRow = imgGetDefault('users', $friendUID);
-	$imgUID = '';
-	if (false != $imgRow) { $imgUID = $imgRow['UID']; }
-
-	notifyUser(	$user->UID, kapenta->createUID(), $user->getName(), 
-				$fromUrl, $title, $content, $url, $imgUID );
-	*/
 	//----------------------------------------------------------------------------------------------
 	//	go back to friends pages
 	//----------------------------------------------------------------------------------------------

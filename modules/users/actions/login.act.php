@@ -69,7 +69,7 @@
 //	display form
 //--------------------------------------------------------------------------------------------------
 
-	$page->load('modules/users/actions/login.page.php');
-	$page->render();
+	$kapenta->page->load('modules/users/actions/login.page.php');
+	$kapenta->page->render();
 
 ?>

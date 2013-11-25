@@ -15,8 +15,8 @@
 	$query = '';
 	if (true == array_key_exists('q', $_POST)) { $query = $_POST['q']; }
 
-	$page->load('modules/users/actions/usersearch.if.page.php');
-	$page->blockArgs['query'] = $query;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/usersearch.if.page.php');
+	$kapenta->page->blockArgs['query'] = $query;
+	$kapenta->page->render();
 
 ?>

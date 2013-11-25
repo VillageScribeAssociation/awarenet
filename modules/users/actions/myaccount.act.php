@@ -14,12 +14,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/myaccount.page.php');
-	$page->blockArgs['UID'] = $user->UID;
-	$page->blockArgs['userUID'] = $user->UID;
-	$page->blockArgs['userRA'] = $user->alias;
-	$page->blockArgs['userRa'] = $user->alias;
-	$page->blockArgs['userName'] = $user->getName();
-	$page->render();
+	$kapenta->page->load('modules/users/actions/myaccount.page.php');
+	$kapenta->page->blockArgs['UID'] = $user->UID;
+	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->blockArgs['userRA'] = $user->alias;
+	$kapenta->page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->blockArgs['userName'] = $user->getName();
+	$kapenta->page->render();
 
 ?>

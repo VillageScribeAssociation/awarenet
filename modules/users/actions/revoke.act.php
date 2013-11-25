@@ -15,16 +15,16 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	if (false == array_key_exists('role', $req->args)) { $page->do404('Role not given.'); }
-	if (false == array_key_exists('module', $req->args)) { $page->do404('Module not given.'); }
-	if (false == array_key_exists('model', $req->args)) { $page->do404('Model not given.'); }
-	if (false == array_key_exists('permission', $req->args)) { $page->do404('Perm not given.'); }
+	if (false == array_key_exists('role', $kapenta->request->args)) { $page->do404('Role not given.'); }
+	if (false == array_key_exists('module', $kapenta->request->args)) { $page->do404('Module not given.'); }
+	if (false == array_key_exists('model', $kapenta->request->args)) { $page->do404('Model not given.'); }
+	if (false == array_key_exists('permission', $kapenta->request->args)) { $page->do404('Perm not given.'); }
 
-	$module = $req->args['module'];
-	$model = $req->args['model'];
-	$permission = $req->args['permission'];
+	$module = $kapenta->request->args['module'];
+	$model = $kapenta->request->args['model'];
+	$permission = $kapenta->request->args['permission'];
 
-	$role = new Users_Role($req->args['role'], true);
+	$role = new Users_Role($kapenta->request->args['role'], true);
 	if (false == $role->loaded) { $page->do404('Unknown role.'); }	
 
 	//----------------------------------------------------------------------------------------------

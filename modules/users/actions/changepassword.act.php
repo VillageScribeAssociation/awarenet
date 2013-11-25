@@ -34,6 +34,7 @@
 	// check current password
 	if ($model->password != sha1($pwdCurrent . $model->UID)) {
 		$msg .= "[*] Current password incorrent.<br/>\n";
+		$msg .= "[*] " . $model->password . " != " . sha1($pwdCurrent . $model->UID) . " (" . $model->UID . ")<br/>\n";
 		$allOk = false;
 	}
 

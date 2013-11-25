@@ -5,19 +5,15 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - my user account</title>
 	<content>
-		[[:theme::navtitlebox::label=Change Password::toggle=divChangePass:]]
-		[`|lt]div id='divChangePass' class=[`|sq]block[`|sq][`|gt]
 		[[:users::changepassform::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-		[`|lt]/div[`|gt]
-		<div class='foot'></div>
-		<br/>
 
-
+		<div class='block'>
 		[[:theme::navtitlebox::label=Themes and Appearance::toggle=divThemes:]]
-		<div class='block' id='divThemes'>
+		<div id='divThemes'>
 			[[:users::themeprefs:]]
 		</div>
 		<div class='foot'></div>
+		</div>
 		<br/>
 
 	</content>

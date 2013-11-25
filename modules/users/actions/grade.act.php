@@ -9,27 +9,27 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $req->ref = $user->UID; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->UID; }
 	
-	$model = new Users_User($req->ref);
+	$model = new Users_User($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 	//TODO: permissions check here (same as profile?)
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/grade.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['schoolUID'] = $model->school;
-	$page->blockArgs['schoolName'] = '[[:schools::name::schoolUID=' . $model->school . ':]]';
-	$page->blockArgs['grade'] = $model->grade;
-	$page->blockArgs['userRa'] = $model->alias;
-	$page->blockArgs['userUID'] = $model->UID;
-	$page->blockArgs['userName'] = $model->getName();
+	$kapenta->page->load('modules/users/actions/grade.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['schoolUID'] = $model->school;
+	$kapenta->page->blockArgs['schoolName'] = '[[:schools::name::schoolUID=' . $model->school . ':]]';
+	$kapenta->page->blockArgs['grade'] = $model->grade;
+	$kapenta->page->blockArgs['userRa'] = $model->alias;
+	$kapenta->page->blockArgs['userUID'] = $model->UID;
+	$kapenta->page->blockArgs['userName'] = $model->getName();
 
 	$page->menu2 = "[[:users::menu::userUID=" . $model->UID . ":]]";
 	$page->title = 'awareNet - ' . $model->getName() . ' (classmates )';
 
-	$page->render();
+	$kapenta->page->render();
 
 ?>

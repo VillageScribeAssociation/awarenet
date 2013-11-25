@@ -21,7 +21,7 @@ function users_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('users', 'users_user', 'list')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 	if ($num < 1) { $num = 1; }
 	if ($pageNo < 1) { $num = 1; }

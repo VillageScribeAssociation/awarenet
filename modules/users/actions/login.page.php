@@ -4,8 +4,12 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - log in</title>
-	<content>[`|lt]h2[`|gt]Log In[`|lt]/h2[`|gt]
-[[:users::loginform:]]</content>
+	<content>
+		<div class='block'>
+		[`|lt]h2[`|gt]Log In[`|lt]/h2[`|gt]
+		[[:users::loginform:]]
+		</div>
+	</content>
 	<nav1></nav1>
 	<nav2></nav2>
 	<script></script>

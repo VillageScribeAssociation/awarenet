@@ -19,17 +19,17 @@
 	//----------------------------------------------------------------------------------------------
 
 	$add = '';
-	if (true == array_key_exists('add', $req->args)) {
+	if (true == array_key_exists('add', $kapenta->request->args)) {
 		$add = "<br/>[[:users::friendrequestprofilenav::"
-					 . "userUID=" . $req->args['add'] . "::notitle=yes:]]";
+					 . "userUID=" . $kapenta->request->args['add'] . "::notitle=yes:]]";
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/find.page.php');
-	$page->blockArgs['fsearch'] = $search;
-	$page->blockArgs['fadd'] = $add;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/find.page.php');
+	$kapenta->page->blockArgs['fsearch'] = $search;
+	$kapenta->page->blockArgs['fadd'] = $add;
+	$kapenta->page->render();
 
 ?>

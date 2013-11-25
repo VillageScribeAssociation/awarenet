@@ -12,9 +12,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['userUID'] = $aliases->getOwner('users', 'users_user', $req->ref);
-	$page->render();
+	$kapenta->page->load('modules/users/actions/edit.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['userUID'] = $aliases->getOwner('users', 'users_user', $kapenta->request->ref);
+	$kapenta->page->render();
 
 ?>

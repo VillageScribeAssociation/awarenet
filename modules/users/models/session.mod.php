@@ -40,8 +40,9 @@ class Users_Session {
 
 	function Users_Session($UID = '') {
 		global $kapenta;
-		global $db;
-		global $registry;
+
+		$db = &$kapenta->db;
+		$registry = &$kapenta->registry;
 
 		$this->dbSchema = $this->getDbSchema();					//	initialise table schema
 
@@ -71,21 +72,15 @@ class Users_Session {
 			$this->set('role', $this->role);
 			$this->set('debug', $this->debug);
 
-			$this->serverUID = $registry->get('p2p.server.uid');
-			$this->serverName = $registry->get('p2p.server.name');
-			$this->serverUrl = $registry->get('p2p.server.url');
+			$this->serverUID = $kapenta->registry->get('p2p.server.uid');
+			$this->serverName = $kapenta->registry->get('p2p.server.name');
+			$this->serverUrl = $kapenta->registry->get('p2p.server.url');
 			$this->status = 'active';
 			$this->createdBy = $this->user;
 			$this->createdOn = $kapenta->datetime();
 			$this->editedBy = $this->user;
 			$this->editedOn = $kapenta->datetime();
-			$this->shared = 'no';
-
-			//--------------------------------------------------------------------------------------
-			// try to detect mobile browsers
-			//--------------------------------------------------------------------------------------
-
-			
+			$this->shared = 'no';	
 
 			//--------------------------------------------------------------------------------------
 			// load more information from stored session if non-public user
@@ -127,9 +122,22 @@ class Users_Session {
 	//arg: userUID - UID of a user [string]
 
 	function loadUser($userUID) {
+		global $kapenta;
 		global $db;
 
-		//echo "Attempting to load stored session for user: $userUID <br/>";
+		//------------------------------------------------------------------------------------------
+		//	try load from memcached
+		//------------------------------------------------------------------------------------------
+		$cacheKey = 'session::active::' . $userUID;
+		if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
+			$UID = $kapenta->cacheGet($cacheKey);
+			$this->load($UID);
+			return true;
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	try load from database
+		//------------------------------------------------------------------------------------------
 
 		$conditions = array();
 		$conditions[] = "status='active'";
@@ -138,7 +146,11 @@ class Users_Session {
 
 		if (0 == count($range)) { return false; }
 
-		foreach($range as $row) { $this->loadArray($row); }
+		foreach($range as $row) {
+			if (true == $kapenta->mcEnabled) { $kapenta->cacheSet($cacheKey, $row['UID'], 3600); }
+			$this->loadArray($row);
+		}
+
 		return true;			// unreachable state, remove?
 	}
 
@@ -188,6 +200,13 @@ class Users_Session {
 
 		$check = $db->save($objArray, $this->dbSchema, false);
 		if (false == $check) { return "Database error.<br/>\n"; }
+
+		if (true == $kapenta->mcEnabled) {
+			$cacheKey = 'session::active::' . $this->createdBy;
+			if ('active' == $this->status) { $kapenta->cacheSet($cacheKey, $this->UID, 3600); }
+			else { $kapenta->cacheDelete($cacheKey); }
+		}
+
 		return '';
 	}
 
@@ -238,7 +257,7 @@ class Users_Session {
 			'editedBy' => '10'
 		);
 
-		//revision history will be kept for these fields
+		//revision history will not be kept for these fields
 		$dbSchema['nodiff'] = array(
 			'UID',
 			'status',
@@ -320,6 +339,11 @@ class Users_Session {
 	function delete() {
 		global $db;
 		$db->delete($this->UID, $this->dbSchema);
+
+		if (true == $kapenta->mcEnabled) {
+			$cacheKey = 'session::active::' . $this->createdBy;
+			$kapenta->cacheDelete($cacheKey);
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -415,6 +439,7 @@ class Users_Session {
 	//----------------------------------------------------------------------------------------------
 	//arg: message - message to user [string]
 	//opt: icon - message icon [string]
+	//returns: true on success, false on failure [bool]
 
 	function msgAdmin($message, $icon = 'info') {
 		global $user;
@@ -430,18 +455,18 @@ class Users_Session {
 	//return: html [string]
 
 	function messagesToHtml() {
-		global $registry;
+		global $kapenta;
 		global $theme;
 
 		$html = '';								//%	return value [string]
 
 		$messages = $this->get('messages');
-		$maxMessages = $registry->get('users.maxmessages');
-		$count = (int)$this->get('msgcount');		
+		$maxMessages = (int)$kapenta->registry->get('users.maxmessages');
+		$count = (int)$this->get('msgcount');
 
 		if (0 == $count) { return $html; }
 
-		if ($count > $maxMessages) {
+		if ($count >= $maxMessages) {
 			$html = $theme->tb($messages, $count . ' Notices', 'divSMessage', 'hide');
 
 		} else {
@@ -459,16 +484,6 @@ class Users_Session {
 		$this->set('messages', '');
 		$this->set('msgcount', '0');
 	}
-
-	//----------------------------------------------------------------------------------------------
-	//.	examine user agent and try to detect mobile browsers
-	//----------------------------------------------------------------------------------------------
-	//returns: true if mobile device suspected [string]
-
-	function guessMobile() {
-		return false;
-	}
-
 }
 
 ?>

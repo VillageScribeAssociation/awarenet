@@ -32,8 +32,8 @@ function users_showrequestedfriends($args) {
 	$block = $theme->loadBlock('modules/users/views/showfriendrequest.block.php');
 
 	if (count($requests) > 0) {
-		$html .= "[[:theme::navtitlebox::label=Friend Requests (from me):]]\n";
 		foreach($requests as $item) { $html .= $theme->replaceLabels($item, $block); }
+		$html = $theme->ntb($html, 'Friend Requests (from me)', 'divFriendsRequested', 'show');
 	}
 
 	return $html;

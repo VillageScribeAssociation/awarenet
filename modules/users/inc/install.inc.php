@@ -22,12 +22,14 @@
 function users_install_module() {
 	global $db;
 	global $user;
-	global $registry;
+	global $kapenta;
 	global $kapenta;
 	
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';						//%	return value [string]
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Users_Friendship table
@@ -81,15 +83,15 @@ function users_install_module() {
 	//----------------------------------------------------------------------------------------------
 	//	create default registry values
 	//----------------------------------------------------------------------------------------------
-	if ('' == $registry->get('users.allowpublicsignup')) { 
-		$registry->set('users.allowpublicsignup', 'no');
+	if ('' == $kapenta->registry->get('users.allowpublicsignup')) { 
+		$kapenta->registry->set('users.allowpublicsignup', 'no');
 	}
 
-	if ('' == $registry->get('users.allowteachersignup')) { 
-		$registry->set('users.allowteachersignup', 'no');
+	if ('' == $kapenta->registry->get('users.allowteachersignup')) { 
+		$kapenta->registry->set('users.allowteachersignup', 'no');
 	}
 
-	if ('' == $registry->get('users.grades')) { 
+	if ('' == $kapenta->registry->get('users.grades')) { 
 		$grades = array(
 			'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7',
 			'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', '1. Klasse', '2. Klasse',
@@ -100,7 +102,7 @@ function users_install_module() {
 		);	// add other school systems here
 
 		$gradeStr = implode("\n", $grades);
-		$registry->set('users.grades', $gradeStr);
+		$kapenta->registry->set('users.grades', $gradeStr);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -165,10 +167,10 @@ function users_install_module() {
 	//----------------------------------------------------------------------------------------------
 	//	create default admin account from windows installer if it doesn't already exist
 	//----------------------------------------------------------------------------------------------
-	$adminUID = $registry->get('firstrun.adminuid');
-	$adminUser = $registry->get('firstrun.adminuser');
-	$adminPass = $registry->get('firstrun.adminpass');
-	$firstSchool = $registry->get('firstrun.firstschool');
+	$adminUID = $kapenta->registry->get('firstrun.adminuid');
+	$adminUser = $kapenta->registry->get('firstrun.adminuser');
+	$adminPass = $kapenta->registry->get('firstrun.adminpass');
+	$firstSchool = $kapenta->registry->get('firstrun.firstschool');
 	
 	if (('' !== $adminUID) && ('' !== $adminUser) && ('' !== $adminPass)) {
 		if (false == $db->objectExists('users_user', $adminUID)) {
@@ -205,12 +207,15 @@ function users_install_module() {
 
 function users_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Friendship objects exists and is correct

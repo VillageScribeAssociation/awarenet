@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/activesessions.page.php');
-	$page->render();
+	$kapenta->page->load('modules/users/actions/activesessions.page.php');
+	$kapenta->page->render();
 
 ?>

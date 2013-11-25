@@ -9,7 +9,7 @@
 //	display current user
 //--------------------------------------------------------------------------------------------------
 
-if ($req->ref == 'current') {
+if ($kapenta->request->ref == 'current') {
 	$ary = array(	'uid' => $user->UID,
 					'username' => $user->username,
 					'ofgroup' => $user->role,  

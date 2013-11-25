@@ -26,7 +26,7 @@ class Users_Logins {
 	//----------------------------------------------------------------------------------------------
 
 	function getLocalSessionsXml() {
-		global $registry;
+		global $kapenta;
 
 		
 	}

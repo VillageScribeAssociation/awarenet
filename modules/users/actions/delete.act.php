@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	OK, delete it
 	//----------------------------------------------------------------------------------------------
-	$model = new Users_User($req->ref);
+	$model = new Users_User($kapenta->request->ref);
 	$_SESSION['sMessage'] .= "Deleted user: " . $model->getName() . "<br/>";
 	$model->delete();
 

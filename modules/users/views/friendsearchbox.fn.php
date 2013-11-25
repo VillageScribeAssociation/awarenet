@@ -1,25 +1,40 @@
-<?
-
-	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
-	require_once($kapenta->installPath . 'modules/users/models/user.mod.php');
+<?php
 
 //--------------------------------------------------------------------------------------------------
-//|	make iframe to search for friends
+//*	show a user search box for adding friends
 //--------------------------------------------------------------------------------------------------
+//arg: userUID - user context this request was made in - only shown on own page [string]
 
 function users_friendsearchbox($args) {
 	global $user;
+	global $theme;
+	
+	$html = '';							//%	rreturn value [string]
 
-	if (false == $user->authHas('users', 'users_user', 'show')) { return ''; }
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and user role
+	//----------------------------------------------------------------------------------------------
+	if ('public' == $user->role) { return ''; }
 
-	$html = "<iframe name='friendSearch' id='ifFSearch'
-			 src='%%serverPath%%users/find/' 
-			 width='300' height='200' 
-			 frameborder='0'></iframe>";
+	if (false == array_key_exists('userUID', $args)) { return '(missing user context)'; }
+
+	$userUID = $args['userUID'];
+	if ($userUID != $user->UID) { return ''; }
+
+	//---------------------------------------------------------------------------------------------
+	//	make the block
+	//---------------------------------------------------------------------------------------------
+
+	$html = ''
+	 . "<script src='%%serverPath%%modules/users/js/friends.js'></script>"
+	 . "[[:users::searchbox"
+	 . "::cbicon=arrow_down_green.png"
+	 . "::cbjs=users_showFriendRequestForm"
+	 . ":]]\n";
+
+	$html = $theme->ntb($html, 'Search for friends', 'divFriendSearch', 'show');
 
 	return $html;
 }
-
-//--------------------------------------------------------------------------------------------------
 
 ?>

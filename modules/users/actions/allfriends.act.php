@@ -139,9 +139,9 @@
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load('modules/users/actions/allfriends.page.php');
-	$page->blockArgs['friendstable'] = $ftableHtml;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/allfriends.page.php');
+	$kapenta->page->blockArgs['friendstable'] = $ftableHtml;
+	$kapenta->page->render();
 
 	//---------------------------------------------------------------------------------------------
 	//	utility functions

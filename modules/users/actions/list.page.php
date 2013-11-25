@@ -4,18 +4,29 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all users</title>
-	<content>[[:theme::navtitlebox::label=All Users::width=570:]]
-[[:users::summarylist::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]::num=30:]]
-[`|lt]br/[`|gt]</content>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::label=All Users::width=570:]]
+		[[:users::summarylist::pageNo=[`|pc][`|pc]pageNo[`|pc][`|pc]::num=30:]]
+		</div>
+		[`|lt]br/[`|gt]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Search:]]
-[[:users::usersearchbox:]]
-[`|lt]br/[`|gt]
+		<div class='block'>
+		[[:theme::navtitlebox::label=Search:]]
+		[[:users::searchbox:]]
+		</div>
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=New User:]]
-[[:users::newuserform:]]
-[`|lt]br/[`|gt]
-[[:admin::subnav:]]</nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::label=New User:]]
+		[[:users::newuserform:]]
+		[`|lt]br/[`|gt]
+		</div>
+		<br/>
+
+		[[:admin::subnav:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

@@ -45,6 +45,7 @@ function users_friendrequestprofilenav($args) {
 		$withdrawBlock = '';	//TODO
 
 		$html = ''
+		 . "<div class='block'>\n"
 		 . "[[:theme::navtitlebox::label=Friend Request::toggle=divFriendRequest:]]\n"
 		 . "<div id='divFriendRequest'>\n"
 		 . "You have requested to add " 
@@ -59,6 +60,7 @@ function users_friendrequestprofilenav($args) {
 		 . "</form>\n"
 		 . "</div>\n"
 		 . "<div class='foot'></div>\n"
+		 . "</div>\n"
 		 . "<br/>\n";
 
 		return $html;
@@ -74,6 +76,7 @@ function users_friendrequestprofilenav($args) {
 	);
 
 	$html = $theme->replaceLabels($labels, $block);
+	$html = $theme->ntb($html, 'Make a Friend Request', 'divFriendRequest', 'hide');
 	return $html;
 	
 }

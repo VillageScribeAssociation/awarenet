@@ -18,7 +18,11 @@
 					$size = $_POST['transform'];		//TODO: sanitize this
 				}
 
-				$user->set('ut.i.background', 'images/' . $size . '/' . $value);
+				if ('full' == $size) {
+					$user->set('ut.i.background', 'images/' . $size . '/' . $value);
+				} else {
+					$user->set('ut.i.background', 'images/s_' . $size . '/' . $value);
+				}				
 				$session->msg('Setting user background.');
 				break;
 

@@ -102,9 +102,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/bulksignup.page.php');
-	$page->blockArgs['blSchool'] = $school;
-	$page->blockArgs['blGrade'] = $grade;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/bulksignup.page.php');
+	$kapenta->page->blockArgs['blSchool'] = $school;
+	$kapenta->page->blockArgs['blGrade'] = $grade;
+	$kapenta->page->render();
 
 ?>

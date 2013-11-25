@@ -1,12 +1,10 @@
 <? /*
 
-<form name='friendRequest' method='POST' action='%%serverPath%%users/addfriendrequest/' >
-<input type='hidden' name='action' value='addFriendReq' />
-<input type='hidden' name='friendshipUID' value='%%friendshipUID%%' />
+<div id='divFriendRequest%%friendUID%%' class='outline'>
+<form name='friendRequest%%friendUID%%' id='frmFriendRequest%%friendUID%%'>
 <input type='hidden' name='friendUID' value='%%friendUID%%' />
-<input type='hidden' name='return' value='%%return%%' />
 What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?
-<select name='relationship'>
+<select name='relationship' id='relationship%%friendUID%%'>
   <option value='friend'>friend</option>
   <option value='family'>family</option>
   <option value='scholar'>scholar</option>
@@ -19,7 +17,10 @@ What is your relationship to [[:users::namelink::userUID=%%friendUID%%:]]?
   <option value='acquaintance'>acquaintance</option>
   <option value='spouse'>spouse</option>
 </select><br/>
-<input type='submit' value='ask to be added to friend list' />
+<input type='button' value='ask to be added to friend list' onClick="users_makeRequest('%%friendUID%%');" />
 </form>
+</div>
+<div class='foot'></div>
+<br/>
 
 */ ?>

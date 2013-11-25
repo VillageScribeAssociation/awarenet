@@ -16,6 +16,8 @@
 		//	log them out
 		//------------------------------------------------------------------------------------------
 		$args = array('userUID' => $session->user);
+
+		if ('yes' == $session->get('recover')) { $session->set('recover', 'no'); }
 		$check = $session->logout();
 
 		if (true == $check) { $session->msg("You are now logged out.<br/>\n", 'ok'); }

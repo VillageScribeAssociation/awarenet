@@ -12,7 +12,7 @@
 	//TODO: finer controls and permissions for profile view (only friends classmates, etc)
 
 	$model = new Users_user();
-	if ('' != $req->ref) { $model->load($req->ref); }	// if a user was specified, try load it
+	if ('' != $kapenta->request->ref) { $model->load($kapenta->request->ref); }	// if a user was specified, try load it
 	else { $model->loadArray($user->toArray()); }		// if not, default to current user
 
 	if (false == $model->loaded) { $page->do404(); }
@@ -21,11 +21,11 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	$userName = $model->getName();
-	$page->load('modules/users/actions/friends.page.php');
-	$page->blockArgs['userUID'] = $model->UID;
-	$page->blockArgs['userRa'] = $req->ref;
-	$page->blockArgs['userName'] = $userName;
+	$kapenta->page->load('modules/users/actions/friends.page.php');
+	$kapenta->page->blockArgs['userUID'] = $model->UID;
+	$kapenta->page->blockArgs['userRa'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['userName'] = $userName;
 	$page->title = 'awareNet - friends of ' . $userName;
-	$page->render();
+	$kapenta->page->render();
 
 ?>

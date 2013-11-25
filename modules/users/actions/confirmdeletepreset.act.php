@@ -10,9 +10,9 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $req->args)) { $page->do404('UID not given'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given'); }
 
-	$model = new Users_Preset($req->args['UID']);
+	$model = new Users_Preset($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Preset not found.'); }
 
 	//----------------------------------------------------------------------------------------------

@@ -11,8 +11,19 @@
 //opt: target - a URL or _parent, for iFrames [string]
 
 function users_summarynav($args) {
-	global $db, $user, $theme;
+	global $db;
+	global $user;
+	global $theme;
+	global $cache;
+
 	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check cache, this view may be precached
+	//----------------------------------------------------------------------------------------------
+
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -35,8 +46,18 @@ function users_summarynav($args) {
 	$block = $theme->loadBlock('modules/users/views/summarynav.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 
-	if (true == array_key_exists('target', $args)) 
-		{ $html = str_replace("<a href=", "<a target='" . $args['target'] . "' href=", $html); }
+	if (true == array_key_exists('target', $args)) {
+		$html = str_replace("<a href=", "<a target='" . $args['target'] . "' href=", $html);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	save in cache
+	//----------------------------------------------------------------------------------------------
+
+	if ($model->UID != $user->UID) {
+		$html = $theme->expandBlocks($html, $args['area']);
+		$cache->set('users-summarynav-' . $model->UID, $args['area'], $args['rawblock'], $html);
+	}
 
 	return $html;
 }

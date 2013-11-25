@@ -13,14 +13,14 @@ function users_signupform($args) {
 	global $db;
 	global $user;
 	global $theme;
-	global $registry;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and any permissions
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) && ('yes' != $registry->get('users.allowpublicsignup'))) { 
+	if (('public' == $user->role) && ('yes' != $kapenta->registry->get('users.allowpublicsignup'))) { 
 		return '(this site is not currently accepting public registrations)'; 
 	}
 

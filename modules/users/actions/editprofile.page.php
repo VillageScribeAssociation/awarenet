@@ -5,21 +5,28 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit your profile</title>
 	<content>
-	[[:theme::navtitlebox::width=570::label=Profile:]]
-	[`|lt]h1[`|gt]Your Profile[`|lt]/h1[`|gt]
-	[[:users::editprofileform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+	  [[:users::editprofileform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+    </content>
+	<nav1>
+	<div class='block'>
+	[[:theme::navtitlebox::label=My Profile Picture::toggle=divChooseAvatar:]]
+	<div class='spacer'></div>
+	<div class='divChooseAvatar'>
+	[[:users::chooseavatar:]]
+	</div>
+	<div class='foot'></div>
+	</div>
 	<br/>
 
-</content>
-	<nav1>
-	[[:theme::navtitlebox::label=My Profile Picture:]]
-	[[:users::chooseavatar:]]
-	<hr/>
 	[[:live::manageattachments::refModule=users::refModel=users_user::refUID=%%UID%%:]]
-	<br/>
+
+<div class='block'>
 [[:theme::navtitlebox::label=Info:]]
 [`|lt]h3[`|gt]How to Write a Profile[`|lt]/h3[`|gt]
-[`|lt]p[`|gt]It is important not to reveal personal information on the internet unless you are sure you have complete control over what will happen to it.  Because one seldom has that control, it is strongly recommended that you do not share your telephone number, street address or similar details on this or any other website.  Remember that teachers and family might see your profile.[`|lt]/p[`|gt]</nav1>
+[`|lt]p[`|gt]It is important not to reveal personal information on the internet unless you are sure you have complete control over what will happen to it.  Because one seldom has that control, it is strongly recommended that you do not share your telephone number, street address or similar details on this or any other website.  Remember that teachers and family might see your profile.[`|lt]/p[`|gt]
+</div>
+
+    </nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

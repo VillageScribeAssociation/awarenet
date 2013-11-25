@@ -8,7 +8,7 @@
 
 function users_selectgrade($args) {
 	global $theme;
-	global $registry;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$default = '';						//%	default value [string]
@@ -23,7 +23,7 @@ function users_selectgrade($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$gradeStr = $registry->get('users.grades');
+	$gradeStr = $kapenta->registry->get('users.grades');
 	$grades = explode("\n", $gradeStr);
 
 	$html .= "<select name='$varname'>\n";

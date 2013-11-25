@@ -11,22 +11,28 @@
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403(); }			// public users can't add friends
 	
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('addFriendReq' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('friendUID', $_POST)) { $page->do404('No friendUID given.'); }
-	if (false == $db->objectExists('users_user', $_POST['friendUID'])) { $page->do404(); }
+	if (false == array_key_exists('action', $_POST)) {
+		$page->doXmlError('Action not specified.');
+	}
+
+	if ('addFriendReq' != $_POST['action']) {
+		$page->doXmlError('Action not supported.');
+	}
+
+	if (false == array_key_exists('friendUID', $_POST)) {
+		$page->doXmlError('No friendUID given.');
+	}
+
+	if (false == $db->objectExists('users_user', $_POST['friendUID'])) {
+		$page->doXmlError("User not found.");
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	OK, make the rquest
 	//----------------------------------------------------------------------------------------------
-	$retLink = 'users/profile/' . $_POST['friendUID'];
-
-	if ((true == array_key_exists('return', $_POST)) AND ('search' == $_POST['return']))
-		{ $retLink = 'users/find/'; }
-
 	$relationship = 'friend';
 	if (true == array_key_exists('relationship', $_POST))
-		{ $relationship = $utils->cleanString($_POST['relationship']); }
+		{ $relationship = $utils->cleanTitle($_POST['relationship']); }
 
 	$friendUID = $utils->cleanString($_POST['friendUID']);
 	$friendName = $theme->expandBlocks("[[:users::name::userUID=" . $friendUID . ":]]", '');
@@ -49,7 +55,7 @@
 		$recip->status = 'confirmed';
 		$recip->save();
 
-		$fStatus = 'confirmed';
+		$fStatus = 'confirmed'; 
 
 		//------------------------------------------------------------------------------------------
 		//	raise event for notifications, etc
@@ -117,27 +123,16 @@
 	//------------------------------------------------------------------------------------------
 	//	send notification
 	//------------------------------------------------------------------------------------------
-	/*	TODO: re-add notifications
-	$title = $user->getName() . " sent you a friend request.";
 
-	$content = "If you accept this request, your names will appear on each others profiles.";
 
-	$url = '/users/friends/';
-	$fromUrl = '/users/profile/' . $user->UID;
-	$imgRow = imgGetDefault('users', $user->UID);
-	$imgUID = '';
-	if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 
-	notifyUser(	$friendUID, $kapenta->createUID(), $user->getName(), 
-				$fromUrl, $title, $content, $url, $imgUID );
-	*/
 	//------------------------------------------------------------------------------------------
 	//	redirect back
 	//------------------------------------------------------------------------------------------
 
-	if ('unconfirmed' == $fStatus) { $session->msg('You have made a friend request.', 'ok'); }
-	else { $session->msg('You have confirmed a friend request from ' . $friendName, 'ok'); }
+	//if ('unconfirmed' == $fStatus) { $session->msg('You have made a friend request.', 'ok'); }
+	//else { $session->msg('You have confirmed a friend request from ' . $friendName, 'ok'); }
 
-	$page->do302($retLink);
+	echo "<ok/>";
 
 ?>

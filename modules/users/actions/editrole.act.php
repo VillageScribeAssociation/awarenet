@@ -16,10 +16,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/editrole.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['roleUID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/editrole.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['roleUID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

@@ -11,13 +11,13 @@
 	//if (false == $user->authHas('users', 'users_user', 'list')) { $page->do403(''); }
 
 	$pageNo = 1;
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load('modules/users/actions/banned.page.php');
-	$page->blockArgs['pageNo'] = $pageNo;
-	$page->render();
+	$kapenta->page->load('modules/users/actions/banned.page.php');
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;
+	$kapenta->page->render();
 
 ?>

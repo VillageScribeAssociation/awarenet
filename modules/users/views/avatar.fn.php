@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	find the group's logo/picture (300px) or a blank image
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - recordAlias or UID or groups entry [string]
+//opt: raUID - UID or alias of a Users_User object [string]
 //opt: userUID - overrides raUID [string]
 //opt: size - width100, width200, width300, width570, thumb, etc (default width300) [string]
 //opt: link - link to larger image (yes|no) (default is yes) [string]
@@ -14,6 +14,7 @@
 function users_avatar($args) {
 	global $db;
 	global $kapenta;
+	global $user;
 
 	$size = 'width300';				//%	image width [string]
 	$link = 'yes';					//%	link to full size image [string]
@@ -23,7 +24,7 @@ function users_avatar($args) {
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
-	if (false == array_key_exists('raUID', $args)) { return false; }
+	if (false == array_key_exists('raUID', $args)) { $args['raUID'] = $user->UID; }
 	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
 	if (true == array_key_exists('size', $args)) {	$size = $args['size']; }
 
@@ -41,6 +42,7 @@ function users_avatar($args) {
 	 . '::refUID=' . $model->UID
 	 . '::size=' . $size
 	 . '::link=no'
+	 . '::display=inline'
 	 . ':]]';
 
 	if ('yes' == $link) { 

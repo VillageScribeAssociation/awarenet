@@ -1,33 +1,28 @@
-<?
+<?php
 
 //--------------------------------------------------------------------------------------------------
-//|	settings form for users module
+//|	provides a summary of an object as used by search
 //--------------------------------------------------------------------------------------------------
+//arg: model - type of object to display [string]
+//arg: raUID - UID of object to display [string]
 
-function users_settings($args) {
-	global $user;
-	global $kapenta;
+function users_summarylink($args) {
 	global $theme;
 
-	$html = '';						//%	return value [string]
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and user role
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('model', $args)) { return '(model not given)'; }
+	if (false == array_key_exists('raUID', $args)) { return '(raUID not given)'; }
+	if ('users_user' != $args['model']) { return '(object type not supported)'; }
+	//TODO: check permissions
 
 	//----------------------------------------------------------------------------------------------
-	//	check user role
+	//	show the object
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	$html = "[[:user::summarynav::userUID=" . $args['raUID'] . ":]]";
+	$html = $theme->expandBlocks($html);
 
-	//----------------------------------------------------------------------------------------------
-	//	make the block
-	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/users/views/settings.block.php');
-
-	$labels = array(
-		'users.allowpublicsignup' => $kapenta->registry->get('users.allowpublicsignup'),
-		'users.allowteachersignup' => $kapenta->registry->get('users.allowteachersignup'),
-		'users.grades' => $kapenta->registry->get('users.grades')
-	);		// add more settings here
-
-	$html = $theme->replaceLabels($labels, $block);
 	return $html;
 }
 

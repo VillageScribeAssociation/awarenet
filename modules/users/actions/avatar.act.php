@@ -8,14 +8,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404("User UID or alias not given."); }
+	if ('' == $kapenta->request->ref) { $page->do404("User UID or alias not given."); }
 
-	$model = new Users_User($req->ref);
+	$model = new Users_User($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unknown user.'); }
 
-	$req->args['module'] = 'users';
-	$req->args['model'] = 'users_user';
-	$req->args['uid'] = $model->UID;
+	$kapenta->request->args['module'] = 'users';
+	$kapenta->request->args['model'] = 'users_user';
+	$kapenta->request->args['uid'] = $model->UID;
 
 	include $kapenta->installPath . 'modules/images/actions/first.act.php';
 

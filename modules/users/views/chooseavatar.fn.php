@@ -41,7 +41,7 @@ function users_chooseavatar($args) {
 	$html .= "<p>Click on the thumbnails below to set your default profile picture.</p>";
 
 	foreach($imgset->images as $objArray) {
-		$block = "[[:images::thumbsm::imageUID=" . $objArray['UID'] . "::link=no:]]";
+		$block = "[[:images::thumbsm::imageUID=" . $objArray['UID'] . "::display=inline::link=no:]]";
 		$onClick = "users_setDefaultPicture('" . $model->UID . "', '" . $objArray['UID'] . "');";
 		$html .= "<a href='javascript:void(0);' onClick=\"$onClick\">$block</a>";
 	}

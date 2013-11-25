@@ -9,7 +9,7 @@
 	//	check if user user is authorized to create new accounts
 	//----------------------------------------------------------------------------------------------
 
-	if (('no' == $registry->get('users.allowpublicsignup')) && ('admin' != $user->role)) {
+	if (('no' == $kapenta->registry->get('users.allowpublicsignup')) && ('admin' != $user->role)) {
 		$session->msg('Public signup has been disabled.', 'bad');
 		$page->do403('Not authorized.');
 	}
@@ -135,9 +135,9 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ($showPage == true) {
-		$page->load('modules/users/actions/signup.page.php');
-		foreach($formvars as $field => $value) { $page->blockArgs[$field] = $value; }
-		$page->render();
+		$kapenta->page->load('modules/users/actions/signup.page.php');
+		foreach($formvars as $field => $value) { $kapenta->page->blockArgs[$field] = $value; }
+		$kapenta->page->render();
 	}
 
 ?>

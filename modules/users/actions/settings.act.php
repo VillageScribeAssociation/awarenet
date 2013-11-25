@@ -12,15 +12,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user defaults
 	//----------------------------------------------------------------------------------------------
-	if ('' == $registry->get('users.allowpublicsignup')) { 
-		$registry->set('users.allowpublicsignup', 'no');
+	if ('' == $kapenta->registry->get('users.allowpublicsignup')) { 
+		$kapenta->registry->set('users.allowpublicsignup', 'no');
 	}
 
-	if ('' == $registry->get('users.allowteachersignup')) { 
-		$registry->set('users.allowteachersignup', 'no');
+	if ('' == $kapenta->registry->get('users.allowteachersignup')) { 
+		$kapenta->registry->set('users.allowteachersignup', 'no');
 	}
 
-	if ('' == $registry->get('users.grades')) { 
+	if ('' == $kapenta->registry->get('users.grades')) { 
 		$grades = array(
 			'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7',
 			'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', '1. Klasse', '2. Klasse',
@@ -31,10 +31,10 @@
 		);	// add other school systems here
 
 		$gradeStr = implode("\n", $grades);
-		$registry->set('users.grades', $gradeStr);
+		$kapenta->registry->set('users.grades', $gradeStr);
 	}
 
-	if ('' == $registry->get('users.maxmessages')) { $registry->set('users.maxmessages', '5'); }
+	if ('' == $kapenta->registry->get('users.maxmessages')) { $kapenta->registry->set('users.maxmessages', '5'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	handle any POST vars
@@ -44,21 +44,21 @@
 		switch($key) {
 
 			case 'users_allowpublicsignup':	
-				$registry->set('users.allowpublicsignup', $utils->cleanYesNo($value));	
+				$kapenta->registry->set('users.allowpublicsignup', $utils->cleanYesNo($value));	
 				break;	//..........................................................................
 
 
 			case 'users_allowteachersignup':	
-				$registry->set('users.allowteachersignup', $utils->cleanYesNo($value));	
+				$kapenta->registry->set('users.allowteachersignup', $utils->cleanYesNo($value));	
 				break;	//..........................................................................
 
 
 			case 'users_grades':	
-				$registry->set('users.grades', trim($value));	
+				$kapenta->registry->set('users.grades', trim($value));	
 				break;	//..........................................................................
 
 			case 'users_maxmessages':	
-				$registry->set('users.maxmessages', (int)$value);	
+				$kapenta->registry->set('users.maxmessages', (int)$value);	
 				break;	//..........................................................................
 
 		}
@@ -67,7 +67,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/users/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/users/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

@@ -1,0 +1,1 @@
+Note that most of the icons are from GTK theme which ships with Ubuntu, and distributed under that licence.

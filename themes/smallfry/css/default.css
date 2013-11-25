@@ -1,0 +1,460 @@
+@charset "UTF-8";
+
+/* main body ------------------------------------------------------------------------------------ */
+
+body {
+	background: %%pageBackground%%;
+	background-size: 100%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	color: %%theme.c.text%%;
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+}
+
+a { text-decoration: none; color: %%theme.c.link%%; } /* #365a10 */
+a:hover { text-decoration: underline; color: %%theme.c.link%%; }
+a h1 { color: #303030; }
+a h2 { color: #303030; }
+
+table { background: transparent; background-color: transparent; }
+div { background: transparent; background-color: transparent; }
+
+div.mainTable {
+	background-color: rgba(255,255,255,0.7);
+	width: 950px;
+	margin-left: auto;
+	margin-right: auto;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+}
+
+hr {
+	border-top: 1px solid #aaaaaa;
+	color: %%theme.c.lightest%%;
+	background-color: %%theme.c.lightest%%;
+	height: 1px;
+}
+
+/* top menu ------------------------------------------------------------------------------------- */
+
+img.rounded {
+	border-radius: 3px;
+	display: block;
+}
+
+a.menu {
+	color: #ffffff;
+	background-color: #3d4246; /* %%theme.c.darkest%% */
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	border-radius: 5px;
+}
+
+/* footer --------------------------------------------------------------------------------------- */
+
+a.footer {
+	color: %%theme.c.lightest%%;	
+}
+
+/* images --------------------------------------------------------------------------------------- */
+
+div.caption {
+	float: left;
+	background-color: %%theme.c.lighter%%; /* #eeeeee */
+}
+
+div.captionpad {
+	float: left;
+	background-color: %%theme.c.lighter%%; /* #eeeeee */
+	margin-right: 10px;
+}
+
+/* submenu items -------------------------------------------------------------------------------- */
+
+div.submenu {
+	float: left;
+	width: 100%;
+	height: 25px;
+	background-color: %%theme.c.light%%; /* #aaaaaa */
+
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+}
+
+span.submenu { 
+	font-size: 90%; 
+	padding-left: 18px;
+	color: %%theme.c.lightest%%;	/* #ffffff */
+	font-size: 19px;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: %%theme.c.light%%;	/* #aaaaaa */
+	vertical-align: top;
+}
+
+span.submenu:hover { 
+	background-color: %%theme.c.lighter%%; 
+	color: %%theme.c.medium%%;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+}
+
+span.submenu a {
+	color: %%theme.c.lightest%%;
+	text-decoration: none;
+}
+
+span.submenu a:hover {
+	color: %%theme.c.light%%;
+	text-decoration: none;
+}
+
+/* navigation boxes ----------------------------------------------------------------------------- */
+
+div.navbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+	color: %%theme.c.lightest%%;
+	font-size: 20px;
+	padding: 2px;
+	padding-left: 12px;
+	background-color: %%theme.c.dark%%; /* #4e4e4e */
+	-moz-user-select: none;
+
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.navbox a { color: %%theme.c.dark%%; /* #444444 */ }
+
+
+img.navboxbtn {
+	float: right; 
+	position: relative; 
+	top: 5px; 
+	left: -5px; 
+}
+
+img.navboxbtnie {
+	float: right;
+	position: relative;
+	top: -22px;
+	left: -5px;  
+}
+
+/* tags ----------------------------------------------------------------------------------------- */
+
+span.tag {
+	padding: 1px;
+	background-color: #eeeeee;
+	border-color: #aaaaaa;
+	border-style: solid;
+	border-width: 1px;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+a.tag {
+	color: #aaaaaa;
+	text-decoration: none;
+}
+
+/* action boxes --------------------------------------------------------------------------------- */
+
+div.actionbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+	color: %%theme.c.lightest%%; /* #ffffff */
+	font-size: 20px;
+	padding: 2px;
+	padding-left: 12px;
+	cursor: pointer;
+	background-color: %%theme.c.action%%; /* #799f3e */
+	-moz-user-select: none;
+
+/*	-moz-border-radius-bottomleft: 10px;
+	-moz-border-radius-topright: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius-bottomleft: 10px;
+	border-radius-topright: 10px; */
+
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+}
+
+div.action {
+	background-color: %%theme.c.action%%; /* #799f3e */
+}
+
+/* blocks --------------------------------------------------------------------------------------- */
+
+div.block {
+	/*
+	padding: 0px 5px 0px 5px;			
+	margin: 0px;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ddd;
+	*/
+
+	/* background-color: %%theme.c.lightest%%; */
+
+	background-color: rgba(255, 255, 255, 0.9);
+
+	padding: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+	border-radius: 10px;
+}
+
+div.block hr {
+	border-top: 1px #527d26;
+	color: #527d26;
+	background-color: %%theme.c.lightest%%;
+	height: 1px;
+}
+
+div.navblock {
+	background-color: %%theme.c.lightest%%;
+}
+
+div.foot {
+	padding: 0px;			
+	margin: 0px;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: %%theme.c.action%%;
+	background-color: %%theme.c.action%%; /* #799f3e */
+}
+
+div.spacer {
+	padding: 0px;			
+	margin: 0px;
+	display: block;
+	background-color: transparent;
+}
+
+div.hidden {
+	visibility: hidden;
+	display: none;
+}
+
+div.shown {
+	visibility: hidden;
+	display: visible;
+}
+
+div.outline {
+	padding: 0px 5px 0px 5px;			
+	margin: 0px;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: %%theme.c.lighter%%;
+	background-color: %%theme.c.lightest%%;
+}
+
+/* indented div --------------------------------------------------------------------------------- */
+
+div.indent {
+	padding: 0px 0px 0px 14px;
+}
+
+/* wireframe tables ----------------------------------------------------------------------------- */
+
+table.wireframe {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+	border-style: solid solid solid solid;
+	border-color: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px
+}
+
+td.wireframe {
+	vertical-align: top;
+	border-width: 1px 1px 1px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+td.title {
+	vertical-align: top;
+	border-width: 1px 1px 0px 0px;
+	padding: 1px;
+	border-style: solid;
+	border-color: %%theme.c.light%%;
+	background-color: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+/* iframes -------------------------------------------------------------------------------------- */
+
+frame.consoleif {
+	width: 100%;
+	height: 5px;
+	border: 0px solid %%theme.c.lightest%%; :
+}
+
+/* WYSWYG editor -------------------------------------------------------------------------------- */
+
+div.HyperTextArea {
+	visibility: hidden;
+	display: none;
+}
+
+div.HyperTextArea64 {
+	visibility: hidden;
+	display: none;
+}
+
+/* images --------------------------------------------------------------------------------------- */
+
+img.imthumb {
+	float: left;
+}
+
+img.imwidth300 {
+	float: left;
+	padding-right: 10px;
+}
+
+img.imwidtheditor {
+	
+}
+
+/* ajax messages -------------------------------------------------------------------------------- */
+
+span.ajaxmsg {
+	background-color: #799f3e;		/* static for now */
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxerror {
+	background-color: red;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxwarn {
+	background-color: #ff6600;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxinactive {
+	background-color: #aaaaaa;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+image.infobutton {
+	position: relative; 
+	top: 3px;
+}
+
+/* session messages --------------------------------------------------------------------------- */
+
+div.sessionmsg {
+	margin: 0px 0px 4px 0px;
+	display: block;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-style: solid;
+	border-color: #ddd;
+	background-color: %%theme.c.lighter%%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: %%theme.c.dark%%;
+	font-size: 12px;
+	text-decoration: none;
+	/* font-weight: 200; */
+ }
+
+/* inline quote boxes --------------------------------------------------------------------------- */
+
+div.inlinequote {
+	margin: 4px;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: %%theme.c.light%%;
+	background-color: %%theme.c.lighter%%;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	color: %%theme.c.dark%%;
+	font-size: 12px;
+	text-decoration: none;
+	font-weight: 200;
+ }
+
+/* footer --------------------------------------------------------------------------------------- */
+
+td.footer {
+	background-color: %%theme.c.dark%%;
+	color: %%theme.c.lightest%%;
+}
+
+/* modal overlay div ---------------------------------------------------------------------------- */
+
+div.overlay {
+	display: none;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	text-align:center;
+	z-index: -1;
+	background: #000 50% 50% repeat-x; opacity: .50; filter: Alpha(Opacity=50);
+	min-height: 100%
+}
+
+/* window overlay div --------------------------------------------------------------------------- */
+
+div.windowoverlay {
+	display: none;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 0px;
+	height: 0px;
+	text-align:center;
+	z-index: -1;
+	background: #000 50% 50% repeat-x; opacity: .50; filter: Alpha(Opacity=50);
+}
+
+
+/* window banners ------------------------------------------------------------------------------- */
+
+div.windowbanner {
+	background-color: %%theme.c.dark%%;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	margin: 0;
+	color: #ddd;
+	font-size: 19px;
+	display: none;
+}

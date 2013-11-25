@@ -1,0 +1,211 @@
+@charset "UTF-8";
+
+/* main body ------------------------------------------------------------------------------------ */
+
+body {
+	background: %%theme.c.lighter%%;  /* #dddddd */
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	color: %%theme.c.text%%; /* #303030 */
+}
+
+a { text-decoration: none; color: %%theme.c.link%%; /* #365a10 */ }
+
+a h1 { color: %%theme.c.dark%%; /* #303030 */ }
+
+a h2 {
+	color: %%theme.c.text%%; /* #303030 */
+}
+
+hr {
+	border-top: 1px dashed %%theme.c.action%%; /* #527d26 */
+	color: %%theme.c.lightest%%;
+	background-color: %%theme.c.lightest%%;
+	height: 1px;
+}
+
+/* top menu ------------------------------------------------------------------------------------- */
+
+img.menu1 {
+	padding-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+/* navigation boxes ----------------------------------------------------------------------------- */
+
+div.navbox { 
+	font-size: 90%; 
+	padding-left: 20px;
+	color: #ffffff;
+	font-size: 20px;
+	padding: 2px;
+	padding-left: 12px;
+	background-color: #aaaaaa;
+	-moz-user-select: none;
+}
+
+div.navbox a {
+	color: #444444;
+}
+
+
+img.navboxbtn {
+	float: right; 
+	position: relative; 
+	top: 5px; 
+	left: -5px; 
+}
+
+img.navboxbtnie {
+	float: right;
+	position: relative;
+	top: -22px;
+	left: -5px;  
+}
+
+/* images --------------------------------------------------------------------------------------- */
+
+img.imthumb {
+	float: left;
+}
+
+img.imwidth300 {
+	float: left;
+	padding-right: 10px;
+}
+
+img.imwidtheditor {
+	
+}
+
+/* inline quote boxes --------------------------------------------------------------------------- */
+
+div.inlinequote {
+	margin: 4px 4px 4px 4px;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ddd;
+	background-color: %%theme.c.lighter%%;  /* #eeeeee */
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	color: %%theme.c.dark%%;
+	font-size: 12px;
+	text-decoration: none;
+	font-weight: 200;
+}
+
+/* ajax messages -------------------------------------------------------------------------------- */
+
+span.ajaxmsg {
+	background-color: green;		/* constant for now */
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxerror {
+	background-color: red;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+span.ajaxwarn {
+	background-color: #ff6600;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+image.infobutton {
+	position: relative; 
+	top: 3px;
+}
+
+/* wireframe tables ----------------------------------------------------------------------------- */
+
+table.wireframe {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 0px;
+	padding: 0px 0px 0px 0px;
+	border-style: solid solid solid solid;
+	border-color: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px
+}
+
+td.wireframe {
+	border-width: 1px 1px 1px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+td.title {
+	border-width: 1px 1px 0px 0px;
+	padding: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	border-color: %%theme.c.light%%;
+	background: %%theme.c.light%%;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+span.mychat {
+	color: #365a10;
+	font-size: 12px;	
+}
+
+/* iframes -------------------------------------------------------------------------------------- */
+
+frame.consoleif {
+	width: 100%;
+	height: 5px;
+	border: 0px solid %%theme.c.lightest%%; 
+}
+
+/* chat windows --------------------------------------------------------------------------------- */
+
+div.cwtext {
+	height: 250px;
+	width: 200px;
+	overflow: auto;
+	text-align: left;
+}
+
+/* chat and console messages (fixed colors for now) --------------------------------------------- */
+
+div.chatmessagegray {
+	background-color: #fff;
+	display: block;
+	border-left-style: solid;
+	border-left-color: #ddd;
+	margin: 4px 4px 4px 4px;
+	padding: 4px 4px 4px 4px;
+}
+
+div.chatmessagegreen {
+	background-color: #fff;
+	display: block;
+	border-left-style: solid;
+	border-left-color: #0f0;
+	margin: 4px 4px 4px 4px;
+	padding: 4px 4px 4px 4px;
+}
+
+div.chatmessagered {
+	background-color: #fff;
+	display: block;
+	border-left-style: solid;
+	border-left-color: #f00;
+	margin: 4px 4px 4px 4px;
+	padding: 4px 4px 4px 4px;
+}
+
+div.chatmessageblack {
+	background-color: #fff;
+	display: block;
+	border-left-style: solid;
+	border-left-color: #000;
+	margin: 4px 4px 4px 4px;
+	padding: 4px 4px 4px 4px;
+}
+

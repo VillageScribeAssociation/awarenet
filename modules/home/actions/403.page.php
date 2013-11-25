@@ -6,7 +6,7 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - Not allowed</title>
 	<content>
 		[[:theme::navtitlebox::label=Oops::toggle=div403:]]
-		<div id='div403'>
+		<div id='div403' class='block'>
 		%%message%%
 		</div>
 		<div class='foot'></div>

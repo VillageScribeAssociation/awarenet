@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check references and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $req->ref = 'frontpage'; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = 'frontpage'; }
 	$UID = $aliases->findRedirect('home_static');
 	$model = new Home_Static($UID);
 	if (false == $model->loaded) {
-		if ('frontpage' == $req->ref) { $page->do404('no front page'); }
+		if ('frontpage' == $kapenta->request->ref) { $page->do404('no front page'); }
 		else { $page->do404('page not found'); }
 	}
 
@@ -37,7 +37,7 @@
 					. "'>[edit static page]</a><br/>\n";
 	}
 	
-	$page->blockArgs['staticTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->blockArgs['staticTitle'] = $model->title;
+	$kapenta->page->render();
 	
 ?>

@@ -1,19 +1,33 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	list static pages
+//|	create the site's top menu bar according to context
 //--------------------------------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------------------------
-	//	check arguments and permissions
-	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'home_static', 'show', '')) { $page->do403(); }
-	//TODO: paginate
+function home_usermenu($args) {
+	global $user;
+	global $theme;
+	global $session;
 
 	//----------------------------------------------------------------------------------------------
-	//	render page
+	//	check user role and mobile status
 	//----------------------------------------------------------------------------------------------
-	$kapenta->page->load('modules/home/actions/list.page.php');
-	$kapenta->page->render();
+	$block = 'publicmenu.block.php';
+
+	if (('public' != $user->role) && ('banned' != $user->role)) { $block = 'usermenu.block.php'; }
+
+	$adminCl = '';
+	if ('admin' == $user->role) {
+		$adminCl = "<a href='%%serverPath%%admin/' class='menu'>Admin</a>";
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	load the block
+	//----------------------------------------------------------------------------------------------
+	$html = $theme->loadBlock('modules/home/views/' . $block);
+	$html = str_replace('%%adminConsoleLink%%', $adminCl, $html);
+
+	return $html;
+}
 
 ?>

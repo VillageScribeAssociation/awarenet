@@ -1,6 +1,6 @@
 <? /*
 
-<p>Would you like to join awareNet?  Comments, criticisms, questions?  We'd love to hear from you.  We can be reached <a href='mailto:info@villagescribe.org'>by email</a>, by phone at +27 46 6227507, or via the form below.</p>
+<p>Would you like to join awareNet?  Comments, criticisms, questions?  We'd love to hear from you.</p>
 
 <h2>Send Us Mail!</h2>
 
@@ -11,7 +11,7 @@
   <b>Your Email Address:</b><br/>
   <input type='text' name='contactEmail' size='30' style='width: 100%;' /><br/>
   <b>Message:</b><br/>
-  <textarea rows='10' name='message' style='width: 100%;' ></textarea><br/>
+  <textarea rows='15' name='message' style='width: 100%;' ></textarea><br/>
   <input type='submit' value='Send' />  
 </form>
 

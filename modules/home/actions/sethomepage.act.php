@@ -21,7 +21,7 @@
 	if (false == $model->loaded) { 
 		$session->msg('Could not load / set new home page.', 'bad'); 
 	} else { 
-		$registry->set('home.frontpage', $model->UID);
+		$kapenta->registry->set('home.frontpage', $model->UID);
 		$session->msg('Homepage changed to: ' . $model->title);
 	}
 

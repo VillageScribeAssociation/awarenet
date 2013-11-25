@@ -19,7 +19,7 @@
 
 	foreach($files as $file) {
 		echo "<h2>$file</h2>\n";
-		$raw = $kapenta->fileGetContents($file);
+		$raw = $kapenta->fs->get($file);
 		echo "length: " . strlen($raw) . "<br/>\n";
 		$raw = str_replace("<a", "\n<a", $raw);
 		$raw = str_replace("</a>", "</a>\n", $raw);

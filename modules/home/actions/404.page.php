@@ -6,7 +6,7 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - Oops</title>
 	<content>
 		[[:theme::navtitlebox::label=Oops::toggle=div404:]]
-		<div id='div404'>
+		<div id='div404' class='block'>
 		[`|pc][`|pc]message[`|pc][`|pc]
 		</div>
 		<div class='foot'></div>

@@ -1,25 +1,27 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/home/models/static.mod.php'); // (?)
+	//require_once($kapenta->installPath . 'modules/home/models/partner.mod.php');
+	// ^ sometimes needed for breadcrumbs, etc
 
 //--------------------------------------------------------------------------------------------------
-//*	edit a static page
+//*	show form to edit a Partner object
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
-	//	check reference and permissions
+	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do302('home/list/'); }
-	$UID = $aliases->findRedirect('home_static');
-	if (false == $user->authHas('home', 'home_static', 'edit', $UID)) 
-		{ $page->do403('you cannot edit this static page'); }
+	$UID = $aliases->findRedirect('home_partner');
+	if (false == $user->authHas('home', 'home_partner', 'edit', $UID))
+		{ $page->do403('You are not authorized to edit this Partners.'); }
+
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
-	//----------------------------------------------------------------------------------------------	
-	$kapenta->page->load('modules/home/actions/edit.page.php');
+	//----------------------------------------------------------------------------------------------
+	$kapenta->page->load('modules/home/actions/editpartner.page.php');
 	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['partnerUID'] = $UID;
 	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
 	$kapenta->page->render();
-	
+
 ?>

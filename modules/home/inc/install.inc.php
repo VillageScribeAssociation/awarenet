@@ -15,12 +15,13 @@
 function home_install_module() {
 	global $user;
 	global $db;
-	global $registry;
+	global $kapenta;
+	global $kapenta;
 
 	if ('admin' != $user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing home_static Module</h3>\n";
-	$dba = new KDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create Home_Static table if it does not exist, upgrade it if it does
@@ -71,7 +72,7 @@ function home_install_module() {
 		$check = $newPage->save();
 
 		if ('' == $check) {
-			$registry->set('home.frontpage', $newPage->UID);
+			$kapenta->registry->set('home.frontpage', $newPage->UID);
 			$report .= "Home page set to " . $newPage->UID . ".<br/>";
 		}
 	}
@@ -90,12 +91,15 @@ function home_install_module() {
 
 function home_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Static objects exists and is correct

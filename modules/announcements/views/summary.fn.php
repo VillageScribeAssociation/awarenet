@@ -35,8 +35,8 @@ function announcements_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	set AJAX triggers
 	//----------------------------------------------------------------------------------------------
-	$channel = 'announcement-' . $model->UID;
-	$page->setTrigger('announcements', $channel, $args['rawblock']);
+	//$channel = 'announcement-' . $model->UID;
+	//$page->setTrigger('announcements', $channel, $args['rawblock']);
 
 	return $html;
 }

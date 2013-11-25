@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	get name of announcement owner
 	//----------------------------------------------------------------------------------------------	
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('announcements_announcement');
-	$model = new Announcements_Announcement($req->ref);
+	$model = new Announcements_Announcement($kapenta->request->ref);
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'show', $UID)) 
 		{ $page->do403(); }
 
@@ -24,14 +24,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/announcements/actions/show.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['refUID'] = $model->refUID;
-	$page->blockArgs['refModule'] = $model->refModule;
-	$page->blockArgs['announceLink'] = $ownerName;
-	$page->blockArgs['announcementOwner'] = $ownerName;
-	$page->blockArgs['announcementTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->load('modules/announcements/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['refUID'] = $model->refUID;
+	$kapenta->page->blockArgs['refModule'] = $model->refModule;
+	$kapenta->page->blockArgs['announceLink'] = $ownerName;
+	$kapenta->page->blockArgs['announcementOwner'] = $ownerName;
+	$kapenta->page->blockArgs['announcementTitle'] = $model->title;
+	$kapenta->page->render();
 
 ?>

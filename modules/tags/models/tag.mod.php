@@ -161,7 +161,6 @@ class Tags_Tag {
 		$dbSchema['indices'] = array(
 			'UID' => '10',
 			'name' => '10',
-			'objectCount' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',

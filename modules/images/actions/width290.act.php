@@ -5,6 +5,6 @@
 //--------------------------------------------------------------------------------------------------
 //DEPRECATED: remove this action when data is clean [string]
 
-	$page->do302('images/s_width290/' . $req->ref);
+	$page->do302('images/s_width290/' . $kapenta->request->ref);
 
 ?>

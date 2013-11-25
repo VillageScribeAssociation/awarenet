@@ -15,9 +15,13 @@
 
 function twitter_install_module() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';												//%	return value [string]
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Twitter_Tweet table
@@ -40,11 +44,15 @@ function twitter_install_module() {
 
 function twitter_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';												//%	return value [string]
 	$installNotice = '<!-- table installed correctly -->';		//%	scripts look for this [string]
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Tweet objects exists and is correct

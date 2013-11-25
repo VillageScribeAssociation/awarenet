@@ -95,7 +95,7 @@ class Live_ShellSession {
 			$cwd = $cwd . '/' . $new . '/';
 		}
 		$cwd = $this->reduceRelativeDir($cwd);
-		if (true == $kapenta->fileExists(substr($cwd, 2))) {
+		if (true == $kapenta->fs->exists(substr($cwd, 2))) {
 			$this->set('cwd', $cwd); 
 			return "$cwd [ok]";
 		} else {

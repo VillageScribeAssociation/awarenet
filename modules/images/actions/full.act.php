@@ -9,14 +9,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
-	$model = new Images_Image($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	$model = new Images_Image($kapenta->request->ref);
 	if ($model->fileName == '') { $page->do404(); }
 			
 	//----------------------------------------------------------------------------------------------
 	//	return the original file
 	//----------------------------------------------------------------------------------------------
-	if (true == $kapenta->fileExists($model->fileName)) {
+	if (true == $kapenta->fs->exists($model->fileName)) {
 		// transform exists
 		header('Content-Type: image/jpeg');
 		readfile($kapenta->installPath . $model->fileName);
@@ -27,7 +27,7 @@
 		//$sync->requestFile($i->fileName);
 
 		readfile(
-			$kapenta->installPath . 'themes/' . $kapenta->defaultTheme . '/unavailable/loading.jpg'
+			$kapenta->installPath . 'data/images/unavailable/unavailable_widthmax.jpg'
 		);
 
 	}

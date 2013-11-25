@@ -13,7 +13,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/listmodules.page.php');
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/listmodules.page.php');
+	$kapenta->page->render();
 
 ?>

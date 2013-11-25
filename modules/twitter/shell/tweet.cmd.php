@@ -10,7 +10,7 @@
 
 function twitter_WebShell_tweet($args) {
 	global $kapenta;
-	global $registry;
+	global $kapenta;
 	global $user;
 	global $shell;
 

@@ -26,7 +26,7 @@ function calendar_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	relationships of Entry object
 	//----------------------------------------------------------------------------------------------
-	if ('calendar_entry' == $refModel) {
+	if ('calendar_entry' == strtolower($refModel)) {
 		$model = new Calendar_Entry($UID);					// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 

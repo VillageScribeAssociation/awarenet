@@ -47,7 +47,7 @@ function images_popular($args) {
 				 . "<a href='%%serverPath%%images/show/" . $ext['alias'] . "'>"
 				 . "<img"
 				 . " src='%%serverPath%%images/" . $size . '/' . $ext['alias'] . "'"
-				 . " title='" . $item['title'] . "'"
+				 . " title='" . $ext['title'] . "'"
 				 . " border='0' vspace='5px' hspace='5px' "
 				 . "/></a>";
 			}

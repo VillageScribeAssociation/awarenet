@@ -31,14 +31,14 @@
     <td><b>Batch Size: </b></td>
     <td>
 		<input type='text' name='p2p_batchsize' value='%%p2p.batchsize%%' size='5' />
-		<small>Number of database objects to transfer per worker cycle.</small>
+		<small>Maximum number of events to process per cycle.</small>
 	</td>
   </tr>
   <tr>
     <td><b>Batch Parts: </b></td>
     <td>
 		<input type='text' name='p2p_batchparts' value='%%p2p.batchparts%%' size='5' />
-		<small>Number of file parts to transfer per worker cycle.</small>
+		<small>Chunk size of message queues (kilobytes).</small>
 	</td>
   </tr>
   <tr>

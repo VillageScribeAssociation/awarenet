@@ -7,13 +7,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $req->args)) { $page->do404('(no module)'); }
-	if (false == array_key_exists('refModel', $req->args)) { $page->do404('(no model)'); }
-	if (false == array_key_exists('refUID', $req->args)) { $page->do404('(no UID)'); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('(no module)'); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('(no model)'); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('(no UID)'); }
 	
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	//----------------------------------------------------------------------------------------------
 	//	render the (iframe) page
@@ -24,21 +24,21 @@
 		//------------------------------------------------------------------------------------------
 		//	not authorised to edit files, just display
 		//------------------------------------------------------------------------------------------
-		$page->load('modules/files/actions/fileset.if.page.php');
-		$page->blockArgs['refModule'] = $refModule;
-		$page->blockArgs['refModel'] = $refModel;
-		$page->blockArgs['refUID'] = $refUID;
-		$page->render();
+		$kapenta->page->load('modules/files/actions/fileset.if.page.php');
+		$kapenta->page->blockArgs['refModule'] = $refModule;
+		$kapenta->page->blockArgs['refModel'] = $refModel;
+		$kapenta->page->blockArgs['refUID'] = $refUID;
+		$kapenta->page->render();
 		
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	authorised to edit files, show upload form
 		//------------------------------------------------------------------------------------------
-		$page->load('modules/files/actions/uploadmultiple.if.page.php');
-		$page->blockArgs['refModule'] = $refModule;
-		$page->blockArgs['refModel'] = $refModel;
-		$page->blockArgs['refUID'] = $refUID;
-		$page->render();
+		$kapenta->page->load('modules/files/actions/uploadmultiple.if.page.php');
+		$kapenta->page->blockArgs['refModule'] = $refModule;
+		$kapenta->page->blockArgs['refModel'] = $refModel;
+		$kapenta->page->blockArgs['refUID'] = $refUID;
+		$kapenta->page->render();
 			
 	}
 

@@ -23,9 +23,9 @@ class P2P_Offers {
 	//----------------------------------------------------------------------------------------------
 
 	function P2P_Offers($peerUID = '', $xml = '') {
-		global $registry;
+		global $kapenta;
 
-		$this->maxGifts = (int)$registry->get('p2p.batchsize');
+		$this->maxGifts = (int)$kapenta->registry->get('p2p.batchsize');
 		if (0 == $this->maxGifts) { $this->maxGifts = 20; }
 
 		$this->members = array();
@@ -96,7 +96,7 @@ class P2P_Offers {
 			//	if offering a file, make sure we have that file and its owner
 			//--------------------------------------------------------------------------------------
 			if ('file' == $item['type']) {
-				if (false == $kapenta->fileExists($item['fileName'])) { 
+				if (false == $kapenta->fs->exists($item['fileName'])) { 
 					$this->updateFile($item['refModel'], $item['refUID'], $item['fileName']);
 					$allOk = false;
 				}
@@ -170,7 +170,7 @@ class P2P_Offers {
 			//	decide if we want a file
 			//--------------------------------------------------------------------------------------
 			if ('file' == $offer['type']) {
-				if (false == $kapenta->fileExists($offer['fileName'])) {
+				if (false == $kapenta->fs->exists($offer['fileName'])) {
 					// we don't have it, and we want it
 					$this->members[$idx]['status'] = 'want';
 					$check = $dnset->add($offer['fileName']);
@@ -370,7 +370,7 @@ class P2P_Offers {
 					//	add to gifts
 					//------------------------------------------------------------------------------
 					$localHash = '';
-					if (true == $kapenta->fileExists($fileName)) {
+					if (true == $kapenta->fs->exists($fileName)) {
 						$localHash = sha1_file($kapenta->installPath . $fileName);
 					}
 
@@ -481,7 +481,7 @@ class P2P_Offers {
 		//------------------------------------------------------------------------------------------
 		//	first make sure the file exists and can be hashed
 		//------------------------------------------------------------------------------------------
-		if (false == $kapenta->fileExists($fileName)) {
+		if (false == $kapenta->fs->exists($fileName)) {
 			if ('' != $giftUID) {
 				$model = new P2P_Gift($giftUID);		//	gift exists for non-existent file
 				$check = $model->delete();				//	we can't share the file, so remove gift

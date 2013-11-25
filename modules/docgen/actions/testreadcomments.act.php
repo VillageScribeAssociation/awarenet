@@ -21,8 +21,8 @@
 		$dg .=  docMakeArgTable($fn) . "<br/>\n";
 	}
 
-	$page->load('modules/docgen/actions/testreadcomments.page.php');
-	$page->blockArgs['docgentest'] = $dg;
-	$page->render();
+	$kapenta->page->load('modules/docgen/actions/testreadcomments.page.php');
+	$kapenta->page->blockArgs['docgentest'] = $dg;
+	$kapenta->page->render();
 
 ?>

@@ -54,12 +54,13 @@ function Live_River(riverUID, divId, blockTemplate) {
 
 			var appendHtml = ''
 				 + "<div id='" + nextDivId + "'>"
-				 + "<div class='action'>"
+				 + "<div class='action' style='border-radius: 3px;'>"
 				 + "&nbsp;loading more..."
 				 + "<span style='float: right'>"
-				 + "<img src='" + jsServerPath + "themes/clockface/images/throbber-inline.gif' />"
+				 + "<img src='" + jsServerPath + "themes/" + jsTheme + "/images/throbber-inline.gif' />"
 				 + "&nbsp;</span>"
 				 + "</div>"
+				 + "<div class='spacer'></div>"
 				 + "</div>";
 
 

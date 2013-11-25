@@ -8,18 +8,18 @@
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('refModule', $req->args))
+	if (false == array_key_exists('refModule', $kapenta->request->args))
 		{ $page->do404('refModule not given', true); }
 
-	if (false == array_key_exists('refModel', $req->args))
+	if (false == array_key_exists('refModel', $kapenta->request->args))
 		{ $page->do404('refModel not given', true); }
 
-	if (false == array_key_exists('refUID', $req->args))
+	if (false == array_key_exists('refUID', $kapenta->request->args))
 		{ $page->do404('refUID not given', true); }
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	//----------------------------------------------------------------------------------------------
 	//	load all images associated with this record
@@ -33,8 +33,8 @@
 
 	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
 
-	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($req->args['refmodule']) 
-	//		. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
+	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) 
+	//		. "' and refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
 
 				
 	$index = 0;
@@ -45,7 +45,7 @@
 		$rows[$row['UID']]['index'] = $index;
 	}
 		
-	if (array_key_exists('show', $req->args)) { $show = $db->addMarkup($req->args['show']); }
+	if (array_key_exists('show', $kapenta->request->args)) { $show = $db->addMarkup($kapenta->request->args['show']); }
 		
 	//----------------------------------------------------------------------------------------------
 	//	show the current image
@@ -79,8 +79,8 @@
 		
 	$html = $img . $nav;
 		
-	$page->load('modules/images/actions/slideshow.page.php');
+	$kapenta->page->load('modules/images/actions/slideshow.page.php');
 	$page->content = $html;
-	$page->render();
+	$kapenta->page->render();
 
 ?>

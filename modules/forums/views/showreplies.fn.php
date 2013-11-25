@@ -56,8 +56,7 @@ function forums_showreplies($args) {
 	$block = $theme->loadBlock('modules/forums/views/reply.block.php');
 
 	foreach ($range as $item) {
-		$reply = new Forums_Reply();
-		$reply->loadArray($item);
+		$reply = new Forums_Reply($item['UID']);
 		$ext = $reply->extArray();
 		$ext['threadTitle'] = $model->title;
 		$ext['editLinkJs'] = '';
@@ -66,7 +65,7 @@ function forums_showreplies($args) {
 		//$ext['contentHtml'] = str_replace('widthcontent', 'width300', $ext['contentHtml']);
 		//$ext['contentHtml'] = str_replace('width570', 'width300', $ext['contentHtml']);
 
-		if ($ext['createdBy'] == $user->UID) {
+		if (($ext['createdBy'] == $user->UID) || ('admin' == $user->role)) {
 			$UID = $ext['UID'];
 			$editBlock = '[[:forums::editreplyif::replyUID=' . $UID . ':]]';
 			$editBlock64 = base64_encode($editBlock);

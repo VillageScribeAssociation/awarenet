@@ -13,8 +13,8 @@
 	if ('admin' != $user->role) { $page->do403('Admins only.', true); }
 
 	if (false == array_key_exists('wikiUrl', $_POST)) {
-		$page->load('modules/wiki/actions/mwscan.if.page.php');
-		$page->render();;
+		$kapenta->page->load('modules/wiki/actions/mwscan.if.page.php');
+		$kapenta->page->render();;
 	}
 
 	//----------------------------------------------------------------------------------------------

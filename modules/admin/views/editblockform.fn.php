@@ -25,7 +25,7 @@ function admin_editblockform($args) {
 	$labels['refBlockName'] = $args['block'];
 	$fileName = 'modules/'. $args['module'] .'/views/'. $args['block'] .'.block.php';
 
-	if (false == $kapenta->fileExists($fileName)) { return '(no such block)'; }
+	if (false == $kapenta->fs->exists($fileName)) { return '(no such block)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

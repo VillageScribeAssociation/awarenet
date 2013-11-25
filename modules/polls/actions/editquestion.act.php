@@ -14,13 +14,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $req->args)) { $page->do404('no refModule', true); }
-	if (false == array_key_exists('refModel', $req->args)) { $page->do404('no refModel', true); }
-	if (false == array_key_exists('refUID', $req->args)) { $page->do404('no refUID', true); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('no refModule', true); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('no refModel', true); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('no refUID', true); }
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('unknown module', true); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('unknown owner', true); }
@@ -45,12 +45,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load($pageFile);
-	$page->blockArgs['refModule'] = $refModule;
-	$page->blockArgs['refModel'] = $refModel;
-	$page->blockArgs['refUID'] = $refUID;
-	$page->blockArgs['UID'] = $questionUID;
-	$page->blockArgs['questionUID'] = $questionUID;
-	$page->render();
+	$kapenta->page->load($pageFile);
+	$kapenta->page->blockArgs['refModule'] = $refModule;
+	$kapenta->page->blockArgs['refModel'] = $refModel;
+	$kapenta->page->blockArgs['refUID'] = $refUID;
+	$kapenta->page->blockArgs['UID'] = $questionUID;
+	$kapenta->page->blockArgs['questionUID'] = $questionUID;
+	$kapenta->page->render();
 
 ?>

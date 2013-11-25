@@ -1,4 +1,5 @@
 <? /*
+<div class='block'>
 [[:theme::navtitlebox::label=Move This Image::toggle=divMoveImage::hidden=yes:]]
 <div id='divMoveImage' style='visibility: hidden; display: none;'>
 <br/>
@@ -10,6 +11,8 @@
 </select>
 <input type='submit' value='&gt;&gt;' />
 </form>
+</div>
+<div class='foot'></div>
 </div>
 <br/>
 */ ?>

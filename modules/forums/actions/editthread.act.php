@@ -16,10 +16,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/forums/actions/editthread.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['threadUID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/forums/actions/editthread.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['threadUID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

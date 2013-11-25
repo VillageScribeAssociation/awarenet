@@ -10,7 +10,12 @@
 		$session->msg('<b>Posted:</b><br/>' . $_POST['moose'], 'ok');
 	}
 
-	$page->load('modules/editor/actions/testhta.page.php');
-	$page->render();
+	if ('yes' == $session->get('mobile')) {
+		$kapenta->page->load('modules/editor/actions/testhta.page.php');
+		$kapenta->page->render();
+	} else {
+		$kapenta->page->load('modules/editor/actions/testhta.m.page.php');
+		$kapenta->page->render();
+	}
 
 ?>

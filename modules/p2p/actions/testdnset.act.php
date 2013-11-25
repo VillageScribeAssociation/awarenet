@@ -7,16 +7,16 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('peerUID not given'); }
+	if ('' == $kapenta->request->ref) { $page->do404('peerUID not given'); }
 
-	$dnset = new P2P_Downloads($req->ref);
+	$dnset = new P2P_Downloads($kapenta->request->ref);
 
-	if (true == array_key_exists('add', $req->args)) {
+	if (true == array_key_exists('add', $kapenta->request->args)) {
 		$dnset->add('data/videos/1/4/5/145824693138495692.swf');
 		$dnset->save();
 	}
 
-	if (true == array_key_exists('remove', $req->args)) {
+	if (true == array_key_exists('remove', $kapenta->request->args)) {
 		$check = $dnset->remove('data/videos/1/4/5/145824693138495692.swf');
 		if (false == $check) { echo "Could not remove file...<br/>"; }
 		$check = $dnset->save();

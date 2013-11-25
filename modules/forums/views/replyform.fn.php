@@ -10,12 +10,19 @@
 //arg: threadUID - UID of a forum thread [string]
 
 function forums_replyform($args) {
+	global $user;
 	global $theme;
 
 	// TODO: auth
+
+	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+
 	if (array_key_exists('threadUID', $args) == false) { return false; }
 	$model = new Forums_Thread($args['threadUID']);
 	$html = $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/forums/views/replyform.block.php'));
+
+	$html = $theme->ntb($html, 'Reply to this discussion', 'divReplyForm', 'hide');
+
 	return $html;
 }
 

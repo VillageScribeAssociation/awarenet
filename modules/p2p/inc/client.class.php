@@ -33,11 +33,11 @@ class P2P_Client {
 	//returns: true during file transfer hours, false if not [bool]
 
 	function inFileHours() {
-		global $registry;
+		global $kapenta;
 		global $kapenta;
 		$inHours = false;			//%	return value [bool]
 
-		$fileHours = $registry->get('p2p.filehours');
+		$fileHours = $kapenta->registry->get('p2p.filehours');
 		$hours = explode(",", $fileHours);
 		$current = (int)date('G', $kapenta->time());
 
@@ -58,13 +58,13 @@ class P2P_Client {
 		global $theme;
 		global $kapenta;			
 		global $user;
-		global $registry;
+		global $kapenta;
 
 		$report = '';						//% return value [string]
 
 		//return "Temporarily disabled.";
 
-		if ('yes' != $registry->get('p2p.enabled')) { return 'P2P Disabled'; }
+		if ('yes' != $kapenta->registry->get('p2p.enabled')) { return 'P2P Disabled'; }
 		$model = new P2P_Peer($this->peerUID);
 		if (false == $model->loaded) { return 'Could not load P2P_Peer object.'; }
 
@@ -205,11 +205,11 @@ class P2P_Client {
 		global $theme;
 		global $kapenta;			
 		global $user;
-		global $registry;
+		global $kapenta;
 
 		$report = '';								//%	return value [string]
 
-		if ('yes' != $registry->get('p2p.enabled')) { return 'P2P Disabled'; }
+		if ('yes' != $kapenta->registry->get('p2p.enabled')) { return 'P2P Disabled'; }
 		$model = new P2P_Peer($this->peerUID);
 		if (false == $model->loaded) { return 'Could not load P2P_Peer object.<br/>'; }
 
@@ -325,13 +325,13 @@ class P2P_Client {
 	//returns: HTML report of any actions taken [string]
 
 	function pullFiles() {
-		global $registry;
+		global $kapenta;
 		global $kapenta;
 
 		$report = '';												//%	return value [string]
-		$remaining = (int)$registry->get('p2p.batchparts');			//% bandwidth limit [int]
+		$remaining = (int)$kapenta->registry->get('p2p.batchparts');			//% bandwidth limit [int]
 
-		if ('yes' != $registry->get('p2p.enabled')) { return 'P2P Disabled'; }
+		if ('yes' != $kapenta->registry->get('p2p.enabled')) { return 'P2P Disabled'; }
 		if (false == $this->inFileHours()) { return 'Outside of file transfer hours.'; }
 
 		$downloads = new P2P_Downloads($this->peerUID);
@@ -441,12 +441,12 @@ class P2P_Client {
 
 	function pushFiles() {
 		global $kapenta;
-		global $registry;	
+		global $kapenta;	
 
 		$report = '';												//%	return value [string]
-		$remaining = (int)$registry->get('p2p.batchparts');			//% bandwidth limit [int]
+		$remaining = (int)$kapenta->registry->get('p2p.batchparts');			//% bandwidth limit [int]
 
-		if ('yes' != $registry->get('p2p.enabled')) { return 'P2P Disabled'; }
+		if ('yes' != $kapenta->registry->get('p2p.enabled')) { return 'P2P Disabled'; }
 		if (false == $this->inFileHours()) { return 'Outside of file transfer hours.'; }
 
 		//------------------------------------------------------------------------------------------
@@ -476,7 +476,7 @@ class P2P_Client {
 			//--------------------------------------------------------------------------------------
 			//	if peer does not have manifest, send manifest
 			//--------------------------------------------------------------------------------------
-			if (('no' == $dn['manifest']) && (true == $kapenta->fileExists($dn['fileName']))) {
+			if (('no' == $dn['manifest']) && (true == $kapenta->fs->exists($dn['fileName']))) {
 				$report .= "<b>Sending Manifest for:</b> " . $dn['fileName'] . "<br/>";
 				$klf = new KLargeFile($dn['fileName']);
 				$klf->makeFromFile();

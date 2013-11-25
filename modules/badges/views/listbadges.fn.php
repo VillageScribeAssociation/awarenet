@@ -28,7 +28,7 @@ function badges_listbadges($args) {
 
 	// users may list by these fields
 	if (true == array_key_exists('by', $args)) {	
-		switch(strtolower($req->args['by'])) {
+		switch(strtolower($kapenta->request->args['by'])) {
 			case 'createdon':	$orderBy = 'createdOn';		break;
 			case 'editedon':	$orderBy = 'editedOn';		break;
 		}

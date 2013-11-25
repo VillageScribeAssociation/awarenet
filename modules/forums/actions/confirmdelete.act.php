@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $req->args)) { $page->do404('UID not given.'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given.'); }
 
-	$model = new Forums_Board($req->args['UID']);
+	$model = new Forums_Board($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('No such forum.'); }
 
 	if (false == $user->authHas('forums', 'forums_board', 'delete', $model->UID))

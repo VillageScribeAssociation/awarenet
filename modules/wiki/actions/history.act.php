@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('wiki_article');
 	$model = new Wiki_Article($UID);
 	if (false == $model->loaded) { $page->do404('no such wiki article'); }
@@ -17,10 +17,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/wiki/actions/history.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['articleTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/history.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['articleTitle'] = $model->title;
+	$kapenta->page->render();
 
 ?>

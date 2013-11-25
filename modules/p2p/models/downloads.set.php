@@ -40,8 +40,8 @@ class P2P_Downloads {
 		if ('' == $this->peerUID) { return false; }
 
 		$this->fileName = 'data/p2p/transfer/' . $this->peerUID . '.txt.php';
-		if (false == $kapenta->fileExists($this->fileName)) { return false; }
-		$raw = $kapenta->fileGetContents($this->fileName, true, true);
+		if (false == $kapenta->fs->exists($this->fileName)) { return false; }
+		$raw = $kapenta->fs->get($this->fileName, true, true);
 		$lines = explode("\n", $raw);
 
 		foreach($lines as $line) {
@@ -68,7 +68,7 @@ class P2P_Downloads {
 		foreach($this->members as $download) {
 			if (strlen($download) > 20) { $raw .= $download . "\n"; }
 		}
-		$check = $kapenta->filePutContents($this->fileName, $raw, true, true);
+		$check = $kapenta->fs->put($this->fileName, $raw, true, true);
 
 		return $check;
 	}
@@ -240,7 +240,7 @@ class P2P_Downloads {
 
 				if ($partHash != $part['hash']) { echo "Hash mismatch.<br/>"; return false; }
 
-				$kapenta->filePutContents($part['fileName'], $part64, true, true);
+				$kapenta->fs->put($part['fileName'], $part64, true, true);
 				echo "SAVED FILE: " . $part['fileName'] . "<br/>\n";
 
 				$klf->parts[$idx]['status'] = 'ok';

@@ -10,7 +10,10 @@
 //arg: userUID - UID of a user [string]
 
 function projects_listuserprojectsnav($args) {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $theme;
+
 	$html = '';				//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -28,8 +31,12 @@ function projects_listuserprojectsnav($args) {
 
 	$range = $db->loadRange('projects_membership', '*', $conditions, 'joined');
 
+	if (0 == count($range)) { return ''; }
+
 	foreach($range as $row) 
 		{ $html .= "[[:projects::summarynav::projectUID=" . $row['projectUID'] . ":]]\n"; }
+
+	$html = $theme->ntb($html, 'Projects', 'divUserProjects', 'show');
 
 	return $html;
 }

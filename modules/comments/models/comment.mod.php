@@ -22,7 +22,8 @@ class Comments_Comment {
 	var $UID;				//_ UID [string]
 	var $refModule;			//_ module [string]
 	var $refModel;			//_ model [string]
-	var $refUID;			//_ ref:*-* [string]
+	var $refUID;			//_ ref:* [string]
+	var $parent;			//_ ref:comments_comment [string]
 	var $comment;			//_ wyswyg [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:Users_User [string]
@@ -71,6 +72,7 @@ class Comments_Comment {
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];
 		$this->refUID = $ary['refUID'];
+		$this->parent = $ary['parent'];
 		$this->comment = $ary['comment'];
 		$this->createdOn = $ary['createdOn'];
 		$this->createdBy = $ary['createdBy'];
@@ -123,6 +125,7 @@ class Comments_Comment {
 			'refModule' => 'VARCHAR(50)',
 			'refModel' => 'VARCHAR(50)',
 			'refUID' => 'VARCHAR(33)',
+			'parent' => 'VARCHAR(33)',
 			'comment' => 'TEXT',
 			'createdOn' => 'DATETIME',
 			'createdBy' => 'VARCHAR(33)',
@@ -135,6 +138,7 @@ class Comments_Comment {
 			'refModule' => '10',
 			'refModel' => '10',
 			'refUID' => '10',
+			'parent' => '10',
 			'createdOn' => '',
 			'createdBy' => '10',
 			'editedOn' => '',
@@ -158,6 +162,7 @@ class Comments_Comment {
 			'refModule' => $this->refModule,
 			'refModel' => $this->refModel,
 			'refUID' => $this->refUID,
+			'parent' => $this->parent,
 			'comment' => $this->comment,
 			'createdOn' => $this->createdOn,
 			'createdBy' => $this->createdBy,
@@ -184,28 +189,38 @@ class Comments_Comment {
 		$ary['newUrl'] = '';
 		$ary['newLink'] = '';
 
+		$ary['replyJsLink'] = '';
+
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('comments', 'Comment_Comment', 'show', $this->UID)) { 
+		if (true == $user->authHas('comments', 'comments_comment', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%comments/' . $this->UID;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('comments', 'Comment_Comment', 'edit', $this->UID)) {
+		if (true == $user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%comments/edit/' . $this->UID;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('comments', 'Comment_Comment', 'edit', $this->UID)) {
+		if (true == $user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
 			$ary['delUrl'] = '%%serverPath%%comments/confirmdelete/UID_'. $this->UID .'/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('comments', 'Comment_Comment', 'new', $this->UID)) { 
+		if (true == $user->authHas('comments', 'comments_comment', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%comments/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new comment]</a>"; 
+		}
+
+		if (
+			('' == $ary['parent']) && 
+			($user->authHas($this->refModule, $this->refModel, 'comments-add', $this->refUID))
+		) {
+			$ary['replyJsLink'] = ''
+			 . "<a href=\"javascript:comments_showReplyInline('" . $this->UID . "');\">[reply]</a>"; 			
 		}
 
 		$createdBy = new Users_User($ary['createdBy']);

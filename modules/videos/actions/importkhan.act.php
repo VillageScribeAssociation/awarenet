@@ -163,9 +163,9 @@
 		global $kapenta;
 		$meta = array();
 
-		if (false == $kapenta->fileExists($fileName)) {	return $meta; }
+		if (false == $kapenta->fs->exists($fileName)) {	return $meta; }
 
-		$raw = $kapenta->fileGetContents($fileName, false, false);
+		$raw = $kapenta->fs->get($fileName, false, false);
 		$lines = explode("\n", $raw);
 		foreach($lines as $line) {
 			$eqPos = strpos($line, '=');

@@ -16,10 +16,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/badges/actions/edit.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['badgeUID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/badges/actions/edit.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['badgeUID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

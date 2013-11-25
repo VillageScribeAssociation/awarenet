@@ -9,7 +9,15 @@
 		[`|lt]h1[`|gt]Activity Feed: [`|pc][`|pc]feed[`|pc][`|pc][`|lt]/h1[`|gt]
 		[`|lt]br/[`|gt]
 
-		[[:live::river::rivermodule=notifications::riverview=list::riverpagevar=page::allow=num|pagination|userUID::num=10::pagination=no::userUID=%%feed%%:]]
+		[[:live::river
+			::rivermodule=notifications
+			::riverview=list
+			::riverpagevar=page
+			::allow=num|pagination|userUID
+			::num=10
+			::pagination=no
+			::userUID=%%feed%%
+		:]]
 		[`|lt]br/[`|gt]
 
 	</content>

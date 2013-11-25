@@ -13,21 +13,21 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference, arguments and user
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { echo "ERROR: no UID given\n"; die(); }
+	if ('' == $kapenta->request->ref) { echo "ERROR: no UID given\n"; die(); }
 	
 	if ('public' != $user->role) {
 		$pingArgs = array('user' => $user->UID, 'role' => $user->role);
 		$kapenta->raiseEvent('*', 'live_ping', $pingArgs);
 	}
 
-	$model = new Live_Mailbox($req->ref, true);
+	$model = new Live_Mailbox($kapenta->request->ref, true);
 	if (false == $model->loaded) { 
 		//------------------------------------------------------------------------------------------
 		//	no such mailbox, create it
 		//------------------------------------------------------------------------------------------
-		$model->pageUID = $req->ref;
+		$model->pageUID = $kapenta->request->ref;
 		$model->userUID = $user->UID;
-		echo "NEW: creating mailbox ID " . $model->UID . " for page " . $req->ref . "\n";
+		echo "NEW: creating mailbox ID " . $model->UID . " for page " . $kapenta->request->ref . "\n";
 		$model->save();
 	}
 

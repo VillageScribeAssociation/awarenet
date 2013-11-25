@@ -18,8 +18,8 @@
 	$pUID = $kapenta->createUID();					//%	UID of this worker process [string]
 	$started = $kapenta->time();						//%	timestamp [int]
 
-	$lastStarted = $registry->get('chat.started');
-	$lastWorker = $registry->get('chat.worker');
+	$lastStarted = $kapenta->registry->get('chat.started');
+	$lastWorker = $kapenta->registry->get('chat.worker');
 
 	if ('' == $lastWorker) { $lastStarted = 0; }
 
@@ -35,8 +35,8 @@
 		}
 	}
 	
-	$registry->set('chat.worker', $pUID);
-	$registry->set('chat.started', $started);
+	$kapenta->registry->set('chat.worker', $pUID);
+	$kapenta->registry->set('chat.started', $started);
 	echo "** registered worker $pUID at $started (" . $kapenta->datetime($started) . ") **<br/>\n";
 	flush();
 
@@ -59,12 +59,13 @@
 		echo $report;
 		echo "</pre>\n";
 		flush();
+		sleep(3);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	done, resign as current worker thread
 	//----------------------------------------------------------------------------------------------
 	echo "** end of worker life, process resigning **<br/>"; flush();
-	if ($pUID == $registry->get('chat.worker')) { $registry->set('chat.worker', ''); }
+	if ($pUID == $kapenta->registry->get('chat.worker')) { $kapenta->registry->set('chat.worker', ''); }
 
 ?>

@@ -13,8 +13,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/images/actions/showall.page.php');
+	$kapenta->page->load('modules/images/actions/showall.page.php');
 	$page->allowBlockArgs('page,refMod');
-	$page->render();
+	$kapenta->page->render();
 
 ?>

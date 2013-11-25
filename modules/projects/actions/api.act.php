@@ -13,7 +13,7 @@
 	//----------------------------------------------------------------------------------------------
 	//NOTE: this is a legacy API, still used by firefox extension, but deprecated
 
-	if ($req->ref == 'myrecords') {
+	if ($kapenta->request->ref == 'myrecords') {
 
 		$conditions = array();
 		$conditions = "userUID='" . $db->addMarkup($user->UID) . "'";

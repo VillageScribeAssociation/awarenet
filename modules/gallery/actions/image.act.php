@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	anyone can view images TODO: add permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('images_image');
 	$model = new Images_Image($UID);
 	if (false == $model->loaded) { $page->do404('Image not found.'); }
@@ -25,15 +25,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/gallery/actions/image.page.php');
-	$page->blockArgs['imageUID'] = $UID;
-	$page->blockArgs['imageRa'] = $model->alias;
-	$page->blockArgs['imageTitle'] = $model->title;
-	$page->blockArgs['userUID'] = $model->createdBy;
-	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['galleryUID'] = $model->refUID;
-	$page->blockArgs['galleryTitle'] = $gallery->title;
-	$page->blockArgs['galleryRa'] = $gallery->alias;
-	$page->render();
+	$kapenta->page->load('modules/gallery/actions/image.page.php');
+	$kapenta->page->blockArgs['imageUID'] = $UID;
+	$kapenta->page->blockArgs['imageRa'] = $model->alias;
+	$kapenta->page->blockArgs['imageTitle'] = $model->title;
+	$kapenta->page->blockArgs['userUID'] = $model->createdBy;
+	$kapenta->page->blockArgs['userRa'] = $userRa;
+	$kapenta->page->blockArgs['galleryUID'] = $model->refUID;
+	$kapenta->page->blockArgs['galleryTitle'] = $gallery->title;
+	$kapenta->page->blockArgs['galleryRa'] = $gallery->alias;
+	$kapenta->page->render();
 
 ?>

@@ -42,8 +42,7 @@ function comments_list($args) {
 
 	$auth = false;
 	// blanket permissions on comments
-	if (true == $user->authHas('comments', 'Comment_Comment', 'list')) { $auth = true; }
-	if (true == $user->authHas('comments', 'Comment_Comment', 'show')) { $auth = true; }
+	if (true == $user->authHas('comments', 'comment_comment', 'show')) { $auth = true; }
 	// permission granted by reference module
 	if (true == $user->authHas($refModule, $refModel, 'comments-show', $refUID)) { $auth = true; }
 	
@@ -55,6 +54,7 @@ function comments_list($args) {
 	$conditions = array();
 	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
 	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "parent=''";
 
 	$totalItems = $db->countRange('comments_comment', $conditions);
 
@@ -70,13 +70,19 @@ function comments_list($args) {
 	$blockFile = 'modules/comments/views/summary.block.php';
 
 	if (count($range) > 0) {
-		foreach ($range as $row) {
-			$model = new Comments_Comment();
-			$model->loadArray($row);
-			$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
+		foreach ($range as $item) {
+			//$model = new Comments_Comment();
+			//$model->loadArray($row);
+			//$html .= $theme->replaceLabels($model->extArray(), $theme->loadBlock($blockFile));
+
+			$html .= "[[:comments::show::UID=" . $item['UID'] . ":]]";
+
 		}  
 	} else {
-		$html .= "<div class='inlinequote'>no comments at present.</div>";
+		$html .= ''
+		 . "<div class='outline' style='color: #bbbbbb;'>"
+		 . "<small>No comments yet.  Be the first :-)</small>"
+		 . "</div>";
 	}
 
 	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }
@@ -84,16 +90,15 @@ function comments_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	set triggers
 	//----------------------------------------------------------------------------------------------
-
-	$UID = $kapenta->createUID();
-	$rawBlock64 = base64_encode($args['rawblock']);
-	$html = "<div id='blockCommentsL" . $UID . "'>\n"
-			. $html
-			. "<!-- REGISTERBLOCK:blockCommentsL" . $UID . ":" . $rawBlock64 . " -->"
-			. "</div>";
-
-	$channel = 'comment-' . $refModel . '-' . $refUID;
-	$page->setTrigger('comments', $channel, $args['rawblock']);
+	//$UID = $kapenta->createUID();
+	//$rawBlock64 = base64_encode($args['rawblock']);
+	//$html = "<div id='blockCommentsL" . $UID . "'>\n"
+	//		. $html
+	//		. "<!-- REGISTERBLOCK:blockCommentsL" . $UID . ":" . $rawBlock64 . " -->"
+	//		. "</div>";
+	//
+	//	$channel = 'comment-' . $refModel . '-' . $refUID;
+	//	$page->setTrigger('comments', $channel, $args['rawblock']);
 
 
 	return $html;

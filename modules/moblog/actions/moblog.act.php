@@ -16,13 +16,13 @@
 	if (false == $user->authHas('moblog', 'moblog_post', 'show', ''))
 		{ $page->do403('You are not authorized to view blog posts.'); }
 
-	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = floor($kapenta->request->args['page']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/moblog/actions/moblog.page.php');
-	$page->blockArgs['pageno'] = $pageNo;
-	$page->render();
+	$kapenta->page->load('modules/moblog/actions/moblog.page.php');
+	$kapenta->page->blockArgs['pageno'] = $pageNo;
+	$kapenta->page->render();
 
 ?>

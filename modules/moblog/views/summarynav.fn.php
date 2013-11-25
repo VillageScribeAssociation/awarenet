@@ -4,14 +4,23 @@
 	require_once($kapenta->installPath . 'modules/moblog/models/precache.mod.php');
 
 //--------------------------------------------------------------------------------------------------
-//|	summarise for the nav (300 wide)
+//|	summarise a post for the nav (300 wide)
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID or groups entry [string]
 //opt: postUID - overrides raUID [string]
 
 function moblog_summarynav($args) {
-	global $theme, $user;
+	global $theme;
+	global $user;
+	global $cache;
+
 	$html = '';			//% return value [html]
+
+	//----------------------------------------------------------------------------------------------
+	//	check view cache
+	//----------------------------------------------------------------------------------------------
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -27,6 +36,10 @@ function moblog_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);
+
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('moblog-summarynav-' . $model->UID, $args['area'], $args['rawblock'], $html);
+
 	return $html;
 }
 

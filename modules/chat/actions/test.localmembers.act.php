@@ -12,8 +12,8 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	if ('' == $req->ref) { $page->doXmlError("No room UID given."); }
-	$model = new Chat_Room($req->ref);
+	if ('' == $kapenta->request->ref) { $page->doXmlError("No room UID given."); }
+	$model = new Chat_Room($kapenta->request->ref);
 	if (false == $model->loaded) { $page->doXmlError("Unknown room."); }
 
 	header('Content-type: application/xml');

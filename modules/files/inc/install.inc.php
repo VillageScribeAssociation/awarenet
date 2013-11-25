@@ -17,11 +17,13 @@
 function files_install_module() {
 	global $db;
 	global $user;
-	global $registry;
+	global $kapenta;
+	global $kapenta;
 
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Files_File table
@@ -67,8 +69,8 @@ function files_install_module() {
 	);
 
 	foreach($assoc as $ext) {
-		if ('files' != $registry->get('live.file.' . $ext)) {
-			$registry->set('live.file.' . $ext, 'files');
+		if ('files' != $kapenta->registry->get('live.file.' . $ext)) {
+			$kapenta->registry->set('live.file.' . $ext, 'files');
 			$report .= "<b>Added file association:</b> $ext<br/>";
 		}
 	}
@@ -87,13 +89,15 @@ function files_install_module() {
 
 function files_install_status_report() {
 	global $user;
+	global $kapenta;
 
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores File objects exists and is correct

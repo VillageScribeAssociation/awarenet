@@ -39,9 +39,9 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	
-	$page->load('modules/admin/actions/install.page.php');
-	$page->blockArgs['report'] = $report;
-	$page->blockArgs['modulename'] = $model->modulename;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/install.page.php');
+	$kapenta->page->blockArgs['report'] = $report;
+	$kapenta->page->blockArgs['modulename'] = $model->modulename;
+	$kapenta->page->render();
 
 ?>

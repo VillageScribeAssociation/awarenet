@@ -1,0 +1,3 @@
+
+
+Individual course packages should call /lessons/inc/install.inc.php::lessons_rebuild_index

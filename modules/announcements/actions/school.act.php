@@ -10,12 +10,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { 
+	if ('' == $kapenta->request->ref) { 
 		if ('public' == $user->role) { $page->do404('School nor given.'); }
-		$req->ref = $user->school;
+		$kapenta->request->ref = $user->school;
 	}
 
-	$model = new Schools_School($req->ref);
+	$model = new Schools_School($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unknown school.'); }
 	
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'show')) {
@@ -25,9 +25,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/announcements/actions/school.page.php');
-	$page->blockArgs['schoolUID'] = $model->UID;
-	$page->blockArgs['schoolRa'] = $model->alias;
-	$page->render();
+	$kapenta->page->load('modules/announcements/actions/school.page.php');
+	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
+	$kapenta->page->blockArgs['schoolRa'] = $model->alias;
+	$kapenta->page->render();
 
 ?>

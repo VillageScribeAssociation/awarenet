@@ -8,18 +8,18 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('module', $req->args)) { $page->do404('Module not specified.'); }
-	if ('' == trim($req->ref)) { $page->do404('Page not specified (reference).'); }
+	if (false == array_key_exists('module', $kapenta->request->args)) { $page->do404('Module not specified.'); }
+	if ('' == trim($kapenta->request->ref)) { $page->do404('Page not specified (reference).'); }
 
-	$fileName = 'modules/' . $req->args['module'] . '/actions/' . $req->ref;
-	if (false == $kapenta->fileExists($fileName)) { $page->do404('Page file not found.'); }
+	$fileName = 'modules/' . $kapenta->request->args['module'] . '/actions/' . $kapenta->request->ref;
+	if (false == $kapenta->fs->exists($fileName)) { $page->do404('Page file not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	// TODO: more error checking here (directory traversal, etc)
 	//----------------------------------------------------------------------------------------------
-	$page->blockArgs['xmodule'] = $req->args['module'];
-	$page->blockArgs['xpage'] = $req->ref;
-	$page->load('modules/admin/actions/editpage.page.php');
-	$page->render();
+	$kapenta->page->blockArgs['xmodule'] = $kapenta->request->args['module'];
+	$kapenta->page->blockArgs['xpage'] = $kapenta->request->ref;
+	$kapenta->page->load('modules/admin/actions/editpage.page.php');
+	$kapenta->page->render();
 
 ?>

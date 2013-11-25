@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/central/actions/listpeers.page.php');
-	$page->render();
+	$kapenta->page->load('modules/central/actions/listpeers.page.php');
+	$kapenta->page->render();
 
 ?>

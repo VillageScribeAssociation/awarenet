@@ -13,9 +13,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and request args
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Image not specified', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified', true); }
 	
-	$model = new Images_Image($req->ref);
+	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Image not found', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editimage', $model->refUID)) 

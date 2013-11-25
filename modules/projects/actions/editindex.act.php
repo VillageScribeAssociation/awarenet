@@ -7,7 +7,7 @@
 //*	show project index with edit links
 //-------------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
@@ -26,23 +26,23 @@
 	//	increment or decrement section weights (move up or down)
 	//----------------------------------------------------------------------------------------------
 
-	if (array_key_exists('inc', $req->args) == true) {
-		//$session->msg("incrementing section " . $req->args['inc'], 'ok');
-		$model->incrementSection($req->args['inc']);
+	if (array_key_exists('inc', $kapenta->request->args) == true) {
+		//$session->msg("incrementing section " . $kapenta->request->args['inc'], 'ok');
+		$model->incrementSection($kapenta->request->args['inc']);
 	}
 
-	if (array_key_exists('dec', $req->args) == true) {
-		//$session->msg("decrementing section " . $req->args['inc'], 'ok');
-		$model->decrementSection($req->args['dec']);
+	if (array_key_exists('dec', $kapenta->request->args) == true) {
+		//$session->msg("decrementing section " . $kapenta->request->args['inc'], 'ok');
+		$model->decrementSection($kapenta->request->args['dec']);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load the page (or 403)
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/projects/actions/editindex.if.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/editindex.if.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

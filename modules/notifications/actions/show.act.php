@@ -13,25 +13,25 @@
 	//	check arguments and authorization
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403(); }	// user must be logged in
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 
 	$model = $user;
 
-	if (('' != $req->ref) && ('admin' == $user->role)) {
+	if (('' != $kapenta->request->ref) && ('admin' == $user->role)) {
 		// only admins can see other peoples notification feed
-		$model = new Users_User($req->ref);
+		$model = new Users_User($kapenta->request->ref);
 		if (false == $model->loaded) { $page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/notifications/actions/show.page.php');
-	$page->blockArgs['userUID'] = $model->UID;
-	$page->blockArgs['userRa'] = $model->alias;
-	$page->blockArgs['userName'] = $model->getName();
-	$page->blockArgs['pageNo'] = $pageNo;
+	$kapenta->page->load('modules/notifications/actions/show.page.php');
+	$kapenta->page->blockArgs['userUID'] = $model->UID;
+	$kapenta->page->blockArgs['userRa'] = $model->alias;
+	$kapenta->page->blockArgs['userName'] = $model->getName();
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;
 
 	if (true == $session->get('mobile')) {
 		//------------------------------------------------------------------------------------------
@@ -47,6 +47,6 @@
 		$page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
 	}
 
-	$page->render()
+	$kapenta->page->render()
 
 ?>

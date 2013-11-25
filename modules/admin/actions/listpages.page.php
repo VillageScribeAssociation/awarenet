@@ -4,13 +4,19 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all page templates</title>
-	<content>[[:theme::navtitlebox::label=Pages And Blocks::width=570:]]
-[`|lt]div class=[`|sq]indent[`|sq][`|gt]
-[`|lt]h1[`|gt]All Pages By Module[`|lt]/h1[`|gt]
-[`|lt]b[`|gt]Jump to:[`|lt]/b[`|gt] [[:admin::modanchorlist:]]
-[`|lt]br/[`|gt]
-[[:admin::listallpages:]]
-[`|lt]/div[`|gt]</content>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Pages And Blocks::width=570:]]
+		[`|lt]div class=[`|sq]indent[`|sq][`|gt]
+		[`|lt]h1[`|gt]All Pages By Module[`|lt]/h1[`|gt]
+		[`|lt]b[`|gt]Jump to:[`|lt]/b[`|gt] [[:admin::modanchorlist:]]
+		[`|lt]/div[`|gt]
+		</div>
+		[`|lt]br/[`|gt]
+
+		[[:admin::listallpages:]]
+
+	</content>
 	<nav1>[[:admin::subnav:]]</nav1>
 	<nav2></nav2>
 	<script></script>

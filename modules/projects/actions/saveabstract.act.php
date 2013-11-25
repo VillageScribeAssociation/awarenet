@@ -65,7 +65,7 @@
 		$kapenta->raiseEvent('projects', 'project_saved', $args);
 		$session->msg('Saved changes to abstract.', 'ok'); 
 	} else {
-		$session->msg('Could not save changes to abstract.', 'bad');
+		$session->msg('Could not save changes to abstract: ' . $report, 'bad');
 	}		
 		
 	$page->do302('projects/edit/' . $model->alias);

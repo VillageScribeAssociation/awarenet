@@ -4,7 +4,7 @@
     <td valign='top'>
 		<div class='spacer' style='height: 3px;'></div>
     	<a href='/moblog/%%alias%%'>
-    	[[:images::default::size=thumbsm::refModule=moblog::refModel=moblog_post::refUID=%%UID%%::link=no:]]
+    	[[:images::default::size=thumbsm::refModule=moblog::refModel=moblog_post::refUID=%%UID%%::altUser=%%createdBy%%::link=no:]]
 		</a>
 	</td>
     <td width='3px'></td>

@@ -15,8 +15,10 @@
 
 function aliases_install_module() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver();
 	$report = '';
 
 	//----------------------------------------------------------------------------------------------
@@ -47,9 +49,12 @@ function aliases_install_module() {
 
 function aliases_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver();
+
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;

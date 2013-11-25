@@ -30,7 +30,7 @@ function chat_listrooms($args) {
 
 	// users may list by these fields
 	if (true == array_key_exists('by', $args)) {	
-		switch(strtolower($req->args['by'])) {
+		switch(strtolower($kapenta->request->args['by'])) {
 		}
 	}
 

@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/revisions/actions/revisions.page.php');
-	$page->render();
+	$kapenta->page->load('modules/revisions/actions/revisions.page.php');
+	$kapenta->page->render();
 
 ?>

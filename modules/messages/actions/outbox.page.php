@@ -4,15 +4,23 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - sent items</title>
-	<content>[[:theme::navtitlebox::width=570::label=Outbox:]]
-[[:messages::folder::folder=outbox::orderBy=[`|pc][`|pc]orderBy[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]</content>
-	<nav1>[[:theme::navtitlebox::label=Folders:]]
-[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Contacts:]]
-[[:messages::contactlist:]]
-[`|lt]br/[`|gt]</nav1>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Outbox:]]
+		[[:messages::folder::folder=outbox::orderBy=[`|pc][`|pc]orderBy[`|pc][`|pc]::pageno=[`|pc][`|pc]pageno[`|pc][`|pc]:]]
+		</div>
+	</content>
+	<nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Folders::toggle=divFolders:]]
+		<div id='divFolders' class='outline'>
+		[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		[`|lt]br/[`|gt]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

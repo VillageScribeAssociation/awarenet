@@ -51,7 +51,7 @@ function videos_player($args) {
 	//	check that we actually have the file to be played
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $kapenta->fileExists($model->fileName)) {
+	if (false == $kapenta->fs->exists($model->fileName)) {
 		$block = $theme->loadBlock('modules/videos/views/nofile.block.php');
 		return $block;
 	}
@@ -60,7 +60,7 @@ function videos_player($args) {
 	//	decide on a size (TODO: handle this through the registry)
 	//----------------------------------------------------------------------------------------------
 
-	if (true == $session->get('mobile')) { $area = 'mobile'; }
+	if ('desktop' !== $session->get('deviceprofile')) { $area = 'mobile'; }
 
 	switch($area) {
 		case 'content':		$width = 570;	$height = 420;		break;
@@ -69,6 +69,9 @@ function videos_player($args) {
 		case 'nav2':		$width = 300;	$height = 200;		break;
 		case 'mobile':		$width = 320;	$height = 240;		break;
 	}
+
+	if (true == array_key_exists('width', $args)) { $width = (int)$args['width']; }
+	if (true == array_key_exists('height', $args)) { $height = (int)$args['height']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -96,7 +99,7 @@ function videos_player($args) {
 		// load cover image (TODO: make this better)
 		$ciBlock = ''
 		 . "[[:images::default"
-		 . "::size=" . $args['area']
+		 . "::size=width570" // . $args['area']
 		 . "::link=no"
 		 . "::refModule=videos"
 		 . "::refModel=videos_video"

@@ -26,6 +26,9 @@ function calendar_notificationmonthsubnav($args) {
 	if (true == array_key_exists('refModule', $args)) { $refModule = $args['refModule']; }
 	if (true == array_key_exists('div', $args)) { $div = $args['div']; }
 
+	if ('current' == $args['year']) { $args['year'] = date('Y'); }
+	if ('current' == $args['month']) { $args['month'] = date('m'); }
+
 	$year = (int)$args['year'];
 	$month = (int)$args['month'];
 	//TODO: sanity checking

@@ -22,10 +22,10 @@
 		$permission = $utils->cleanTitle($_POST['permission']); 
 	}
 
-	if (true == array_key_exists('module', $req->args)) { $modulename = $req->args['module']; }
-	if (true == array_key_exists('model', $req->args)) { $modelname = $req->args['model']; }
-	if (true == array_key_exists('permission', $req->args)) { 
-		$permission = $utils->cleanTitle($req->args['permission']); 
+	if (true == array_key_exists('module', $kapenta->request->args)) { $modulename = $kapenta->request->args['module']; }
+	if (true == array_key_exists('model', $kapenta->request->args)) { $modelname = $kapenta->request->args['model']; }
+	if (true == array_key_exists('permission', $kapenta->request->args)) { 
+		$permission = $utils->cleanTitle($kapenta->request->args['permission']); 
 	}
 
 	if ('' == trim($permission)) { $page->do404('Permission not specified.'); }

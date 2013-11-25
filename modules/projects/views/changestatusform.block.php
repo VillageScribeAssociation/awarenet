@@ -1,7 +1,5 @@
 <? /*
 
-[[:theme::navtitlebox::label=Project Status::toggle=divProjectStatus::hidden=yes:]]
-<div id='divProjectStatus' style='visibility: hidden; display: none;'>
 <ul>
   <li><b>Open</b> projects are still ongoing and can be edited by members.</li>
   <li><b>Closed</b> projects are complete, their membership and content can't be changed.</li>
@@ -15,8 +13,6 @@
 	%%selectStatus%%
 	<input type='submit' value='Change Status >>' />
 </form>
-<hr/>
-</div>
-<br/>
+<div class='spacer'></div>
 
 */ ?>

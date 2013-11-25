@@ -8,7 +8,7 @@
 //+		kmouse - a Live_Mouse
 
 //--------------------------------------------------------------------------------------------------
-//	Window
+//	Window Manager
 //--------------------------------------------------------------------------------------------------
 //+	expects to be initalized as global object kwindowmanager
 
@@ -37,8 +37,9 @@ function Live_WindowManager() {
 		//------------------------------------------------------------------------------------------
 		//	create a new Live_Window object
 		//------------------------------------------------------------------------------------------
-		var icon = jsServerPath + 'modules/live/icons/document-new.png';	// default [string]
-		wnd = new Live_Window(title, frameUrl, icon);
+		if (!icon) { icon = jsServerPath + 'modules/live/icons/document-new.png'; }		// default
+
+		var wnd = new Live_Window(title, frameUrl, icon);
 		wnd.hWnd = this.windows.length;
 
 		if (isMobile) { width = $(window).width(); }
@@ -55,9 +56,9 @@ function Live_WindowManager() {
 		if (!theMsgDiv) { alert("Window container div not found."); return -1; }
 
 		if (true == wnd.modal) {
-			var height = $("#jqBody").height();
-			$("#divModal").height(height); 
-			$("#divModal").css('zIndex', wnd.zIndex + 2); 
+			var modalheight = $("#jqBody").height();
+			$("#divModal").height(modalheight);
+			$("#divModal").css('zIndex', wnd.zIndex + 2);
 			$("#divModal").show();
 		}
 

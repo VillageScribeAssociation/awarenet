@@ -5,16 +5,18 @@
 	var memberConsole = new Projects_MemberConsole('%%projectUID%%');
 </script>
 
-[[:theme::navtitlebox::label=Add Members::toggle=divAddmembers%%projectUID%%:]]
-<div id='divAddmembers%%projectUID%%'>
-[[:users::usersearchbox::cbjs=memberConsole.addMemberForm::cblabel=add to project::cbicon=arrow_down_green.png:]]
+<div class='block'>
+	[[:theme::navtitlebox::label=Add Members::toggle=divAddmembers%%projectUID%%:]]
+	<div id='divAddmembers%%projectUID%%' class='outline'>
+		[[:users::searchbox::cbjs=memberConsole.addMemberForm::cblabel=add to project::cbicon=arrow_down_green.png:]]
+	</div>
+	<div class='foot'></div>
 </div>
 <br/>
 
-[[:theme::navtitlebox::label=All Members::toggle=divMembers%%projectUID%%:]]
+
 <div id='divMembers%%projectUID%%'>
-[[:projects::listmembersnav::projectUID=%%projectUID%%::editmode=js:]]
+	[[:projects::listmembersnav::projectUID=%%projectUID%%::editmode=js:]]
 </div>
-<br/>
 
 */ ?>

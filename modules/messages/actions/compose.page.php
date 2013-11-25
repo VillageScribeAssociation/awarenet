@@ -4,19 +4,44 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - compose message</title>
-	<content>[[:theme::navtitlebox::width=570::label=Compose:]]
-[[:messages::composeform:]]
-</content>
-	<nav1>[[:theme::navtitlebox::label=Folders:]]
-[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
-[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Contacts:]]
-[[:messages::contactlist:]]
-[`|lt]br/[`|gt]</nav1>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Compose:]]
+		[[:messages::composeform:]]
+		</div>
+	</content>
+	<nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Folders::toggle=divFolders:]]
+		<div id='divFolders' class='outline'>
+		[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		<br/>
+
+		<div class='block'>
+		[[:theme::navtitlebox::label=Search::toggle=divRecipientSearch:]]
+		<div id='divRecipientSearch' class='outline'>
+		[[:users::searchbox::::cbjs=messages_addRecipient::cblabel=add recipient::cbicon=arrow_left_green.png:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		<br/>
+
+		<div class='block'>
+		[[:theme::navtitlebox::label=Contacts::toggle=divContacts::hidden=yes:]]
+		<div id='divContacts' style='display: none;' class='outline'>
+		[[:messages::contactlist:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		<br/>
+	</nav1>
 	<nav2></nav2>
 	<script></script>
-	<jsinit></jsinit>
+	<jsinit>messages_showRecipients();</jsinit>
 	<banner></banner>
 	<head></head>
 	<menu1>[[:home::menu:]]</menu1>

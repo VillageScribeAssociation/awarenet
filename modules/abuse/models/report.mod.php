@@ -108,6 +108,11 @@ class Abuse_Report {
 	function verify() {
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
+
+		$this->comment = str_replace('widthcontent', 'widthindent', $this->comment);
+		$this->comment = str_replace('widtheditor', 'widthindent', $this->comment);
+		$this->comment = str_replace('width570', 'widthindent', $this->comment);
+
 		return $report;
 	}
 
@@ -243,14 +248,14 @@ class Abuse_Report {
 		//	links
 		//------------------------------------------------------------------------------------------
 		if (true == $auth) {
-			$ext['viewUrl'] = '%%serverPath%%Abuse/show/' . $ext['UID'];
+			$ext['viewUrl'] = '%%serverPath%%abuse/show/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
 		if ('admin' == $user->role) {
-			$ext['editUrl'] = '%%serverPath%%Abuse/editreport/' . $ext['UID'];
+			$ext['editUrl'] = '%%serverPath%%abuse/editreport/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
-			$ext['delUrl'] = '%%serverPath%%Abuse/delreport/' . $ext['UID'];
+			$ext['delUrl'] = '%%serverPath%%abuse/delreport/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
 
@@ -259,6 +264,7 @@ class Abuse_Report {
 		//------------------------------------------------------------------------------------------
 		$ext['commentHtml'] = $utils->stripHtml($ext['comment']);
 		$ext['commentHtml'] = str_replace("\n", "<br/>\n", $ext['commentHtml']);
+		$ext['commentHtml'] = str_replace("&amp;", "&", $ext['commentHtml']);
 
 		$ext['notesHtml'] = '';
 		if ('' != $ext['notes']) {

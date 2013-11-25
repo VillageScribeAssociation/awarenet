@@ -28,7 +28,7 @@ function revisions_cron_daily() {
 
 	while ($row = $db->fetchAssoc($result)) {
 		$item = $db->rmArray($row);
-		if (false == $db->obejctExists($item['refModel'], $item['refUID'])) {
+		if (false == $db->objectExists($item['refModel'], $item['refUID'])) {
 
 			$model = new Revisions_Deleted($item['UID']);
 			if (true == $model->loaded) {

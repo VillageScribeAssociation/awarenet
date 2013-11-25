@@ -16,8 +16,8 @@ function imgSend($size) {
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
 	
-	if ('' == $req->ref) { $page->do404('Image not specified.'); }
-	$model = new Images_Image($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
+	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Image not found'); }
 	if ('' == $model->fileName) { $page->do404('File missing.'); }
 	

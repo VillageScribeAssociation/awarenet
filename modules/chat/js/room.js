@@ -76,12 +76,14 @@ function Chat_RoomClient(roomUID) {
 		//------------------------------------------------------------------------------------------
 		var containerDiv = document.getElementById('divM' + uid);
 		if (!containerDiv) {
-			this.msgDiv.innerHTML = this.msgDiv.innerHTML
+			var newMsg = ''
 			 + "<div id='divM" + uid + "' "
 			 + "class='chatmessage" + divcolor + "' "
 			 + "style='padding: 0px 0px 0px 0px;'>"
 			 + msgHtml
 			 + "</div>";
+
+			$(this.msgDiv).append(newMsg);
 
 		} else {
 			containerDiv.innerHTML = msgHtml;
@@ -369,4 +371,5 @@ function Chat_RoomClient(roomUID) {
 
 	this.submitButton.onclick = function() { that.submitClicked(); }
 	this.setStatus('Initializing...', 'green');
+
 }

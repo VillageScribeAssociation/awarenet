@@ -87,8 +87,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/live/actions/test.page.php');
-	$page->blockArgs['testcontents'] = $testContents;
-	$page->render();
+	$kapenta->page->load('modules/live/actions/test.page.php');
+	$kapenta->page->blockArgs['testcontents'] = $testContents;
+	$kapenta->page->render();
 
 ?>

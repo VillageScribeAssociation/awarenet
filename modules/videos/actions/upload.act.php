@@ -216,7 +216,7 @@
 			'refUID' => $model->UID, 
 			'fileName' => $model->fileName, 
 			'hash' => $kapenta->fileSha1($model->fileName),
-			'size' => $kapenta->fileSize($model->fileName)
+			'size' => $kapenta->fs->size($model->fileName)
 		);
 
 		$kapenta->raiseEvent('*', 'file_added', $args);

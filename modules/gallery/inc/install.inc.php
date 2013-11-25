@@ -14,10 +14,15 @@
 //returns: html report or false if not authorized [string][bool]
 
 function gallery_install_module() {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Gallery_Gallery table
@@ -47,12 +52,15 @@ function gallery_install_module() {
 
 function gallery_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Gallery objects exists and is correct

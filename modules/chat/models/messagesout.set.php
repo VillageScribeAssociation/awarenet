@@ -73,15 +73,17 @@ class Chat_MessagesOut {
 	//returns: true on success, false on failure [bool]
 
 	function send() {
+		global $kapenta;
+
 		$allOk = true;
 		$xml = $this->toXml();
 		if ('' == $xml) { return false; }
 
-		echo "<b>Request:</b><br/><textarea rows='10' cols=80'>$xml</textarea><br/>\n";
+		$kapenta->logEvent('chatclient', 'messagesout.set', 'send()::out', $xml);
 		$io = new Chat_IO();
 		$response = $io->send('send', '', $xml);
 
-		echo "<b>Response:</b><br/><textarea rows='10' cols=80'>$response</textarea><br/>\n";
+		$kapenta->logEvent('chatclient', 'messagesout.set', 'send()::in', $response);
 		$xd = new KXmlDocument($response);
 		$root = $xd->getEntity(1);
 
@@ -99,14 +101,16 @@ class Chat_MessagesOut {
 					$model = new Chat_MessageOut($child['value']);
 					if (true == $model->loaded) {
 						$check = $model->delete();
-						if (true == $check) { echo "*** rm sent message ". $model->UID ."<br/>\n"; }
-						else { 
-							echo "*** could not rm message " . $model->UID . " from queue<br/>\n";
+						if (true == $check) {
+							$logMsg = "*** rm sent message ". $model->UID ."<br/>\n";
+							$kapenta->logEvent('chatclient', 'messagesout.set', 'send()::ms', $logMsg);
+						} else { 
+							$logMsg = "*** could not rm message " . $model->UID . " from queue";
+							$kapenta->logEvent('chatclient', 'messagesout.set', 'send()::ms', $logMsg);
 							$allOk = false;
 						}
 					}
 				}
-
 			}
 		}
 

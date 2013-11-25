@@ -1,5 +1,5 @@
 <? /*
-<div class='inlinequote'>
+<div class='outline'>
 <table noborder width='100%'>
   <tr>
     <td valign='top' width='50'>
@@ -8,13 +8,17 @@
     </td>
     <td width='5'></td>
     <td valign='top'>
-	  [[:abuse::buttonwnd::refModule=comments::refModel=comments_comment::refUID=%%UID%%:]]
       <a name='comment%%UID%%'></a>
       <b>%%userLink%% said:</b><br/>
       %%comment%%<br/>
-      <small><small>added: %%createdOn%% %%retractLink%%</small>
+      <small>
+		added: %%createdOn%%
+		%%retractLink%%
+		[[:abuse::reportlink::refModule=comments::refModel=comments_comment::refUID=%%UID%%:]]
+	  </small>
     </td>
   </tr>
 </table>
 </div>
+<div class='spacer'></div>
 */ ?>

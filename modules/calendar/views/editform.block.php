@@ -1,5 +1,12 @@
 <? /*
-<form name='editCalendar' method='POST' action='%%serverPath%%calendar/save/'>
+<form
+	id='frmEditEntry%%UID%%'
+	name='editCalendar'
+	method='POST'
+	action='%%serverPath%%calendar/save/'
+	onSubmit="khta.updateAllAreas();"
+>
+
 <input type='hidden' name='action' value='saveCalendar' />
 <input type='hidden' name='UID' value='%%UID%%' />
 
@@ -44,21 +51,31 @@
        <input type='text' name='year' value='%%year%%' size='4' /> (yyyy) 
        <input type='text' name='month' value='%%month%%' size='4' /> (mm) 
        <input type='text' name='day' value='%%day%%' size='4' /> (dd) 
-
     </td>
   </tr>
 </table>
 <br/>
 <b>Description of event:</b><br/>
-%%contentJs64%%
-[[:editor::base64::jsvar=contentJs64::name=content:]]
-<br/>
+<div
+	class='HyperTextArea64'
+	title='content'
+	width='-1'
+	height='400'
+	style='visibility: hidden; display: none'
+	refModule='calendar'
+	refModel='calendar_entry'
+	refUID='%%UID%%'
+>%%content64%%</div>
+<script language='Javascript'> khta.convertDivs(); </script>
+</form>
 
 <table noborder>
   <tr>
    <td valign='top'>
-    <input type='submit' value='save' />
-    </form>
+   <input
+		type='button'
+		value='Save'
+		onClick="$('#frmEditEntry%%UID%%').submit();" />
    </td>
    <td>
    <form name='cDelete' method='GET' action='%%delUrl%%'>
@@ -68,7 +85,4 @@
  </tr>
 </table>
 
-<h2>Images</h2>
-[[:images::uploadmultiple::refModule=calendar::refModel=calendar_entry::refUID=%%UID%%:]]
-<br/>
 */ ?>

@@ -41,7 +41,7 @@ function images__cb_file_uploaded($args) {
 	//	check that this is actually an image
 	//----------------------------------------------------------------------------------------------
 
-	$raw = $kapenta->fileGetContents($args['path']);	//%	contents of uploaded file [string]
+	$raw = $kapenta->fs->get($args['path']);	//%	contents of uploaded file [string]
 	$gdh = imagecreatefromstring($raw);					//%	GD image handle [int]
 
 	if (false == $gdh) {
@@ -84,7 +84,7 @@ function images__cb_file_uploaded($args) {
 			'refUID' => $model->UID, 
 			'fileName' => $model->fileName, 
 			'hash' => $kapenta->fileSha1($model->fileName),
-			'size' => $kapenta->fileSize($model->fileName)
+			'size' => $kapenta->fs->size($model->fileName)
 		);
 
 		$kapenta->raiseEvent('*', 'file_added', $detail);

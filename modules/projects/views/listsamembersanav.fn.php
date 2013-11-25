@@ -12,11 +12,19 @@
 
 function projects_listsamembersanav($args) {
 	global $db;
-
 	global $user;
+	global $theme;
+	global $cache;
+
 	$limit = 10;
-	$html = '';
 	$projects = array();
+	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check cache
+	//----------------------------------------------------------------------------------------------
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and auth
@@ -71,6 +79,12 @@ function projects_listsamembersanav($args) {
 			//$html .= "<small>score: $count</small><br/>\n";
 		}
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	this is an expensive operation, cache it
+	//----------------------------------------------------------------------------------------------
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('projects-samemembersnav-' . $args['UID'], $args['area'], $args['rawblock'], $html);
 
 	return $html;
 }

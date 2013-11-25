@@ -10,9 +10,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check authorisation
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('No blog post specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('No blog post specified.'); }
 
-	$model = new Moblog_Post($req->ref);
+	$model = new Moblog_Post($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }	// no such post
 
 	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
@@ -21,13 +21,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the edit page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/moblog/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['postUID'] = $model->UID;
-	$page->blockArgs['postTitle'] = $model->title;
-	$page->blockArgs['userRa'] = $user->alias;
-	$page->blockArgs['userName'] = $user->getName();
-	$page->render();
+	$kapenta->page->load('modules/moblog/actions/edit.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['postUID'] = $model->UID;
+	$kapenta->page->blockArgs['postTitle'] = $model->title;
+	$kapenta->page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->blockArgs['userName'] = $user->getName();
+	$kapenta->page->render();
 
 ?>

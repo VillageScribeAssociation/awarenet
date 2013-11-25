@@ -98,9 +98,13 @@ class Messages_Message {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $kapenta;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
+
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
@@ -195,8 +199,10 @@ class Messages_Message {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
+		global $kapenta;
 		global $user;
-		$ary = $this->toArray();
+
+		$ary = $this->toArray();		//%	return value [dict]
 
 		$ary['editUrl'] = '';		$ary['editLink'] = '';
 		$ary['viewUrl'] = '';		$ary['viewLink'] = '';
@@ -235,7 +241,7 @@ class Messages_Message {
 		//	strandardise date format to previous website
 		//------------------------------------------------------------------------------------------
 
-		$ary['longdate'] = date('jS F, Y', strtotime($ary['createdOn']));
+		$ary['longdate'] = $kapenta->longDate($ary['createdOn']);
 		$ary['titleUpper'] = strtoupper($ary['title']);
 
 		//------------------------------------------------------------------------------------------

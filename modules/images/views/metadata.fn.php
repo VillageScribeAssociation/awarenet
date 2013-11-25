@@ -56,7 +56,7 @@ function images_metadata($args) {
 	}
 
 
-	if ($kapenta->fileExists($ext['fileName'])) {
+	if ($kapenta->fs->exists($ext['fileName'])) {
 		$size = filesize($kapenta->installPath . $ext['fileName']);
 		$sizeHtml = $size . 'bytes';
 		if ($size > 1024) { $sizeHtml = (floor(($size * 10) / 1024) / 10) . ' kb'; }

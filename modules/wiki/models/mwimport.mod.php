@@ -371,7 +371,7 @@ class Wiki_MWImport {
 
 	function saveApFrom($title) {
 		global $kapenta;
-		$result = $kapenta->filePutContents($this->apFromFile, $title, true, false);
+		$result = $kapenta->fs->put($this->apFromFile, $title, true, false);
 		return $result;
 	}
 
@@ -382,8 +382,8 @@ class Wiki_MWImport {
 
 	function restoreApFrom() {
 		global $kapenta;
-		if (false == $kapenta->fileExists($this->apFromFile)) { return ''; }
-		$result = $kapenta->fileGetContents($this->apFromFile, true, false);
+		if (false == $kapenta->fs->exists($this->apFromFile)) { return ''; }
+		$result = $kapenta->fs->get($this->apFromFile, true, false);
 		return $result;
 	}
 

@@ -19,7 +19,7 @@
     <table noborder>
       <tr>
         <td><input type='button' value='Submit Abuse Report' onClick="
-			/* submitAbuse%%refUID%%X(); */
+		// submitAbuse%%refUID%%X(); 
 		var theDiv = document.getElementById('divReport%%refUID%%');
 		theDiv.innerHTML = '';	// remove this so there's only one form with this id
 		txtFrom = document.getElementById('abuseFrom%%refUID%%');
@@ -56,7 +56,7 @@
 
 <span id='divAbuse%%refUID%%'></span>
 
-<img src='%%serverPath%%themes/clockface/icons/abuse3.png' 
+<img src='%%serverPath%%themes/%%defaultTheme%%/images/icons/abuse3.png' 
 	onClick="divCopyInnerHtml('divReport%%refUID%%', 'divAbuse%%refUID%%');" 
 	style='float: right;' width='20px'
 	border='0' alt='report abuse' title='report abuse' />

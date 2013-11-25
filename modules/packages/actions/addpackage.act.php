@@ -85,7 +85,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	manifest loaded and saved, display file list
 	//----------------------------------------------------------------------------------------------
+	echo "<div class='chatmessagegreen'>\n";
 	foreach($package->files as $file) { echo $file['path'] . "<br/>\n"; }
+	echo "</div>\n";	
 	$um->log("Downloaded package manifest.<br/>" . count($package->files) . ' files.', 'green');
 
 	//----------------------------------------------------------------------------------------------
@@ -104,9 +106,16 @@
 			$check = $package->updateFile($file['uid']);
 			if (true == $check) { $um->log("Downloaded: " . $file['path'], 'green'); }
 			else { $um->log("Download failed: " . $file['path'], 'red'); }
+
 		} else {
-			$msg .= "file exists...<br/>";
-			echo $msg;
+			if ($kapenta->fileSha1($file['path']) == $file['hash']) {
+				$msg .= "file exists, matches hash...<br/>";
+				echo "<div class='chatmessageblack'>" . $msg . "</div>";
+			} else {
+				$check = $package->updateFile($file['uid']);
+				if (true == $check) { $um->log("Updated: " . $file['path'], 'green'); }
+				else { $um->log("Download failed: " . $file['path'], 'red'); }
+			}
 		}
 	}
 
@@ -121,7 +130,7 @@
 	//	call install function
 	//----------------------------------------------------------------------------------------------
 	if ('' != $package->installFile) {
-		if (true == $kapenta->fileExists($package->installFile)) {
+		if (true == $kapenta->fs->exists($package->installFile)) {
 			//--------------------------------------------------------------------------------------
 			//	install script present, include it
 			//--------------------------------------------------------------------------------------

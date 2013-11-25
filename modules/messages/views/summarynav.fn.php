@@ -23,28 +23,21 @@ function messages_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count all messages
 	//----------------------------------------------------------------------------------------------
-	$sql = "select count(UID) as allMsgs from messages_message "
-		 . "where owner='" . $owner . "' and folder='" . $folder . "'";
+	$conditions = array();
+	$conditions[] = "owner='" . $owner . "'";
+	$conditions[] = "folder='" . $folder . "'";
 
-	$result = $db->query($sql);
-	$row = $db->fetchAssoc($result);
-	$totalMessages = $row['allMsgs'];
-	//TODO: $db->countRange
+	$totalMessages = $db->countRange('messages_message', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	count unread messages
 	//----------------------------------------------------------------------------------------------
+	$conditions[] = "status='unread'";
+	$newMessages = $db->countRange('messages_message', $conditions);
+	$unread = '';	
 
-	$sql = "select count(UID) as allMsgs from messages_message "
-		 . "where owner='" . $owner . "' and folder='" . $folder . "' and status='unread'";
-
-	$result = $db->query($sql);
-	$row = $db->fetchAssoc($result);
-	$newMessages = $row['allMsgs'];
-	$unread = '';
-	
 	if ('outbox' == $folder) { $newMessages = 'n/a'; }
-	else { $unread = "<small>Unread: $newMessages messages</small><br/><hr/>\n"; }
+	else { $unread = "<small>Unread: $newMessages messages</small><br/>\n"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make HTML snippet

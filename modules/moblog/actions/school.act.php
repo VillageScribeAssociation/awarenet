@@ -13,8 +13,8 @@
 	$model = new Schools_School();
 	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
 
-	if ('' != $req->ref) {
-		$model->load($req->ref);
+	if ('' != $kapenta->request->ref) {
+		$model->load($kapenta->request->ref);
 		if (false  == $model->loaded) { $page->do404(); }
 
 	} else { $model->load($user->school); }
@@ -24,12 +24,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/moblog/actions/school.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['schoolUID'] = $model->UID;
-	$page->blockArgs['schoolName'] = $model->name;
-	$page->blockArgs['schoolRa'] = $model->alias;
+	$kapenta->page->load('modules/moblog/actions/school.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
+	$kapenta->page->blockArgs['schoolName'] = $model->name;
+	$kapenta->page->blockArgs['schoolRa'] = $model->alias;
 	$page->allowBlockArgs('page,tag');
-	$page->render();
+	$kapenta->page->render();
 
 ?>

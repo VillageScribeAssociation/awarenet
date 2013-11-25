@@ -16,11 +16,14 @@
 function images_install_module() {
 	global $db;
 	global $user;
-	global $registry;
+	global $kapenta;
+	global $kapenta;
 
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Images_Image table
@@ -42,8 +45,8 @@ function images_install_module() {
 
 	$assoc = array('jpg', 'jpeg', 'png', 'gif');
 	foreach($assoc as $ext) {
-		if ('images' != $registry->get('live.file.' . $ext)) {
-			$registry->set('live.file.' . $ext, 'images');
+		if ('images' != $kapenta->registry->get('live.file.' . $ext)) {
+			$kapenta->registry->set('live.file.' . $ext, 'images');
 			$report .= "<b>Added file association:</b> $ext<br/>";
 		}
 	}
@@ -62,12 +65,15 @@ function images_install_module() {
 
 function images_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Image objects exists and is correct

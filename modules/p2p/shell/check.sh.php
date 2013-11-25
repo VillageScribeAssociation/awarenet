@@ -60,7 +60,7 @@
 		//	check references to files, delete offer if bad
 		//------------------------------------------------------------------------------------------
 		if ('file' == $item['type']) {
-			if (false == $kapenta->fileExists($item['fileName'])) { 
+			if (false == $kapenta->fs->exists($item['fileName'])) { 
 				echo ''
 				 . 'p2p_gift::' . $item['UID'] . ' for'
 				 . ' ' . $item['refModel'] . '::' . $item['refUID']

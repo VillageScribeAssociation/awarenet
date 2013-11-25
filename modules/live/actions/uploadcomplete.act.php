@@ -14,7 +14,7 @@
 	
 	$errmsg = '';
 
-	$session->msgAdmin('Calling uploadcomplete for: ' . $_POST['filehash']);
+	//$session->msgAdmin('Calling uploadcomplete for: ' . $_POST['filehash']);
 
 	//----------------------------------------------------------------------------------------------
 	//	load upload manifest and stitch file parts together
@@ -28,15 +28,25 @@
 	//----------------------------------------------------------------------------------------------
 	//	get extension and discover which module handles files of this type
 	//----------------------------------------------------------------------------------------------
-	$reg = $registry->search('live', 'live.file.');
+	$reg = $kapenta->registry->search('live', 'live.file.');
 
 	foreach($reg as $key => $value) {
 		$ext = str_replace('live.file.', '', $key);
 		$compare = substr($upload->name, strlen($upload->name) - strlen($ext));
+
+		//	special case for lessons module
+		if ('lessons' == $upload->refModule) {
+			$module = 'lessons';
+			$session->msgAdmin('Assigning file to lessons module (ext: ' . $extension . ').');
+			break;
+		}
+
+		//	or get file type from registry
 		if (strtolower($ext) == strtolower($compare)) {
 			$module = $value;
 			$extension = $ext;
 			$session->msgAdmin("/uploadcomplete/ module: $module ext: $extension upload: " . $upload->name);
+			break;
 		}
 	}
 

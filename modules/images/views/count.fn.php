@@ -5,8 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 //|	count images belonging to a given UID on some module specified
 //--------------------------------------------------------------------------------------------------
-//arg: refUID - recordAlias or UID of owner record [string]
 //arg: refModule - module owner recod belongs to [string]
+//arg: refModel - type of object which may own images [string]
+//arg: refUID - alias or UID of owbject which may own images [string]
 
 function images_count($args) {
 	global $db;

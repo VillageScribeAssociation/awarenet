@@ -10,8 +10,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
-	$model = new Wiki_Revision($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	$model = new Wiki_Revision($kapenta->request->ref);
 	if (false == $model->loaded) {$page->do404(); }
 	if (false == $user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { $page->do403(); }
 
@@ -31,17 +31,15 @@
 
 	$extArray = $article->extArray();
 
-	if ('' != trim($extArray['infobox'])) {
-		$extArray['infobox'] = "[[:theme::navtitlebox::label=Infobox:]]\n" 
-							 . "" . $extArray['infobox'] . "\n<br/><br/>";
-	}
-
 	//TODO: tidy this all up
 
-	$page->load('modules/wiki/actions/showrevision.page.php');
-	$page->blockArgs['currentRevision'] = $model->UID;
-	$page->blockArgs['raUID'] = $model->UID;											
-	foreach($extArray as $key => $value) {  $page->blockArgs[$key] = $value; }		// messy
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/showrevision.page.php');
+	$kapenta->page->blockArgs['currentRevision'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->UID;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['articleTitle'] = $model->title;
+	$kapenta->page->blockArgs['contentHtml'] = "[[:wiki::revisioncontent::raUID=" . $model->UID . ":]]";
+	//foreach($extArray as $key => $value) {  $kapenta->page->blockArgs[$key] = $value; }		// messy
+	$kapenta->page->render();
 
 ?>

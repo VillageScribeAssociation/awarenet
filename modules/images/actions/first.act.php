@@ -11,20 +11,20 @@
 	//---------------------------------------------------------------------------------------------- 
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('module', $req->args)) { $page->doXmlError('Module not given'); }
-	if (false == array_key_exists('model', $req->args)) { $page->doXmlError('Model not given'); }
-	if (false == array_key_exists('uid', $req->args)) { $page->doXmlError('UID not given'); }
+	if (false == array_key_exists('module', $kapenta->request->args)) { $page->doXmlError('Module not given'); }
+	if (false == array_key_exists('model', $kapenta->request->args)) { $page->doXmlError('Model not given'); }
+	if (false == array_key_exists('uid', $kapenta->request->args)) { $page->doXmlError('UID not given'); }
 
 	$size = 'width300';			// default
-	if (true == array_key_exists('s', $req->args)) { $size = $req->args['s']; }
+	if (true == array_key_exists('s', $kapenta->request->args)) { $size = $kapenta->request->args['s']; }
 
 	//---------------------------------------------------------------------------------------------- 
 	//	look up default image and redirect
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($req->args['module']) ."'";
-	$conditions[] = "refModel='" . $db->addMarkup($req->args['model']) ."'";
-	$conditions[] = "refUID='" . $db->addMarkup($req->args['uid']) ."'";
+	$conditions[] = "refModule='" . $db->addMarkup($kapenta->request->args['module']) ."'";
+	$conditions[] = "refModel='" . $db->addMarkup($kapenta->request->args['model']) ."'";
+	$conditions[] = "refUID='" . $db->addMarkup($kapenta->request->args['uid']) ."'";
 
 	$range = $db->loadRange('images_image', '*', $conditions, 'weight', '1');
 

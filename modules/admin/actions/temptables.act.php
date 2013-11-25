@@ -29,7 +29,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/temptables.page.php');
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/temptables.page.php');
+	$kapenta->page->render();
 
 ?>

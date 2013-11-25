@@ -13,13 +13,15 @@
 	if ('public' == $user->role) { $page->do403('Please log in.', true); }
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.', true); }
 	
+	if ('yes' != $kapenta->registry->get('chat.enabled')) { $page->doXmlError('Chat disabled.'); }
+
 	$room = new Chat_Room($_POST['UID']);
 	if (false == $room->loaded) { $page->do404('Chat room not found.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	perform n checks for new messages
 	//----------------------------------------------------------------------------------------------
-	$checks = 4;
+	$checks = 1;
 	if ($checks > 0) {
 		$checks--;
 
@@ -55,6 +57,21 @@
 		}
 	
 		if ($checks > 0) { sleep(1); }
+
+		//------------------------------------------------------------------------------------------
+		//	set up another poll if none are ongoing
+		//------------------------------------------------------------------------------------------
+		$now = $kapenta->time();
+		$lastpoll = $kapenta->registry->get('chat.lastcheck');
+	
+		if (($now - $lastpoll) > 10) {
+			$lastpoll = $kapenta->registry->set('chat.lastcheck', $now);
+
+			$client = new Chat_Client();
+			$report = $client->check();
+
+			if ('' != $report) { $kapenta->logEvent('chatclient', 'jspoll', 'report', $report); }
+		}
 
 	}
 

@@ -1,9 +1,9 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	default action for chat is to view history, admins can view anyones history
+//*	default action on chat module is to list available chat rooms
 //--------------------------------------------------------------------------------------------------
 
-		include $kapenta->installPath . 'modules/chat/actions/history.act.php';
+	include($kapenta->installPath . 'modules/chat/actions/listrooms.act.php');
 
 ?>

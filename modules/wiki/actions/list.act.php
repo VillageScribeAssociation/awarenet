@@ -10,15 +10,15 @@
 	//	check for arguments
 	//----------------------------------------------------------------------------------------------
 	$pageno = 1; $num = 30;
-	if (array_key_exists('page', $req->args) != false) { $pageno = $req->args['page']; }
-	if (array_key_exists('num', $req->args) != false) { $num = $req->args['num']; }
+	if (array_key_exists('page', $kapenta->request->args) != false) { $pageno = $kapenta->request->args['page']; }
+	if (array_key_exists('num', $kapenta->request->args) != false) { $num = $kapenta->request->args['num']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/wiki/actions/list.page.php');
-	$page->blockArgs['pageno'] = $pageno;
-	$page->blockArgs['num'] = $num;
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/list.page.php');
+	$kapenta->page->blockArgs['pageno'] = $pageno;
+	$kapenta->page->blockArgs['num'] = $num;
+	$kapenta->page->render();
 
 ?>

@@ -15,11 +15,11 @@
 	$set = new Images_Transforms();
 
 	if (
-		(true == array_key_exists('s', $req->args)) &&
-		(true == array_key_exists($req->args['s'], $set->presets))
+		(true == array_key_exists('s', $kapenta->request->args)) &&
+		(true == array_key_exists($kapenta->request->args['s'], $set->presets))
 	) {
-			$testFile = 'data/images/unavailable/unavailable_' . $req->args['s'] . '.jpg';
-			if (true == $kapenta->fileExists($testFile)) { $size = $req->args['s']; }
+			$testFile = 'data/images/unavailable/unavailable_' . $kapenta->request->args['s'] . '.jpg';
+			if (true == $kapenta->fs->exists($testFile)) { $size = $kapenta->request->args['s']; }
 	}
 
 	$page->do302('data/images/unavailable/unavailable_' . $size . '.jpg');

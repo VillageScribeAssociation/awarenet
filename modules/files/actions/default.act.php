@@ -8,7 +8,7 @@
 	//temporarily disabled:
 	$page->do404();
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		include $kapenta->installPath . 'modules/files/actions/showall.act.php';
 	} else {
 		include $kapenta->installPath . 'modules/files/actions/show.act.php';

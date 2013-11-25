@@ -5,12 +5,16 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit project abstract</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::width=570::label=Project Setup:]]
 		[[:projects::editabstractform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-	</content>
-	<nav1>
+		</div>
+		<br/>
+
 		[[:projects::editmembersjs::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 
+	</content>
+	<nav1>
 		[[:projects::requestsjoinnav::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
 
 		[[:projects::changestatusform::projectUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]

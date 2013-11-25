@@ -1,66 +1,99 @@
 
-//-------------------------------------------------------------------------------------------------
-//	javascript for adding and displaying comments
-//-------------------------------------------------------------------------------------------------
-//	requires aryComments (an array of comments) to exist on the page, and a div called
-//	divCommentsJs to populate with display
+//--------------------------------------------------------------------------------------------------
+//*	javascript for adding and displaying comments
+//--------------------------------------------------------------------------------------------------
 
-//-------------------------------------------------------------------------------------------------
-//	handle an event
-//-------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//|	show inline comment reply form
+//--------------------------------------------------------------------------------------------------
+//arg: parentUID - UID of a parent Comments_Comment object [string]
 
-function msgh_comments(channel, event, msg) {
-	//alert('comments message recieved, type: ' + event);
-	switch(event) {
-		case 'add': 	msgh_commentsAdd(msg); break;
-		case 'remove':	msgh_commentsRemove(msg); break;
-		case 'update':	msgh_commentsUpadte(msg); break;
+function comments_showReplyInline(parentUID) {
+	var divId = 'divReply' + parentUID;
+
+	if ($('#' +	divId).html() == '') { 
+		var replyBlock = '[' + '[:comments::replyform::parentUID=' + parentUID + ':]' + ']';
+		klive.bindDivToBlock(divId, replyBlock);
+	} else {
+		$('#' +	divId).show();
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
-//	add a new comment to the array and refresh
-//-------------------------------------------------------------------------------------------------
-//	the message must be UID|escaped message html
+//--------------------------------------------------------------------------------------------------
+//|	hide inline comment reply form
+//--------------------------------------------------------------------------------------------------
+//arg: parentUID - UID of a parent Comments_Comment object [string]
 
-function msgh_commentsAdd(msg) {
-	var splitPos = msg.indexOf('|');
-	if (splitPos > 0) {
-		var commentUID = msg.substring(0, splitPos);
-		var commentB64 = msg.substring(splitPos + 1);
-		aryComments.reverse();
-		aryComments.push(new Array(commentUID, commentB64));
-		aryComments.reverse();
+function comments_hideReplyInline(parentUID) {
+	var divId = 'divReply' + parentUID;
+	$('#' +	divId).hide();
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	send a reply
+//--------------------------------------------------------------------------------------------------
+//arg: parentUID - UID of a parent Comments_Comment object, identifies form [string]
+
+function comments_saveReply(parentUID) {
+
+	var msgEmpty = "<span class='ajaxwarn'>Please enter a comment first.</span>";
+
+	var msgSend = ''
+		 + "<span class='ajaxmsg'>Saving reply "
+		 + "<img src='" + jsServerPath + "themes/clockface/images/throbber-inline.gif'>"
+		 + "</span>";
+
+	khta.updateAllAreas();
+
+	//var divId = 'divReply' + parentUID;
+	var commentTxt = $('#hdnreply' + parentUID).val();
+	commentTxt = kutils.trim(commentTxt);
+
+	if (('' == commentTxt) || ('<br/>' == commentTxt) || ('<br>' == commentTxt)) {
+		comments_setReplyStatus(parentUID, msgEmpty);
+		return;
+	} else {
+		comments_setReplyStatus(parentUID, msgSend);
 	}
-	//alert('added new comment');
-	msgh_commentsRefresh();
+
+	var theForm = document.getElementById('frmReply' + parentUID);	
+	if (!theForm) { alert('Missing form'); return; }
+
+	var postUrl = jsServerPath + 'comments/reply/';
+
+	var params = urlEncodeForm(theForm);
+	//alert(params);
+
+	var cbFn = function(responseText, status) {
+		//alert('status: ' + status + "\n" + responseText);
+
+		var blockReplies = '[' + '[:comments::replies::parentUID=' + parentUID + ':]' + ']';
+
+		klive.removeBlock(blockReplies);
+		klive.bindDivToBlock('divReplies' + parentUID, blockReplies);
+
+		if ('200' == status) {
+			comments_setReplyStatus(parentUID, "<span class='ajaxmsg'>Saved.</span>");
+			window.setTimeout("comments_setReplyStatus('" + parentUID + "', '');", 1000);
+		} else {
+			comments_setReplyStatus(parentUID, "<span class='ajaxwarn'>Comment not saved.</span>");
+			window.setTimeout("comments_setReplyStatus('" + parentUID + "', '');", 1000);
+		}
+	}
+
+	kutils.httpPost(postUrl, params, cbFn);
+
+	var hta = khta.getArea('reply' + parentUID);
+	//alert(hta.name);
+	//alert(hta.getContent());
+	hta.setContent('');
+	hta.update();
+
+	if (isMobile) { alert('isMobile'); }
+
+	comments_hideReplyInline(parentUID);
 }
 
-//-------------------------------------------------------------------------------------------------
-//	remove a comment from the array
-//-------------------------------------------------------------------------------------------------
-
-function msgh_commentsRemove() {
-	
-}
-
-//-------------------------------------------------------------------------------------------------
-//	remove a comment from the array
-//-------------------------------------------------------------------------------------------------
-
-function msgh_commentsUpdate() {
-	
-}
-
-//-------------------------------------------------------------------------------------------------
-//	refresh the display
-//-------------------------------------------------------------------------------------------------
-
-function msgh_commentsRefresh() {
-	printPage('divCommentsJs', 'commentsPageChanged', aryComments, commentsPage, commentsPageSize);
-}
-
-function commentsPageChanged(pageNo) {
-	commentsPage = pageNo;
-	msgh_commentsRefresh();
+function comments_setReplyStatus(parentUID, msg) {
+	$('#divCRStatus' + parentUID).html(msg);
 }

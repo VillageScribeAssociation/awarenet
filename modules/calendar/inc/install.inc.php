@@ -16,10 +16,14 @@
 
 function calendar_install_module() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return ''; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';				//% return value [string:html]
+
+	$dba = $kapenta->getDBAdminDriver();
+
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade calendar_entry table
 	//----------------------------------------------------------------------------------------------
@@ -48,12 +52,15 @@ function calendar_install_module() {
 
 function calendar_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$report = '';				//%	return value [string:html]
-	$dba = new KDBAdminDriver();
+	$report = '';												//%	return value [string:html]
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Entry objects exists and is correct

@@ -11,9 +11,9 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $req->ref = 'Pink'; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = 'Pink'; }
 
-	$model = new Wiki_Article($req->ref);
+	$model = new Wiki_Article($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------

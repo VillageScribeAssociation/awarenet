@@ -57,7 +57,7 @@ class Admin_LogFile {
 		//------------------------------------------------------------------------------------------
 		//	open input and output files
 		//------------------------------------------------------------------------------------------
-		if (false == $kapenta->fileExists($inFile)) { return false; }
+		if (false == $kapenta->fs->exists($inFile)) { return false; }
 		$this->inFile = $inFile;
 		$this->inFh = fopen($kapenta->installPath . $inFile, 'r+');
 
@@ -174,12 +174,42 @@ class Admin_LogFile {
 		//echo $shellCmd . "<br/>\n";
 
 		$result = shell_exec($shellCmd);
-		$raw = $kapenta->fileGetContents($reportFile);
+		$raw = $kapenta->fs->get($reportFile);
 
 		$parser = new KHTMLParser($raw);
 		$report = $parser->output;
 
 		return $report;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//.	guess bots
+	//----------------------------------------------------------------------------------------------
+	//TODO: allow bot strings to be stored in registry
+	//arg: useragent - UA [string]
+	//returns: true if likely a bot, false if not [bool]
+
+	function isBot($useragent) {
+		$tells = array(
+			'msnbot.htm',
+			'Googlebot',
+			'bingbot',
+			'ezooms.bot',
+			'Baiduspider',
+			'Sosospider',
+			'spider.htm',
+			'ahrefs.com/robot/',
+			'search.goo.ne.jp',
+			'YandexBot',
+			'Exabot',
+			'spider/'
+		);
+
+		foreach($tells as $tell) {
+			if (false != strpos($useragent, $tell)) { return true; }
+		}
+
+		return false;
 	}
 
 }

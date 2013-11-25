@@ -9,7 +9,10 @@
 //opt: pageUID - overrides raUID [string]
 
 function gallery_summary($args) {
-	global $theme, $user;
+	global $theme;
+	global $user;
+	global $cache;
+
 	$html = '';		//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -23,14 +26,28 @@ function gallery_summary($args) {
 	if (false == $model->loaded) { return ''; }
 	//TODO: permissions check here
 
-	$labels = $model->extArray();
-	//TODO: live JS
+	//----------------------------------------------------------------------------------------------
+	//	check the cache
+	//----------------------------------------------------------------------------------------------
+	if ($model->createdBy != $user->UID) {
+		$html = $cache->get($args['area'], $args['rawblock']);
+		if ('' != $html) { return $html; }
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
+	$labels = $model->extArray();
+	//TODO: live JS
+
 	$block = $theme->loadBlock('modules/gallery/views/summary.block.php');
 	$html = $theme->replaceLabels($labels, $block);
+
+	if ($model->createdBy != $user->UID) {
+		$html = $theme->expandBlocks($html, $args['area']);
+		$cache->set('gallery-show-' . $model->UID, $args['area'], $args['rawblock'], $html);
+	}
+
 	return $html;
 }
 

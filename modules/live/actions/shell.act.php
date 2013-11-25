@@ -14,8 +14,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page  //TODO: make a generic window template
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/live/actions/shell.page.php');
-	$page->blockArgs['jsUserName'] = $user->getName();
-	$page->render();
+	$kapenta->page->load('modules/live/actions/shell.page.php');
+	$kapenta->page->blockArgs['jsUserName'] = $user->getName();
+	$kapenta->page->render();
 
 ?>

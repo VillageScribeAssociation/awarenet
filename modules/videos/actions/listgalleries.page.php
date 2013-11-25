@@ -6,39 +6,49 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all image galleries</title>
 	<content>
 		[[:theme::navtitlebox::label=Video Galleries::width=570:]]
-		[`|lt]h1[`|gt]In This Collection[`|lt]/h1[`|gt]
+		<div class='spacer'></div>
 		[[:videos::summarylistuser:]]
 	</content>
 	<nav1>
+		<div class='block'>
 		[[:theme::navtitlebox::label=Made By:]]
 		[[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 		[`|lt]br/[`|gt]
+		</div>
+		<br/>
 
-		[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
-		[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 		[[:videos::newgalleryform:]]
-		[`|lt]/div[`|gt]
-		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Galleries:]]
 		[[:videos::navlist::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Gallery Tags::toggle=divTagCloud:]]
 		[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
 		[[:tags::modelcloud::refModule=videos::refModel=videos[`|us]gallery:]]
 		[`|lt]/div[`|gt]
+		<div class='foot'></div>
+		</div>
 		<br/>
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Popular Videos::toggle=divPopularVideos::hidden=yes:]]
 		<div id='divPopularVideos' style='visibility: hidden; display: none'>
 		[[:videos::listpopularvideosnav::num=10:]]
 		</div>
+		<div class='foot'></div>
+		</div>
 		<br/>
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Recently Added::toggle=divRecentVideos::hidden=yes:]]
 		<div id='divRecentVideos' style='visibility: hidden; display: none'>
 		[[:videos::listrecentvideosnav::num=10:]]
+		</div>
+		<div class='foot'></div>
 		</div>
 		<br/>
 

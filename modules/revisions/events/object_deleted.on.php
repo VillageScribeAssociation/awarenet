@@ -3,6 +3,12 @@
 //--------------------------------------------------------------------------------------------------
 //|	record object deletions
 //--------------------------------------------------------------------------------------------------
+//opt: module - name of module controlling this object [string]
+//arg: model - type of object which was deleted [string]
+//arg: UID - UID of deleted object [string]
+//arg: data - array of key => value pairs [array:string]
+//opt: dbSchema - database table definition [string]
+//opt: isShared - true if object is shared with other peers [bool]
 
 function revisions__cb_object_deleted($args) {
 	global $db;
@@ -17,7 +23,7 @@ function revisions__cb_object_deleted($args) {
 	}
 
 	if (false == array_key_exists('dbSchema', $args)) {
-		$session->msgAdmin('Record deletion: Missing object data argument.');
+		$session->msgAdmin('Record deletion: Missing dbSchema argument.');
 		return false;
 	}
 

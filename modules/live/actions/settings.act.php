@@ -34,7 +34,7 @@
 
 			if (true == $allOk) {
 				$eventFile = 'modules/' . $module . '/events/file_attach.on.php';
-				if (false == $kapenta->fileExists($eventFile)) {
+				if (false == $kapenta->fs->exists($eventFile)) {
 
 					$msg = ''
 					 . "Module '" . $module . "' does not handle 'file_attach' events, "
@@ -46,7 +46,7 @@
 			}
 
 			if (true == $allOk) {
-				$registry->set('live.file.' . $ext, $module);
+				$kapenta->registry->set('live.file.' . $ext, $module);
 				$session->msg("Added file association: $ext => $module.", 'ok');
 			}
 		}
@@ -54,8 +54,8 @@
 		if ('removeFileAssociation' == $_POST['action']) {
 			$ext = $_POST['ext'];
 
-			if ('' !== $registry->get('live.file.' . $ext)) {
-				$registry->delete('live.file.' . $ext);
+			if ('' !== $kapenta->registry->get('live.file.' . $ext)) {
+				$kapenta->registry->delete('live.file.' . $ext);
 				$session->msg("Removed association for '$ext' files.");
 			}
 		}
@@ -66,7 +66,7 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/live/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/live/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

@@ -19,31 +19,31 @@
 		switch($key) {
 
 			case 'twitter_consumerkey':	
-				$registry->set('twitter.consumerkey', $value);	
+				$kapenta->registry->set('twitter.consumerkey', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_consumersecret':	
-				$registry->set('twitter.consumersecret', $value);	
+				$kapenta->registry->set('twitter.consumersecret', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_requesttoken':	
-				$registry->set('twitter.requesttoken', $value);	
+				$kapenta->registry->set('twitter.requesttoken', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_requesttokensecret':	
-				$registry->set('twitter.requesttokensecret', $value);	
+				$kapenta->registry->set('twitter.requesttokensecret', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_pin':	
-				$registry->set('twitter.pin', $value);	
+				$kapenta->registry->set('twitter.pin', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_accesstoken':	
-				$registry->set('twitter.accesstoken', $value);	
+				$kapenta->registry->set('twitter.accesstoken', $value);	
 				break;	//..........................................................................
 
 			case 'twitter_accesstokensecret':	
-				$registry->set('twitter.accesstokensecret', $value);	
+				$kapenta->registry->set('twitter.accesstokensecret', $value);	
 				break;	//..........................................................................
 
 		}
@@ -54,8 +54,8 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ((true == array_key_exists('action', $_POST)) && ('register' == $_POST['action'])) {
-		$consumerKey = $registry->get('twitter.consumerkey');
-		$consumerSecret = $registry->get('twitter.consumersecret');
+		$consumerKey = $kapenta->registry->get('twitter.consumerkey');
+		$consumerSecret = $kapenta->registry->get('twitter.consumersecret');
 		
 		if (('' == $consumerKey) || ('' == $consumerSecret)) {
 			$session->msg('Please complete the consumer key and secret first.', 'bad');
@@ -68,8 +68,8 @@
 			$requestTokenSecret = $request['oauth_token_secret'];
 
 			// store the generated request token/secret in the registry
-			$registry->set('twitter.requesttoken', $requestToken);
-			$registry->set('twitter.requesttokensecret', $requestTokenSecret);
+			$kapenta->registry->set('twitter.requesttoken', $requestToken);
+			$kapenta->registry->set('twitter.requesttokensecret', $requestTokenSecret);
 	
 			// display Twitter generated registration URL
 			$registerURL = $oauth->getAuthorizeURL($request);			
@@ -87,11 +87,11 @@
 		$ok = true;
 
 		// Retrieve our previously generated request token & secret
-		$requestToken = $registry->get('twitter.requesttoken');
-		$requestTokenSecret = $registry->get('twitter.requesttokensecret');
+		$requestToken = $kapenta->registry->get('twitter.requesttoken');
+		$requestTokenSecret = $kapenta->registry->get('twitter.requesttokensecret');
 
-		$consumerKey = $registry->get('twitter.consumerkey');
-		$consumerSecret = $registry->get('twitter.consumersecret');
+		$consumerKey = $kapenta->registry->get('twitter.consumerkey');
+		$consumerSecret = $kapenta->registry->get('twitter.consumersecret');
 
 		$PIN = '';
 		if (true == array_key_exists('twitter_pin', $_POST)) { $PIN = $_POST['twitter_pin']; }
@@ -125,8 +125,8 @@
 			$accessTokenSecret = $request['oauth_token_secret'];
 
 			// Save our access token/secret to the registry
-			$registry->set('twitter.accesstoken', $accessToken);
-			$registry->set('twitter.accesstokensecret', $accessTokenSecret);
+			$kapenta->registry->set('twitter.accesstoken', $accessToken);
+			$kapenta->registry->set('twitter.accesstokensecret', $accessTokenSecret);
 
 			$msg = "Stored Access Token and Secret... (PIN: $PIN)<br/>"
 				. "Access Token: $accessToken <br/>"
@@ -154,7 +154,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/twitter/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/twitter/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

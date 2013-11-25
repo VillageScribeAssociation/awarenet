@@ -15,10 +15,14 @@
 
 function popular_install_module() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return ''; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';				//% return value [string:html]
+
+	$dba = $kapenta->getDBAdminDriver();
+
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade popular_ladder table
 	//----------------------------------------------------------------------------------------------
@@ -40,12 +44,15 @@ function popular_install_module() {
 
 function popular_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
 	$report = '';				//%	return value [string:html]
-	$dba = new KDBAdminDriver();
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Ladder objects exists and is correct

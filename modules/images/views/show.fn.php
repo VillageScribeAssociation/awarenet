@@ -19,13 +19,14 @@ function images_show($args) {
 	global $page;
 	global $session;
 
-	$display = 'block';			//%	css display mode (inline|block) [string]
+	$display = 'block';							//%	css display mode (inline|block) [string]
 	$link = 'yes';	
 	$caption = 'no'; 
 	$size = 'widthnav'; 
 	$align = '';
-	$style = '';				//%	additional, per image style [string]
-	$html = ''; 				//%	return value [string]
+	$style = '';								//%	additional, per image style [string]
+	$profile = $session->get('deviceprofile');	//%	device context
+	$html = ''; 								//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -57,12 +58,14 @@ function images_show($args) {
 		if ('' !== $args['area']) { $size = $args['area']; }
 	}
 
-	if (true == $session->get('mobile')) {
+
+
+	if ('desktop' !== $profile) {
 		switch($size) {
-			case 'width570':		$size = 'mobile';			break;
-			case 'width560':		$size = 'mobile';			break;
-			case 'widthcontent':	$size = 'mobile';			break;
-			case 'widthindent':		$size = 'mobile';			break;
+			case 'width570':		$size = $profile;			break;
+			case 'width560':		$size = $profile;			break;
+			case 'widthcontent':	$size = $profile;			break;
+			case 'widthindent':		$size = $profile;			break;
 			case 'slide':			$size = 'mobileslide';		break;
 			case 'slideindent':		$size = 'mobileslide';		break;
 		}

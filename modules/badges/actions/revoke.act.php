@@ -10,9 +10,9 @@
 	//	check reference and user permissions
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }		//TODO: use a permission for this
-	if ('' == $req->ref) { $page->do404('Badge award not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Badge award not specified.'); }
 	
-	$model = new Badges_UserIndex($req->ref);
+	$model = new Badges_UserIndex($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Award not found.'); }
 
 	$model->delete();

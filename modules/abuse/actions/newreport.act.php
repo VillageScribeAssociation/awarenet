@@ -19,7 +19,7 @@
 	if (false == $kapenta->moduleExists($_POST['refModule']))
 		{ $page->do404('specified module does not exist'); }
 	if (false == $db->objectExists($_POST['refModel'], $_POST['refUID']))
-		{ $page->do404('specified owner does not exist in database'); }
+		{ $page->do404('specified owner does not exist in database: ' . $_POST['refModel'] . ' - '. $_POST['refUID']); }
 
 	//----------------------------------------------------------------------------------------------
 	//*	create the object
@@ -49,7 +49,7 @@
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$msg = "Report Submitted.<br/>Thank you for letting us know.\n";
+		$msg = "Report Submitted.<br/>Thank you for letting us know. fromurl:" . $model->fromurl . "\n";
 		$session->msg($msg, 'ok');
 		$page->do302($model->fromurl);
 	} else {

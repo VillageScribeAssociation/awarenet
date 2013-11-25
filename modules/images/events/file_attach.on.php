@@ -18,7 +18,7 @@ function images__cb_file_attach($args) {
 	global $kapenta;
 	global $session;
 	global $utils;
-	global $registry;
+	global $kapenta;
 	global $user;
 
 	$msg = ''
@@ -47,12 +47,30 @@ function images__cb_file_attach($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check that this is actually an image
 	//----------------------------------------------------------------------------------------------
-	$raw = $kapenta->fileGetContents($args['path']);	//%	contents of uploaded file [string]
-	$gdh = imagecreatefromstring($raw);					//%	GD image handle [int]
 
-	if (false == $gdh) {
-		$session->msg('Uploaded file was not a valid image.', 'bad');
-		return false;
+	if (class_exists("Imagick")) {
+		//------------------------------------------------------------------------------------------
+		//	check properties using ImageMagick (work around memory exhaustion on large images)
+		//------------------------------------------------------------------------------------------
+		try {
+			$im = new Imagick($args['path']);
+			$improp = $im->identifyImage();
+		} catch (Exception $e) {
+			$session->msg('Uploaded file was not a valid image.', 'bad');
+			return false;
+		}
+
+	} else {
+		//------------------------------------------------------------------------------------------
+		//	use GD if imagemagick not available (memory intensive)
+		//------------------------------------------------------------------------------------------
+		$raw = $kapenta->fs->get($args['path']);	//%	contents of uploaded file [string]
+		$gdh = imagecreatefromstring($raw);					//%	GD image handle [int]
+
+		if (false == $gdh) {
+			$session->msg('Uploaded file was not a valid image.', 'bad');
+			return false;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -83,11 +101,29 @@ function images__cb_file_attach($args) {
 		//------------------------------------------------------------------------------------------
 		//	save as .jpg
 		//------------------------------------------------------------------------------------------
-		$check = imagejpeg($gdh, $model->fileName, 90);
-		if (false == $check) {
-			$report .= "Could not convert image to jpg format.";
+		if (class_exists("Imagick")) {
+			//--------------------------------------------------------------------------------------
+			//	convert using Imagick
+			//--------------------------------------------------------------------------------------
+			if ($im->getImageWidth() > 1024) { $im->scaleImage(1024, 0); }
+
+			$im->setCompression(Imagick::COMPRESSION_JPEG);
+			$im->setCompressionQuality(90);
+			$im->setImageFormat('jpeg'); 
+			$im->writeImage($model->fileName);
+			$im->destroy();
+
 		} else {
-			$session->msg('Attached image.');
+			//--------------------------------------------------------------------------------------
+			//	convert using GD
+			//--------------------------------------------------------------------------------------
+			$check = imagejpeg($gdh, $model->fileName, 90);
+			imagedestroy($gdh);
+			if (false == $check) {
+				$report .= "Could not convert image to jpg format.";
+			} else {
+				$session->msg('Attached image.');
+			}
 		}
 	}
 
@@ -95,13 +131,13 @@ function images__cb_file_attach($args) {
 		//------------------------------------------------------------------------------------------
 		//	rescale large files
 		//------------------------------------------------------------------------------------------
-		$maxSize = $registry->get('images.maxsize');
-		$fileSize = $kapenta->fileSize($model->fileName);
+		$maxSize = $kapenta->registry->get('images.maxsize');
+		$fileSize = $kapenta->fs->size($model->fileName);
 
 		$model->load($model->UID);
 		$model->transforms->load();
 		$model->transforms->loadImage();
-		$mdoel->transforms->sourceFile = $model->fileName;
+		$model->transforms->sourceFile = $model->fileName;
 
 		if (false == $model->transforms->loaded) { $report .= "Transforms not loaded."; }
 
@@ -109,10 +145,15 @@ function images__cb_file_attach($args) {
 			$check = $model->transforms->reduce();
 		
 			if (false == $check) {
-				$report .= "Could not transform to smaller size:<br/>" . $model->fileName;
+				$report .= ''
+				 . "Could not transform to smaller size:<br/>\n"
+				 . $model->fileName . "<br/>\n"
+				 . "Last error: " . $model->transforms->lasterr . "<br/>\n";
+
 			} else {
 				$session->msg('Attached image.');
 			}
+
 		} else {
 			$report .= "Could not rescale image.";
 		}
@@ -128,7 +169,7 @@ function images__cb_file_attach($args) {
 			'refUID' => $model->UID, 
 			'fileName' => $model->fileName, 
 			'hash' => $kapenta->fileSha1($model->fileName), 
-			'size' => $kapenta->fileSize($model->fileName) 
+			'size' => $kapenta->fs->size($model->fileName) 
 		);
 
 		$kapenta->raiseEvent('*', 'file_added', $detail);

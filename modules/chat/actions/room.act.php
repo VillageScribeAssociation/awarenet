@@ -11,19 +11,19 @@
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403('[[::users::pleaselogin:]]', true); }
 
-	if ('' == $req->ref) { $page->do404('Room not specified.', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Room not specified.', true); }
 	
-	$model = new Chat_Room($req->ref);
+	$model = new Chat_Room($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Room not found.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/chat/actions/room.if.page.php');
-	$page->blockArgs['currentUserUID'] = $user->UID;
+	$kapenta->page->load('modules/chat/actions/room.if.page.php');
+	$kapenta->page->blockArgs['currentUserUID'] = $user->UID;
 
 	$ext = $model->extArray();
-	foreach($ext as $key => $value) { $page->blockArgs[$key] = $value; }
-	$page->render();
+	foreach($ext as $key => $value) { $kapenta->page->blockArgs[$key] = $value; }
+	$kapenta->page->render();
 
 ?>

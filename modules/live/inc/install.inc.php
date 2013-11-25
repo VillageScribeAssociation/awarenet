@@ -16,10 +16,15 @@
 //returns: html report or false if not authorized [string][bool]
 
 function live_install_module() {
-	global $db, $user;
+	global $db;
+	global $kapenta;
+	global $user;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Live_Chat table
@@ -56,12 +61,15 @@ function live_install_module() {
 
 function live_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Chat objects exists and is correct

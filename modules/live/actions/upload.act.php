@@ -79,7 +79,7 @@
 	//	get extension and discover which module handles files of this type
 	//----------------------------------------------------------------------------------------------
 	if ('' == $errmsg) {
-		$reg = $registry->search('live', 'live.file.');
+		$reg = $kapenta->registry->search('live', 'live.file.');
 
 		foreach($reg as $key => $value) {
 			$ext = str_replace('live.file.', '', $key);
@@ -104,7 +104,7 @@
 	//	get extension and discover which module handles files of this type
 	//----------------------------------------------------------------------------------------------
 	if ('' == $errmsg) {
-		$reg = $registry->search('live', 'live.file.');
+		$reg = $kapenta->registry->search('live', 'live.file.');
 
 		foreach($reg as $key => $value) {
 			$ext = str_replace('live.file.', '', $key);
@@ -126,7 +126,7 @@
 
 	if ('' == $errmsg) {
 		copy($tempFile, $kapenta->installPath . $path);				//	absolute locations
-		if (false == $kapenta->fileExists($path)) {
+		if (false == $kapenta->fs->exists($path)) {
 			$errmsg .= ''
 			 . "Could not copy temp file.<br/>\n"
 			 . "src: $tempFile<br/>\n"

@@ -13,7 +13,9 @@ function forums_summarylistall($args) {
 	global $db;
 	global $user;
 	global $aliases;
+	global $theme;
 
+	$count = 0;		//%	number of boards returned [int]
 	$num = 0;		//%	max number of threads to show per board [int]
 	$html = '';		//% return value [string]
 
@@ -37,18 +39,24 @@ function forums_summarylistall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	if (0 == $db->numRows($result)) { return "<div class='inlinequote'>no forums yet</div><br/>"; }
-
 	while ($row = $db->fetchAssoc($result)) { 
 		$row = $db->rmArray($row);
 		$schoolName = '';
 		if ('' == $row['school']) { $schoolName = 'General'; }
-		else { $schoolName = $aliases->getDefault('schools_school', $row['school']);  }
+		else {
+			$nameBlock = '[[:schools::name::schoolUID=' . $row['school'] . ':]]';
+			$schoolName = $theme->expandBlocks($nameBlock);
+		}
 
-		$html .= "[[:theme::navtitlebox::width=570::label=$schoolName:]]\n"
-			   . "[[:forums::summarylist::school=" . $row['school'] . ":]]\n";
+		$html .= ''
+		 . "[[:theme::navtitlebox::width=570::label=$schoolName:]]\n"
+		 . "<div class='spacer'></div>\n"
+		 . "[[:forums::summarylist::school=" . $row['school'] . ":]]\n";
 
+		$count++;
 	}	
+
+	if (0 == $count) { return "<div class='inlinequote'>no forums yet</div><br/>"; }
 
 	return $html;
 }

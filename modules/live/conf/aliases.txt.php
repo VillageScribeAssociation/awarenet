@@ -35,5 +35,7 @@ fileowner := admin.fileowner
 fo := admin.fileowner
 manifest := p2p.manifest
 revisions := revisions.revisions
+memcached := admin.memcached
+touch := live.touch
 
 */ ?>

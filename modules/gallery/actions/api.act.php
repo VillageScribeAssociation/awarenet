@@ -10,7 +10,7 @@ if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 //	list records owned by the current user
 //--------------------------------------------------------------------------------------------------
 
-if ($req->ref == 'myrecords') {
+if ($kapenta->request->ref == 'myrecords') {
 	$sql = "select * from gallery_gallery where createdBy='" . $user->UID . "' order by title";
 	$result = $db->query($sql);
 	

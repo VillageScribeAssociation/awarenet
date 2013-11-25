@@ -15,7 +15,7 @@
 
 	$set = new Chat_Rooms(true);
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		echo "Please choose a chat room:<br/>\n";
 		foreach($set->members as $item) {
 			if ('global' == $item['state']) {
@@ -25,7 +25,7 @@
 		die();
 	}
 
-	$model = new Chat_Room($req->ref);
+	$model = new Chat_Room($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Chat room not found.'); }
 
 	//----------------------------------------------------------------------------------------------

@@ -28,10 +28,10 @@ function calendar_show($args) {
 	$labels['eventStartString'] = '<b>Starting:</b> ' . $labels['eventStart'];
 	$labels['eventEndString'] = '<b>Ending:</b> ' . $labels['eventEnd'];
 
+
 	if ('' == trim($labels['venue'])) { $labels['venueString'] = ' '; }
 	if ('00:00' == trim($labels['eventStart'])) { $labels['eventStartString'] = ' '; }
 	if ('00:00' == trim($labels['eventEnd'])) { $labels['eventEndString'] = ' '; }
-
 
 	$html = $theme->replaceLabels($labels, $block);
 	return $html;

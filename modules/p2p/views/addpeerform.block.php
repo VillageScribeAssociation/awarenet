@@ -1,6 +1,5 @@
 <? /*
-[[:theme::navtitlebox::label=New Peer Server::toggle=divNewServerForm::hidden=yes:]]
-<div id='divNewServerForm' style='visibility: hidden; display: none;'>
+
 <h2>Add Peer</h2>
 <form name='addServer' method='POST' action='%%serverPath%%p2p/newpeer/'>
 <input type='hidden' name='action' value='newPeer' />
@@ -33,8 +32,5 @@
 
 <input type='submit' value='Add Peer >>' />
 </form>
-<hr/>
-</div>
-<br/>
 
 */ ?>

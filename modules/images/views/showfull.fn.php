@@ -38,13 +38,14 @@ function images_showfull($args) {
 	if (($model->createdBy == $user->UID) || ('admin' == $user->role)) {
 		$labels['rotateBlock'] =  "[[:images::rotatebuttons::imageUID=" . $model->UID . ":]]\n";
 		$labels['userEditBlock'] = ''
-		 . "<br/><br/>\n"
+		 . "<div class='block'>\n"
 		 . "[[:theme::navtitlebox::label=Edit::toggle=divEditImage::hidden=yes:]]\n"
 		 . "<div id='divEditImage' style='visibility: hidden; display: none;'>\n"
 		 . "[[:images::editform::return=show::imageUID=" . $model->UID . "::edittags=yes:]]\n"
 		 . $labels['rotateBlock']
 		 . "</div>\n"
-		 . "<div class='foot'></div>\n";
+		 . "<div class='foot'></div>\n"
+		 . "</div><br/>";
 	}	//TODO: user permission for this
 
 	$block = $theme->loadBlock('modules/images/views/showfull.block.php');

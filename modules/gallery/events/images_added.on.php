@@ -81,7 +81,7 @@ function gallery__cb_images_added($args) {
 
 		$notifications->addUser($nUID, $user->UID);
 		$notifications->addFriends($nUID, $user->UID);
-		$notifications->addFriends($nUID, $user->UID);
+		//$notifications->addFriends($nUID, $user->UID);
 		$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
 	}
 

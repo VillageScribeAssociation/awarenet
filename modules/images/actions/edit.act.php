@@ -10,8 +10,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check page arguments and authorisation
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
-	$model = new Images_Image($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Image not found.'); }
 	//if ('' == $model->fileName) { $page->do404(); }
 	if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
@@ -20,15 +20,15 @@
 	//TODO: add more auth options here
 
 	$return = '';
-	if (true == array_key_exists('return', $req->args)) { $return = $req->args['return']; }
+	if (true == array_key_exists('return', $kapenta->request->args)) { $return = $kapenta->request->args['return']; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	load the page :-)
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/images/actions/edit.if.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['return'] = $return;
-	$page->render();
+	$kapenta->page->load('modules/images/actions/edit.if.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['return'] = $return;
+	$kapenta->page->render();
 
 ?>

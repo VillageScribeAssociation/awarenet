@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+        <!-- For ChartBeat analytics START -->
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <!-- For ChartBeat analytics END -->
+        <title>Multiplying Whole Numbers and Applications 4 | Khan Academy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="description" content="U01_L3_T1_we4 Multiplying Whole Numbers and Applications 4" />
+        <meta name="keywords" content="U01_L3_T1_we4, Multiplying, Whole, Numbers, and, Applications" />
+        
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights START -->
+        <meta property="fb:page_id" content="159403248441" />
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights END -->
+        <meta property="og:title" content="The Khan Academy"/>
+        <meta property="og:type" content="non_profit"/>
+        <meta property="og:url" content="http://www.khanacademy.org"/>
+        <meta property="og:image" content="http://www.khanacademy.org/images/handtreehorizontal_facebook.png"/>
+        <meta property="og:site_name" content="khanacademy.org"/>
+        <meta property="fb:admins" content="100000121497109,718859633"/> 
+        <meta property="fb:app_id" content="160249463991765"/>
+        <meta property="og:description"
+              content="The Khan Academy is a not-for-profit 501(c)(3) with the mission of providing a world-class education to anyone, anywhere.  Despite being the work of one man, Salman Khan, this 1600+ video library is the most-used educational video resource as measured by YouTube video views per day and unique users per month."/>
+        <link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+        <script>var KA_VERSION = '1101.348262090236499247';</script>
+        
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shared-package/compressed.css?1101.348262090236499247" />
+
+
+
+        
+    <script type="text/javascript" src="/javascript/shared-package/compressed.js?1101.348262090236499247"></script>
+
+
+
+        <script type="text/javascript">
+            // Create a dummy version of each HTML5 element we use so that IE 6-8 can style them.
+            (function(){
+                var html5elements = ['header', 'footer', 'nav', 'article', 'section', 'menu'];
+                for (var i = 0; i < html5elements.length; i++) {
+                    document.createElement(html5elements[i]);
+                }
+            })();
+
+            $(function(){
+                // Configure the search form
+                $('#page_search input[type=text]').placeholder();
+                initAutocomplete();
+
+                // Make the CSS-only menus click-activated
+                var active_menu = undefined;
+                $('.noscript').removeClass('noscript');
+                $('.css-menu > ul > li').click(function() {
+                    if (active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                    }
+                    if ($(this) == active_menu) {
+                        active_menu = undefined
+                    }
+                    else {
+                        active_menu = $(this);
+                        $(this).addClass('css-menu-js-hover');
+                    }
+                });
+                $(document).bind("click focusin", function(e){
+                    if ($(e.target).closest(".css-menu").length == 0 && active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                        active_menu = undefined;
+                    }
+                });
+                // Make the CSS-only menus keyboard-accessible
+                $('.css-menu a').focus(function(e){
+                    $(e.target).addClass('css-menu-js-hover').closest(".css-menu > ul > li").addClass('css-menu-js-hover');
+                }).blur(function(e){
+                    $(e.target).removeClass('css-menu-js-hover').closest(".css-menu > ul > li").removeClass('css-menu-js-hover');
+                });
+            });
+
+
+
+            //Javascript for estimating the cumulative video views in real-time
+            function addCommas(nStr)
+	    {
+	        nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+		    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		}
+		return x1 + x2;
+	    }
+
+
+
+	    var seedTime = new Date(2010,9,31);  //Seed Date is set to October 31, 2010  0-January, 11-december
+	    var seedTotalViews = 28402468
+	    var seedDailyViews = 100000;
+
+	    var currentTime = new Date();
+	    var secondsSince = (currentTime.getTime()-seedTime.getTime())/1000;
+	    var viewsPerSecond = seedDailyViews/24/3600
+	    var estimatedTotalViews = Math.round(seedTotalViews + secondsSince*viewsPerSecond)
+
+	    var totalViewsString = addCommas(""+estimatedTotalViews);
+        
+
+
+
+        </script>
+        
+<style>
+    .breadcrumbs_nav {
+        font-weight: bold;
+    }
+    #video_dropdown {
+        display: none;
+        text-indent: 0;
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
+    #video_dropdown .ui-button {
+        display: block;
+    }
+    #video_menu {
+        position: relative;
+    }
+    #video_menu ol {
+        z-index: 2;
+    }
+    #video_dropdown ol {
+        max-height: 20em;
+        padding-left: 3em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        list-style: outside decimal;
+    }
+    #video_dropdown li {
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #video_dropdown li[data-selected=selected] a {
+        font-weight: bold;
+    }
+    #video_dropdown .ui-button-text, #video_dropdown .ui-menu-item a {
+        font-weight: normal;
+        line-height: inherit;
+        padding: 0px 25px 0px 1ex;
+    }
+    #video_dropdown .ui-menu-item a {
+        padding: 0px 25px 0px 0px;
+    }
+    #video_dropdown a:visited {
+        color: #DD6900;
+    }
+    #video_dropdown a:link:hover, #video_dropdown a:link:focus, #video_dropdown a:visited:hover, #video_dropdown a:visited:focus {
+        color: #DD6900;
+    }
+    .prev_next_nav {
+        display: block;
+        margin-top: 2em;
+        padding-bottom: .5ex;
+    }
+    .prev_next_nav a {
+        text-decoration: none;
+    }
+    .prev_next_nav a:hover {
+        text-decoration: underline;
+    }
+    #prev_video {
+        display: block;
+        float: left;
+        margin-right: 1em;
+        text-align: left;
+        background: url(/images/list-item-black-left.png) no-repeat 0 4px;
+        padding-top: 1px;
+        padding-left: 10px;
+        height: 20px;
+    }
+    #playlists {
+        display: block;
+        float: left;
+    }
+    #next_video {
+        display: block;
+        float: right;
+        margin-left: 1em;
+        text-align: right;
+        background: url(/images/list-item-black.png) no-repeat 100% 4px;
+        padding-top: 1px;
+        padding-right: 10px;
+        height: 20px;
+    }
+
+    #youtube_blocked {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+        color: red;
+        font-weight: bold;
+        clear: both;
+        padding-top: 1em;
+    }
+    .video #description {
+        padding-top: 20px;
+    }
+        .video #description h3 {
+            display: block;
+            margin: 0;
+            font-size: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .video #description h3 span.title {
+            color: #e45c02;
+        }
+        .video #description h3 span.long-description {
+            color: #555;
+            font-weight: normal;
+            position: relative;
+            top: -1px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    #page_sub_nav .breadcrumbs_nav {
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-left: -5px;
+        width: auto;
+    }
+    #page_sub_nav .breadcrumbs_nav a {
+        text-decoration: none;
+        padding: 0 5px;
+    }
+    #page_sub_nav .breadcrumbs_nav #video_menu {
+        text-transform: none;
+    }
+</style>
+<script>
+$(function(){
+    $('<img width=0 height=0>').error(function() {
+       $("#youtube_blocked").css("visibility", "visible").css("left", "0px").css("position", "relative");
+       $("#idOVideo").hide();
+       VideoStats.prepareAlternativePlayer(); // If YouTube is hidden, use the flv player for statistics
+    }).attr('src', 'http://www.youtube.com/favicon.ico?' + Math.random()).appendTo('#page-container');
+    $('#video_selector').hide();
+    $('#video_dropdown').css('display', 'inline-block');
+    var menu = $('#video_dropdown ol').menu();
+
+    // Set the width explicitly before positioning it absolutely to satisfy IE7.
+    menu.width(menu.width()).hide().css('position', 'absolute');
+
+    menu.bind("menuselect", function(e, ui){
+        window.location.href = ui.item.children('a').attr('href');
+    });
+    $(document).bind("click focusin", function(e){
+        if ($(e.target).closest("#video_dropdown").length == 0) {
+            menu.hide();
+        }
+    });
+    var button = $('#video_dropdown > a').button({
+        icons: {
+            secondary: 'ui-icon-triangle-1-s'
+        }
+    }).show().click(function(e){
+        if (menu.css('display') == 'none')
+            menu.show().menu("activate", e, $('#video_dropdown li[data-selected=selected]')).focus();
+        else
+            menu.hide();
+        e.preventDefault();
+    });
+});
+
+
+
+</script>
+
+
+	<!-- New, faster Google Analytics async tag START -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6742635-1']);
+	  _gaq.push(['_setDomainName', '.khanacademy.org']);
+	  _gaq.push(['_trackPageview']);
+
+	  // For OER Analytics
+	  _gaq.push(['ht._setAccount', 'UA-5033010-1']);
+	  _gaq.push(['ht._setDomainName', '.khanacademy.org']);
+	  _gaq.push(['ht._trackPageview']);
+
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- New, faster Google Analytics async tag END -->
+
+    </head>
+    <body>
+    <div id="page-container">
+        
+        
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({appId: '160249463991765', status: true, cookie: true,
+                     xfbml: true});
+    
+            
+                FB.Event.subscribe('auth.login', function(response) {
+                    window.location.reload();
+                });
+            
+    
+            FB.getLoginStatus(function(response) {
+               if (response.session) {
+                $('#page_logout').click(function(e) {
+                    FB.logout(function() { 
+                        window.location = $("#page_logout").attr("href"); 
+                    });
+                    e.preventDefault();
+                    return false;
+                });
+               }
+            });
+          };
+          (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+              '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+          }());
+        </script>
+        
+        
+    
+    	
+    	<script>document.writeln('<style scoped type="text/css">a[href="#"], .requires_script { visibility: visible; }</style>');</script>
+    
+            <header>
+                <div id="top-header">
+                    <div id="top-header-links">
+                        <span class="page_links" id="page_auth">
+                            
+                            <nav class="css-menu noscript" id="login-menu">
+                                <ul class="ui-corner-top">
+                                    <li class="ui-corner-top">
+                                        Login
+                                        <ul class="ui-corner-tr ui-corner-bottom">
+                                            <li id="page_login_options">
+                                                <a href="/login?openid_identifier=https://www.google.com/accounts/o8/id">Login with Google</a>
+                                            </li>
+                                            
+                                            <li><fb:login-button>Login with Facebook</fb:login-button></li>
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <span class="separator">&nbsp;</span>
+                            <a href="/donate" id="donate-link">Donate</a>
+                            <span class="separator">&nbsp;</span>
+                            <span id="social-links">
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Youtube-Subscribe-Header']);" href="http://www.youtube.com/khanacademy"><img src="/images/youtube.png" alt="YouTube" title="YouTube"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Twitter-Follow-Header']);" href="http://twitter.com/khanacademy"><img src="/images/twitter.png" alt="Twitter" title="Twitter"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Facebook-Join-Header']);" href="http://www.facebook.com/khanacademy"><img src="/images/facebook.png" alt="Facebook" title="Facebook"></a>
+                            </span>
+                            <span class="separator">&nbsp;</span>
+                            <span id="fb-like-badge">
+                                <fb:like id="page_fb_like" href="http://www.khanacademy.org" layout="button_count" show_faces="false" font="arial" ref="Like-Button-Top-Header-Left"></fb:like>
+                            </span>
+                        </span>
+                    </div>
+                    <div id="logo">
+                        <div id="logo-highlight">
+                            <a id="logo-image" href="/"><img src="/images/logo-no-highlight.png?1101.348262090236499247" alt="Khan Academy"></a>
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span id="page_visitors">
+                                <span id="page_num_visitors">
+                                    <!-- Content will get populated by javacript at end of page -->
+                                </span>&nbsp;lessons delivered
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div id="search-box">
+                    <form id="page_search" action="/search">
+                        <input id="search-input" type="text" placeholder="Search for a video or playlist" name="page_search_query" value='' class="ui-corner-left placeholder"><input type="submit" value=" " id="search-submit" />
+                    </form>
+                </div>
+                <div id="sitewide-navigation">
+                    <nav class="css-menu noscript" id="page_main_nav">
+                        <ul>
+                            <li class="ui-corner-top">
+                                Watch Videos
+                                <ul class="ui-corner-tr ui-corner-bottom">
+                                    <li>
+                                        <a href="/#browse">Browse by Topic</a>
+                                    </li>
+                                    <li>
+                                        <a href="/search">Search</a>
+                                    </li>
+                                    <li>
+                                        <a href="/downloads">Download</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="do-exercises" class="ui-corner-top">
+                                <div id="do-exercise-inner"><a href="/exercisedashboard">Do Exercises</a></div>
+                            </li>
+                            <li class="ui-corner-top">
+                                Join Us
+                                <ul class="ui-corner-tr">
+                                    <li>
+                                       <p>About Us</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/about">Overview</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#faq">Frequently Asked Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved#credits">Credits</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>Coaching Tools</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/students">Become a Coach</a>
+                                            </li>
+                                            <li>
+                                                <a href="/students">View Students</a>
+                                            </li>
+                                            <li>
+                                                <a href="/classreport">Class Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>How to Help</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/getinvolved#translation">Translate Videos</a>
+                                            </li>
+                                            <li>
+                                                <a href="http://sites.google.com/a/khanacademy.org/forge/for-developers/getting-started-with-the-code">Develop Software</a>
+                                            </li>
+                                            <li>
+                                                <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-multiplying-whole-numbers-and-applications-4">Report a Problem</a>
+                                            </li>
+                                            <li>
+                                                <a href="/donate">Donate</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved">Help in Other Ways</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#contactus">Contact Us</a>
+                                            </li>
+    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav id="page_sub_nav">
+                    
+<span class="breadcrumbs_nav">
+        <a href="/">All videos</a> &#187;
+        <a href="/?video=multiplying-whole-numbers-and-applications-4#Developmental%20Math">Developmental Math</a> &#187;
+    <form id="video_selector">
+        <select name="v">
+            
+            <option  value="jxA8MffVmPs">Place Value 1</option>
+            
+            <option  value="wd4cRAoBOiE">Place Value 2</option>
+            
+            <option  value="iK0y39rjBgQ">Place Value 3</option>
+            
+            <option  value="_qzs1zozTBo">Rounding Whole Numbers 1</option>
+            
+            <option  value="fh8gkPW_6g4">Rounding Whole Numbers 2</option>
+            
+            <option  value="3jBfLaLrk6I">Rounding Whole Numbers 3</option>
+            
+            <option  value="9Jg5S7F2SMQ">Comparing Whole Numbers</option>
+            
+            <option  value="KMwzeYAtJDc">Comparing Whole Numbers 2</option>
+            
+            <option  value="zVqLlUpCnd0">Comparing Whole Numbers 3</option>
+            
+            <option  value="b22tMEc6Kko">Adding Whole Numbers and Applications 1</option>
+            
+            <option  value="8TD6iDzt4oQ">Adding Whole Numbers and Applications 2</option>
+            
+            <option  value="YB2ATNCMciY">Adding Whole Numbers and Applications 3</option>
+            
+            <option  value="-HaI9U9w3CM">Adding Whole Numbers and Applications 4</option>
+            
+            <option  value="XBarsXzUtuE">Rounding to Estimate Differences</option>
+            
+            <option  value="lNfZQNWZklI">Rounding to Estimate Sums</option>
+            
+            <option  value="j21X53Rwqt4">Rounding to Estimate Sums 2</option>
+            
+            <option  value="Yw3EoxC_GXU">Multiplying Whole Numbers and Applications 1</option>
+            
+            <option  value="0WUXQNjdRvM">Multiplying Whole Numbers and Applications 2</option>
+            
+            <option  value="CCPrxewq4bU">Multiplying Whole Numbers and Applications 3</option>
+            
+            <option selected value="tx2Niw7aJJ8">Multiplying Whole Numbers and Applications 4</option>
+            
+            <option  value="_AP6rM49rOc">Multiplying Whole Numbers and Applications 5</option>
+            
+            <option  value="4I9iibPLdBw">Dividing Whole Numbers and Applications 1</option>
+            
+            <option  value="chWcaZSLmHE">Dividing Whole Numbers and Applications 2</option>
+            
+            <option  value="qoDJwyyD_pg">Dividing Whole Numbers and Applications 3</option>
+            
+            <option  value="4yp5v64XuRc">Dividing Whole Numbers and Applications 4</option>
+            
+            <option  value="MS7k0BVR_uM">Dividing Whole Numbers and Applications 5</option>
+            
+            <option  value="SQ523h4CTMM">Dividing Whole Numbers and Applications 6</option>
+            
+            <option  value="HhwqS_d7Qp8">Properties of Whole Numbers</option>
+            
+            <option  value="6nZp2QGeQ9k">Identity Property of 1</option>
+            
+            <option  value="HwSszh3L358">Commutative Law of Addition</option>
+            
+            <option  value="ENKH97PYssg">Commutative Law of Multiplication</option>
+            
+            <option  value="oTKVXJ7TcbA">Associative Law of Addition</option>
+            
+            <option  value="5RzDVNob0-0">Associative Law of Multiplication</option>
+            
+            <option  value="gl_-E6iVAg4">The Distributive Property</option>
+            
+            <option  value="Badvask-UDU">The Distributive Property 2</option>
+            
+            <option  value="mJ1P4A-KA8k">Understanding Exponents</option>
+            
+            <option  value="5qfOViJda_g">Understanding Exponents 2</option>
+            
+            <option  value="ROIfbUQrSY4">Understanding Square Roots</option>
+            
+            <option  value="GiSpzFKI5_w">Order of Operations</option>
+            
+            <option  value="_xuXwHhqNUg">Order of Operations 2</option>
+            
+            <option  value="3XOt1fjWKi8">Numerator and Denominator of a Fraction</option>
+            
+            <option  value="-a_w0_VAo6U">Identifying Fraction Parts</option>
+            
+            <option  value="cLYa05dOy8E">Proper and Improper Fractions</option>
+            
+            <option  value="xkg7370cpjs">Changing a Mixed Number to an Improper Fraction</option>
+            
+            <option  value="8JyPzTeA_8w">Changing an Improper Fraction to a Mixed Number</option>
+            
+            <option  value="2G_Jr_XpnY4">Recognizing Divisibility</option>
+            
+            <option  value="vcn2ruTOwFo">Finding Factors of a Number</option>
+            
+            <option  value="ZKKDTfHcsG0">Prime Factorization</option>
+            
+            <option  value="0JW9P_T4P_Y">Equivalent Fractions</option>
+            
+            <option  value="WPimvspI0_c">Fractions in lowest terms</option>
+            
+            <option  value="Io9i1JkKgN4">Comparing Fractions</option>
+            
+            <option  value="EiXl9g3TRvw">Comparing Fractions 2</option>
+            
+            <option  value="CTKMK1ZGLuk">Multiplying Fractions</option>
+            
+            <option  value="RPhaidW0dmY">Multiplying  Mixed Numbers</option>
+            
+            <option  value="p729tFmpOXg">Multiplying Fractions and Mixed Numbers</option>
+            
+            <option  value="YJgIGwTysk0">Multiplying Fractions Word Problem</option>
+            
+            <option  value="6YYiiixYz9A">Reciprocal of a Mixed Number</option>
+            
+            <option  value="tnkPY4UqJ44">Dividing Fractions</option>
+            
+            <option  value="51-U-Jkq79A">Dividing Mixed Numbers</option>
+            
+            <option  value="aNeCGxJVG7w">Dividing Mixed Numbers and Fractions</option>
+            
+            <option  value="PQsgXNggV7Q">Dividing Fractions Word Problem</option>
+            
+            <option  value="EJjnEau6aeI">Adding Fractions with Like Denominators</option>
+            
+            <option  value="OVMceVL_CEQ">Adding Fractions with Unlike Denominators</option>
+            
+            <option  value="4TBVB4hLQhY">Adding Mixed Numbers</option>
+            
+            <option  value="CfBYGFm5gPA">Adding Mixed Numbers with Unlike Denominators</option>
+            
+            <option  value="o0arqcKC7QE">Adding Mixed Numbers Word Problem</option>
+            
+            <option  value="UbUdyE1_b9g">Subtracting  Fractions</option>
+            
+            <option  value="WF7L2waDwLw">Subtracting Mixed Numbers</option>
+            
+            <option  value="4LYtLMmDuzw">Subtracting Mixed Numbers 2</option>
+            
+            <option  value="tj9oLZYA-AQ">Subtracting Mixed Numbers Word Problem</option>
+            
+            <option  value="x-Dqe5U1TXA">Decimal Place Value</option>
+            
+            <option  value="AuD2TX-90Cc">Decimal Place Value 2</option>
+            
+            <option  value="NzIoHQfStoM">Decimals and Fractions</option>
+            
+            <option  value="HCC96awA-FM">Comparing Decimals</option>
+            
+            <option  value="_MIn3zFkEcc">Rounding Decimals</option>
+            
+            <option  value="w616LEmrHVE">Adding Decimals</option>
+            
+            <option  value="Eq4mVCd-yyo">Subtracting Decimals</option>
+            
+            <option  value="hy_bDS3aHO4">Subtracting Decimals Word Problem</option>
+            
+            <option  value="JEHejQphIYc">Multiplying Decimals</option>
+            
+            <option  value="1fnzY3WypMA">Multiplying Decimals 2</option>
+            
+            <option  value="Nqts8zW8RxM">Dividing Decimals</option>
+            
+            <option  value="D_E4Jws71rE">Dividing Decimals 2</option>
+            
+            <option  value="HLGCq2h4ihY">Dividing Decimals 2.1</option>
+            
+            <option  value="W7dImsrVa0Y">Mulitplyling Decimals 3</option>
+            
+            <option  value="BkwI6Uu0vi4">Estimation with Decimals</option>
+            
+            <option  value="JWmCiZwoyMs">Ratios as Fractions in Simplest Form</option>
+            
+            <option  value="p5nomPfUF9k">Simplifying Rates and Ratios</option>
+            
+            <option  value="Zm0KaIw-35k">Finding Unit Rates</option>
+            
+            <option  value="d7rAlcNHDUI">Finding Unit Prices</option>
+            
+            <option  value="V3FvaClh6LY">Understanding Proportions</option>
+            
+            <option  value="e_6lyl3Lq-c">Find an Unknown in a Proportion</option>
+            
+            <option  value="biL7ILa6P6A">Find an Unknown in a Proportion 2</option>
+            
+            <option  value="Lvr2YsxG10o">Describing the Meaning of Percent</option>
+            
+            <option  value="MokI3Fi8jpc">Describing the Meaning of Percent 2</option>
+            
+            <option  value="-gB1y-PMWfs">Representing a number as a decimal, percent, and fraction</option>
+            
+            <option  value="Hkwfibux88s">Representing a number as a decimal, percent, and fraction 2</option>
+            
+            <option  value="TvSKeTFsaj4">Solving Percent Problems</option>
+            
+            <option  value="N4kDzoQOngY">Solving Percent Problems 2</option>
+            
+            <option  value="DAikW24_O0A">Solving Percent Problems 3</option>
+            
+            <option  value="8C5kAIKLcZo">Converting Yards into Inches</option>
+            
+            <option  value="CAXqVVxn9zA">Adding different units of length</option>
+            
+            <option  value="AGFO-ROxH_I">Converting units of length</option>
+            
+            <option  value="IrvEHVn-fks">Converting pounds to ounces</option>
+            
+            <option  value="gRAwbGqnEqk">Adding different units for weight</option>
+            
+            <option  value="gnCL_0uA6Ds">Application problems involving units of weight</option>
+            
+            <option  value="4uQtJDf7drU">Converting Gallons to quarts pints and cups</option>
+            
+            <option  value="hShqXKpI6KA">Performing arithmetic calculations on units of volume</option>
+            
+            <option  value="KgoXx_58QyQ">Solving application problems involving units of volume</option>
+            
+            <option  value="y2RHWA7t0WM">U.S. Customary and Metric units</option>
+            
+            <option  value="SYkmadc2wOI">Conversion between metric units</option>
+            
+            <option  value="uHaKyNplino">Converting within the metric system</option>
+            
+            <option  value="CDvPPsB3nEM">Applying the Metric System</option>
+            
+            <option  value="aASUZqJCHHA">Comparing Celsius and Farenheit temperature scales</option>
+            
+            <option  value="p7TtcisPQN4">Converting Farenheit to Celsius</option>
+            
+            <option  value="AJNDeVt9UOo">Variables and Expressions 1</option>
+            
+            <option  value="pc4r1Z2PwWo">Locate integers on a number line</option>
+            
+            <option  value="r6hS_8nm1jM">Absolute Value of Integers</option>
+            
+            <option  value="zsnkK43UtfY">Opposite of a given number</option>
+            
+            <option  value="pu4tn_Yl4_k">Number Sets</option>
+            
+            <option  value="uC09taczvOo">Points on a number line</option>
+            
+            <option  value="j3ty_c9Fulg">Adding integers with same sign</option>
+            
+            <option  value="NrVvu7cM8_o">Adding integers with different signs</option>
+            
+            <option  value="3O1wcDGXEgA">Adding real numbers with different signs</option>
+            
+            <option  value="QS1LMomm0Gk">Adding fractions with different signs</option>
+            
+            <option  value="uXTRmzXlorI">Identity property of 0</option>
+            
+            <option  value="5liQvZAC7-Q">Application of addition of real numbers</option>
+            
+            <option  value="yeiroTpHFmg">Subtracting real numbers</option>
+            
+            <option  value="jvad-axh3ww">Adding and subtracting real numbers</option>
+            
+            <option  value="T2RQxi76aig">Adding and subtracting real numbers application</option>
+            
+            <option  value="4ve7OaCnDLs">Multiplying negative real numbers</option>
+            
+            <option  value="hrNeFsCBq_8">Dividing real numbers with different signs</option>
+            
+            <option  value="_86K0yQ8BQY">Identity property of 1</option>
+            
+            <option  value="BdDkQJ0rolc">Multiplying real number application</option>
+            
+            <option  value="UeG_EYd-0xw">Commutative Property for Addition</option>
+            
+            <option  value="fUgkIcx82xY">Associative property for multiplication</option>
+            
+            <option  value="uu0Cchc7T14">Distributive property</option>
+            
+            <option  value="gjrGd9TjjnY">Order of Operations</option>
+            
+            <option  value="_sJXUM8W4LY">Order of Operations 2</option>
+            
+            <option  value="VidnbCEOGdg">Solving One-Step Equations</option>
+            
+            <option  value="DqeMQHomwAU">Solving One-Step Equations 2</option>
+            
+            <option  value="CGS0vihzSlc">Multi-step equations 1</option>
+            
+            <option  value="CJyVct57-9s">Multi-step equations 2</option>
+            
+            <option  value="zKotuhQWIRg">Equation Special Cases</option>
+            
+            <option  value="iimpwYBiKNg">Application problems with equation in one variable</option>
+            
+            <option  value="tC1SfxRvtmM">Evaluate a formula using substitution</option>
+            
+            <option  value="eTSVTTg_QZ4">Rearrange formulas to isolate specific variables</option>
+            
+            <option  value="dTwZ5N126gw">Inequalities on a number line</option>
+            
+            <option  value="17a443nL7Qw">One-Step Inequalities</option>
+            
+            <option  value="D1cKk48kz-E">One-Step Inequalities 2</option>
+            
+            <option  value="hl7g82m_BgA">Multi-Step Inequalities</option>
+            
+            <option  value="XOAn5z8mkvI">Multi-Step Inequalities 2</option>
+            
+            <option  value="0YErxSShF0A">Compund Inequalities</option>
+            
+            <option  value="d2cnQ5ahHgE">Compund Inequalities 2</option>
+            
+            <option  value="2ocKyW1L_hQ">Compound Inequalities 3</option>
+            
+            <option  value="ZF_cZ-GX9PI">Compound Inequalities 4</option>
+            
+            <option  value="LRlVWC0FMQc">Absolute Value Equations</option>
+            
+            <option  value="YKQLZOq4HTA">Absolute Value Inequalities</option>
+            
+            <option  value="w5YltRetIQ0">Absolute Value Equations 2</option>
+            
+            <option  value="0uCslW40VHQ">Evaluating exponential expressions</option>
+            
+            <option  value="NEaLgGi4Vh4">Evaluating exponential expressions 2</option>
+            
+            <option  value="U8kmaUXaPJY">Evaluating exponential expressions 3</option>
+            
+            <option  value="-TpiL4J_yUA">Exponent Properties 1</option>
+            
+            <option  value="tvj42WdKlH4">Exponent Properties 2</option>
+            
+            <option  value="Of8ezQj1hRk">Exponent Properties 3</option>
+            
+            <option  value="X6zD3SoN3iY">Exponent Properties 4</option>
+            
+            <option  value="4jhG7g5qgO0">Exponent Properties 5</option>
+            
+            <option  value="BwmTemng9lc">Exponent Properties 6</option>
+            
+            <option  value="IF-8VOiEOes">Exponent Properties 7</option>
+            
+            <option  value="6phoVfGKKec">Scientific Notation I</option>
+            
+            <option  value="xxAFh-qHPPA">Scientific Notation 2</option>
+            
+            <option  value="dD71fFNwVJw">Scientific Notation 3</option>
+            
+            <option  value="REiDXCN0lGU">Terms coefficients and exponents in a polynomial</option>
+            
+            <option  value="03yq7XsErqo">Evaluating a polynomial at a given value</option>
+            
+            <option  value="vN0aL-_vIKM">Simply a polynomial</option>
+            
+            <option  value="Oe1PKI_6-38">Adding Polynomials</option>
+            
+            <option  value="pb8vGcMlRmU">Opposite of a Polynomial</option>
+            
+            <option  value="5ZdxnFspyP8">Subtracting Polynomials</option>
+            
+            <option  value="ssY1dFl7d30">Multiplying Monomials</option>
+            
+            <option  value="pD2-H15ucNE">Multiplying Monomials by Polynomials</option>
+            
+            <option  value="ZMLFfTX615w">Multiplying Binomials</option>
+            
+            <option  value="yJzLYa-_Y1k">Multiplying Polynomials</option>
+            
+            <option  value="h6HmHjkA034">Special Polynomials Products 1</option>
+            
+            <option  value="xjkbR7Gjgjs">Square a Binomial</option>
+            
+            <option  value="4Eax48gDg9g">Dividing Monomials</option>
+            
+            <option  value="UquFdMg6Z_U">Polynomial divided by monomial</option>
+            
+            <option  value="8Wxw9bpKEGQ">Dividing polynomials 1</option>
+            
+            <option  value="pLCmwHsDYqo">Dividing polynomials with remainders</option>
+            
+            <option  value="UH0HuxtBhEM">Evaluating an expression with multiple variables</option>
+            
+            <option  value="MjAcASWqZS4">Simplifying an expression with multiple variables</option>
+            
+            <option  value="c0iXgjXt1ZQ">Adding polynomials with multiple variables</option>
+            
+            <option  value="AqMT_zB9rP8">Subtracting polynomials with multiple variables</option>
+            
+            <option  value="D6mivA_8L8U">More multiplying polynomials</option>
+            
+            <option  value="Yu00YJ3tAlo">Dividing multivariable polynomial with monomial</option>
+            
+        </select>
+        <button type="submit">Go</button>
+    </form>
+    <span id="video_dropdown">
+        <a href="/video/multiplying-whole-numbers-and-applications-4?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 4</a>
+        <div id="video_menu">
+            <ol>
+                
+                <li data-selected=''><a href="/video/place-value-1?playlist=Developmental%20Math">Place Value 1</a></li>
+                
+                <li data-selected=''><a href="/video/place-value-2?playlist=Developmental%20Math">Place Value 2</a></li>
+                
+                <li data-selected=''><a href="/video/place-value-3?playlist=Developmental%20Math">Place Value 3</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-whole-numbers-1?playlist=Developmental%20Math">Rounding Whole Numbers 1</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-whole-numbers-2?playlist=Developmental%20Math">Rounding Whole Numbers 2</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-whole-numbers-3?playlist=Developmental%20Math">Rounding Whole Numbers 3</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-whole-numbers?playlist=Developmental%20Math">Comparing Whole Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-whole-numbers-2?playlist=Developmental%20Math">Comparing Whole Numbers 2</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-whole-numbers-3?playlist=Developmental%20Math">Comparing Whole Numbers 3</a></li>
+                
+                <li data-selected=''><a href="/video/adding-whole-numbers-and-applications-1?playlist=Developmental%20Math">Adding Whole Numbers and Applications 1</a></li>
+                
+                <li data-selected=''><a href="/video/adding-whole-numbers-and-applications-2?playlist=Developmental%20Math">Adding Whole Numbers and Applications 2</a></li>
+                
+                <li data-selected=''><a href="/video/adding-whole-numbers-and-applications-3?playlist=Developmental%20Math">Adding Whole Numbers and Applications 3</a></li>
+                
+                <li data-selected=''><a href="/video/adding-whole-numbers-and-applications-4?playlist=Developmental%20Math">Adding Whole Numbers and Applications 4</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-to-estimate-differences?playlist=Developmental%20Math">Rounding to Estimate Differences</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-to-estimate-sums?playlist=Developmental%20Math">Rounding to Estimate Sums</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-to-estimate-sums-2?playlist=Developmental%20Math">Rounding to Estimate Sums 2</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-whole-numbers-and-applications-1?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 1</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-whole-numbers-and-applications-2?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 2</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-whole-numbers-and-applications-3?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 3</a></li>
+                
+                <li data-selected='selected'><a href="/video/multiplying-whole-numbers-and-applications-4?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 4</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-whole-numbers-and-applications-5?playlist=Developmental%20Math">Multiplying Whole Numbers and Applications 5</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-1?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 1</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-2?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 2</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-3?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 3</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-4?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 4</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-5?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 5</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-whole-numbers-and-applications-6?playlist=Developmental%20Math">Dividing Whole Numbers and Applications 6</a></li>
+                
+                <li data-selected=''><a href="/video/properties-of-whole-numbers?playlist=Developmental%20Math">Properties of Whole Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/identity-property-of-1?playlist=Developmental%20Math">Identity Property of 1</a></li>
+                
+                <li data-selected=''><a href="/video/commutative-law-of-addition?playlist=Developmental%20Math">Commutative Law of Addition</a></li>
+                
+                <li data-selected=''><a href="/video/commutative-law-of-multiplication?playlist=Developmental%20Math">Commutative Law of Multiplication</a></li>
+                
+                <li data-selected=''><a href="/video/associative-law-of-addition?playlist=Developmental%20Math">Associative Law of Addition</a></li>
+                
+                <li data-selected=''><a href="/video/associative-law-of-multiplication?playlist=Developmental%20Math">Associative Law of Multiplication</a></li>
+                
+                <li data-selected=''><a href="/video/the-distributive-property?playlist=Developmental%20Math">The Distributive Property</a></li>
+                
+                <li data-selected=''><a href="/video/the-distributive-property-2?playlist=Developmental%20Math">The Distributive Property 2</a></li>
+                
+                <li data-selected=''><a href="/video/understanding-exponents?playlist=Developmental%20Math">Understanding Exponents</a></li>
+                
+                <li data-selected=''><a href="/video/understanding-exponents-2?playlist=Developmental%20Math">Understanding Exponents 2</a></li>
+                
+                <li data-selected=''><a href="/video/understanding-square-roots?playlist=Developmental%20Math">Understanding Square Roots</a></li>
+                
+                <li data-selected=''><a href="/video/order-of-operations?playlist=Developmental%20Math">Order of Operations</a></li>
+                
+                <li data-selected=''><a href="/video/order-of-operations-2?playlist=Developmental%20Math">Order of Operations 2</a></li>
+                
+                <li data-selected=''><a href="/video/numerator-and-denominator-of-a-fraction?playlist=Developmental%20Math">Numerator and Denominator of a Fraction</a></li>
+                
+                <li data-selected=''><a href="/video/identifying-fraction-parts?playlist=Developmental%20Math">Identifying Fraction Parts</a></li>
+                
+                <li data-selected=''><a href="/video/proper-and-improper-fractions?playlist=Developmental%20Math">Proper and Improper Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/changing-a-mixed-number-to-an-improper-fraction?playlist=Developmental%20Math">Changing a Mixed Number to an Improper Fraction</a></li>
+                
+                <li data-selected=''><a href="/video/changing-an-improper-fraction-to-a-mixed-number?playlist=Developmental%20Math">Changing an Improper Fraction to a Mixed Number</a></li>
+                
+                <li data-selected=''><a href="/video/recognizing-divisibility?playlist=Developmental%20Math">Recognizing Divisibility</a></li>
+                
+                <li data-selected=''><a href="/video/finding-factors-of-a-number?playlist=Developmental%20Math">Finding Factors of a Number</a></li>
+                
+                <li data-selected=''><a href="/video/prime-factorization?playlist=Developmental%20Math">Prime Factorization</a></li>
+                
+                <li data-selected=''><a href="/video/equivalent-fractions?playlist=Developmental%20Math">Equivalent Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/fractions-in-lowest-terms?playlist=Developmental%20Math">Fractions in lowest terms</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-fractions?playlist=Developmental%20Math">Comparing Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-fractions-2?playlist=Developmental%20Math">Comparing Fractions 2</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-fractions?playlist=Developmental%20Math">Multiplying Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying--mixed-numbers?playlist=Developmental%20Math">Multiplying  Mixed Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-fractions-and-mixed-numbers?playlist=Developmental%20Math">Multiplying Fractions and Mixed Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-fractions-word-problem?playlist=Developmental%20Math">Multiplying Fractions Word Problem</a></li>
+                
+                <li data-selected=''><a href="/video/reciprocal-of-a-mixed-number?playlist=Developmental%20Math">Reciprocal of a Mixed Number</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-fractions?playlist=Developmental%20Math">Dividing Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-mixed-numbers?playlist=Developmental%20Math">Dividing Mixed Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-mixed-numbers-and-fractions?playlist=Developmental%20Math">Dividing Mixed Numbers and Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-fractions-word-problem?playlist=Developmental%20Math">Dividing Fractions Word Problem</a></li>
+                
+                <li data-selected=''><a href="/video/adding-fractions-with-like-denominators?playlist=Developmental%20Math">Adding Fractions with Like Denominators</a></li>
+                
+                <li data-selected=''><a href="/video/adding-fractions-with-unlike-denominators?playlist=Developmental%20Math">Adding Fractions with Unlike Denominators</a></li>
+                
+                <li data-selected=''><a href="/video/adding-mixed-numbers?playlist=Developmental%20Math">Adding Mixed Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/adding-mixed-numbers-with-unlike-denominators?playlist=Developmental%20Math">Adding Mixed Numbers with Unlike Denominators</a></li>
+                
+                <li data-selected=''><a href="/video/adding-mixed-numbers-word-problem?playlist=Developmental%20Math">Adding Mixed Numbers Word Problem</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting--fractions?playlist=Developmental%20Math">Subtracting  Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-mixed-numbers?playlist=Developmental%20Math">Subtracting Mixed Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-mixed-numbers-2?playlist=Developmental%20Math">Subtracting Mixed Numbers 2</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-mixed-numbers-word-problem?playlist=Developmental%20Math">Subtracting Mixed Numbers Word Problem</a></li>
+                
+                <li data-selected=''><a href="/video/decimal-place-value?playlist=Developmental%20Math">Decimal Place Value</a></li>
+                
+                <li data-selected=''><a href="/video/decimal-place-value-2?playlist=Developmental%20Math">Decimal Place Value 2</a></li>
+                
+                <li data-selected=''><a href="/video/decimals-and-fractions?playlist=Developmental%20Math">Decimals and Fractions</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-decimals?playlist=Developmental%20Math">Comparing Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/rounding-decimals?playlist=Developmental%20Math">Rounding Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/adding-decimals?playlist=Developmental%20Math">Adding Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-decimals?playlist=Developmental%20Math">Subtracting Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-decimals-word-problem?playlist=Developmental%20Math">Subtracting Decimals Word Problem</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-decimals?playlist=Developmental%20Math">Multiplying Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-decimals-2?playlist=Developmental%20Math">Multiplying Decimals 2</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-decimals?playlist=Developmental%20Math">Dividing Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-decimals-2?playlist=Developmental%20Math">Dividing Decimals 2</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-decimals-2-1?playlist=Developmental%20Math">Dividing Decimals 2.1</a></li>
+                
+                <li data-selected=''><a href="/video/mulitplyling-decimals-3?playlist=Developmental%20Math">Mulitplyling Decimals 3</a></li>
+                
+                <li data-selected=''><a href="/video/estimation-with-decimals?playlist=Developmental%20Math">Estimation with Decimals</a></li>
+                
+                <li data-selected=''><a href="/video/ratios-as-fractions-in-simplest-form?playlist=Developmental%20Math">Ratios as Fractions in Simplest Form</a></li>
+                
+                <li data-selected=''><a href="/video/simplifying-rates-and-ratios?playlist=Developmental%20Math">Simplifying Rates and Ratios</a></li>
+                
+                <li data-selected=''><a href="/video/finding-unit-rates?playlist=Developmental%20Math">Finding Unit Rates</a></li>
+                
+                <li data-selected=''><a href="/video/finding-unit-prices?playlist=Developmental%20Math">Finding Unit Prices</a></li>
+                
+                <li data-selected=''><a href="/video/understanding-proportions?playlist=Developmental%20Math">Understanding Proportions</a></li>
+                
+                <li data-selected=''><a href="/video/find-an-unknown-in-a-proportion?playlist=Developmental%20Math">Find an Unknown in a Proportion</a></li>
+                
+                <li data-selected=''><a href="/video/find-an-unknown-in-a-proportion-2?playlist=Developmental%20Math">Find an Unknown in a Proportion 2</a></li>
+                
+                <li data-selected=''><a href="/video/describing-the-meaning-of-percent?playlist=Developmental%20Math">Describing the Meaning of Percent</a></li>
+                
+                <li data-selected=''><a href="/video/describing-the-meaning-of-percent-2?playlist=Developmental%20Math">Describing the Meaning of Percent 2</a></li>
+                
+                <li data-selected=''><a href="/video/representing-a-number-as-a-decimal--percent--and-fraction?playlist=Developmental%20Math">Representing a number as a decimal, percent, and fraction</a></li>
+                
+                <li data-selected=''><a href="/video/representing-a-number-as-a-decimal--percent--and-fraction-2?playlist=Developmental%20Math">Representing a number as a decimal, percent, and fraction 2</a></li>
+                
+                <li data-selected=''><a href="/video/solving-percent-problems?playlist=Developmental%20Math">Solving Percent Problems</a></li>
+                
+                <li data-selected=''><a href="/video/solving-percent-problems-2?playlist=Developmental%20Math">Solving Percent Problems 2</a></li>
+                
+                <li data-selected=''><a href="/video/solving-percent-problems-3?playlist=Developmental%20Math">Solving Percent Problems 3</a></li>
+                
+                <li data-selected=''><a href="/video/converting-yards-into-inches?playlist=Developmental%20Math">Converting Yards into Inches</a></li>
+                
+                <li data-selected=''><a href="/video/adding-different-units-of-length?playlist=Developmental%20Math">Adding different units of length</a></li>
+                
+                <li data-selected=''><a href="/video/converting-units-of-length?playlist=Developmental%20Math">Converting units of length</a></li>
+                
+                <li data-selected=''><a href="/video/converting-pounds-to-ounces?playlist=Developmental%20Math">Converting pounds to ounces</a></li>
+                
+                <li data-selected=''><a href="/video/adding-different-units-for-weight?playlist=Developmental%20Math">Adding different units for weight</a></li>
+                
+                <li data-selected=''><a href="/video/application-problems-involving-units-of-weight?playlist=Developmental%20Math">Application problems involving units of weight</a></li>
+                
+                <li data-selected=''><a href="/video/converting-gallons-to-quarts-pints-and-cups?playlist=Developmental%20Math">Converting Gallons to quarts pints and cups</a></li>
+                
+                <li data-selected=''><a href="/video/performing-arithmetic-calculations-on-units-of-volume?playlist=Developmental%20Math">Performing arithmetic calculations on units of volume</a></li>
+                
+                <li data-selected=''><a href="/video/solving-application-problems-involving-units-of-volume?playlist=Developmental%20Math">Solving application problems involving units of volume</a></li>
+                
+                <li data-selected=''><a href="/video/u-s--customary-and-metric-units?playlist=Developmental%20Math">U.S. Customary and Metric units</a></li>
+                
+                <li data-selected=''><a href="/video/conversion-between-metric-units?playlist=Developmental%20Math">Conversion between metric units</a></li>
+                
+                <li data-selected=''><a href="/video/converting-within-the-metric-system?playlist=Developmental%20Math">Converting within the metric system</a></li>
+                
+                <li data-selected=''><a href="/video/applying-the-metric-system?playlist=Developmental%20Math">Applying the Metric System</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-celsius-and-farenheit-temperature-scales?playlist=Developmental%20Math">Comparing Celsius and Farenheit temperature scales</a></li>
+                
+                <li data-selected=''><a href="/video/converting-farenheit-to-celsius?playlist=Developmental%20Math">Converting Farenheit to Celsius</a></li>
+                
+                <li data-selected=''><a href="/video/variables-and-expressions-1?playlist=Developmental%20Math">Variables and Expressions 1</a></li>
+                
+                <li data-selected=''><a href="/video/locate-integers-on-a-number-line?playlist=Developmental%20Math">Locate integers on a number line</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-of-integers?playlist=Developmental%20Math">Absolute Value of Integers</a></li>
+                
+                <li data-selected=''><a href="/video/opposite-of-a-given-number?playlist=Developmental%20Math">Opposite of a given number</a></li>
+                
+                <li data-selected=''><a href="/video/number-sets?playlist=Developmental%20Math">Number Sets</a></li>
+                
+                <li data-selected=''><a href="/video/points-on-a-number-line?playlist=Developmental%20Math">Points on a number line</a></li>
+                
+                <li data-selected=''><a href="/video/adding-integers-with-same-sign?playlist=Developmental%20Math">Adding integers with same sign</a></li>
+                
+                <li data-selected=''><a href="/video/adding-integers-with-different-signs?playlist=Developmental%20Math">Adding integers with different signs</a></li>
+                
+                <li data-selected=''><a href="/video/adding-real-numbers-with-different-signs?playlist=Developmental%20Math">Adding real numbers with different signs</a></li>
+                
+                <li data-selected=''><a href="/video/adding-fractions-with-different-signs?playlist=Developmental%20Math">Adding fractions with different signs</a></li>
+                
+                <li data-selected=''><a href="/video/identity-property-of-0?playlist=Developmental%20Math">Identity property of 0</a></li>
+                
+                <li data-selected=''><a href="/video/application-of-addition-of-real-numbers?playlist=Developmental%20Math">Application of addition of real numbers</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-real-numbers?playlist=Developmental%20Math">Subtracting real numbers</a></li>
+                
+                <li data-selected=''><a href="/video/adding-and-subtracting-real-numbers?playlist=Developmental%20Math">Adding and subtracting real numbers</a></li>
+                
+                <li data-selected=''><a href="/video/adding-and-subtracting-real-numbers-application?playlist=Developmental%20Math">Adding and subtracting real numbers application</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-negative-real-numbers?playlist=Developmental%20Math">Multiplying negative real numbers</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-real-numbers-with-different-signs?playlist=Developmental%20Math">Dividing real numbers with different signs</a></li>
+                
+                <li data-selected=''><a href="/video/identity-property-of-1?playlist=Developmental%20Math">Identity property of 1</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-real-number-application?playlist=Developmental%20Math">Multiplying real number application</a></li>
+                
+                <li data-selected=''><a href="/video/commutative-property-for-addition?playlist=Developmental%20Math">Commutative Property for Addition</a></li>
+                
+                <li data-selected=''><a href="/video/associative-property-for-multiplication?playlist=Developmental%20Math">Associative property for multiplication</a></li>
+                
+                <li data-selected=''><a href="/video/distributive-property?playlist=Developmental%20Math">Distributive property</a></li>
+                
+                <li data-selected=''><a href="/video/order-of-operations?playlist=Developmental%20Math">Order of Operations</a></li>
+                
+                <li data-selected=''><a href="/video/order-of-operations-2?playlist=Developmental%20Math">Order of Operations 2</a></li>
+                
+                <li data-selected=''><a href="/video/solving-one-step-equations?playlist=Developmental%20Math">Solving One-Step Equations</a></li>
+                
+                <li data-selected=''><a href="/video/solving-one-step-equations-2?playlist=Developmental%20Math">Solving One-Step Equations 2</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-equations-1?playlist=Developmental%20Math">Multi-step equations 1</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-equations-2?playlist=Developmental%20Math">Multi-step equations 2</a></li>
+                
+                <li data-selected=''><a href="/video/equation-special-cases?playlist=Developmental%20Math">Equation Special Cases</a></li>
+                
+                <li data-selected=''><a href="/video/application-problems-with-equation-in-one-variable?playlist=Developmental%20Math">Application problems with equation in one variable</a></li>
+                
+                <li data-selected=''><a href="/video/evaluate-a-formula-using-substitution?playlist=Developmental%20Math">Evaluate a formula using substitution</a></li>
+                
+                <li data-selected=''><a href="/video/rearrange-formulas-to-isolate-specific-variables?playlist=Developmental%20Math">Rearrange formulas to isolate specific variables</a></li>
+                
+                <li data-selected=''><a href="/video/inequalities-on-a-number-line?playlist=Developmental%20Math">Inequalities on a number line</a></li>
+                
+                <li data-selected=''><a href="/video/one-step-inequalities?playlist=Developmental%20Math">One-Step Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/one-step-inequalities-2?playlist=Developmental%20Math">One-Step Inequalities 2</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-inequalities?playlist=Developmental%20Math">Multi-Step Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-inequalities-2?playlist=Developmental%20Math">Multi-Step Inequalities 2</a></li>
+                
+                <li data-selected=''><a href="/video/compund-inequalities?playlist=Developmental%20Math">Compund Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/compund-inequalities-2?playlist=Developmental%20Math">Compund Inequalities 2</a></li>
+                
+                <li data-selected=''><a href="/video/compound-inequalities-3?playlist=Developmental%20Math">Compound Inequalities 3</a></li>
+                
+                <li data-selected=''><a href="/video/compound-inequalities-4?playlist=Developmental%20Math">Compound Inequalities 4</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-equations?playlist=Developmental%20Math">Absolute Value Equations</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-inequalities?playlist=Developmental%20Math">Absolute Value Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-equations-2?playlist=Developmental%20Math">Absolute Value Equations 2</a></li>
+                
+                <li data-selected=''><a href="/video/evaluating-exponential-expressions?playlist=Developmental%20Math">Evaluating exponential expressions</a></li>
+                
+                <li data-selected=''><a href="/video/evaluating-exponential-expressions-2?playlist=Developmental%20Math">Evaluating exponential expressions 2</a></li>
+                
+                <li data-selected=''><a href="/video/evaluating-exponential-expressions-3?playlist=Developmental%20Math">Evaluating exponential expressions 3</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-1?playlist=Developmental%20Math">Exponent Properties 1</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-2?playlist=Developmental%20Math">Exponent Properties 2</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-3?playlist=Developmental%20Math">Exponent Properties 3</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-4?playlist=Developmental%20Math">Exponent Properties 4</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-5?playlist=Developmental%20Math">Exponent Properties 5</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-6?playlist=Developmental%20Math">Exponent Properties 6</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-7?playlist=Developmental%20Math">Exponent Properties 7</a></li>
+                
+                <li data-selected=''><a href="/video/scientific-notation-i?playlist=Developmental%20Math">Scientific Notation I</a></li>
+                
+                <li data-selected=''><a href="/video/scientific-notation-2?playlist=Developmental%20Math">Scientific Notation 2</a></li>
+                
+                <li data-selected=''><a href="/video/scientific-notation-3?playlist=Developmental%20Math">Scientific Notation 3</a></li>
+                
+                <li data-selected=''><a href="/video/terms-coefficients-and-exponents-in-a-polynomial?playlist=Developmental%20Math">Terms coefficients and exponents in a polynomial</a></li>
+                
+                <li data-selected=''><a href="/video/evaluating-a-polynomial-at-a-given-value?playlist=Developmental%20Math">Evaluating a polynomial at a given value</a></li>
+                
+                <li data-selected=''><a href="/video/simply-a-polynomial?playlist=Developmental%20Math">Simply a polynomial</a></li>
+                
+                <li data-selected=''><a href="/video/adding-polynomials?playlist=Developmental%20Math">Adding Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/opposite-of-a-polynomial?playlist=Developmental%20Math">Opposite of a Polynomial</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-polynomials?playlist=Developmental%20Math">Subtracting Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-monomials?playlist=Developmental%20Math">Multiplying Monomials</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-monomials-by-polynomials?playlist=Developmental%20Math">Multiplying Monomials by Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-binomials?playlist=Developmental%20Math">Multiplying Binomials</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-polynomials?playlist=Developmental%20Math">Multiplying Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/special-polynomials-products-1?playlist=Developmental%20Math">Special Polynomials Products 1</a></li>
+                
+                <li data-selected=''><a href="/video/square-a-binomial?playlist=Developmental%20Math">Square a Binomial</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-monomials?playlist=Developmental%20Math">Dividing Monomials</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-divided-by-monomial?playlist=Developmental%20Math">Polynomial divided by monomial</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-polynomials-1?playlist=Developmental%20Math">Dividing polynomials 1</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-polynomials-with-remainders?playlist=Developmental%20Math">Dividing polynomials with remainders</a></li>
+                
+                <li data-selected=''><a href="/video/evaluating-an-expression-with-multiple-variables?playlist=Developmental%20Math">Evaluating an expression with multiple variables</a></li>
+                
+                <li data-selected=''><a href="/video/simplifying-an-expression-with-multiple-variables?playlist=Developmental%20Math">Simplifying an expression with multiple variables</a></li>
+                
+                <li data-selected=''><a href="/video/adding-polynomials-with-multiple-variables?playlist=Developmental%20Math">Adding polynomials with multiple variables</a></li>
+                
+                <li data-selected=''><a href="/video/subtracting-polynomials-with-multiple-variables?playlist=Developmental%20Math">Subtracting polynomials with multiple variables</a></li>
+                
+                <li data-selected=''><a href="/video/more-multiplying-polynomials?playlist=Developmental%20Math">More multiplying polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/dividing-multivariable-polynomial-with-monomial?playlist=Developmental%20Math">Dividing multivariable polynomial with monomial</a></li>
+                
+            </ol>
+        </div>
+    </span>
+</span>
+
+                </nav>
+                
+    
+                
+            </header>
+            
+<article class="video">
+    <div id="description">
+        <h3>
+            <span class="title">Multiplying Whole Numbers and Applications 4</span>
+        
+            <span class="long-description">: U01_L3_T1_we4 Multiplying Whole Numbers and Applications 4</span>
+        
+        </h3>
+    </div>
+    <div style="margin-top: -15px;">
+        <nav class="prev_next_nav">
+            
+            <label id="prev_video">
+                <a rel=prev href="/video/multiplying-whole-numbers-and-applications-3?playlist=Developmental%20Math"><b>Previous Video:</b> Multiplying Whole Numbers and Applications 3</a>
+            </label>
+            
+            
+            <label id="next_video">
+                <a rel=next href="/video/multiplying-whole-numbers-and-applications-5?playlist=Developmental%20Math"><b>Next Video:</b> Multiplying Whole Numbers and Applications 5</a>
+            </label>
+            
+        </nav>
+
+        <div id="youtube_blocked">
+            <object id="flvPlayer" type="application/x-shockwave-flash" data="/flvplayer/player_flv_maxi.swf" width="800" height="480">
+    <param name="movie" value="/flvplayer/player_flv_maxi.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="FlashVars" value="flv=http%3A//www.archive.org/download/KhanAcademy_DevelopmentalMath/multiplying-whole-numbers-and-applications-4.flv&amp;showstop=1&amp;showvolume=1&amp;showfullscreen=1&amp;showiconplay=1&amp;bgcolor=FFFFFF&amp;bgcolor1=80C65A&amp;bgcolor2=80C65A&amp;iconplaybgcolor=80C65A&amp;width=800&amp;height=480" />
+    <div>
+            <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+    </div>                
+</object>
+
+
+        </div>
+
+        <object id="idOVideo" name="idOVideo" width="800" height="480" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+    <param name="movie" value="http://www.youtube.com/v/tx2Niw7aJJ8&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1">
+    <param name="allowFullScreen" value="true">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="transparent">
+    <embed id="idPlayer" name="idPlayer" wmode="transparent" src="http://www.youtube.com/v/tx2Niw7aJJ8&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1" type="application/x-shockwave-flash" allowScriptAccess="always" allowfullscreen="true" width="800" height="480">
+</object>
+
+
+        <span class="video_extra_links"><nobr>
+        
+        <span class="extra-link-bar"><a href="http://www.archive.org/download/KhanAcademy_DevelopmentalMath/multiplying-whole-numbers-and-applications-4.flv">Download</a>
+        </span>
+        </nobr></span>
+
+        
+<div class="video_comments">
+
+    <h3>Comments:</h3>
+
+    <div class="comments_container">
+    
+
+        
+            <div class="comment">
+                Thank you, Sal!<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        &ndash;Example
+    
+</nobr>
+</span>
+            </div>
+        
+
+        
+
+        
+
+        
+
+    
+    </div>
+    
+    
+        <a href="/login?continue=/video%3Fv%3Dtx2Niw7aJJ8" class="control"><img class="icon" src="/images/balloon-plus.png" />Log in to add a comment</a>
+    
+
+    
+
+    <div class="comment_form" style="display:none;">
+        <form class="comments" name="comments">
+            <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+            <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjk3Z4BDA" />
+            <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBiTDQw" />
+            <textarea name="comment_text" class="comment_text" rows="3" cols="40"></textarea><br/>
+            <div class="comment_controls_container"
+    
+>
+    <div class="comment_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button comment_submit" type="button" value="Comment"/>
+            or <a href="#" class="comment_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </form>
+    </div>
+</div>
+
+
+        
+<div class="video_questions">
+    <h3 class="ask_and_answer">Ask and answer questions about this video:</h3>
+
+    <div class="sticky_note" style="display:none;">
+        <div class="sticky_note_content">
+            <h2>Ask a question about Multiplying Whole Numbers and Applications 4</h2>
+            <ul>
+                <li><em>Be as specific as possible!</em></li>
+                <li>Remember, you're asking <em>the entire Khan Academy community</em> for answers.</li>
+                <li>Mention a time from the video, like "5:28", to help people understand what your question is about.</li>
+                <li><strong>Please don't</strong> report problems or mistakes here.&nbsp; <strong><a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-tx2Niw7aJJ8">Send in a problem report</a></strong> instead.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="question_container">
+        <div class="question_form">
+            <form class="question" name="questions">
+                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjk3Z4BDA" />
+                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBiTDQw" />
+                <div class="question_placeholder requires_script">
+                    <textarea name="question_text" class="question_text" rows="3" cols="40" 
+                                watermark="Example: Why does Sal use shorthand notation at 5:43?"></textarea>
+                </div>
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button question_submit" type="button" value="Ask your question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+           </form>
+        </div>
+    </div>
+
+    <div class="questions_container">
+    
+
+        
+
+        
+
+    
+    </div>
+
+    
+        <div class="login_note" style="display:none;">
+            <a class="login_link" href="/login?continue=/video%3Fv%3Dtx2Niw7aJJ8"><img class="icon" src="/images/key-plus.png"/ >Log in first</a>
+            <span class="login_action"></span>
+        </div>
+    
+
+</div>
+<br/>
+
+
+        </div>
+    </article>
+
+            <div style="padding: 10px;">&nbsp;</div>
+            
+<footer id="footer" class="short">
+    <div id="leaves">
+        <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-multiplying-whole-numbers-and-applications-4">Report a Problem</a> <a href="/getinvolved">Get Involved</a> <a href="/about#contactus">Contact Us</a>
+        <span class="sep">|</span>
+        <a href="/about">About</a> <a href="/about#faq">FAQ</a> <a href="/getinvolved#credits">Credits</a> <a href="/downloads">Downloads</a>
+        <span class="sep">|</span>
+        <a href="/coaches">Add a Coach</a> <a href="/classreport">Class Report</a>
+        <div id="copyright">
+            <small>
+                &copy;2010 Khan Academy
+            </small>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/"><img style="vertical-align: middle;" alt="Creative Commons License" width="80" height="15" src="/images/cc-by-nc-sa-80x15.png" /></a>
+        </div>
+    </div>
+</footer>
+
+
+
+            
+    
+    	<!-- For ChartBeat analytics START -->
+    	<script type="text/javascript">
+    	var _sf_async_config={uid:10894,domain:"khanacademy.org"};
+    	(function(){
+    	  function loadChartbeat() {
+    	    window._sf_endpt=(new Date()).getTime();
+    	    var e = document.createElement('script');
+    	    e.setAttribute('language', 'javascript');
+    	    e.setAttribute('type', 'text/javascript');
+    	    e.setAttribute('src',
+    	       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+    	       "static.chartbeat.com/js/chartbeat.js");
+    	    document.body.appendChild(e);
+    	  }
+    	  var oldonload = window.onload;
+    	  window.onload = (typeof window.onload != 'function') ?
+    	     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    	})();
+    	</script>
+    	<!-- For ChartBeat analytics END -->
+    
+    	<!-- ChartBeat API - get # of users online now BEGIN -->
+    
+       <script type="text/javascript">
+    
+                $('#page_num_visitors').append(totalViewsString);
+                $('#page_visitors').css('display', 'inline');
+    	</script>
+    
+    	<!-- ChartBeat API - get # of users online now END -->
+    
+    </div>
+    
+    
+    </body>
+</html>

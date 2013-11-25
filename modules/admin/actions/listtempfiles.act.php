@@ -26,7 +26,7 @@
 		foreach($list as $item) {
 			$item = trim($item);
 			if (strlen($item) > 1) {
-				if (true == $kapenta->fileExists($item)) {
+				if (true == $kapenta->fs->exists($item)) {
 					// check this isn't a system file
 					$check = false;
 					if (false != strpos($item, '~')) { $check = true; }
@@ -139,8 +139,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/listtempfiles.page.php');
-	$page->blockArgs['fileList'] = $fileList;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/listtempfiles.page.php');
+	$kapenta->page->blockArgs['fileList'] = $fileList;
+	$kapenta->page->render();
 
 ?>

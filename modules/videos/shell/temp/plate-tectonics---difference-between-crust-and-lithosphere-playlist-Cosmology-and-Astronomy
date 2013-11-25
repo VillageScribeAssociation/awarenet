@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+        <!-- For ChartBeat analytics START -->
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <!-- For ChartBeat analytics END -->
+        <title>Plate Tectonics-- Difference between crust and lithosphere | Khan Academy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="description" content="Plate Tectonics Introduction and Difference between crust and lithosphere" />
+        <meta name="keywords" content="Plate, Tectonics--, Difference, between, crust, and, lithosphere" />
+        
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights START -->
+        <meta property="fb:page_id" content="159403248441" />
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights END -->
+        <meta property="og:title" content="The Khan Academy"/>
+        <meta property="og:type" content="non_profit"/>
+        <meta property="og:url" content="http://www.khanacademy.org"/>
+        <meta property="og:image" content="http://www.khanacademy.org/images/handtreehorizontal_facebook.png"/>
+        <meta property="og:site_name" content="khanacademy.org"/>
+        <meta property="fb:admins" content="100000121497109,718859633"/> 
+        <meta property="fb:app_id" content="160249463991765"/>
+        <meta property="og:description"
+              content="The Khan Academy is a not-for-profit 501(c)(3) with the mission of providing a world-class education to anyone, anywhere.  Despite being the work of one man, Salman Khan, this 1600+ video library is the most-used educational video resource as measured by YouTube video views per day and unique users per month."/>
+        <link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+        <script>var KA_VERSION = '1101.348262090236499247';</script>
+        
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shared-package/compressed.css?1101.348262090236499247" />
+
+
+
+        
+    <script type="text/javascript" src="/javascript/shared-package/compressed.js?1101.348262090236499247"></script>
+
+
+
+        <script type="text/javascript">
+            // Create a dummy version of each HTML5 element we use so that IE 6-8 can style them.
+            (function(){
+                var html5elements = ['header', 'footer', 'nav', 'article', 'section', 'menu'];
+                for (var i = 0; i < html5elements.length; i++) {
+                    document.createElement(html5elements[i]);
+                }
+            })();
+
+            $(function(){
+                // Configure the search form
+                $('#page_search input[type=text]').placeholder();
+                initAutocomplete();
+
+                // Make the CSS-only menus click-activated
+                var active_menu = undefined;
+                $('.noscript').removeClass('noscript');
+                $('.css-menu > ul > li').click(function() {
+                    if (active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                    }
+                    if ($(this) == active_menu) {
+                        active_menu = undefined
+                    }
+                    else {
+                        active_menu = $(this);
+                        $(this).addClass('css-menu-js-hover');
+                    }
+                });
+                $(document).bind("click focusin", function(e){
+                    if ($(e.target).closest(".css-menu").length == 0 && active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                        active_menu = undefined;
+                    }
+                });
+                // Make the CSS-only menus keyboard-accessible
+                $('.css-menu a').focus(function(e){
+                    $(e.target).addClass('css-menu-js-hover').closest(".css-menu > ul > li").addClass('css-menu-js-hover');
+                }).blur(function(e){
+                    $(e.target).removeClass('css-menu-js-hover').closest(".css-menu > ul > li").removeClass('css-menu-js-hover');
+                });
+            });
+
+
+
+            //Javascript for estimating the cumulative video views in real-time
+            function addCommas(nStr)
+	    {
+	        nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+		    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		}
+		return x1 + x2;
+	    }
+
+
+
+	    var seedTime = new Date(2010,9,31);  //Seed Date is set to October 31, 2010  0-January, 11-december
+	    var seedTotalViews = 28402468
+	    var seedDailyViews = 100000;
+
+	    var currentTime = new Date();
+	    var secondsSince = (currentTime.getTime()-seedTime.getTime())/1000;
+	    var viewsPerSecond = seedDailyViews/24/3600
+	    var estimatedTotalViews = Math.round(seedTotalViews + secondsSince*viewsPerSecond)
+
+	    var totalViewsString = addCommas(""+estimatedTotalViews);
+        
+
+
+
+        </script>
+        
+<style>
+    .breadcrumbs_nav {
+        font-weight: bold;
+    }
+    #video_dropdown {
+        display: none;
+        text-indent: 0;
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
+    #video_dropdown .ui-button {
+        display: block;
+    }
+    #video_menu {
+        position: relative;
+    }
+    #video_menu ol {
+        z-index: 2;
+    }
+    #video_dropdown ol {
+        max-height: 20em;
+        padding-left: 3em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        list-style: outside decimal;
+    }
+    #video_dropdown li {
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #video_dropdown li[data-selected=selected] a {
+        font-weight: bold;
+    }
+    #video_dropdown .ui-button-text, #video_dropdown .ui-menu-item a {
+        font-weight: normal;
+        line-height: inherit;
+        padding: 0px 25px 0px 1ex;
+    }
+    #video_dropdown .ui-menu-item a {
+        padding: 0px 25px 0px 0px;
+    }
+    #video_dropdown a:visited {
+        color: #DD6900;
+    }
+    #video_dropdown a:link:hover, #video_dropdown a:link:focus, #video_dropdown a:visited:hover, #video_dropdown a:visited:focus {
+        color: #DD6900;
+    }
+    .prev_next_nav {
+        display: block;
+        margin-top: 2em;
+        padding-bottom: .5ex;
+    }
+    .prev_next_nav a {
+        text-decoration: none;
+    }
+    .prev_next_nav a:hover {
+        text-decoration: underline;
+    }
+    #prev_video {
+        display: block;
+        float: left;
+        margin-right: 1em;
+        text-align: left;
+        background: url(/images/list-item-black-left.png) no-repeat 0 4px;
+        padding-top: 1px;
+        padding-left: 10px;
+        height: 20px;
+    }
+    #playlists {
+        display: block;
+        float: left;
+    }
+    #next_video {
+        display: block;
+        float: right;
+        margin-left: 1em;
+        text-align: right;
+        background: url(/images/list-item-black.png) no-repeat 100% 4px;
+        padding-top: 1px;
+        padding-right: 10px;
+        height: 20px;
+    }
+
+    #youtube_blocked {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+        color: red;
+        font-weight: bold;
+        clear: both;
+        padding-top: 1em;
+    }
+    .video #description {
+        padding-top: 20px;
+    }
+        .video #description h3 {
+            display: block;
+            margin: 0;
+            font-size: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .video #description h3 span.title {
+            color: #e45c02;
+        }
+        .video #description h3 span.long-description {
+            color: #555;
+            font-weight: normal;
+            position: relative;
+            top: -1px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    #page_sub_nav .breadcrumbs_nav {
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-left: -5px;
+        width: auto;
+    }
+    #page_sub_nav .breadcrumbs_nav a {
+        text-decoration: none;
+        padding: 0 5px;
+    }
+    #page_sub_nav .breadcrumbs_nav #video_menu {
+        text-transform: none;
+    }
+</style>
+<script>
+$(function(){
+    $('<img width=0 height=0>').error(function() {
+       $("#youtube_blocked").css("visibility", "visible").css("left", "0px").css("position", "relative");
+       $("#idOVideo").hide();
+       VideoStats.prepareAlternativePlayer(); // If YouTube is hidden, use the flv player for statistics
+    }).attr('src', 'http://www.youtube.com/favicon.ico?' + Math.random()).appendTo('#page-container');
+    $('#video_selector').hide();
+    $('#video_dropdown').css('display', 'inline-block');
+    var menu = $('#video_dropdown ol').menu();
+
+    // Set the width explicitly before positioning it absolutely to satisfy IE7.
+    menu.width(menu.width()).hide().css('position', 'absolute');
+
+    menu.bind("menuselect", function(e, ui){
+        window.location.href = ui.item.children('a').attr('href');
+    });
+    $(document).bind("click focusin", function(e){
+        if ($(e.target).closest("#video_dropdown").length == 0) {
+            menu.hide();
+        }
+    });
+    var button = $('#video_dropdown > a').button({
+        icons: {
+            secondary: 'ui-icon-triangle-1-s'
+        }
+    }).show().click(function(e){
+        if (menu.css('display') == 'none')
+            menu.show().menu("activate", e, $('#video_dropdown li[data-selected=selected]')).focus();
+        else
+            menu.hide();
+        e.preventDefault();
+    });
+});
+
+
+
+</script>
+
+
+	<!-- New, faster Google Analytics async tag START -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6742635-1']);
+	  _gaq.push(['_setDomainName', '.khanacademy.org']);
+	  _gaq.push(['_trackPageview']);
+
+	  // For OER Analytics
+	  _gaq.push(['ht._setAccount', 'UA-5033010-1']);
+	  _gaq.push(['ht._setDomainName', '.khanacademy.org']);
+	  _gaq.push(['ht._trackPageview']);
+
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- New, faster Google Analytics async tag END -->
+
+    </head>
+    <body>
+    <div id="page-container">
+        
+        
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({appId: '160249463991765', status: true, cookie: true,
+                     xfbml: true});
+    
+            
+                FB.Event.subscribe('auth.login', function(response) {
+                    window.location.reload();
+                });
+            
+    
+            FB.getLoginStatus(function(response) {
+               if (response.session) {
+                $('#page_logout').click(function(e) {
+                    FB.logout(function() { 
+                        window.location = $("#page_logout").attr("href"); 
+                    });
+                    e.preventDefault();
+                    return false;
+                });
+               }
+            });
+          };
+          (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+              '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+          }());
+        </script>
+        
+        
+    
+    	
+    	<script>document.writeln('<style scoped type="text/css">a[href="#"], .requires_script { visibility: visible; }</style>');</script>
+    
+            <header>
+                <div id="top-header">
+                    <div id="top-header-links">
+                        <span class="page_links" id="page_auth">
+                            
+                            <nav class="css-menu noscript" id="login-menu">
+                                <ul class="ui-corner-top">
+                                    <li class="ui-corner-top">
+                                        Login
+                                        <ul class="ui-corner-tr ui-corner-bottom">
+                                            <li id="page_login_options">
+                                                <a href="/login?openid_identifier=https://www.google.com/accounts/o8/id">Login with Google</a>
+                                            </li>
+                                            
+                                            <li><fb:login-button>Login with Facebook</fb:login-button></li>
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <span class="separator">&nbsp;</span>
+                            <a href="/donate" id="donate-link">Donate</a>
+                            <span class="separator">&nbsp;</span>
+                            <span id="social-links">
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Youtube-Subscribe-Header']);" href="http://www.youtube.com/khanacademy"><img src="/images/youtube.png" alt="YouTube" title="YouTube"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Twitter-Follow-Header']);" href="http://twitter.com/khanacademy"><img src="/images/twitter.png" alt="Twitter" title="Twitter"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Facebook-Join-Header']);" href="http://www.facebook.com/khanacademy"><img src="/images/facebook.png" alt="Facebook" title="Facebook"></a>
+                            </span>
+                            <span class="separator">&nbsp;</span>
+                            <span id="fb-like-badge">
+                                <fb:like id="page_fb_like" href="http://www.khanacademy.org" layout="button_count" show_faces="false" font="arial" ref="Like-Button-Top-Header-Left"></fb:like>
+                            </span>
+                        </span>
+                    </div>
+                    <div id="logo">
+                        <div id="logo-highlight">
+                            <a id="logo-image" href="/"><img src="/images/logo-no-highlight.png?1101.348262090236499247" alt="Khan Academy"></a>
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span id="page_visitors">
+                                <span id="page_num_visitors">
+                                    <!-- Content will get populated by javacript at end of page -->
+                                </span>&nbsp;lessons delivered
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div id="search-box">
+                    <form id="page_search" action="/search">
+                        <input id="search-input" type="text" placeholder="Search for a video or playlist" name="page_search_query" value='' class="ui-corner-left placeholder"><input type="submit" value=" " id="search-submit" />
+                    </form>
+                </div>
+                <div id="sitewide-navigation">
+                    <nav class="css-menu noscript" id="page_main_nav">
+                        <ul>
+                            <li class="ui-corner-top">
+                                Watch Videos
+                                <ul class="ui-corner-tr ui-corner-bottom">
+                                    <li>
+                                        <a href="/#browse">Browse by Topic</a>
+                                    </li>
+                                    <li>
+                                        <a href="/search">Search</a>
+                                    </li>
+                                    <li>
+                                        <a href="/downloads">Download</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="do-exercises" class="ui-corner-top">
+                                <div id="do-exercise-inner"><a href="/exercisedashboard">Do Exercises</a></div>
+                            </li>
+                            <li class="ui-corner-top">
+                                Join Us
+                                <ul class="ui-corner-tr">
+                                    <li>
+                                       <p>About Us</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/about">Overview</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#faq">Frequently Asked Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved#credits">Credits</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>Coaching Tools</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/students">Become a Coach</a>
+                                            </li>
+                                            <li>
+                                                <a href="/students">View Students</a>
+                                            </li>
+                                            <li>
+                                                <a href="/classreport">Class Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>How to Help</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/getinvolved#translation">Translate Videos</a>
+                                            </li>
+                                            <li>
+                                                <a href="http://sites.google.com/a/khanacademy.org/forge/for-developers/getting-started-with-the-code">Develop Software</a>
+                                            </li>
+                                            <li>
+                                                <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-plate-tectonics---difference-between-crust-and-lithosphere">Report a Problem</a>
+                                            </li>
+                                            <li>
+                                                <a href="/donate">Donate</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved">Help in Other Ways</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#contactus">Contact Us</a>
+                                            </li>
+    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav id="page_sub_nav">
+                    
+<span class="breadcrumbs_nav">
+        <a href="/">All videos</a> &#187;
+        <a href="/?video=plate-tectonics---difference-between-crust-and-lithosphere#Cosmology%20and%20Astronomy">Cosmology and Astronomy</a> &#187;
+    <form id="video_selector">
+        <select name="v">
+            
+            <option  value="GZx3U0dbASg">Scale of Earth and  Sun</option>
+            
+            <option  value="GP53b__h4ew">Scale of Solar System</option>
+            
+            <option  value="jEeJkkMXt6c">Scale of Distance to Closest Stars</option>
+            
+            <option  value="rcLnMe1ELPA">Scale of the Galaxy</option>
+            
+            <option  value="JiE_kNk3ucI">Intergalactic Scale</option>
+            
+            <option  value="Wl4re38deh0">Hubble Image of Galaxies</option>
+            
+            <option  value="eUF59jCFcyQ">Big Bang Introduction</option>
+            
+            <option  value="6nVysrZQnOQ">Radius of Observable Universe</option>
+            
+            <option  value="b6VQv76BQDs">(Correction) Radius of Observable Universe</option>
+            
+            <option  value="mx2M_ZKXM_c">Red Shift</option>
+            
+            <option  value="sxbPwl_KRuA">Cosmic Background Radiation</option>
+            
+            <option  value="06z7Q8TWPyU">Cosmic Background Radiation 2</option>
+            
+            <option  value="DRtLXagrMHw">Cosmological Time Scale 1</option>
+            
+            <option  value="LO7-3MpWijU">Cosmological Time Scale 2</option>
+            
+            <option  value="FEF6PxWOvsk">Four Fundamental Forces</option>
+            
+            <option  value="i-NNWI8Ccas">Birth of Stars</option>
+            
+            <option  value="kJSOqlcFpJw">Becoming a Red Giant</option>
+            
+            <option  value="EdYyuUUY-nc">White and Black Dwarfs</option>
+            
+            <option  value="0w9R_foNLrg">A Universe Smaller than the Observable</option>
+            
+            <option  value="w3IKEa_GOYs">Star Field and Nebula Images</option>
+            
+            <option  value="ETzUpoqZIHY">Parallax in Observing Stars</option>
+            
+            <option  value="lVadjWOjvV8">Stellar Distance Using Parallax</option>
+            
+            <option  value="6FP-hLuAlr4">Stellar Parallax Clarification</option>
+            
+            <option  value="6zV3JEjLoyE">Parsec Definition</option>
+            
+            <option  value="1V9wVmO0Tfg">Hubble&#39;s Law</option>
+            
+            <option  value="UhIwMAhZpCo">Lifecycle of Massive Stars</option>
+            
+            <option  value="qOwCpnQsDLM">Supernova (Supernovae)</option>
+            
+            <option  value="QMv4kxATfzs">Supernova clarification</option>
+            
+            <option  value="JoL2pO3O0rg">Black Holes</option>
+            
+            <option  value="BWs-ONRDDG4">Cepheid Variables 1</option>
+            
+            <option  value="X_3QAB3o4Vw">Why Cepheids Pulsate</option>
+            
+            <option  value="RpOHZc6cDIw">Why Gravity Gets So Strong Near Dense Objects</option>
+            
+            <option  value="DxkkAHnqlpY">Supermassive Black Holes</option>
+            
+            <option  value="4LmIyMyAuN0">Quasars</option>
+            
+            <option  value="PX_XSnVWlNc">Quasar Correction</option>
+            
+            <option  value="QXYbGZ3T3_k">Galactic Collisions</option>
+            
+            <option  value="VbNXh0GaLYo">Earth Formation</option>
+            
+            <option  value="nYFuxTXDj90">Beginnings of Life</option>
+            
+            <option  value="E1P79uFLCMc">Ozone Layer and Eukaryotes Show Up in the Proterozoic Eon</option>
+            
+            <option  value="MS7x2hDEhrw">Biodiversity Flourishes in Phanerozoic Eon</option>
+            
+            <option  value="3gUE_P9T-Wk">First living things on land clarification</option>
+            
+            <option selected value="f2BWsPVN7c4">Plate Tectonics-- Difference between crust and lithosphere</option>
+            
+            <option  value="4AxZ-6MOznY">Structure of the Earth</option>
+            
+            <option  value="6EdsBabSZ4g">Plate Tectonics -- Evidence of plate movement</option>
+            
+            <option  value="FK1s1-OJ5BE">Plate Tectonics -- Geological Features of Divergent Plate Boundaries</option>
+            
+            <option  value="Y0eWnOZpSpQ">Plate Tectonics-- Geological features of Convergent Plate Boundaries</option>
+            
+            <option  value="f8GK2oEN-uI">Plates Moving Due to Convection in Mantle</option>
+            
+            <option  value="D1eibbfAEVk">Hawaiian Islands Formation</option>
+            
+            <option  value="hHteUIS0OFY">Compositional and Mechanical Layers of the Earth</option>
+            
+            <option  value="NhioAAdYDJM">Seismic Waves</option>
+            
+            <option  value="BTWLwoaNeBA">Why S-Waves Only Travel in Solids</option>
+            
+            <option  value="UNZ171fDja4">Refraction of Seismic Waves</option>
+            
+            <option  value="yAQSucmHrAk">The Mohorovicic Seismic Discontinuity</option>
+            
+            <option  value="KL0i1RSnpfI">How we know about the Earth&#39;s core</option>
+            
+            <option  value="axB6uhEx628">Pangaea</option>
+            
+        </select>
+        <button type="submit">Go</button>
+    </form>
+    <span id="video_dropdown">
+        <a href="/video/plate-tectonics---difference-between-crust-and-lithosphere?playlist=Cosmology%20and%20Astronomy">Plate Tectonics-- Difference between crust and lithosphere</a>
+        <div id="video_menu">
+            <ol>
+                
+                <li data-selected=''><a href="/video/scale-of-earth-and--sun?playlist=Cosmology%20and%20Astronomy">Scale of Earth and  Sun</a></li>
+                
+                <li data-selected=''><a href="/video/scale-of-solar-system?playlist=Cosmology%20and%20Astronomy">Scale of Solar System</a></li>
+                
+                <li data-selected=''><a href="/video/scale-of-distance-to-closest-stars?playlist=Cosmology%20and%20Astronomy">Scale of Distance to Closest Stars</a></li>
+                
+                <li data-selected=''><a href="/video/scale-of-the-galaxy?playlist=Cosmology%20and%20Astronomy">Scale of the Galaxy</a></li>
+                
+                <li data-selected=''><a href="/video/intergalactic-scale?playlist=Cosmology%20and%20Astronomy">Intergalactic Scale</a></li>
+                
+                <li data-selected=''><a href="/video/hubble-image-of-galaxies?playlist=Cosmology%20and%20Astronomy">Hubble Image of Galaxies</a></li>
+                
+                <li data-selected=''><a href="/video/big-bang-introduction?playlist=Cosmology%20and%20Astronomy">Big Bang Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/radius-of-observable-universe?playlist=Cosmology%20and%20Astronomy">Radius of Observable Universe</a></li>
+                
+                <li data-selected=''><a href="/video/correction--radius-of-observable-universe?playlist=Cosmology%20and%20Astronomy">(Correction) Radius of Observable Universe</a></li>
+                
+                <li data-selected=''><a href="/video/red-shift?playlist=Cosmology%20and%20Astronomy">Red Shift</a></li>
+                
+                <li data-selected=''><a href="/video/cosmic-background-radiation?playlist=Cosmology%20and%20Astronomy">Cosmic Background Radiation</a></li>
+                
+                <li data-selected=''><a href="/video/cosmic-background-radiation-2?playlist=Cosmology%20and%20Astronomy">Cosmic Background Radiation 2</a></li>
+                
+                <li data-selected=''><a href="/video/cosmological-time-scale-1?playlist=Cosmology%20and%20Astronomy">Cosmological Time Scale 1</a></li>
+                
+                <li data-selected=''><a href="/video/cosmological-time-scale-2?playlist=Cosmology%20and%20Astronomy">Cosmological Time Scale 2</a></li>
+                
+                <li data-selected=''><a href="/video/four-fundamental-forces?playlist=Cosmology%20and%20Astronomy">Four Fundamental Forces</a></li>
+                
+                <li data-selected=''><a href="/video/birth-of-stars?playlist=Cosmology%20and%20Astronomy">Birth of Stars</a></li>
+                
+                <li data-selected=''><a href="/video/becoming-a-red-giant?playlist=Cosmology%20and%20Astronomy">Becoming a Red Giant</a></li>
+                
+                <li data-selected=''><a href="/video/white-and-black-dwarfs?playlist=Cosmology%20and%20Astronomy">White and Black Dwarfs</a></li>
+                
+                <li data-selected=''><a href="/video/a-universe-smaller-than-the-observable?playlist=Cosmology%20and%20Astronomy">A Universe Smaller than the Observable</a></li>
+                
+                <li data-selected=''><a href="/video/star-field-and-nebula-images?playlist=Cosmology%20and%20Astronomy">Star Field and Nebula Images</a></li>
+                
+                <li data-selected=''><a href="/video/parallax-in-observing-stars?playlist=Cosmology%20and%20Astronomy">Parallax in Observing Stars</a></li>
+                
+                <li data-selected=''><a href="/video/stellar-distance-using-parallax?playlist=Cosmology%20and%20Astronomy">Stellar Distance Using Parallax</a></li>
+                
+                <li data-selected=''><a href="/video/stellar-parallax-clarification?playlist=Cosmology%20and%20Astronomy">Stellar Parallax Clarification</a></li>
+                
+                <li data-selected=''><a href="/video/parsec-definition?playlist=Cosmology%20and%20Astronomy">Parsec Definition</a></li>
+                
+                <li data-selected=''><a href="/video/hubble-s-law?playlist=Cosmology%20and%20Astronomy">Hubble&#39;s Law</a></li>
+                
+                <li data-selected=''><a href="/video/lifecycle-of-massive-stars?playlist=Cosmology%20and%20Astronomy">Lifecycle of Massive Stars</a></li>
+                
+                <li data-selected=''><a href="/video/supernova--supernovae?playlist=Cosmology%20and%20Astronomy">Supernova (Supernovae)</a></li>
+                
+                <li data-selected=''><a href="/video/supernova-clarification?playlist=Cosmology%20and%20Astronomy">Supernova clarification</a></li>
+                
+                <li data-selected=''><a href="/video/black-holes?playlist=Cosmology%20and%20Astronomy">Black Holes</a></li>
+                
+                <li data-selected=''><a href="/video/cepheid-variables-1?playlist=Cosmology%20and%20Astronomy">Cepheid Variables 1</a></li>
+                
+                <li data-selected=''><a href="/video/why-cepheids-pulsate?playlist=Cosmology%20and%20Astronomy">Why Cepheids Pulsate</a></li>
+                
+                <li data-selected=''><a href="/video/why-gravity-gets-so-strong-near-dense-objects?playlist=Cosmology%20and%20Astronomy">Why Gravity Gets So Strong Near Dense Objects</a></li>
+                
+                <li data-selected=''><a href="/video/supermassive-black-holes?playlist=Cosmology%20and%20Astronomy">Supermassive Black Holes</a></li>
+                
+                <li data-selected=''><a href="/video/quasars?playlist=Cosmology%20and%20Astronomy">Quasars</a></li>
+                
+                <li data-selected=''><a href="/video/quasar-correction?playlist=Cosmology%20and%20Astronomy">Quasar Correction</a></li>
+                
+                <li data-selected=''><a href="/video/galactic-collisions?playlist=Cosmology%20and%20Astronomy">Galactic Collisions</a></li>
+                
+                <li data-selected=''><a href="/video/earth-formation?playlist=Cosmology%20and%20Astronomy">Earth Formation</a></li>
+                
+                <li data-selected=''><a href="/video/beginnings-of-life?playlist=Cosmology%20and%20Astronomy">Beginnings of Life</a></li>
+                
+                <li data-selected=''><a href="/video/ozone-layer-and-eukaryotes-show-up-in-the-proterozoic-eon?playlist=Cosmology%20and%20Astronomy">Ozone Layer and Eukaryotes Show Up in the Proterozoic Eon</a></li>
+                
+                <li data-selected=''><a href="/video/biodiversity-flourishes-in-phanerozoic-eon?playlist=Cosmology%20and%20Astronomy">Biodiversity Flourishes in Phanerozoic Eon</a></li>
+                
+                <li data-selected=''><a href="/video/first-living-things-on-land-clarification?playlist=Cosmology%20and%20Astronomy">First living things on land clarification</a></li>
+                
+                <li data-selected='selected'><a href="/video/plate-tectonics---difference-between-crust-and-lithosphere?playlist=Cosmology%20and%20Astronomy">Plate Tectonics-- Difference between crust and lithosphere</a></li>
+                
+                <li data-selected=''><a href="/video/structure-of-the-earth?playlist=Cosmology%20and%20Astronomy">Structure of the Earth</a></li>
+                
+                <li data-selected=''><a href="/video/plate-tectonics----evidence-of-plate-movement?playlist=Cosmology%20and%20Astronomy">Plate Tectonics -- Evidence of plate movement</a></li>
+                
+                <li data-selected=''><a href="/video/plate-tectonics----geological-features-of-divergent-plate-boundaries?playlist=Cosmology%20and%20Astronomy">Plate Tectonics -- Geological Features of Divergent Plate Boundaries</a></li>
+                
+                <li data-selected=''><a href="/video/plate-tectonics---geological-features-of-convergent-plate-boundaries?playlist=Cosmology%20and%20Astronomy">Plate Tectonics-- Geological features of Convergent Plate Boundaries</a></li>
+                
+                <li data-selected=''><a href="/video/plates-moving-due-to-convection-in-mantle?playlist=Cosmology%20and%20Astronomy">Plates Moving Due to Convection in Mantle</a></li>
+                
+                <li data-selected=''><a href="/video/hawaiian-islands-formation?playlist=Cosmology%20and%20Astronomy">Hawaiian Islands Formation</a></li>
+                
+                <li data-selected=''><a href="/video/compositional-and-mechanical-layers-of-the-earth?playlist=Cosmology%20and%20Astronomy">Compositional and Mechanical Layers of the Earth</a></li>
+                
+                <li data-selected=''><a href="/video/seismic-waves?playlist=Cosmology%20and%20Astronomy">Seismic Waves</a></li>
+                
+                <li data-selected=''><a href="/video/why-s-waves-only-travel-in-solids?playlist=Cosmology%20and%20Astronomy">Why S-Waves Only Travel in Solids</a></li>
+                
+                <li data-selected=''><a href="/video/refraction-of-seismic-waves?playlist=Cosmology%20and%20Astronomy">Refraction of Seismic Waves</a></li>
+                
+                <li data-selected=''><a href="/video/the-mohorovicic-seismic-discontinuity?playlist=Cosmology%20and%20Astronomy">The Mohorovicic Seismic Discontinuity</a></li>
+                
+                <li data-selected=''><a href="/video/how-we-know-about-the-earth-s-core?playlist=Cosmology%20and%20Astronomy">How we know about the Earth&#39;s core</a></li>
+                
+                <li data-selected=''><a href="/video/pangaea?playlist=Cosmology%20and%20Astronomy">Pangaea</a></li>
+                
+            </ol>
+        </div>
+    </span>
+</span>
+
+                </nav>
+                
+    
+                
+            </header>
+            
+<article class="video">
+    <div id="description">
+        <h3>
+            <span class="title">Plate Tectonics-- Difference between crust and lithosphere</span>
+        
+            <span class="long-description">: Plate Tectonics Introduction and Difference between crust and lithosphere</span>
+        
+        </h3>
+    </div>
+    <div style="margin-top: -15px;">
+        <nav class="prev_next_nav">
+            
+            <label id="prev_video">
+                <a rel=prev href="/video/first-living-things-on-land-clarification?playlist=Cosmology%20and%20Astronomy"><b>Previous Video:</b> First living things on land clarification</a>
+            </label>
+            
+            
+            <label id="next_video">
+                <a rel=next href="/video/structure-of-the-earth?playlist=Cosmology%20and%20Astronomy"><b>Next Video:</b> Structure of the Earth</a>
+            </label>
+            
+        </nav>
+
+        <div id="youtube_blocked">
+            <object id="flvPlayer" type="application/x-shockwave-flash" data="/flvplayer/player_flv_maxi.swf" width="800" height="480">
+    <param name="movie" value="/flvplayer/player_flv_maxi.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="FlashVars" value="flv=http%3A//www.archive.org/download/KhanAcademy_CosmologyandAstronomy/plate-tectonics---difference-between-crust-and-lithosphere.flv&amp;showstop=1&amp;showvolume=1&amp;showfullscreen=1&amp;showiconplay=1&amp;bgcolor=FFFFFF&amp;bgcolor1=80C65A&amp;bgcolor2=80C65A&amp;iconplaybgcolor=80C65A&amp;width=800&amp;height=480" />
+    <div>
+            <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+    </div>                
+</object>
+
+
+        </div>
+
+        <object id="idOVideo" name="idOVideo" width="800" height="480" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+    <param name="movie" value="http://www.youtube.com/v/f2BWsPVN7c4&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1">
+    <param name="allowFullScreen" value="true">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="transparent">
+    <embed id="idPlayer" name="idPlayer" wmode="transparent" src="http://www.youtube.com/v/f2BWsPVN7c4&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1" type="application/x-shockwave-flash" allowScriptAccess="always" allowfullscreen="true" width="800" height="480">
+</object>
+
+
+        <span class="video_extra_links"><nobr>
+        
+        <span class="extra-link-bar"><a href="http://www.archive.org/download/KhanAcademy_CosmologyandAstronomy/plate-tectonics---difference-between-crust-and-lithosphere.flv">Download</a>
+        </span>
+        </nobr></span>
+
+        
+<div class="video_comments">
+
+    <h3>Comments:</h3>
+
+    <div class="comments_container">
+    
+
+        
+            <div class="comment">
+                Thank you, Sal!<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        &ndash;Example
+    
+</nobr>
+</span>
+            </div>
+        
+
+        
+
+        
+
+        
+
+    
+    </div>
+    
+    
+        <a href="/login?continue=/video%3Fv%3Df2BWsPVN7c4" class="control"><img class="icon" src="/images/balloon-plus.png" />Log in to add a comment</a>
+    
+
+    
+
+    <div class="comment_form" style="display:none;">
+        <form class="comments" name="comments">
+            <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+            <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxistKQGDA" />
+            <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiD2_MDDA" />
+            <textarea name="comment_text" class="comment_text" rows="3" cols="40"></textarea><br/>
+            <div class="comment_controls_container"
+    
+>
+    <div class="comment_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button comment_submit" type="button" value="Comment"/>
+            or <a href="#" class="comment_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </form>
+    </div>
+</div>
+
+
+        
+<div class="video_questions">
+    <h3 class="ask_and_answer">Ask and answer questions about this video:</h3>
+
+    <div class="sticky_note" style="display:none;">
+        <div class="sticky_note_content">
+            <h2>Ask a question about Plate Tectonics-- Difference between crust and lithosphere</h2>
+            <ul>
+                <li><em>Be as specific as possible!</em></li>
+                <li>Remember, you're asking <em>the entire Khan Academy community</em> for answers.</li>
+                <li>Mention a time from the video, like "5:28", to help people understand what your question is about.</li>
+                <li><strong>Please don't</strong> report problems or mistakes here.&nbsp; <strong><a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-f2BWsPVN7c4">Send in a problem report</a></strong> instead.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="question_container">
+        <div class="question_form">
+            <form class="question" name="questions">
+                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxistKQGDA" />
+                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiD2_MDDA" />
+                <div class="question_placeholder requires_script">
+                    <textarea name="question_text" class="question_text" rows="3" cols="40" 
+                                watermark="Example: Why does Sal use shorthand notation at 5:43?"></textarea>
+                </div>
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button question_submit" type="button" value="Ask your question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+           </form>
+        </div>
+    </div>
+
+    <div class="questions_container">
+    
+
+        
+
+        
+
+    
+    </div>
+
+    
+        <div class="login_note" style="display:none;">
+            <a class="login_link" href="/login?continue=/video%3Fv%3Df2BWsPVN7c4"><img class="icon" src="/images/key-plus.png"/ >Log in first</a>
+            <span class="login_action"></span>
+        </div>
+    
+
+</div>
+<br/>
+
+
+        </div>
+    </article>
+
+            <div style="padding: 10px;">&nbsp;</div>
+            
+<footer id="footer" class="short">
+    <div id="leaves">
+        <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-plate-tectonics---difference-between-crust-and-lithosphere">Report a Problem</a> <a href="/getinvolved">Get Involved</a> <a href="/about#contactus">Contact Us</a>
+        <span class="sep">|</span>
+        <a href="/about">About</a> <a href="/about#faq">FAQ</a> <a href="/getinvolved#credits">Credits</a> <a href="/downloads">Downloads</a>
+        <span class="sep">|</span>
+        <a href="/coaches">Add a Coach</a> <a href="/classreport">Class Report</a>
+        <div id="copyright">
+            <small>
+                &copy;2010 Khan Academy
+            </small>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/"><img style="vertical-align: middle;" alt="Creative Commons License" width="80" height="15" src="/images/cc-by-nc-sa-80x15.png" /></a>
+        </div>
+    </div>
+</footer>
+
+
+
+            
+    
+    	<!-- For ChartBeat analytics START -->
+    	<script type="text/javascript">
+    	var _sf_async_config={uid:10894,domain:"khanacademy.org"};
+    	(function(){
+    	  function loadChartbeat() {
+    	    window._sf_endpt=(new Date()).getTime();
+    	    var e = document.createElement('script');
+    	    e.setAttribute('language', 'javascript');
+    	    e.setAttribute('type', 'text/javascript');
+    	    e.setAttribute('src',
+    	       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+    	       "static.chartbeat.com/js/chartbeat.js");
+    	    document.body.appendChild(e);
+    	  }
+    	  var oldonload = window.onload;
+    	  window.onload = (typeof window.onload != 'function') ?
+    	     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    	})();
+    	</script>
+    	<!-- For ChartBeat analytics END -->
+    
+    	<!-- ChartBeat API - get # of users online now BEGIN -->
+    
+       <script type="text/javascript">
+    
+                $('#page_num_visitors').append(totalViewsString);
+                $('#page_visitors').css('display', 'inline');
+    	</script>
+    
+    	<!-- ChartBeat API - get # of users online now END -->
+    
+    </div>
+    
+    
+    </body>
+</html>

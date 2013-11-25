@@ -48,7 +48,7 @@ function admin_WebShell_db($args) {
 
 				$clean = array();
 				foreach($row as $key => $value) {	
-					$clean[] = "<pre>" . htmlentities($value) . "</pre>"; 
+					$clean[] = "<pre>" . htmlentities($value, ENT_QUOTES, "UTF-8") . "</pre>"; 
 				}
 				
 				$table[] = $clean;

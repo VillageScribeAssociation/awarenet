@@ -1,5 +1,5 @@
 <? /*
-<h2>Reply To This Discussion</h2>
+
 <form
 	name='newThreadReply'
 	id='frmNewReply'

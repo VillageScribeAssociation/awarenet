@@ -16,16 +16,43 @@ function moblog__cb_object_updated($args) {
 	global $page;
 	global $notifications;
 	global $session;
+	global $cache;
 
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('model', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }
 	if (false == array_key_exists('data', $args)) { return false; }
 
+	//----------------------------------------------------------------------------------------------
+	//	check attachments and tags to invalidate cached views
+	//----------------------------------------------------------------------------------------------
+
+	if (
+		(true == array_key_exists('refModel', $args['data'])) &&
+		(true == array_key_exists('refUID', $args['data'])) &&
+		('moblog_post' == $args['data']['refModel'])
+	) {
+		$cache->clear('moblog-summarynav-' . $args['data']['refUID']);
+		$cache->clear('moblog-summary-' . $args['data']['refUID']);
+		$cache->clear('moblog-show-' . $args['data']['refUID']);
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	raise notifications and microblog
+	//----------------------------------------------------------------------------------------------
+
 	if ('moblog' != $args['module']) { return false; }
 	if ('moblog_post' != $args['model']) { return false; }
 
 	$model = new Moblog_Post($args['UID']);
+
+	//----------------------------------------------------------------------------------------------
+	//	invalidate cached views
+	//----------------------------------------------------------------------------------------------
+	$cache->clear('moblog-summarynav-' . $model->UID);
+	$cache->clear('moblog-summary-' . $model->UID);
+	$cache->clear('moblog-show-' . $model->UID);
+	$cache->clear('moblog-schoolstatsnav');
 
 	//----------------------------------------------------------------------------------------------
 	//	create or append notification

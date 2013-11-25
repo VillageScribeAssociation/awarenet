@@ -40,6 +40,8 @@ function images_maintenance() {
 		//-----------------------------------------------------------------------------------------
 		//	clean up legacy undelete scheme
 		//-----------------------------------------------------------------------------------------
+
+		/*
 		if ($model->refUID != str_replace('del-', '', $model->refUID)) {
 			$model->save();
 			$errorCount++;
@@ -58,6 +60,7 @@ function images_maintenance() {
 			$errorCount++;
 			$errors[] = array($row['UID'], $row['title'], 'legacy undelete issue');
 		}
+		*/
 
 		//-----------------------------------------------------------------------------------------
 		//	check that this object has an alias
@@ -97,7 +100,7 @@ function images_maintenance() {
 		//-------------------------------------------------------------------------------------
 		//	add hash if not already done and file is available
 		//-------------------------------------------------------------------------------------
-		if (('' == $model->hash) && (true == $kapenta->fileExists($model->fileName))) {
+		if (('' == $model->hash) && (true == $kapenta->fs->exists($model->fileName))) {
 			$model->save();			// hash is set by $model->vertify()
 			$errors[] = array($row['UID'], $row['title'], 'added hash');
 			$errorCount++;
@@ -111,6 +114,7 @@ function images_maintenance() {
 			//--------------------------------------------------------------------------------------
 			//	check that image file is valid
 			//--------------------------------------------------------------------------------------
+			/*
 			if (true == file_exists($kapenta->installPath . $model->fileName)) {
 				$loaded = $model->loadImage();
 				if (false == $loaded) {
@@ -120,6 +124,7 @@ function images_maintenance() {
 					$fixCount++;
 				}
 			}
+			*/
 
 		} else {
 			//TODO:

@@ -11,28 +11,40 @@
 //opt: projectUID - overrides raUID if present [string]
 
 function projects_summary($args) {
-	global $db, $theme, $user, $session;
+	global $db;
+	global $theme;
+	global $user;
+	global $session;
+	global $cache;
+
 	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check block cache
+	//----------------------------------------------------------------------------------------------
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
+
 	$model = new Projects_Project($db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
+
 	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make the block
+	//	make and cache the block
 	//----------------------------------------------------------------------------------------------
-	if ('true' == $session->get('mobile')) { 
-		$block = $theme->loadBlock('modules/projects/views/summary.m.block.php');		
-	} else {
-		$block = $theme->loadBlock('modules/projects/views/summary.block.php');
-	}
-	
+	$block = $theme->loadBlock('modules/projects/views/summary.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);
+
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('projects-summary-' . $model->UID, $args['area'], $args['rawblock'], $html);
+
 	return $html;
 }
 

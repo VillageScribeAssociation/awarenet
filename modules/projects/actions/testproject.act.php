@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	load test data
 	//----------------------------------------------------------------------------------------------
-	$model = new Projects_Project($req->ref);
+	$model = new Projects_Project($kapenta->request->ref);
 	//if (false == $model->selectionsLoaded) { $page->do404('could not load project sections', true); }
 
 	foreach($model->sections as $idx => $section) {

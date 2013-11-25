@@ -23,7 +23,7 @@ function calendar_editform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$ext['contentJs64'] = $utils->base64EncodeJs('contentJs64', $ext['content']);
+	$ext['content64'] = $utils->b64wrap($ext['content']);
 	$block = $theme->loadBlock('modules/calendar/views/editform.block.php');
 	$html = $theme->replaceLabels($ext, $block);
 

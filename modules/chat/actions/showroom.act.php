@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('No Room specified.'); } 
-	$model = new Chat_Room($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404('No Room specified.'); } 
+	$model = new Chat_Room($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404("Unkown Room");}
 
 //	if (false == $user->authHas('chat', 'chat_room', 'show', $model->UID)) {
@@ -20,11 +20,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/chat/actions/showroom.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['raUID'] = $model->UID;
-	$page->blockArgs['roomUID'] = $model->UID;
+	$kapenta->page->load('modules/chat/actions/showroom.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->UID;
+	$kapenta->page->blockArgs['roomUID'] = $model->UID;
 	//	^ add any further block arguments here
-	$page->render();
+	$kapenta->page->render();
 
 ?>

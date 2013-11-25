@@ -6,7 +6,11 @@
 	href="%%serverPath%%%%fileName%%"
 	style="display:block;width:%%width%%px;height:%%height%%px;"
 	id="player%%UID%%r%%rand%%">
+
 </a>
+
+<!-- deprecated: splash image -->
+<!-- <img src='%%coverImage%%' style='width: %%width%%px; height: %%height%%px;' /> -->
 
 <script language="JavaScript">
 flowplayer(
@@ -25,11 +29,20 @@ flowplayer(
 		},
 
 		canvas:  { backgroundImage: 'url(%%coverImage%%)' }
-
 	}
 );
 </script>
 
-%%browserLink%% %%like%% %%extra%%
+<small>
+%%browserLink%%
+%%like%%
+%%extra%% 
+</small>
+
+<span style='float: right;'>
+  <small>
+    [[:abuse::reportlink::refModule=videos::refModel=videos_video::refUID=%%UID%%:]]
+  </small>
+</span>
 <br/>
 */ ?>

@@ -1,20 +1,33 @@
-<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*
+<? /*
 <?xml version="1.0" ?>
 
 <page>
 	<template>twocol-rightnav.template.php</template>
-	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - wiki - [`|pc][`|pc]articleTitle[`|pc][`|pc]</title>
-	<content>[[:theme::navtitlebox::width=570::label=Wiki:]]
-[`|lt]h1[`|gt][`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
-[`|pc][`|pc]contentHtml[`|pc][`|pc]</content>
-	<nav1>[`|pc][`|pc]infobox[`|pc][`|pc]
+	<title>%%websiteName%% - wiki - %%articleTitle%%</title>
+	<content>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Wiki:]]
+		[[:wiki::articlecontent::raUID=%%UID%%:]]
+		</div>
+	</content>
+	<nav1>
+		[[:wiki::articleinfobox::raUID=%%UID%%:]]
 
-[[:theme::navtitlebox::label=Article Details:]]
-[[:wiki::statsnav::raUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Most Recent Edit:]]
-[[:wiki::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1:]]
-</nav1>
+
+		<div class='block'>
+		[[:theme::navtitlebox::label=Article Details::toggle=divWikiStats:]]
+		<div id='divWikiStats'>
+		[[:wiki::statsnav::raUID=%%UID%%:]]
+		</div>
+		<div class='foot'></div>
+		</div>
+		<br/>
+
+		<div class='block'>
+		[[:theme::navtitlebox::label=Most Recent Edit:]]
+		[[:wiki::historynav::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=1:]]
+		</div>
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

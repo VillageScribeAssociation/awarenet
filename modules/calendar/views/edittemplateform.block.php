@@ -48,8 +48,10 @@
   </tr>
     </table>
 <b>content:</b><br/>
-%%contentJs64%%
-[[:editor::base64::jsvar=%%contentJsVar64%%::name=content:]]<br/>
+<div class='HyperTextArea64' title='content' width='100%' height='400'>
+%%content64%%
+</div>
+<script language='Javascript'> khta.convertDivs(); </script>
 </form>
 <table noborder>
   <tr>
@@ -59,7 +61,7 @@
 			onClick="
 				var theForm = document.getElementById('formET%%UID%%');
 				theForm.action = '%%serverPath%%calendar/savetemplate/';
-				area.update();
+				khta.updateAllAreas();
 				theForm.submit();
 			">
 	</td>

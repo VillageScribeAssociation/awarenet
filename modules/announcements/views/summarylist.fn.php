@@ -43,11 +43,12 @@ function announcements_summarylist($args) {
 	}  
 
 	$UID = $kapenta->createUID();
-	$rawblock64 = base64_encode($args['rawblock']);
-	$html = "<div id='blockAnnouncementsSL" . $UID . "'>\n"
-		  . $html;
-		  . "</div>"
-		  . "<! REGISTERBLOCK:blockAnnouncementsSL" . $UID . ":" . $rawblock64 . " -->\n"
+
+	//$rawblock64 = base64_encode($args['rawblock']);
+	//$html = "<div id='blockAnnouncementsSL" . $UID . "'>\n"
+	//	  . $html;
+	//	  . "</div>"
+	//	  . "<! REGISTERBLOCK:blockAnnouncementsSL" . $UID . ":" . $rawblock64 . " -->\n"
 
 	return $html;
 }

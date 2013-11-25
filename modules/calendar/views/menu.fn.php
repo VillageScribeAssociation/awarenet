@@ -7,10 +7,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function calendar_menu($args) {
-	global $theme, $user;
+	global $kapenta;
+	global $theme;
+	global $user;
 
 	$labels = array();
-	$now = time();
+	$now = $kapenta->time();
 
 	$labels['thisYear'] = 'year_' . date('Y');
 	$labels['thisMonth'] = 'month_' . date('Y') . '_' . date('m');

@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $req->args)) { $page->do404('UID not given'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given'); }
 
-	$model = new Moblog_Post($req->args['UID']);
+	$model = new Moblog_Post($kapenta->request->args['UID']);
 
 	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to delete this blog post.'); }

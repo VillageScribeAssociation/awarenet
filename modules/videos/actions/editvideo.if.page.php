@@ -13,8 +13,8 @@
 		<div class='footer'></div>
 		<br/>
 
-		[[:theme::navtitlebox::label=Video Thumbnail::toggle=divVideoThumbnail::hidden=yes:]]
-		<div id='divVideoThumbnail' style='display: none;'>
+		[[:theme::navtitlebox::label=Video Thumbnail::toggle=divVideoThumbnail::hidden=no:]]
+		<div id='divVideoThumbnail'>
 		<iframe name='videoThumb' class='consoleif' id='ifVideoThumb'
 		  src='%%serverPath%%/images/uploadsingle/refModule_videos/refModel_videos_video/refUID_%%UID%%/category_thumb/'
 		  width='100%' height='400px' frameborder='0' ></iframe>

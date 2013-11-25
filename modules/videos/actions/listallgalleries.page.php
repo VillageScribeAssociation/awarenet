@@ -12,27 +12,32 @@
 	</content>
 	<nav1>
 
-		[[:theme::navtitlebox::label=Create New Gallery::toggle=divNewGalleryForm::hidden=[`|sq]yes[`|sq]:]]
-		[`|lt]div id=[`|sq]divNewGalleryForm[`|sq] style=[`|sq]visibility: hidden[`|sc] display: none[`|sc][`|sq][`|gt]
 		[[:videos::newgalleryform:]]
-		[`|lt]/div[`|gt]
-		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Gallery Tags::toggle=divTagCloud:]]
 		[`|lt]div id=[`|sq]divTagCloud[`|sq][`|gt]
 		[[:tags::modelcloud::refModule=videos::refModel=videos[`|us]gallery:]]
 		[`|lt]/div[`|gt]
+		<div class='foot'></div>
+		</div>
 		<br/>
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Popular Videos::toggle=divPopularVideos:]]
 		<div id='divPopularVideos'>
 		[[:videos::listpopularvideosnav::num=10:]]
 		</div>
+		<div class='foot'></div>
+		</div>
 		<br/>
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Recently Added::toggle=divRecentVideos:]]
 		<div id='divRecentVideos'>
 		[[:videos::listrecentvideosnav::num=10:]]
+		</div>
+		<div class='foot'></div>
 		</div>
 		<br/>
 

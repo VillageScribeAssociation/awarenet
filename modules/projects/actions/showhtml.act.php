@@ -10,13 +10,13 @@
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-	$model = new Projects_Project($req->ref);
+	$model = new Projects_Project($kapenta->request->ref);
 
 	$cssUrl = $kapenta->serverPath . "/home/css/default.css";
 

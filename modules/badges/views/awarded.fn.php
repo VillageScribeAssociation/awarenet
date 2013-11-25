@@ -25,10 +25,7 @@ function badges_awarded($args) {
 
 	$imgOpts = "size=thumb::link=no::refModule=badges::refModel=badges_badge::display=inline::size=thumb90::";
 
-	$html .= ''
-	 . "[[:theme::navtitlebox::label=Badges::toggle=divUserBadges:]]\n"
-	 . "<div id='divUserBadges'>"
-	 . "<div class='spacer'></div>\n";
+	$html .= "<div class='spacer'></div>\n";
 
 	foreach($range as $row) {
 		$block = ''
@@ -45,7 +42,7 @@ function badges_awarded($args) {
 		$html .= "<a href='$badgeUrl'>$block</a>\n";
 	}
 
-	$html .= "<div class='foot'></div>\n</div>\n<br/>";
+	$html = $theme->ntb($html, 'Badges', 'divUserBadges', 'show');
 
 	return $html;
 }

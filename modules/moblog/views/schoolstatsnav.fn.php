@@ -8,8 +8,19 @@
 //--------------------------------------------------------------------------------------------------
 
 function moblog_schoolstatsnav($args) {
-	global $db, $user, $theme, $aliases;
+	global $db;
+	global $user;
+	global $theme;
+	global $aliases;
+	global $cache;
+
 	$html = '';		//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check view cache
+	//----------------------------------------------------------------------------------------------
+	$html = $cache->get($args['area'], $args['rawblock']);	
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
@@ -58,6 +69,12 @@ function moblog_schoolstatsnav($args) {
 	}
 
 	$html = $theme->arrayToHtmlTable($aryTable, true, true);
+
+	//----------------------------------------------------------------------------------------------
+	//	save to view cache
+	//----------------------------------------------------------------------------------------------
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('moblog-schoolstatsnav', $args['area'], $args['rawblock'], $html);
 
 	return $html;
 }

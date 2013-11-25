@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('No contact detail specified', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('No contact detail specified', true); }
 
-	$model = new Contact_Detail($req->ref);
+	$model = new Contact_Detail($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Contact detail not found.', true); }
 
 	$authHas = $user->authHas($model->refModule, $model->refModel, 'contact-edit', $model->refUID);

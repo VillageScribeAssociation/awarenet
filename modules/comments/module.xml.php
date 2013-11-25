@@ -18,7 +18,9 @@
                 <permission>retract</permission>
                 <permission>showall</permission>
                 <permission>show</permission>
+                <permission>list</permission>
                 <permission>delete</permission>
+                <permission>new</permission>
                 <export>comments-add</export>
                 <export>comments-retract</export>
                 <export>comments-show</export>

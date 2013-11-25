@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/forums/actions/list.page.php');	
-	$page->render();													
+	$kapenta->page->load('modules/forums/actions/list.page.php');	
+	$kapenta->page->render();													
 
 ?>

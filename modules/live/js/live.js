@@ -48,7 +48,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 		//------------------------------------------------------------------------------------------
 		//	create XMLHttpRequest object
 		//------------------------------------------------------------------------------------------
-		var url = kutils.serverPath + 'live/getmessages/' + this.UID;
+		var url = kutils.serverPath + 'live/getmessages/' + window.jsPageUID;
 		this.log('[*] Polling server: ' + url + '...');	
 
 		//------------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ function Live_Pump(jsPageUID, jsServerPath) {
 				//TODO: check the div was found
 				theDiv.innerHTML = content;
 				this.runJs(content);
-				theDiv.style.backgroundColor = '#ffffff';
+				theDiv.style.backgroundColor = 'transparent';
 			}
 		}
 	}

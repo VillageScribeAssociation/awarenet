@@ -23,7 +23,7 @@ function admin_maintenancelist($args) {
 	//---------------------------------------------------------------------------------------------
 	foreach($mods as $modName) {
 		$fileName = 'modules/' . $modName . '/inc/maintenance.inc.php';
-		$maint[$modName] = $kapenta->fileExists($fileName);
+		$maint[$modName] = $kapenta->fs->exists($fileName);
 		if (true == $maint[$modName]) { $count++; }
 	}
 

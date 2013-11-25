@@ -2,13 +2,14 @@
 
 	require_once('../../../shinit.php');
 	require_once($kapenta->installPath . 'modules/p2p/models/peer.mod.php');
-	require_once($kapenta->installPath . 'modules/p2p/models/offers.set.php');
-	require_once($kapenta->installPath . 'modules/p2p/inc/client.class.php');
+	require_once($kapenta->installPath . 'modules/p2p/inc/worker.class.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	administrative shell script to repeatedly pull from a peer
 //--------------------------------------------------------------------------------------------------
 //ref: UID of a P2P_Peer object
+
+	/*
 
 	$usage_notes = ''
 	 . "Usage: shinit.php [peerUID]|[peerName]|[peerUrl]\n"
@@ -32,27 +33,16 @@
 	$peer = new P2P_Peer($peerUID);
 	if (false == $peer->loaded) { echo $usage_notes; die(); }
 
-	$offers = new P2P_Offers($peer->UID);	
+	*/
 
-	/* ------------------------------------------------------------------------------------------ */
+	$worker = new P2P_Worker(true);		//	true - make it chatty
 
-	$print = true;
-
-	if ($print) { echo "Pulling from: " . $peer->name . " (" . $peer->url . ")\n"; }
-
-	$client = new P2P_Client($peer->UID);
-	$limit = 100;
 	$continue = true;
 
 	while (true == $continue) {
-
-		echo "Testing pull from: " . $peer->name . "\n";
-		$report = $client->pull();
-		echo strip_tags($report);
-		$limit--;
-
-		if (0 == $limit) { $continue = false; }
-		if (false !== strpos($report, "Peer reports no changes.")) { $continue = false; }
+		$continue = $worker->pull();
 	}
+
+	echo "All queues empty.\n";
 
 ?>

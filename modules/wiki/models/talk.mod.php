@@ -321,7 +321,7 @@ class Wiki_Talk {
 		global $kapenta, $user;
 
 		$this->title = 'Index';
-		$raw = $kapenta->fileGetContents($this->defaultIndexPage, false, true);
+		$raw = $kapenta->fs->get($this->defaultIndexPage, false, true);
 		if (false == $raw) { $raw = "(editable by admins only)"; }
 		$this->content = $raw;
 		$this->locked = 'admin';

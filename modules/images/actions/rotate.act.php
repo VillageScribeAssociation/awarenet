@@ -23,7 +23,7 @@
 		$page->do403('You are not authorized to edit this image.'); 
 	}
 
-	if (false == $kapenta->fileExists($model->fileName)) { $page->do404('File missing.'); }
+	if (false == $kapenta->fs->exists($model->fileName)) { $page->do404('File missing.'); }
 
 	$angle = 270;
 	if (

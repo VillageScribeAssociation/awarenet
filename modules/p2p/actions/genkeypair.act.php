@@ -1,7 +1,13 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/p2p/inc/phpseclib/Math/BigInteger.php');
+	require_once($kapenta->installPath . 'modules/p2p/inc/phpseclib/Crypt/Random.php');
+	require_once($kapenta->installPath . 'modules/p2p/inc/phpseclib/Crypt/Hash.php');
+	require_once($kapenta->installPath . 'modules/p2p/inc/phpseclib/Crypt/RSA.php');
+	require_once($kapenta->installPath . 'modules/p2p/inc/phpseclib/Crypt/AES.php');
+
 //--------------------------------------------------------------------------------------------------
-//*	test openSSL key generation
+//*	RSA key generation utility action
 //--------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------------------------
@@ -12,30 +18,23 @@
 	//----------------------------------------------------------------------------------------------
 	// generate a bit rsa private key (usually 1024 bit)
 	//----------------------------------------------------------------------------------------------
-	$prikey = '';
-	$pubkey = '';
+	$keylen = (int)$kapenta->registry->get('p2p.keylength');
+	if (0 == $keylen) { $keylen = 1024; }
 
-	if (true == function_exists('openssl_pkey_get_details')) {
-		$config = array();
-		$config['private_key_bits'] = 4096;					//	setting?
-		$config['private_key_type'] = OPENSSL_KEYTYPE_RSA;
+	$keypair = array('publickey' => '', 'privatekey' => '');
 
-		$res = openssl_pkey_new($config);					//	make new key pair 
-		openssl_pkey_export($res, $prikey);					//	get the private key as PEM
-
-		$details = openssl_pkey_get_details($res);			//	get metadata
-		$pubkey = $details['key'];							//	get public key
-	} else {
-		$session->msg('Could not generate key pair, openSSL support missing or incomplete.', 'bad');
+	if (true == array_key_exists('generate', $kapenta->request->args)) {
+		$rsa = new Crypt_RSA();
+		$keypair = $rsa->createKey($keylen);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	// render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/p2p/actions/genkeypair.page.php');
-	$page->blockArgs['publicKeyTxt'] = $pubkey;
-	$page->blockArgs['privateKeyTxt'] = $prikey;
-	$page->render();
+	$kapenta->page->load('modules/p2p/actions/genkeypair.page.php');
+	$kapenta->page->blockArgs['publicKeyTxt'] = $keypair['publickey'];
+	$kapenta->page->blockArgs['privateKeyTxt'] = $keypair['privatekey'];
+	$kapenta->page->render();
 
 
 ?>

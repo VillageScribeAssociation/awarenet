@@ -32,15 +32,28 @@ function admin_serversummary($args) {
 		}
 	}
 
+	if (true == class_exists('Memcached')) {
+		$exts .= "<span class='ajaxmsg'>Memcached</span> ";
+	} else {
+		$exts .= "<span class='ajaxwarn'>Memcached</span> ";
+	}
+
+	if (true == class_exists('Imagick')) {
+		$exts .= "<span class='ajaxmsg'>Imagick</span> ";
+	} else {
+		$exts .= "<span class='ajaxwarn'>Imagick</span> ";
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
+
 	$table = array(
 		array('Key', 'Setting'),
-		array('<b>iPath:</b>', $registry->get('kapenta.installpath')),
-		array('<b>sPath:</b>', $registry->get('kapenta.serverpath')),
+		array('<b>iPath:</b>', $kapenta->registry->get('kapenta.installpath')),
+		array('<b>sPath:</b>', $kapenta->registry->get('kapenta.serverpath')),
 		array('<b>date:</b>', $db->datetime()),
-		array('<b>db use:</b>', '[[:admin::dbusage:]]'),
+		array('<b>db use:</b>', "[[:admin::dbusage:]]"),
 		array('<b>extensions:</b>', $exts)
 	);
 

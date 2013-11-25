@@ -45,10 +45,23 @@ function images_default($args) {
 	if (true == array_key_exists('display', $args)) { $display = $args['display']; }
 
 	//----------------------------------------------------------------------------------------------
-	//	find default (lowest weight image), if any
+	//	find default (lowest weight image), if any, first attempting memcache
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("refUID='" . $db->addMarkup($args['refUID']) . "'");
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', '1');
+	$range = array();
+	$cacheKey = 'images::default::' . $args['refUID'];
+
+	//	attempt to load from memcache
+	if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
+		$imgUID = $kapenta->cacheGet($cacheKey);
+		$objAry = $db->getObject('images_image', $imgUID);
+		if (0 != count($objAry)) { $range[$imgUID] = $objAry; }
+	}
+
+	//	attempt database lookup
+	if (0 == count($range)) {
+		$conditions = array("refUID='" . $db->addMarkup($args['refUID']) . "'");
+		$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', '1');
+	}
 
 	if (0 == count($range)) {
 		if (('' == $altUser) || (false == $db->objectExists('users_user', $altUser))) {
@@ -77,7 +90,11 @@ function images_default($args) {
 		//------------------------------------------------------------------------------------------
 		//	item owns at least one image, return default (the one with lowest weight)
 		//------------------------------------------------------------------------------------------
+
 		$row = array_pop($range);
+
+		$kapenta->cacheSet($cacheKey, $row['UID']);
+
 		$imgUrl = "%%serverPath%%images/s_" . $size . "/" . $row['alias'];
 
 		if ('inline' == $display) { $style = " style='display: inline;'"; }

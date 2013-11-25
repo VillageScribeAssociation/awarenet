@@ -10,9 +10,9 @@
 	//	delete file passed in GET request as argument
 	//----------------------------------------------------------------------------------------------
 
-	if (true == array_key_exists('rmfile', $req->args)) {
+	if (true == array_key_exists('rmfile', $kapenta->request->args)) {
 
-		$model = new Files_File($req->args['rmfile']);
+		$model = new Files_File($kapenta->request->args['rmfile']);
 		if (false == $model->loaded) { $page->do404('File not found.'); }
 
 		$authorized = false;

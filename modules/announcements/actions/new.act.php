@@ -13,13 +13,13 @@
 	//	check request args and user permissions
 	//----------------------------------------------------------------------------------------------
 	
-	if (false == array_key_exists('refModule', $req->args)) { $page->do404('refModule not given'); }
-	if (false == array_key_exists('refModel', $req->args)) { $page->do404('refModel not given'); }
-	if (false == array_key_exists('refUID', $req->args)) { $page->do404('refUID not given.'); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('refModule not given'); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('refModel not given'); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('refUID not given.'); }
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('Unkonwn module.'); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('Unkonwn module.'); }

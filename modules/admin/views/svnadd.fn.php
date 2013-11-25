@@ -6,7 +6,7 @@
 
 function admin_svnadd($args) {
 	global $user;
-	global $registry;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';								//%	return value [html]
@@ -14,7 +14,7 @@ function admin_svnadd($args) {
 	$skipfiles = '';
 
 	if ('admin' != $user->role) { return ''; }
-	if ('linux' != $registry->get('kapenta.os')) { 
+	if ('linux' != $kapenta->registry->get('kapenta.os')) { 
 		return 'This action is only available on Linux web hosts.<br/>';
 	}
 
@@ -22,10 +22,6 @@ function admin_svnadd($args) {
 	//	define which files should not be tracked by SVN
 	//---------------------------------------------------------------------------------------------
 	$exemptions = array(
-		'reg.php',
-		'oblog/views/image.fn.php',
-		'callbacks.inc.php',
-		'odules/sync/',
 		'setup.inc.php',
 		'tweet.txt',  
 		'morbo.gif',

@@ -29,13 +29,13 @@
 		switch($key) {
 			case 'username':	
 				if (('' != trim($value)) && ($value != $package->username)) { 
-					$registry->set($prefix . 'user', $value); 
+					$kapenta->registry->set($prefix . 'user', $value); 
 				}
 				break;	//..........................................................................
 
 			case 'password':	
 				if (('' != trim($value)) && ($value != $package->password)) { 
-					$registry->set($prefix . 'pass', $value);
+					$kapenta->registry->set($prefix . 'pass', $value);
 				}
 				break;	//..........................................................................
 

@@ -13,8 +13,8 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	if (true == array_key_exists('clear', $req->args)) {
-		$model = new Projects_Section($req->args['clear']);
+	if (true == array_key_exists('clear', $kapenta->request->args)) {
+		$model = new Projects_Section($kapenta->request->args['clear']);
 		if (false == $model->loaded) {
 			$session->msg('Unkown project section, could not clear lock.', 'bad');
 		} else {
@@ -34,7 +34,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/showlocks.page.php');
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/showlocks.page.php');
+	$kapenta->page->render();
 
 ?>

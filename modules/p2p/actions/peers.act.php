@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/p2p/actions/peers.page.php');
-	$page->render();
+	$kapenta->page->load('modules/p2p/actions/peers.page.php');
+	$kapenta->page->render();
 
 ?>

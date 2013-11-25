@@ -9,7 +9,7 @@
 function packages_commitform($args) {
 	global $user;
 	global $theme;
-	global $registry;
+	global $kapenta;
 	global $kapenta;
 
 	$maxUploads = 200;			//%	commit in batches [string]

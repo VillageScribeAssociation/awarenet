@@ -11,14 +11,14 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('projects', 'projects_project', 'show')) { $page->do403(); }
-	if (true == array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = $kapenta->request->args['page']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/list.page.php');
-	$page->blockArgs['pageNo'] = $pageNo;
-	$page->blockArgs['page'] = $pageNo;
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/list.page.php');
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;
+	$kapenta->page->blockArgs['page'] = $pageNo;
+	$kapenta->page->render();
 
 ?>

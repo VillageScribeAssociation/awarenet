@@ -12,20 +12,20 @@
 	//----------------------------------------------------------------------------------------------
 	//	decide which users galleries to show
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $req->ref = $user->alias; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->alias; }
 
-	$model = new Users_User($req->ref);
+	$model = new Users_User($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/videos/actions/listgalleries.page.php');		
-	$page->blockArgs['userUID'] = $model->UID;								
-	$page->blockArgs['userRa'] = $model->alias;
-	$page->blockArgs['userName'] = $model->getName();
-	$page->title = 'awareNet - videos by ' . $page->blockArgs['userName'];
-	$page->render();													
+	$kapenta->page->load('modules/videos/actions/listgalleries.page.php');		
+	$kapenta->page->blockArgs['userUID'] = $model->UID;								
+	$kapenta->page->blockArgs['userRa'] = $model->alias;
+	$kapenta->page->blockArgs['userName'] = $model->getName();
+	$page->title = 'awareNet - videos by ' . $kapenta->page->blockArgs['userName'];
+	$kapenta->page->render();													
 
 ?>

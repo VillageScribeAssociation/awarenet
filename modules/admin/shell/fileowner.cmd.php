@@ -60,11 +60,11 @@ function admin_WebShell_fileowner($args) {
 				$creatorBlock = '[[:users::name::userUID=' . $obj['createdBy'] . ':]]';
 				$creatorName = $theme->expandBlocks($creatorBlock);
 
-				$present = $kapenta->fileExists($fileName) ? 'yes' : 'no';
+				$present = $kapenta->fs->exists($fileName) ? 'yes' : 'no';
 				$shared = $db->isShared($owner['model'], $owner['UID']) ? 'yes' : 'no';
 
-				$fileHash = $kapenta->fileExists($fileName) ? $kapenta->fileSha1($fileName) : 'na';
-				$fileSize = $kapenta->fileExists($fileName) ? $kapenta->fileSize($fileName) : 'na';
+				$fileHash = $kapenta->fs->exists($fileName) ? $kapenta->fileSha1($fileName) : 'na';
+				$fileSize = $kapenta->fs->exists($fileName) ? $kapenta->fs->size($fileName) : 'na';
 
 				$html .= ''
 				 . '<pre>'

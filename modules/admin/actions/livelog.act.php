@@ -12,8 +12,8 @@
 	//---------------------------------------------------------------------------------------------
 	//	render page
 	//---------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/livelog.page.php');
+	$kapenta->page->load('modules/admin/actions/livelog.page.php');
 	$page->jsinit .= "\n\t\tmsgSubscribe('admin-syspagelogsimple', msgh_sysPageLog);\n";
-	$page->render();
+	$kapenta->page->render();
 
 ?>

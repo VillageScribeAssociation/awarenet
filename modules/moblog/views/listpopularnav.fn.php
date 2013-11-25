@@ -37,14 +37,17 @@ function moblog_listpopularnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block and return
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
+	//$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
+
 	foreach($items as $item) {
 		if ('' != trim($item)) {
-			$model = new Moblog_Post($item);				
-			if (true == $model->loaded) {
-				$ext = $model->extArray();
-				$html .= $theme->replaceLabels($ext, $block);
-			}
+			//$model = new Moblog_Post($item);				
+			//if (true == $model->loaded) {
+			//	$ext = $model->extArray();
+			//	$html .= $theme->replaceLabels($ext, $block);
+			//}
+
+			$html .= "[[:moblog::summarynav::postUID=" . $item . ":]]\n";
 		}
 	}
 

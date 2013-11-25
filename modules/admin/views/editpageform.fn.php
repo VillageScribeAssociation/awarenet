@@ -18,7 +18,7 @@ function admin_editpageform($args) {
 	if (false == array_key_exists('xpage', $args)) { return '(xpage not specified)'; }
 
 	$fileName = 'modules/' . $args['xmodule'] . '/actions/' . $args['xpage'];
-	if (false == $kapenta->fileExists($fileName)) { return ''; }
+	if (false == $kapenta->fs->exists($fileName)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the page

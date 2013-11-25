@@ -12,7 +12,7 @@
 	$lines = explode("\n", $result);
 	foreach($lines as $line) { 
 		$line = str_replace($kapenta->installPath, '', $line);
-		$page->load($line);
+		$kapenta->page->load($line);
 		if (false != strpos(' ' . $page->title, 'awareNet')) {
 			echo "fixing: $line <br/>\n";
 			echo "from: " . htmlentities($page->title) . "<br/>\n";

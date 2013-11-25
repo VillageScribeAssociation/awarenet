@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: check user auth
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('files_file');
 
 	$model = new Files_File($UID);

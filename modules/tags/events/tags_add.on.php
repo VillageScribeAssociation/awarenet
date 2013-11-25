@@ -16,6 +16,8 @@ function tags__cb_tags_add($args) {
 	global $user;
 	global $db;
 	global $session;
+	global $utils;
+	global $cache;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -43,6 +45,9 @@ function tags__cb_tags_add($args) {
 	$refUID = $args['refUID'];
 	$tagName = $args['tagName'];
 
+	$tagName = str_replace(' ', '-', $tagName);
+	$tagName = $utils->makeAlphaNumeric($tagName, '-');
+
 	if (false == $kapenta->moduleExists($refModule)) {
 		$session->msgAdmin('tags_add: unknown module.');
 		return false;
@@ -56,6 +61,12 @@ function tags__cb_tags_add($args) {
 		$session->msgAdmin('tags_add: tag too short.');
 		return false;
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	invalidate cache objects
+	//----------------------------------------------------------------------------------------------
+
+	$cache->clear('tags-modelcloud-' . $refModel);
 
 	//----------------------------------------------------------------------------------------------
 	//	check if this tag exists, create it if it does not
@@ -95,9 +106,17 @@ function tags__cb_tags_add($args) {
 
 	$tag->updateObjectCount();
 	$report = $tag->save();
+	if ('' != $report) { return false; }
 
-	if ('' == $report) { return true; }
-	return false;
+	//----------------------------------------------------------------------------------------------
+	//	raise tags_added event for owner / cache to respond to
+	//----------------------------------------------------------------------------------------------
+	$args['tagName'] = $tagName;
+	$args['tagUID'] = $tag->UID;
+	$args['indexUID'] = $model->UID;
+	$kapenta->raiseEvent('*', 'tags_added', $args);
+
+	return true;
 }
 
 ?>

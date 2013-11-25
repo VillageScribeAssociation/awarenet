@@ -18,7 +18,15 @@
 	$refModule = $_POST['refModule'];
 	$refModel = $_POST['refModel'];
 	$refUID = $_POST['refUID'];
+	$replyTo = '';
 	$return = $_POST['return'];
+
+	if (true == array_key_exists('replyTo', $_POST)) {
+		$replyTo = $_POST['replyTo'];
+		if (false == $db->objectExists('comments_comment', $replyTo)) {
+			$page->do404('(cannot reply to missing comment');
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions, valid module
@@ -50,11 +58,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	raise 'comment_added' event on refModule
 	//----------------------------------------------------------------------------------------------
-	$args = array(	'refModule' => $refModule, 
-					'refModel' => $refModel, 
-					'refUID' => $refUID, 
-					'commentUID' => $ext['UID'], 
-					'comment' => $ext['comment']    );
+	$args = array(
+		'refModule' => $refModule, 
+		'refModel' => $refModel, 
+		'refUID' => $refUID, 
+		'commentUID' => $ext['UID'], 
+		'comment' => $ext['comment']
+	);
 
 	$kapenta->raiseEvent($refModule, 'comments_added', $args);
 	

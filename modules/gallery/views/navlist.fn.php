@@ -8,34 +8,43 @@
 //arg: userUID - user whose galleries we wish to show [string]
 
 function gallery_navlist($args) {
-	global $db, $theme, $user;
-	$html = '';
+	global $db;
+	global $theme;
+	global $user;
 
+	$num = 10;						//%	maximum number of galleries to show in nav [int]
+	$html = '';						//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('userUID', $args)) { return ''; }
+	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
-	//$sql = "select * from gallery "
-	//	 . "where parent='root' and createdBy='" . $db->addMarkup($args['userUID']) . "' "
-	//	 . "order by title";
+	// TODO: permissions checks here
 
-	// TODO: input and permissions checks here
-
+	//----------------------------------------------------------------------------------------------
+	//	query database
+	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'title');
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'createdOn DESC', $num);
 	
-	$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
+	//$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
 
-	if (count($range) > 0) {
-		foreach ($range as $row) {
-			$model = new Gallery_Gallery();
-			$model->loadArray($row);
-			$labels = $model->extArray();
-			$labels['galleryUID'] = $row['UID'];
-			$html .= $theme->replaceLabels($labels, $block);
-		}
+	if (0 == count($range) > 0) { return "<div class='inlinequote'>(no galleries)</div><br/>\n"; }
 
-	} else { $html = "<div class='inlinequote'>(no galleries)</div><br/>\n"; }
+	foreach ($range as $item) {
+		//$model = new Gallery_Gallery();
+		//$model->loadArray($row);
+		//$labels = $model->extArray();
+		//$labels['galleryUID'] = $row['UID'];
+		//$html .= $theme->replaceLabels($labels, $block);
+
+		$html .= "[[:gallery::summarynav::galleryUID=" . $item['UID'] . ":]]";
+	}
+
 	return $html;
 }
 

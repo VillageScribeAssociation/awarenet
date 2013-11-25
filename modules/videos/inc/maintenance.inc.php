@@ -157,7 +157,7 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check hash
 		//------------------------------------------------------------------------------------------
-		if (('' == $model->hash) && (true == $kapenta->fileExists($model->fileName))) {
+		if (('' == $model->hash) && (true == $kapenta->fs->exists($model->fileName))) {
 			$model->save();			// hash is set by $model->vertify()
 			$errors[] = array($model->UID, $model->title, 'added hash');
 			$errorCount++;

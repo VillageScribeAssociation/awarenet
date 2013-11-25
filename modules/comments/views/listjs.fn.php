@@ -5,18 +5,22 @@
 //--------------------------------------------------------------------------------------------------
 //|	list all most recent x comments owned by a particular record on a given module
 //--------------------------------------------------------------------------------------------------
-//arg: refUID - record which owns the comments [string]
-//arg: refModule - module which owns the record [string]
+//arg: refModule - name of a kapenta module [string]
+//arg: refModel - type of obejct which may have comments [string]
+//arg: refUID - UID of object which may own comments [string]
 //opt: num - number of records per page (default 10) [string]
+//TODO: discover if this is still used by anything and delete if not
 
 function comments_listjs($args) {
 	global $theme, $kapenta, $db, $user, $utils;
 
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
-	if ($user->authHas('comments', 'Comment_Comment', 'list', 'TODO:UIDHERE') == false) { return false; }
-	if ($user->authHas('comments', 'Comment_Comment', 'show', 'TODO:UIDHERE') == false) { return false; }
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
+	if (false == $user->authHas('comments', 'Comment_Comment', 'show')) { return false; }
+	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refUID', $args)) { return false; }
 
 	$num = 10;
 	if (array_key_exists('num', $args) == true) { $num = $args['num']; }
@@ -25,6 +29,7 @@ function comments_listjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
+	//TODO: use db->loadRange() for this
 
 	$sql = "select * from comments_comment "
 		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "

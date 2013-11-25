@@ -127,9 +127,9 @@ class Files_File {
 
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 
-		if ($kapenta->fileExists($this->fileName)) {
+		if ($kapenta->fs->exists($this->fileName)) {
 			if (0 == (int)$this->fileSize) {
-				$this->fileSize = $kapenta->fileSize($this->fileName);
+				$this->fileSize = $kapenta->fs->size($this->fileName);
 			}
 			if ('' == $this->hash) {
 				$this->hash = $kapenta->fileSha1($this->fileName);

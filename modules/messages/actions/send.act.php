@@ -40,6 +40,20 @@
 		$subject = $utils->cleanString($_POST['subject']);
 		if ('' == trim($subject)) { $subject = '(no subject)'; }
 
+		//	Asyncronous implementation via message_send => p2p_selfcast
+
+		$detail = array(
+			'fromUID' => $user->UID,
+			'toUID' => $toUID,
+			'title' => $subject,
+			'content' => $utils->cleanHtml($_POST['content']),
+			're' => ''		/*	TODO: this */
+		);
+
+		$kapenta->raiseEvent('messages', 'messages_send', $detail);
+
+		//	Previous implementation, saves directly to the database, slow on some hosts
+		/*
 		$toNameBlock = '[[:users::name::userUID=' . $toUID . ':]]';
 		$toName = $theme->expandBlocks($toNameBlock, '');
 
@@ -65,12 +79,13 @@
 		$model->owner = $user->UID;
 		$model->folder = "outbox";
 		$model->save();
+		*/
 	}
 
 	//------------------------------------------------------------------------------------------
 	//	redirect back to inbox
 	//------------------------------------------------------------------------------------------
-		
+	
 	$page->do302('messages/inbox/');
 
 ?>

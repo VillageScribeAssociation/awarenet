@@ -28,12 +28,12 @@
 	
 	$part = base64_decode($part64);
 
-	$kapenta->filePutContents('data/live/some64.txt', $part64);
-	$kapenta->filePutContents('data/live/some.jpg', $part);
+	$kapenta->fs->put('data/live/some64.txt', $part64);
+	$kapenta->fs->put('data/live/some.jpg', $part);
 	
-	if (strlen($part) != $length) {
+	if (mb_strlen($part, 'ASCII') != $length) {
 	 	header( "HTTP/1.1 500 Internal Server Error" );
-		echo "LENGTH MISMATCH: " . strlen($part) . '  != ' . $length . "<br/>\n";
+		echo "LENGTH MISMATCH: " . mb_strlen($part, 'ASCII') . '  != ' . $length . "<br/>\n";
 		//echo "starts:" . substr($part, 0, 100) . "<br/>\n";
 		//echo "ends:" . substr($part, strlen($part) - 100) . "<br/>\n";
 		//$part = substr($part, 0, $length);

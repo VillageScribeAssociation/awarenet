@@ -35,8 +35,7 @@ function calendar_edittemplateform($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/calendar/views/edittemplateform.block.php');
 	$labels = $model->extArray();
-	$labels['contentJs64'] = $utils->base64EncodeJs('contentJs64', $labels['content']);
-	$labels['contentJsVar64'] = 'contentJs64';
+	$labels['content64'] = $utils->b64wrap($labels['content']);
 	// ^ add any labels, block args, etc here
 
 	$html = $theme->replaceLabels($labels, $block);

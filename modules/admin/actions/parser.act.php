@@ -13,7 +13,7 @@
 
 	$html = '';
 	$testResult = '';
-	$allowedTags = $registry->get('kapenta.htmlparser.allowtags');
+	$allowedTags = $kapenta->registry->get('kapenta.htmlparser.allowtags');
 
 	//----------------------------------------------------------------------------------------------
 	//	set allowed tags
@@ -23,7 +23,7 @@
 		$tags = explode('|', $_POST['tags']);
 		foreach($tags as $idx => $tag) { $tags[$idx] = trim($tag); }
 		$allowedTags = implode('|', $tags);
-		$registry->set('kapenta.htmlparser.allowtags', $allowedTags);
+		$kapenta->registry->set('kapenta.htmlparser.allowtags', $allowedTags);
 		$session->msg('<b>Updated tag list:</b><br/>' . $allowedTags, 'ok');
 
 	}
@@ -43,7 +43,7 @@
 			 . "[[:theme::navtitlebox::label=Result:]]\n"
 			 . "<b>Parser output:</b><br/>\n"
 			 . "<textarea rows='20' cols='80' name='result'>"
-			 . str_replace('[[:', '[%%delme%%[:', $parser->output)
+			 . str_replace('[[:', '[%%delme%%[:', $utils->trimHtml($parser->output))
 			 . "</textarea><br/>\n"
 			 . "<hr/><br/>\n"
 			 . "[[:theme::navtitlebox::label=Parser Debug Log::toggle=divParserDebug:]]\n"
@@ -56,11 +56,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/parser.page.php');
-	$page->blockArgs['sampleHtml'] = $html;
-	$page->blockArgs['allowedTags'] = $allowedTags;
-	$page->blockArgs['testResult'] = $testResult;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/parser.page.php');
+	$kapenta->page->blockArgs['sampleHtml'] = $html;
+	$kapenta->page->blockArgs['allowedTags'] = $allowedTags;
+	$kapenta->page->blockArgs['testResult'] = $testResult;
+	$kapenta->page->render();
 
 
 ?>

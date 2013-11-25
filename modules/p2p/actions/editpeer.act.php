@@ -10,16 +10,16 @@
 	//	check referenace and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == trim($req->ref)) { $page->do404(); }
+	if ('' == trim($kapenta->request->ref)) { $page->do404(); }
 
-	$model = new P2P_Peer($req->ref);
+	$model = new P2P_Peer($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unkown peer.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/p2p/actions/editpeer.page.php');
-	$page->blockArgs['UID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/p2p/actions/editpeer.page.php');
+	$kapenta->page->blockArgs['UID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

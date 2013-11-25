@@ -11,7 +11,7 @@
 function packages_packagefilestatus($args) {
 	global $user;
 	global $theme;
-	global $registry;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';					//%	return value [string]
@@ -71,7 +71,7 @@ function packages_packagefilestatus($args) {
 	//	look for any missing files from the package
 	//----------------------------------------------------------------------------------------------
 	foreach($package->files as $pf) {
-		if (false == $kapenta->fileExists($pf['path'])) {
+		if (false == $kapenta->fs->exists($pf['path'])) {
 			$path = $pf['path'] . "<br/>"
 				 . "<span><small style='color: #aaa;'><tt>"
 				 . $pf['hash'] . " (sha1) " . $pf['type'] . "</tt></small></span>";

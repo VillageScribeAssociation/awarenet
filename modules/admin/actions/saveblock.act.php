@@ -24,7 +24,7 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: enable editing of theme blocks
 	$fileName = 'modules/' . $module . '/views/' . $block . '.block.php';
-	$kapenta->filePutContents($fileName, stripslashes($_POST['blockContent']));
+	$kapenta->fs->put($fileName, stripslashes($_POST['blockContent']));
 
 	$page->do302('admin/listpages/#modList' . $_POST['module']);
 

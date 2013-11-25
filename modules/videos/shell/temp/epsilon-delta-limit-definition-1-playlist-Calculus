@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+        <!-- For ChartBeat analytics START -->
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <!-- For ChartBeat analytics END -->
+        <title>Epsilon Delta Limit Definition 1 | Khan Academy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="description" content="Introduction to the Epsilon Delta Definition of a Limit." />
+        <meta name="keywords" content="calculus, epsilon, delta, limit" />
+        
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights START -->
+        <meta property="fb:page_id" content="159403248441" />
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights END -->
+        <meta property="og:title" content="The Khan Academy"/>
+        <meta property="og:type" content="non_profit"/>
+        <meta property="og:url" content="http://www.khanacademy.org"/>
+        <meta property="og:image" content="http://www.khanacademy.org/images/handtreehorizontal_facebook.png"/>
+        <meta property="og:site_name" content="khanacademy.org"/>
+        <meta property="fb:admins" content="100000121497109,718859633"/> 
+        <meta property="fb:app_id" content="160249463991765"/>
+        <meta property="og:description"
+              content="The Khan Academy is a not-for-profit 501(c)(3) with the mission of providing a world-class education to anyone, anywhere.  Despite being the work of one man, Salman Khan, this 1600+ video library is the most-used educational video resource as measured by YouTube video views per day and unique users per month."/>
+        <link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+        <script>var KA_VERSION = '1101.348262090236499247';</script>
+        
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shared-package/compressed.css?1101.348262090236499247" />
+
+
+
+        
+    <script type="text/javascript" src="/javascript/shared-package/compressed.js?1101.348262090236499247"></script>
+
+
+
+        <script type="text/javascript">
+            // Create a dummy version of each HTML5 element we use so that IE 6-8 can style them.
+            (function(){
+                var html5elements = ['header', 'footer', 'nav', 'article', 'section', 'menu'];
+                for (var i = 0; i < html5elements.length; i++) {
+                    document.createElement(html5elements[i]);
+                }
+            })();
+
+            $(function(){
+                // Configure the search form
+                $('#page_search input[type=text]').placeholder();
+                initAutocomplete();
+
+                // Make the CSS-only menus click-activated
+                var active_menu = undefined;
+                $('.noscript').removeClass('noscript');
+                $('.css-menu > ul > li').click(function() {
+                    if (active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                    }
+                    if ($(this) == active_menu) {
+                        active_menu = undefined
+                    }
+                    else {
+                        active_menu = $(this);
+                        $(this).addClass('css-menu-js-hover');
+                    }
+                });
+                $(document).bind("click focusin", function(e){
+                    if ($(e.target).closest(".css-menu").length == 0 && active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                        active_menu = undefined;
+                    }
+                });
+                // Make the CSS-only menus keyboard-accessible
+                $('.css-menu a').focus(function(e){
+                    $(e.target).addClass('css-menu-js-hover').closest(".css-menu > ul > li").addClass('css-menu-js-hover');
+                }).blur(function(e){
+                    $(e.target).removeClass('css-menu-js-hover').closest(".css-menu > ul > li").removeClass('css-menu-js-hover');
+                });
+            });
+
+
+
+            //Javascript for estimating the cumulative video views in real-time
+            function addCommas(nStr)
+	    {
+	        nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+		    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		}
+		return x1 + x2;
+	    }
+
+
+
+	    var seedTime = new Date(2010,9,31);  //Seed Date is set to October 31, 2010  0-January, 11-december
+	    var seedTotalViews = 28402468
+	    var seedDailyViews = 100000;
+
+	    var currentTime = new Date();
+	    var secondsSince = (currentTime.getTime()-seedTime.getTime())/1000;
+	    var viewsPerSecond = seedDailyViews/24/3600
+	    var estimatedTotalViews = Math.round(seedTotalViews + secondsSince*viewsPerSecond)
+
+	    var totalViewsString = addCommas(""+estimatedTotalViews);
+        
+
+
+
+        </script>
+        
+<style>
+    .breadcrumbs_nav {
+        font-weight: bold;
+    }
+    #video_dropdown {
+        display: none;
+        text-indent: 0;
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
+    #video_dropdown .ui-button {
+        display: block;
+    }
+    #video_menu {
+        position: relative;
+    }
+    #video_menu ol {
+        z-index: 2;
+    }
+    #video_dropdown ol {
+        max-height: 20em;
+        padding-left: 3em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        list-style: outside decimal;
+    }
+    #video_dropdown li {
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #video_dropdown li[data-selected=selected] a {
+        font-weight: bold;
+    }
+    #video_dropdown .ui-button-text, #video_dropdown .ui-menu-item a {
+        font-weight: normal;
+        line-height: inherit;
+        padding: 0px 25px 0px 1ex;
+    }
+    #video_dropdown .ui-menu-item a {
+        padding: 0px 25px 0px 0px;
+    }
+    #video_dropdown a:visited {
+        color: #DD6900;
+    }
+    #video_dropdown a:link:hover, #video_dropdown a:link:focus, #video_dropdown a:visited:hover, #video_dropdown a:visited:focus {
+        color: #DD6900;
+    }
+    .prev_next_nav {
+        display: block;
+        margin-top: 2em;
+        padding-bottom: .5ex;
+    }
+    .prev_next_nav a {
+        text-decoration: none;
+    }
+    .prev_next_nav a:hover {
+        text-decoration: underline;
+    }
+    #prev_video {
+        display: block;
+        float: left;
+        margin-right: 1em;
+        text-align: left;
+        background: url(/images/list-item-black-left.png) no-repeat 0 4px;
+        padding-top: 1px;
+        padding-left: 10px;
+        height: 20px;
+    }
+    #playlists {
+        display: block;
+        float: left;
+    }
+    #next_video {
+        display: block;
+        float: right;
+        margin-left: 1em;
+        text-align: right;
+        background: url(/images/list-item-black.png) no-repeat 100% 4px;
+        padding-top: 1px;
+        padding-right: 10px;
+        height: 20px;
+    }
+
+    #youtube_blocked {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+        color: red;
+        font-weight: bold;
+        clear: both;
+        padding-top: 1em;
+    }
+    .video #description {
+        padding-top: 20px;
+    }
+        .video #description h3 {
+            display: block;
+            margin: 0;
+            font-size: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .video #description h3 span.title {
+            color: #e45c02;
+        }
+        .video #description h3 span.long-description {
+            color: #555;
+            font-weight: normal;
+            position: relative;
+            top: -1px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    #page_sub_nav .breadcrumbs_nav {
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-left: -5px;
+        width: auto;
+    }
+    #page_sub_nav .breadcrumbs_nav a {
+        text-decoration: none;
+        padding: 0 5px;
+    }
+    #page_sub_nav .breadcrumbs_nav #video_menu {
+        text-transform: none;
+    }
+</style>
+<script>
+$(function(){
+    $('<img width=0 height=0>').error(function() {
+       $("#youtube_blocked").css("visibility", "visible").css("left", "0px").css("position", "relative");
+       $("#idOVideo").hide();
+       VideoStats.prepareAlternativePlayer(); // If YouTube is hidden, use the flv player for statistics
+    }).attr('src', 'http://www.youtube.com/favicon.ico?' + Math.random()).appendTo('#page-container');
+    $('#video_selector').hide();
+    $('#video_dropdown').css('display', 'inline-block');
+    var menu = $('#video_dropdown ol').menu();
+
+    // Set the width explicitly before positioning it absolutely to satisfy IE7.
+    menu.width(menu.width()).hide().css('position', 'absolute');
+
+    menu.bind("menuselect", function(e, ui){
+        window.location.href = ui.item.children('a').attr('href');
+    });
+    $(document).bind("click focusin", function(e){
+        if ($(e.target).closest("#video_dropdown").length == 0) {
+            menu.hide();
+        }
+    });
+    var button = $('#video_dropdown > a').button({
+        icons: {
+            secondary: 'ui-icon-triangle-1-s'
+        }
+    }).show().click(function(e){
+        if (menu.css('display') == 'none')
+            menu.show().menu("activate", e, $('#video_dropdown li[data-selected=selected]')).focus();
+        else
+            menu.hide();
+        e.preventDefault();
+    });
+});
+
+
+
+</script>
+
+
+	<!-- New, faster Google Analytics async tag START -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6742635-1']);
+	  _gaq.push(['_setDomainName', '.khanacademy.org']);
+	  _gaq.push(['_trackPageview']);
+
+	  // For OER Analytics
+	  _gaq.push(['ht._setAccount', 'UA-5033010-1']);
+	  _gaq.push(['ht._setDomainName', '.khanacademy.org']);
+	  _gaq.push(['ht._trackPageview']);
+
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- New, faster Google Analytics async tag END -->
+
+    </head>
+    <body>
+    <div id="page-container">
+        
+        
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({appId: '160249463991765', status: true, cookie: true,
+                     xfbml: true});
+    
+            
+                FB.Event.subscribe('auth.login', function(response) {
+                    window.location.reload();
+                });
+            
+    
+            FB.getLoginStatus(function(response) {
+               if (response.session) {
+                $('#page_logout').click(function(e) {
+                    FB.logout(function() { 
+                        window.location = $("#page_logout").attr("href"); 
+                    });
+                    e.preventDefault();
+                    return false;
+                });
+               }
+            });
+          };
+          (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+              '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+          }());
+        </script>
+        
+        
+    
+    	
+    	<script>document.writeln('<style scoped type="text/css">a[href="#"], .requires_script { visibility: visible; }</style>');</script>
+    
+            <header>
+                <div id="top-header">
+                    <div id="top-header-links">
+                        <span class="page_links" id="page_auth">
+                            
+                            <nav class="css-menu noscript" id="login-menu">
+                                <ul class="ui-corner-top">
+                                    <li class="ui-corner-top">
+                                        Login
+                                        <ul class="ui-corner-tr ui-corner-bottom">
+                                            <li id="page_login_options">
+                                                <a href="/login?openid_identifier=https://www.google.com/accounts/o8/id">Login with Google</a>
+                                            </li>
+                                            
+                                            <li><fb:login-button>Login with Facebook</fb:login-button></li>
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <span class="separator">&nbsp;</span>
+                            <a href="/donate" id="donate-link">Donate</a>
+                            <span class="separator">&nbsp;</span>
+                            <span id="social-links">
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Youtube-Subscribe-Header']);" href="http://www.youtube.com/khanacademy"><img src="/images/youtube.png" alt="YouTube" title="YouTube"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Twitter-Follow-Header']);" href="http://twitter.com/khanacademy"><img src="/images/twitter.png" alt="Twitter" title="Twitter"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Facebook-Join-Header']);" href="http://www.facebook.com/khanacademy"><img src="/images/facebook.png" alt="Facebook" title="Facebook"></a>
+                            </span>
+                            <span class="separator">&nbsp;</span>
+                            <span id="fb-like-badge">
+                                <fb:like id="page_fb_like" href="http://www.khanacademy.org" layout="button_count" show_faces="false" font="arial" ref="Like-Button-Top-Header-Left"></fb:like>
+                            </span>
+                        </span>
+                    </div>
+                    <div id="logo">
+                        <div id="logo-highlight">
+                            <a id="logo-image" href="/"><img src="/images/logo-no-highlight.png?1101.348262090236499247" alt="Khan Academy"></a>
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span id="page_visitors">
+                                <span id="page_num_visitors">
+                                    <!-- Content will get populated by javacript at end of page -->
+                                </span>&nbsp;lessons delivered
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div id="search-box">
+                    <form id="page_search" action="/search">
+                        <input id="search-input" type="text" placeholder="Search for a video or playlist" name="page_search_query" value='' class="ui-corner-left placeholder"><input type="submit" value=" " id="search-submit" />
+                    </form>
+                </div>
+                <div id="sitewide-navigation">
+                    <nav class="css-menu noscript" id="page_main_nav">
+                        <ul>
+                            <li class="ui-corner-top">
+                                Watch Videos
+                                <ul class="ui-corner-tr ui-corner-bottom">
+                                    <li>
+                                        <a href="/#browse">Browse by Topic</a>
+                                    </li>
+                                    <li>
+                                        <a href="/search">Search</a>
+                                    </li>
+                                    <li>
+                                        <a href="/downloads">Download</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="do-exercises" class="ui-corner-top">
+                                <div id="do-exercise-inner"><a href="/exercisedashboard">Do Exercises</a></div>
+                            </li>
+                            <li class="ui-corner-top">
+                                Join Us
+                                <ul class="ui-corner-tr">
+                                    <li>
+                                       <p>About Us</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/about">Overview</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#faq">Frequently Asked Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved#credits">Credits</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>Coaching Tools</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/students">Become a Coach</a>
+                                            </li>
+                                            <li>
+                                                <a href="/students">View Students</a>
+                                            </li>
+                                            <li>
+                                                <a href="/classreport">Class Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>How to Help</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/getinvolved#translation">Translate Videos</a>
+                                            </li>
+                                            <li>
+                                                <a href="http://sites.google.com/a/khanacademy.org/forge/for-developers/getting-started-with-the-code">Develop Software</a>
+                                            </li>
+                                            <li>
+                                                <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-epsilon-delta-limit-definition-1">Report a Problem</a>
+                                            </li>
+                                            <li>
+                                                <a href="/donate">Donate</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved">Help in Other Ways</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#contactus">Contact Us</a>
+                                            </li>
+    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav id="page_sub_nav">
+                    
+<span class="breadcrumbs_nav">
+        <a href="/">All videos</a> &#187;
+        <a href="/?video=epsilon-delta-limit-definition-1#Calculus">Calculus</a> &#187;
+    <form id="video_selector">
+        <select name="v">
+            
+            <option  value="W0VWO4asgmk">Introduction to Limits</option>
+            
+            <option  value="GGQngIp0YGI">Limit Examples (part 1)</option>
+            
+            <option  value="YRw8udexH4o">Limit Examples (part 2)</option>
+            
+            <option  value="gWSDDopD9sk">Limit Examples (part3)</option>
+            
+            <option  value="xjkSE9cPqzo">Limit Examples w/ brain malfunction on first prob (part 4)</option>
+            
+            <option  value="igJdDN-DPgA">Squeeze Theorem</option>
+            
+            <option  value="Ve99biD1KtA">Proof: lim (sin x)/x</option>
+            
+            <option  value="rkeU8_4nzKo">More Limits</option>
+            
+            <option selected value="-ejyeII0i5c">Epsilon Delta Limit Definition 1</option>
+            
+            <option  value="Fdu5-aNJTzU">Epsilon Delta Limit Definition 2</option>
+            
+            <option  value="ANyVpMS3HL4">Calculus: Derivatives 1 (new HD version)</option>
+            
+            <option  value="IePCHjMeFkE">Calculus: Derivatives 2 (new HD version)</option>
+            
+            <option  value="HEH_oKNLgUU">Calculus: Derivatives 2.5 (new HD version)</option>
+            
+            <option  value="rAof9Ld5sOg">Calculus: Derivatives 1</option>
+            
+            <option  value="ay8838UZ4nM">Calculus: Derivatives 2</option>
+            
+            <option  value="z1lwai-lIzY">Calculus: Derivatives 3</option>
+            
+            <option  value="XIQ-KnsAsbg">The Chain Rule</option>
+            
+            <option  value="6_lmiPDedsY">Chain Rule Examples</option>
+            
+            <option  value="DYb-AN-lK94">Even More Chain Rule</option>
+            
+            <option  value="h78GdGiRmpM">Product Rule</option>
+            
+            <option  value="E_1gEtiGPNI">Quotient Rule</option>
+            
+            <option  value="aEP4C_kvcO4">Derivatives (part 9)</option>
+            
+            <option  value="dZnc3PtNaN4">Proof: d/dx(x^n)</option>
+            
+            <option  value="789aMeepbxI">Proof: d/dx(sqrt(x))</option>
+            
+            <option  value="yUpDRpkUhf4">Proof: d/dx(ln x) = 1/x</option>
+            
+            <option  value="sSE6_fK3mu0">Proof: d/dx(e^x) = e^x</option>
+            
+            <option  value="3nQejB-XPoY">Proofs of Derivatives of Ln(x) and e^x</option>
+            
+            <option  value="viaPc8zDcRI">Extreme Derivative Word Problem (advanced)</option>
+            
+            <option  value="sL6MC-lKOrw">Implicit Differentiation</option>
+            
+            <option  value="PUsMyhds5S4">Implicit Differentiation (part 2)</option>
+            
+            <option  value="hrg1hCzg3W0">More implicit differentiation</option>
+            
+            <option  value="XHBkQW_XuA4">More chain rule and implicit differentiation intuition</option>
+            
+            <option  value="6xvwyE67CeM">Trig Implicit Differentiation Example</option>
+            
+            <option  value="N5kkwVoAtkc">Calculus: Derivative of x^(x^x)</option>
+            
+            <option  value="PdSzruR5OeE">Introduction to L&#39;Hopital&#39;s Rule</option>
+            
+            <option  value="BiVOC3WocXs">L&#39;Hopital&#39;s Rule Example 1</option>
+            
+            <option  value="FJo18AwLfuI">L&#39;Hopital&#39;s Rule Example 2</option>
+            
+            <option  value="MeVFZjT-ABM">L&#39;Hopital&#39;s Rule Example 3</option>
+            
+            <option  value="tpHz0gZfVss">Maxima Minima Slope Intuition</option>
+            
+            <option  value="dIE22eL6q90">Inflection Points and Concavity Intuition</option>
+            
+            <option  value="WrEcQsa-1ME">Monotonicity Theorem</option>
+            
+            <option  value="gzmSKrwiG3g">Calculus: Maximum and minimum values on an interval</option>
+            
+            <option  value="hIgnece9ins">Calculus: Graphing Using Derivatives</option>
+            
+            <option  value="zC_dTaEY2AY">Calculus Graphing with Derivatives Example</option>
+            
+            <option  value="ojcp0GJKluM">Graphing with Calculus</option>
+            
+            <option  value="Ef22yTJDUZI">Optimization with Calculus 1</option>
+            
+            <option  value="3GYv-BZYYdg">Optimization with Calculus 2</option>
+            
+            <option  value="i8Wtu-kdDC4">Optimization with Calculus 3</option>
+            
+            <option  value="T8sG4Sb3g7Y">Optimization  Example 4</option>
+            
+            <option  value="Zyq6TmQVBxk">Introduction to rate-of-change problems</option>
+            
+            <option  value="1KwW1v__T_0">Equation of a tangent line</option>
+            
+            <option  value="xmgk8_l3lig">Rates-of-change (part 2)</option>
+            
+            <option  value="hD3U65CcZ0Q">Ladder rate-of-change problem</option>
+            
+            <option  value="bGNMXfaNR5Q">Mean Value Theorem</option>
+            
+            <option  value="xRspb-iev-g">The Indefinite Integral or Anti-derivative</option>
+            
+            <option  value="mHvSYRUEWnE">Indefinite integrals (part II)</option>
+            
+            <option  value="77-najNh4iY">Indefinite Integration (part III)</option>
+            
+            <option  value="VJ9VRUDQyK8">Indefinite Integration (part IV)</option>
+            
+            <option  value="Pra6r20geXU">Indefinite Integration (part V)</option>
+            
+            <option  value="ouYZiIh8Ctc">Integration by Parts (part 6 of Indefinite Integration)</option>
+            
+            <option  value="F-OsMq7QKEQ">Indefinite Integration (part 7)</option>
+            
+            <option  value="IAbSeAk5RJU">Another u-subsitution example</option>
+            
+            <option  value="0RdI3-8G4Fs">Introduction to definite integrals</option>
+            
+            <option  value="6PaFm_Je5A0">Definite integrals (part II)</option>
+            
+            <option  value="7wUHJ7JQ-gs">Definite Integrals (area under a curve) (part III)</option>
+            
+            <option  value="11Bt6OhIeqA">Definite Integrals (part 4)</option>
+            
+            <option  value="CmXmRNFrtFw">Definite Integrals (part 5)</option>
+            
+            <option  value="CbUx0S8BCtA">Definite integral with substitution</option>
+            
+            <option  value="n4EK92CSuBE">Integrals: Trig Substitution 1</option>
+            
+            <option  value="fD7MbnXbTls">Integrals: Trig Substitution 2</option>
+            
+            <option  value="sw2p2tUIFpc">Integrals: Trig Substitution 3 (long problem)</option>
+            
+            <option  value="CZdziIlYIfI">Periodic Definite Integral</option>
+            
+            <option  value="C8mudsCSmcU">Introduction to differential equations</option>
+            
+            <option  value="R_aqSL-q6_8">Solid of Revolution (part 1)</option>
+            
+            <option  value="iUzfsUOl3-A">Solid of Revolution  (part 2)</option>
+            
+            <option  value="tqfU9mC2yFU">Solid of Revolution (part 3)</option>
+            
+            <option  value="OtmjNuiTHp0">Solid of Revolution (part 4)</option>
+            
+            <option  value="NIdqkwocNuE">Solid of Revolution (part 5)</option>
+            
+            <option  value="F2psxMnGdUw">Solid of Revolution (part 6)</option>
+            
+            <option  value="IZ8W-h764Cc">Solid of Revolution (part 7)</option>
+            
+            <option  value="4Flj9plmKGQ">Solid of Revolution (part 8)</option>
+            
+            <option  value="VgVJrSJxkDk">Sequences and Series (part 1)</option>
+            
+            <option  value="U_8GRLJplZg">Sequences and series (part 2)</option>
+            
+            <option  value="sy132cgqaiU">Polynomial approximation of functions (part 1)</option>
+            
+            <option  value="3JG3qn7-Sac">Polynomial approximation of functions (part 2)</option>
+            
+            <option  value="XZDGrbyz0v0">Approximating functions with polynomials (part 3)</option>
+            
+            <option  value="gcJeg4SdIpU">Polynomial approximation of functions (part 4)</option>
+            
+            <option  value="9AoDucUmO20">Polynomial approximations of functions (part 5)</option>
+            
+            <option  value="-gRNRBCG3Ow">Polynomial approximation of functions (part 6)</option>
+            
+            <option  value="bC5Lahh4Aus">Polynomial approximation of functions (part 7)</option>
+            
+            <option  value="8SsC5st4LnI">Taylor Polynomials</option>
+            
+            <option  value="JWfTckls59k">Exponential Growth</option>
+            
+            <option  value="upO6Mh862PI">AP Calculus BC Exams: 2008 1 a</option>
+            
+            <option  value="xPb6HLM3xEQ">AP Calculus BC Exams: 2008 1 b&amp;c</option>
+            
+            <option  value="_l0Mfsu__gU">AP Calculus BC Exams: 2008 1 c&amp;d</option>
+            
+            <option  value="sPTuCE5zd3s">AP Calculus BC Exams: 2008 1 d</option>
+            
+            <option  value="xvvI_QRYxBY">Calculus BC 2008 2 a</option>
+            
+            <option  value="S4oOSgTj9C8">Calculus BC 2008 2 b &amp;c</option>
+            
+            <option  value="o_vMb655dFk">Calculus BC 2008 2d</option>
+            
+            <option  value="1CMDS4-PKKQ">Partial Derivatives</option>
+            
+            <option  value="-u0mqFqpMNY">Partial Derivatives 2</option>
+            
+            <option  value="U7HQ_G_N6vo">Gradient 1</option>
+            
+            <option  value="OB8b8aDGLgE">Gradient of a scalar field</option>
+            
+            <option  value="JAXyLhvZ-Vg">Divergence 1</option>
+            
+            <option  value="tOX3RkH2guE">Divergence 2</option>
+            
+            <option  value="U6Re4xT0o4w">Divergence 3</option>
+            
+            <option  value="Mt4dpGFVsYc">Curl 1</option>
+            
+            <option  value="hTSyVgBa1T0">Curl 2</option>
+            
+            <option  value="fYzoiWIBjP8">Curl 3</option>
+            
+            <option  value="85zGYB-34jQ">Double Integral 1</option>
+            
+            <option  value="TdLD2Zh-nUQ">Double Integrals 2</option>
+            
+            <option  value="z8BM6cHifPA">Double Integrals 3</option>
+            
+            <option  value="twT-WZChfZ8">Double Integrals 4</option>
+            
+            <option  value="hrIPO8mQqtw">Double Integrals 5</option>
+            
+            <option  value="0pv0QtOi5l8">Double Integrals 6</option>
+            
+            <option  value="vr0sTKbV7lI">Triple Integrals 1</option>
+            
+            <option  value="vxQvL_WhBGU">Triple Integrals 2</option>
+            
+            <option  value="ZN2PfqZ4ihM">Triple Integrals 3</option>
+            
+            <option  value="C5Lbjbyr1t4">(2^ln x)/x  Antiderivative Example</option>
+            
+            <option  value="_60sKaoRmhU">Introduction to the Line Integral</option>
+            
+            <option  value="uXjQ8yc9Pdg">Line Integral Example 1</option>
+            
+            <option  value="wyTjyQMVvc4">Line Integral Example 2 (part 1)</option>
+            
+            <option  value="Qqanbd3gLhw">Line Integral Example 2 (part 2)</option>
+            
+            <option  value="sBldw95xMD4">Position Vector Valued Functions</option>
+            
+            <option  value="E9Q_Lc0g1xE">Derivative of a position vector valued function</option>
+            
+            <option  value="FYMn61HLw1k">Differential of a vector valued function</option>
+            
+            <option  value="vcwvzUVLPw0">Vector valued function derivative example</option>
+            
+            <option  value="t3cJYNdQLYg">Line Integrals and Vector Fields</option>
+            
+            <option  value="AFF8FXxt5os">Using a line integral to find the work done by a vector field example</option>
+            
+            <option  value="eGRZKkmI_fo">Parametrization of a Reverse Path</option>
+            
+            <option  value="99pD1-6ZpuM">Scalar Field Line Integral Independent of Path Direction</option>
+            
+            <option  value="fuSOY9r1R6w">Vector Field Line Integrals Dependent on Path Direction</option>
+            
+            <option  value="K_fgnCJOI8I">Path Independence for Line Integrals</option>
+            
+            <option  value="I2dbzp0zHuw">Closed Curve Line Integrals of Conservative Vector Fields</option>
+            
+            <option  value="Q9t1LghwdGc">Example of Closed Line Integral of Conservative Field</option>
+            
+            <option  value="LpY8Qa3IP1w">Second Example of Line Integral of Conservative Vector Field</option>
+            
+            <option  value="l5zJvZKfMYE">Green&#39;s Theorem Proof Part 1</option>
+            
+            <option  value="qdFD-0OWBRo">Green&#39;s Theorem Proof (part 2)</option>
+            
+            <option  value="gGXnILbrhsM">Green&#39;s Theorem Example 1</option>
+            
+            <option  value="sSyPAAyL8nQ">Green&#39;s Theorem Example 2</option>
+            
+            <option  value="owKAHXf1y1A">Introduction to Parametrizing a Surface with Two Parameters</option>
+            
+            <option  value="bJ_09eoCmag">Determining a Position Vector-Valued Function for a Parametrization of Two Parameters</option>
+            
+            <option  value="c7ByaI3T7Dc">Partial Derivatives of Vector-Valued Functions</option>
+            
+            <option  value="9k97m8oWnaY">Introduction to the Surface Integral</option>
+            
+            <option  value="7sQCcGlK2bY">Example of calculating a surface integral part 1</option>
+            
+            <option  value="qQAhhithHa8">Example of calculating a surface integral part 2</option>
+            
+            <option  value="s2_NTiISZl4">Example of calculating a surface integral part 3</option>
+            
+        </select>
+        <button type="submit">Go</button>
+    </form>
+    <span id="video_dropdown">
+        <a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus">Epsilon Delta Limit Definition 1</a>
+        <div id="video_menu">
+            <ol>
+                
+                <li data-selected=''><a href="/video/introduction-to-limits?playlist=Calculus">Introduction to Limits</a></li>
+                
+                <li data-selected=''><a href="/video/limit-examples--part-1?playlist=Calculus">Limit Examples (part 1)</a></li>
+                
+                <li data-selected=''><a href="/video/limit-examples--part-2?playlist=Calculus">Limit Examples (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/limit-examples--part3?playlist=Calculus">Limit Examples (part3)</a></li>
+                
+                <li data-selected=''><a href="/video/limit-examples-w--brain-malfunction-on-first-prob--part-4?playlist=Calculus">Limit Examples w/ brain malfunction on first prob (part 4)</a></li>
+                
+                <li data-selected=''><a href="/video/squeeze-theorem?playlist=Calculus">Squeeze Theorem</a></li>
+                
+                <li data-selected=''><a href="/video/proof--lim--sin-x--x?playlist=Calculus">Proof: lim (sin x)/x</a></li>
+                
+                <li data-selected=''><a href="/video/more-limits?playlist=Calculus">More Limits</a></li>
+                
+                <li data-selected='selected'><a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus">Epsilon Delta Limit Definition 1</a></li>
+                
+                <li data-selected=''><a href="/video/epsilon-delta-limit-definition-2?playlist=Calculus">Epsilon Delta Limit Definition 2</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-1--new-hd-version?playlist=Calculus">Calculus: Derivatives 1 (new HD version)</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-2--new-hd-version?playlist=Calculus">Calculus: Derivatives 2 (new HD version)</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-2-5--new-hd-version?playlist=Calculus">Calculus: Derivatives 2.5 (new HD version)</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-1?playlist=Calculus">Calculus: Derivatives 1</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-2?playlist=Calculus">Calculus: Derivatives 2</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivatives-3?playlist=Calculus">Calculus: Derivatives 3</a></li>
+                
+                <li data-selected=''><a href="/video/the-chain-rule?playlist=Calculus">The Chain Rule</a></li>
+                
+                <li data-selected=''><a href="/video/chain-rule-examples?playlist=Calculus">Chain Rule Examples</a></li>
+                
+                <li data-selected=''><a href="/video/even-more-chain-rule?playlist=Calculus">Even More Chain Rule</a></li>
+                
+                <li data-selected=''><a href="/video/product-rule?playlist=Calculus">Product Rule</a></li>
+                
+                <li data-selected=''><a href="/video/quotient-rule?playlist=Calculus">Quotient Rule</a></li>
+                
+                <li data-selected=''><a href="/video/derivatives--part-9?playlist=Calculus">Derivatives (part 9)</a></li>
+                
+                <li data-selected=''><a href="/video/proof--d-dx-x-n?playlist=Calculus">Proof: d/dx(x^n)</a></li>
+                
+                <li data-selected=''><a href="/video/proof--d-dx-sqrt-x?playlist=Calculus">Proof: d/dx(sqrt(x))</a></li>
+                
+                <li data-selected=''><a href="/video/proof--d-dx-ln-x----1-x?playlist=Calculus">Proof: d/dx(ln x) = 1/x</a></li>
+                
+                <li data-selected=''><a href="/video/proof--d-dx-e-x----e-x?playlist=Calculus">Proof: d/dx(e^x) = e^x</a></li>
+                
+                <li data-selected=''><a href="/video/proofs-of-derivatives-of-ln-x--and-e-x?playlist=Calculus">Proofs of Derivatives of Ln(x) and e^x</a></li>
+                
+                <li data-selected=''><a href="/video/extreme-derivative-word-problem--advanced?playlist=Calculus">Extreme Derivative Word Problem (advanced)</a></li>
+                
+                <li data-selected=''><a href="/video/implicit-differentiation?playlist=Calculus">Implicit Differentiation</a></li>
+                
+                <li data-selected=''><a href="/video/implicit-differentiation--part-2?playlist=Calculus">Implicit Differentiation (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/more-implicit-differentiation?playlist=Calculus">More implicit differentiation</a></li>
+                
+                <li data-selected=''><a href="/video/more-chain-rule-and-implicit-differentiation-intuition?playlist=Calculus">More chain rule and implicit differentiation intuition</a></li>
+                
+                <li data-selected=''><a href="/video/trig-implicit-differentiation-example?playlist=Calculus">Trig Implicit Differentiation Example</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--derivative-of-x--x-x?playlist=Calculus">Calculus: Derivative of x^(x^x)</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-l-hopital-s-rule?playlist=Calculus">Introduction to L&#39;Hopital&#39;s Rule</a></li>
+                
+                <li data-selected=''><a href="/video/l-hopital-s-rule-example-1?playlist=Calculus">L&#39;Hopital&#39;s Rule Example 1</a></li>
+                
+                <li data-selected=''><a href="/video/l-hopital-s-rule-example-2?playlist=Calculus">L&#39;Hopital&#39;s Rule Example 2</a></li>
+                
+                <li data-selected=''><a href="/video/l-hopital-s-rule-example-3?playlist=Calculus">L&#39;Hopital&#39;s Rule Example 3</a></li>
+                
+                <li data-selected=''><a href="/video/maxima-minima-slope-intuition?playlist=Calculus">Maxima Minima Slope Intuition</a></li>
+                
+                <li data-selected=''><a href="/video/inflection-points-and-concavity-intuition?playlist=Calculus">Inflection Points and Concavity Intuition</a></li>
+                
+                <li data-selected=''><a href="/video/monotonicity-theorem?playlist=Calculus">Monotonicity Theorem</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--maximum-and-minimum-values-on-an-interval?playlist=Calculus">Calculus: Maximum and minimum values on an interval</a></li>
+                
+                <li data-selected=''><a href="/video/calculus--graphing-using-derivatives?playlist=Calculus">Calculus: Graphing Using Derivatives</a></li>
+                
+                <li data-selected=''><a href="/video/calculus-graphing-with-derivatives-example?playlist=Calculus">Calculus Graphing with Derivatives Example</a></li>
+                
+                <li data-selected=''><a href="/video/graphing-with-calculus?playlist=Calculus">Graphing with Calculus</a></li>
+                
+                <li data-selected=''><a href="/video/optimization-with-calculus-1?playlist=Calculus">Optimization with Calculus 1</a></li>
+                
+                <li data-selected=''><a href="/video/optimization-with-calculus-2?playlist=Calculus">Optimization with Calculus 2</a></li>
+                
+                <li data-selected=''><a href="/video/optimization-with-calculus-3?playlist=Calculus">Optimization with Calculus 3</a></li>
+                
+                <li data-selected=''><a href="/video/optimization--example-4?playlist=Calculus">Optimization  Example 4</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-rate-of-change-problems?playlist=Calculus">Introduction to rate-of-change problems</a></li>
+                
+                <li data-selected=''><a href="/video/equation-of-a-tangent-line?playlist=Calculus">Equation of a tangent line</a></li>
+                
+                <li data-selected=''><a href="/video/rates-of-change--part-2?playlist=Calculus">Rates-of-change (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/ladder-rate-of-change-problem?playlist=Calculus">Ladder rate-of-change problem</a></li>
+                
+                <li data-selected=''><a href="/video/mean-value-theorem?playlist=Calculus">Mean Value Theorem</a></li>
+                
+                <li data-selected=''><a href="/video/the-indefinite-integral-or-anti-derivative?playlist=Calculus">The Indefinite Integral or Anti-derivative</a></li>
+                
+                <li data-selected=''><a href="/video/indefinite-integrals--part-ii?playlist=Calculus">Indefinite integrals (part II)</a></li>
+                
+                <li data-selected=''><a href="/video/indefinite-integration--part-iii?playlist=Calculus">Indefinite Integration (part III)</a></li>
+                
+                <li data-selected=''><a href="/video/indefinite-integration--part-iv?playlist=Calculus">Indefinite Integration (part IV)</a></li>
+                
+                <li data-selected=''><a href="/video/indefinite-integration--part-v?playlist=Calculus">Indefinite Integration (part V)</a></li>
+                
+                <li data-selected=''><a href="/video/integration-by-parts--part-6-of-indefinite-integration?playlist=Calculus">Integration by Parts (part 6 of Indefinite Integration)</a></li>
+                
+                <li data-selected=''><a href="/video/indefinite-integration--part-7?playlist=Calculus">Indefinite Integration (part 7)</a></li>
+                
+                <li data-selected=''><a href="/video/another-u-subsitution-example?playlist=Calculus">Another u-subsitution example</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-definite-integrals?playlist=Calculus">Introduction to definite integrals</a></li>
+                
+                <li data-selected=''><a href="/video/definite-integrals--part-ii?playlist=Calculus">Definite integrals (part II)</a></li>
+                
+                <li data-selected=''><a href="/video/definite-integrals--area-under-a-curve---part-iii?playlist=Calculus">Definite Integrals (area under a curve) (part III)</a></li>
+                
+                <li data-selected=''><a href="/video/definite-integrals--part-4?playlist=Calculus">Definite Integrals (part 4)</a></li>
+                
+                <li data-selected=''><a href="/video/definite-integrals--part-5?playlist=Calculus">Definite Integrals (part 5)</a></li>
+                
+                <li data-selected=''><a href="/video/definite-integral-with-substitution?playlist=Calculus">Definite integral with substitution</a></li>
+                
+                <li data-selected=''><a href="/video/integrals--trig-substitution-1?playlist=Calculus">Integrals: Trig Substitution 1</a></li>
+                
+                <li data-selected=''><a href="/video/integrals--trig-substitution-2?playlist=Calculus">Integrals: Trig Substitution 2</a></li>
+                
+                <li data-selected=''><a href="/video/integrals--trig-substitution-3--long-problem?playlist=Calculus">Integrals: Trig Substitution 3 (long problem)</a></li>
+                
+                <li data-selected=''><a href="/video/periodic-definite-integral?playlist=Calculus">Periodic Definite Integral</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-differential-equations?playlist=Calculus">Introduction to differential equations</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-1?playlist=Calculus">Solid of Revolution (part 1)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution---part-2?playlist=Calculus">Solid of Revolution  (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-3?playlist=Calculus">Solid of Revolution (part 3)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-4?playlist=Calculus">Solid of Revolution (part 4)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-5?playlist=Calculus">Solid of Revolution (part 5)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-6?playlist=Calculus">Solid of Revolution (part 6)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-7?playlist=Calculus">Solid of Revolution (part 7)</a></li>
+                
+                <li data-selected=''><a href="/video/solid-of-revolution--part-8?playlist=Calculus">Solid of Revolution (part 8)</a></li>
+                
+                <li data-selected=''><a href="/video/sequences-and-series--part-1?playlist=Calculus">Sequences and Series (part 1)</a></li>
+                
+                <li data-selected=''><a href="/video/sequences-and-series--part-2?playlist=Calculus">Sequences and series (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximation-of-functions--part-1?playlist=Calculus">Polynomial approximation of functions (part 1)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximation-of-functions--part-2?playlist=Calculus">Polynomial approximation of functions (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/approximating-functions-with-polynomials--part-3?playlist=Calculus">Approximating functions with polynomials (part 3)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximation-of-functions--part-4?playlist=Calculus">Polynomial approximation of functions (part 4)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximations-of-functions--part-5?playlist=Calculus">Polynomial approximations of functions (part 5)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximation-of-functions--part-6?playlist=Calculus">Polynomial approximation of functions (part 6)</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-approximation-of-functions--part-7?playlist=Calculus">Polynomial approximation of functions (part 7)</a></li>
+                
+                <li data-selected=''><a href="/video/taylor-polynomials?playlist=Calculus">Taylor Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/exponential-growth?playlist=Calculus">Exponential Growth</a></li>
+                
+                <li data-selected=''><a href="/video/ap-calculus-bc-exams--2008-1-a?playlist=Calculus">AP Calculus BC Exams: 2008 1 a</a></li>
+                
+                <li data-selected=''><a href="/video/ap-calculus-bc-exams--2008-1-b-c?playlist=Calculus">AP Calculus BC Exams: 2008 1 b&amp;c</a></li>
+                
+                <li data-selected=''><a href="/video/ap-calculus-bc-exams--2008-1-c-d?playlist=Calculus">AP Calculus BC Exams: 2008 1 c&amp;d</a></li>
+                
+                <li data-selected=''><a href="/video/ap-calculus-bc-exams--2008-1-d?playlist=Calculus">AP Calculus BC Exams: 2008 1 d</a></li>
+                
+                <li data-selected=''><a href="/video/calculus-bc-2008-2-a?playlist=Calculus">Calculus BC 2008 2 a</a></li>
+                
+                <li data-selected=''><a href="/video/calculus-bc-2008-2-b--c?playlist=Calculus">Calculus BC 2008 2 b &amp;c</a></li>
+                
+                <li data-selected=''><a href="/video/calculus-bc-2008-2d?playlist=Calculus">Calculus BC 2008 2d</a></li>
+                
+                <li data-selected=''><a href="/video/partial-derivatives?playlist=Calculus">Partial Derivatives</a></li>
+                
+                <li data-selected=''><a href="/video/partial-derivatives-2?playlist=Calculus">Partial Derivatives 2</a></li>
+                
+                <li data-selected=''><a href="/video/gradient-1?playlist=Calculus">Gradient 1</a></li>
+                
+                <li data-selected=''><a href="/video/gradient-of-a-scalar-field?playlist=Calculus">Gradient of a scalar field</a></li>
+                
+                <li data-selected=''><a href="/video/divergence-1?playlist=Calculus">Divergence 1</a></li>
+                
+                <li data-selected=''><a href="/video/divergence-2?playlist=Calculus">Divergence 2</a></li>
+                
+                <li data-selected=''><a href="/video/divergence-3?playlist=Calculus">Divergence 3</a></li>
+                
+                <li data-selected=''><a href="/video/curl-1?playlist=Calculus">Curl 1</a></li>
+                
+                <li data-selected=''><a href="/video/curl-2?playlist=Calculus">Curl 2</a></li>
+                
+                <li data-selected=''><a href="/video/curl-3?playlist=Calculus">Curl 3</a></li>
+                
+                <li data-selected=''><a href="/video/double-integral-1?playlist=Calculus">Double Integral 1</a></li>
+                
+                <li data-selected=''><a href="/video/double-integrals-2?playlist=Calculus">Double Integrals 2</a></li>
+                
+                <li data-selected=''><a href="/video/double-integrals-3?playlist=Calculus">Double Integrals 3</a></li>
+                
+                <li data-selected=''><a href="/video/double-integrals-4?playlist=Calculus">Double Integrals 4</a></li>
+                
+                <li data-selected=''><a href="/video/double-integrals-5?playlist=Calculus">Double Integrals 5</a></li>
+                
+                <li data-selected=''><a href="/video/double-integrals-6?playlist=Calculus">Double Integrals 6</a></li>
+                
+                <li data-selected=''><a href="/video/triple-integrals-1?playlist=Calculus">Triple Integrals 1</a></li>
+                
+                <li data-selected=''><a href="/video/triple-integrals-2?playlist=Calculus">Triple Integrals 2</a></li>
+                
+                <li data-selected=''><a href="/video/triple-integrals-3?playlist=Calculus">Triple Integrals 3</a></li>
+                
+                <li data-selected=''><a href="/video/2-ln-x--x--antiderivative-example?playlist=Calculus">(2^ln x)/x  Antiderivative Example</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-the-line-integral?playlist=Calculus">Introduction to the Line Integral</a></li>
+                
+                <li data-selected=''><a href="/video/line-integral-example-1?playlist=Calculus">Line Integral Example 1</a></li>
+                
+                <li data-selected=''><a href="/video/line-integral-example-2--part-1?playlist=Calculus">Line Integral Example 2 (part 1)</a></li>
+                
+                <li data-selected=''><a href="/video/line-integral-example-2--part-2?playlist=Calculus">Line Integral Example 2 (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/position-vector-valued-functions?playlist=Calculus">Position Vector Valued Functions</a></li>
+                
+                <li data-selected=''><a href="/video/derivative-of-a-position-vector-valued-function?playlist=Calculus">Derivative of a position vector valued function</a></li>
+                
+                <li data-selected=''><a href="/video/differential-of-a-vector-valued-function?playlist=Calculus">Differential of a vector valued function</a></li>
+                
+                <li data-selected=''><a href="/video/vector-valued-function-derivative-example?playlist=Calculus">Vector valued function derivative example</a></li>
+                
+                <li data-selected=''><a href="/video/line-integrals-and-vector-fields?playlist=Calculus">Line Integrals and Vector Fields</a></li>
+                
+                <li data-selected=''><a href="/video/using-a-line-integral-to-find-the-work-done-by-a-vector-field-example?playlist=Calculus">Using a line integral to find the work done by a vector field example</a></li>
+                
+                <li data-selected=''><a href="/video/parametrization-of-a-reverse-path?playlist=Calculus">Parametrization of a Reverse Path</a></li>
+                
+                <li data-selected=''><a href="/video/scalar-field-line-integral-independent-of-path-direction?playlist=Calculus">Scalar Field Line Integral Independent of Path Direction</a></li>
+                
+                <li data-selected=''><a href="/video/vector-field-line-integrals-dependent-on-path-direction?playlist=Calculus">Vector Field Line Integrals Dependent on Path Direction</a></li>
+                
+                <li data-selected=''><a href="/video/path-independence-for-line-integrals?playlist=Calculus">Path Independence for Line Integrals</a></li>
+                
+                <li data-selected=''><a href="/video/closed-curve-line-integrals-of-conservative-vector-fields?playlist=Calculus">Closed Curve Line Integrals of Conservative Vector Fields</a></li>
+                
+                <li data-selected=''><a href="/video/example-of-closed-line-integral-of-conservative-field?playlist=Calculus">Example of Closed Line Integral of Conservative Field</a></li>
+                
+                <li data-selected=''><a href="/video/second-example-of-line-integral-of-conservative-vector-field?playlist=Calculus">Second Example of Line Integral of Conservative Vector Field</a></li>
+                
+                <li data-selected=''><a href="/video/green-s-theorem-proof-part-1?playlist=Calculus">Green&#39;s Theorem Proof Part 1</a></li>
+                
+                <li data-selected=''><a href="/video/green-s-theorem-proof--part-2?playlist=Calculus">Green&#39;s Theorem Proof (part 2)</a></li>
+                
+                <li data-selected=''><a href="/video/green-s-theorem-example-1?playlist=Calculus">Green&#39;s Theorem Example 1</a></li>
+                
+                <li data-selected=''><a href="/video/green-s-theorem-example-2?playlist=Calculus">Green&#39;s Theorem Example 2</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-parametrizing-a-surface-with-two-parameters?playlist=Calculus">Introduction to Parametrizing a Surface with Two Parameters</a></li>
+                
+                <li data-selected=''><a href="/video/determining-a-position-vector-valued-function-for-a-parametrization-of-two-parameters?playlist=Calculus">Determining a Position Vector-Valued Function for a Parametrization of Two Parameters</a></li>
+                
+                <li data-selected=''><a href="/video/partial-derivatives-of-vector-valued-functions?playlist=Calculus">Partial Derivatives of Vector-Valued Functions</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-the-surface-integral?playlist=Calculus">Introduction to the Surface Integral</a></li>
+                
+                <li data-selected=''><a href="/video/example-of-calculating-a-surface-integral-part-1?playlist=Calculus">Example of calculating a surface integral part 1</a></li>
+                
+                <li data-selected=''><a href="/video/example-of-calculating-a-surface-integral-part-2?playlist=Calculus">Example of calculating a surface integral part 2</a></li>
+                
+                <li data-selected=''><a href="/video/example-of-calculating-a-surface-integral-part-3?playlist=Calculus">Example of calculating a surface integral part 3</a></li>
+                
+            </ol>
+        </div>
+    </span>
+</span>
+
+                </nav>
+                
+    
+                
+            </header>
+            
+<article class="video">
+    <div id="description">
+        <h3>
+            <span class="title">Epsilon Delta Limit Definition 1</span>
+        
+            <span class="long-description">: Introduction to the Epsilon Delta Definition of a Limit.</span>
+        
+        </h3>
+    </div>
+    <div style="margin-top: -15px;">
+        <nav class="prev_next_nav">
+            
+            <label id="prev_video">
+                <a rel=prev href="/video/more-limits?playlist=Calculus"><b>Previous Video:</b> More Limits</a>
+            </label>
+            
+            
+            <label id="next_video">
+                <a rel=next href="/video/epsilon-delta-limit-definition-2?playlist=Calculus"><b>Next Video:</b> Epsilon Delta Limit Definition 2</a>
+            </label>
+            
+        </nav>
+
+        <div id="youtube_blocked">
+            <object id="flvPlayer" type="application/x-shockwave-flash" data="/flvplayer/player_flv_maxi.swf" width="800" height="480">
+    <param name="movie" value="/flvplayer/player_flv_maxi.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="FlashVars" value="flv=http%3A//www.archive.org/download/KhanAcademy_Calculus/epsilon-delta-limit-definition-1.flv&amp;showstop=1&amp;showvolume=1&amp;showfullscreen=1&amp;showiconplay=1&amp;bgcolor=FFFFFF&amp;bgcolor1=80C65A&amp;bgcolor2=80C65A&amp;iconplaybgcolor=80C65A&amp;width=800&amp;height=480" />
+    <div>
+            <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+    </div>                
+</object>
+
+
+        </div>
+
+        <object id="idOVideo" name="idOVideo" width="800" height="480" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+    <param name="movie" value="http://www.youtube.com/v/-ejyeII0i5c&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1">
+    <param name="allowFullScreen" value="true">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="transparent">
+    <embed id="idPlayer" name="idPlayer" wmode="transparent" src="http://www.youtube.com/v/-ejyeII0i5c&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1" type="application/x-shockwave-flash" allowScriptAccess="always" allowfullscreen="true" width="800" height="480">
+</object>
+
+
+        <span class="video_extra_links"><nobr>
+        
+        <span class="extra-link-bar"><a href="http://www.archive.org/download/KhanAcademy_Calculus/epsilon-delta-limit-definition-1.flv">Download</a>
+        </span>
+        </nobr></span>
+
+        
+<div class="video_comments">
+
+    <h3>Comments:</h3>
+
+    <div class="comments_container">
+    
+
+        
+
+        
+            <div class="comment">
+                finally somebody explained this!<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;Adam Lane, 2 days, 7 hours ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+                
+            
+        
+            <div class="comment">
+                Thanks Sal<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;briantgross, 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+                
+            
+        
+            <div class="comment">
+                The definition already says that, in more formal notation. The notation is practical because it contains the equalities that proofs of limits invariably use. Your &#39;definition&#39; is more <br />an intuitive description than a definition. I don&#39;t see how one would use your proposal as basis for a proof.<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;gromith, 3 months, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+                
+                    <div class="comments_hidden" style="display:none;">
+                
+            
+        
+            <div class="comment">
+                i have never understood why no one addresses why this is so convoluted--why not say, in effect--for any delta range around a there is an epsilon range around L with 1 to 1 value correspondence<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;pjordan@animdevl.com, 3 months, 3 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+                
+            
+        
+            <div class="comment">
+                You talk about &quot;getting the intuition&quot; behind this definition. I think one intuitive idea which could have helped (in this video) is that for any function, f(x), a small change in x results in a small change of f(x) - ie the abscence of jump discontinuities where + and - limits exist but not equal.<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;adam.jassat@googlemail.com, 7 months ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+        
+
+        
+
+        
+            </div>
+        
+
+    
+    </div>
+    
+    
+        <a href="/login?continue=/video%3Fv%3D-ejyeII0i5c" class="control"><img class="icon" src="/images/balloon-plus.png" />Log in to add a comment</a>
+    
+
+    
+        <span class="comments_show_more">
+             <a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&comments_page=1" class="comment_show control uses_script"><img class="icon" src="/images/balloons.png" />Show more</a>
+        </span>
+    
+
+    <div class="comment_form" style="display:none;">
+        <form class="comments" name="comments">
+            <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+            <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxigvAEM" />
+            <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBj_Sgw" />
+            <textarea name="comment_text" class="comment_text" rows="3" cols="40"></textarea><br/>
+            <div class="comment_controls_container"
+    
+>
+    <div class="comment_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button comment_submit" type="button" value="Comment"/>
+            or <a href="#" class="comment_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </form>
+    </div>
+</div>
+
+
+        
+<div class="video_questions">
+    <h3 class="ask_and_answer">Ask and answer questions about this video:</h3>
+
+    <div class="sticky_note" style="display:none;">
+        <div class="sticky_note_content">
+            <h2>Ask a question about Epsilon Delta Limit Definition 1</h2>
+            <ul>
+                <li><em>Be as specific as possible!</em></li>
+                <li>Remember, you're asking <em>the entire Khan Academy community</em> for answers.</li>
+                <li>Mention a time from the video, like "5:28", to help people understand what your question is about.</li>
+                <li><strong>Please don't</strong> report problems or mistakes here.&nbsp; <strong><a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo--ejyeII0i5c">Send in a problem report</a></strong> instead.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="question_container">
+        <div class="question_form">
+            <form class="question" name="questions">
+                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxigvAEM" />
+                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBj_Sgw" />
+                <div class="question_placeholder requires_script">
+                    <textarea name="question_text" class="question_text" rows="3" cols="40" 
+                                watermark="Example: Why does Sal use shorthand notation at 5:43?"></textarea>
+                </div>
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button question_submit" type="button" value="Ask your question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+           </form>
+        </div>
+    </div>
+
+    <div class="questions_container">
+    
+
+        
+            <a name="q_12565123"></a>
+            <div class="question_container
+                
+            ">
+                <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiD9f4FDA" />
+                <div class="question" data-question_id="12565123">
+                    
+                        <a class="question_link" href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=12565123#q_12565123" onclick="return false;">
+                            <span>thats what she said!</span>
+                        </a>
+                    
+                    <span
+                    
+                        class="question_content_urlized" style="display:none;"
+                    
+                    >thats what she said!</span>
+                </div>
+
+                
+                    <div class="question_answer_count
+                    
+                        unanswered
+                    
+                    ">
+                        <table><tr>
+                        <td style="vertical-align: middle;">
+                            <a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=12565123#q_12565123" onclick="return false;">0 answers</a>
+                        </td>
+                        <td>
+                            <span class="question_answer_count_add_yours">
+                                <input type="button" class="button add_yours" value="Add yours" />
+                            </span>
+                        </td>
+                        </tr></table>
+                    </div>
+                
+                
+                <div class="question_sig sig">
+                    <nobr>
+    
+        
+            &ndash;Ima Smert asked 1 month, 1 week ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+                </div>
+
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiD9f4FDA"/>
+            
+
+            <input class="button question_submit" type="button" value="Edit this question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+
+                <div class="answers_and_form_container"
+                    
+                        style="display:none;"
+                    
+                >
+                    <div class="answers_container">
+                        
+    
+
+
+                    </div>
+
+                    <div class="answer_container">
+                        <div class="answer_form">
+                            <form class="answer">
+                                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxigvAEM" />
+                                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBj_Sgw" />
+                                <input type="hidden" name="question_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiD9f4FDA" />
+                                <div class="answer_placeholder">
+                                    <textarea name="answer_text" class="answer_text" rows="2" cols="40" watermark="Answer this question"></textarea>
+                                </div>
+                                <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button answer_submit" type="button" value="Answer this question"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearFloat">&nbsp;</div>
+        
+            <a name="q_12178354"></a>
+            <div class="question_container
+                
+            ">
+                <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiyp-cFDA" />
+                <div class="question" data-question_id="12178354">
+                    
+                        <a class="question_link" href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=12178354#q_12178354" onclick="return false;">
+                            <span>At <span class='youTube' seconds='674'>11:14</span> what is the symbol on the far left. I can&#39;t make out what he said. <br /><br /><br />thanks,</span>
+                        </a>
+                    
+                    <span
+                    
+                        class="question_content_urlized" style="display:none;"
+                    
+                    >At <span class='youTube' seconds='674'>11:14</span> what is the symbol on the far left. I can&#39;t make out what he said. <br /><br /><br />thanks,  </span>
+                </div>
+
+                
+                    <div class="question_answer_count
+                    
+                    ">
+                        <table><tr>
+                        <td style="vertical-align: middle;">
+                            <a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=12178354#q_12178354" onclick="return false;">1 answer</a>
+                        </td>
+                        <td>
+                            <span class="question_answer_count_add_yours">
+                                <input type="button" class="button add_yours" value="Add yours" />
+                            </span>
+                        </td>
+                        </tr></table>
+                    </div>
+                
+                
+                <div class="question_sig sig">
+                    <nobr>
+    
+        
+            &ndash;Juan.Euvin asked 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+                </div>
+
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiyp-cFDA"/>
+            
+
+            <input class="button question_submit" type="button" value="Edit this question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+
+                <div class="answers_and_form_container"
+                    
+                        style="display:none;"
+                    
+                >
+                    <div class="answers_container">
+                        
+    
+        <div class="answer_container">
+            <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxj_l-sHDA" />
+            <div class="answer">
+                
+                    <span>sloppy arrow pointing to abs( |f(x)-L| ) &lt; E</span>
+                
+            </div>
+
+            <div class="answer_sig sig">
+                <nobr>
+    
+        
+            &ndash;agentc0re answered 2 weeks, 3 days ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+            </div>
+
+            <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxj_l-sHDA"/>
+            
+
+            <input class="button answer_submit" type="button" value="Edit this answer"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </div>
+    
+
+
+                    </div>
+
+                    <div class="answer_container">
+                        <div class="answer_form">
+                            <form class="answer">
+                                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxigvAEM" />
+                                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBj_Sgw" />
+                                <input type="hidden" name="question_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiyp-cFDA" />
+                                <div class="answer_placeholder">
+                                    <textarea name="answer_text" class="answer_text" rows="2" cols="40" watermark="Answer this question"></textarea>
+                                </div>
+                                <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button answer_submit" type="button" value="Answer this question"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearFloat">&nbsp;</div>
+        
+            <a name="q_11442767"></a>
+            <div class="question_container
+                
+            ">
+                <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjPtLoFDA" />
+                <div class="question" data-question_id="11442767">
+                    
+                        <a class="question_link" href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=11442767#q_11442767" onclick="return false;">
+                            <span>I dont Get It Whats epsilon? A greek letter?</span>
+                        </a>
+                    
+                    <span
+                    
+                        class="question_content_urlized" style="display:none;"
+                    
+                    >I dont Get It Whats epsilon? A greek letter?</span>
+                </div>
+
+                
+                    <div class="question_answer_count
+                    
+                    ">
+                        <table><tr>
+                        <td style="vertical-align: middle;">
+                            <a href="/video/epsilon-delta-limit-definition-1?playlist=Calculus&qa_expand_id=11442767#q_11442767" onclick="return false;">3 answers</a>
+                        </td>
+                        <td>
+                            <span class="question_answer_count_add_yours">
+                                <input type="button" class="button add_yours" value="Add yours" />
+                            </span>
+                        </td>
+                        </tr></table>
+                    </div>
+                
+                
+                <div class="question_sig sig">
+                    <nobr>
+    
+        
+            &ndash;briantgross asked 1 month, 3 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+                </div>
+
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjPtLoFDA"/>
+            
+
+            <input class="button question_submit" type="button" value="Edit this question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+
+                <div class="answers_and_form_container"
+                    
+                        style="display:none;"
+                    
+                >
+                    <div class="answers_container">
+                        
+    
+        <div class="answer_container">
+            <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxi_zMMFDA" />
+            <div class="answer">
+                
+                    <span>Yes it is just a Greek letter for the arbitrarily chosen positive range for L, or f(x).   </span>
+                
+            </div>
+
+            <div class="answer_sig sig">
+                <nobr>
+    
+        
+            &ndash;Nicole Shabazi answered 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+            </div>
+
+            <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxi_zMMFDA"/>
+            
+
+            <input class="button answer_submit" type="button" value="Edit this answer"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </div>
+    
+        <div class="answer_container">
+            <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxj2veUFDA" />
+            <div class="answer">
+                
+                    <span>It is two place on the Y axis near L. For instance when Sal replaced L for 2, then he pick two epsilon places above and below 2 (1.5 and 2.5). He picked .5 at random. he could have also have picked .25. Then epsilon would have been 1.75 and 2.25<br />I hope this helps. <br /><br />Best, </span>
+                
+            </div>
+
+            <div class="answer_sig sig">
+                <nobr>
+    
+        
+            &ndash;Juan.Euvin answered 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+            </div>
+
+            <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxj2veUFDA"/>
+            
+
+            <input class="button answer_submit" type="button" value="Edit this answer"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </div>
+    
+        <div class="answer_container">
+            <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxirrLYJDA" />
+            <div class="answer">
+                
+                    <span>you wanted to say that they  all are greek to you :D</span>
+                
+            </div>
+
+            <div class="answer_sig sig">
+                <nobr>
+    
+        
+            &ndash;Dixtosa answered 1 day, 4 hours ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+            </div>
+
+            <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxirrLYJDA"/>
+            
+
+            <input class="button answer_submit" type="button" value="Edit this answer"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </div>
+    
+
+
+                    </div>
+
+                    <div class="answer_container">
+                        <div class="answer_form">
+                            <form class="answer">
+                                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxigvAEM" />
+                                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2Vzcg8LEghQbGF5bGlzdBj_Sgw" />
+                                <input type="hidden" name="question_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjPtLoFDA" />
+                                <div class="answer_placeholder">
+                                    <textarea name="answer_text" class="answer_text" rows="2" cols="40" watermark="Answer this question"></textarea>
+                                </div>
+                                <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button answer_submit" type="button" value="Answer this question"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearFloat">&nbsp;</div>
+        
+
+        
+
+    
+    </div>
+
+    
+        <div class="login_note" style="display:none;">
+            <a class="login_link" href="/login?continue=/video%3Fv%3D-ejyeII0i5c"><img class="icon" src="/images/key-plus.png"/ >Log in first</a>
+            <span class="login_action"></span>
+        </div>
+    
+
+</div>
+<br/>
+
+
+        </div>
+    </article>
+
+            <div style="padding: 10px;">&nbsp;</div>
+            
+<footer id="footer" class="short">
+    <div id="leaves">
+        <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-epsilon-delta-limit-definition-1">Report a Problem</a> <a href="/getinvolved">Get Involved</a> <a href="/about#contactus">Contact Us</a>
+        <span class="sep">|</span>
+        <a href="/about">About</a> <a href="/about#faq">FAQ</a> <a href="/getinvolved#credits">Credits</a> <a href="/downloads">Downloads</a>
+        <span class="sep">|</span>
+        <a href="/coaches">Add a Coach</a> <a href="/classreport">Class Report</a>
+        <div id="copyright">
+            <small>
+                &copy;2010 Khan Academy
+            </small>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/"><img style="vertical-align: middle;" alt="Creative Commons License" width="80" height="15" src="/images/cc-by-nc-sa-80x15.png" /></a>
+        </div>
+    </div>
+</footer>
+
+
+
+            
+    
+    	<!-- For ChartBeat analytics START -->
+    	<script type="text/javascript">
+    	var _sf_async_config={uid:10894,domain:"khanacademy.org"};
+    	(function(){
+    	  function loadChartbeat() {
+    	    window._sf_endpt=(new Date()).getTime();
+    	    var e = document.createElement('script');
+    	    e.setAttribute('language', 'javascript');
+    	    e.setAttribute('type', 'text/javascript');
+    	    e.setAttribute('src',
+    	       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+    	       "static.chartbeat.com/js/chartbeat.js");
+    	    document.body.appendChild(e);
+    	  }
+    	  var oldonload = window.onload;
+    	  window.onload = (typeof window.onload != 'function') ?
+    	     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    	})();
+    	</script>
+    	<!-- For ChartBeat analytics END -->
+    
+    	<!-- ChartBeat API - get # of users online now BEGIN -->
+    
+       <script type="text/javascript">
+    
+                $('#page_num_visitors').append(totalViewsString);
+                $('#page_visitors').css('display', 'inline');
+    	</script>
+    
+    	<!-- ChartBeat API - get # of users online now END -->
+    
+    </div>
+    
+    
+    </body>
+</html>

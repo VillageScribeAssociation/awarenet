@@ -52,7 +52,8 @@ function projects_summarybyline($args) {
 		 . '::refModel=users_user'
 		 . '::refUID=' . $item['userUID']
 		 . '::display=inline'
-		 . '::size=thumbsm'  
+		 . '::size=thumbsm' 
+		 . '::link=no' 
 		 . ':]]';
 
 		$imgBlock = $theme->expandBlocks($imgBlock, 'nav1');

@@ -9,22 +9,22 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 	$model = new Projects_Project($UID);
 	if (false == $model->loaded) { $page->do404('No such project.'); }
 
 	$pageNo = 1;
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/history.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['articleTitle'] = $model->title;
-	$page->blockArgs['pageNo'] = $pageNo . '';
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/history.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['articleTitle'] = $model->title;
+	$kapenta->page->blockArgs['pageNo'] = $pageNo . '';
+	$kapenta->page->render();
 
 ?>

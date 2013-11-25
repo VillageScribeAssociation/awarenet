@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	run indexer
 	//----------------------------------------------------------------------------------------------
-	$raw = $kapenta->fileGetContents('modules/admin/inc/htok.sample.html');
+	$raw = $kapenta->fs->get('modules/admin/inc/htok.sample.html');
 	$htok = new Scraper_HTok($raw);
 
 ?>

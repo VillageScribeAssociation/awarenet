@@ -28,8 +28,7 @@ function p2p_listpeers($args) {
 		$table = array();
 		$table[] = array('Name', 'Status', 'Pending', 'Actions');
 
-		$model = new P2P_Peer();
-		$model->loadArray($item);
+		$model = new P2P_Peer($item['UID']);
 		$ext = $model->extArray();
 
 		$name = ''
@@ -39,20 +38,27 @@ function p2p_listpeers($args) {
 		$actions = $ext['editLink'] .'<br/>'. $ext['delLink'] .'<br/>'. $ext['scanLink'] .'<br/>';
 		if ('no' == $item['firewalled']) { $actions .= $ext['testLink'] . '<br/>'; }
 
-		$status = $item['status'] . '<br/>';
-		if ('no' == $item['firewalled']) { $status .= "<small>not firewalled</small><br/>"; }
-		if ('yes' == $item['firewalled']) { $status .= "<small>firewalled</small><br/>"; }
+		$status = '';	//$item['status'] . '<br/>';
+
+		$status .= ''
+		 . "[[:p2p::firewallform"
+		 . "::peerUID=" . $item['UID']
+		 . "::firewalled=" . $item['firewalled']
+		 . ":]]";
 
 		$shareBlock = "[[:p2p::stats::peerUID=" . $item['UID'] . ":]]\n";
 
 		$table[] = array($name, $status, $shareBlock, $actions);
 
-		$html .= $theme->arrayToHtmlTable($table, true, true);
+		$labels = array(
+			'pending' => $theme->arrayToHtmlTable($table, true, true),
+			'UID' => $item['UID']
+		);
 
-		$html .= "<br/>\n";
-		$html .= "[[:p2p::listdownloads::peerUID=" . $item['UID'] . ":]]<br/>\n";
+		$block = $theme->loadBlock('modules/p2p/views/showpeer.block.php');
+		$html .= $theme->replaceLabels($labels, $block);
+
 	}
-
 
 
 	if (0 == count($range)) { $html .= "<div class='inlinequote'>No peers recorded.</div>"; }

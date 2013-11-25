@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refUID', $req->args)) { $page->do404('refUID not given', true); }
-	if (false == array_key_exists('refModel', $req->args)) { $page->do404('no refModel', true); }
-	if (false == array_key_exists('refModule', $req->args)) { $page->do404('no refModule', true); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('refUID not given', true); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('no refModel', true); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('no refModule', true); }
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such refModule', true); }
 	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('no such owner', true); }
@@ -27,11 +27,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/contact/actions/contact.if.page.php');
-	$page->blockArgs['refUID'] = $refUID;
-	$page->blockArgs['refModel'] = $refModel;
-	$page->blockArgs['refModule'] = $refModule;
-	$page->render();
+	$kapenta->page->load('modules/contact/actions/contact.if.page.php');
+	$kapenta->page->blockArgs['refUID'] = $refUID;
+	$kapenta->page->blockArgs['refModel'] = $refModel;
+	$kapenta->page->blockArgs['refModule'] = $refModule;
+	$kapenta->page->render();
 
 
 ?>

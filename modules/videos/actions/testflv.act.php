@@ -14,10 +14,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/videos/actions/testflv.page.php');
-	$page->blockArgs['swfFile'] = $testVideo;
-	$page->blockArgs['swfWidth'] = 570;
-	$page->blockArgs['swfHeight'] = 423;
-	$page->render();
+	$kapenta->page->load('modules/videos/actions/testflv.page.php');
+	$kapenta->page->blockArgs['swfFile'] = $testVideo;
+	$kapenta->page->blockArgs['swfWidth'] = 570;
+	$kapenta->page->blockArgs['swfHeight'] = 423;
+	$kapenta->page->render();
 
 ?>

@@ -63,25 +63,16 @@ function projects_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	$range = $db->loadRange('projects_project', '*', $conditions, 'editedOn DESC', $num, $start);
 
-	if ('true' == $session->get('mobile')) { 
-		$block = $theme->loadBlock('modules/projects/views/summary.m.block.php');
-	} else {
-		$block = $theme->loadBlock('modules/projects/views/summary.block.php');
-	}
+	//$block = $theme->loadBlock('modules/projects/views/summary.block.php');
 
 	foreach($range as $UID => $row) {
-		$model = new Projects_Project();
-		$model->loadArray($row);
-		$labels = $model->extArray();
+		//$model = new Projects_Project();
+		//$model->loadArray($row);
+		//$labels = $model->extArray();
 
-		//DEPRECATED
-		//$labels['rawblock64'] = base64_encode('[[:projects::summary::UID=' . $row['UID'] . ':]]');
+		$html .= "[[:projects::summary::projectUID=" . $row['UID'] . ":]]";
 
-		$html .= $theme->replaceLabels($labels, $block);
-
-		//DEPRECATED
-		//$channel = 'project-' . $model->UID;
-		//$page->setTrigger('projects', $channel, "[[:projects::summary::UID=" . $row['UID'] . ":]]");
+		//$html .= $theme->replaceLabels($labels, $block);
 	}
 
 	if (($start + $num) > $totalItems) { $html .= "<!-- end of results -->"; }

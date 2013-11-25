@@ -5,25 +5,35 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - [`|pc][`|pc]userName[`|pc][`|pc] ::</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::label=Aggregated Blogs ([`|pc][`|pc]userName[`|pc][`|pc])::width=570:]]
+		</div>
+		<br/>
 
 		[[:live::river::rivermodule=moblog::riverview=summarylist::riverpagevar=page::allow=num|userUID|pagination::num=5::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]::pagination=no:]]
 
 	</content>
 	<nav1>
 		%%newPostForm%%
+
+		<div class='block'>
 		[[:theme::navtitlebox::label=Author:]]
 		[[:images::default::refModule=users::refUID=[`|pc][`|pc]userUID[`|pc][`|pc]::size=width300:]]
 		[[:users::summarynav::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Blogs By School:]]
+		<div class='spacer'></div>
 		[[:moblog::schoolstatsnav:]]
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=Most Popular Posts:]]
 		[[:moblog::listpopularnav::num=10:]]
-
+		</div>
 		<br/>
 	</nav1>
 	<nav2></nav2>

@@ -11,9 +11,9 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('Peer UID not given.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given.'); }
 
-	$peer = new P2p_Peer($req->ref);
+	$peer = new P2p_Peer($kapenta->request->ref);
 	if (false == $peer->loaded) { $page->do404('Peer not found.'); }
 
 	//----------------------------------------------------------------------------------------------

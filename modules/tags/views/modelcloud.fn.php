@@ -10,7 +10,11 @@
 //opt: num - maximum number of tags to show, default is 30 (int) [string]
 
 function tags_modelcloud($args) {
-	global $db, $user, $theme;
+	global $db;
+	global $user;
+	global $theme;
+	global $cache;
+
 	$html = '';
 	$num = 30;
 
@@ -23,6 +27,13 @@ function tags_modelcloud($args) {
 
 	$refModule = $args['refModule'];
 	$refModel = $args['refModel'];
+
+	//----------------------------------------------------------------------------------------------
+	//	check cache
+	//----------------------------------------------------------------------------------------------
+
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load top n tags from the database by counting Tags_Index objects
@@ -60,6 +71,13 @@ function tags_modelcloud($args) {
 	asort($tags);
 
 	$html = $theme->makeTagCloud($tags);
+
+	//----------------------------------------------------------------------------------------------
+	//	add to view cache
+	//----------------------------------------------------------------------------------------------
+
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('tags-modelcloud-' . $refModel, $args['area'], $args['rawblock'], $html);
 
 	return $html;
 }

@@ -48,6 +48,8 @@ function projects_changestatusform($args) {
 	);
 
 	$html = $theme->replaceLabels($labels, $block);
+	$html = $theme->ntb($html, 'Project Status', 'divProjectStatus', 'hide');
+
 	return $html;
 }
 

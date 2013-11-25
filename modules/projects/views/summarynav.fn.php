@@ -12,10 +12,16 @@
 
 function projects_summarynav($args) {
 	global $db;
-
+	global $cache;
 	global $theme;
 
 	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check cache
+	//----------------------------------------------------------------------------------------------
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permisisons
@@ -35,6 +41,9 @@ function projects_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/projects/views/summarynav.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('projects-summarynav-' . $model->UID, $args['area'], $args['rawblock'], $html);
+
 	return $html;
 }
 

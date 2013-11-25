@@ -47,21 +47,9 @@ function announcements_listnav($args) {
 	if (0 == count($range)) { $html .= "(no announcements at present)"; }
 
 	foreach ($range as $row) {
-		$model = new Announcements_Announcement();
-		$model->loadArray($row);
+		$model = new Announcements_Announcement($row['UID']);
 		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
-
-	//----------------------------------------------------------------------------------------------
-	//	set AJAX triggers
-	//----------------------------------------------------------------------------------------------
-	$page->setTrigger('announcements', 'announcement-any', $args['rawblock']);
-
-	$rawBlock64 = base64_encode($args['rawblock']);
-	$html = "<div id='blockAnnouncementsLN'>\n"
-			. $html
-		    . "<!-- REGISTERBLOCK:blockAnnouncementsLN:" . $rawBlock64 . " -->"
-			. "</div>\n";
 
 	return $html;
 }

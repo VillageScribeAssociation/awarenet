@@ -24,7 +24,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and message signature
 	//----------------------------------------------------------------------------------------------
-	if ('yes' != $registry->get('p2p.enabled')) { $page->doXmlError('P2P disabled on this peer.'); }
+	if ('yes' != $kapenta->registry->get('p2p.enabled')) { $page->doXmlError('P2P disabled on this peer.'); }
 	if (false == array_key_exists('message', $_POST)) { $page->doXmlError('No message sent.'); }
 	if (false == array_key_exists('signature', $_POST)) { $page->doXmlError('No signature sent.'); }
 	if (false == array_key_exists('peer', $_POST)) { $page->doXmlError('Peer UID not sent.'); }
@@ -51,7 +51,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	get and return the file part
 	//----------------------------------------------------------------------------------------------
-	if (false == $kapenta->fileExists($detail['path'])) { $page->doXmlError('File not found.'); }
+	if (false == $kapenta->fs->exists($detail['path'])) { $page->doXmlError('File not found.'); }
 
 	$meta = new KLargeFile($detail['path']);
 	$raw = $meta->getPart($detail['index']);

@@ -22,10 +22,10 @@
 		$relationship = $utils->cleanTitle($_POST['relationship']); 
 	}
 
-	if (true == array_key_exists('module', $req->args)) { $modulename = $req->args['module']; }
-	if (true == array_key_exists('model', $req->args)) { $modelname = $req->args['model']; }
-	if (true == array_key_exists('relationship', $req->args)) { 
-		$relationship = $utils->cleanTitle($req->args['relationship']); 
+	if (true == array_key_exists('module', $kapenta->request->args)) { $modulename = $kapenta->request->args['module']; }
+	if (true == array_key_exists('model', $kapenta->request->args)) { $modelname = $kapenta->request->args['model']; }
+	if (true == array_key_exists('relationship', $kapenta->request->args)) { 
+		$relationship = $utils->cleanTitle($kapenta->request->args['relationship']); 
 	}
 
 	if ('' == trim($relationship)) { $page->do404('Relationship not specified.'); }

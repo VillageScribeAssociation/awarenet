@@ -41,7 +41,7 @@ function videos_summaryhta($args) {
 	
 	$labels = $model->extArray();
 	$labels['hta'] = $args['hta'];
-	$labels['fileSize'] = $kapenta->fileSize($model->fileName);
+	$labels['fileSize'] = $kapenta->fs->size($model->fileName);
 	$labels['printFileSize'] = $utils->printFileSize((int)$labels['fileSize']);
 
 	$html = $theme->replaceLabels($labels, $block);

@@ -25,9 +25,9 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/live/actions/testwindows.page.php');
-	$page->blockArgs['testcontents'] = $testcontents;
-	$page->render();
+	$kapenta->page->load('modules/live/actions/testwindows.page.php');
+	$kapenta->page->blockArgs['testcontents'] = $testcontents;
+	$kapenta->page->render();
 
 
 ?>

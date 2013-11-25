@@ -48,9 +48,8 @@ function videos__cb_file_attach($args) {
 	//TODO: use mplayer or ffmpeg to do this where available
 
 	//----------------------------------------------------------------------------------------------
-	//	create a new videos_video object attached to this gallery
+	//	create a new videos_video object attached to this object
 	//----------------------------------------------------------------------------------------------
-
 	$model = new Videos_Video();
 	$model->UID = $kapenta->createUID();
 	$model->refModule = $args['refModule'];
@@ -82,7 +81,7 @@ function videos__cb_file_attach($args) {
 			'refUID' => $model->UID, 
 			'fileName' => $model->fileName, 
 			'hash' => $kapenta->fileSha1($model->fileName),
-			'size' => $kapenta->fileSize($model->fileName)
+			'size' => $kapenta->fs->size($model->fileName)
 		);
 
 		$kapenta->raiseEvent('*', 'file_added', $detail);
@@ -103,6 +102,21 @@ function videos__cb_file_attach($args) {
 
 	} else {
 		$session->msg('Could not create video object.');
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	try extract a thumbnail of this video
+	//----------------------------------------------------------------------------------------------
+	$detail = array(
+		'refModule' => 'videos',
+		'refModel' => 'videos_video',
+		'refUID' => $model->UID,
+		'fileName' => $model->fileName,
+		'title' => $model->title
+	);
+
+	if (('flv' == $model->format) || ('mp4' == $model->format)) {
+		$kapenta->raiseEvent('images', 'extract_video_thumb', $detail);
 	}
 
 }

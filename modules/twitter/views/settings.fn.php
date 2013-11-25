@@ -18,13 +18,13 @@ function twitter_settings($args) {
 	$block = $theme->loadBlock('modules/twitter/views/settings.block.php');
 
 	$labels = array(
-		'twitter.consumerkey' => $registry->get('twitter.consumerkey'),
-		'twitter.consumersecret' => $registry->get('twitter.consumersecret'),
-		'twitter.requesttoken' => $registry->get('twitter.requesttoken'),
-		'twitter.requesttokensecret' => $registry->get('twitter.requesttokensecret'),
-		'twitter.pin' => $registry->get('twitter.pin'),
-		'twitter.accesstoken' => $registry->get('twitter.accesstoken'),
-		'twitter.accesstokensecret' => $registry->get('twitter.accesstokensecret'),
+		'twitter.consumerkey' => $kapenta->registry->get('twitter.consumerkey'),
+		'twitter.consumersecret' => $kapenta->registry->get('twitter.consumersecret'),
+		'twitter.requesttoken' => $kapenta->registry->get('twitter.requesttoken'),
+		'twitter.requesttokensecret' => $kapenta->registry->get('twitter.requesttokensecret'),
+		'twitter.pin' => $kapenta->registry->get('twitter.pin'),
+		'twitter.accesstoken' => $kapenta->registry->get('twitter.accesstoken'),
+		'twitter.accesstokensecret' => $kapenta->registry->get('twitter.accesstokensecret'),
 	);
 
 	$html = $theme->replaceLabels($labels, $block);

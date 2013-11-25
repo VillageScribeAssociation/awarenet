@@ -18,12 +18,12 @@ function admin_codesummary($args) {
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { return ''; }
 	if (false == array_key_exists('path', $args)) { return '(path not given)'; }	
-	if (false == $kapenta->fileExists($args['path'])) { return '(file not found)'; }
+	if (false == $kapenta->fs->exists($args['path'])) { return '(file not found)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	read the file
 	//----------------------------------------------------------------------------------------------
-	$raw = $kapenta->fileGetContents($args['path']);
+	$raw = $kapenta->fs->get($args['path']);
 	$lines = explode("\n", $raw);
 	foreach($lines as $line) {
 		if (('//*' == substr($line . 'xxx', 0, 3)) && ('' == $firstStar)) { 

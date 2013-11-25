@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('UID', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404(); }
 
-	$model = new Projects_Project($req->args['UID']);
+	$model = new Projects_Project($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Project not found.'); }
 	if (false == $user->authHas('projects', 'projects_project', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this project.'); }	

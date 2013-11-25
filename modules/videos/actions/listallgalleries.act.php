@@ -20,9 +20,9 @@
 	$origin = 'user';
 	$originLabel = 'by awareNet users';
 
-	if (true == array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
-	if (true == array_key_exists('orderby', $req->args)) { $orderBy = $req->args['orderby']; }
-	if (true == array_key_exists('origin', $req->args)) { $origin = $req->args['origin']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = $kapenta->request->args['page']; }
+	if (true == array_key_exists('orderby', $kapenta->request->args)) { $orderBy = $kapenta->request->args['orderby']; }
+	if (true == array_key_exists('origin', $kapenta->request->args)) { $origin = $kapenta->request->args['origin']; }
 
 	if ('3rdparty' == $origin) { $originLabel = 'by awareNet partners'; }
 
@@ -36,15 +36,15 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/videos/actions/listallgalleries.page.php');		
-	$page->blockArgs['pageNo'] = $pageNo;								
-	$page->blockArgs['orderBy'] = $orderBy;
-	$page->blockArgs['orderLabel'] = $orderLabel;
-	$page->blockArgs['userUID'] = $user->UID;
-	$page->blockArgs['userRa'] = $user->alias;
-	$page->blockArgs['origin'] = $origin;
-	$page->blockArgs['originlabel'] = $originLabel;
+	$kapenta->page->load('modules/videos/actions/listallgalleries.page.php');		
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;								
+	$kapenta->page->blockArgs['orderBy'] = $orderBy;
+	$kapenta->page->blockArgs['orderLabel'] = $orderLabel;
+	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->blockArgs['origin'] = $origin;
+	$kapenta->page->blockArgs['originlabel'] = $originLabel;
 	$page->title = 'awareNet - all video galleries ' . $orderLabel . ' (page ' . $pageNo . ')';
-	$page->render();													
+	$kapenta->page->render();													
 
 ?>

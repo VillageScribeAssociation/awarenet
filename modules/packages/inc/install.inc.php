@@ -7,8 +7,8 @@
 function packages_install_module() {
 	global $kapenta;
 
-	if (false == $kapenta->fileExists('data/packages/')) { 
-		$kapenta->filePutContents('data/packages/test.php', "<?php die('ok') ?>");
+	if (false == $kapenta->fs->exists('data/packages/')) { 
+		$kapenta->fs->put('data/packages/test.php', "<?php die('ok') ?>");
 	}
 }
 
@@ -24,13 +24,11 @@ function packages_install_status_report() {
 
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
-	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
 
 
-	if (false == $kapenta->fileExists('data/packages/')) {
+	if (false == $kapenta->fs->exists('data/packages/')) {
 		$report .= "Packages folder not present.<br/>";
 		$installed = false;
 	}

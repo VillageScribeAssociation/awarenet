@@ -11,12 +11,12 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 
-	$fileName = 'data/log/' . $req->ref;
-	if (false == $kapenta->fileExists($fileName)) { $page->do404('No such log file.'); }
+	$fileName = 'data/log/' . $kapenta->request->ref;
+	if (false == $kapenta->fs->exists($fileName)) { $page->do404('No such log file.'); }
 	
-	if (true == array_key_exists('format', $req->args)) { $format = $req->args['format']; }
+	if (true == array_key_exists('format', $kapenta->request->args)) { $format = $kapenta->request->args['format']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
@@ -24,16 +24,16 @@
 	switch(strtolower($format)) {
 		case 'xml':
 			header('Content-type: application/xml');
-			$raw = $kapenta->fileGetContents($fileName, true, true);
+			$raw = $kapenta->fs->get($fileName, true, true);
 			$startEntries = strpos($raw, '?>') + 2;
 			$raw = substr($raw, $startEntries);
-			echo "<log file='" . $req->ref . "'>\n" . $raw . "</log>";
+			echo "<log file='" . $kapenta->request->ref . "'>\n" . $raw . "</log>";
 			break;
 
 		case 'html':
-			$page->load('modules/admin/actions/log.page.php');
-			$page->blockArgs['logFile'] = $fileName;
-			$page->render();
+			$kapenta->page->load('modules/admin/actions/log.page.php');
+			$kapenta->page->blockArgs['logFile'] = $fileName;
+			$kapenta->page->render();
 			break;
 
 		default:

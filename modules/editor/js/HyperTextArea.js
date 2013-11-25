@@ -34,6 +34,8 @@
 
 function HyperTextArea(name, html, width, height, delayRender, divId) {
 
+	isMobile = false;		//	temporary, while testing Android 4
+
 	//----------------------------------------------------------------------------------------------
 	//	member variables
 	//----------------------------------------------------------------------------------------------
@@ -90,7 +92,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	 [ 'p' ]
 	];
 
-	if (this.width < 400) {
+	if ((this.width < 400) && (this.width > 0)) {
 		this.controls = [
 		 ['t', 'toolbar1'],
 		 [ 'c',	'bold',		'Bold',			'post_button_bold.gif',		'bold'			],
@@ -186,9 +188,10 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	//arg: html - content to be used for iframe body [string]
 
 	this.setContent = function(html) {
+		alert(html);
 		khta.activeArea = this;
 		var oRTE = this.getRTE();								//%	iframe's window [object]		
-		body = oRTE.document.getElementsByTagName("body");		//%	iframe's document body [object]
+		var body = oRTE.document.getElementsByTagName("body");	//%	iframe's document body [object]
 		this.html = html;										//%	maps to hidden form field?
 		body.innerHTML = this.html;								//%	set body only (not head) [string]
 	}
@@ -202,7 +205,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		khta.activeArea = this;
 		if (isMobile) { return $('#txtHta' + this.name).val(); }
 		var oRTE = this.getRTE();							//%	iframe DOM root [object:document]
-		body = oRTE.document.getElementsByTagName("body");
+		var body = oRTE.document.getElementsByTagName("body");
 		return this.htmlEncode(body[0].innerHTML);			//% get body only (not head) [string]
 	}
 
@@ -215,8 +218,20 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		if (isMobile) { $('#txtHta' + this.name).val(html); return; }
 
 		var oRTE = this.getRTE();							//%	iframe's window [object]
-		body = oRTE.document.getElementsByTagName("body");	//%	iframe's document body [object]
-		body.innerHTML = html;								//% get body only (not head) [string]
+
+		//alert('setting html: ' + html);
+		//alert('previous html: ' + oRTE.document.body.innerHTML);
+
+		if ((oRTE) && (oRTE.document) && (oRTE.document.body)) {
+			oRTE.document.body.innerHTML = html;
+		} else {
+			body = oRTE.document.getElementsByTagName("body");	//%	iframe's document body [object]
+			if (body) {
+				body.innerHTML = html;					//% get body only (not head) [string]
+			} else {
+				alert('No oRTE.document.body object');
+			}
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -512,7 +527,14 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		//	add simple text area for mobile clients
 		//------------------------------------------------------------------------------------------
 		if (isMobile) {
-			this.writeln("<textarea id='txtHta" + this.name + "' name='" + this.name + "' rows='10' style='width: 100%'></textarea>");
+			this.writeln(
+				"<textarea"
+				 + " id='txtHta" + this.name + "'"
+				 + " name='" + this.name + "'"
+				 + " rows='10'"
+				 + " style='width: 100%'>"
+				 + "</textarea>"
+			);
 			this.writeln("<input type='hidden' name='" + this.name + "format' value='plaintext'>");
 			return;
 		}
@@ -798,7 +820,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 			//	TODO: investigate further, discover if this is even used
 			//--------------------------------------------------------------------------------------
 			this.command = command;
-			controlElement = document.getElementById(this.name +"_" + command);	// div containing button
+			controlElement = document.getElementById(this.name + "_" + command);	// div containing button
 			cp = document.getElementById('cp' + this.name);		// 'copy' iFrame
 			this.cpWindow.area = this;							// set copy iframe to this iframe?
 			cp.style.left = getOffsetLeft(controlElement) + "px";	
@@ -1655,6 +1677,7 @@ function KHyperTextAreas() {
 
 	this.setContent = function(areaName, html) {
 		var area = this.getArea(areaName);
+		alert("set contet, area name: " + area.name + "\n" + html);
 		return area.setContent(html);		
 	}
 

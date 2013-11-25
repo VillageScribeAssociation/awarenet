@@ -10,13 +10,13 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	$pageNo = 1;
-	if (true == array_key_exists('page', $request['args'])) { $pageNo = (int)$req->args['page']; }
+	if (true == array_key_exists('page', $request['args'])) { $pageNo = (int)$kapenta->request->args['page']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/abuse/actions/list.page.php');
-	$page->blockArgs['pageNo'] = $pageNo . '';
-	$page->render();
+	$kapenta->page->load('modules/abuse/actions/list.page.php');
+	$kapenta->page->blockArgs['pageNo'] = $pageNo . '';
+	$kapenta->page->render();
 
 ?>

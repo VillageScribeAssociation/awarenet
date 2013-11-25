@@ -16,11 +16,11 @@
 	$pageSize = 10;				//%	default number of items per page [int]
 	$orderBy = 'createdOn';		//%	default list order [string]
 
-	if (true == array_key_exists('page', $req->args)) { $pageNo = (int)$req->args['page']; }
-	if (true == array_key_exists('num', $req->args)) { $pageSize = (int)$req->args['num']; }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
+	if (true == array_key_exists('num', $kapenta->request->args)) { $pageSize = (int)$kapenta->request->args['num']; }
 
-	if (true == array_key_exists('by', $req->args)) {	// users may list by these fields
-		switch(strtolower($req->args['by'])) {
+	if (true == array_key_exists('by', $kapenta->request->args)) {	// users may list by these fields
+		switch(strtolower($kapenta->request->args['by'])) {
 			case 'createdon': 	$orderBy = 'createdOn';		break;
 			case 'editedon': 	$orderBy = 'editedOn';		break;
 		}
@@ -30,10 +30,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/badges/actions/list.page.php');
-	$page->blockArgs['pageNo'] = $pageNo;
-	$page->blockArgs['pageSize'] = $pageSize;
-	$page->blockArgs['orderBy'] = $orderBy;
-	$page->render();
+	$kapenta->page->load('modules/badges/actions/list.page.php');
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;
+	$kapenta->page->blockArgs['pageSize'] = $pageSize;
+	$kapenta->page->blockArgs['orderBy'] = $orderBy;
+	$kapenta->page->render();
 
 ?>

@@ -8,15 +8,35 @@
 //TODO: consider adding a bot user to take credit for changes
 
 	//----------------------------------------------------------------------------------------------
-	//	run any outstanding scheduled tasks
+	//	begin output
 	//----------------------------------------------------------------------------------------------	
+
+	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');	}
+
+	//	flush one output block to prevent wget timeout due to slow output buffering
+	//	assuming max packet size is 4096, output buffer may be smaller, and zlib compression
+	//	may mess this up 
+
+	for ($i = 0; $i < 32; $i++) { echo str_repeat(' ', 126) . "\r\n"; }
+
+	//	TODO: check behavior under zlib
+
+	flush();		
+	if (true == function_exists('ob_flush')) { @ob_flush(); }
+	if (true == function_exists('ob_end_flush')) { @ob_end_flush(); }
+
+	//----------------------------------------------------------------------------------------------
+	//	run all module cron scrips / outstanding scheduled tasks
+	//----------------------------------------------------------------------------------------------
+
 	$cron = new KCron();
 	$report = $cron->run();
 
-	$fileName = 'data/log/' . date("y-m-d") . "-cron.log.php";
-	$kapenta->filePutContents($fileName, $report, false, false, 'a+');
+	//echo "Premature / testing update.";
+	//die();
 
-	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');	}
+	$fileName = 'data/log/' . date("y-m-d") . "-cron.log.php";
+	$kapenta->fs->put($fileName, $report, false, false, 'a+');
 
 	//----------------------------------------------------------------------------------------------
 	//	display report if user is administrator
@@ -25,9 +45,9 @@
 		//------------------------------------------------------------------------------------------
 		//	admin report
 		//------------------------------------------------------------------------------------------
-		//$page->load('modules/admin/actions/cron.page.php');
-		//$page->blockArgs['report'] = $report;
-		//$page->render();
+		//$kapenta->page->load('modules/admin/actions/cron.page.php');
+		//$kapenta->page->blockArgs['report'] = $report;
+		//$kapenta->page->render();
 
 	} else {
 		//------------------------------------------------------------------------------------------
@@ -38,15 +58,15 @@
 		<table noborder>
 			<tr>
 				<td>ten minutes</td>
-				<td>" . $registry->get('cron.tenmins') . "</td>
+				<td>" . $kapenta->registry->get('cron.tenmins') . "</td>
 			</tr>
 			<tr>
 				<td>hourly</td>
-				<td>" . $registry->get('cron.hourly') . "</td>
+				<td>" . $kapenta->registry->get('cron.hourly') . "</td>
 			</tr>
 			<tr>
 				<td>daily</td>
-				<td>" . $registry->get('cron.daily') . "</td>
+				<td>" . $kapenta->registry->get('cron.daily') . "</td>
 			</tr>
 		</table>
 		";

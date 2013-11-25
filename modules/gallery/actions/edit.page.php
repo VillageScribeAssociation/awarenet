@@ -5,11 +5,14 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit gallery</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::width=570::label=Edit Gallery:]]
 		[`|lt]h1[`|gt]Edit Gallery[`|lt]/h1[`|gt]
 
 		[[:gallery::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 		[`|lt]br/[`|gt]
+		</div>
+
 	</content>
 	<nav1>
 		[[:live::manageattachments::refModule=gallery::refModel=gallery_gallery::refUID=%%UID%%:]]

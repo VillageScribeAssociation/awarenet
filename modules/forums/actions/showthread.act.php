@@ -16,7 +16,7 @@
 	//	check permissions and reference ( TODO: banned, moderator, etc)
 	//----------------------------------------------------------------------------------------------
 	$threadUID = $aliases->findRedirect('forums_thread');
-	if (true == array_key_exists('page', $req->args)) { $pageNo = floor($req->args['page']); }
+	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = floor($kapenta->request->args['page']); }
 
 	$thread = new Forums_Thread($threadUID);
 	$forum = new Forums_Board($thread->board);
@@ -27,16 +27,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	redner the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/forums/actions/showthread.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['threadUID'] = $threadUID;
-	$page->blockArgs['forumUID'] = $forum->UID;
-	$page->blockArgs['pageno'] = $pageNo;
-	$page->blockArgs['forumRa'] = $forum->alias;
-	$page->blockArgs['forumTitle'] = $forum->title;
-	$page->blockArgs['threadRa'] = $thread->alias;
-	$page->blockArgs['threadTitle'] = $thread->title;
-	$page->blockArgs['createdBy'] = $thread->createdBy;
-	$page->render();
+	$kapenta->page->load('modules/forums/actions/showthread.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['threadUID'] = $threadUID;
+	$kapenta->page->blockArgs['forumUID'] = $forum->UID;
+	$kapenta->page->blockArgs['pageno'] = $pageNo;
+	$kapenta->page->blockArgs['forumRa'] = $forum->alias;
+	$kapenta->page->blockArgs['forumTitle'] = $forum->title;
+	$kapenta->page->blockArgs['threadRa'] = $thread->alias;
+	$kapenta->page->blockArgs['threadTitle'] = $thread->title;
+	$kapenta->page->blockArgs['createdBy'] = $thread->createdBy;
+	$kapenta->page->render();
 
 ?>

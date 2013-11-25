@@ -4,10 +4,10 @@
 //*	page to display a single file
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	
-	$page->load('modules/files/actions/show.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/files/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

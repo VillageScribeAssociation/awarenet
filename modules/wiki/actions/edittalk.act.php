@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }			// check for ref
+	if ('' == $kapenta->request->ref) { $page->do404(); }			// check for ref
 	$UID = $aliases->findRedirect('wiki_article');		// check correct ref
 
 	$model = new Wiki_Article($UID);
@@ -43,10 +43,10 @@
 	//----------------------------------------------------------------------------------------------
 	// check permissions and render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load('modules/wiki/actions/edittalk.page.php');
-	$page->blockArgs['UID'] = $talkUID;
-	$page->blockArgs['raUID'] = $talkUID;
-	$page->blockArgs['parentUID'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/edittalk.page.php');
+	$kapenta->page->blockArgs['UID'] = $talkUID;
+	$kapenta->page->blockArgs['raUID'] = $talkUID;
+	$kapenta->page->blockArgs['parentUID'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

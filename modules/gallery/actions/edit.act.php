@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }								// check for ref
+	if ('' == $kapenta->request->ref) { $page->do404(); }								// check for ref
 	$UID = $aliases->findRedirect('gallery_gallery'); 						// check correct ref
 
 	$model = new Gallery_Gallery($UID);
@@ -31,9 +31,9 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/gallery/actions/edit.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->render();
+	$kapenta->page->load('modules/gallery/actions/edit.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->render();
 
 ?>

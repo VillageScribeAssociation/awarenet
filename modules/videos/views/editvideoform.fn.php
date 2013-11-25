@@ -9,7 +9,11 @@
 //opt: return - return to upload dialog (set to 'uploadmultiple' or 'player') [string]
 
 function videos_editvideoform($args) {
-	global $user, $theme;
+	global $kapenta;
+	global $user;
+	global $theme;
+	global $page;
+
 	$html = '';			//%	return value [html]
 
 	//----------------------------------------------------------------------------------------------
@@ -26,6 +30,8 @@ function videos_editvideoform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	
+	$block = $theme->loadBlock('modules/videos/views/editvideoform.block.php');
+
 	$labels = $model->extArray();
 	$labels['return'] = $return;
 	$labels['returnUrl'] = '';
@@ -50,8 +56,14 @@ function videos_editvideoform($args) {
 			break;
 		
 	}
-	
-	$block = $theme->loadBlock('modules/videos/views/editvideoform.block.php');
+
+	if ((true == array_key_exists('edittags', $args)) && ('yes' == $args['edittags'])) {
+		$page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
+		$labels['editTagsLink'] = ''
+		 . "<a href=\"javascript:Videos_EditTags('" . $model->UID . "');\">[edit tags]</a>"
+		 . '';
+	}
+
 	$html = $theme->replaceLabels($labels, $block);
 	return $html;
 }

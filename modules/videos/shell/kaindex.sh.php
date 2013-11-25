@@ -106,7 +106,7 @@
 		$raw = implode(file($vid['url']));
 		echo $raw . "\n\n\n";
 
-		$kapenta->filePutContents($tempDir . $vid['filename'], $raw, false, false);
+		$kapenta->fs->put($tempDir . $vid['filename'], $raw, false, false);
 
 		sleep(4);
 	}

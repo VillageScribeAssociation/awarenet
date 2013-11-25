@@ -31,7 +31,7 @@
       </form>
     </td>
     <td>
-      <form name='cancelThread%%UIDJsClean%%' method='POST' action='%%serverPath%%forums/confirmdeletethread/'>
+      <form name='cancelThread%%UIDJsClean%%' method='POST' action='%%serverPath%%forums/confirmdeletethread/UID_%%UID%%'>
         <input type='hidden' name='action' value='deleteThread' />
         <input type='hidden' name='UID' value='%%UID%%' />
         <input type='submit' value='Delete' />

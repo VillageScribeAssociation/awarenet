@@ -73,13 +73,7 @@ function projects_historynav($args) {
 	//$html .= "<b>Total revisions:</b> $totalItems<br/>\n";
 
 	// TODO: sanitize label
-	if ('' != $label) {
-		$html = "[[:theme::navtitlebox::label=" . $label . "::toggle=divHistoryNav:]]\n"
-			  . "<div id='divHistoryNav'>\n"
-			  . $html
-			  . "</div>\n"
-			  . "<br/>\n";
-	}
+	if ('' != $label) { $html = $theme->ntb($html, $label, 'divHistoryNav', 'show'); }
 
 	return $html;
 }

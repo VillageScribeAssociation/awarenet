@@ -24,20 +24,20 @@
 //+					<hash>[sha1 hash of first 512k]</hash>
 //+					<status>ok</status>
 //+					<size>524288</size>
-//+					<fileName>data/p2p/parts/[timestamp]_[hash].part</fileName>
+//+					<fileName>data/p2p/transfer/parts/[uid]_[hash]_[idx].part</fileName>
 //+				</part>
 //+				<part>
 //+					<index>1</index>
 //+					<hash>[sha1 hash of second 512k]</hash>
 //+					<status>pending</status>
 //+					<size>524288</size>
-//+					<fileName>data/p2p/parts/[timestamp]_[hash].part</fileName>
+//+					<fileName>data/p2p/transfer/parts/[uid]_[hash]_[idx].part</fileName>
 //+				</part>
 //+				... more parts here ....
 //+			</parts>
 //+		</klargefile>
 //+
-//+	The metadata filename will be ./data/p2p/transfer/meta/filename-as-alias.xml.php
+//+	The metadata filename will be ./data/p2p/transfer/meta/{sha1hash}.xml.php
 
 class KLargeFile {
 
@@ -58,22 +58,28 @@ class KLargeFile {
 	var $metaFile = '';		//%	relative to installPath [string]
 	var $hash = '';			//%	sha1 hash of complete file [int]
 	var $size = 0;			//%	total size of the file, bytes [int]
-	var $partSize = 512;	//%	in kilobytes [int]
+	var $chunkSize = 512;	//%	in kilobytes [int]
 	var $complete = 'no';	//%	set to true when all parts have been transferred [string]
 	var $mismatches = 0;	//%	records failures, so bad manifests can be corrected [int]
+	var $timestamp = 0;		//%	records when this manifest was created, for allow expiry [int]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
 	//opt: path - ideal location of file this relates to [string]
 
-	function KLargeFile($path = '') {
+	function KLargeFile($path = '', $hash = '', $refUID = '') {
+		global $kapenta;
+
 		$this->parts = array();
 
 		$this->path = $path;			//	TODO: checks on validity of all these
+		$this->hash = $hash;
+		$this->UID = $refUID;
+		$this->timestamp = $kapenta->time();
 
-		if ('' != $this->path) {
-			$this->metaFile = $this->makeMetaFileName($path);
+		if (('' != $this->hash) && ('' != $this->UID)) {
+			$this->metaFile = $this->makeMetaFileName($hash, $this->UID);
 			$this->loadMetaXml();
 		}
 	}
@@ -89,10 +95,11 @@ class KLargeFile {
 		global $kapenta;
 		$isFile = false; 
 		$this->parts = array();
+		$this->timestamp = 0;
 
 		if ('' == $xml) {
 			// xml not given, try to load from disk
-			if (false == $kapenta->fileExists($this->metaFile)) { return false; }
+			if (false == $kapenta->fs->exists($this->metaFile)) { return false; }
 			$xml = $this->metaFile;
 			$isFile = true;
 		}
@@ -100,6 +107,7 @@ class KLargeFile {
 		$xd = new KXmlDocument($xml, $isFile);
 
 		$children = $xd->getChildren(1);					//%	children of root node [array]
+
 		foreach($children as $childId) {
 			$child = $xd->getEntity($childId);
 			switch(strtolower($child['type'])) {
@@ -112,6 +120,7 @@ class KLargeFile {
 				case 'size':		$this->size = $child['value'];				break;
 				case 'complete':	$this->complete = $child['value'];			break;
 				case 'mismatches':	$this->mismatches = (int)$child['value'];	break;
+				case 'timestamp':	$this->timestamp = (int)$child['value'];	break;
 
 				case 'parts':
 					$parts = $xd->getChildren($childId);
@@ -120,7 +129,7 @@ class KLargeFile {
 			}
 		}
 
-		$this->metaFile = $this->makeMetaFileName($this->path);
+		$this->metaFile = $this->makeMetaFileName($this->hash, $this->UID);
 		$this->loaded = true;
 		if (0 == count($this->parts)) { $this->loaded = false; }
 		return true;
@@ -139,7 +148,7 @@ class KLargeFile {
 			return false;
 		}
 		$xml = $this->toXml();
-		$check = $kapenta->filePutContents($this->metaFile, $xml);
+		$check = $kapenta->fs->put($this->metaFile, $xml);
 		if (false == $check) {
 			echo "Could not save file: " . $this->metaFile . " (" . strlen($xml) . " bytes)\n";
 		}
@@ -171,22 +180,25 @@ class KLargeFile {
 		$this->model = $owner['model'];
 		$this->UID = $owner['UID'];
 
-		if (!$kapenta->fileExists($this->path)) { return false; }			//	no such file
+		if (!$kapenta->fs->exists($this->path)) { return false; }			//	no such file
 		if (!$kapenta->moduleExists($this->module)) { return false; }		//	no such module
 		if (!$db->objectExists($this->model, $this->UID)) { return false; }	//	no such object
 		if (!$db->isShared($this->model, $this->UID)) { return false; }		//	is not shared
 
 		$this->hash = $kapenta->fileSha1($this->path);
-		$this->size = $kapenta->fileSize($this->path);
+		$this->size = $kapenta->fs->size($this->path);
 		$this->complete = 'yes';
 
 		$this->parts = array();
-		$numParts = ceil($this->size / ($this->partSize * 1024));
+		$numParts = ceil($this->size / ($this->chunkSize * 1024));
 
 		for ($i = 0; $i < $numParts; $i++) {
 			$raw = $this->getPart($i);
 			$hash = sha1($raw);
-			$fileName = 'data/p2p/transfer/parts/' . $kapenta->time() . '_' . $hash . '.part.php';
+			$fileName = ''
+			 . 'data/p2p/transfer/parts/'
+			 . $this->UID . '_' . $this->hash . '_' . $i . '.part.php';
+
 			$this->parts[$i] = array(
 				'index' => $i,
 				'status' => 'pending',
@@ -196,7 +208,7 @@ class KLargeFile {
 			);
 		}
 
-		$this->metaFile = $this->makeMetaFileName($this->path);
+		$this->metaFile = $this->makeMetaFileName($this->hash, $this->UID);
 		$this->loaded = true;
 		return true;
 	}
@@ -240,12 +252,12 @@ class KLargeFile {
 		//------------------------------------------------------------------------------------------
 		//	base64 decode and join all parts
 		//------------------------------------------------------------------------------------------
-		$kapenta->filePutContents($this->path, '');					//	creates file and directories
+		$kapenta->fs->put($this->path, '');					//	creates file and directories
 		$fH = fopen($kapenta->installPath . $this->path, 'wb+');	//	open for writing
 		if (false == $fH) { return false; }							//	if cannot create
 
 		foreach($this->parts as $part) {
-			$part64 = $kapenta->fileGetContents($part['fileName'], true, true);
+			$part64 = $kapenta->fs->get($part['fileName'], true, true);
 			$partBin = base64_decode($part64);
 			fwrite($fH, $partBin);
 		}
@@ -277,11 +289,11 @@ class KLargeFile {
 		$fH = fopen($kapenta->installPath . $this->path, 'r');	//%	read only file handle [int]
 		if (false == $fH) { return $raw; }
 
-		$skip = ($this->partSize * 1024) * $index;				//%	position to skip to [int]
+		$skip = ($this->chunkSize * 1024) * $index;				//%	position to skip to [int]
 		$check = fseek($fH, $skip);								//	move to position
 		if (-1 == $check) { fclose($fH); return $raw; }
 
-		$raw = fread($fH, ($this->partSize * 1024));			//	read the part into $raw
+		$raw = fread($fH, ($this->chunkSize * 1024));			//	read the part into $raw
 		fclose($fH);
 
 		return $raw;
@@ -290,17 +302,26 @@ class KLargeFile {
 	//----------------------------------------------------------------------------------------------
 	//.	save a file part to disk
 	//----------------------------------------------------------------------------------------------
-	//arg: index - part number [int]
-	//arg: content64 - base64 encoded fiel part [string]
+	//arg: index - sequence number of part [int]
+	//arg: content64 - base64 encoded file part [string]
+	//arg: hash - sha1 hash of raw file part [string]
 	//returns: true on success, false on failure [bool]
 
 	function storePart($index, $content64, $hash) {
 		global $kapenta;
-		if (false == array_key_exists($index, $this->parts)) { echo "no such part<br/>"; return false; }
-		if ($hash != $this->parts[$index]['hash']) { echo "hash mismatch<br/>"; return false; }
+		if (false == array_key_exists($index, $this->parts)) {
+			//echo "no such part<br/>";
+			return false;
+		}
+
+		if ($hash != $this->parts[$index]['hash']) {
+			//echo "hash mismatch<br/>";
+			return false;
+		}
+
 		$fileName = $this->parts[$index]['fileName'];
 
-		$check = $kapenta->filePutContents($fileName, $content64, true, true);
+		$check = $kapenta->fs->put($fileName, $content64, true, true);
 		if (false == $check) { echo "file could not be saved<br/>"; return false; }
 
 		$this->parts[$index]['status'] = 'ok';
@@ -319,33 +340,43 @@ class KLargeFile {
 	//----------------------------------------------------------------------------------------------
 	//.	convert file location to alias
 	//----------------------------------------------------------------------------------------------
-	//arg: path - location relative to installPath [string]
+	//arg: hash - sha1 hash of file [string]
+	//arg: UID - UID of owner object, disambiguate multiple identical files [string]
 	//returns: filename based on path name [string]
 
-	function makeMetaFileName($path) {
-		$path = str_replace('/', '-fs-', $path);
-		$path = str_replace('\\', '-bs-', $path);
-		$path = 'data/p2p/transfer/meta/' . $path . '.xml.php';
+	function makeMetaFileName($hash, $UID) {
+		$hash = str_replace(array('.', '/', '\\'), array('', '', ''), $hash);
+		$UID = str_replace(array('.', '/', '\\'), array('', '', ''), $UID);
+		$path = 'data/p2p/transfer/meta/' . $UID . '_' . $hash . '.xml.php';
 		return $path;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	remove this and any downloaded parts
+	//.	remove manifest and any downloaded parts
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
 		global $kapenta;
 		$allOk = true;
+
 		foreach($this->parts as $part) {
-			if (true == $kapenta->fileExists($part['fileName'])) {
+			if (true == $kapenta->fs->exists($part['fileName'])) {
 				$check = $kapenta->fileDelete($part['fileName']);
-				if (false == $check) { $allOk = false; }
-				else { echo "removed part: " . $part['fileName'] . "<br/>\n"; }
+				if (false == $check) {
+					$allOk = false;
+				} else {
+					//echo "removed part: " . $part['fileName'] . "<br/>\n";
+				}
 			}
 		}
+
 		$check = $kapenta->fileDelete($this->metaFile);
-		if (false == $check) { $allOk = false; }
-		else { /* echo "removed meta file: " . $this->metaFile . "<br/>\n"; */ }
+		if (false == $check) {
+			//echo "could not delete meta file: " . $this->metaFile . "<br/>\n";
+			$allOk = false;
+		} else {
+			//echo "removed meta file: " . $this->metaFile . "<br/>\n";
+		}
 		return $allOk;
 	}
 
@@ -377,6 +408,7 @@ class KLargeFile {
 		 . "\t<complete>" . $this->size . "</complete>\n"
 		 . "\t<hash>" . $this->hash . "</hash>\n"
 		 . "\t<mismatches>" . $this->mismatches . "</mismatches>\n"
+		 . "\t<timestamp>" . $this->timestamp . "</timestamp>\n"
 		 . $parts
 		 . "</klargefile>\n";
 
@@ -406,7 +438,7 @@ class KLargeFile {
 		. "<b>loaded:</b> " . $loaded . "<br/>\n"
 		. "<b>metaFile:</b> " . $this->metaFile . "<br/>\n"
 		. "<b>size:</b> " . $this->size . "<br/>\n"
-		. "<b>partSize:</b> " . $this->partSize . " (kb)<br/>\n"
+		. "<b>partSize:</b> " . $this->chunkSize . " (kb)<br/>\n"
 		. "<b>complete:</b> " . $this->complete . "<br/>\n"
 		. "<br/><b>Parts:</b><br/>\n"
 		. $theme->arrayToHtmlTable($table, true, true);

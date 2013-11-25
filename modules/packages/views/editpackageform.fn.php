@@ -9,7 +9,7 @@
 function packages_editpackageform($args) {
 	global $user;
 	global $theme;
-	global $registry;	
+	global $kapenta;	
 
 	$html = '';					//%	return value [string]
 

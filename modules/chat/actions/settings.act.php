@@ -13,17 +13,17 @@
 	//	handle POSTs
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('chat_server', $_POST)) {
-		$registry->set('chat.server', $_POST['chat_server']);
+		$kapenta->registry->set('chat.server', $_POST['chat_server']);
 	}	
 
 	if (true == array_key_exists('chat_enabled', $_POST)) {
-		$registry->set('chat.enabled', $utils->cleanYesNo($_POST['chat_enabled']));
+		$kapenta->registry->set('chat.enabled', $utils->cleanYesNo($_POST['chat_enabled']));
 	}	
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/chat/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/chat/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

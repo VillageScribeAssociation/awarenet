@@ -28,7 +28,7 @@ function revisions__cb_object_updated($args) {
 	global $kapenta;
 	global $db; 
 	global $user;
-	global $registry;
+	global $kapenta;
 	global $session;
 
 	if ((true == array_key_exists('revision', $args)) && ('no' == $args['revision'])) {
@@ -55,8 +55,8 @@ function revisions__cb_object_updated($args) {
 	//	check if revisions to obejcts of this type are disallowed by registry settings
 	//----------------------------------------------------------------------------------------------
 
-	if ('no' == $registry->get('revisions.enabled')) { return false; }
-	$csv = $registry->get('revisions.limitto');
+	if ('no' == $kapenta->registry->get('revisions.enabled')) { return false; }
+	$csv = $kapenta->registry->get('revisions.limitto');
 
 	if ('' != $csv) {
 		$allow = explode(',', $csv);		//%	names of modules or models [array]

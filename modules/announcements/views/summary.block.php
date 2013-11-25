@@ -1,10 +1,11 @@
 <? /*
-<div class='outline' id='blockAnnouncements%%UID%%'>
+<div class='block' id='blockAnnouncements%%UID%%'>
 <table noborder width='100%'>
   <tr>
     <td valign='top'>
       <a href='/announcements/%%alias%%'>
-      [[:announcements::image::raUID=%%UID%%::size=width200::link=no:]]</a>
+      [[:images::default::refModule=announcements::refModel=announcements_announcement::refUID=%%UID%%::size=width200::altUser=%%createdBy%%::link=no:]]
+	  </a>
     </td>
     <td width='10'></td>
     <td valign='top'>

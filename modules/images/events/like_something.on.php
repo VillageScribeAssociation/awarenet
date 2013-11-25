@@ -33,6 +33,7 @@ function images__cb_like_something($args) {
 
 	if ('images_image' == $refModel) {
 		$model = new Images_Image($refUID);
+
 		if (true == $model->loaded) {
 
 			$creatorName = '[[:users::name::userUID=' . $model->createdBy . ":]]'s";
@@ -42,6 +43,7 @@ function images__cb_like_something($args) {
 			$url = '%%serverPath%%images/show/' . $model->alias;
 
 			$content = ''
+			 . "[[:images::show::width=indent::imageUID=" . $model->UID . ":]]\n"
 			 . "[[:like::otherusers"
 			 . "::userUID=" . $user->UID 
 			 . "::refModule=" . $refModule

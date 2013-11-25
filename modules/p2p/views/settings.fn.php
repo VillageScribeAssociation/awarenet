@@ -6,7 +6,7 @@
 
 function p2p_settings($args) {
 	global $theme;
-	global $registry;
+	global $kapenta;
 	global $user;
 
 	$html = '';					//%	return value [string]
@@ -22,15 +22,15 @@ function p2p_settings($args) {
 	$block = $theme->loadBlock('modules/p2p/views/settings.block.php');
 
 	$labels = array(
-		'p2p.enabled' => $registry->get('p2p.enabled'),
-		'p2p.server.uid' => $registry->get('p2p.server.uid'),
-		'p2p.server.name' => $registry->get('p2p.server.name'),
-		'p2p.server.url' => $registry->get('p2p.server.url'),
-		'p2p.server.fw' => $registry->get('p2p.server.fw'),
-		'p2p.server.pubkey' => $registry->get('p2p.server.pubkey'),
-		'p2p.batchsize' => $registry->get('p2p.batchsize'),
-		'p2p.batchparts' => $registry->get('p2p.batchparts'),
-		'p2p.filehours' => $registry->get('p2p.filehours')
+		'p2p.enabled' => $kapenta->registry->get('p2p.enabled'),
+		'p2p.server.uid' => $kapenta->registry->get('p2p.server.uid'),
+		'p2p.server.name' => $kapenta->registry->get('p2p.server.name'),
+		'p2p.server.url' => $kapenta->registry->get('p2p.server.url'),
+		'p2p.server.fw' => $kapenta->registry->get('p2p.server.fw'),
+		'p2p.server.pubkey' => $kapenta->registry->get('p2p.server.pubkey'),
+		'p2p.batchsize' => $kapenta->registry->get('p2p.batchsize'),
+		'p2p.batchparts' => $kapenta->registry->get('p2p.batchparts'),
+		'p2p.filehours' => $kapenta->registry->get('p2p.filehours')
 	);
 
 	$html = $theme->replaceLabels($labels, $block);

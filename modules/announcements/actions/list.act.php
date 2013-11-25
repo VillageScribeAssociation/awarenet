@@ -13,14 +13,14 @@
 	}
 	
 	$school = $user->school;
-	if (true == array_key_exists('school', $req->args)) { $school = $req->args['sc']; }
+	if (true == array_key_exists('school', $kapenta->request->args)) { $school = $kapenta->request->args['sc']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/announcements/actions/list.page.php');
-	$page->blockArgs['schoolUID'] = $school;
-	$page->render();
+	$kapenta->page->load('modules/announcements/actions/list.page.php');
+	$kapenta->page->blockArgs['schoolUID'] = $school;
+	$kapenta->page->render();
 
 ?>

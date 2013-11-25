@@ -10,6 +10,7 @@
 
 function p2p_WebShell_share($args) {
 	global $kapenta;
+	global $kapenta;
 	global $user;
 	global $shell;
 	global $db;
@@ -128,55 +129,48 @@ function p2p_WebShell_share($args) {
 			if ('' != $UID) { $sql .= " WHERE UID='" . $db->addMarkup($UID) . "'"; }
 			$result = $db->query($sql);
 
+			$objects = '';
+			$objectCount = 0;
+
 			while ($row = $db->fetchAssoc($result)) {
 				$item = $db->rmArray($row);
-				$isShared = $db->isShared($tableName, $item['UID']);	//%	share status [bool]
+				$isShared = $db->isShared($tableName, $item['UID']);			//%	share status [bool]
 				$hasFile = array_key_exists('fileName', $dbSchema['fields']);	//% [bool]
 
 				if (true == $isShared) { $html .= "Database reports that object is shared.<br/>"; }
 				else { $html .= "Database reports that object is NOT SHARED.<br/>"; }
 
-				if (true == $hasFile) { $html .= "Object may have an attached file.<br/>"; }
-
 				if (true == $isShared) {
 					//------------------------------------------------------------------------------
 					// item is shared, (re)add for all peers
 					//------------------------------------------------------------------------------
-					$set = new P2P_Offers();
-					foreach($peers as $peer) {
-						$html .= "Sharing $tableName :: $UID  with " . $peer['name'] . "<br/>\n";
-						$set->peerUID = $peer['UID'];
-						$upd = $set->updateObject($tableName, $item['UID'], $item);
-						if (true == $upd) {
-							$html .= ''
-							 . "Updated object share $tableName " . $row['UID'] . " "
-							 . "on " . $peer['name'] . ".<br/>";
-						}
 
+					$objects .= '      ' . $item['UID'] . '|' . $item['editedOn'] . "\n";
+					$objectCount++;
+			
+					if ($objectCount >= 50) {
+						p2p_WebShell_share_throw($tableName, $objects);
+						$objects = '';
+						$objectCount = 0;
+					}
 
-						if (true == $hasFile) {
-							$upd = $set->updateFile($tableName, $item['UID'], $item['fileName']);
-							if (true == $upd) {
-								$html .= ''
-								 . "Updated file share " . $row['fileName']
-								 . "( " . $tableName . " " . $row['UID'] . ")"
-								 . " on " . $peer['name'] . ".<br/>";
-							}
-						}
-
+					if (true == $hasFile) {
+						p2p_WebShell_file_throw(
+							$item['fileName'], $item['hash'],
+							$dbSchema['module'], $tableName, $item['UID']
+						);
+						$html .= "Object may have an attached file.<br/>";
 					}
 
 				} else {
 					//------------------------------------------------------------------------------
-					// item is not shared, delete any gift records
+					// item is not shared, do nothing
 					//------------------------------------------------------------------------------
-					$conditions = array();
-					$conditions[] = "refModel='" . $db->addMarkup($tableName). "'";
-					$conditions[] = "refUID='" . $db->addMarkup($UID). "'";
-					$range = $db->loadRange('p2p_gift', '*', $conditions);
-					
 				}
 			}
+
+			//	handle any outstanding items
+			if ($objectCount >= 0) { p2p_WebShell_share_throw($tableName, $objects); }
 
 			break;	//..............................................................................
 
@@ -215,5 +209,60 @@ function p2p_WebShell_share_help($short = false) {
 	return $html;
 }
 
+//--------------------------------------------------------------------------------------------------
+//|	utility function to add contents of the buffer to peer message queues as announcment
+//--------------------------------------------------------------------------------------------------
+
+function p2p_WebShell_share_throw($tableName, $buffer) {
+	global $kapenta;
+
+	$msg = ''
+	 . "  <announcement>\n"
+	 . "    <model>" . $tableName . "</model>\n"
+	 . "    <list>\n"
+	 . $buffer
+	 . "    </list>\n"
+	 . "  </announcement>\n";
+
+	$detail = array(
+		'priority' => '6',
+		'message' => $msg,
+		'exclude' => ''
+	);
+
+	$kapenta->raiseEvent('p2p', 'p2p_broadcast', $detail);	
+}
+
+//--------------------------------------------------------------------------------------------------
+//|	utility function to announce a file to peers
+//--------------------------------------------------------------------------------------------------
+//arg: fileName - canonical location of file [string]
+//arg: hash - sha1 hash of file [string]
+//arg: refModule - module this file is part of [string]
+//arg: refModel - type of object which owns file [string]
+//arg: refUID - UID of object which owns file [string]
+
+function p2p_WebShell_file_throw($fileName, $hash, $refModule, $refModel, $refUID) {
+	global $kapenta;
+	global $kapenta;
+
+	$msg = ''
+	 . "<fileoffer>\n"
+	 . "  <module>" . $refModule . "</module>\n"
+	 . "  <model>" . $refModel . "</model>\n"
+	 . "  <uid>" . $refUID . "</uid>\n"
+	 . "  <filename>" . $fileName . "</filename>\n"
+	 . "  <hash>" . $hash . "</hash>\n"
+	 . "  <peer>" . $kapenta->registry->get('p2p.server.uid') . "</peer>\n"
+	 . "</fileoffer>\n";
+
+	$detail = array(
+		'message' => $msg,
+		'priority' => '5',
+		'exclude' => ''
+	);
+
+	$kapenta->raiseEvent('p2p', 'p2p_broadcast', $detail);
+}
 
 ?>

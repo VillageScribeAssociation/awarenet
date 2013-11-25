@@ -31,7 +31,7 @@
 	//	option to delete the package manifest
 	//----------------------------------------------------------------------------------------------
 	/*	TODO
-	if (true == $kapenta->fileExists($package->fileName)) {
+	if (true == $kapenta->fs->exists($package->fileName)) {
 		$check = @unlink($kapenta->installPath . $package->fileName);
 		if (true == $check) {
 			$session->msg("Deleted package manifest: " . $package->fileName, 'ok');

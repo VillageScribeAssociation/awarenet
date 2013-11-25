@@ -1,6 +1,8 @@
-<?
+<?php
 
-	require_once($kapenta->installPath . 'modules/twitter/inc/twitteroauth.class.php');
+	if (version_compare(PHP_VERSION, '5.0.0') >= 0) {
+		require_once($kapenta->installPath . 'modules/twitter/inc/twitteroauth.class.php');
+	}
 
 //--------------------------------------------------------------------------------------------------
 //*	send a status update to twitter
@@ -9,18 +11,20 @@
 //return: html report [string]
 
 function twitter_send($message) {
-	global $registry;
+	global $kapenta;
 	global $session;
 
 	$report = '';						//%	return value [string]
 	$ok = true;							//%	if settings test pass [bool]
 
-	// Read in our saved access token/secret
-	$accessToken = $registry->get('twitter.accesstoken');
-	$accessTokenSecret = $registry->get('twitter.accesstokensecret');
+	if ('yes' != $kapenta->registry->get('twitter.enabled')) { return '<fail/>'; }
 
-	$consumerKey = $registry->get('twitter.consumerkey');
-	$consumerSecret = $registry->get('twitter.consumersecret');
+	// Read in our saved access token/secret
+	$accessToken = $kapenta->registry->get('twitter.accesstoken');
+	$accessTokenSecret = $kapenta->registry->get('twitter.accesstokensecret');
+
+	$consumerKey = $kapenta->registry->get('twitter.consumerkey');
+	$consumerSecret = $kapenta->registry->get('twitter.consumersecret');
 
 	if (('' == trim($consumerKey)) || ('' == trim($consumerSecret))) {
 		$report .= "Please complete consumer key and secret.<br/>\n";
@@ -32,7 +36,7 @@ function twitter_send($message) {
 		$ok = false;
 	}
 
-	if ($message == $registry->get('twitter.lasttweet')) {
+	if ($message == $kapenta->registry->get('twitter.lasttweet')) {
 		$report .= "message repetition";
 		$ok = false;
 	}
@@ -60,7 +64,7 @@ function twitter_send($message) {
 		$report .= "<ok/>\n";
 
 		// record this tweet to prevent repetitions
-		$registry->set('twitter.lasttweet', $message);
+		$kapenta->registry->set('twitter.lasttweet', $message);
 
 	} else {
 		$report .= "<fail/>\n";

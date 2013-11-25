@@ -6,15 +6,28 @@
 //|	editform
 //--------------------------------------------------------------------------------------------------
 //arg: raUID - recordAlias or UID of comment to edit [string]
+//TODO: fix up this legacy code
 
 function comments_editform($args) {
 	global $theme;
+	global $user;
 
-	if ($user->authHas('comments', 'Comment_Comment', 'edit', $args) == false) { return false; }
-	if (array_key_exists('raUID', $args) == false) { return false; }
-	$model = new comment($args['raUID']);
-	if ($model->UID == '') { return false; }
-	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/comments/editform.block.php'));
+	$html = '';							//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == array_key_exists('raUID', $args)) { return 'raUID not given'; }
+	$model = new Comments_Comment($args['raUID']);
+	if (false == $model->loaded) { return ''; }
+	if (false == $user->authHas('comments', 'comment_comment', 'edit', $model->UID)) { return ''; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the block
+	//----------------------------------------------------------------------------------------------
+	$block = $theme->loadBlock('modules/comments/editform.block.php');
+	$html = $theme->replaceLabels($model->extArray(), $block);
+	return $html;
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -31,12 +31,13 @@ function moblog_listrecentnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
+	//$block = $theme->loadBlock('modules/moblog/views/summarynav.block.php');
 
-	foreach ($range as $row) {
-		$model = new Moblog_Post();
-		$model->loadArray($db->rmArray($row));
-		$html .= $theme->replaceLabels($model->extArray(), $block);
+	foreach ($range as $item) {
+		//$model = new Moblog_Post();
+		//$model->loadArray($db->rmArray($row));
+		//$html .= $theme->replaceLabels($model->extArray(), $block);
+		$html .= "[[:moblog::summarynav::postUID=" . $item['UID'] . ":]]";
 	}
 
 	return $html;

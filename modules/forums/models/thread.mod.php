@@ -223,7 +223,7 @@ class Forums_Thread {
 			$ary['editUrl'] = '%%serverPath%%forums/editthread/' . $ary['alias'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['newUrl'] = "%%serverPath%%forums/newthread/";
-			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new forumthreads]</a>";  
+			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new forum thread]</a>";  
 			$ary['delUrl'] = "%%serverPath%%forums/confirmdeletethread/UID_" . $ary['UID'] . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete this thread]</a>";  
 		}

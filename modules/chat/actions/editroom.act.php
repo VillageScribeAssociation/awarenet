@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Room not specified'); }
-	$UID = $req->ref;
+	if ('' == $kapenta->request->ref) { $page->do404('Room not specified'); }
+	$UID = $kapenta->request->ref;
 	if (false == $db->objectExists('chat_room', $UID)) { $page->do404(); }
 	if (false == $user->authHas('chat', 'chat_room', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Rooms.'); }
@@ -19,9 +19,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/chat/actions/editroom.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['roomUID'] = $UID;
-	$page->render();
+	$kapenta->page->load('modules/chat/actions/editroom.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['roomUID'] = $UID;
+	$kapenta->page->render();
 
 ?>

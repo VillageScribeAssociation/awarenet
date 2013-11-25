@@ -25,18 +25,18 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('refModule', $req->args))
+	if (false == array_key_exists('refModule', $kapenta->request->args))
 		{ $page->do404('module not given', true); }
 
-	if (false == array_key_exists('refModel', $req->args))
+	if (false == array_key_exists('refModel', $kapenta->request->args))
 		{ $page->do404('model not specified', true); }
 
-	if (false == array_key_exists('refUID', $req->args))
+	if (false == array_key_exists('refUID', $kapenta->request->args))
 		{ $page->do404('UID of owner object not specified', true); }
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such module', true); }
 	if (false == $db->tableExists($refModel)) { $page->do404('model not recognized', true); }
@@ -49,11 +49,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	load and render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/images/actions/uploadsingle.if.page.php');
-	$page->blockArgs['refModule'] = $refModule;
-	$page->blockArgs['refModel'] = $refModel;
-	$page->blockArgs['refUID'] = $refUID;
-	$page->blockArgs['category'] = $category;
-	$page->render();
+	$kapenta->page->load('modules/images/actions/uploadsingle.if.page.php');
+	$kapenta->page->blockArgs['refModule'] = $refModule;
+	$kapenta->page->blockArgs['refModel'] = $refModel;
+	$kapenta->page->blockArgs['refUID'] = $refUID;
+	$kapenta->page->blockArgs['category'] = $category;
+	$kapenta->page->render();
 
 ?>

@@ -34,17 +34,16 @@ function videos_samegallerynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	if (0 == count($range)) { 
-		// NVM
-	} else {
-		$html .= "[[:theme::navtitlebox::label=Also In This Gallery::toggle=divSameGallery:]]\n"
-			  . "<div id='divSameGallery'>\n";
+	if (0 == count($range)) { return ''; }
+	else {
 	
-		foreach($range as $row) 
-			{ $html .= "[[:videos::videosummarynav::raUID=" . $row['UID'] . ":]]\n"; }
+		foreach($range as $row) {
+			$html .= "[[:videos::videosummarynav::raUID=" . $row['UID'] . ":]]\n";
+		}
 
-		$html .= "</div>\n<br/>\n";
 	}
+
+	$html = $theme->ntb($html, 'Also in this gallery', 'divSameGallery');
 
 	return $html;
 }

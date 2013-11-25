@@ -1,0 +1,24 @@
+PLAN FOR CODE MODULE
+
+Files:
+container records
+
+Functions:
+same table as files
+
+create table code (
+  UID VARCHAR(30),
+  project VARCHAR(255), 
+  parent VARCHAR(30), 
+  type VARCHAR(50),	// folder/phpfile/binfile/txtfile/jpegfile/pngfile/function
+  title VARCHAR(255),
+  version VARCHAR(100),
+  revision VARCHAR(100),
+  description VARCHAR(100),
+  content VARCHAR(100),
+  author VARCHAR(255),
+  createdOn VARCHAR(255),
+  recordAlias VARCHAR(255)
+);
+
+aldgovdb 66password99

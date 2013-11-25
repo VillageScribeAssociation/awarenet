@@ -1,6 +1,6 @@
 <? /*
 
-<div id='divN%%userIndexUID%%'>
+<div id='divN%%userIndexUID%%' class='block'>
 <table noborder width='100%'>
   <tr>
     <td valign='top' width='50px'>
@@ -12,6 +12,7 @@
     <td valign='top'>
       <a href='%%refUrl%%'>%%title%%</a><br/>
 	  %%content%%<br/>
+	  <div class='spacer'></div>
 	  <small>
 		Sent on %%createdOnLong%% by [[:users::namelink::userUID=%%createdBy%%:]] 
 		%%hideJsLink%%
@@ -20,5 +21,6 @@
   </tr>
 </table>
 </div>
+<div class='spacer'></div>
 
 */ ?>

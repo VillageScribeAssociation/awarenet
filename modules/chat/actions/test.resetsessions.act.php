@@ -15,14 +15,14 @@
 	
 	$set = new Chat_Peers(true);
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		foreach($set->members as $item) {
 			echo $item['peerUID'] . " - " . $item['peerName'] . "(" . $item['peerUrl'] . ")" . "\n";
 		}
 		die();
 	}
 
-	$peer = new Chat_Peer($req->ref, true);
+	$peer = new Chat_Peer($kapenta->request->ref, true);
 	if (false == $peer->loaded) { $page->do404('Unknown peer.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@
 	//----------------------------------------------------------------------------------------------
 	
 	$io = new Chat_IO();
-	$result = $io->send('getsessions', $req->ref, '');
+	$result = $io->send('getsessions', $kapenta->request->ref, '');
 	echo "<b>Response:</b>";
 	echo "<textarea rows='10' style='width: 100%'>$result</textarea><br/>\n";
 

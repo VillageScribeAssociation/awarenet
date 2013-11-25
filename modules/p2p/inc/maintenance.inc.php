@@ -36,7 +36,7 @@ function p2p_maintenance() {
 		$downloads = new P2P_Downloads($peer->UID);
 		if (true == $downloads->loaded) { 
 			foreach($downloads->members as $fileName) {
-				if (true == $kapenta->fileExists($fileName)) {
+				if (true == $kapenta->fs->exists($fileName)) {
 					$downloads->remove($fileName);
 					$downloads->save();
 				} 
@@ -93,7 +93,7 @@ function p2p_maintenance() {
 		//	check references to files, delete offer if bad
 		//------------------------------------------------------------------------------------------
 		if ('file' == $item['type']) {
-			if (false == $kapenta->fileExists($item['fileName'])) { 
+			if (false == $kapenta->fs->exists($item['fileName'])) { 
 				$errors[] = array(
 					$item['UID'],
 					$item['refModel'],

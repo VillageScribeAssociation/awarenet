@@ -25,7 +25,7 @@ function admin_runmaintenance($args) {
 	//	include the maintenance script and check that maintenance function exists
 	//---------------------------------------------------------------------------------------------
 	$fileName = 'modules/' . $args['modName'] . '/inc/maintenance.inc.php';
-	if (false == $kapenta->fileExists($fileName)) {
+	if (false == $kapenta->fs->exists($fileName)) {
 		return '(no such maintenance script: ' . $fileName . ')';
 	}
 

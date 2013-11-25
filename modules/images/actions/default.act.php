@@ -4,7 +4,7 @@
 //*	display an image, or the entire gallery of all images
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------
 		//	default action of images module, no arguments
 		//------------------------------------------------------------------------------------------
@@ -16,9 +16,9 @@
 		//------------------------------------------------------------------------------------------
 
 		if (
-			(true == array_key_exists('scale', $req->args)) ||
-			(true == array_key_exists('s', $req->args)) ||
-			(true == array_key_exists('p', $req->args))
+			(true == array_key_exists('scale', $kapenta->request->args)) ||
+			(true == array_key_exists('s', $kapenta->request->args)) ||
+			(true == array_key_exists('p', $kapenta->request->args))
 		) {
 			include $kapenta->installPath . 'modules/images/actions/scale.act.php';
 		}

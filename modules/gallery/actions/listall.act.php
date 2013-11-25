@@ -18,10 +18,10 @@
 	$orderBy = 'createdOn';
 	$orderLabel = '';
 
-	if (array_key_exists('page', $req->args)) { $pageNo = $req->args['page']; }
-	if (array_key_exists('orderby', $req->args)) { 
+	if (array_key_exists('page', $kapenta->request->args)) { $pageNo = $kapenta->request->args['page']; }
+	if (array_key_exists('orderby', $kapenta->request->args)) { 
 
-		$orderBy = $req->args['orderby']; 
+		$orderBy = $kapenta->request->args['orderby']; 
 
 		switch($orderBy) {
 			case 'createdOn':	$orderLabel = 'by creation date';	break;
@@ -37,13 +37,13 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/gallery/actions/listall.page.php');		
-	$page->blockArgs['pageNo'] = $pageNo;								
-	$page->blockArgs['orderBy'] = $orderBy;
-	$page->blockArgs['orderLabel'] = $orderLabel;
-	$page->blockArgs['userUID'] = $user->UID;
-	$page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->load('modules/gallery/actions/listall.page.php');		
+	$kapenta->page->blockArgs['pageNo'] = $pageNo;								
+	$kapenta->page->blockArgs['orderBy'] = $orderBy;
+	$kapenta->page->blockArgs['orderLabel'] = $orderLabel;
+	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->blockArgs['userRa'] = $user->alias;
 	$page->title = 'awareNet - all galleries ' . $orderLabel . ' (page ' . $pageNo . ')';
-	$page->render();													
+	$kapenta->page->render();													
 
 ?>

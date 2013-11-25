@@ -33,7 +33,7 @@ function images_allthumbs($args) {
 
 	// users may list by these fields
 	if (true == array_key_exists('by', $args)) {	
-		switch(strtolower($req->args['by'])) {
+		switch(strtolower($kapenta->request->args['by'])) {
 			case 'title':	$orderBy = 'title';		break;
 			case 'createdon':	$orderBy = 'createdOn';		break;
 		}
@@ -72,7 +72,8 @@ function images_allthumbs($args) {
 		 . "::size=thumb"
 		 . "::display=inline"
 		 . "::imageUID=" . $item['UID']
-		 . "::link=no:]]\n";
+		 . "::link=no"
+		 . ":]]\n";
 	}
 
 	//$link = 'images/listimage/';	//% relative to serverPath [string]

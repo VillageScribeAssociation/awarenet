@@ -1,0 +1,11 @@
+{
+   "launch_url": "http://mugtug.com/sketchpad/",
+   "urls": [ "*://mugtug.com/sketchpad/" ],
+   "description": "Draw, sketch, create with MugTug Sketchpad.",
+   "icons": {
+      "128": "sketchpad.icon128.png"
+   },
+   "offline_enabled": true,
+   "name": "Sketchpad",
+   "permissions": [ ]
+}

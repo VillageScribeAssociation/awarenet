@@ -9,13 +9,13 @@
 //+	one will be created.
 
 	
-	$raUID = $req->ref;
+	$raUID = $kapenta->request->ref;
 
 	//----------------------------------------------------------------------------------------------
 	//	decide which article to show
 	//----------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------
 		//	no article specified
 		//------------------------------------------------------------------------------------------
@@ -27,14 +27,14 @@
 		//------------------------------------------------------------------------------------------
 		//	article has been specified
 		//------------------------------------------------------------------------------------------
-		$raUID = $aliases->getOwner('wiki', 'wiki_article', $req->ref);	// maybe its an alias
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', $kapenta->request->ref);	// maybe its an alias
 		if (false == $raUID) {							// no? maybe its a UID
 
-			if ($db->objectExists('wiki_article', $req->ref) == true) {
-				$raUID = $req->ref;			
+			if ($db->objectExists('wiki_article', $kapenta->request->ref) == true) {
+				$raUID = $kapenta->request->ref;			
 			} else {
-				$page->load('modules/wiki/actions/notfound.page.php');
-				$page->render();
+				$kapenta->page->load('modules/wiki/actions/notfound.page.php');
+				$kapenta->page->render();
 				die();
 			}
 		}
@@ -65,9 +65,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	show it
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/wiki/actions/pdf.page.php');
-	$page->blockArgs['raUID'] = $raUID;
-	foreach($extArray as $key => $value) { $page->blockArgs[$key] = $value; }
+	$kapenta->page->load('modules/wiki/actions/pdf.page.php');
+	$kapenta->page->blockArgs['raUID'] = $raUID;
+	foreach($extArray as $key => $value) { $kapenta->page->blockArgs[$key] = $value; }
 	$page->renderPdf();
 
 ?>

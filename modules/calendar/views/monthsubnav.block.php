@@ -5,7 +5,8 @@
 <table noborder>
   <tr>
     <td>
-		<a class='black' href='%%prevMonthUrl%%'><img src='/themes/clockface/icons/arrow_left.jpg' border='0' /></a>
+		<a class='black' href='%%prevMonthUrl%%'>
+		<img src='%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_left.jpg' border='0' /></a>
 	</td>
     <td>
 	<a class='black' href='%%prevMonthUrl%%'>Previous</a>
@@ -15,7 +16,8 @@
 		<a class='black' href='%%nextMonthUrl%%'>Next</a>
 	</td>
 	<td>
-		<a class='black' href='%%nextMonthUrl%%'><img src='/themes/clockface/icons/arrow_right.jpg' border='0' /></a>
+		<a class='black' href='%%nextMonthUrl%%'>
+		<img src='%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_right.jpg' border='0' /></a>
 	</td>
   </tr>
 </table>

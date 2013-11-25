@@ -1,36 +1,22 @@
 <? /*
 
+[[:comments::tip_policy:]]
+
+<form name='addComment' id='formCommentsAdd' method='POST' action='%%serverPath%%comments/add/'>
+<input type='hidden' id='iCommentRefModule' name='refModule' value='%%refModule%%' />
+<input type='hidden' id='iCommentRefModel' name='refModel' value='%%refModel%%' />
+<input type='hidden' id='iCommentRefUID' name='refUID' value='%%refUID%%' />
+<input type='hidden' id='iCommentReturn' name='return' value='none' />
+
+<textarea id='txtComment' name='comment' rows='7' cols='50'></textarea><br/>
+
 <table noborder>
   <tr>
-    <td valign='top'>
-
-  	  <form name='addComment' id='formCommentsAdd' method='POST' action='%%serverPath%%comments/add/'>
-  	  <input type='hidden' id='iCommentRefModule' name='refModule' value='%%refModule%%' />
-  	  <input type='hidden' id='iCommentRefModel' name='refModel' value='%%refModel%%' />
-  	  <input type='hidden' id='iCommentRefUID' name='refUID' value='%%refUID%%' />
-  	  <input type='hidden' id='iCommentReturn' name='return' value='none' />
-
-  	  <textarea id='txtComment' name='comment' rows='7' cols='50'></textarea><br/>
-
-  	  <table noborder>
-  	    <tr>
-  	      <td><input type='button' onClick='commentsPostNew();' value='Post Comment' /></td>
-  	      <td><div id='divCommentSendStatus'></div></td>
-  	    </tr>
-	  </table>
-      </form>
-
-    </td>
-    <td valign='top'>
-<small>You can write any comment you like.
-Remember others will read it. It can be funny,
-arouse interest or describe what you think. Be careful
-with judgments or aggressive comments towards other
-people. If others find your comment offensive it will be
-removed.</small>
-    </td>
+    <td><input type='button' onClick='commentsPostNew();' value='Post Comment' /></td>
+  	<td><div id='divCommentSendStatus'></div></td>
   </tr>
 </table>
+</form>
 
 <script language='javascript'>
 

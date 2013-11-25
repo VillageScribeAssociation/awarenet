@@ -7,12 +7,12 @@
 //--------------------------------------------------------------------------------------------------
 //+	This is a placeholder action to allow further modification of the image in the future.
 
-	if ('' == $req->ref) { $page->do404('Video not specified.'); }
-	$model = new Videos_Video($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404('Video not specified.'); }
+	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Video not found.'); }
 
 	$size = 'widtheditor';
-	if (true == array_key_exists('size', $req->args)) { $size = $req->args['size']; }
+	if (true == array_key_exists('size', $kapenta->request->args)) { $size = $kapenta->request->args['size']; }
 
 	$imgUrl = ''
 	 . 'images/showdefault'

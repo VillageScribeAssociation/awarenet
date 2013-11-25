@@ -15,7 +15,7 @@
 	if (false == array_key_exists('page', $_POST)) { $page->do404('Module not specified.'); }
 	$fileName = 'modules/' . $_POST['module'] . '/actions/' . $_POST['page'];
 
-	if (false == $kapenta->fileExists($fileName)) { $page->do404('No such template.'); }
+	if (false == $kapenta->fs->exists($fileName)) { $page->do404('No such template.'); }
 
 	$model = new KPage($fileName);
 	if (false == $model->loaded) { $page->do404('Could not load template.'); }

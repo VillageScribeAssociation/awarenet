@@ -87,7 +87,7 @@ class Live_Upload {
 
 	function loadXml($xml = '') {
 		global $kapenta;
-		if (('' == $xml) && (false == $kapenta->fileExists($this->fileName))) { return false; }
+		if (('' == $xml) && (false == $kapenta->fs->exists($this->fileName))) { return false; }
 		$this->parts = array();
 
 		$isFile = false; 
@@ -145,7 +145,7 @@ class Live_Upload {
 		global $kapenta;
 		if (false == $this->loaded) { return false; }
 		$xml = $this->toXml();
-		$check = $kapenta->filePutContents($this->fileName, $xml);
+		$check = $kapenta->fs->put($this->fileName, $xml);
 		return $check;
 	}
 
@@ -173,7 +173,7 @@ class Live_Upload {
 		if (false == $this->loaded) { return false; }
 		foreach($this->parts as $idx => $part) {
 			if ('done' == $part['status']) {
-				if (false == $kapenta->fileExists($part['fileName'])) {
+				if (false == $kapenta->fs->exists($part['fileName'])) {
 					$this->parts[$idx]['status'] = 'waiting';
 					$this->saveXml();
 				}
@@ -190,13 +190,13 @@ class Live_Upload {
 		global $kapenta;
 		//if ('no' == $this->complete) { return false; }
 		
-		$kapenta->filePutContents($this->outFile, '');					//	create file
+		$kapenta->fs->put($this->outFile, '');					//	create file
 		$fH = fopen($kapenta->installPath . $this->outFile, 'wb+');		//	open for writing
 		//echo "opening outfile: " . $this->outFile . "<br/>";
 		if (false == $fH) { return false; }								//	if cannot create
 
 		foreach($this->parts as $part) {
-			$part64 = $kapenta->fileGetContents($part['fileName'], true, true);
+			$part64 = $kapenta->fs->get($part['fileName'], true, true);
 			//echo "part64: <br/>";
 			//echo "<textarea rows='10' style='width: 100%'>$part64</textarea><br/>\n";
 
@@ -247,7 +247,7 @@ class Live_Upload {
 		if ($hash != $this->parts[$index]['hash']) { return false; }
 		$fileName = $this->parts[$index]['fileName'];
 
-		$check = $kapenta->filePutContents($fileName, $content64, true, true);
+		$check = $kapenta->fs->put($fileName, $content64, true, true);
 		if (false == $check) { echo "file could not be saved<br/>"; return false; }
 
 		$this->parts[$index]['status'] = 'done';
@@ -325,7 +325,7 @@ class Live_Upload {
 		global $kapenta;
 
 		foreach($this->parts as $part) {
-			if (true == $kapenta->fileExists($part['fileName'])) { 
+			if (true == $kapenta->fs->exists($part['fileName'])) { 
 				$kapenta->fileDelete($part['fileName'], true);
 			}
 		}

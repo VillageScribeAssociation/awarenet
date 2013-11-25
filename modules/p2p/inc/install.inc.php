@@ -17,12 +17,15 @@
 
 function p2p_install_module() {
 	global $user;
-	global $registry;
+	global $kapenta;
+	global $kapenta;
 
 	if ('admin' != $user->role) { return ''; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';				//% return value [string:html]
+
+	$dba = $kapenta->getDBAdminDriver();
+
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade p2p_deleted table
 	//----------------------------------------------------------------------------------------------
@@ -47,15 +50,15 @@ function p2p_install_module() {
 	//----------------------------------------------------------------------------------------------
 	//	create RSA keypair for this peer
 	//----------------------------------------------------------------------------------------------
-	if ('' == $registry->get('p2p.server.prvkey')) {
+	if ('' == $kapenta->registry->get('p2p.server.prvkey')) {
 
 		if (true == function_exists('openssl_pkey_get_details')) {
 			//--------------------------------------------------------------------------------------
 			// generate a bit rsa private key (usually 1024 bit)
 			//--------------------------------------------------------------------------------------
 			$keyLength = 4096;
-			$registry->set('p2p.keylength', '4096');
-			$registry->set('p2p.keytype', 'RSA');
+			$kapenta->registry->set('p2p.keylength', '4096');
+			$kapenta->registry->set('p2p.keytype', 'RSA');
 
 			$config = array();
 			$config['private_key_bits'] = $keyLength;		//	setting?
@@ -69,8 +72,8 @@ function p2p_install_module() {
 			$pubkey = $details['key'];							//	get public key
 
 
-			$registry->set('p2p.server.pubkey', $pubkey);
-			$registry->set('p2p.server.prvkey', $prvkey);
+			$kapenta->registry->set('p2p.server.pubkey', $pubkey);
+			$kapenta->registry->set('p2p.server.prvkey', $prvkey);
 
 			$report .= "Set RSA $keyLength public key.<br/><pre>$pubkey</pre><br/>\n";
 			$report .= "Set RSA $keyLength private key.<br/><pre>(not shown)</pre><br/>\n";
@@ -96,12 +99,15 @@ function p2p_install_module() {
 
 function p2p_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
 	$report = '';				//%	return value [string:html]
-	$dba = new KDBAdminDriver();
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Deleted objects exists and is correct

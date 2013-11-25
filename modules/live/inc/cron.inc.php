@@ -74,7 +74,7 @@ function live_cron_daily() {
 				$report .= "Upload exceeds max age (" . $model->started . "), deleting...<br/>";
 				
 				foreach($model->parts as $part) {
-					if (true == $kapenta->fileExists($part['fileName'])) {
+					if (true == $kapenta->fs->exists($part['fileName'])) {
 						echo "Removing file part: " . $part['fileName'] . "<br/>";
 
 					}

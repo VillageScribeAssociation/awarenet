@@ -7,19 +7,19 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $req->args)) 
+	if (false == array_key_exists('refModule', $kapenta->request->args)) 
 		{ $page->do404('Module not specified.', true); }
 
-	if (false == array_key_exists('refModel', $req->args))
+	if (false == array_key_exists('refModel', $kapenta->request->args))
 		{ $page->do404('Model not specified.', true); }
 
-	if (false == array_key_exists('refUID', $req->args))
+	if (false == array_key_exists('refUID', $kapenta->request->args))
 		{ $page->do404('UID not specified.', true); }
 
 
-	$refModule = $req->args['refModule'];
-	$refModel = $req->args['refModel'];
-	$refUID = $req->args['refUID'];
+	$refModule = $kapenta->request->args['refModule'];
+	$refModel = $kapenta->request->args['refModel'];
+	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
 	if (false == $db->tableExists($refModel)) { $page->do404('Object type not recognized.', true); }
@@ -30,7 +30,7 @@
 		{ $page->do403('You are not authorized to add images to this object.', true); }
 
 	$tags = 'no';
-	if ((true == array_key_exists('tags', $req->args)) && ('yes' == $req->args['tags']))
+	if ((true == array_key_exists('tags', $kapenta->request->args)) && ('yes' == $kapenta->request->args['tags']))
 		{ $tags = 'yes'; }
 	
 	//TODO: check this permission name
@@ -38,20 +38,20 @@
 			//--------------------------------------------------------------------------------------
 			//	not authorised to edit images, just display
 			//--------------------------------------------------------------------------------------
-			$page->load('modules/images/actions/imageset.if.page.php');
-			$page->blockArgs['refModule'] = $refModule;
-			$page->blockArgs['refUID'] = $refUID;
-			$page->render();
+			$kapenta->page->load('modules/images/actions/imageset.if.page.php');
+			$kapenta->page->blockArgs['refModule'] = $refModule;
+			$kapenta->page->blockArgs['refUID'] = $refUID;
+			$kapenta->page->render();
 	*/
 		
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/images/actions/uploadmultiple.if.page.php');
-	$page->blockArgs['refModule'] = $refModule;
-	$page->blockArgs['refModel'] = $refModel;
-	$page->blockArgs['refUID'] = $refUID;
-	$page->blockArgs['tags'] = $tags;
-	$page->render();
+	$kapenta->page->load('modules/images/actions/uploadmultiple.if.page.php');
+	$kapenta->page->blockArgs['refModule'] = $refModule;
+	$kapenta->page->blockArgs['refModel'] = $refModel;
+	$kapenta->page->blockArgs['refUID'] = $refUID;
+	$kapenta->page->blockArgs['tags'] = $tags;
+	$kapenta->page->render();
 			
 ?>

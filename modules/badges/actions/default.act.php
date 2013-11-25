@@ -4,7 +4,7 @@
 //*	default action for badges module (ie, no action specified in URL)
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		// no recordAlias/UID given in URL, list all groups in current users school
 		include $kapenta->installPath . 'modules/badges/actions/list.act.php';
 	} else {

@@ -43,7 +43,7 @@
 	$model->role = 'member';
 	$report = $model->save();
 
-	if ('' != $report) { $page->do404('Database error, could not grant membership.', 'bad'); }
+	if ('' != $report) { $page->do404("Database error, could not grant membership:<br/>$report"); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, create notification

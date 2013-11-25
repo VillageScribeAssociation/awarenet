@@ -1,7 +1,11 @@
 <?
 
-	require_once($kapenta->installPath . 'modules/twitter/models/tweet.mod.php');
-	require_once($kapenta->installPath . 'modules/twitter/inc/send.inc.php');
+	//	done like this because includes from this lib cause 
+
+	if (version_compare(PHP_VERSION, '5.0.0') >= 0) {
+		require_once($kapenta->installPath . 'modules/twitter/models/tweet.mod.php');
+		require_once($kapenta->installPath . 'modules/twitter/inc/send.inc.php');
+	}
 
 //--------------------------------------------------------------------------------------------------
 //*	processes run regularly to keep things tidy
@@ -15,9 +19,16 @@
 function twitter_cron_tenmins() {
 	global $db, $registry;
 
-	if ('yes' !== $registry->get('twitter.enabled')) { return "Twitter not enabled.<br/>\n"; }
+	if ('yes' !== $kapenta->registry->get('twitter.enabled')) { return "Twitter not enabled.<br/>\n"; }
 
 	$report = "<h2>twitter_cron_tenmins</h2>\n";	//%	return value [string]
+
+	if (version_compare(PHP_VERSION, '5.0.0') >= 0) {
+		$report .= "PHP Version requirement met.";
+	} else {
+		$report .= "PHP Version requirement not met, must be 5+.";
+		return $report;
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	send any unsent tweets if twitter is enabled on this node
@@ -31,8 +42,7 @@ function twitter_cron_tenmins() {
 		$model->status = 'sent';
 		$model->save();
 
-		$result .= twitter_send($model->content);
-		$report .= $result;
+		$report .= twitter_send($model->content);
 
 		if (false !== strpos($result, '<ok/>')) {
 			$model->status = 'fail';
@@ -59,10 +69,10 @@ function twitter_cron_tenmins() {
 
 function twitter_cron_daily() {
 	global $kapenta;
-	global $registry;
+	global $kapenta;
 	global $theme;
 
-	if ('yes' != $registry->get('twitter.enabled')) { return "Twitter not enabled.<br/>\n";}
+	if ('yes' != $kapenta->registry->get('twitter.enabled')) { return "Twitter not enabled.<br/>\n";}
 
 	$report = "<h2>twitter_cron_daily</h2>\n";	//%	return value [string]
 
@@ -77,7 +87,7 @@ function twitter_cron_daily() {
 		$args = array(
 			'refModule' => 'home',
 			'refModel' => 'home_static',
-			'refUID' => $registry->get('home.frontpage'),
+			'refUID' => $kapenta->registry->get('home.frontpage'),
 			'message' => $date . ' - ' . $msg
 		);
 

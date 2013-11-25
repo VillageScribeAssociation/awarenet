@@ -18,8 +18,8 @@ function comments_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('comments', 'Comment_Comment', 'list')) { return ''; }
-	if (false == $user->authHas('comments', 'Comment_Comment', 'show')) { return ''; }
+	if (false == $user->authHas('comments', 'comment_comment', 'list')) { return ''; }
+	if (false == $user->authHas('comments', 'comment_comment', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) { 

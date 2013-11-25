@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }							// check ref
+	if ('' == $kapenta->request->ref) { $page->do404(); }							// check ref
 	$UID = $aliases->findRedirect('videos_gallery'); 					// check correct ref
 	
-	$model = new Videos_Gallery($req->ref);	
+	$model = new Videos_Gallery($kapenta->request->ref);	
 	if (false == $model->loaded) { $page->do404('Video gallery not found.'); }
 	if (false == $user->authHas('videos', 'videos_gallery', 'show', $model->UID)) {$page->do403();}
 
@@ -21,13 +21,13 @@
 	//----------------------------------------------------------------------------------------------
 	$userRa = $aliases->getDefault('users_user', $model->createdBy);
 
-	$page->load('modules/videos/actions/showgallery.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['userUID'] = $model->createdBy;
-	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['galleryRa'] = $model->alias;
-	$page->blockArgs['galleryTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->load('modules/videos/actions/showgallery.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['userUID'] = $model->createdBy;
+	$kapenta->page->blockArgs['userRa'] = $userRa;
+	$kapenta->page->blockArgs['galleryRa'] = $model->alias;
+	$kapenta->page->blockArgs['galleryTitle'] = $model->title;
+	$kapenta->page->render();
 
 ?>

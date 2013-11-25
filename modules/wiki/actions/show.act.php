@@ -7,12 +7,12 @@
 //--------------------------------------------------------------------------------------------------
 //	If no alias is specified, the 'index' article is shown.
 
-	$raUID = $req->ref;
+	$raUID = $kapenta->request->ref;
 	
 	//----------------------------------------------------------------------------------------------
 	//	decide which article to show
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------
 		//	no article specified
 		//------------------------------------------------------------------------------------------
@@ -30,14 +30,14 @@
 		//------------------------------------------------------------------------------------------
 		//	article has been specified
 		//------------------------------------------------------------------------------------------
-		$raUID = $aliases->getOwner('wiki', 'wiki_article', $req->ref);	// maybe its an alias
+		$raUID = $aliases->getOwner('wiki', 'wiki_article', $kapenta->request->ref);	// maybe its an alias
 		if ($raUID == false) {							// no? maybe its a UID
 
-			if (true == $db->objectExists('wiki_article', $req->ref)) {
-				$raUID = $req->ref;			
+			if (true == $db->objectExists('wiki_article', $kapenta->request->ref)) {
+				$raUID = $kapenta->request->ref;			
 			} else {
-				$page->load('modules/wiki/actions/notfound.page.php');
-				$page->render();
+				$kapenta->page->load('modules/wiki/actions/notfound.page.php');
+				$kapenta->page->render();
 				die();
 			}
 		}
@@ -49,14 +49,6 @@
 
 	$model = new Wiki_Article($raUID);
 	if ('talk' == $model->namespace) { $page->do302('wiki/talk/' . $model->talkFor); }
-	$model->expandWikiCode();
-
-	$extArray = $model->extArray();	
-
-	if ('' != trim($extArray['infobox']) ) {
-		$extArray['infobox'] = "[[:theme::navtitlebox::label=Infobox:]]\n" 
-							 . "" . $extArray['infobox'] . "\n<br/><br/>";
-	}
 
 	//----------------------------------------------------------------------------------------------
 	//	increment hit count
@@ -73,9 +65,10 @@
 	//	show it
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/wiki/actions/show.page.php');
-	$page->blockArgs['raUID'] = $raUID;
-	foreach($extArray as $key => $value) {  $page->blockArgs[$key] = $value; }
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/show.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->UID;
+	$kapenta->page->blockArgs['articleTitle'] = $model->title;
+	$kapenta->page->render();
 
 ?>

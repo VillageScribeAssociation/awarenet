@@ -5,12 +5,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_adminconsole($args) {
-	global $theme;
+	global $kapenta;
 
-	global $user;
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
-	$html = $theme->loadBlock('modules/admin/views/adminconsole.block.php');
+	$html = $kapenta->theme->loadBlock('modules/admin/views/adminconsole.block.php');
 
 	return $html;
 }

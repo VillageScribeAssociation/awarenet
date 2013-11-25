@@ -14,8 +14,8 @@
 	//---------------------------------------------------------------------------------------------
 	
 	$browsePath = '';
-	if (true == array_key_exists('path', $req->args)) { 
-		$browsePath = base64_decode($req->args['path']);
+	if (true == array_key_exists('path', $kapenta->request->args)) { 
+		$browsePath = base64_decode($kapenta->request->args['path']);
 		$browsePath = str_replace('//', '/', $browsePath);
 		$browsePath = str_replace('..', '.', $browsePath);
 	}
@@ -89,10 +89,10 @@
 	//	render page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load('modules/admin/actions/filebrowser.page.php');
-	$page->blockArgs['filePath'] = '~/' . str_replace($kapenta->installPath, '', $browsePath);
-	$page->blockArgs['fileList'] = $theme->arrayToHtmlTable($table, true, true);
-	$page->blockArgs['parentLink'] = $parentLink;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/filebrowser.page.php');
+	$kapenta->page->blockArgs['filePath'] = '~/' . str_replace($kapenta->installPath, '', $browsePath);
+	$kapenta->page->blockArgs['fileList'] = $theme->arrayToHtmlTable($table, true, true);
+	$kapenta->page->blockArgs['parentLink'] = $parentLink;
+	$kapenta->page->render();
 
 ?>

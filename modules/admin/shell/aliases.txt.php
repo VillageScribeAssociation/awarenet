@@ -9,5 +9,6 @@ modules := admin.modules
 registry := admin.registry
 time := admin.time
 reattach := admin.reattach
+memcached := admin.memcached
 
 */ ?>

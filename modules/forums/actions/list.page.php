@@ -8,12 +8,16 @@
 		[[:forums::summarylistall:]]
 	</content>
 	<nav1>
+		<div class='block'>
 		[[:theme::navtitlebox::label=Most Active Discussions:]]
 		[[:forums::busiestthreads::num=6:]]
+		</div>
 		[`|lt]br/[`|gt]
 
+		<div class='block'>
 		[[:theme::navtitlebox::label=At My School:]]
 		[[:forums::atmyschoolnav:]]
+		</div>
 	</nav1>
 	<nav2></nav2>
 	<script></script>

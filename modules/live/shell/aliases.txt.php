@@ -9,5 +9,6 @@ man := live.help
 sha1 := live.sha1
 newuid := live.newuid
 block := live.block
+touch := live.touch
 
 */ ?>

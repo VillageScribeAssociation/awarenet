@@ -1,6 +1,5 @@
 <?
 
-	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/badges/models/badge.mod.php');
 	require_once($kapenta->installPath . 'modules/badges/models/userindex.mod.php');
 
@@ -15,9 +14,9 @@
 //returns: html report or false if not authorized [string][bool]
 
 function badges_install_module() {
-	global $db, $user;
+	global $db, $user, $kapenta;
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver();
 	$report = '';
 
 	//----------------------------------------------------------------------------------------------
@@ -47,10 +46,10 @@ function badges_install_module() {
 //returns: HTML installation status report [string]
 
 function badges_install_status_report() {
-	global $user;
+	global $user, $kapenta;
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;

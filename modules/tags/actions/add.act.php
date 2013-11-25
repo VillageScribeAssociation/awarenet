@@ -23,10 +23,10 @@
 	if (true == array_key_exists('refUID', $_POST)) { $refUID = $_POST['refUID']; }
 	if (true == array_key_exists('tagName', $_POST)) { $tagName = $_POST['tagName']; }
 
-	if (true == array_key_exists('refModule', $req->args)) { $refModule = $req->args['refModule']; }
-	if (true == array_key_exists('refModel', $req->args)) { $refModel = $req->args['refModel']; }
-	if (true == array_key_exists('refUID', $req->args)) { $refUID = $req->args['refUID']; }
-	if (true == array_key_exists('tagName', $req->args)) { $tagName = $req->args['tagName']; }
+	if (true == array_key_exists('refModule', $kapenta->request->args)) { $refModule = $kapenta->request->args['refModule']; }
+	if (true == array_key_exists('refModel', $kapenta->request->args)) { $refModel = $kapenta->request->args['refModel']; }
+	if (true == array_key_exists('refUID', $kapenta->request->args)) { $refUID = $kapenta->request->args['refUID']; }
+	if (true == array_key_exists('tagName', $kapenta->request->args)) { $tagName = $kapenta->request->args['tagName']; }
 
 	if ('' == $refModule) { $page->do403('No refModule specified.'); }
 	if ('' == $refModel) { $page->do403('No refModel specified.'); }

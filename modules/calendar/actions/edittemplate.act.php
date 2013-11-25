@@ -17,10 +17,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/calendar/actions/edittemplate.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['templateUID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/calendar/actions/edittemplate.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['templateUID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

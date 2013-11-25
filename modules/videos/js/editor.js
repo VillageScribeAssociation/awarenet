@@ -3,6 +3,10 @@
 //	helper functions for editing videos
 //--------------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------
+//	create a modal window to edit video details
+//--------------------------------------------------------------------------------------------------
+
 function Videos_EditModal(videoUID) {
 
 	var hWnd = kwindowmanager.createWindow(
@@ -27,6 +31,24 @@ function Videos_EditTags(videoUID) {
 	//TODO: add an icon
 	var hWnd = kwindowmanager.createWindow('Edit Video Tags', tagWindowUrl, 570, 400, '', true);	
 
+}
+
+function Videos_EditThumbs(videoUID) {
+
+	var imgWindowUrl = ''
+	 + jsServerPath
+	 + 'tags/edittags'
+	 + '/refModule_videos'
+	 + '/refModel_videos_video'
+	 + '/refUID_' + videoUID;
+
+	//TODO: add an icon
+	var hWnd = kwindowmanager.createWindow(
+		'Edit Video Thumbnails',
+		imgWindowUrl,
+		570, 400, '', true
+	);	
+	
 }
 
 function Videos_MakeDefault(videoUID) {

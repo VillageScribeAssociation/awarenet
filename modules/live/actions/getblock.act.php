@@ -12,7 +12,7 @@
 	$area = 'content';
 	//echo $block . "<br/>\n";
 
-	if (true == array_key_exists('area', $req->args)) { $area = $req->args['area']; }
+	if (true == array_key_exists('area', $kapenta->request->args)) { $area = $kapenta->request->args['area']; }
 	if (true == array_key_exists('area', $_POST)) { $area = $_POST['area']; }
 	if (true == array_key_exists('a', $_POST)) { $area = $_POST['a']; }    
 

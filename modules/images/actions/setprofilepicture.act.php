@@ -12,12 +12,12 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('Image not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
 
-	$model = new Images_image($req->ref);
+	$model = new Images_image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unkown image.'); }
 
-	if (false == $kapenta->fileExists($model->fileName)) {
+	if (false == $kapenta->fs->exists($model->fileName)) {
 		$msg = 'Image not available on this node, you can not set it as a profile picture.';
 		$session->msg($msg, 'bad');
 		$page->do302('users/editprofile/' . $user->alias);
@@ -37,7 +37,7 @@
 	 . substr($UID, 0, 1) . '/' . substr($UID, 1, 1) . '/' . substr($UID, 2, 1) . '/'
 	 . $UID . '.jpg';
 
-	$kapenta->filePutContents($newFile, '');
+	$kapenta->fs->put($newFile, '');
 
 	$check = copy($kapenta->installPath . $model->fileName, $kapenta->installPath . $newFile);
 

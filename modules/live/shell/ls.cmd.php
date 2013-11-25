@@ -1,5 +1,6 @@
 <?
 
+	require_once($kapenta->installPath . 'modules/live/inc/shellsession.class.php');
 	require_once($kapenta->installPath . 'modules/live/inc/cmdaliases.class.php');
 
 //--------------------------------------------------------------------------------------------------
@@ -20,6 +21,8 @@ function live_WebShell_ls($args) {
 	//----------------------------------------------------------------------------------------------
 	//	execute
 	//----------------------------------------------------------------------------------------------
+
+	if (false == isset($shell)) { $shell = new Live_ShellSession(); }
 	
 	switch($mode) {
 		case 'list':

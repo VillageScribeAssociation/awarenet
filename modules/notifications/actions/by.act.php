@@ -7,15 +7,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
-	if (('teachers' != $req->ref) && ('everyone' != $req->ref)) { $page->do404('Unknown feed.'); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if (('teachers' != $kapenta->request->ref) && ('everyone' != $kapenta->request->ref)) { $page->do404('Unknown feed.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/notifications/actions/by.page.php');
-	$page->blockArgs['feed'] = $req->ref;
-	$page->blockArgs['userUID'] = $user->UID;
-	$page->render();
+	$kapenta->page->load('modules/notifications/actions/by.page.php');
+	$kapenta->page->blockArgs['feed'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->render();
 
 ?>

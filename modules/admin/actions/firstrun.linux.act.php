@@ -9,7 +9,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	check that this is not already complete
 	//---------------------------------------------------------------------------------------------
-	if ('yes' == $registry->get('firstrun.complete')) {
+	if ('yes' == $kapenta->registry->get('firstrun.complete')) {
 		$session->msg('awareNet initialized.');
 		$page->do302('');
 	}
@@ -34,7 +34,7 @@
 	);
 	
 	foreach($dbrDefault as $key => $value) {
-		if ('' == $registry->get($key)) { $registry->set($key, $value); }
+		if ('' == $kapenta->registry->get($key)) { $kapenta->registry->set($key, $value); }
 	}
 			
 	//---------------------------------------------------------------------------------------------
@@ -56,9 +56,9 @@
 		. "<form name='frmSetDbr' method='POST'>\n"
 		. "<input type='hidden' name='action' value='set_dbr' />"
 		. "<b>Username:</b> <input type='text' name='firstrun_dbr_user' "
-		 . "value='" . $registry->get('firstrun.dbr.user') . "'/>&nbsp; "
+		 . "value='" . $kapenta->registry->get('firstrun.dbr.user') . "'/>&nbsp; "
 		. "<b>Password:</b> <input type='text' name='firstrun_dbr_password' "
-		 . "value='" . $registry->get('firstrun.dbr.password') . "'/>&nbsp; "
+		 . "value='" . $kapenta->registry->get('firstrun.dbr.password') . "'/>&nbsp; "
 		. "<input type='submit' value='Retry &gt;&gt;' />"
 		. "</form><br/>\n"
 		. "<small>Default values for XAMPP are 'root' and no password.</small>";
@@ -70,21 +70,21 @@
 		. "<table noborder>\n"
 		. "  <tr>\n"
 		. "    <td><b>Database host:</b></td>\n"
-		. "    <td><input type='text' name='kapenta_db_host' value='" . $registry->get('firstrun.dbr.host') . "'> "
+		. "    <td><input type='text' name='kapenta_db_host' value='" . $kapenta->registry->get('firstrun.dbr.host') . "'> "
 		 . "   <small>(use <i>localhost</i> if unsure)</small></td>\n"
 		. "  </tr>\n"
 		. "  <tr>\n"
 		. "    <td><b>Database name:</b></td>\n"
-		. "    <td><input type='text' name='kapenta_db_name' value='" . $registry->get('firstrun.dbr.name') . "'> "
+		. "    <td><input type='text' name='kapenta_db_name' value='" . $kapenta->registry->get('firstrun.dbr.name') . "'> "
 		 . "   <small>(eg: awarenet)</small></td>\n"
 		. "  </tr>\n"
 		. "  <tr>\n"
 		. "    <td><b>Database user:</b></td>\n"
-		. "    <td><input type='text' name='kapenta_db_user' value='" . $registry->get('firstrun.dbr.user') . "'><small></small></td>\n"
+		. "    <td><input type='text' name='kapenta_db_user' value='" . $kapenta->registry->get('firstrun.dbr.user') . "'><small></small></td>\n"
 		. "  </tr>\n"
 		. "  <tr>\n"
 		. "    <td><b>Database password:</b></td>\n"
-		. "    <td><input type='text' name='kapenta_db_password' value='" . $registry->get('firstrun.dbr.password') . "'></td>\n"
+		. "    <td><input type='text' name='kapenta_db_password' value='" . $kapenta->registry->get('firstrun.dbr.password') . "'></td>\n"
 		. "  </tr>\n"
 		. "  <tr>\n"
 		. "    <td><b></b></td>\n"
@@ -117,7 +117,7 @@
 		. "</form>\n"
 		. "";
 
-	$adminuser = $registry->get('firstrun.adminuser');
+	$adminuser = $kapenta->registry->get('firstrun.adminuser');
 
 	$frmAdminUser = ''
 		. "<p>Please set up an administrator account.</p>\n"
@@ -153,8 +153,8 @@
 		//-----------------------------------------------------------------------------------------
 
 		if ('set_dbr' == $_POST['action']) {
-			$registry->set('firstrun.dbr.user', $_POST['firstrun_dbr_user']);
-			$registry->set('firstrun.dbr.password', $_POST['firstrun_dbr_password']);
+			$kapenta->registry->set('firstrun.dbr.user', $_POST['firstrun_dbr_user']);
+			$kapenta->registry->set('firstrun.dbr.password', $_POST['firstrun_dbr_password']);
 		}
 
 		//-----------------------------------------------------------------------------------------
@@ -162,14 +162,14 @@
 		//-----------------------------------------------------------------------------------------
 
 		if ('set_mysql' == $_POST['action']) {
-			$registry->set('firstrun.dbr.host', $_POST['kapenta_db_host']);
-			$registry->set('firstrun.dbr.name', $_POST['kapenta_db_name']);
-			$registry->set('firstrun.dbr.user', $_POST['kapenta_db_user']);
-			$registry->set('firstrun.dbr.password', $_POST['kapenta_db_password']);
+			$kapenta->registry->set('firstrun.dbr.host', $_POST['kapenta_db_host']);
+			$kapenta->registry->set('firstrun.dbr.name', $_POST['kapenta_db_name']);
+			$kapenta->registry->set('firstrun.dbr.user', $_POST['kapenta_db_user']);
+			$kapenta->registry->set('firstrun.dbr.password', $_POST['kapenta_db_password']);
 
 			// use this form from now on
-			$registry->set('firstrun.dbr.created', 'yes');
-			$registry->set('firstrun.dbr.granted', 'yes');
+			$kapenta->registry->set('firstrun.dbr.created', 'yes');
+			$kapenta->registry->set('firstrun.dbr.granted', 'yes');
 			echo "<div class='chatmessageblack'>Changing to manual database settings...</div>\n";
 		}
 
@@ -183,8 +183,8 @@
 				echo "<div class='chatmessageblack'>$frmRecoveryPass</div>";
 				die();
 			} else {
-				$registry->set('firstrun.recovery', $_POST['recovery1']);
-				$registry->set('kapenta.recoverypassword', sha1($_POST['recovery1']));
+				$kapenta->registry->set('firstrun.recovery', $_POST['recovery1']);
+				$kapenta->registry->set('kapenta.recoverypassword', sha1($_POST['recovery1']));
 			}
 		}
 
@@ -206,8 +206,8 @@
 				die();			
 			}
 
-			$registry->set('firstrun.adminuser', $_POST['firstrun_adminuser']);
-			$registry->set('firstrun.adminpass', $_POST['firstrun_adminpass']);
+			$kapenta->registry->set('firstrun.adminuser', $_POST['firstrun_adminuser']);
+			$kapenta->registry->set('firstrun.adminpass', $_POST['firstrun_adminpass']);
 
 		}
 
@@ -216,29 +216,29 @@
 	//---------------------------------------------------------------------------------------------
 	//	install database (xampp settings)
 	//---------------------------------------------------------------------------------------------
-	if ('yes' !== $registry->get('firstrun.dbr.installed')) {
+	if ('yes' !== $kapenta->registry->get('firstrun.dbr.installed')) {
 	
-		$db->host = $registry->get('firstrun.dbr.host');
-		$db->user = $registry->get('firstrun.dbr.user');;
-		$db->pass = $registry->get('firstrun.dbr.password');;
-		$db->name = $registry->get('firstrun.dbr.name');
+		$db->host = $kapenta->registry->get('firstrun.dbr.host');
+		$db->user = $kapenta->registry->get('firstrun.dbr.user');;
+		$db->pass = $kapenta->registry->get('firstrun.dbr.password');;
+		$db->name = $kapenta->registry->get('firstrun.dbr.name');
 	
 		//-----------------------------------------------------------------------------------------
 		//	create the database itself
 		//-----------------------------------------------------------------------------------------
 	
-		if ('yes' !== $registry->get('firstrun.dbr.created')) {
+		if ('yes' !== $kapenta->registry->get('firstrun.dbr.created')) {
 			
 			$check = $dba->create($db->name);
 			
 			$msg = "Creating database `awareNet` using default XAMPP root user... ";
 			if (true == $check) {
 				$msg .= "<b>OK</b>";
-				$registry->set('firstrun.dbr.created', 'yes');
+				$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				echo "<div class='chatmessagegreen'>$msg</div>";
 			
 				if (true == $dba->dbExists($db->name)) {
-					$registry->set('firstrun.dbr.created', 'yes');
+					$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				}
 			
 			} else {
@@ -256,9 +256,9 @@
 		//	create database user
 		//-----------------------------------------------------------------------------------------
 	
-		if ('yes' !== $registry->get('firstrun.dbr.granted')) {
-			$newUser = $registry->get('firstrun.db.user');
-			$newPass = $registry->get('firstrun.db.password');
+		if ('yes' !== $kapenta->registry->get('firstrun.dbr.granted')) {
+			$newUser = $kapenta->registry->get('firstrun.db.user');
+			$newPass = $kapenta->registry->get('firstrun.db.password');
 			
 			$sql = ''
 				. "GRANT ALL ON " . $db->name . ".* "
@@ -269,11 +269,11 @@
 			$check = $db->query($sql);
 			if (true == $check) {
 				$msg .= "<b>OK</b>.";
-				$registry->set('firstrun.dbr.granted', 'yes');
-				$registry->set('kapenta.db.user', $newUser);
-				$registry->set('kapenta.db.password', $newPass);
-				$registry->set('kapenta.db.host', 'localhost');
-				$registry->set('kapenta.db.name', $db->name);
+				$kapenta->registry->set('firstrun.dbr.granted', 'yes');
+				$kapenta->registry->set('kapenta.db.user', $newUser);
+				$kapenta->registry->set('kapenta.db.password', $newPass);
+				$kapenta->registry->set('kapenta.db.host', 'localhost');
+				$kapenta->registry->set('kapenta.db.name', $db->name);
 				echo "<div class='chatmessagegreen'>$msg</div>";
 				
 			} else {
@@ -288,10 +288,10 @@
 	//---------------------------------------------------------------------------------------------
 	//	copy db credentials
 	//---------------------------------------------------------------------------------------------
-	$registry->set('kapenta.db.host', $registry->get('firstrun.dbr.host'));
-	$registry->set('kapenta.db.name', $registry->get('firstrun.dbr.name'));
-	$registry->set('kapenta.db.user', $registry->get('firstrun.dbr.user'));
-	$registry->set('kapenta.db.password', $registry->get('firstrun.dbr.password'));
+	$kapenta->registry->set('kapenta.db.host', $kapenta->registry->get('firstrun.dbr.host'));
+	$kapenta->registry->set('kapenta.db.name', $kapenta->registry->get('firstrun.dbr.name'));
+	$kapenta->registry->set('kapenta.db.user', $kapenta->registry->get('firstrun.dbr.user'));
+	$kapenta->registry->set('kapenta.db.password', $kapenta->registry->get('firstrun.dbr.password'));
 
 	//---------------------------------------------------------------------------------------------
 	//	create and delete canary table
@@ -360,11 +360,11 @@
 	//	set up recovery password
 	//---------------------------------------------------------------------------------------------
 
-	if ('' == $registry->get('firstrun.recovery')) {
+	if ('' == $kapenta->registry->get('firstrun.recovery')) {
 		echo "<div class='chatmessageblack'>$frmRecoveryPass</div>\n";
 		die();
 	} else {
-		$registry->set('kapenta.recoverypassword', sha1($registry->get('firstrun.recovery')));
+		$kapenta->registry->set('kapenta.recoverypassword', sha1($kapenta->registry->get('firstrun.recovery')));
 		echo "<div class='chatmessagegreen'>Recovery password set.</div>\n";
 	}
 
@@ -372,7 +372,7 @@
 	//	set up admin user
 	//---------------------------------------------------------------------------------------------
 
-	if ('' == $registry->get('firstrun.adminuser')) {
+	if ('' == $kapenta->registry->get('firstrun.adminuser')) {
 		echo "<div class='chatmessageblack'>$frmAdminUser</div>\n";
 		die();		
 	} else {
@@ -390,7 +390,7 @@
 	foreach($mods as $moduleName) {
 		$msg = "<b>Installing module: $moduleName </b><br/>";
 		$installScript = 'modules/' . $moduleName . '/inc/install.inc.php';
-		if (true == $kapenta->fileExists($installScript)) {
+		if (true == $kapenta->fs->exists($installScript)) {
 			$msg .= "Install script: $installScript<br/>";
 			$installFn = $moduleName . "_install_module";
 			
@@ -426,7 +426,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	done
 	//---------------------------------------------------------------------------------------------	
-	$registry->set('firstrun.complete', 'yes');
+	$kapenta->registry->set('firstrun.complete', 'yes');
 	echo $theme->expandBlocks("[[:theme::ifscrollfooter:]]", '');
 	
 ?>

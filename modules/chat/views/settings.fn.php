@@ -7,7 +7,7 @@
 function chat_settings($args) {
 	global $theme;
 	global $user;
-	global $registry;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
@@ -22,11 +22,11 @@ function chat_settings($args) {
 	$block = $theme->loadBlock('modules/chat/views/settings.block.php');
 
 	$labels = array(
-		'chat.enabled' => $registry->get('chat.enabled'),
-		'chat.server' => $registry->get('chat.server'),
-		'p2p.server.uid' => $registry->get('p2p.server.uid'),
-		'p2p.server.url' => $registry->get('p2p.server.url'),
-		'p2p.server.name' => $registry->get('p2p.server.name')
+		'chat.enabled' => $kapenta->registry->get('chat.enabled'),
+		'chat.server' => $kapenta->registry->get('chat.server'),
+		'p2p.server.uid' => $kapenta->registry->get('p2p.server.uid'),
+		'p2p.server.url' => $kapenta->registry->get('p2p.server.url'),
+		'p2p.server.name' => $kapenta->registry->get('p2p.server.name')
 	);
 
 	$html = $theme->replaceLabels($labels, $block);

@@ -19,6 +19,8 @@ function videos_newgalleryform($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$html = $theme->loadBlock('modules/videos/views/newgalleryform.block.php');
+	$html = $theme->ntb($html, 'Create New Gallery', 'divNewVideoGallery', 'hide');
+
 	return $html;
 }
 

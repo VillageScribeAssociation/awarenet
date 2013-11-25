@@ -25,8 +25,8 @@ function live_WebShell_cat($args) {
 		case 'list':
 			if (false == array_key_exists(0, $args)) { return live_WebShell_cat_help(); }			
 			$fileName = substr($shell->get('cwd'), 1) . $args[0];
-			if (false == $kapenta->fileExists($fileName)) { return 'File not found: ' . $fileName; }
-			$raw = $kapenta->fileGetContents($fileName, false, false);
+			if (false == $kapenta->fs->exists($fileName)) { return 'File not found: ' . $fileName; }
+			$raw = $kapenta->fs->get($fileName, false, false);
 			$raw = htmlentities($raw);
 			$html = "<pre>" . $raw . "</pre>";
 			break;	//..............................................................................

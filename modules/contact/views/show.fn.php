@@ -61,8 +61,7 @@ function contact_show($args) {
 
 		foreach($range as $row) {
 
-			$model = new Contact_Detail();
-			$model->loadArray($row);
+			$model = new Contact_Detail($row['UID']);
 			$ext = $model->extArray();
 
 			$table[] = array(

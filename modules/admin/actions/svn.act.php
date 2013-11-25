@@ -14,7 +14,7 @@
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load('modules/admin/actions/svn.page.php');
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/svn.page.php');
+	$kapenta->page->render();
 
 ?>

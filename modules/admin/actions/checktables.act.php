@@ -39,7 +39,7 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/admin/actions/checktables.page.php');
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/checktables.page.php');
+	$kapenta->page->render();
 
 ?>

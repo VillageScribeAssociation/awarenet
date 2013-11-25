@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	find user whose post this is
 	//----------------------------------------------------------------------------------------------
-	$model = new Moblog_Post($req->ref);
+	$model = new Moblog_Post($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $page->do403(''); }
 
@@ -44,14 +44,14 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/moblog/actions/show.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['userUID'] = $model->createdBy;
-	$page->blockArgs['userRa'] = $thisUser->alias;
-	$page->blockArgs['userName'] = $thisUser->getName();
-	$page->blockArgs['postTitle'] = $model->title;
-	$page->blockArgs['newPostForm'] = $newPostForm;
-	$page->render();
+	$kapenta->page->load('modules/moblog/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['userUID'] = $model->createdBy;
+	$kapenta->page->blockArgs['userRa'] = $thisUser->alias;
+	$kapenta->page->blockArgs['userName'] = $thisUser->getName();
+	$kapenta->page->blockArgs['postTitle'] = $model->title;
+	$kapenta->page->blockArgs['newPostForm'] = $newPostForm;
+	$kapenta->page->render();
 
 ?>

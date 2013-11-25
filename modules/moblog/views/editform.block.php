@@ -18,15 +18,12 @@
   <tr>
     <td><b>Published: </b></td>
     <td>
-      <select name='published'>
-        <option value='yes'>yes</option>
-        <option value='no'>no</option>
-      </select>
+		[[:moblog::selectpublished::value=%%published%%:]]
     </td>
   </tr>
 </table>
 <br/>
-<b>Post Body: </b><small>(use special {fold} marker at end of introduction)</small>
+<b>Post Body: </b>
 <div
 	class='HyperTextArea64'
 	title='content'

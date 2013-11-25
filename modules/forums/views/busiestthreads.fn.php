@@ -21,8 +21,21 @@ function forums_busiestthreads($args) {
 	// TODO: permissions check here
 
 	// thread with the smallest ammount of time between replies is the winner
-	$sql = "select *, ((now() - TIMESTAMP(createdOn)) / replies) as score from forums_thread "
-		 . "where replies > 0 order by score";
+
+	//	for MySQL (default)
+	$sql = ''
+	 ."SELECT *, ((now() - TIMESTAMP(createdOn)) / replies) AS score FROM forums_thread "
+	 . "WHERE replies > 0 ORDER BY score";
+
+	//	for SQLite
+	if ('SQLite' == $db->type) {
+		$sql = ''
+		 ."SELECT"
+		 . " *,"
+		 . " ((strftime('%s', 'now') - strftime('%s', createdOn)) / replies) AS score"
+		 . " FROM forums_thread"
+		 . " WHERE replies > 0 order by score";
+	}
 
 	$block = $theme->loadBlock('modules/forums/views/threadsummarynav.block.php');
 

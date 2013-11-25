@@ -124,7 +124,7 @@ class Badges_Badge {
 			'createdBy' => 'VARCHAR(33)',
 			'editedOn' => 'DATETIME',
 			'editedBy' => 'VARCHAR(33)',
-			'alias' => 'TEXT' );
+			'alias' => 'VARCHAR(255)' );
 
 		//these fields will be indexed
 		$dbSchema['indices'] = array(

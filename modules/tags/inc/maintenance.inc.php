@@ -14,7 +14,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function tags_maintenance() {
-	global $db, $aliases, $user, $theme;
+	global $db, $aliases, $user, $theme, $utils;
 	if ('admin' != $user->role) { return false; }
 	$report = '';
 
@@ -101,6 +101,20 @@ function tags_maintenance() {
 		$objAry = $db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);				// load into model
 		$recordCount++;
+
+		//------------------------------------------------------------------------------------------
+		//	check the tag name
+		//------------------------------------------------------------------------------------------
+
+		if ($model->name != $utils->makeAlphaNumeric($model->name, '-')) {
+			$errors[] = array($model->UID, $model->name, ' (invalid tag name)');
+			$errorCount++;
+
+			$model->name = str_replace(' ', '-', $model->name);
+			$model->name = $utils->makeAlphaNumeric($model->name, '-');
+			$report = $model->save();
+			if ('' == $report) { $fixCount++; }
+		}
 
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects

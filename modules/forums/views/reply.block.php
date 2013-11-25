@@ -1,5 +1,5 @@
 <? /*
-<div id='divReply%%UID%%'><a name='#reply%%UID%%'></a>
+<div id='divReply%%UID%%' class='block'><a name='#reply%%UID%%'></a>
 <table noborder width='100%'>
 	<tr>
 		<td valign='top' width='55'>
@@ -17,6 +17,8 @@
 		</td>
 	</tr>
 </table>
-<hr/>
 </div>
+
+<div class='spacer'></div>
+
 */ ?>

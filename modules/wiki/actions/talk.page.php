@@ -4,11 +4,23 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - wiki - talk page</title>
-	<content>[[:theme::navtitlebox::width=570::label=awareNet Wiki:]]
-[`|lt]div class=[`|sq]indent[`|sq][`|gt]
-[`|lt]h1[`|gt]Talk: [`|pc][`|pc]parentTitle[`|pc][`|pc][`|lt]/h1[`|gt]
-[`|pc][`|pc]contentHtml[`|pc][`|pc]
-[`|lt]/div[`|gt]</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=awareNet Wiki:]]
+		<div id='divArticleTalk'>
+		<h1>Discussion: %%articleTitle%%</h1>
+		[[:live::river::mod=comments::view=list::pv=pageNo::allow=refModule|refModel|refUID::refModule=wiki::refModel=wiki_article::refUID=%%UID%%:]]
+		</div>
+		<br/>
+
+		[[:theme::navtitlebox::label=Comment on this Article::width=570::toggle=divWikiAddComment::hidden=yes:]]
+		<div id='divWikiAddComment' style='visibility: hidden; display: none;'>
+		[[:comments::addcommentform::refModule=wiki::refModel=wiki_article::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=/wiki/talk/%%articleAlias%%:]]
+		</div>
+		<div class='foot'></div>
+		<br/>
+
+
+	</content>
 	<nav1>[[:theme::navtitlebox::label=Stats:]]
 [[:wiki::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
 [`|lt]br/[`|gt]

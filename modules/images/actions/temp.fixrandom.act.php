@@ -34,7 +34,7 @@
 
 	while ($row = $db->fetchAssoc($result)) {
 		$item = $db->rmArray($row);
-		if (false == $kapenta->fileExists($item['fileName'])) {
+		if (false == $kapenta->fs->exists($item['fileName'])) {
 			echo $item['fileName'] . "<br/>\n";
 
 			$imgFile = array_pop($imgs);

@@ -10,8 +10,8 @@
 	//	check arguments and permisisons
 	//----------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) { $page->do404(); }
-	$model = new Announcements_Announcement($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	$model = new Announcements_Announcement($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this announcement.'); }
@@ -23,9 +23,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/announcements/actions/edit.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/announcements/actions/edit.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

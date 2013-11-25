@@ -10,9 +10,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('school not given'); }
+	if ('' == $kapenta->request->ref) { $page->do404('school not given'); }
 
-	$model = new Schools_School($req->ref);
+	$model = new Schools_School($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unknown school.'); }
 
 	//TODO: permissions check here
@@ -20,10 +20,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the pages
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/gallery/actions/school.page.php');
-	$page->blockArgs['schoolUID'] = $model->UID;
-	$page->blockArgs['schoolName'] = $model->name;
+	$kapenta->page->load('modules/gallery/actions/school.page.php');
+	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
+	$kapenta->page->blockArgs['schoolName'] = $model->name;
 	// ... etc
-	$page->render();
+	$kapenta->page->render();
 
 ?>

@@ -23,7 +23,7 @@
 		$views = $kapenta->listViews($mod);
 		foreach($views as $view) {
 			$fileName = 'modules/' . $mod . '/views/' . $view;
-			$raw = $kapenta->fileGetContents($fileName, false, false);
+			$raw = $kapenta->fs->get($fileName, false, false);
 
 			$done = 'yes';
 			if (strpos($raw, "//|") == false) { $done = 'no'; }

@@ -5,17 +5,21 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>awareNet - my notifications</title>
 	<content>
-[`|tb][`|tb][[:theme::navtitlebox::width=570::label=Notifications:]]
-[`|tb][`|tb][`|lt]h1[`|gt]All Activity: [`|pc][`|pc]userName[`|pc][`|pc][`|lt]/h1[`|gt]
-[`|tb][`|tb][`|lt]br/[`|gt]
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Notifications:]]
+		[`|lt]h1[`|gt]All Activity: [`|pc][`|pc]userName[`|pc][`|pc][`|lt]/h1[`|gt]
+		</div>
+		[`|lt]br/[`|gt]
 
-[`|tb][`|tb][[:live::river::rivermodule=notifications::riverview=list::riverpagevar=page::allow=num|pagination|userUID::num=10::pagination=no::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|tb][`|tb][`|lt]br/[`|gt]
+		[[:live::river::rivermodule=notifications::riverview=list::riverpagevar=page::allow=num|pagination|userUID::num=10::pagination=no::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		</div>
+		[`|lt]br/[`|gt]
 
 [`|tb]</content>
 	<nav1>
+	<div class='block'>
 	[[:theme::navtitlebox::label=Poll::toggle=divResourcePoll:]]
-	<div id='divResourcePoll' class='block'>
+	<div id='divResourcePoll'>
 
 	<h3>Low Resource Schools</h3>
 
@@ -30,13 +34,14 @@
 	<a href='%%serverPath%%forums/showthread/Low-Resource-Schools'>[ see all questions &gt;&gt; ]</a>
 	</div>
 	<div class='foot'></div>
+	</div>
 	<br/>
 
-[`|tb][`|tb][[:users::showfriendrequests::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
-[`|tb][`|tb][[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		[[:users::showfriendrequests::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
+		[[:users::showrequestedfriends::userUID=[`|pc][`|pc]userUID[`|pc][`|pc]:]]
 
-[`|tb][`|tb][[:abuse::listnav::num=4:]]
-[`|tb]</nav1>
+		[[:abuse::listnav::num=4:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

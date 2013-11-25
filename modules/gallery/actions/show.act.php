@@ -7,20 +7,20 @@
 //--------------------------------------------------------------------------------------------------
 	
 	//if ($user->authHas('gallery', 'gallery_gallery', 'show', 'TODO:UIDHERE') == false) { $page->do403(); }		// check basic permissions
-	if ('' == $req->ref) { $page->do404(); }							// check ref
+	if ('' == $kapenta->request->ref) { $page->do404(); }							// check ref
 	$UID = $aliases->findRedirect('gallery_gallery'); 					// check correct ref
 	
-	$model = new Gallery_Gallery($req->ref);	
+	$model = new Gallery_Gallery($kapenta->request->ref);	
 
 	$userRa = $aliases->getDefault('users_user', $model->createdBy);
 
-	$page->load('modules/gallery/actions/show.page.php');
-	$page->blockArgs['UID'] = $UID;
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['userUID'] = $model->createdBy;
-	$page->blockArgs['userRa'] = $userRa;
-	$page->blockArgs['galleryRa'] = $model->alias;
-	$page->blockArgs['galleryTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->load('modules/gallery/actions/show.page.php');
+	$kapenta->page->blockArgs['UID'] = $UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['userUID'] = $model->createdBy;
+	$kapenta->page->blockArgs['userRa'] = $userRa;
+	$kapenta->page->blockArgs['galleryRa'] = $model->alias;
+	$kapenta->page->blockArgs['galleryTitle'] = $model->title;
+	$kapenta->page->render();
 
 ?>

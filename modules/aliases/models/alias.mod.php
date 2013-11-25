@@ -54,7 +54,6 @@ class Aliases_Alias {
 		return false;
 	}
 
-
 	//----------------------------------------------------------------------------------------------
 	//. load Alias object serialized as an associative array
 	//----------------------------------------------------------------------------------------------
@@ -85,8 +84,17 @@ class Aliases_Alias {
 		global $kapenta, $db;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$result = $db->save($this->toArray(), $this->dbSchema);
-		return $result;
+
+		//	clear any previous version from memcached
+		if (true == $kapenta->mcEnabled) {
+			$kapenta->cacheDelete('alias::' . $this->refModel . '::' . strtolower($this->alias));
+			$kapenta->cacheDelete('aliasalt::' . $this->refModel . '::' . strtolower($this->alias));
+		}
+
+		$check = $db->save($this->toArray(), $this->dbSchema);
+
+		if (true == $check) { return ''; }
+		else { return "Database error: " . $db->lasterr . "\n"; }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -202,14 +210,21 @@ class Aliases_Alias {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//. delete current object from the database
+	//. delete current object from the database and memory cache
 	//----------------------------------------------------------------------------------------------
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
+		global $kapenta;
 		global $db;
 		if (false == $this->loaded) { return false; }
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+
+		if (true == $kapenta->mcEnabled) {
+			$kapenta->cacheDelete('alias::' . $this->refModel . '::' . strtolower($this->alias));
+			$kapenta->cacheDelete('aliasalt::' . $this->refModel . '::' . strtolower($this->alias));
+		}
+
 		return true;
 	}
 

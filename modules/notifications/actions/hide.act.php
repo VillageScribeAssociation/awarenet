@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and ownership
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Notification to hide not specified'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Notification to hide not specified'); }
 
-	$model = new Notifications_UserIndex($req->ref);
+	$model = new Notifications_UserIndex($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Notification index not found'); }
 	if ('admin' != $user->role) {
 		if ($model->userUID != $user->UID) { $page->d043('Not your notification to hide.'); }

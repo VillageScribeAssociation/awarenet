@@ -16,9 +16,9 @@
 	foreach($logFiles as $logFile) {
 		$fileName = 'data/log/' . $logFile;
 		echo $fileName . "<br/>\n";
-		$raw = $kapenta->fileGetContents($fileName, true, false);
+		$raw = $kapenta->fs->get($fileName, true, false);
 		$raw = str_replace('<timstamp>', '<timestamp>', $raw);
-		$kapenta->filePutContents($fileName, $raw, false, false);
+		$kapenta->fs->put($fileName, $raw, false, false);
 	}
 
 ?>

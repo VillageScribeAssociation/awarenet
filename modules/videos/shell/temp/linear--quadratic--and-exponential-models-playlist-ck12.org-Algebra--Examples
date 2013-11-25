@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+        <!-- For ChartBeat analytics START -->
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <!-- For ChartBeat analytics END -->
+        <title>Linear, Quadratic, and Exponential Models | Khan Academy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="description" content="None" />
+        <meta name="keywords" content="Linear, Quadratic, and, Exponential, Models" />
+        
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights START -->
+        <meta property="fb:page_id" content="159403248441" />
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights END -->
+        <meta property="og:title" content="The Khan Academy"/>
+        <meta property="og:type" content="non_profit"/>
+        <meta property="og:url" content="http://www.khanacademy.org"/>
+        <meta property="og:image" content="http://www.khanacademy.org/images/handtreehorizontal_facebook.png"/>
+        <meta property="og:site_name" content="khanacademy.org"/>
+        <meta property="fb:admins" content="100000121497109,718859633"/> 
+        <meta property="fb:app_id" content="160249463991765"/>
+        <meta property="og:description"
+              content="The Khan Academy is a not-for-profit 501(c)(3) with the mission of providing a world-class education to anyone, anywhere.  Despite being the work of one man, Salman Khan, this 1600+ video library is the most-used educational video resource as measured by YouTube video views per day and unique users per month."/>
+        <link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+        <script>var KA_VERSION = '1101.348262090236499247';</script>
+        
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shared-package/compressed.css?1101.348262090236499247" />
+
+
+
+        
+    <script type="text/javascript" src="/javascript/shared-package/compressed.js?1101.348262090236499247"></script>
+
+
+
+        <script type="text/javascript">
+            // Create a dummy version of each HTML5 element we use so that IE 6-8 can style them.
+            (function(){
+                var html5elements = ['header', 'footer', 'nav', 'article', 'section', 'menu'];
+                for (var i = 0; i < html5elements.length; i++) {
+                    document.createElement(html5elements[i]);
+                }
+            })();
+
+            $(function(){
+                // Configure the search form
+                $('#page_search input[type=text]').placeholder();
+                initAutocomplete();
+
+                // Make the CSS-only menus click-activated
+                var active_menu = undefined;
+                $('.noscript').removeClass('noscript');
+                $('.css-menu > ul > li').click(function() {
+                    if (active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                    }
+                    if ($(this) == active_menu) {
+                        active_menu = undefined
+                    }
+                    else {
+                        active_menu = $(this);
+                        $(this).addClass('css-menu-js-hover');
+                    }
+                });
+                $(document).bind("click focusin", function(e){
+                    if ($(e.target).closest(".css-menu").length == 0 && active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                        active_menu = undefined;
+                    }
+                });
+                // Make the CSS-only menus keyboard-accessible
+                $('.css-menu a').focus(function(e){
+                    $(e.target).addClass('css-menu-js-hover').closest(".css-menu > ul > li").addClass('css-menu-js-hover');
+                }).blur(function(e){
+                    $(e.target).removeClass('css-menu-js-hover').closest(".css-menu > ul > li").removeClass('css-menu-js-hover');
+                });
+            });
+
+
+
+            //Javascript for estimating the cumulative video views in real-time
+            function addCommas(nStr)
+	    {
+	        nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+		    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		}
+		return x1 + x2;
+	    }
+
+
+
+	    var seedTime = new Date(2010,9,31);  //Seed Date is set to October 31, 2010  0-January, 11-december
+	    var seedTotalViews = 28402468
+	    var seedDailyViews = 100000;
+
+	    var currentTime = new Date();
+	    var secondsSince = (currentTime.getTime()-seedTime.getTime())/1000;
+	    var viewsPerSecond = seedDailyViews/24/3600
+	    var estimatedTotalViews = Math.round(seedTotalViews + secondsSince*viewsPerSecond)
+
+	    var totalViewsString = addCommas(""+estimatedTotalViews);
+        
+
+
+
+        </script>
+        
+<style>
+    .breadcrumbs_nav {
+        font-weight: bold;
+    }
+    #video_dropdown {
+        display: none;
+        text-indent: 0;
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
+    #video_dropdown .ui-button {
+        display: block;
+    }
+    #video_menu {
+        position: relative;
+    }
+    #video_menu ol {
+        z-index: 2;
+    }
+    #video_dropdown ol {
+        max-height: 20em;
+        padding-left: 3em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        list-style: outside decimal;
+    }
+    #video_dropdown li {
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #video_dropdown li[data-selected=selected] a {
+        font-weight: bold;
+    }
+    #video_dropdown .ui-button-text, #video_dropdown .ui-menu-item a {
+        font-weight: normal;
+        line-height: inherit;
+        padding: 0px 25px 0px 1ex;
+    }
+    #video_dropdown .ui-menu-item a {
+        padding: 0px 25px 0px 0px;
+    }
+    #video_dropdown a:visited {
+        color: #DD6900;
+    }
+    #video_dropdown a:link:hover, #video_dropdown a:link:focus, #video_dropdown a:visited:hover, #video_dropdown a:visited:focus {
+        color: #DD6900;
+    }
+    .prev_next_nav {
+        display: block;
+        margin-top: 2em;
+        padding-bottom: .5ex;
+    }
+    .prev_next_nav a {
+        text-decoration: none;
+    }
+    .prev_next_nav a:hover {
+        text-decoration: underline;
+    }
+    #prev_video {
+        display: block;
+        float: left;
+        margin-right: 1em;
+        text-align: left;
+        background: url(/images/list-item-black-left.png) no-repeat 0 4px;
+        padding-top: 1px;
+        padding-left: 10px;
+        height: 20px;
+    }
+    #playlists {
+        display: block;
+        float: left;
+    }
+    #next_video {
+        display: block;
+        float: right;
+        margin-left: 1em;
+        text-align: right;
+        background: url(/images/list-item-black.png) no-repeat 100% 4px;
+        padding-top: 1px;
+        padding-right: 10px;
+        height: 20px;
+    }
+
+    #youtube_blocked {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+        color: red;
+        font-weight: bold;
+        clear: both;
+        padding-top: 1em;
+    }
+    .video #description {
+        padding-top: 20px;
+    }
+        .video #description h3 {
+            display: block;
+            margin: 0;
+            font-size: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .video #description h3 span.title {
+            color: #e45c02;
+        }
+        .video #description h3 span.long-description {
+            color: #555;
+            font-weight: normal;
+            position: relative;
+            top: -1px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    #page_sub_nav .breadcrumbs_nav {
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-left: -5px;
+        width: auto;
+    }
+    #page_sub_nav .breadcrumbs_nav a {
+        text-decoration: none;
+        padding: 0 5px;
+    }
+    #page_sub_nav .breadcrumbs_nav #video_menu {
+        text-transform: none;
+    }
+</style>
+<script>
+$(function(){
+    $('<img width=0 height=0>').error(function() {
+       $("#youtube_blocked").css("visibility", "visible").css("left", "0px").css("position", "relative");
+       $("#idOVideo").hide();
+       VideoStats.prepareAlternativePlayer(); // If YouTube is hidden, use the flv player for statistics
+    }).attr('src', 'http://www.youtube.com/favicon.ico?' + Math.random()).appendTo('#page-container');
+    $('#video_selector').hide();
+    $('#video_dropdown').css('display', 'inline-block');
+    var menu = $('#video_dropdown ol').menu();
+
+    // Set the width explicitly before positioning it absolutely to satisfy IE7.
+    menu.width(menu.width()).hide().css('position', 'absolute');
+
+    menu.bind("menuselect", function(e, ui){
+        window.location.href = ui.item.children('a').attr('href');
+    });
+    $(document).bind("click focusin", function(e){
+        if ($(e.target).closest("#video_dropdown").length == 0) {
+            menu.hide();
+        }
+    });
+    var button = $('#video_dropdown > a').button({
+        icons: {
+            secondary: 'ui-icon-triangle-1-s'
+        }
+    }).show().click(function(e){
+        if (menu.css('display') == 'none')
+            menu.show().menu("activate", e, $('#video_dropdown li[data-selected=selected]')).focus();
+        else
+            menu.hide();
+        e.preventDefault();
+    });
+});
+
+
+
+</script>
+
+
+	<!-- New, faster Google Analytics async tag START -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6742635-1']);
+	  _gaq.push(['_setDomainName', '.khanacademy.org']);
+	  _gaq.push(['_trackPageview']);
+
+	  // For OER Analytics
+	  _gaq.push(['ht._setAccount', 'UA-5033010-1']);
+	  _gaq.push(['ht._setDomainName', '.khanacademy.org']);
+	  _gaq.push(['ht._trackPageview']);
+
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- New, faster Google Analytics async tag END -->
+
+    </head>
+    <body>
+    <div id="page-container">
+        
+        
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({appId: '160249463991765', status: true, cookie: true,
+                     xfbml: true});
+    
+            
+                FB.Event.subscribe('auth.login', function(response) {
+                    window.location.reload();
+                });
+            
+    
+            FB.getLoginStatus(function(response) {
+               if (response.session) {
+                $('#page_logout').click(function(e) {
+                    FB.logout(function() { 
+                        window.location = $("#page_logout").attr("href"); 
+                    });
+                    e.preventDefault();
+                    return false;
+                });
+               }
+            });
+          };
+          (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+              '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+          }());
+        </script>
+        
+        
+    
+    	
+    	<script>document.writeln('<style scoped type="text/css">a[href="#"], .requires_script { visibility: visible; }</style>');</script>
+    
+            <header>
+                <div id="top-header">
+                    <div id="top-header-links">
+                        <span class="page_links" id="page_auth">
+                            
+                            <nav class="css-menu noscript" id="login-menu">
+                                <ul class="ui-corner-top">
+                                    <li class="ui-corner-top">
+                                        Login
+                                        <ul class="ui-corner-tr ui-corner-bottom">
+                                            <li id="page_login_options">
+                                                <a href="/login?openid_identifier=https://www.google.com/accounts/o8/id">Login with Google</a>
+                                            </li>
+                                            
+                                            <li><fb:login-button>Login with Facebook</fb:login-button></li>
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <span class="separator">&nbsp;</span>
+                            <a href="/donate" id="donate-link">Donate</a>
+                            <span class="separator">&nbsp;</span>
+                            <span id="social-links">
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Youtube-Subscribe-Header']);" href="http://www.youtube.com/khanacademy"><img src="/images/youtube.png" alt="YouTube" title="YouTube"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Twitter-Follow-Header']);" href="http://twitter.com/khanacademy"><img src="/images/twitter.png" alt="Twitter" title="Twitter"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Facebook-Join-Header']);" href="http://www.facebook.com/khanacademy"><img src="/images/facebook.png" alt="Facebook" title="Facebook"></a>
+                            </span>
+                            <span class="separator">&nbsp;</span>
+                            <span id="fb-like-badge">
+                                <fb:like id="page_fb_like" href="http://www.khanacademy.org" layout="button_count" show_faces="false" font="arial" ref="Like-Button-Top-Header-Left"></fb:like>
+                            </span>
+                        </span>
+                    </div>
+                    <div id="logo">
+                        <div id="logo-highlight">
+                            <a id="logo-image" href="/"><img src="/images/logo-no-highlight.png?1101.348262090236499247" alt="Khan Academy"></a>
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span id="page_visitors">
+                                <span id="page_num_visitors">
+                                    <!-- Content will get populated by javacript at end of page -->
+                                </span>&nbsp;lessons delivered
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div id="search-box">
+                    <form id="page_search" action="/search">
+                        <input id="search-input" type="text" placeholder="Search for a video or playlist" name="page_search_query" value='' class="ui-corner-left placeholder"><input type="submit" value=" " id="search-submit" />
+                    </form>
+                </div>
+                <div id="sitewide-navigation">
+                    <nav class="css-menu noscript" id="page_main_nav">
+                        <ul>
+                            <li class="ui-corner-top">
+                                Watch Videos
+                                <ul class="ui-corner-tr ui-corner-bottom">
+                                    <li>
+                                        <a href="/#browse">Browse by Topic</a>
+                                    </li>
+                                    <li>
+                                        <a href="/search">Search</a>
+                                    </li>
+                                    <li>
+                                        <a href="/downloads">Download</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="do-exercises" class="ui-corner-top">
+                                <div id="do-exercise-inner"><a href="/exercisedashboard">Do Exercises</a></div>
+                            </li>
+                            <li class="ui-corner-top">
+                                Join Us
+                                <ul class="ui-corner-tr">
+                                    <li>
+                                       <p>About Us</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/about">Overview</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#faq">Frequently Asked Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved#credits">Credits</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>Coaching Tools</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/students">Become a Coach</a>
+                                            </li>
+                                            <li>
+                                                <a href="/students">View Students</a>
+                                            </li>
+                                            <li>
+                                                <a href="/classreport">Class Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>How to Help</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/getinvolved#translation">Translate Videos</a>
+                                            </li>
+                                            <li>
+                                                <a href="http://sites.google.com/a/khanacademy.org/forge/for-developers/getting-started-with-the-code">Develop Software</a>
+                                            </li>
+                                            <li>
+                                                <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-linear--quadratic--and-exponential-models">Report a Problem</a>
+                                            </li>
+                                            <li>
+                                                <a href="/donate">Donate</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved">Help in Other Ways</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#contactus">Contact Us</a>
+                                            </li>
+    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav id="page_sub_nav">
+                    
+<span class="breadcrumbs_nav">
+        <a href="/">All videos</a> &#187;
+        <a href="/?video=linear--quadratic--and-exponential-models#ck12.org%20Algebra%201%20Examples">ck12.org Algebra 1 Examples</a> &#187;
+    <form id="video_selector">
+        <select name="v">
+            
+            <option  value="aoXUWSwiDzE">Variable Expressions</option>
+            
+            <option  value="3Po3nfITsok">Order of Operations</option>
+            
+            <option  value="rUT0pa87m7E">Patterns and Equations</option>
+            
+            <option  value="hJ-_OoCHTks">Equations and Inequalities</option>
+            
+            <option  value="O0uUVH8dRiU">Domain and Range of a Function</option>
+            
+            <option  value="jQ-fS2lsslU">Functions as Graphs</option>
+            
+            <option  value="Xz6rT9k8ftg">Word Problem Solving Plan 1</option>
+            
+            <option  value="SpDIXJ2I2D4">Word Problem Solving Strategies</option>
+            
+            <option  value="kyu-IQ-gBIg">Integers and Rational Numbers</option>
+            
+            <option  value="BKEtsv9MbyY">Addition of Rational  Numbers</option>
+            
+            <option  value="lLIo4kGRBEw">Subraction of Rational Numbers</option>
+            
+            <option  value="lBi9bwz08EY">Multiplication of Rational Numbers</option>
+            
+            <option  value="ewEorPD4kdA">Distributive Property</option>
+            
+            <option  value="I0b5-7UuwQ8">Division of Rational Numbers</option>
+            
+            <option  value="BpBh8gvMifs">Square Roots and Real Numbers</option>
+            
+            <option  value="s1QN7sSfBM8">Problem Solving Word Problems 2</option>
+            
+            <option  value="9DxrF6Ttws4">One Step Equations</option>
+            
+            <option  value="tuVd355R-OQ">Two-Step Equations</option>
+            
+            <option  value="a5uNoOnEy_A">Multi-Step Equations</option>
+            
+            <option  value="xMsG9hvqzbY">Equations with Variables on Both Sides</option>
+            
+            <option  value="WfqgFBGet7s">Ratio and Proportion</option>
+            
+            <option  value="GfNB14D55gQ">Scale and Indirect Measurement</option>
+            
+            <option  value="1LtBcfk1uHg">Percent Problems</option>
+            
+            <option  value="LRKMoqrMbGw">Word Problem Solving 3</option>
+            
+            <option  value="VhNkWdLGpmA">The Coordinate Plane</option>
+            
+            <option  value="6zixwWZ88tk">Graphing Using Intercepts</option>
+            
+            <option  value="rgvysb9emcQ">Graphs of Linear Equations</option>
+            
+            <option  value="Iqws-qzyZwc">Slope and Rate of Change</option>
+            
+            <option  value="9wOalujeZf4">Graphs Using Slope-Intercept Form</option>
+            
+            <option  value="9M-B5qU7ezY">Direct Variation Models</option>
+            
+            <option  value="EmTvdKkAUtE">Linear Function Graphs</option>
+            
+            <option  value="5EdbPz1ZVn0">Word Problem Solving 4</option>
+            
+            <option  value="5fkh01mClLU">Linear Equations in Slope Intercept Form</option>
+            
+            <option  value="zqCokP2vDGo">Linear Equations in Point Slope Form</option>
+            
+            <option  value="BaQXFstxCMo">Linear Equations in Standard Form</option>
+            
+            <option  value="9hryH94KFJA">Equations of Parallel and Perpendicular Lines</option>
+            
+            <option  value="OhUkMQtBGmE">Fitting a Line to Data</option>
+            
+            <option  value="aVDiAGZmcPo">Predicting with Linear Models</option>
+            
+            <option  value="Gjv25aOuD00">Using a Linear Model</option>
+            
+            <option  value="UTs4uZhu5t8">Inequalities Using Addition and Subtraction</option>
+            
+            <option  value="PNXozoJWsWc">Inequalities Using Multiplication and Division</option>
+            
+            <option  value="xOxvyeSl0uA">Multi-Step Inequalities</option>
+            
+            <option  value="A3xPhzs-KBI">Compound Inequalities</option>
+            
+            <option  value="u6zDpUL5RkU">Absolute Value Equations</option>
+            
+            <option  value="iI_2Piwn_og">Absolute Value Inequalities</option>
+            
+            <option  value="unSBFwK881s">Graphing Inequalities</option>
+            
+            <option  value="5a6zpfl50go">Solving Linear Systems by Graphing</option>
+            
+            <option  value="V7H1oUHXPkg">Solving Linear Systems by Substitution</option>
+            
+            <option  value="vA-55wZtLeE">Solving Systems of Equations by Elimination</option>
+            
+            <option  value="wYrxKGt_bLg">Solving Systems of Equations by Multiplication</option>
+            
+            <option  value="5qkyuHIE2GM">Special Types of Linear Systems</option>
+            
+            <option  value="5xQqwgS3O4U">Systems of Linear Inequalities</option>
+            
+            <option  value="zM_p7tfWvLU">Exponent Properties Involving Products</option>
+            
+            <option  value="AR1uqNbjM5s">Exponent Properties Involving Quotients</option>
+            
+            <option  value="tOuCdKqO6-s">Zero, Negative, and Fractional Exponents</option>
+            
+            <option  value="i6lfVUp5RW8">Scientific Notation</option>
+            
+            <option  value="6WMZ7J0wwMI">Exponential Growth Functions</option>
+            
+            <option  value="AXAMVxaxjDg">Exponential Decay Functions</option>
+            
+            <option  value="pXo0bG4iAyg">Geometric Sequences (Introduction)</option>
+            
+            <option  value="m5Tf6vgoJtQ">Word Problem Solving- Exponential Growth and Decay</option>
+            
+            <option  value="ZgFXL6SEUiI">Addition and Subtraction of Polynomials</option>
+            
+            <option  value="fGThIRpWEE4">Multiplication of Polynomials</option>
+            
+            <option  value="bFtjG45-Udk">Special Products of Binomials</option>
+            
+            <option  value="zxz0WNVnF38">Polynomial Equations in Factored Form</option>
+            
+            <option  value="eF6zYNzlZKQ">Factoring Quadratic Expressions</option>
+            
+            <option  value="BI_jmI4xRus">Factoring Special Products</option>
+            
+            <option  value="X7B_tH4O-_s">Factor by Grouping and Factoring Completely</option>
+            
+            <option  value="RjkTEyO5Zso">Graphs of Quadratic Functions</option>
+            
+            <option  value="JHUju_Qkqbg">Solving Quadratic Equations by Graphing</option>
+            
+            <option  value="55G8037gsKY">Solving Quadratic Equations by Square Roots</option>
+            
+            <option  value="bNQY0z76M5A">Solving Quadratic Equations by Completing the Square</option>
+            
+            <option  value="i7idZfS8t8w">Using the Quadratic Formula</option>
+            
+            <option  value="r3SEkdtpobo">Proof of Quadratic Formula</option>
+            
+            <option  value="JBSDQLZtjFo">Discriminant of Quadratic Equations</option>
+            
+            <option selected value="CxEFOozrMSE">Linear, Quadratic, and Exponential Models</option>
+            
+            <option  value="o1npPDCq-4M">Identifying Quadratic Models</option>
+            
+            <option  value="s8PKFcrrbNQ">Identifying Exponential Models</option>
+            
+            <option  value="z_hEVWSkQHo">Quadratic Regression</option>
+            
+            <option  value="outcfkh69U0">Graphs of Square Root Functions</option>
+            
+            <option  value="iX7ivCww2ws">Radical Expressions with Higher Roots</option>
+            
+            <option  value="VWlFMfPVmkU">More Simplifying Radical Expressions</option>
+            
+            <option  value="gY5TvlHg4Vk">How to Rationalize a Denominator</option>
+            
+            <option  value="711pdW8TbbY">Extraneous Solutions to Radical Equations</option>
+            
+            <option  value="dKuk8PybYs4">Radical Equation Examples</option>
+            
+            <option  value="5pqzmUxOw_E">More Involved Radical Equation Example</option>
+            
+            <option  value="AEIzy1kNRqo">Pythagorean Theorem</option>
+            
+            <option  value="nyZuite17Pc">Distance Formula</option>
+            
+            <option  value="Ez_-RwV9WVo">Midpoint Formula</option>
+            
+            <option  value="r382kfkqAF4">Visual Pythagorean Theorem Proof</option>
+            
+            <option  value="GrynkZB3E7M">Average or Central Tendency: Arithmetic Mean, Median, and Mode</option>
+            
+            <option  value="E4HAYd0QnRc">Range, Variance and Standard Deviation as Measures of Dispersion</option>
+            
+            <option  value="OaJXJduRiIE">Stem and Leaf Plots</option>
+            
+            <option  value="4eLJGG2Ad30">Histograms</option>
+            
+            <option  value="BXq5TFLvsVw">Box-and-whisker Plot</option>
+            
+            <option  value="AQFZuih2odo">Proportionality</option>
+            
+            <option  value="2N62v_63SBo">Asymptotes of Rational Functions</option>
+            
+            <option  value="ReEMqdZEEX0">Another Rational Function Graph Example</option>
+            
+            <option  value="p7ycTWq6BFk">A Third Example of Graphing a Rational Function</option>
+            
+            <option  value="FXgV9ySNusc">Polynomial Division</option>
+            
+            <option  value="7Uos1ED3KHI">Simplifying Rational Expressions</option>
+            
+            <option  value="x_5hDLe8UL0">Multiplying and Dividing Rational Expressions</option>
+            
+            <option  value="nWEso_M7By4">Adding Rational Expressions Example 1</option>
+            
+            <option  value="euyg3SwS2lU">Adding Rational Expressions Example 2</option>
+            
+            <option  value="4VO-BgDgAHE">Adding Rational Expressions Example 3</option>
+            
+            <option  value="6eqgIZyXgK8">Solving Rational Equations</option>
+            
+            <option  value="u28w46QrE0Q">Two more examples of solving rational equations</option>
+            
+            <option  value="nabw6v93Xns">Surveys and Samples</option>
+            
+        </select>
+        <button type="submit">Go</button>
+    </form>
+    <span id="video_dropdown">
+        <a href="/video/linear--quadratic--and-exponential-models?playlist=ck12.org%20Algebra%201%20Examples">Linear, Quadratic, and Exponential Models</a>
+        <div id="video_menu">
+            <ol>
+                
+                <li data-selected=''><a href="/video/variable-expressions?playlist=ck12.org%20Algebra%201%20Examples">Variable Expressions</a></li>
+                
+                <li data-selected=''><a href="/video/order-of-operations?playlist=ck12.org%20Algebra%201%20Examples">Order of Operations</a></li>
+                
+                <li data-selected=''><a href="/video/patterns-and-equations?playlist=ck12.org%20Algebra%201%20Examples">Patterns and Equations</a></li>
+                
+                <li data-selected=''><a href="/video/equations-and-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Equations and Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/domain-and-range-of-a-function?playlist=ck12.org%20Algebra%201%20Examples">Domain and Range of a Function</a></li>
+                
+                <li data-selected=''><a href="/video/functions-as-graphs?playlist=ck12.org%20Algebra%201%20Examples">Functions as Graphs</a></li>
+                
+                <li data-selected=''><a href="/video/word-problem-solving-plan-1?playlist=ck12.org%20Algebra%201%20Examples">Word Problem Solving Plan 1</a></li>
+                
+                <li data-selected=''><a href="/video/word-problem-solving-strategies?playlist=ck12.org%20Algebra%201%20Examples">Word Problem Solving Strategies</a></li>
+                
+                <li data-selected=''><a href="/video/integers-and-rational-numbers?playlist=ck12.org%20Algebra%201%20Examples">Integers and Rational Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/addition-of-rational--numbers?playlist=ck12.org%20Algebra%201%20Examples">Addition of Rational  Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/subraction-of-rational-numbers?playlist=ck12.org%20Algebra%201%20Examples">Subraction of Rational Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/multiplication-of-rational-numbers?playlist=ck12.org%20Algebra%201%20Examples">Multiplication of Rational Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/distributive-property?playlist=ck12.org%20Algebra%201%20Examples">Distributive Property</a></li>
+                
+                <li data-selected=''><a href="/video/division-of-rational-numbers?playlist=ck12.org%20Algebra%201%20Examples">Division of Rational Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/square-roots-and-real-numbers?playlist=ck12.org%20Algebra%201%20Examples">Square Roots and Real Numbers</a></li>
+                
+                <li data-selected=''><a href="/video/problem-solving-word-problems-2?playlist=ck12.org%20Algebra%201%20Examples">Problem Solving Word Problems 2</a></li>
+                
+                <li data-selected=''><a href="/video/one-step-equations?playlist=ck12.org%20Algebra%201%20Examples">One Step Equations</a></li>
+                
+                <li data-selected=''><a href="/video/two-step-equations?playlist=ck12.org%20Algebra%201%20Examples">Two-Step Equations</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-equations?playlist=ck12.org%20Algebra%201%20Examples">Multi-Step Equations</a></li>
+                
+                <li data-selected=''><a href="/video/equations-with-variables-on-both-sides?playlist=ck12.org%20Algebra%201%20Examples">Equations with Variables on Both Sides</a></li>
+                
+                <li data-selected=''><a href="/video/ratio-and-proportion?playlist=ck12.org%20Algebra%201%20Examples">Ratio and Proportion</a></li>
+                
+                <li data-selected=''><a href="/video/scale-and-indirect-measurement?playlist=ck12.org%20Algebra%201%20Examples">Scale and Indirect Measurement</a></li>
+                
+                <li data-selected=''><a href="/video/percent-problems?playlist=ck12.org%20Algebra%201%20Examples">Percent Problems</a></li>
+                
+                <li data-selected=''><a href="/video/word-problem-solving-3?playlist=ck12.org%20Algebra%201%20Examples">Word Problem Solving 3</a></li>
+                
+                <li data-selected=''><a href="/video/the-coordinate-plane?playlist=ck12.org%20Algebra%201%20Examples">The Coordinate Plane</a></li>
+                
+                <li data-selected=''><a href="/video/graphing-using-intercepts?playlist=ck12.org%20Algebra%201%20Examples">Graphing Using Intercepts</a></li>
+                
+                <li data-selected=''><a href="/video/graphs-of-linear-equations?playlist=ck12.org%20Algebra%201%20Examples">Graphs of Linear Equations</a></li>
+                
+                <li data-selected=''><a href="/video/slope-and-rate-of-change?playlist=ck12.org%20Algebra%201%20Examples">Slope and Rate of Change</a></li>
+                
+                <li data-selected=''><a href="/video/graphs-using-slope-intercept-form?playlist=ck12.org%20Algebra%201%20Examples">Graphs Using Slope-Intercept Form</a></li>
+                
+                <li data-selected=''><a href="/video/direct-variation-models?playlist=ck12.org%20Algebra%201%20Examples">Direct Variation Models</a></li>
+                
+                <li data-selected=''><a href="/video/linear-function-graphs?playlist=ck12.org%20Algebra%201%20Examples">Linear Function Graphs</a></li>
+                
+                <li data-selected=''><a href="/video/word-problem-solving-4?playlist=ck12.org%20Algebra%201%20Examples">Word Problem Solving 4</a></li>
+                
+                <li data-selected=''><a href="/video/linear-equations-in-slope-intercept-form?playlist=ck12.org%20Algebra%201%20Examples">Linear Equations in Slope Intercept Form</a></li>
+                
+                <li data-selected=''><a href="/video/linear-equations-in-point-slope-form?playlist=ck12.org%20Algebra%201%20Examples">Linear Equations in Point Slope Form</a></li>
+                
+                <li data-selected=''><a href="/video/linear-equations-in-standard-form?playlist=ck12.org%20Algebra%201%20Examples">Linear Equations in Standard Form</a></li>
+                
+                <li data-selected=''><a href="/video/equations-of-parallel-and-perpendicular-lines?playlist=ck12.org%20Algebra%201%20Examples">Equations of Parallel and Perpendicular Lines</a></li>
+                
+                <li data-selected=''><a href="/video/fitting-a-line-to-data?playlist=ck12.org%20Algebra%201%20Examples">Fitting a Line to Data</a></li>
+                
+                <li data-selected=''><a href="/video/predicting-with-linear-models?playlist=ck12.org%20Algebra%201%20Examples">Predicting with Linear Models</a></li>
+                
+                <li data-selected=''><a href="/video/using-a-linear-model?playlist=ck12.org%20Algebra%201%20Examples">Using a Linear Model</a></li>
+                
+                <li data-selected=''><a href="/video/inequalities-using-addition-and-subtraction?playlist=ck12.org%20Algebra%201%20Examples">Inequalities Using Addition and Subtraction</a></li>
+                
+                <li data-selected=''><a href="/video/inequalities-using-multiplication-and-division?playlist=ck12.org%20Algebra%201%20Examples">Inequalities Using Multiplication and Division</a></li>
+                
+                <li data-selected=''><a href="/video/multi-step-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Multi-Step Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/compound-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Compound Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-equations?playlist=ck12.org%20Algebra%201%20Examples">Absolute Value Equations</a></li>
+                
+                <li data-selected=''><a href="/video/absolute-value-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Absolute Value Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/graphing-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Graphing Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/solving-linear-systems-by-graphing?playlist=ck12.org%20Algebra%201%20Examples">Solving Linear Systems by Graphing</a></li>
+                
+                <li data-selected=''><a href="/video/solving-linear-systems-by-substitution?playlist=ck12.org%20Algebra%201%20Examples">Solving Linear Systems by Substitution</a></li>
+                
+                <li data-selected=''><a href="/video/solving-systems-of-equations-by-elimination?playlist=ck12.org%20Algebra%201%20Examples">Solving Systems of Equations by Elimination</a></li>
+                
+                <li data-selected=''><a href="/video/solving-systems-of-equations-by-multiplication?playlist=ck12.org%20Algebra%201%20Examples">Solving Systems of Equations by Multiplication</a></li>
+                
+                <li data-selected=''><a href="/video/special-types-of-linear-systems?playlist=ck12.org%20Algebra%201%20Examples">Special Types of Linear Systems</a></li>
+                
+                <li data-selected=''><a href="/video/systems-of-linear-inequalities?playlist=ck12.org%20Algebra%201%20Examples">Systems of Linear Inequalities</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-involving-products?playlist=ck12.org%20Algebra%201%20Examples">Exponent Properties Involving Products</a></li>
+                
+                <li data-selected=''><a href="/video/exponent-properties-involving-quotients?playlist=ck12.org%20Algebra%201%20Examples">Exponent Properties Involving Quotients</a></li>
+                
+                <li data-selected=''><a href="/video/zero--negative--and-fractional-exponents?playlist=ck12.org%20Algebra%201%20Examples">Zero, Negative, and Fractional Exponents</a></li>
+                
+                <li data-selected=''><a href="/video/scientific-notation?playlist=ck12.org%20Algebra%201%20Examples">Scientific Notation</a></li>
+                
+                <li data-selected=''><a href="/video/exponential-growth-functions?playlist=ck12.org%20Algebra%201%20Examples">Exponential Growth Functions</a></li>
+                
+                <li data-selected=''><a href="/video/exponential-decay-functions?playlist=ck12.org%20Algebra%201%20Examples">Exponential Decay Functions</a></li>
+                
+                <li data-selected=''><a href="/video/geometric-sequences--introduction?playlist=ck12.org%20Algebra%201%20Examples">Geometric Sequences (Introduction)</a></li>
+                
+                <li data-selected=''><a href="/video/word-problem-solving--exponential-growth-and-decay?playlist=ck12.org%20Algebra%201%20Examples">Word Problem Solving- Exponential Growth and Decay</a></li>
+                
+                <li data-selected=''><a href="/video/addition-and-subtraction-of-polynomials?playlist=ck12.org%20Algebra%201%20Examples">Addition and Subtraction of Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/multiplication-of-polynomials?playlist=ck12.org%20Algebra%201%20Examples">Multiplication of Polynomials</a></li>
+                
+                <li data-selected=''><a href="/video/special-products-of-binomials?playlist=ck12.org%20Algebra%201%20Examples">Special Products of Binomials</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-equations-in-factored-form?playlist=ck12.org%20Algebra%201%20Examples">Polynomial Equations in Factored Form</a></li>
+                
+                <li data-selected=''><a href="/video/factoring-quadratic-expressions?playlist=ck12.org%20Algebra%201%20Examples">Factoring Quadratic Expressions</a></li>
+                
+                <li data-selected=''><a href="/video/factoring-special-products?playlist=ck12.org%20Algebra%201%20Examples">Factoring Special Products</a></li>
+                
+                <li data-selected=''><a href="/video/factor-by-grouping-and-factoring-completely?playlist=ck12.org%20Algebra%201%20Examples">Factor by Grouping and Factoring Completely</a></li>
+                
+                <li data-selected=''><a href="/video/graphs-of-quadratic-functions?playlist=ck12.org%20Algebra%201%20Examples">Graphs of Quadratic Functions</a></li>
+                
+                <li data-selected=''><a href="/video/solving-quadratic-equations-by-graphing?playlist=ck12.org%20Algebra%201%20Examples">Solving Quadratic Equations by Graphing</a></li>
+                
+                <li data-selected=''><a href="/video/solving-quadratic-equations-by-square-roots?playlist=ck12.org%20Algebra%201%20Examples">Solving Quadratic Equations by Square Roots</a></li>
+                
+                <li data-selected=''><a href="/video/solving-quadratic-equations-by-completing-the-square?playlist=ck12.org%20Algebra%201%20Examples">Solving Quadratic Equations by Completing the Square</a></li>
+                
+                <li data-selected=''><a href="/video/using-the-quadratic-formula?playlist=ck12.org%20Algebra%201%20Examples">Using the Quadratic Formula</a></li>
+                
+                <li data-selected=''><a href="/video/proof-of-quadratic-formula?playlist=ck12.org%20Algebra%201%20Examples">Proof of Quadratic Formula</a></li>
+                
+                <li data-selected=''><a href="/video/discriminant-of-quadratic-equations?playlist=ck12.org%20Algebra%201%20Examples">Discriminant of Quadratic Equations</a></li>
+                
+                <li data-selected='selected'><a href="/video/linear--quadratic--and-exponential-models?playlist=ck12.org%20Algebra%201%20Examples">Linear, Quadratic, and Exponential Models</a></li>
+                
+                <li data-selected=''><a href="/video/identifying-quadratic-models?playlist=ck12.org%20Algebra%201%20Examples">Identifying Quadratic Models</a></li>
+                
+                <li data-selected=''><a href="/video/identifying-exponential-models?playlist=ck12.org%20Algebra%201%20Examples">Identifying Exponential Models</a></li>
+                
+                <li data-selected=''><a href="/video/quadratic-regression?playlist=ck12.org%20Algebra%201%20Examples">Quadratic Regression</a></li>
+                
+                <li data-selected=''><a href="/video/graphs-of-square-root-functions?playlist=ck12.org%20Algebra%201%20Examples">Graphs of Square Root Functions</a></li>
+                
+                <li data-selected=''><a href="/video/radical-expressions-with-higher-roots?playlist=ck12.org%20Algebra%201%20Examples">Radical Expressions with Higher Roots</a></li>
+                
+                <li data-selected=''><a href="/video/more-simplifying-radical-expressions?playlist=ck12.org%20Algebra%201%20Examples">More Simplifying Radical Expressions</a></li>
+                
+                <li data-selected=''><a href="/video/how-to-rationalize-a-denominator?playlist=ck12.org%20Algebra%201%20Examples">How to Rationalize a Denominator</a></li>
+                
+                <li data-selected=''><a href="/video/extraneous-solutions-to-radical-equations?playlist=ck12.org%20Algebra%201%20Examples">Extraneous Solutions to Radical Equations</a></li>
+                
+                <li data-selected=''><a href="/video/radical-equation-examples?playlist=ck12.org%20Algebra%201%20Examples">Radical Equation Examples</a></li>
+                
+                <li data-selected=''><a href="/video/more-involved-radical-equation-example?playlist=ck12.org%20Algebra%201%20Examples">More Involved Radical Equation Example</a></li>
+                
+                <li data-selected=''><a href="/video/pythagorean-theorem?playlist=ck12.org%20Algebra%201%20Examples">Pythagorean Theorem</a></li>
+                
+                <li data-selected=''><a href="/video/distance-formula?playlist=ck12.org%20Algebra%201%20Examples">Distance Formula</a></li>
+                
+                <li data-selected=''><a href="/video/midpoint-formula?playlist=ck12.org%20Algebra%201%20Examples">Midpoint Formula</a></li>
+                
+                <li data-selected=''><a href="/video/visual-pythagorean-theorem-proof?playlist=ck12.org%20Algebra%201%20Examples">Visual Pythagorean Theorem Proof</a></li>
+                
+                <li data-selected=''><a href="/video/average-or-central-tendency--arithmetic-mean--median--and-mode?playlist=ck12.org%20Algebra%201%20Examples">Average or Central Tendency: Arithmetic Mean, Median, and Mode</a></li>
+                
+                <li data-selected=''><a href="/video/range--variance-and-standard-deviation-as-measures-of-dispersion?playlist=ck12.org%20Algebra%201%20Examples">Range, Variance and Standard Deviation as Measures of Dispersion</a></li>
+                
+                <li data-selected=''><a href="/video/stem-and-leaf-plots?playlist=ck12.org%20Algebra%201%20Examples">Stem and Leaf Plots</a></li>
+                
+                <li data-selected=''><a href="/video/histograms?playlist=ck12.org%20Algebra%201%20Examples">Histograms</a></li>
+                
+                <li data-selected=''><a href="/video/box-and-whisker-plot?playlist=ck12.org%20Algebra%201%20Examples">Box-and-whisker Plot</a></li>
+                
+                <li data-selected=''><a href="/video/proportionality?playlist=ck12.org%20Algebra%201%20Examples">Proportionality</a></li>
+                
+                <li data-selected=''><a href="/video/asymptotes-of-rational-functions?playlist=ck12.org%20Algebra%201%20Examples">Asymptotes of Rational Functions</a></li>
+                
+                <li data-selected=''><a href="/video/another-rational-function-graph-example?playlist=ck12.org%20Algebra%201%20Examples">Another Rational Function Graph Example</a></li>
+                
+                <li data-selected=''><a href="/video/a-third-example-of-graphing-a-rational-function?playlist=ck12.org%20Algebra%201%20Examples">A Third Example of Graphing a Rational Function</a></li>
+                
+                <li data-selected=''><a href="/video/polynomial-division?playlist=ck12.org%20Algebra%201%20Examples">Polynomial Division</a></li>
+                
+                <li data-selected=''><a href="/video/simplifying-rational-expressions?playlist=ck12.org%20Algebra%201%20Examples">Simplifying Rational Expressions</a></li>
+                
+                <li data-selected=''><a href="/video/multiplying-and-dividing-rational-expressions?playlist=ck12.org%20Algebra%201%20Examples">Multiplying and Dividing Rational Expressions</a></li>
+                
+                <li data-selected=''><a href="/video/adding-rational-expressions-example-1?playlist=ck12.org%20Algebra%201%20Examples">Adding Rational Expressions Example 1</a></li>
+                
+                <li data-selected=''><a href="/video/adding-rational-expressions-example-2?playlist=ck12.org%20Algebra%201%20Examples">Adding Rational Expressions Example 2</a></li>
+                
+                <li data-selected=''><a href="/video/adding-rational-expressions-example-3?playlist=ck12.org%20Algebra%201%20Examples">Adding Rational Expressions Example 3</a></li>
+                
+                <li data-selected=''><a href="/video/solving-rational-equations?playlist=ck12.org%20Algebra%201%20Examples">Solving Rational Equations</a></li>
+                
+                <li data-selected=''><a href="/video/two-more-examples-of-solving-rational-equations?playlist=ck12.org%20Algebra%201%20Examples">Two more examples of solving rational equations</a></li>
+                
+                <li data-selected=''><a href="/video/surveys-and-samples?playlist=ck12.org%20Algebra%201%20Examples">Surveys and Samples</a></li>
+                
+            </ol>
+        </div>
+    </span>
+</span>
+
+                </nav>
+                
+    
+                
+            </header>
+            
+<article class="video">
+    <div id="description">
+        <h3>
+            <span class="title">Linear, Quadratic, and Exponential Models</span>
+        
+        </h3>
+    </div>
+    <div style="margin-top: -15px;">
+        <nav class="prev_next_nav">
+            
+            <label id="prev_video">
+                <a rel=prev href="/video/discriminant-of-quadratic-equations?playlist=ck12.org%20Algebra%201%20Examples"><b>Previous Video:</b> Discriminant of Quadratic Equations</a>
+            </label>
+            
+            
+            <label id="next_video">
+                <a rel=next href="/video/identifying-quadratic-models?playlist=ck12.org%20Algebra%201%20Examples"><b>Next Video:</b> Identifying Quadratic Models</a>
+            </label>
+            
+        </nav>
+
+        <div id="youtube_blocked">
+            <object id="flvPlayer" type="application/x-shockwave-flash" data="/flvplayer/player_flv_maxi.swf" width="800" height="480">
+    <param name="movie" value="/flvplayer/player_flv_maxi.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="FlashVars" value="flv=http%3A//www.archive.org/download/KhanAcademy_ck12.orgAlgebra1Examples/linear--quadratic--and-exponential-models.flv&amp;showstop=1&amp;showvolume=1&amp;showfullscreen=1&amp;showiconplay=1&amp;bgcolor=FFFFFF&amp;bgcolor1=80C65A&amp;bgcolor2=80C65A&amp;iconplaybgcolor=80C65A&amp;width=800&amp;height=480" />
+    <div>
+            <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+    </div>                
+</object>
+
+
+        </div>
+
+        <object id="idOVideo" name="idOVideo" width="800" height="480" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+    <param name="movie" value="http://www.youtube.com/v/CxEFOozrMSE&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1">
+    <param name="allowFullScreen" value="true">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="transparent">
+    <embed id="idPlayer" name="idPlayer" wmode="transparent" src="http://www.youtube.com/v/CxEFOozrMSE&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1" type="application/x-shockwave-flash" allowScriptAccess="always" allowfullscreen="true" width="800" height="480">
+</object>
+
+
+        <span class="video_extra_links"><nobr>
+        
+        <span class="extra-link-bar"><a href="http://www.archive.org/download/KhanAcademy_ck12.orgAlgebra1Examples/linear--quadratic--and-exponential-models.flv">Download</a>
+        </span>
+        </nobr></span>
+
+        
+<div class="video_comments">
+
+    <h3>Comments:</h3>
+
+    <div class="comments_container">
+    
+
+        
+
+        
+            <div class="comment">
+                I like this i am learning realy fast. My lecturer at school goes very very fast becuase he wants to complete the curriculum by the end of the semister, so this and other vedios is really helping me.<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;tamekagordon2008@yahoo.com, 2 months, 3 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+        
+
+        
+
+        
+
+    
+    </div>
+    
+    
+        <a href="/login?continue=/video%3Fv%3DCxEFOozrMSE" class="control"><img class="icon" src="/images/balloon-plus.png" />Log in to add a comment</a>
+    
+
+    
+
+    <div class="comment_form" style="display:none;">
+        <form class="comments" name="comments">
+            <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+            <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxi0uQEM" />
+            <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchALEghQbGF5bGlzdBj8pwEM" />
+            <textarea name="comment_text" class="comment_text" rows="3" cols="40"></textarea><br/>
+            <div class="comment_controls_container"
+    
+>
+    <div class="comment_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button comment_submit" type="button" value="Comment"/>
+            or <a href="#" class="comment_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </form>
+    </div>
+</div>
+
+
+        
+<div class="video_questions">
+    <h3 class="ask_and_answer">Ask and answer questions about this video:</h3>
+
+    <div class="sticky_note" style="display:none;">
+        <div class="sticky_note_content">
+            <h2>Ask a question about Linear, Quadratic, and Exponential Models</h2>
+            <ul>
+                <li><em>Be as specific as possible!</em></li>
+                <li>Remember, you're asking <em>the entire Khan Academy community</em> for answers.</li>
+                <li>Mention a time from the video, like "5:28", to help people understand what your question is about.</li>
+                <li><strong>Please don't</strong> report problems or mistakes here.&nbsp; <strong><a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-CxEFOozrMSE">Send in a problem report</a></strong> instead.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="question_container">
+        <div class="question_form">
+            <form class="question" name="questions">
+                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg0LEgVWaWRlbxi0uQEM" />
+                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchALEghQbGF5bGlzdBj8pwEM" />
+                <div class="question_placeholder requires_script">
+                    <textarea name="question_text" class="question_text" rows="3" cols="40" 
+                                watermark="Example: Why does Sal use shorthand notation at 5:43?"></textarea>
+                </div>
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button question_submit" type="button" value="Ask your question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+           </form>
+        </div>
+    </div>
+
+    <div class="questions_container">
+    
+
+        
+
+        
+
+    
+    </div>
+
+    
+        <div class="login_note" style="display:none;">
+            <a class="login_link" href="/login?continue=/video%3Fv%3DCxEFOozrMSE"><img class="icon" src="/images/key-plus.png"/ >Log in first</a>
+            <span class="login_action"></span>
+        </div>
+    
+
+</div>
+<br/>
+
+
+        </div>
+    </article>
+
+            <div style="padding: 10px;">&nbsp;</div>
+            
+<footer id="footer" class="short">
+    <div id="leaves">
+        <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-linear--quadratic--and-exponential-models">Report a Problem</a> <a href="/getinvolved">Get Involved</a> <a href="/about#contactus">Contact Us</a>
+        <span class="sep">|</span>
+        <a href="/about">About</a> <a href="/about#faq">FAQ</a> <a href="/getinvolved#credits">Credits</a> <a href="/downloads">Downloads</a>
+        <span class="sep">|</span>
+        <a href="/coaches">Add a Coach</a> <a href="/classreport">Class Report</a>
+        <div id="copyright">
+            <small>
+                &copy;2010 Khan Academy
+            </small>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/"><img style="vertical-align: middle;" alt="Creative Commons License" width="80" height="15" src="/images/cc-by-nc-sa-80x15.png" /></a>
+        </div>
+    </div>
+</footer>
+
+
+
+            
+    
+    	<!-- For ChartBeat analytics START -->
+    	<script type="text/javascript">
+    	var _sf_async_config={uid:10894,domain:"khanacademy.org"};
+    	(function(){
+    	  function loadChartbeat() {
+    	    window._sf_endpt=(new Date()).getTime();
+    	    var e = document.createElement('script');
+    	    e.setAttribute('language', 'javascript');
+    	    e.setAttribute('type', 'text/javascript');
+    	    e.setAttribute('src',
+    	       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+    	       "static.chartbeat.com/js/chartbeat.js");
+    	    document.body.appendChild(e);
+    	  }
+    	  var oldonload = window.onload;
+    	  window.onload = (typeof window.onload != 'function') ?
+    	     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    	})();
+    	</script>
+    	<!-- For ChartBeat analytics END -->
+    
+    	<!-- ChartBeat API - get # of users online now BEGIN -->
+    
+       <script type="text/javascript">
+    
+                $('#page_num_visitors').append(totalViewsString);
+                $('#page_visitors').css('display', 'inline');
+    	</script>
+    
+    	<!-- ChartBeat API - get # of users online now END -->
+    
+    </div>
+    
+    
+    </body>
+</html>

@@ -20,6 +20,10 @@ function moblog_editform($args) {
 	if (false == $model->loaded) { return ''; }
 	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID)) { return ''; }
 
+	if (('' == $model->content) && ('no' == $model->published)) {
+		$model->published = 'yes';
+	}
+
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------

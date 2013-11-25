@@ -4,7 +4,7 @@
 //*	display wikicode help
 //--------------------------------------------------------------------------------------------------
 
-	$page->load('modules/wiki/actions/wikicode.page.php');
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/wikicode.page.php');
+	$kapenta->page->render();
 
 ?>

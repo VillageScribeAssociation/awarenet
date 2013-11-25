@@ -175,7 +175,7 @@ function downloadFileFromRepository($item) {
 	//	download the file
 	//----------------------------------------------------------------------------------------------
 
-	if (true == $kapenta->fileExists($outFile)) { echo "[|] Replacing $outFile (already present)<br/>\n"; }
+	if (true == $kapenta->fs->exists($outFile)) { echo "[|] Replacing $outFile (already present)<br/>\n"; }
 	else { echo "[|] Downloading $outFile (not present in local installation)<br/>\n"; }
 
 	//----------------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ function downloadFileFromRepository($item) {
 		//------------------------------------------------------------------------------------------
 		//	save it :-)
 		//------------------------------------------------------------------------------------------
-		$check = $kapenta->filePutContents($outFile, $content, false, false, 'w+');
+		$check = $kapenta->fs->put($outFile, $content, false, false, 'w+');
 		if ($check == false) {
 			echo "[*] Error: could not open $outFile for writing.<br/>\n";	flush();
 			return false;

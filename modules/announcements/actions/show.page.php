@@ -4,17 +4,20 @@
 <page>
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - [`|pc][`|pc]announcementTitle[`|pc][`|pc] (announcement)</title>
-	<content>[[:theme::navtitlebox::width=570::label=Announcement:]]
-[[:announcements::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Comments::width=570:]]
-[[:comments::list::refModule=announcements::refModel=announcements[`|us]announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
-[[:comments::addcommentform::refModule=announcements::refModel=announcements[`|us]announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=announcements/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
-</content>
+	<content>
+		[[:theme::navtitlebox::width=570::label=Announcement:]]
+		[[:announcements::show::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		[`|lt]br/[`|gt]
+
+		[[:theme::navtitlebox::label=Comments::width=570:]]
+		[[:comments::list::refModule=announcements::refModel=announcements[`|us]announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]:]]
+		[[:comments::addcommentform::refModule=announcements::refModel=announcements[`|us]announcement::refUID=[`|pc][`|pc]UID[`|pc][`|pc]::return=announcements/[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Previously:]]
-[[:announcements::listnav::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]:]]
-</nav1>
+		[[:announcements::bulkpm::UID=%%UID%%:]]
+		[[:theme::navtitlebox::label=Previously:]]
+		[[:announcements::listnav::refUID=[`|pc][`|pc]refUID[`|pc][`|pc]::refModule=[`|pc][`|pc]refModule[`|pc][`|pc]:]]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit>galleryNav[`|us]init()[`|sc]

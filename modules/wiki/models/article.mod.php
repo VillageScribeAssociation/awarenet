@@ -291,10 +291,11 @@ class Wiki_Article {
 
 
 
-		if (count($this->expanded) == true) {
+		if ($this->expanded == true) {
 			$ary['contents'] = $this->wikicode->contents;
-			$ary['contentHtml'] = $theme->expandBlocks($this->wikicode->html, '');
+			$ary['contentHtml'] = $theme->expandBlocks($this->wikicode->html, 'content');
 			$ary['infobox'] = $this->wikicode->infobox;
+
 			//$ary['talkContents'] = $this->talk->contents;	// TODO - stabilize
 			//$ary['talkHtml'] = $this->talk->html;
 		}
@@ -342,7 +343,7 @@ class Wiki_Article {
 		global $kapenta, $user;
 
 		$this->title = 'Index';
-		$raw = $kapenta->fileGetContents($this->defaultIndexPage, false, true);
+		$raw = $kapenta->fs->get($this->defaultIndexPage, false, true);
 		if (false == $raw) { $raw = "(editable by admins only)"; }
 		$this->content = $raw;
 		$this->locked = 'admin';

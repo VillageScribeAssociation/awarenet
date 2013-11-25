@@ -50,7 +50,7 @@
 
 	foreach($defaults as $label => $value) {
 		$key = 'images.size.' . $label;
-		if ('' == $registry->get($key)) { $registry->set($key, $value);	}
+		if ('' == $kapenta->registry->get($key)) { $kapenta->registry->set($key, $value);	}
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 	if ((true == array_key_exists('action', $_POST)) && ('loadDefaults' == $_POST['action'])) {
 		foreach($defaults as $label => $value) {
 			$key = 'images.size.' . $label;
-			$registry->set($key, $value);
+			$kapenta->registry->set($key, $value);
 		}
 	}
 
@@ -81,7 +81,7 @@
 		if ('*' == $_POST['height']) { $height = '*'; }
 		if ('yes' == $_POST['watermark']) { $watermark = 'w'; }
 
-		$registry->set('images.size.' . $label, $width . 'x' . $height . $watermark);
+		$kapenta->registry->set('images.size.' . $label, $width . 'x' . $height . $watermark);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@
 	if ((true == array_key_exists('action', $_POST)) && ('deletePreset' == $_POST['action'])) {
 		if (false == array_key_exists('label', $_POST)) { $page->do404('Label not given'); }	
 		$label = trim(strtolower($_POST['label']));		//TODO: better sanitzation
-		$registry->delete('images.size.' . $label);
+		$kapenta->registry->delete('images.size.' . $label);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -99,21 +99,21 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ((true == array_key_exists('action', $_POST)) && ('resetFileAssoc' == $_POST['action'])) {
-		$reg = $registry->search('live', 'live.file.');
+		$reg = $kapenta->registry->search('live', 'live.file.');
 
 		//	delete existing file associations with this module
 		foreach($reg as $key => $value) {
-			if ('images' == $value) { $registry->delete($key); }
+			if ('images' == $value) { $kapenta->registry->delete($key); }
 		}
 
 		//	recreate defaults
-		foreach($assoc as $ext) { $registry->set('live.file.' . $ext, 'images'); }
+		foreach($assoc as $ext) { $kapenta->registry->set('live.file.' . $ext, 'images'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/images/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/images/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

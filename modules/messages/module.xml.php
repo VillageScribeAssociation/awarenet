@@ -9,23 +9,47 @@
     <enabled>yes</enabled>
     <dbschema></dbschema>
     <search>no</search>
-    <dependancy>
-    </dependancy>
-    <permissions>
-        <perm>new|%%user.ofGroup%%=admin</perm>
-        <perm>new|%%user.ofGroup%%=teacher</perm>
-        <perm>edit|%%user.ofGroup%%=student</perm>
-        <perm>edit|%%user.ofGroup%%=teacher</perm>
-        <perm>show|%%user.ofGroup%%=student</perm>
-        <perm>show|%%user.ofGroup%%=teacher</perm>
-        <perm>send|%%user.ofGroup%%=student</perm>
-        <perm>send|%%user.ofGroup%%=teacher</perm>
-        <perm>imageupload|%%user.ofGroup%%=student</perm>
-        <perm>imageupload|%%user.ofGroup%%=teacher</perm>
-        <perm>images|%%user.ofGroup%%=student</perm>
-        <perm>images|%%user.ofGroup%%=teacher</perm>
-    </permissions>
-    <blocks>
-    </blocks>
+    <dependencies>
+		<module>aliases</module>
+		<module>images</module>
+		<module>comments</module>
+    </dependencies>
+
+    <models>
+        <model>
+            <name>Messages_Message</name>
+            <description>A copy of a PM.</description>
+            <permissions>
+                <permission>send</permission>
+                <permission>show</permission>
+                <permission>edit</permission>
+                <permission>delete</permission>
+                <permission>new</permission>
+            </permissions>
+            <relationships>
+                <relationship>creator</relationship>
+                <relationship>recipient</relationship>
+            </relationships>
+        </model>
+    </models>
+
+	<defaultpermissions>
+		student:p|messages|messages_message|send
+		student:c|messages|messages_message|delete|(if)|owner
+		student:c|messages|messages_message|images-show
+		student:c|messages|messages_message|images-add|(if)|creator
+		student:c|messages|messages_message|images-remove|(if)|creator
+
+		teacher:p|messages|messages_message|send
+		student:c|messages|messages_message|delete|(if)|owner
+		teacher:c|messages|messages_message|images-show
+		teacher:c|messages|messages_message|images-add|(if)|creator
+		teacher:c|messages|messages_message|images-remove|(if)|creator
+
+		moderator:p|messages|messages_message|send
+		moderator:c|messages|messages_message|images-show
+		moderator:c|messages|messages_message|images-add|(if)|creator
+		moderator:c|messages|messages_message|images-remove|(if)|creator
+	</defaultpermissions>
 </module>
 */ ?>

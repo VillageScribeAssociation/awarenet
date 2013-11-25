@@ -7,7 +7,7 @@
 //arg: path - file anem or location [string]
 
 function live_fileassociation($args) {
-	global $registry;
+	global $kapenta;
 	
 	$path = '';						//%	file name or location [string]
 	$module = '';					//%	return value [string]
@@ -21,7 +21,7 @@ function live_fileassociation($args) {
 	//----------------------------------------------------------------------------------------------
 	//	look up extension in registry (may contain periods so don't use pathinfo)
 	//----------------------------------------------------------------------------------------------
-	$reg = $registry->search('live', 'live.file.');
+	$reg = $kapenta->registry->search('live', 'live.file.');
 
 	foreach($reg as $key => $value) {
 		$ext = str_replace('live.file.', '', $key);

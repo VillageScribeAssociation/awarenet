@@ -26,7 +26,7 @@ function addRecipient(usrUID, usrHtml) {
 	html = "<div id='usrd" + usrUID + "'>" 
 		 + "<table noborder><tr><td>"
 		 + "<a href='#' onClick=\"mcRemoveRecipient('" + usrUID + "')\">"
-		 + "<img src='/themes/clockface/icons/arrow_x.jpg' border='0' /><a/>"
+		 + "<img src='/themes/clockface/images/icons/arrow_x.jpg' border='0' /><a/>"
 		 + "</td><td>" + usrHtml + "</td></tr></table></div>";
 
 	divRecip.innerHTML = divRecip.innerHTML + html;

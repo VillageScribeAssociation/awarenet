@@ -20,7 +20,7 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	if (true == array_key_exists('message', $_POST)) { $message = $_POST['message']; }
-	if (true == array_key_exists('UID', $req->args)) { $packageUID = $req->args['UID']; }
+	if (true == array_key_exists('UID', $kapenta->request->args)) { $packageUID = $kapenta->request->args['UID']; }
 
 	if ('' == $packageUID) { $page->do404('Package UID not given.'); }
 
@@ -37,9 +37,9 @@
 			$session->msg('No changelog message given, not updating repository.', 'bad');
 		}
 
-		$page->load('modules/packages/actions/commit.page.php');
-		$page->blockArgs['UID'] = $packageUID;
-		$page->render();
+		$kapenta->page->load('modules/packages/actions/commit.page.php');
+		$kapenta->page->blockArgs['UID'] = $packageUID;
+		$kapenta->page->render();
 		die();
 	}
 
@@ -57,11 +57,27 @@
 	//----------------------------------------------------------------------------------------------
 	echo $theme->expandBlocks('[[:theme::ifscrollheader::title=Commit Package:]]', ''); flush();
 	$um->log("<h2>Committing package: " . $package->name . " (" . $package->UID . ")</h2>");
-	$um->log('Repository: ' . $package->source);
 
 	echo "<div class='chatmessageblack'><pre>";
 	print_r($_POST);
 	echo "</pre></div>";
+
+	//----------------------------------------------------------------------------------------------
+	//	check repository
+	//----------------------------------------------------------------------------------------------
+
+	if ('' == $package->source) {
+		$sourceKey = 'pkg.' . $package->UID . '.source';
+		$package->source = $kapenta->registry->get($sourceKey);
+		$um->log("Loading source from registry: $sourceKey = " . $package->source);
+		if ('' == $package->source) {
+			$um->log('<b>Cannot commit:</b> Missing repository information.', 'red');
+			echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', ''); 
+			die();
+		}
+	}
+
+	$um->log('Repository: ' . $package->source);
 
 	//----------------------------------------------------------------------------------------------
 	//	get list of files from $_POST
@@ -97,11 +113,7 @@
 	if (true == $package->testCredentials('commit')) {
 		$um->log('<b>Auth:</b> Credentials accepted by repository.', 'green');		
 	} else {
-		if ('' == $result) {
-			$um->log('<b>Fail:</b> Could not connect to repository.', 'red');
-		} else {
-			$um->log('<b>Fail:</b> Credentials not accepted by repository.', 'red');
-		}
+		$um->log('<b>Fail:</b> Credentials not accepted by repository.', 'red');
 		echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', ''); 
 		die();
 	}

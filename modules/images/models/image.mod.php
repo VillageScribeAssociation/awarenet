@@ -69,7 +69,6 @@ class Images_Image {
 			$this->data = $db->makeBlank($this->dbSchema);	//	make new object
 			$this->loadArray($this->data);					//	initialize
 			$this->title = 'New Image ' . $this->UID;		//	set default title
-			$this->transforms = array();					//	no transforms yet
 			$this->weight = 10000;							//	end of list (corrected on save())
 			$this->hash = '';
 			$this->shared = 'yes';
@@ -121,7 +120,7 @@ class Images_Image {
 		$this->alias = $ary['alias'];
 
 		$this->transforms = new Images_Transforms($this->UID, $this->fileName);
-		$this->transforms->load();
+		//$this->transforms->load();	-- performance drain
 
 		$this->loaded = true;
 		return true;
@@ -136,6 +135,7 @@ class Images_Image {
 	function save() {
 		global $db;
 		global $aliases;
+		global $kapenta;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
@@ -147,6 +147,14 @@ class Images_Image {
 		$set = new Images_Images($this->refModule, $this->refModel, $this->UID);
 		$set->checkWeights();
 
+		//------------------------------------------------------------------------------------------
+		//	invalidate owner's default image in memcached
+		//------------------------------------------------------------------------------------------
+		if (true == $kapenta->mcEnabled) {
+			$cacheKey = 'images::default::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+		}
+
 		return '';
 	}
 
@@ -157,7 +165,7 @@ class Images_Image {
 
 	function verify() {
 		global $kapenta;
-		global $registry;
+		global $kapenta;
 		global $session;
 
 		$report = '';				//%	return value [string]
@@ -201,7 +209,7 @@ class Images_Image {
 		if ('' == $this->refModel) { $report .= "No refModel.<br/>\n"; }
 		if ('' == $this->refUID) { $report .= "No refUID.<br/>\n"; }
 
-		if (true == $kapenta->fileExists($this->fileName)) 
+		if (true == $kapenta->fs->exists($this->fileName)) {
 			//--------------------------------------------------------------------------------------
 			// add hash if missing and the file is available
 			//--------------------------------------------------------------------------------------
@@ -210,19 +218,21 @@ class Images_Image {
 			//--------------------------------------------------------------------------------------
 			// check that this falls within the max filesize (half a MB by default)
 			//--------------------------------------------------------------------------------------
-			$fileSize = $kapenta->fileSize($this->fileName);
-			$maxSize = $registry->get('images.maxsize');
+			/*	
+			$fileSize = $kapenta->fs->size($this->fileName);
+			$maxSize = $kapenta->registry->get('images.maxsize');
 			if (($maxSize > 0) && ($fileSize > $maxSize)) {
 				$check = $this->transforms->reduce();
 				if (true == $check) {
-					$newSize = $kapenta->fileSize($this->fileName);
+					$newSize = $kapenta->fs->size($this->fileName);
 					$session->msg("Image '". $this->title ."' reduced from $fileSize to $newSize.");
 				} else {
 					$report .= "Could not reduce image " . $this->UID . ".";
 				}
 			}
-
-			return $report;
+			*/
+		}
+		return $report;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -403,7 +413,7 @@ class Images_Image {
 	function getHash() {
 		global $kapenta;
 		if ('' == $this->fileName) { return ''; }
-		if (false == $kapenta->fileExists($this->fileName)) { return ''; }
+		if (false == $kapenta->fs->exists($this->fileName)) { return ''; }
 		$hash = sha1_file($kapenta->installPath . $this->fileName);
 		if (false === $hash) { return ''; }
 		return $hash;
@@ -416,7 +426,7 @@ class Images_Image {
 
 	function loadImage() {
 		global $kapenta;
-		if (false == $kapenta->fileExists($this->fileName)) { return false; }
+		if (false == $kapenta->fs->exists($this->fileName)) { return false; }
 		$fileName = $kapenta->installPath . $this->fileName;
 		if ('jpg' == $this->format) { $this->img = @imagecreatefromjpeg($fileName); }
 		if ('png' == $this->format) { $this->img = @imagecreatefrompng($fileName); }
@@ -489,7 +499,7 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		//	remove file
 		//------------------------------------------------------------------------------------------
-		if (true == $kapenta->fileExists($this->fileName)) {
+		if (true == $kapenta->fs->exists($this->fileName)) {
 			//$kapenta->fileDelete($this->fileName, true);
 			//NOTE: disabled as a safety precaution, and to allow undelete of images_image obejcts
 			//TODO: create admin action / display for deleting these files permenantly
@@ -506,6 +516,15 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		$session->msg("Deleting image: " . $this->title . " (" . $this->UID . ")<br/>");
 		$check = $db->delete($this->UID, $this->dbSchema);
+
+		//------------------------------------------------------------------------------------------
+		//	invalidate owner's default image in memcached
+		//------------------------------------------------------------------------------------------
+		if (true == $kapenta->mcEnabled) {
+			$cacheKey = 'images::default::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+		}
+
 		return $check;
 	}
 

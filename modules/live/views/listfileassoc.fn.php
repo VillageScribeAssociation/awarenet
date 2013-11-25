@@ -8,7 +8,7 @@
 function live_listfileassoc($args) {
 	global $user;
 	global $theme;
-	global $registry;
+	global $kapenta;
 
 	$module = '';
 	$html = '';	
@@ -28,7 +28,7 @@ function live_listfileassoc($args) {
 	$delFormBlock = $theme->loadBlock('modules/live/views/delfileassocform.block.php');
 
 	$assoc = array();
-	$reg = $registry->search('live', 'live.file.');
+	$reg = $kapenta->registry->search('live', 'live.file.');
 
 	foreach($reg as $key => $value) {
 		if (('' == $module) || ($value == $module)) {

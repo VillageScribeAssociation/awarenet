@@ -13,7 +13,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that the module is known to the system (protect against directory traversal, etc)
 	//----------------------------------------------------------------------------------------------
-	if (false == $kapenta->moduleExists($req->ref)) {
+	if (false == $kapenta->moduleExists($kapenta->request->ref)) {
 		$session->msg("Invalid module name.", 'bad');
 		$page->do302('admin/listmodules/');
 	}
@@ -21,8 +21,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	show the page (or bounce to /)
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/settings.page.php');
-	$page->blockArgs['showModule'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/settings.page.php');
+	$kapenta->page->blockArgs['showModule'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

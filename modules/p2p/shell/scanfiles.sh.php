@@ -75,7 +75,7 @@
 				//	add to gifts
 				//----------------------------------------------------------------------------------
 				$localHash = '';
-				if (true == $kapenta->fileExists($fileName)) {
+				if (true == $kapenta->fs->exists($fileName)) {
 					$localHash = sha1_file($kapenta->installPath . $fileName);
 				}
 

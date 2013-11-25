@@ -94,7 +94,7 @@ class Scraper_HTok {
 							$mode = 'o';						//	end of this tag, add to index
 							$this->addTag($buffer, $start, $i);
 							foreach($tokens as $tk) {
-								echo "token: " . htmlEntities($tk) . "<br/>\n";
+								echo "token: " . htmlEntities($tk, ENT_QUOTES, "UTF-8") . "<br/>\n";
 							}
 							$tokens = array();
 							$token = '';
@@ -133,7 +133,7 @@ class Scraper_HTok {
 	//arg: end - offset of last char [int]
 
 	function addTag($raw, $start, $end) {
-		echo "found raw tag: " . htmlentities($raw) . "<br/>";
+		echo "found raw tag: " . htmlentities($raw, ENT_QUOTES, "UTF-8") . "<br/>";
 	}
 
 }

@@ -29,7 +29,7 @@ function projects_show($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------	
 	$block = $theme->loadBlock('modules/projects/views/show.block.php');
-	$page->blockArgs['projectTitle'] = $model->title;
+	$kapenta->page->blockArgs['projectTitle'] = $model->title;
 
 	$labels = $model->extArray();
 	$labels['addSectionForm'] = '[[:projects::addsectionform::projectUID=' . $model->UID . ':]]';

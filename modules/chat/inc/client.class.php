@@ -40,16 +40,16 @@ class Chat_Client {
 	//----------------------------------------------------------------------------------------------
 
 	function Chat_Client($prefix = '', $postfix = '') {
-		global $registry;
-		$this->server = $registry->get('chat.server');
-		$this->myUID = $registry->get('p2p.server.uid');
+		global $kapenta;
+		$this->server = $kapenta->registry->get('chat.server');
+		$this->myUID = $kapenta->registry->get('p2p.server.uid');
 
 		$this->hashes = new Chat_Hashes();
 		$this->peers = new Chat_Peers();
 		$this->rooms = new Chat_Rooms();
 		$this->sessions = new Chat_Sessions($this->myUID);
 
-		if ('yes' == $registry->get('chat.enabled')) { $this->enabled = true; }
+		if ('yes' == $kapenta->registry->get('chat.enabled')) { $this->enabled = true; }
 	}
 
 	//----------------------------------------------------------------------------------------------

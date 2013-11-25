@@ -10,12 +10,12 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }	// only admins may perform these actions
 
-	if ('' == $req->ref) {
+	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------
 		//	no specific module referenced, show list of maintenance scripts
 		//------------------------------------------------------------------------------------------
-		$page->load('modules/admin/actions/maintenance.page.php');
-		$page->render();
+		$kapenta->page->load('modules/admin/actions/maintenance.page.php');
+		$kapenta->page->render();
 
 	} else {
 		//------------------------------------------------------------------------------------------
@@ -23,11 +23,11 @@
 		//------------------------------------------------------------------------------------------
 
 		$mods = $kapenta->listModules();
-		if (false == in_array($req->ref, $mods)) { $page->do404(); }	// no such module
+		if (false == in_array($kapenta->request->ref, $mods)) { $page->do404(); }	// no such module
 
-		$page->load('modules/admin/actions/runmaintenance.page.php');
-		$page->blockArgs['modName'] = $req->ref;
-		$page->render();
+		$kapenta->page->load('modules/admin/actions/runmaintenance.page.php');
+		$kapenta->page->blockArgs['modName'] = $kapenta->request->ref;
+		$kapenta->page->render();
 
 	}
 	

@@ -38,7 +38,7 @@ class Live_CmdAliases {
 		global $kapenta;
 
 		// check that aliases file exists, try create if it doesn't
-		if (false == $kapenta->fileExists($this->fileName)) {
+		if (false == $kapenta->fs->exists($this->fileName)) {
 			$this->aliases = array('cls' => 'live.clear');
 			$this->save();
 		}
@@ -46,7 +46,7 @@ class Live_CmdAliases {
 		if ('' == $fileName) { $fileName = $this->fileName; }
 
 		// read aliases into array
-		$raw = $kapenta->fileGetContents($fileName, false, true);
+		$raw = $kapenta->fs->get($fileName, false, true);
 		if (false == $raw) { return false; }		
 		$lines = explode("\n", $raw);
 		
@@ -72,7 +72,7 @@ class Live_CmdAliases {
 		foreach($this->aliases as $alias => $canonical) {
 			if ('' != trim($canonical)) { $raw .= "$alias := $canonical\n"; }
 		}
-		$kapenta->filePutContents($this->fileName, $raw, false, true); 
+		$kapenta->fs->put($this->fileName, $raw, false, true); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ class Live_CmdAliases {
 		foreach($modules as $module) {
 			$report .= "scanning module: $module<br/>";
 			$fileName = "modules/" . $module . "/shell/aliases.txt.php";
-			if (true == $kapenta->fileExists($fileName)) {
+			if (true == $kapenta->fs->exists($fileName)) {
 				$report .= "loading: $fileName<br/>";
 				$this->load($fileName);
 			}

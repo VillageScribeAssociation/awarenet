@@ -13,10 +13,19 @@
 function projects_listmembersnav($args) {
 	global $user;
 	global $kapenta;
+	global $cache;
+	global $theme;
 
 	$editmode = 'no';		//%	for editing membership (yes|no|js) [string]
 	$isAdmin = false;		//%	set to true if current user is project admin [string]
 	$html = '';				//%	return value [string]
+
+	//----------------------------------------------------------------------------------------------
+	//	check view cache for this block and context
+	//----------------------------------------------------------------------------------------------
+
+	$html = $cache->get($args['area'], $args['rawblock']);
+	if ('' != $html) { return $html; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
@@ -89,9 +98,18 @@ function projects_listmembersnav($args) {
 		//------------------------------------------------------------------------------------------
 		//	display memberships only
 		//------------------------------------------------------------------------------------------
-		if (('' == $editmode) || ('no' == $editmode)) { $html .= $block . "\n"; }
+		if (('' == $editmode) || ('no' == $editmode)) {
+			$html .= $block . "\n";
+		}
 
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//	save to cache
+	//----------------------------------------------------------------------------------------------
+	$html = $theme->ntb($html, 'Members', 'divAllProjectMembers', 'show');
+	$html = $theme->expandBlocks($html, $args['area']);
+	$cache->set('projects-membersnav-' . $model->UID, $args['area'], $args['rawblock'], $html);
 
 	return $html;
 }

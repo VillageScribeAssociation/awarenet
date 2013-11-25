@@ -11,8 +11,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('section not specified'); }
-	$model = new Projects_Section($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404('section not specified'); }
+	$model = new Projects_Section($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('section not found', true); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
@@ -36,11 +36,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/editsection.if.page.php');
-	$page->blockArgs['raUID'] = $model->UID;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['projectUID'] = $model->projectUID;
-	$page->blockArgs['sectionUID'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/editsection.if.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->UID;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['projectUID'] = $model->projectUID;
+	$kapenta->page->blockArgs['sectionUID'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

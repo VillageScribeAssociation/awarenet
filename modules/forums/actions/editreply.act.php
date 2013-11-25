@@ -11,17 +11,17 @@
 	//----------------------------------------------------------------------------------------------
 
 	//TODO: check user and timeousness...
-	if ('' == $req->ref) { $page->do404('Reply not specified.', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Reply not specified.', true); }
 
-	$model = new Forums_Reply($req->ref);
+	$model = new Forums_Reply($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Unkown reply.', true); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/forums/actions/editreply.if.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['reply'] = $model->UID;
-	$page->render();
+	$kapenta->page->load('modules/forums/actions/editreply.if.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['reply'] = $model->UID;
+	$kapenta->page->render();
 
 ?>

@@ -5,16 +5,16 @@
 //--------------------------------------------------------------------------------------------------
 //TODO: fix this up
 
-	if ( (array_key_exists('refmodule', $req->args)) 
-	   AND (array_key_exists('refuid', $req->args)) ) {
+	if ( (array_key_exists('refmodule', $kapenta->request->args)) 
+	   AND (array_key_exists('refuid', $kapenta->request->args)) ) {
 	  
 		//------------------------------------------------------------------------------------------
 		//	load all files associated with this record
 		//------------------------------------------------------------------------------------------
 
 		$rows = array();
-		$sql = "select * from files_file where refModule='" . $db->addMarkup($req->args['refmodule']) 
-			. "' and refUID='" . $db->addMarkup($req->args['refuid']) . "' order by weight";
+		$sql = "select * from files_file where refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) 
+			. "' and refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
 			
 		//TODO: $db->loadRange
 
@@ -40,9 +40,9 @@
 			$html .= $theme->replaceLabels($labels, $theme->loadBlock('modules/files/listing.block.php'));
 		}
 		
-		$page->load('modules/files/listing.page.php');
+		$kapenta->page->load('modules/files/listing.page.php');
 		$page->content = $html;
-		$page->render();
+		$kapenta->page->render();
 		
 	}
 

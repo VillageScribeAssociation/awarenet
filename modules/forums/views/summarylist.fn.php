@@ -39,9 +39,12 @@ function forums_summarylist($args) {
 		//	   . "[[:forums::showthreadsjs::num=3::forumUID=" . $row['UID'] . ":]]";
 
 		$html .= ''
+		 . "<div class='block'>"
 		 . '[[:forums::summary::raUID=' . $row['UID'] . ':]]'
 		 . '[[:live::river::mod=forums::view=showthreads::pv=pageno::allow=num|forumUID'
-		 . '::num=3::forumUID=' . $row['UID'] . ':]]' . "\n<br/>\n";
+		 . '::num=3::forumUID=' . $row['UID'] . ':]]' . "\n"
+		 . "</div>\n"
+		 . "<div class='spacer'></div>\n";
 	}
 
 	return $html;

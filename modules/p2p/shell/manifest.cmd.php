@@ -62,7 +62,7 @@ function p2p_WebShell_manifest($args) {
 				//----------------------------------------------------------------------------------
 				//	get file manifest from a local peer
 				//----------------------------------------------------------------------------------
-				if (false == $kapenta->fileExists($fileName)) { return 'No such file.'; }
+				if (false == $kapenta->fs->exists($fileName)) { return 'No such file.'; }
 
 				$klf = new KLargeFile($fileName);
 				$check = $klf->makeFromFile();

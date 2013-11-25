@@ -29,7 +29,7 @@
 
 		foreach($model->transforms->presets as $label => $definition) {
 			$fileName = str_replace('.jpg', '_' . $label . '.jpg', $model->fileName);
-			if (true == $kapenta->fileExists($fileName)) {
+			if (true == $kapenta->fs->exists($fileName)) {
 				$removed .= $label . ' --> ' . $fileName . "<br/>\n";
 				$kapenta->fileDelete($fileName, true);
 			}

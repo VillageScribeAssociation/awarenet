@@ -8,8 +8,11 @@
 //opt: num - number of abuse reports to show (int) [string]
 
 function abuse_listnav($args) {
-	global $user, $db, $theme;
-	$html = "[[:theme::navtitlebox::label=Abuse Reports:]]\n";		//% return value [string]
+	global $user;
+	global $db;
+	global $theme;
+
+	$html = "";						//% return value [string]
 	$num = 10;
 
 	//----------------------------------------------------------------------------------------------
@@ -32,11 +35,12 @@ function abuse_listnav($args) {
 	if (0 == count($range)) { return ''; }
 	$block = $theme->loadBlock('modules/abuse/views/summarynav.block.php');
 	foreach($range as $item) {
-		$model = new Abuse_Report();
-		$model->loadArray($item);
+		$model = new Abuse_Report($item['UID']);
 		$ext = $model->extArray();
 		$html .= $theme->replaceLabels($ext, $block);
 	}
+
+	$html = $theme->ntb($html, 'Abuse Reports', 'divAbuseReports', 'show');
 
 	return $html;
 }

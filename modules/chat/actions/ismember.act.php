@@ -11,9 +11,9 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 	if (('public' == $user->role) || ('banned' == $user->role)) { echo "<ban/>"; die(); }
-	if ('' == $req->ref) { echo "<error>not logged in</error>"; die(); }
+	if ('' == $kapenta->request->ref) { echo "<error>not logged in</error>"; die(); }
 
-	$room = new Chat_Room($req->ref);
+	$room = new Chat_Room($kapenta->request->ref);
 	if (false == $room->loaded) { echo "<error>not found</error>"; die(); }
 
 	if (true == $room->memberships->has($user->UID)) { echo "<yes/>"; }

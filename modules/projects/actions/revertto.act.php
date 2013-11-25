@@ -13,9 +13,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permission
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	
-	$model = new Projects_Change($req->ref);
+	$model = new Projects_Change($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Revision not found.'); }
 
 	$project = new Projects_project($model->projectUID);

@@ -24,16 +24,27 @@ function comments_relationships($refModel, $UID, $relationship, $userUID) {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//	relationships of Comments_Comment object
+	//	relationships of Messages_Message object
 	//----------------------------------------------------------------------------------------------
 	if ('comments_comment' == strtolower($refModel)) {
 		$model = new Comments_Comment($UID);				// try load the object
 		if (false == $model->loaded) { return false; }		// check that we did
 
-		//TODO: other relationships here
 		switch($relationship) {
 			case 'creator':
 				if ($refUser->UID == $model->createdBy) { return true; }
+				break;
+
+			case 'owner':
+				if ($refUser->UID == $model->owner) { return true; }
+				break;
+
+			case 'recipient':
+				if ($refUser->UID == $model->toUID) { return true; }
+				break;
+
+			case 'sender':
+				if ($refUser->UID == $model->fromUID) { return true; }
 				break;
 		}
 

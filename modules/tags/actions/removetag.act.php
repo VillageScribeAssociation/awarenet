@@ -10,9 +10,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Reference UID not given.', 'true'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Reference UID not given.', 'true'); }
 
-	$model = new Tags_Index($req->ref);
+	$model = new Tags_Index($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Not Tagged.', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'tags-manage', $model->refUID))
@@ -24,7 +24,7 @@
 		 . '/refUID_' . $model->refUID. '/';
 
 	//----------------------------------------------------------------------------------------------
-	//	remove the tag and redirect back to /tags/edittags/ iframe
+	//	remove the tag
 	//----------------------------------------------------------------------------------------------
 	$tag = new Tags_Tag($model->tagUID);
 	if (true == $model->loaded) {
@@ -40,6 +40,22 @@
 
 	} else { $session->msgAdmin('Could not update tag object: ' . $model->tagUID, 'bad'); }
 
+	//----------------------------------------------------------------------------------------------
+	//	raise tags_removed event for owner objects to repond to
+	//----------------------------------------------------------------------------------------------
+	$args = array(
+		'refModule' => $model->refModule,
+		'refModel' => $model->refModel,
+		'refUID' => $model->refUID,
+		'tagUID' => $tag->UID,
+		'tagName' => $tag->name
+	);
+
+	$kapenta->raiseEvent('*', 'tags_removed', $args);
+
+	//----------------------------------------------------------------------------------------------
+	// redirect back to /tags/edittags/ iframe
+	//----------------------------------------------------------------------------------------------
 	$page->do302($return);
 
 ?>

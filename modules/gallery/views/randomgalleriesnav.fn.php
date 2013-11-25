@@ -5,10 +5,14 @@
 //--------------------------------------------------------------------------------------------------
 //|	list some random gallery summaries (formatted for the nav)
 //--------------------------------------------------------------------------------------------------
-// opt: num = max number to show, default is 10 (int) [string]
+//DEPRECATED: replace this block with something anchored in user context
+//opt: num = max number to show, default is 10 (int) [string]
 
 function gallery_randomgalleriesnav($args) {
-	global $db, $theme;
+	global $db;
+	global $theme;
+	global $kapenta;
+
 	$num = 10; 
 	$html = '';
 
@@ -21,20 +25,24 @@ function gallery_randomgalleriesnav($args) {
 	//	load x random galleries from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'RAND()', $num);
+
+	$orderBy = 'RAND()';
+	if ('SQLite' == $kapenta->registry->get('db.driver')) { $orderBy = 'RANDOM()'; }
+
+	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy, $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	//$sql = "select * from gallery where imagecount > 0 order by RAND() limit 0," . $db->addMarkup($num);
-	$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
+	//$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
 
-	foreach ($range as $row) {
-		$model = new Gallery_Gallery();
-		$model->loadArray($row);
-		$labels = $model->extArray();
-		$labels['galleryUID'] = $row['UID'];
-		$html .= $theme->replaceLabels($labels, $block);
+	foreach ($range as $item) {
+		//$model = new Gallery_Gallery();
+		//$model->loadArray($row);
+		//$labels = $model->extArray();
+		//$labels['galleryUID'] = $row['UID'];
+		//$html .= $theme->replaceLabels($labels, $block);
+		$html .= "[[:gallery::summarynav::galleryUID=" . $item['UID'] . ":]]";
 	}
 
 	return $html;

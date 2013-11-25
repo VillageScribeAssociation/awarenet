@@ -16,23 +16,23 @@
 		$key = 'test.' . strtolower($keys[rand(0, $num)]);
 		//echo 'key: ' . $key . "<br/>\n";
 
-		if (2 == rand(0, 3)) { $registry->set($key, rand(0, 1000)); }
-		else { $registry->get($key); }
+		if (2 == rand(0, 3)) { $kapenta->registry->set($key, rand(0, 1000)); }
+		else { $kapenta->registry->get($key); }
 	}
 
-	$registry->set('test.canary', 'alive');
+	$kapenta->registry->set('test.canary', 'alive');
 
 	for ($i = 0; $i < 10000; $i++) {
 		$key = 'test.' . strtolower($keys[rand(0, $num)]);
 		//echo 'key: ' . $key . "<br/>\n";
 
-		if (2 == rand(0, 3)) { $registry->set($key, rand(0, 1000)); }
-		else { $registry->get($key); }
+		if (2 == rand(0, 3)) { $kapenta->registry->set($key, rand(0, 1000)); }
+		else { $kapenta->registry->get($key); }
 	}
 
 	$endTime = 0.00 + time() + microtime();
 
-	if ('alive' != $registry->get('test.canary')) { echo "<b>canary died.</b><br/>\n"; }
+	if ('alive' != $kapenta->registry->get('test.canary')) { echo "<b>canary died.</b><br/>\n"; }
 	else { echo "<b>canary survived</b><br/>\n"; }
 
 	echo "<small>20000 tests in " . ($endTime - $startTime) . " microseconds.</small><br/>";

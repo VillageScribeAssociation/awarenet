@@ -10,15 +10,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference, args and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
-	if (array_key_exists('move', $req->args) == false) { $page->do404(); }
-	if (array_key_exists('section', $req->args) == false) { $page->do404(); } 
+	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if (array_key_exists('move', $kapenta->request->args) == false) { $page->do404(); }
+	if (array_key_exists('section', $kapenta->request->args) == false) { $page->do404(); } 
 
-	$model = new Projects_Project($req->ref);
+	$model = new Projects_Project($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 
 	// check section exists
-	$sectionUID = $req->args['section'];
+	$sectionUID = $kapenta->request->args['section'];
 	if (false == array_key_exists($sectionUID, $model->sections) == false) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@
 	//	move the section up (decrease weight)
 	//----------------------------------------------------------------------------------------------
 
-	if ($req->args['move'] == 'up') {
+	if ($kapenta->request->args['move'] == 'up') {
 		$currWeight = $model->sections[$sectionUID]['weight'];
 
 		// find section with next lowest weight
@@ -58,7 +58,7 @@
 	//	move the section down (increase weight)
 	//----------------------------------------------------------------------------------------------
 
-	if ($req->args['move'] == 'down') {
+	if ($kapenta->request->args['move'] == 'down') {
 		$currWeight = $model->sections[$sectionUID]['weight'];
 
 		// find section with next heighest weight

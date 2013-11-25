@@ -23,7 +23,7 @@ function admin_analog($args) {
 	//	convert log to apache format
 	//----------------------------------------------------------------------------------------------
 	$lfReader = new Admin_LogFile($args['logFile']);
-	//$apache = $kapenta->fileGetContents($lfReader->outFile);
+	//$apache = $kapenta->fs->get($lfReader->outFile);
 
 	$html = $lfReader->analog();
 	if ('' == trim($html)) { 

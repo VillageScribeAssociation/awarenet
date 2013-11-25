@@ -12,9 +12,9 @@
 	//----------------------------------------------------------------------------------------------
 	if (('public' == $user->role) || ('banned' == $user->role)) { $page->do403('Please log in.'); }
 
-	if ('' == $req->ref) { $page->do404('Image not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
 	
-	$model = new Images_Image($req->ref);
+	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Image not found.'); }
 	
 	$user->set('ut.i.background', 'images/full/' . $model->alias);

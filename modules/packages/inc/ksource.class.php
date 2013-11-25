@@ -61,7 +61,7 @@ class KSource {
 
 		if ('' != $url) {
 			$this->filename = 'data/updates/' . $utils->makeAlphaNumeric($url) . '.source.php';
-			if (true == $kapenta->fileExists($this->filename)) { 
+			if (true == $kapenta->fs->exists($this->filename)) { 
 				$this->loadXml($this->filename, true); 
 			}
 		}
@@ -115,7 +115,7 @@ class KSource {
 	function saveXml() {
 		global $kapenta;
 		$xml = $this->toXml();
-		$check = $kapenta->filePutContents($this->filename, $xml, true, true);
+		$check = $kapenta->fs->put($this->filename, $xml, true, true);
 		return $check;
 	}
 
@@ -160,7 +160,7 @@ class KSource {
 
 	function update($print = false) {
 		global $kapenta;
-		global $registry;
+		global $kapenta;
 		global $utils;
 		global $session;
 
@@ -193,30 +193,35 @@ class KSource {
 			$pkgcolor = 'green';
 
 			$prefix = 'pkg.' . $uid . '.';
-			if ('dirty' == $registry->get($prefix . 'status'))
+			if ('dirty' == $kapenta->registry->get($prefix . 'status'))
 			{
-				$registry->set($prefix . 'status', 'installed');
+				$kapenta->registry->set($prefix . 'status', 'installed');
+			}
+
+			if ('' == $kapenta->registry->get($prefix . 'source')) {
+				$kapenta->registry->set($prefix . 'source', $this->url);
+				$pkgreport .= "Set source for: " . $pkg['name'] . " (" . $this->url . ")<br/>\n";
 			}
 
 			if (
-				($registry->get($prefix . 'date') != $pkg['updated']) ||
-				(false == $kapenta->fileExists('data/packages/' . $uid . '.xml.php')) ||
-				('unknown' == $registry->get($prefix . 'name'))
+				($kapenta->registry->get($prefix . 'date') != $pkg['updated']) ||
+				(false == $kapenta->fs->exists('data/packages/' . $uid . '.xml.php')) ||
+				('unknown' == $kapenta->registry->get($prefix . 'name'))
 			) {
 				//----------------------------------------------------------------------------------
 				//	add to / update registry						
 				//----------------------------------------------------------------------------------
 
-				$registry->set($prefix . 'source', $this->url);
-				$registry->set($prefix . 'uid', $pkg['uid']);
-				$registry->set($prefix . 'name', $pkg['name']);
-				$registry->set($prefix . 'v', $pkg['version']);
-				$registry->set($prefix . 'r', $pkg['revision']);
-				$registry->set($prefix . 'date', $pkg['updated']);
+				$kapenta->registry->set($prefix . 'source', $this->url);
+				$kapenta->registry->set($prefix . 'uid', $pkg['uid']);
+				$kapenta->registry->set($prefix . 'name', $pkg['name']);
+				$kapenta->registry->set($prefix . 'v', $pkg['version']);
+				$kapenta->registry->set($prefix . 'r', $pkg['revision']);
+				$kapenta->registry->set($prefix . 'date', $pkg['updated']);
 
-				if ('' == $registry->get($prefix . 'status'))
+				if ('' == $kapenta->registry->get($prefix . 'status'))
 				{
-					$registry->set($prefix . 'status', 'available');
+					$kapenta->registry->set($prefix . 'status', 'available');
 				}
 
 				$pkgreport .= "Updating package: " . $pkg['name'] . " ($uid)<br/>";
@@ -240,7 +245,7 @@ class KSource {
 			//--------------------------------------------------------------------------------------
 			//	check for dirty files
 			//--------------------------------------------------------------------------------------
-			if ('installed' == $registry->get($prefix . 'status'))
+			if ('installed' == $kapenta->registry->get($prefix . 'status'))
 			{
 				$package = new KPackage($uid);
 				$dirtyFiles = $package->getLocalDifferent();	//	sets .dirty in registry
@@ -257,7 +262,7 @@ class KSource {
 			if (true == $print) { $this->printchat($pkgreport, $pkgcolor); }
 			$report .= $pkgreport;
 
-		} // end foreach ($packages
+		} // end foreach $packages
 
 		return $report;	
 	}
@@ -269,7 +274,7 @@ class KSource {
 	//returns:
 
 	function getPackageDetails($UID) {
-		global $registry;
+		global $kapenta;
 		$package = array();					//%	return value [array]
 
 		if (false == array_key_exists($UID, $this->packages)) { return $package; }
@@ -282,7 +287,7 @@ class KSource {
 		$package['manifestLink'] = '';
 		$package['installForm'] = '';	
 
-		if ('installed' == $registry->get('pkg.' . $UID . '.status')) {
+		if ('installed' == $kapenta->registry->get('pkg.' . $UID . '.status')) {
 			$package['manifestUrl'] = '%%serverPath%%packages/showpackage/' . $UID;
 			$package['manifestLink'] = "<a href='" . $package['manifestUrl'] . "'>[local manifest]</a>";
 		} else {
@@ -316,6 +321,7 @@ class KSource {
 		 . $msg
 		 . "</div>\n"
 		 . "<script>scrollToBottom();</script>";
+		flush();
 	}
 
 }

@@ -17,7 +17,7 @@
 	foreach($upload->parts as $part) {
 		echo $part['fileName'] . "<br/>\n";
 
-		$raw = $kapenta->fileGetContents($part['fileName'], true, true);
+		$raw = $kapenta->fs->get($part['fileName'], true, true);
 		echo "<textarea rows='10' style='width: 100%'>$raw</textarea><br/>\n";
 
 		$data = base64_decode($raw);

@@ -8,11 +8,11 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('Peer UID not given'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given'); }
 
 	$fileName = 'data/videos/1/1/0/110908755616157252';
 
-	$peer = new P2P_Peer($req->ref);
+	$peer = new P2P_Peer($kapenta->request->ref);
 	if (false == $peer->loaded) { $page->do404('Unkown peer.'); }
 
 	$xml = $peer->sendMessage('file', $fileName);
@@ -21,7 +21,7 @@
 
 	$klf = new KLargeFile($fileName);
 	echo "metaFile: " . $klf->metaFile . "<br/>";
-	$kapenta->filePutContents($klf->metaFile, $xml, true, true);
+	$kapenta->fs->put($klf->metaFile, $xml, true, true);
 	$klf->loadMetaXml();
 	
 	echo "<h2>Check</h2>\n";

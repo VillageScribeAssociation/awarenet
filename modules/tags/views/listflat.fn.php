@@ -7,6 +7,8 @@
 //arg: refModel - type of object which may have tags [string]
 //arg: refUID - UID of object which may have tags [string]
 
+//TODO: use refModel insetad of refModule
+
 function tags_listflat($args) {
 	global $kapenta;
 	global $db;
@@ -34,13 +36,39 @@ function tags_listflat($args) {
 	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
 
 	//----------------------------------------------------------------------------------------------
-	//	load any tags from database
+	//	try load tags from memcached
 	//----------------------------------------------------------------------------------------------	
-	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$range = array();
+	$cacheKey = 'tags::' . strtolower($refModule) . '::' . $refUID;
+	if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
+		$uids = explode('|', $kapenta->cacheGet($cacheKey));
+		foreach($uids as $uid) {
+			if ('' != trim($uid)) {
+				$objAry = $db->getObject('tags_index', $uid);
+				if (count($objAry) > 0) { $range[$uid] = $objAry; }
+			}
+		}
+	}
 
-	$range = $db->loadRange('tags_index', '*', $conditions);
+	//----------------------------------------------------------------------------------------------
+	//	load tags from database if memcached doesn't have them
+	//----------------------------------------------------------------------------------------------	
+	if (0 == count($range)) {
+		$conditions = array();
+		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+
+		$range = $db->loadRange('tags_index', '*', $conditions);
+
+		//------------------------------------------------------------------------------------------
+		//	cache for next time
+		//------------------------------------------------------------------------------------------
+		if (true == $kapenta->mcEnabled) {
+			$uids = array();
+			foreach ($range as $item) { $uids[] = $item['UID']; }
+			$kapenta->cacheSet($cacheKey, implode('|', $uids));
+		}
+	}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

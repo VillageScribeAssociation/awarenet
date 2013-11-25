@@ -10,7 +10,7 @@ function docgen_modulesummarynav($args) {
 
 	$docUrl = '%%serverPath%%docgen/describemodule/' . $args['module'];
 
-	$imgUrl = "%%serverPath%%themes/clockface/icons/folder.png";
+	$imgUrl = "%%serverPath%%themes/%%defaultTheme%%/images/icons/folder.png";
 	$img = "<img src='$imgUrl' border='0' />";
 
 	$desc = "<b><a href='$docUrl'>" . $args['module'] . "</a></b><br/>";

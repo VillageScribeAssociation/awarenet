@@ -6,10 +6,15 @@
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - all announcements</title>
 	<content>
 		[[:theme::navtitlebox::width=570::label=Announcements:]]
+		<div class='spacer'></div>
 		[[:live::river::mod=announcements::view=listall::pv=page::allow=num::num=3:]]
 	</content>
-	<nav1>[[:theme::navtitlebox::label=Recent:]]
-[[:announcements::listnav:]]</nav1>
+	<nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Recent:]]
+		[[:announcements::listnav:]]
+		</div>
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit>galleryNav[`|us]init()[`|sc]

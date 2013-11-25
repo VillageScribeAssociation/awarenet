@@ -35,6 +35,6 @@
 	$d->close();
 
 	echo $videoIDs;
-	$kapenta->filePutContents($videoIDFile, $videoIDs, false, false);
+	$kapenta->fs->put($videoIDFile, $videoIDs, false, false);
 
 ?>

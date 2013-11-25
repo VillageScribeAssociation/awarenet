@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	display import console
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/wiki/actions/mwimport.page.php');
-	$page->render();
+	$kapenta->page->load('modules/wiki/actions/mwimport.page.php');
+	$kapenta->page->render();
 
 ?>

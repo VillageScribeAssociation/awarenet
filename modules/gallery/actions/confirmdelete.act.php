@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('UID', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404(); }
 
-	$model = new Gallery_Gallery($req->args['UID']);
+	$model = new Gallery_Gallery($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Gallery not found.'); }
 	if (false == $user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this gallery.'); }	

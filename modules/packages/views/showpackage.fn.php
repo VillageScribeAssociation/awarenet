@@ -11,7 +11,7 @@
 function packages_showpackage($args) {
 	global $user;
 	global $theme;
-	global $registry;
+	global $kapenta;
 
 	$html = '';			//%	return value [string]
 

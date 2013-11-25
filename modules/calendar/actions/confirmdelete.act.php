@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $req->args))
+	if (false == array_key_exists('UID', $kapenta->request->args))
 		{ $page->do404('Calendar entry not specified.'); }
 
-	$model = new Calendar_Entry($req->args['UID']);
+	$model = new Calendar_Entry($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }
 	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this calendar entry.'); }

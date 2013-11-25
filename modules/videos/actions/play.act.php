@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Video not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Video not specified.'); }
 
-	$model = new Videos_Video($req->ref);
+	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Video not found.'); }
 
 	if (('public' == $user->role) && ('public' != $model->category)) { $page->do403(); }
@@ -41,11 +41,25 @@
 	$editBlock = '';
 
 	if (($model->createdBy == $user->UID) || (true == $editAuth)) {
+
+		$thumbIfUrl = ''
+		 . '%%serverPath%%/images/uploadsingle'
+		 . '/refModule_videos'
+		 . '/refModel_videos_video'
+		 . '/refUID_' . $model->UID
+		 . '/category_thumb/';
+
 		$editBlock = ''
-		 . '[[:theme::navtitlebox::label=Edit Video Details::toggle=divEVD::hidden=yes:]]'
-		 . "<div id='divEVD' style='visibility: hidden; display: none;'>"
-		 . '[[:videos::editvideoform::raUID=' . $model->UID . '::return=player:]]'
-		 . '</div><br/>';
+		 . "[[:theme::navtitlebox::label=Edit Video Details::toggle=divEVD::hidden=yes:]]\n"
+		 . "<div id='divEVD' style='visibility: hidden; display: none;'>\n"
+		 . "[[:videos::editvideoform::raUID=" . $model->UID . "::edittags=yes::return=player:]]\n"
+		 . "[[:theme::navtitlebox::label=Change Thumbnail::toggle=divEditVideoThumbnail:]]\n"
+		 . "<div id='divEditVideoThumbnail'>"
+		 . "<iframe name='videoThumb' class='consoleif' id='ifVideoThumb'\n"
+		 . "  src='" . $thumbIfUrl . "'\n"
+		 . "  width='100%' height='400px' frameborder='0' ></iframe>\n"
+		 . "</div>"
+		 . "</div><br/>\n";
 	}
 
 	if ('swf' == $model->format) { $page->do302('videos/animate/' . $model->alias); }
@@ -54,12 +68,12 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/videos/actions/play.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['title'] = $model->title;
-	$page->blockArgs['caption'] = $model->caption;
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['editBlock'] = $editBlock;
-	$page->render();
+	$kapenta->page->load('modules/videos/actions/play.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['title'] = $model->title;
+	$kapenta->page->blockArgs['caption'] = $model->caption;
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['editBlock'] = $editBlock;
+	$kapenta->page->render();
 
 ?>

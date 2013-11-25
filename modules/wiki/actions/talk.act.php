@@ -12,51 +12,20 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); } 
+	if ('' == $kapenta->request->ref) { $page->do404(); } 
 	$UID = $aliases->findRedirect('wiki_article');
 
 	$model = new Wiki_Article($UID);
 	if (false == $model->loaded) { $page->do404('Could not load parent article.'); }
 	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $page->do403(); }
 
-	if ('talk' == $model->namespace) { $page->do302('wiki/talk/' . $model->talkFor); }
+	$kapenta->page->load('modules/wiki/actions/talk.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['raUID'] = $model->UID;
+	$kapenta->page->blockArgs['articleTitle'] = $model->title;
+	$kapenta->page->blockArgs['articleAlias'] = $model->alias;
+	$kapenta->page->blockArgs['parentUID'] = $model->UID;
 
-	$talkUID = $model->getTalk($model->UID);
-
-	//----------------------------------------------------------------------------------------------
-	//	render the page
-	//----------------------------------------------------------------------------------------------
-	if ('' == $talkUID) { 
-		//------------------------------------------------------------------------------------------
-		//	talk page does not yet exist
-		//------------------------------------------------------------------------------------------
-		$pdx = "<p>There isn't a conversation yet, but you can start one :-)</p>";
-		$extArray = $model->extArray();
-
-		$page->load('modules/wiki/actions/talk.page.php');
-		$page->blockArgs['raUID'] = $model->UID;
-		foreach($extArray as $key => $value) { $page->blockArgs[$key] = $value; }
-		$page->blockArgs['talkHtml'] = $pdx;
-		$page->blockArgs['parentTitle'] = $model->title;
-		$page->render();
-
-
-	} else {
-		//------------------------------------------------------------------------------------------
-		//	talk page does exist, show it
-		//------------------------------------------------------------------------------------------
-		$talk = new Wiki_Article($talkUID);
-		if (false == $talk->loaded) { $page->do404('Missing talk page.'); }
-		$talk->expandWikiCode();
-		$extArray = $talk->extArray();	
-
-		$page->load('modules/wiki/actions/talk.page.php');
-		$page->blockArgs['raUID'] = $talkUID;
-		$page->blockArgs['parentTitle'] = $model->title;
-		$page->blockArgs['parentUID'] = $model->UID;
-		foreach($extArray as $key => $value) { $page->blockArgs[$key] = $value; }
-		$page->render();
-
-	}
+	$kapenta->page->render();
 
 ?>

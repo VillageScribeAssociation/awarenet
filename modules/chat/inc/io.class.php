@@ -17,9 +17,9 @@ class Chat_IO {
 	//----------------------------------------------------------------------------------------------
 
 	function Chat_IO() {
-		global $registry;
-		$this->server = $registry->get('chat.server');
-		$this->myUID = $registry->get('p2p.server.uid');
+		global $kapenta;
+		$this->server = $kapenta->registry->get('chat.server');
+		$this->myUID = $kapenta->registry->get('p2p.server.uid');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -38,6 +38,7 @@ class Chat_IO {
 		if ($this->server == $kapenta->serverPath) { $kapenta->proxyEnabled = 'no'; }
 
 		$checkUrl = $this->server . 'chatserver/' . $action . '/' . $ref;
+		echo "send: " . $checkUrl . "<br/>\n";
 		$params = array('me' => $this->myUID, 'msg' => base64_encode($msg));
 		$response = $utils->curlPost($checkUrl, $params);
 		$kapenta->proxyEnabled = $oldProxyVal;

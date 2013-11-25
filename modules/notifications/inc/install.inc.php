@@ -15,10 +15,15 @@
 //returns: html report or false if not authorized [string][bool]
 
 function notifications_install_module() {
-	global $db, $user;
+	global $db;
+	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
-	$dba = new KDBAdminDriver();
+
 	$report = '';
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	create or upgrade Notifications_Notification table
@@ -48,12 +53,15 @@ function notifications_install_module() {
 
 function notifications_install_status_report() {
 	global $user;
+	global $kapenta;
+
 	if ('admin' != $user->role) { return false; }
 
-	$dba = new KDBAdminDriver();
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';
 	$installed = true;
+
+	$dba = $kapenta->getDBAdminDriver();
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure the table which stores Notification objects exists and is correct

@@ -10,9 +10,9 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('Animation not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Animation not specified.'); }
 
-	$model = new Videos_Video($req->ref);
+	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Animation not found.'); }
 	//TODO: permissions check here
 
@@ -35,10 +35,10 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/videos/actions/animate.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['title'] = $model->title;
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->render();
+	$kapenta->page->load('modules/videos/actions/animate.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['title'] = $model->title;
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->render();
 
 ?>

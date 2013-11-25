@@ -13,9 +13,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and request args
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Video not specified', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Video not specified', true); }
 	
-	$model = new Videos_Video($req->ref);
+	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Video not found', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editvideo', $model->refUID)) 

@@ -29,11 +29,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/videos/actions/testswf.page.php');
-	$page->blockArgs['swfFile'] = $kapenta->serverPath . $testVideo;
-	$page->blockArgs['swfWidth'] = 968;
-	$page->blockArgs['swfHeight'] = 672;
-	$page->blockArgs['navReturn'] = $navReturn;
-	$page->render();
+	$kapenta->page->load('modules/videos/actions/testswf.page.php');
+	$kapenta->page->blockArgs['swfFile'] = $kapenta->serverPath . $testVideo;
+	$kapenta->page->blockArgs['swfWidth'] = 968;
+	$kapenta->page->blockArgs['swfHeight'] = 672;
+	$kapenta->page->blockArgs['navReturn'] = $navReturn;
+	$kapenta->page->render();
 
 ?>

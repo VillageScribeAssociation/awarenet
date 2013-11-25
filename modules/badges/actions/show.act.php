@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------	
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('badges_badge');
 
 	//----------------------------------------------------------------------------------------------	
@@ -30,11 +30,11 @@
 	//----------------------------------------------------------------------------------------------	
 	//	render the page
 	//----------------------------------------------------------------------------------------------	
-	$page->load('modules/badges/actions/show.page.php');
-	$page->blockArgs['raUID'] = $req->ref;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['badgeName'] = $model->name;
-	$page->blockArgs['editBadgeUrl'] = $editUrl;
-	$page->render();
+	$kapenta->page->load('modules/badges/actions/show.page.php');
+	$kapenta->page->blockArgs['raUID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['badgeName'] = $model->name;
+	$kapenta->page->blockArgs['editBadgeUrl'] = $editUrl;
+	$kapenta->page->render();
 
 ?>

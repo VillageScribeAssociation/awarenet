@@ -12,9 +12,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and request args
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404('Image not specified', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified', true); }
 	
-	$model = new Images_Image($req->ref);
+	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('Image not found', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editimage', $model->refUID)) 
@@ -23,7 +23,7 @@
 	$set = new Images_Images($model->refModule, $model->refModel, $model->refUID);
 	$set->decWeight($model->UID);
 
-	if (true == array_key_exists('return', $req->args)) { $return = $req->args['return']; }
+	if (true == array_key_exists('return', $kapenta->request->args)) { $return = $kapenta->request->args['return']; }
 
 	//------------------------------------------------------------------------------------------
 	//	redirect back

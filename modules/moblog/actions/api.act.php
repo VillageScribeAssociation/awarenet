@@ -10,7 +10,7 @@
 	//	list records owned by the current user
 	//--------------------------------------------------------------------------------------------------
 
-	if ('myrecords' == $req->ref) {
+	if ('myrecords' == $kapenta->request->ref) {
 		$sql = ''
 		 . "select * from moblog_post where"
 		 . " createdBy='" . $db->addMarkup($user->UID) . "' order by title";

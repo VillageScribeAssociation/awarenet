@@ -16,6 +16,7 @@ function projects__cb_images_added($args) {
 	global $db;
 	global $user;
 	global $notifications;
+	global $cache;
 
 	//----------------------------------------------------------------------------------------------
 	//	check event arguments
@@ -43,6 +44,12 @@ function projects__cb_images_added($args) {
 	);
 
 	$kapenta->raiseEvent('tags', 'tags_add', $detail);
+
+	//----------------------------------------------------------------------------------------------
+	//	clear the cache
+	//----------------------------------------------------------------------------------------------
+
+	$cache->clear("projects-summary-" . $model->UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	create notification

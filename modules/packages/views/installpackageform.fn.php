@@ -7,7 +7,7 @@
 //opt: packageUID - overrides UID if present [string]
 
 function packages_installpackageform($args) {
-	global $registry;
+	global $kapenta;
 	global $user;
 	global $theme;
 

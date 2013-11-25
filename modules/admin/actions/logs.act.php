@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/logs.page.php');
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/logs.page.php');
+	$kapenta->page->render();
 
 ?>

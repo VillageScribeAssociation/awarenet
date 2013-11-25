@@ -1,7 +1,7 @@
 <?
 
 //-------------------------------------------------------------------------------------------------
-//	add a message posted from the public 'contact us' form to administrator's mail queue
+//*ku	add a message posted from the public 'contact us' form to administrator's mail queue
 //-------------------------------------------------------------------------------------------------
 
 	require_once($kapenta->installPath . 'modules/messages/models/message.mod.php');
@@ -30,9 +30,9 @@
 		if (array_key_exists('message', $_POST)) { $message = $_POST['message']; }
 
 		if ('' == trim($message)) { $send = false; }
-		$message = stripHTML($message);
-		$contactName = stripHTML($contactName);
-		$contactEmail = stripHTML($contactEmail);
+		$message = $utils->stripHtml($message);
+		$contactName = $utils->stripHtml($contactName);
+		$contactEmail = $utils->stripHtml($contactEmail);
 
 		$content = "Contact Name: " . $contactName . "<br/>\n"
 				 . "Contact Email: " . $contactEmail . "<br/>\n"

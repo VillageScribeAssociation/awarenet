@@ -10,13 +10,13 @@
 
 	$sha1 = $kapenta->fileSha1($fileName);
 
-	$raw64 = $kapenta->fileGetContents($kapenta->installPath . 'data/live/some64.txt');
+	$raw64 = $kapenta->fs->get($kapenta->installPath . 'data/live/some64.txt');
 	$raw64Len = strlen($raw64);
 	$raw = base64_decode($raw64);
 	$rawLen = strlen($raw);
 	$rawSha1 = sha1($raw);
 
-	$img = $kapenta->fileGetContents($fileName);
+	$img = $kapenta->fs->get($fileName);
 	$imgLen = strlen($img);
 	$img64 = base64_encode($img);
 	$img64Len = strlen($img64);

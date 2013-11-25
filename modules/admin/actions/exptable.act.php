@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 if ('admin' != $user->role) { $page->do403(); }
-if (('' == $req->ref) || ($db->tableExists($req->ref) == false)) { 
+if (('' == $kapenta->request->ref) || ($db->tableExists($kapenta->request->ref) == false)) { 
 	echo "no table specified";
 	die(); 
 
@@ -14,15 +14,15 @@ if (('' == $req->ref) || ($db->tableExists($req->ref) == false)) {
 	//	make the code
 	//---------------------------------------------------------------------------------------------
 
-	$dbs = xdbGetSchema($req->ref);
+	$dbs = xdbGetSchema($kapenta->request->ref);
 
 	$code = '';
 	$code .= "\t//----------------------------------------------------------------------------------------------\n";
-	$code .= "\t//\t" . $req->ref . " table\n";
+	$code .= "\t//\t" . $kapenta->request->ref . " table\n";
 	$code .= "\t//----------------------------------------------------------------------------------------------\n\n";
 
 	$code .= "\t\$dbSchema = array();\n";
-	$code .= "\t\$dbSchema['model'] = '" . $req->ref . "';\n";
+	$code .= "\t\$dbSchema['model'] = '" . $kapenta->request->ref . "';\n";
 	$code .= "\t\$dbSchema['fields'] = array(\n";
 
 	foreach($dbs['fields'] as $field => $type) {

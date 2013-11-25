@@ -5,8 +5,10 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - edit announcement</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::label=Edit Announcement::width=570:]]
 		[[:announcements::editform::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
 	</content>
 	<nav1>
 		[[:live::manageattachments::refModule=announcements::refModel=announcements_announcement::refUID=%%UID%%:]]

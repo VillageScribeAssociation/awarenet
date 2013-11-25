@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }		// admins only
 
-	$moduleName = $req->ref;
+	$moduleName = $kapenta->request->ref;
 	if (false == $kapenta->moduleExists($moduleName)) { $page->do404(); }
 
 	$module = new KModule($moduleName);
@@ -32,9 +32,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/admin/actions/editmodule.page.php');
-	$page->blockArgs['modulename'] = $moduleName;
-	$page->blockArgs['xmodule'] = $moduleName;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/editmodule.page.php');
+	$kapenta->page->blockArgs['modulename'] = $moduleName;
+	$kapenta->page->blockArgs['xmodule'] = $moduleName;
+	$kapenta->page->render();
 
 ?>

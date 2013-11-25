@@ -5,31 +5,30 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - blogs - everyone</title>
 	<content>
-
-[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
-
-[[:live::river::mod=moblog::view=summarylist::pv=page::allow=num|pagination::num=3::pagination=no:]]</content>
+		[[:theme::navtitlebox::label=Aggregated Blogs (everyone)::width=570:]]
+		[[:live::river::mod=moblog::view=summarylist::pv=page::allow=num|pagination::num=3::pagination=no:]]
+	</content>
 	<nav1>
-[[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
-[`|lt]div id=[`|sq]divSchoolStats[`|sq] class='block'[`|gt]
-[[:moblog::schoolstatsnav:]]
-[`|lt]/div[`|gt]
-[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Blogs By School::toggle=divSchoolStats:]]
+		[`|lt]div id=[`|sq]divSchoolStats[`|sq] class='block'[`|gt]
+		[[:moblog::schoolstatsnav:]]
+		[`|lt]/div[`|gt]
+		[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Tags::toggle=divTagCloud:]]
-[`|lt]div id=[`|sq]divTagCloud[`|sq] class='block'[`|gt]
-[[:tags::modelcloud::refModule=moblog::refModel=moblog[`|us]post:]]
-[`|lt]/div[`|gt]
-[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Tags::toggle=divTagCloud:]]
+		[`|lt]div id=[`|sq]divTagCloud[`|sq] class='block'[`|gt]
+		[[:tags::modelcloud::refModule=moblog::refModel=moblog[`|us]post:]]
+		[`|lt]/div[`|gt]
+		[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
-[[:theme::navtitlebox::label=Recent Posts::toggle=divMoblogRecent::hidden=yes:]]
-[`|lt]div id=[`|sq]divMoblogRecent[`|sq] style=[`|sq]display: none[`|sc][`|sq][`|gt]
-[[:moblog::listrecentnav:]]
-[`|lt]/div[`|gt]
-[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
-[`|lt]br/[`|gt]
+		[[:theme::navtitlebox::label=Recent Posts::toggle=divMoblogRecent::hidden=yes:]]
+		[`|lt]div id=[`|sq]divMoblogRecent[`|sq] style=[`|sq]display: none[`|sc][`|sq][`|gt]
+		[[:moblog::listrecentnav:]]
+		[`|lt]/div[`|gt]
+		[`|lt]div class='foot'[`|gt][`|lt]/div[`|gt]
+		[`|lt]br/[`|gt]
 
 [[:theme::navtitlebox::label=Most Popular Posts::toggle=divMoblogPopular:]]
 [`|lt]div id=[`|sq]divMoblogPopular[`|sq] class='block'[`|gt]

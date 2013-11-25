@@ -13,8 +13,8 @@
 	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
 	//TODO: more advanced permisions for blog - tie to profile
 
-	if ('' != $req->ref) {
-		$model->load($req->ref);
+	if ('' != $kapenta->request->ref) {
+		$model->load($kapenta->request->ref);
 		if (false == $model->loaded) { $page->do404(); }
 	} else { $model->load($user->UID); }
 
@@ -28,13 +28,13 @@
 	//	show the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/moblog/actions/blog.page.php');
-	$page->blockArgs['userUID'] = $model->UID;
-	$page->blockArgs['userRa'] = $model->alias;
-	$page->blockArgs['userName'] = $model->getName();
-	$page->blockArgs['newPostForm'] = $newPostForm;
+	$kapenta->page->load('modules/moblog/actions/blog.page.php');
+	$kapenta->page->blockArgs['userUID'] = $model->UID;
+	$kapenta->page->blockArgs['userRa'] = $model->alias;
+	$kapenta->page->blockArgs['userName'] = $model->getName();
+	$kapenta->page->blockArgs['newPostForm'] = $newPostForm;
 	$page->allowBlockArgs('page,tag');
 	$page->title = 'awareNet - blogs - ' . $model->getName();
-	$page->render();
+	$kapenta->page->render();
 
 ?>

@@ -11,10 +11,10 @@
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('calendar', 'calendar_template', 'new')) { $page->do403(); }
-	if ('' == $req->ref) { $page->do404('No calendar entry specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('No calendar entry specified.'); }
 
 
-	$entry = new Calendar_Entry($req->ref);
+	$entry = new Calendar_Entry($kapenta->request->ref);
 	if (false == $entry->loaded) { $page->do404('Calendar entry not found.'); }
 
 	//----------------------------------------------------------------------------------------------

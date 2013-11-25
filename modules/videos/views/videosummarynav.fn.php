@@ -43,6 +43,7 @@ function videos_videosummarynav($args) {
 		$labels['controls'] = ''
 		 . "<span style='float: right;'>"
 		 . "<small>"
+		 . "<a href=\"javascript:Videos_EditModal('" . $model->UID . "');\">[edit details]</a>"
 		 . "<a href=\"javascript:Videos_EditTags('" . $model->UID . "');\">[edit tags]</a>"
 		 . "<a href=\"javascript:Videos_Delete('" . $model->UID . "');\">[delete]</a>"
 		 . "<a href=\"javascript:Videos_MakeDefault('" . $model->UID . "');\">[move to top]</a>"

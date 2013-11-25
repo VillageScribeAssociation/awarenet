@@ -18,7 +18,7 @@ function editor_add($args) {
 
 	$name = 'wyswyg';				//%	name of HTML form field [string]
 	$width = 568;					//%	width of area, pixels [int]
-	$height = 400;					//%	height of area, pixels [int]
+	$height = -1;					//%	height of area, pixels [int]
 	$areaname = 'area';				//%	name of HyperTextArea object [string]
 	$path = '/modules/editor/';		//%	resource path [string]
 	$ref = '';
@@ -46,7 +46,9 @@ function editor_add($args) {
 		$refUID = $args['refUID'];
 
 		if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-		if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
+		if (false == $db->objectExists($refModel, $refUID)) {
+			//return '(no such owner ' . $refModel . '::' . $refUID . ')';
+		}
 
 		$ref = "refModule='$refModule' refModel='$refModel' refUID='$refUID'";
 	}

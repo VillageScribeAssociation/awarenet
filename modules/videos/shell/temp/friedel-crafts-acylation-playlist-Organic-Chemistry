@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+    <head>
+        <!-- For ChartBeat analytics START -->
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <!-- For ChartBeat analytics END -->
+        <title>Friedel Crafts Acylation | Khan Academy</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <meta name="description" content="None" />
+        <meta name="keywords" content="Friedel, Crafts, Acylation, Acetyl, Chloride, Benzene, Electrophilic, Aromatic, Substitution" />
+        
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights START -->
+        <meta property="fb:page_id" content="159403248441" />
+        <!-- Allows the KA FB Page Admins to see the KA stats for FB Like in FB insights END -->
+        <meta property="og:title" content="The Khan Academy"/>
+        <meta property="og:type" content="non_profit"/>
+        <meta property="og:url" content="http://www.khanacademy.org"/>
+        <meta property="og:image" content="http://www.khanacademy.org/images/handtreehorizontal_facebook.png"/>
+        <meta property="og:site_name" content="khanacademy.org"/>
+        <meta property="fb:admins" content="100000121497109,718859633"/> 
+        <meta property="fb:app_id" content="160249463991765"/>
+        <meta property="og:description"
+              content="The Khan Academy is a not-for-profit 501(c)(3) with the mission of providing a world-class education to anyone, anywhere.  Despite being the work of one man, Salman Khan, this 1600+ video library is the most-used educational video resource as measured by YouTube video views per day and unique users per month."/>
+        <link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="apple-touch-icon" href="/images/apple-touch-icon.png"/>
+        <script>var KA_VERSION = '1101.348262090236499247';</script>
+        
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shared-package/compressed.css?1101.348262090236499247" />
+
+
+
+        
+    <script type="text/javascript" src="/javascript/shared-package/compressed.js?1101.348262090236499247"></script>
+
+
+
+        <script type="text/javascript">
+            // Create a dummy version of each HTML5 element we use so that IE 6-8 can style them.
+            (function(){
+                var html5elements = ['header', 'footer', 'nav', 'article', 'section', 'menu'];
+                for (var i = 0; i < html5elements.length; i++) {
+                    document.createElement(html5elements[i]);
+                }
+            })();
+
+            $(function(){
+                // Configure the search form
+                $('#page_search input[type=text]').placeholder();
+                initAutocomplete();
+
+                // Make the CSS-only menus click-activated
+                var active_menu = undefined;
+                $('.noscript').removeClass('noscript');
+                $('.css-menu > ul > li').click(function() {
+                    if (active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                    }
+                    if ($(this) == active_menu) {
+                        active_menu = undefined
+                    }
+                    else {
+                        active_menu = $(this);
+                        $(this).addClass('css-menu-js-hover');
+                    }
+                });
+                $(document).bind("click focusin", function(e){
+                    if ($(e.target).closest(".css-menu").length == 0 && active_menu) {
+                        active_menu.removeClass('css-menu-js-hover');
+                        active_menu = undefined;
+                    }
+                });
+                // Make the CSS-only menus keyboard-accessible
+                $('.css-menu a').focus(function(e){
+                    $(e.target).addClass('css-menu-js-hover').closest(".css-menu > ul > li").addClass('css-menu-js-hover');
+                }).blur(function(e){
+                    $(e.target).removeClass('css-menu-js-hover').closest(".css-menu > ul > li").removeClass('css-menu-js-hover');
+                });
+            });
+
+
+
+            //Javascript for estimating the cumulative video views in real-time
+            function addCommas(nStr)
+	    {
+	        nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+		    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		}
+		return x1 + x2;
+	    }
+
+
+
+	    var seedTime = new Date(2010,9,31);  //Seed Date is set to October 31, 2010  0-January, 11-december
+	    var seedTotalViews = 28402468
+	    var seedDailyViews = 100000;
+
+	    var currentTime = new Date();
+	    var secondsSince = (currentTime.getTime()-seedTime.getTime())/1000;
+	    var viewsPerSecond = seedDailyViews/24/3600
+	    var estimatedTotalViews = Math.round(seedTotalViews + secondsSince*viewsPerSecond)
+
+	    var totalViewsString = addCommas(""+estimatedTotalViews);
+        
+
+
+
+        </script>
+        
+<style>
+    .breadcrumbs_nav {
+        font-weight: bold;
+    }
+    #video_dropdown {
+        display: none;
+        text-indent: 0;
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
+    #video_dropdown .ui-button {
+        display: block;
+    }
+    #video_menu {
+        position: relative;
+    }
+    #video_menu ol {
+        z-index: 2;
+    }
+    #video_dropdown ol {
+        max-height: 20em;
+        padding-left: 3em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        list-style: outside decimal;
+    }
+    #video_dropdown li {
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #video_dropdown li[data-selected=selected] a {
+        font-weight: bold;
+    }
+    #video_dropdown .ui-button-text, #video_dropdown .ui-menu-item a {
+        font-weight: normal;
+        line-height: inherit;
+        padding: 0px 25px 0px 1ex;
+    }
+    #video_dropdown .ui-menu-item a {
+        padding: 0px 25px 0px 0px;
+    }
+    #video_dropdown a:visited {
+        color: #DD6900;
+    }
+    #video_dropdown a:link:hover, #video_dropdown a:link:focus, #video_dropdown a:visited:hover, #video_dropdown a:visited:focus {
+        color: #DD6900;
+    }
+    .prev_next_nav {
+        display: block;
+        margin-top: 2em;
+        padding-bottom: .5ex;
+    }
+    .prev_next_nav a {
+        text-decoration: none;
+    }
+    .prev_next_nav a:hover {
+        text-decoration: underline;
+    }
+    #prev_video {
+        display: block;
+        float: left;
+        margin-right: 1em;
+        text-align: left;
+        background: url(/images/list-item-black-left.png) no-repeat 0 4px;
+        padding-top: 1px;
+        padding-left: 10px;
+        height: 20px;
+    }
+    #playlists {
+        display: block;
+        float: left;
+    }
+    #next_video {
+        display: block;
+        float: right;
+        margin-left: 1em;
+        text-align: right;
+        background: url(/images/list-item-black.png) no-repeat 100% 4px;
+        padding-top: 1px;
+        padding-right: 10px;
+        height: 20px;
+    }
+
+    #youtube_blocked {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+        color: red;
+        font-weight: bold;
+        clear: both;
+        padding-top: 1em;
+    }
+    .video #description {
+        padding-top: 20px;
+    }
+        .video #description h3 {
+            display: block;
+            margin: 0;
+            font-size: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .video #description h3 span.title {
+            color: #e45c02;
+        }
+        .video #description h3 span.long-description {
+            color: #555;
+            font-weight: normal;
+            position: relative;
+            top: -1px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    #page_sub_nav .breadcrumbs_nav {
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-left: -5px;
+        width: auto;
+    }
+    #page_sub_nav .breadcrumbs_nav a {
+        text-decoration: none;
+        padding: 0 5px;
+    }
+    #page_sub_nav .breadcrumbs_nav #video_menu {
+        text-transform: none;
+    }
+</style>
+<script>
+$(function(){
+    $('<img width=0 height=0>').error(function() {
+       $("#youtube_blocked").css("visibility", "visible").css("left", "0px").css("position", "relative");
+       $("#idOVideo").hide();
+       VideoStats.prepareAlternativePlayer(); // If YouTube is hidden, use the flv player for statistics
+    }).attr('src', 'http://www.youtube.com/favicon.ico?' + Math.random()).appendTo('#page-container');
+    $('#video_selector').hide();
+    $('#video_dropdown').css('display', 'inline-block');
+    var menu = $('#video_dropdown ol').menu();
+
+    // Set the width explicitly before positioning it absolutely to satisfy IE7.
+    menu.width(menu.width()).hide().css('position', 'absolute');
+
+    menu.bind("menuselect", function(e, ui){
+        window.location.href = ui.item.children('a').attr('href');
+    });
+    $(document).bind("click focusin", function(e){
+        if ($(e.target).closest("#video_dropdown").length == 0) {
+            menu.hide();
+        }
+    });
+    var button = $('#video_dropdown > a').button({
+        icons: {
+            secondary: 'ui-icon-triangle-1-s'
+        }
+    }).show().click(function(e){
+        if (menu.css('display') == 'none')
+            menu.show().menu("activate", e, $('#video_dropdown li[data-selected=selected]')).focus();
+        else
+            menu.hide();
+        e.preventDefault();
+    });
+});
+
+
+
+</script>
+
+
+	<!-- New, faster Google Analytics async tag START -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-6742635-1']);
+	  _gaq.push(['_setDomainName', '.khanacademy.org']);
+	  _gaq.push(['_trackPageview']);
+
+	  // For OER Analytics
+	  _gaq.push(['ht._setAccount', 'UA-5033010-1']);
+	  _gaq.push(['ht._setDomainName', '.khanacademy.org']);
+	  _gaq.push(['ht._trackPageview']);
+
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+	<!-- New, faster Google Analytics async tag END -->
+
+    </head>
+    <body>
+    <div id="page-container">
+        
+        
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({appId: '160249463991765', status: true, cookie: true,
+                     xfbml: true});
+    
+            
+                FB.Event.subscribe('auth.login', function(response) {
+                    window.location.reload();
+                });
+            
+    
+            FB.getLoginStatus(function(response) {
+               if (response.session) {
+                $('#page_logout').click(function(e) {
+                    FB.logout(function() { 
+                        window.location = $("#page_logout").attr("href"); 
+                    });
+                    e.preventDefault();
+                    return false;
+                });
+               }
+            });
+          };
+          (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+              '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+          }());
+        </script>
+        
+        
+    
+    	
+    	<script>document.writeln('<style scoped type="text/css">a[href="#"], .requires_script { visibility: visible; }</style>');</script>
+    
+            <header>
+                <div id="top-header">
+                    <div id="top-header-links">
+                        <span class="page_links" id="page_auth">
+                            
+                            <nav class="css-menu noscript" id="login-menu">
+                                <ul class="ui-corner-top">
+                                    <li class="ui-corner-top">
+                                        Login
+                                        <ul class="ui-corner-tr ui-corner-bottom">
+                                            <li id="page_login_options">
+                                                <a href="/login?openid_identifier=https://www.google.com/accounts/o8/id">Login with Google</a>
+                                            </li>
+                                            
+                                            <li><fb:login-button>Login with Facebook</fb:login-button></li>
+                                            
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            
+                            <span class="separator">&nbsp;</span>
+                            <a href="/donate" id="donate-link">Donate</a>
+                            <span class="separator">&nbsp;</span>
+                            <span id="social-links">
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Youtube-Subscribe-Header']);" href="http://www.youtube.com/khanacademy"><img src="/images/youtube.png" alt="YouTube" title="YouTube"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Twitter-Follow-Header']);" href="http://twitter.com/khanacademy"><img src="/images/twitter.png" alt="Twitter" title="Twitter"></a>
+                                <a class="google-analytics-link-track" onclick="_gaq.push(['_trackEvent', 'Click', 'Facebook-Join-Header']);" href="http://www.facebook.com/khanacademy"><img src="/images/facebook.png" alt="Facebook" title="Facebook"></a>
+                            </span>
+                            <span class="separator">&nbsp;</span>
+                            <span id="fb-like-badge">
+                                <fb:like id="page_fb_like" href="http://www.khanacademy.org" layout="button_count" show_faces="false" font="arial" ref="Like-Button-Top-Header-Left"></fb:like>
+                            </span>
+                        </span>
+                    </div>
+                    <div id="logo">
+                        <div id="logo-highlight">
+                            <a id="logo-image" href="/"><img src="/images/logo-no-highlight.png?1101.348262090236499247" alt="Khan Academy"></a>
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span id="page_visitors">
+                                <span id="page_num_visitors">
+                                    <!-- Content will get populated by javacript at end of page -->
+                                </span>&nbsp;lessons delivered
+                        </span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div id="search-box">
+                    <form id="page_search" action="/search">
+                        <input id="search-input" type="text" placeholder="Search for a video or playlist" name="page_search_query" value='' class="ui-corner-left placeholder"><input type="submit" value=" " id="search-submit" />
+                    </form>
+                </div>
+                <div id="sitewide-navigation">
+                    <nav class="css-menu noscript" id="page_main_nav">
+                        <ul>
+                            <li class="ui-corner-top">
+                                Watch Videos
+                                <ul class="ui-corner-tr ui-corner-bottom">
+                                    <li>
+                                        <a href="/#browse">Browse by Topic</a>
+                                    </li>
+                                    <li>
+                                        <a href="/search">Search</a>
+                                    </li>
+                                    <li>
+                                        <a href="/downloads">Download</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="do-exercises" class="ui-corner-top">
+                                <div id="do-exercise-inner"><a href="/exercisedashboard">Do Exercises</a></div>
+                            </li>
+                            <li class="ui-corner-top">
+                                Join Us
+                                <ul class="ui-corner-tr">
+                                    <li>
+                                       <p>About Us</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/about">Overview</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#faq">Frequently Asked Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved#credits">Credits</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>Coaching Tools</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/students">Become a Coach</a>
+                                            </li>
+                                            <li>
+                                                <a href="/students">View Students</a>
+                                            </li>
+                                            <li>
+                                                <a href="/classreport">Class Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>How to Help</p>
+                                        <ul>
+                                            <li>
+                                                <a href="/getinvolved#translation">Translate Videos</a>
+                                            </li>
+                                            <li>
+                                                <a href="http://sites.google.com/a/khanacademy.org/forge/for-developers/getting-started-with-the-code">Develop Software</a>
+                                            </li>
+                                            <li>
+                                                <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-friedel-crafts-acylation">Report a Problem</a>
+                                            </li>
+                                            <li>
+                                                <a href="/donate">Donate</a>
+                                            </li>
+                                            <li>
+                                                <a href="/getinvolved">Help in Other Ways</a>
+                                            </li>
+                                            <li>
+                                                <a href="/about#contactus">Contact Us</a>
+                                            </li>
+    
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <nav id="page_sub_nav">
+                    
+<span class="breadcrumbs_nav">
+        <a href="/">All videos</a> &#187;
+        <a href="/?video=friedel-crafts-acylation#Organic%20Chemistry">Organic Chemistry</a> &#187;
+    <form id="video_selector">
+        <select name="v">
+            
+            <option  value="pMoA65Dj-zk">Representing Structures of Organic Molecules</option>
+            
+            <option  value="NRFPvLp3r3g">Naming Simple Alkanes</option>
+            
+            <option  value="KKAD-OOOHxg">Naming Alkanes with Alkyl Groups</option>
+            
+            <option  value="CFBKfgGTP98">Correction - 2-Propylheptane should never be the name!</option>
+            
+            <option  value="TJUm860AjNw">Common and Systematic Naming-Iso, Sec and Tert Prefixes</option>
+            
+            <option  value="96D7RHUQvMA">More Organic Chemistry Naming Examples 1</option>
+            
+            <option  value="CJRQ8gOjq4E">Organic Chemistry Naming Examples 2</option>
+            
+            <option  value="Se-ekDNhCDk">Organic Chemistry Naming Examples 3</option>
+            
+            <option  value="25axjMBeMxE">Organic Chemistry Naming Examples  4</option>
+            
+            <option  value="6BR0Q5e74bs">Organic Chemistry Naming Examples 5</option>
+            
+            <option  value="KWv5PaoHwPA">Naming Alkenes Examples</option>
+            
+            <option  value="jiJdNWzETSk">Naming Alkyl Halides</option>
+            
+            <option  value="u1eGSL6J6Fo">sp3 Hybridized Orbitals and Sigma Bonds</option>
+            
+            <option  value="lJX8DxoPRfk">Pi bonds and sp2 Hybridized Orbitals</option>
+            
+            <option  value="IkmM4CPnqF0">Newman Projections</option>
+            
+            <option  value="ryJvNEHcuDg">Newman Projections 2</option>
+            
+            <option  value="YUEkOBvJSNg">Chair and Boat Shapes for Cyclohexane</option>
+            
+            <option  value="I6LsWSXx8fg">Double Newman Diagram for Methcyclohexane</option>
+            
+            <option  value="tk-SNvCPLCE">Introduction to Chirality</option>
+            
+            <option  value="0XSSPow5oAc">Chiral Examples 1</option>
+            
+            <option  value="QQMZ1ljepWg">Chiral Examples 2</option>
+            
+            <option  value="DfO27juYly8">Cahn-Ingold-Prelog System for Naming Enantiomers</option>
+            
+            <option  value="peQsBg9P4ms">R,S (Cahn-Ingold-Prelog) Naming System Example 2</option>
+            
+            <option  value="457xnJv80O0">Stereoisomers, Enantiomers, Diastereomers, Constitutional Isomers and Meso Compounds</option>
+            
+            <option  value="oYoQpDtBLac">Cis-Trans and E-Z Naming Scheme for Alkenes</option>
+            
+            <option  value="GFiizJ-jGVw">Entgegen-Zusammen Naming Scheme for Alkenes Examples</option>
+            
+            <option  value="Z_GWBW_GVGA">Introduction to Reaction Mechanisms</option>
+            
+            <option  value="X-VCk3WrGlM">Markovnikov&#39;s Rule and Carbocations</option>
+            
+            <option  value="sEiQm7IzUg8">Addition of Water (Acid-Catalyzed) Mechanism</option>
+            
+            <option  value="tR-hzV5Tkxo">Polymerization of Alkenes with Acid</option>
+            
+            <option  value="Z_85KXnBSYc">Sn2 Reactions</option>
+            
+            <option  value="3e0ScEkz8oU">Sn1 Reactions</option>
+            
+            <option  value="NypbNw1iJ-E">Steric Hindrance</option>
+            
+            <option  value="QxIUeYAQRy0">Sn2 Stereochemistry</option>
+            
+            <option  value="8J0ys3z5wzo">Solvent Effects on Sn1 and Sn2 Reactions</option>
+            
+            <option  value="Z9Jh-Q59xso">Nucleophilicity (Nucleophile Strength)</option>
+            
+            <option  value="Mx7KM-k2MMo">Nucleophilicity vs. Basicity</option>
+            
+            <option  value="J0gXdEAaSiA">E2 Reactions</option>
+            
+            <option  value="U9dGHwsewNk">E1 Reactions</option>
+            
+            <option  value="2jO--kC3aqk">Zaitsev&#39;s Rule</option>
+            
+            <option  value="12Rvts2NR7M">Comparing E2 E1 Sn2 Sn1 Reactions</option>
+            
+            <option  value="vinEPfrqfiU">E2 E1 Sn2 Sn1 Reactions Example 2</option>
+            
+            <option  value="MtwvLru62Qw">E2 E1 Sn2 Sn1 Reactions Example 3</option>
+            
+            <option  value="5HgzsltWwK8">Free Radical Reactions</option>
+            
+            <option  value="nQ7QSV4JRSs">Alcohols</option>
+            
+            <option  value="Aa1CMokCch4">Alcohol Properties</option>
+            
+            <option  value="6XOm3Km7r30">Resonance</option>
+            
+            <option  value="roUGDG1rhPI">Ether Naming and Introduction</option>
+            
+            <option  value="5d63YMUxcS4">Cyclic ethers and epoxide naming</option>
+            
+            <option  value="hMguUHeYf0g">Ring-opening Sn2 reaction of expoxides</option>
+            
+            <option  value="Ordpoq2dHAk">Sn1 and Sn2 epoxide opening discussion</option>
+            
+            <option  value="RaBI3lAACKg">Aromatic Compounds and Huckel&#39;s Rule</option>
+            
+            <option  value="A5r7wkwDID4">Naming Benzene Derivatives Introduction</option>
+            
+            <option  value="fpq0eICjuSI">Electrophilic Aromatic Substitution</option>
+            
+            <option  value="K2tIixiXGOM">Bromination of Benzene</option>
+            
+            <option  value="Kpov3GS6tjM">Amine Naming Introduction</option>
+            
+            <option  value="CJzuu_k9Nv0">Amine Naming 2</option>
+            
+            <option  value="O4dvuimcVBA">Amine as Nucleophile in Sn2 Reaction</option>
+            
+            <option  value="w8LS4fRQvMk">Amine in Sn2 part 2</option>
+            
+            <option  value="pBAwbypjW9s">Sn1 Amine Reaction</option>
+            
+            <option  value="oeyBfrx5RJY">Aldehyde Introduction</option>
+            
+            <option  value="wD15pD5pCt4">Ketone Naming</option>
+            
+            <option selected value="vFfriC55fFw">Friedel Crafts Acylation</option>
+            
+            <option  value="0YD5xSvseIw">Friedel Crafts Acylation Addendum</option>
+            
+            <option  value="SXbc4J1qWjE">Keto Enol Tautomerization</option>
+            
+            <option  value="xheOq0XZ-so">Carboxlic Acid Introduction</option>
+            
+            <option  value="z8h7QgevqjM">Carboxylic Acid Naming</option>
+            
+            <option  value="dbdVMThH1n8">Fisher Esterification</option>
+            
+            <option  value="XKk9K5xTgDA">Acid Chloride Formation</option>
+            
+            <option  value="SRPQ62dR6b4">Amides, Anhydrides, Esters and Acyl Chlorides</option>
+            
+            <option  value="NYI0bJK64MY">Relative Stability of Amides Esters Anhydrides and Acyl Chlorides</option>
+            
+            <option  value="gMKtGulgGH8">Amide Formation from Acyl Chloride</option>
+            
+            <option  value="3XiHrsZNZko">Aldol Reaction</option>
+            
+        </select>
+        <button type="submit">Go</button>
+    </form>
+    <span id="video_dropdown">
+        <a href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry">Friedel Crafts Acylation</a>
+        <div id="video_menu">
+            <ol>
+                
+                <li data-selected=''><a href="/video/representing-structures-of-organic-molecules?playlist=Organic%20Chemistry">Representing Structures of Organic Molecules</a></li>
+                
+                <li data-selected=''><a href="/video/naming-simple-alkanes?playlist=Organic%20Chemistry">Naming Simple Alkanes</a></li>
+                
+                <li data-selected=''><a href="/video/naming-alkanes-with-alkyl-groups?playlist=Organic%20Chemistry">Naming Alkanes with Alkyl Groups</a></li>
+                
+                <li data-selected=''><a href="/video/correction---2-propylheptane-should-never-be-the-name?playlist=Organic%20Chemistry">Correction - 2-Propylheptane should never be the name!</a></li>
+                
+                <li data-selected=''><a href="/video/common-and-systematic-naming-iso--sec-and-tert-prefixes?playlist=Organic%20Chemistry">Common and Systematic Naming-Iso, Sec and Tert Prefixes</a></li>
+                
+                <li data-selected=''><a href="/video/more-organic-chemistry-naming-examples-1?playlist=Organic%20Chemistry">More Organic Chemistry Naming Examples 1</a></li>
+                
+                <li data-selected=''><a href="/video/organic-chemistry-naming-examples-2?playlist=Organic%20Chemistry">Organic Chemistry Naming Examples 2</a></li>
+                
+                <li data-selected=''><a href="/video/organic-chemistry-naming-examples-3?playlist=Organic%20Chemistry">Organic Chemistry Naming Examples 3</a></li>
+                
+                <li data-selected=''><a href="/video/organic-chemistry-naming-examples--4?playlist=Organic%20Chemistry">Organic Chemistry Naming Examples  4</a></li>
+                
+                <li data-selected=''><a href="/video/organic-chemistry-naming-examples-5?playlist=Organic%20Chemistry">Organic Chemistry Naming Examples 5</a></li>
+                
+                <li data-selected=''><a href="/video/naming-alkenes-examples?playlist=Organic%20Chemistry">Naming Alkenes Examples</a></li>
+                
+                <li data-selected=''><a href="/video/naming-alkyl-halides?playlist=Organic%20Chemistry">Naming Alkyl Halides</a></li>
+                
+                <li data-selected=''><a href="/video/sp3-hybridized-orbitals-and-sigma-bonds?playlist=Organic%20Chemistry">sp3 Hybridized Orbitals and Sigma Bonds</a></li>
+                
+                <li data-selected=''><a href="/video/pi-bonds-and-sp2-hybridized-orbitals?playlist=Organic%20Chemistry">Pi bonds and sp2 Hybridized Orbitals</a></li>
+                
+                <li data-selected=''><a href="/video/newman-projections?playlist=Organic%20Chemistry">Newman Projections</a></li>
+                
+                <li data-selected=''><a href="/video/newman-projections-2?playlist=Organic%20Chemistry">Newman Projections 2</a></li>
+                
+                <li data-selected=''><a href="/video/chair-and-boat-shapes-for-cyclohexane?playlist=Organic%20Chemistry">Chair and Boat Shapes for Cyclohexane</a></li>
+                
+                <li data-selected=''><a href="/video/double-newman-diagram-for-methcyclohexane?playlist=Organic%20Chemistry">Double Newman Diagram for Methcyclohexane</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-chirality?playlist=Organic%20Chemistry">Introduction to Chirality</a></li>
+                
+                <li data-selected=''><a href="/video/chiral-examples-1?playlist=Organic%20Chemistry">Chiral Examples 1</a></li>
+                
+                <li data-selected=''><a href="/video/chiral-examples-2?playlist=Organic%20Chemistry">Chiral Examples 2</a></li>
+                
+                <li data-selected=''><a href="/video/cahn-ingold-prelog-system-for-naming-enantiomers?playlist=Organic%20Chemistry">Cahn-Ingold-Prelog System for Naming Enantiomers</a></li>
+                
+                <li data-selected=''><a href="/video/r-s--cahn-ingold-prelog--naming-system-example-2?playlist=Organic%20Chemistry">R,S (Cahn-Ingold-Prelog) Naming System Example 2</a></li>
+                
+                <li data-selected=''><a href="/video/stereoisomers--enantiomers--diastereomers--constitutional-isomers-and-meso-compounds?playlist=Organic%20Chemistry">Stereoisomers, Enantiomers, Diastereomers, Constitutional Isomers and Meso Compounds</a></li>
+                
+                <li data-selected=''><a href="/video/cis-trans-and-e-z-naming-scheme-for-alkenes?playlist=Organic%20Chemistry">Cis-Trans and E-Z Naming Scheme for Alkenes</a></li>
+                
+                <li data-selected=''><a href="/video/entgegen-zusammen-naming-scheme-for-alkenes-examples?playlist=Organic%20Chemistry">Entgegen-Zusammen Naming Scheme for Alkenes Examples</a></li>
+                
+                <li data-selected=''><a href="/video/introduction-to-reaction-mechanisms?playlist=Organic%20Chemistry">Introduction to Reaction Mechanisms</a></li>
+                
+                <li data-selected=''><a href="/video/markovnikov-s-rule-and-carbocations?playlist=Organic%20Chemistry">Markovnikov&#39;s Rule and Carbocations</a></li>
+                
+                <li data-selected=''><a href="/video/addition-of-water--acid-catalyzed--mechanism?playlist=Organic%20Chemistry">Addition of Water (Acid-Catalyzed) Mechanism</a></li>
+                
+                <li data-selected=''><a href="/video/polymerization-of-alkenes-with-acid?playlist=Organic%20Chemistry">Polymerization of Alkenes with Acid</a></li>
+                
+                <li data-selected=''><a href="/video/sn2-reactions?playlist=Organic%20Chemistry">Sn2 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/sn1-reactions?playlist=Organic%20Chemistry">Sn1 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/steric-hindrance?playlist=Organic%20Chemistry">Steric Hindrance</a></li>
+                
+                <li data-selected=''><a href="/video/sn2-stereochemistry?playlist=Organic%20Chemistry">Sn2 Stereochemistry</a></li>
+                
+                <li data-selected=''><a href="/video/solvent-effects-on-sn1-and-sn2-reactions?playlist=Organic%20Chemistry">Solvent Effects on Sn1 and Sn2 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/nucleophilicity--nucleophile-strength?playlist=Organic%20Chemistry">Nucleophilicity (Nucleophile Strength)</a></li>
+                
+                <li data-selected=''><a href="/video/nucleophilicity-vs--basicity?playlist=Organic%20Chemistry">Nucleophilicity vs. Basicity</a></li>
+                
+                <li data-selected=''><a href="/video/e2-reactions?playlist=Organic%20Chemistry">E2 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/e1-reactions?playlist=Organic%20Chemistry">E1 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/zaitsev-s-rule?playlist=Organic%20Chemistry">Zaitsev&#39;s Rule</a></li>
+                
+                <li data-selected=''><a href="/video/comparing-e2-e1-sn2-sn1-reactions?playlist=Organic%20Chemistry">Comparing E2 E1 Sn2 Sn1 Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/e2-e1-sn2-sn1-reactions-example-2?playlist=Organic%20Chemistry">E2 E1 Sn2 Sn1 Reactions Example 2</a></li>
+                
+                <li data-selected=''><a href="/video/e2-e1-sn2-sn1-reactions-example-3?playlist=Organic%20Chemistry">E2 E1 Sn2 Sn1 Reactions Example 3</a></li>
+                
+                <li data-selected=''><a href="/video/free-radical-reactions?playlist=Organic%20Chemistry">Free Radical Reactions</a></li>
+                
+                <li data-selected=''><a href="/video/alcohols?playlist=Organic%20Chemistry">Alcohols</a></li>
+                
+                <li data-selected=''><a href="/video/alcohol-properties?playlist=Organic%20Chemistry">Alcohol Properties</a></li>
+                
+                <li data-selected=''><a href="/video/resonance?playlist=Organic%20Chemistry">Resonance</a></li>
+                
+                <li data-selected=''><a href="/video/ether-naming-and-introduction?playlist=Organic%20Chemistry">Ether Naming and Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/cyclic-ethers-and-epoxide-naming?playlist=Organic%20Chemistry">Cyclic ethers and epoxide naming</a></li>
+                
+                <li data-selected=''><a href="/video/ring-opening-sn2-reaction-of-expoxides?playlist=Organic%20Chemistry">Ring-opening Sn2 reaction of expoxides</a></li>
+                
+                <li data-selected=''><a href="/video/sn1-and-sn2-epoxide-opening-discussion?playlist=Organic%20Chemistry">Sn1 and Sn2 epoxide opening discussion</a></li>
+                
+                <li data-selected=''><a href="/video/aromatic-compounds-and-huckel-s-rule?playlist=Organic%20Chemistry">Aromatic Compounds and Huckel&#39;s Rule</a></li>
+                
+                <li data-selected=''><a href="/video/naming-benzene-derivatives-introduction?playlist=Organic%20Chemistry">Naming Benzene Derivatives Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/electrophilic-aromatic-substitution?playlist=Organic%20Chemistry">Electrophilic Aromatic Substitution</a></li>
+                
+                <li data-selected=''><a href="/video/bromination-of-benzene?playlist=Organic%20Chemistry">Bromination of Benzene</a></li>
+                
+                <li data-selected=''><a href="/video/amine-naming-introduction?playlist=Organic%20Chemistry">Amine Naming Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/amine-naming-2?playlist=Organic%20Chemistry">Amine Naming 2</a></li>
+                
+                <li data-selected=''><a href="/video/amine-as-nucleophile-in-sn2-reaction?playlist=Organic%20Chemistry">Amine as Nucleophile in Sn2 Reaction</a></li>
+                
+                <li data-selected=''><a href="/video/amine-in-sn2-part-2?playlist=Organic%20Chemistry">Amine in Sn2 part 2</a></li>
+                
+                <li data-selected=''><a href="/video/sn1-amine-reaction?playlist=Organic%20Chemistry">Sn1 Amine Reaction</a></li>
+                
+                <li data-selected=''><a href="/video/aldehyde-introduction?playlist=Organic%20Chemistry">Aldehyde Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/ketone-naming?playlist=Organic%20Chemistry">Ketone Naming</a></li>
+                
+                <li data-selected='selected'><a href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry">Friedel Crafts Acylation</a></li>
+                
+                <li data-selected=''><a href="/video/friedel-crafts-acylation-addendum?playlist=Organic%20Chemistry">Friedel Crafts Acylation Addendum</a></li>
+                
+                <li data-selected=''><a href="/video/keto-enol-tautomerization?playlist=Organic%20Chemistry">Keto Enol Tautomerization</a></li>
+                
+                <li data-selected=''><a href="/video/carboxlic-acid-introduction?playlist=Organic%20Chemistry">Carboxlic Acid Introduction</a></li>
+                
+                <li data-selected=''><a href="/video/carboxylic-acid-naming?playlist=Organic%20Chemistry">Carboxylic Acid Naming</a></li>
+                
+                <li data-selected=''><a href="/video/fisher-esterification?playlist=Organic%20Chemistry">Fisher Esterification</a></li>
+                
+                <li data-selected=''><a href="/video/acid-chloride-formation?playlist=Organic%20Chemistry">Acid Chloride Formation</a></li>
+                
+                <li data-selected=''><a href="/video/amides--anhydrides--esters-and-acyl-chlorides?playlist=Organic%20Chemistry">Amides, Anhydrides, Esters and Acyl Chlorides</a></li>
+                
+                <li data-selected=''><a href="/video/relative-stability-of-amides-esters-anhydrides-and-acyl-chlorides?playlist=Organic%20Chemistry">Relative Stability of Amides Esters Anhydrides and Acyl Chlorides</a></li>
+                
+                <li data-selected=''><a href="/video/amide-formation-from-acyl-chloride?playlist=Organic%20Chemistry">Amide Formation from Acyl Chloride</a></li>
+                
+                <li data-selected=''><a href="/video/aldol-reaction?playlist=Organic%20Chemistry">Aldol Reaction</a></li>
+                
+            </ol>
+        </div>
+    </span>
+</span>
+
+                </nav>
+                
+    
+                
+            </header>
+            
+<article class="video">
+    <div id="description">
+        <h3>
+            <span class="title">Friedel Crafts Acylation</span>
+        
+        </h3>
+    </div>
+    <div style="margin-top: -15px;">
+        <nav class="prev_next_nav">
+            
+            <label id="prev_video">
+                <a rel=prev href="/video/ketone-naming?playlist=Organic%20Chemistry"><b>Previous Video:</b> Ketone Naming</a>
+            </label>
+            
+            
+            <label id="next_video">
+                <a rel=next href="/video/friedel-crafts-acylation-addendum?playlist=Organic%20Chemistry"><b>Next Video:</b> Friedel Crafts Acylation Addendum</a>
+            </label>
+            
+        </nav>
+
+        <div id="youtube_blocked">
+            <object id="flvPlayer" type="application/x-shockwave-flash" data="/flvplayer/player_flv_maxi.swf" width="800" height="480">
+    <param name="movie" value="/flvplayer/player_flv_maxi.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="FlashVars" value="flv=http%3A//www.archive.org/download/KhanAcademy_OrganicChemistry/friedel-crafts-acylation.flv&amp;showstop=1&amp;showvolume=1&amp;showfullscreen=1&amp;showiconplay=1&amp;bgcolor=FFFFFF&amp;bgcolor1=80C65A&amp;bgcolor2=80C65A&amp;iconplaybgcolor=80C65A&amp;width=800&amp;height=480" />
+    <div>
+            <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
+    </div>                
+</object>
+
+
+        </div>
+
+        <object id="idOVideo" name="idOVideo" width="800" height="480" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+    <param name="movie" value="http://www.youtube.com/v/vFfriC55fFw&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1">
+    <param name="allowFullScreen" value="true">
+    <param name="allowScriptAccess" value="always">
+    <param name="wmode" value="transparent">
+    <embed id="idPlayer" name="idPlayer" wmode="transparent" src="http://www.youtube.com/v/vFfriC55fFw&hl=en_US&fs=1&rel=0&hd=1&border=0&enablejsapi=1" type="application/x-shockwave-flash" allowScriptAccess="always" allowfullscreen="true" width="800" height="480">
+</object>
+
+
+        <span class="video_extra_links"><nobr>
+        
+        <span class="extra-link-bar"><a href="http://www.archive.org/download/KhanAcademy_OrganicChemistry/friedel-crafts-acylation.flv">Download</a>
+        </span>
+        </nobr></span>
+
+        
+<div class="video_comments">
+
+    <h3>Comments:</h3>
+
+    <div class="comments_container">
+    
+
+        
+
+        
+            <div class="comment">
+                Thank you, Sal!<br/>
+                <span class="comment_sig sig"><nobr>
+    
+        
+            &ndash;Taosif Rakeen, 1 month, 1 week ago
+        
+
+        
+            
+        
+    
+</nobr>
+</span>
+            </div>
+
+            
+        
+
+        
+
+        
+
+    
+    </div>
+    
+    
+        <a href="/login?continue=/video%3Fv%3DvFfriC55fFw" class="control"><img class="icon" src="/images/balloon-plus.png" />Log in to add a comment</a>
+    
+
+    
+
+    <div class="comment_form" style="display:none;">
+        <form class="comments" name="comments">
+            <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+            <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjvzO8CDA" />
+            <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiW3Z4BDA" />
+            <textarea name="comment_text" class="comment_text" rows="3" cols="40"></textarea><br/>
+            <div class="comment_controls_container"
+    
+>
+    <div class="comment_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button comment_submit" type="button" value="Comment"/>
+            or <a href="#" class="comment_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </form>
+    </div>
+</div>
+
+
+        
+<div class="video_questions">
+    <h3 class="ask_and_answer">Ask and answer questions about this video:</h3>
+
+    <div class="sticky_note" style="display:none;">
+        <div class="sticky_note_content">
+            <h2>Ask a question about Friedel Crafts Acylation</h2>
+            <ul>
+                <li><em>Be as specific as possible!</em></li>
+                <li>Remember, you're asking <em>the entire Khan Academy community</em> for answers.</li>
+                <li>Mention a time from the video, like "5:28", to help people understand what your question is about.</li>
+                <li><strong>Please don't</strong> report problems or mistakes here.&nbsp; <strong><a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-vFfriC55fFw">Send in a problem report</a></strong> instead.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="question_container">
+        <div class="question_form">
+            <form class="question" name="questions">
+                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjvzO8CDA" />
+                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiW3Z4BDA" />
+                <div class="question_placeholder requires_script">
+                    <textarea name="question_text" class="question_text" rows="3" cols="40" 
+                                watermark="Example: Why does Sal use shorthand notation at 5:43?"></textarea>
+                </div>
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button question_submit" type="button" value="Ask your question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+           </form>
+        </div>
+    </div>
+
+    <div class="questions_container">
+    
+
+        
+            <a name="q_11762193"></a>
+            <div class="question_container
+                
+            ">
+                <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiR9M0FDA" />
+                <div class="question" data-question_id="11762193">
+                    
+                        <a class="question_link" href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry&qa_expand_id=11762193#q_11762193" onclick="return false;">
+                            <span>Also, what type of reaction allows AlCl4 to steal both the chloride AND the electron from acetyl chloride? Have we encountered this so far in the lectures?</span>
+                        </a>
+                    
+                    <span
+                    
+                        class="question_content_urlized" style="display:none;"
+                    
+                    >Also, what type of reaction allows AlCl4 to steal both the chloride AND the electron from acetyl chloride? Have we encountered this so far in the lectures?</span>
+                </div>
+
+                
+                    <div class="question_answer_count
+                    
+                        unanswered
+                    
+                    ">
+                        <table><tr>
+                        <td style="vertical-align: middle;">
+                            <a href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry&qa_expand_id=11762193#q_11762193" onclick="return false;">0 answers</a>
+                        </td>
+                        <td>
+                            <span class="question_answer_count_add_yours">
+                                <input type="button" class="button add_yours" value="Add yours" />
+                            </span>
+                        </td>
+                        </tr></table>
+                    </div>
+                
+                
+                <div class="question_sig sig">
+                    <nobr>
+    
+        
+            &ndash;pslattery522 asked 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+                </div>
+
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiR9M0FDA"/>
+            
+
+            <input class="button question_submit" type="button" value="Edit this question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+
+                <div class="answers_and_form_container"
+                    
+                        style="display:none;"
+                    
+                >
+                    <div class="answers_container">
+                        
+    
+
+
+                    </div>
+
+                    <div class="answer_container">
+                        <div class="answer_form">
+                            <form class="answer">
+                                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjvzO8CDA" />
+                                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiW3Z4BDA" />
+                                <input type="hidden" name="question_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxiR9M0FDA" />
+                                <div class="answer_placeholder">
+                                    <textarea name="answer_text" class="answer_text" rows="2" cols="40" watermark="Answer this question"></textarea>
+                                </div>
+                                <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button answer_submit" type="button" value="Answer this question"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearFloat">&nbsp;</div>
+        
+            <a name="q_11761231"></a>
+            <div class="question_container
+                
+            ">
+                <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjP7M0FDA" />
+                <div class="question" data-question_id="11761231">
+                    
+                        <a class="question_link" href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry&qa_expand_id=11761231#q_11761231" onclick="return false;">
+                            <span>In step 2, why doesn&#39;t the resonance structure with Oxygen having the positive charge react with benzene? Is it simply because that resonance structure is less likely? Would this reaction result in at least SOME (benzene-O-CH2-CH3)?<br /><br />Thanks for what you are doing Sal.<br />-Patrick</span>
+                        </a>
+                    
+                    <span
+                    
+                        class="question_content_urlized" style="display:none;"
+                    
+                    >In step 2, why doesn&#39;t the resonance structure with Oxygen having the positive charge react with benzene? Is it simply because that resonance structure is less likely? Would this reaction result in at least SOME (benzene-O-CH2-CH3)?<br /><br />Thanks for what you are doing Sal.<br />-Patrick</span>
+                </div>
+
+                
+                    <div class="question_answer_count
+                    
+                    ">
+                        <table><tr>
+                        <td style="vertical-align: middle;">
+                            <a href="/video/friedel-crafts-acylation?playlist=Organic%20Chemistry&qa_expand_id=11761231#q_11761231" onclick="return false;">1 answer</a>
+                        </td>
+                        <td>
+                            <span class="question_answer_count_add_yours">
+                                <input type="button" class="button add_yours" value="Add yours" />
+                            </span>
+                        </td>
+                        </tr></table>
+                    </div>
+                
+                
+                <div class="question_sig sig">
+                    <nobr>
+    
+        
+            &ndash;pslattery522 asked 1 month, 2 weeks ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+                </div>
+
+                <div class="question_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="question_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjP7M0FDA"/>
+            
+
+            <input class="button question_submit" type="button" value="Edit this question"/>
+            or <a href="#" class="question_cancel control">Cancel</a>
+        </div>
+
+        
+            <div class="chars_remaining">
+                <span class="chars_remaining_count">500</span> characters left
+            </div>
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+
+                <div class="answers_and_form_container"
+                    
+                        style="display:none;"
+                    
+                >
+                    <div class="answers_container">
+                        
+    
+        <div class="answer_container">
+            <input type="hidden" name="entity_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxip0LcIDA" />
+            <div class="answer">
+                
+                    <span>Vinylic carbocation are already unstable , further a triple bond carbocation would be very very less likely to occur , thats why it doesnt take part in reaction</span>
+                
+            </div>
+
+            <div class="answer_sig sig">
+                <nobr>
+    
+        
+            &ndash;Bogas O&#39;four answered 1 week, 3 days ago
+        
+
+        
+            
+        
+    
+</nobr>
+
+            </div>
+
+            <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+                <input name="entity_key" type="hidden" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxip0LcIDA"/>
+            
+
+            <input class="button answer_submit" type="button" value="Edit this answer"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+        </div>
+    
+
+
+                    </div>
+
+                    <div class="answer_container">
+                        <div class="answer_form">
+                            <form class="answer">
+                                <div style="display:none;">
+    <input type="text" name="honey_input" value="" />
+    <textarea name="honey_textarea"></textarea>
+</div>
+
+                                <input type="hidden" id="video_key" name="video_key" value="ag1raGFuZXhlcmNpc2Vzcg4LEgVWaWRlbxjvzO8CDA" />
+                                <input type="hidden" id="playlist_key" name="playlist_key" value="ag1raGFuZXhlcmNpc2VzchELEghQbGF5bGlzdBiW3Z4BDA" />
+                                <input type="hidden" name="question_key" value="ag1raGFuZXhlcmNpc2VzchELEghGZWVkYmFjaxjP7M0FDA" />
+                                <div class="answer_placeholder">
+                                    <textarea name="answer_text" class="answer_text" rows="2" cols="40" watermark="Answer this question"></textarea>
+                                </div>
+                                <div class="answer_controls_container"
+    
+        style="display:none;"
+    
+>
+    <div class="answer_add_controls feedback_add_controls">
+        <div class="controls">
+            
+
+            <input class="button answer_submit" type="button" value="Answer this question"/>
+            or <a href="#" class="answer_cancel control">Cancel</a>
+        </div>
+
+        
+        <div class="clearFloat">&nbsp;</div>
+
+    </div>
+</div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearFloat">&nbsp;</div>
+        
+
+        
+
+    
+    </div>
+
+    
+        <div class="login_note" style="display:none;">
+            <a class="login_link" href="/login?continue=/video%3Fv%3DvFfriC55fFw"><img class="icon" src="/images/key-plus.png"/ >Log in first</a>
+            <span class="login_action"></span>
+        </div>
+    
+
+</div>
+<br/>
+
+
+        </div>
+    </article>
+
+            <div style="padding: 10px;">&nbsp;</div>
+            
+<footer id="footer" class="short">
+    <div id="leaves">
+        <a href="/reportissue?type=Defect&issue_labels=Component-Videos%2CVideo-friedel-crafts-acylation">Report a Problem</a> <a href="/getinvolved">Get Involved</a> <a href="/about#contactus">Contact Us</a>
+        <span class="sep">|</span>
+        <a href="/about">About</a> <a href="/about#faq">FAQ</a> <a href="/getinvolved#credits">Credits</a> <a href="/downloads">Downloads</a>
+        <span class="sep">|</span>
+        <a href="/coaches">Add a Coach</a> <a href="/classreport">Class Report</a>
+        <div id="copyright">
+            <small>
+                &copy;2010 Khan Academy
+            </small>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/"><img style="vertical-align: middle;" alt="Creative Commons License" width="80" height="15" src="/images/cc-by-nc-sa-80x15.png" /></a>
+        </div>
+    </div>
+</footer>
+
+
+
+            
+    
+    	<!-- For ChartBeat analytics START -->
+    	<script type="text/javascript">
+    	var _sf_async_config={uid:10894,domain:"khanacademy.org"};
+    	(function(){
+    	  function loadChartbeat() {
+    	    window._sf_endpt=(new Date()).getTime();
+    	    var e = document.createElement('script');
+    	    e.setAttribute('language', 'javascript');
+    	    e.setAttribute('type', 'text/javascript');
+    	    e.setAttribute('src',
+    	       (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://") +
+    	       "static.chartbeat.com/js/chartbeat.js");
+    	    document.body.appendChild(e);
+    	  }
+    	  var oldonload = window.onload;
+    	  window.onload = (typeof window.onload != 'function') ?
+    	     loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    	})();
+    	</script>
+    	<!-- For ChartBeat analytics END -->
+    
+    	<!-- ChartBeat API - get # of users online now BEGIN -->
+    
+       <script type="text/javascript">
+    
+                $('#page_num_visitors').append(totalViewsString);
+                $('#page_visitors').css('display', 'inline');
+    	</script>
+    
+    	<!-- ChartBeat API - get # of users online now END -->
+    
+    </div>
+    
+    
+    </body>
+</html>

@@ -184,9 +184,9 @@
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load('modules/admin/actions/fixtables.page.php');
-	$page->blockArgs['tablesdisplay'] = $html;
+	$kapenta->page->load('modules/admin/actions/fixtables.page.php');
+	$kapenta->page->blockArgs['tablesdisplay'] = $html;
 	//$page->data['template'] = str_replace('%%tablesdisplay%%', $html, $page->data['template']);
-	$page->render();
+	$kapenta->page->render();
 
 ?>

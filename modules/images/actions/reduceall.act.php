@@ -10,9 +10,9 @@
 	//	check user role and registry
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403('This is an administratice action.'); }
-	if (false == $registry->has('images.maxsize')) { $registry->set('images.maxsize', '524288'); }
+	if (false == $kapenta->registry->has('images.maxsize')) { $kapenta->registry->set('images.maxsize', '524288'); }
 
-	$maxSize = $registry->get('images.maxsize');
+	$maxSize = $kapenta->registry->get('images.maxsize');
 
 	//----------------------------------------------------------------------------------------------
 	//	check all images
@@ -22,8 +22,8 @@
 
 	while ($row = $db->fetchAssoc($result)) {
 		$item = $db->rmArray($row);
-		if (true == $kapenta->fileExists($item['fileName'])) {
-			$fileSize = $kapenta->fileSize($item['fileName']);
+		if (true == $kapenta->fs->exists($item['fileName'])) {
+			$fileSize = $kapenta->fs->size($item['fileName']);
 
 			if ($fileSize >= $maxSize) {
 				$model = new Images_Image($item['UID']);

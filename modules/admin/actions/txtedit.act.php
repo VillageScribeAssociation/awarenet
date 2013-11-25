@@ -18,16 +18,16 @@
 		$fileName = str_replace('..', '', $fileName);
 		$fileName = str_replace('//', '/', $fileName);
 		$contents = stripslashes($_POST['fileContents']);
-		$kapenta->filePutContents($fileName, $contents, false, false);
-		$req->args['path'] = '';
+		$kapenta->fs->put($fileName, $contents, false, false);
+		$kapenta->request->args['path'] = '';
 	}
 
 	//---------------------------------------------------------------------------------------------
 	//	working directory
 	//---------------------------------------------------------------------------------------------
 	$browsePath = '';
-	if (true == array_key_exists('path', $req->args)) {
-		$browsePath = 'path_' . $req->args['path'];
+	if (true == array_key_exists('path', $kapenta->request->args)) {
+		$browsePath = 'path_' . $kapenta->request->args['path'];
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -67,9 +67,9 @@
 			$fileName = $_POST['delfile'];
 			if (substr($fileName,0, 1) == '/') { $fileName = substr($fileName, 1); }
 
-			if (true == $kapenta->fileExists($fileName)) {
+			if (true == $kapenta->fs->exists($fileName)) {
 				unlink($kapenta->installPath . $fileName);
-				if (false == $kapenta->fileExists($fileName)) {
+				if (false == $kapenta->fs->exists($fileName)) {
 					$session->msg("Deleted: " . $fileName, 'ok');				
 				} else {
 					$session->msg("Could not delete: " . $fileName, 'bad');				
@@ -84,13 +84,13 @@
 	//---------------------------------------------------------------------------------------------
 
 	$editFile = '';
-	if (true == array_key_exists('file', $req->args)) { 
-		$editFile = base64_decode($req->args['file']);
-		if (true == array_key_exists('path', $req->args)) {
-			$editFile = base64_decode($req->args['path']) . $editFile;
+	if (true == array_key_exists('file', $kapenta->request->args)) { 
+		$editFile = base64_decode($kapenta->request->args['file']);
+		if (true == array_key_exists('path', $kapenta->request->args)) {
+			$editFile = base64_decode($kapenta->request->args['path']) . $editFile;
 		}
 
-		if (false == $kapenta->fileExists($editFile)) { 
+		if (false == $kapenta->fs->exists($editFile)) { 
 			$session->msg("file does not exist.<br/>" . $editFile, 'bad');
 			$editFile = ''; 
 		}
@@ -108,7 +108,7 @@
 			 . '/file_' . base64_encode($editFile) 
 			 . '/' . $browsePath;
 		
-		$raw = $kapenta->fileGetContents($editFile);	// TODO: use $kapenta
+		$raw = $kapenta->fs->get($editFile);	// TODO: use $kapenta
 		$rawJs = $utils->base64EncodeJs('contentJs', $raw, false);
 
 		$editorForm = "<form name='editTxtFile' method='POST' action='" . $editorFormAction . "'>
@@ -137,11 +137,11 @@
 	//	render the page
 	//---------------------------------------------------------------------------------------------
 
-	$page->load('modules/admin/actions/txtedit.page.php');
-	$page->blockArgs['editFile'] = $editFile;
-	$page->blockArgs['editorForm'] = $editorForm;
-	//$page->blockArgs['editorList'] = $editorList;
-	$page->blockArgs['browsePath'] = $browsePath;
-	$page->render();
+	$kapenta->page->load('modules/admin/actions/txtedit.page.php');
+	$kapenta->page->blockArgs['editFile'] = $editFile;
+	$kapenta->page->blockArgs['editorForm'] = $editorForm;
+	//$kapenta->page->blockArgs['editorList'] = $editorList;
+	$kapenta->page->blockArgs['browsePath'] = $browsePath;
+	$kapenta->page->render();
 
 ?>

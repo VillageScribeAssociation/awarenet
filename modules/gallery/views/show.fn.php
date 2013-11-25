@@ -9,6 +9,9 @@
 
 function gallery_show($args) {
 	global $theme;
+	global $user;
+	global $cache;
+
 	$html = '';				//% return value;
 
 	//----------------------------------------------------------------------------------------------
@@ -19,10 +22,24 @@ function gallery_show($args) {
 	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
-	//	make the block
+	//	check block cache
+	//----------------------------------------------------------------------------------------------
+	if ($user->UID != $model->createdBy) {
+		$html = $cache->get($args['area'], $args['rawblock']);
+		if ('' != $html) { return $html; }
+	}
+
+	//----------------------------------------------------------------------------------------------
+	//	make and cache the block
 	//----------------------------------------------------------------------------------------------
 	$block = $theme->loadBlock('modules/gallery/views/show.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);
+
+	if ($user->UID != $model->createdBy) {
+		$html = $theme->expandBlocks($html, $args['area']);
+		$cache->set('gallery-show-' . $model->UID, $args['area'], $args['rawblock'], $html);
+	}
+
 	return $html;
 }
 

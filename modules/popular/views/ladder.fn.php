@@ -24,7 +24,7 @@ function popular_ladder($args) {
 
 	$model = new Popular_Ladder($args['name'], true);
 	if (false == $model->loaded) { 
-		echo "ladder not loaded";
+		//echo "ladder not loaded";
 		return ''; 
 	}
 

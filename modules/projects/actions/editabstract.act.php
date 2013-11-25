@@ -7,7 +7,7 @@
 //*	edit a project abstract
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
@@ -23,11 +23,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/projects/actions/editabstract.page.php');
-	$page->blockArgs['raUID'] = $model->alias;
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['title'] = $model->title;
-	//$page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
-	$page->render();
+	$kapenta->page->load('modules/projects/actions/editabstract.page.php');
+	$kapenta->page->blockArgs['raUID'] = $model->alias;
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['title'] = $model->title;
+	//$kapenta->page->blockArgs['viewProjectUrl'] = $kapenta->serverPath . 'projects/' . $model->alias;
+	$kapenta->page->render();
 
 ?>

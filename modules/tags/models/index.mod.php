@@ -86,11 +86,26 @@ class Tags_Index {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $kapenta;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
+
 		$check = $db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
+
+		if (true == $kapenta->mcEnabled) {
+			//--------------------------------------------------------------------------------------
+			//	invalidate memcached tag lists this belongs to
+			//--------------------------------------------------------------------------------------
+			$cacheKey = 'tags::' . strtolower($this->refModule) . '::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+			$cacheKey = 'tags::' . strtolower($this->refModel) . '::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+		}
+
 		return '';
 	}
 
@@ -274,9 +289,21 @@ class Tags_Index {
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
+		global $kapenta;
 		global $db;
 		if (false == $this->loaded) { return false; }		// nothing to do
 		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+
+		if (true == $kapenta->mcEnabled) {
+			//--------------------------------------------------------------------------------------
+			//	invalidate memcached tag lists this belongs to
+			//--------------------------------------------------------------------------------------
+			$cacheKey = 'tags::' . strtolower($this->refModule) . '::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+			$cacheKey = 'tags::' . strtolower($this->refModel) . '::' . $this->refUID;
+			$kapenta->cacheDelete($cacheKey);
+		}
+
 		return true;
 	}
 

@@ -5,18 +5,31 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - compose message</title>
 	<content>
-[[:theme::navtitlebox::width=570::label=Original Message:]]
-[[:messages::show::UID=[`|pc][`|pc]UID[`|pc][`|pc]::noreply=yes:]]
-[[:theme::navtitlebox::width=570::label=Compose Reply:]]
-[[:messages::composeform:]]
-</content>
-	<nav1>[[:theme::navtitlebox::label=Folders:]]
-[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
-[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
-[`|lt]br/[`|gt]
-[[:theme::navtitlebox::label=Contacts:]]
-[[:messages::contactlist:]]
-[`|lt]br/[`|gt]</nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Original Message:]]
+		[[:messages::show::UID=[`|pc][`|pc]UID[`|pc][`|pc]::noreply=yes:]]
+		</div>
+		<br/>
+
+		<div class='block'>
+		[[:theme::navtitlebox::width=570::label=Compose Reply:]]
+		[[:messages::composeform:]]
+		</div>
+	</content>
+	<nav1>
+		<div class='block'>
+		[[:theme::navtitlebox::label=Folders:]]
+		[[:messages::summarynav::folder=inbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		[[:messages::summarynav::folder=outbox::owner=[`|pc][`|pc]owner[`|pc][`|pc]:]]
+		</div>
+		[`|lt]br/[`|gt]
+
+		<div class='block'>
+		[[:theme::navtitlebox::label=Contacts:]]
+		[[:messages::contactlist:]]
+		</div>
+		[`|lt]br/[`|gt]
+	</nav1>
 	<nav2></nav2>
 	<script></script>
 	<jsinit></jsinit>

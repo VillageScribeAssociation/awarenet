@@ -11,16 +11,16 @@
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { $page->do403('Please log in to use the chat.', true); }	
 
-	if ('' == $req->ref) { $page->do404('User not specified.', true); }
-	$model = new Users_User($req->ref);
+	if ('' == $kapenta->request->ref) { $page->do404('User not specified.', true); }
+	$model = new Users_User($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404('User not found.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page  
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/live/actions/chatwindow.page.php');
-	$page->blockArgs['chatUID'] = 'experimental';
-	$page->render();
+	$kapenta->page->load('modules/live/actions/chatwindow.page.php');
+	$kapenta->page->blockArgs['chatUID'] = 'experimental';
+	$kapenta->page->render();
 
 
 /*

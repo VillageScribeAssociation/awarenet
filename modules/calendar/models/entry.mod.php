@@ -380,7 +380,8 @@ class Calendar_Entry {
 
 
 	function firstDayOfMonth($month, $year) {
-		$ts = strtotime($year . '/' . $month . '/01');
+		global $kapenta;
+		$ts = $kapenta->strtotime($year . '-' . $month . '-01');
 		return date("D", $ts);
 	}
 	
@@ -417,7 +418,8 @@ class Calendar_Entry {
 	//returns: full day name (Monday-Sunday) [string]
 
 	function getDayName($day, $month, $year) {
-		$ts = strtotime($year . '/' . $month . '/' . $day);
+		global $kapenta;
+		$ts = $kapenta->strtotime($year . '-' . $month . '-' . $day);
 		return date("l", $ts);
 	}
 	
@@ -646,7 +648,8 @@ class Calendar_Entry {
 	//returns: array of {year, month, day} [array]
 	
 	function getNextDay($day, $month, $year) {
-		$ts = strtotime($year . '/' . $month . '/' . $day);
+		global $kapenta;
+		$ts = $kapenta->strtotime($year . '-' . $month . '-' . $day);
 		$ts += (60 * 60 * 24); // add one day
 		$next = array();
 		$next['day'] = date('d', $ts);
@@ -664,7 +667,8 @@ class Calendar_Entry {
 	//returns: array of {year, month, day} [array]		
 
 	function getPrevDay($day, $month, $year) {
-		$ts = strtotime($year . '/' . $month . '/' . $day);
+		global $kapenta; 
+		$ts = $kapenta->strtotime($year . '-' . $month . '-' . $day);
 		$ts -= (60 * 60 * 24); // add one day
 		$prev = array();
 		$prev['day'] = date('d', $ts);

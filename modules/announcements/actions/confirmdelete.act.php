@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('UID', $req->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404(); }
 
-	$model = new Announcements_Announcement($req->args['UID']);
+	$model = new Announcements_Announcement($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $page->do404('Announcement not found.'); }
 	if (false == $user->authHas('announcements', 'announcements_announcement', 'delete', $model->UID))
 		{ $page->do403('You are not authorized to delete this announcement.'); }	

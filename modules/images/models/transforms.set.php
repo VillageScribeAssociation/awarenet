@@ -17,7 +17,7 @@ class Images_Transforms {
 	//----------------------------------------------------------------------------------------------
 
 	var $members;				//_	transforms, array of label => filename [dict]
-	var $loaded = false;		//_	set to true when transforms are loaded [bool]
+	var $loaded = false;		//_	set to true when presets are loaded [bool]
 
 	var $presets;				//_	array of image sizes [dict:dict]
 	var $imageUID = '';			//_	UID of an Images_Image object [string]
@@ -26,6 +26,8 @@ class Images_Transforms {
 	var $aspect = -1;			//_	aspect ratio of image [float]
 	var $width = 0;				//_	width of source image, pixels [int]
 	var $height = 0;			//_	height of source image, pixels [int]
+
+	var $lasterr = '';			//_	for debug info [string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -42,7 +44,7 @@ class Images_Transforms {
 		$this->sourceFile = $sourceFile;
 
 		if (('' != $this->imageUID) && ('' != $this->sourceFile)) {
-			$this->load();
+			//$this->load();
 		}
 	}
 
@@ -55,8 +57,8 @@ class Images_Transforms {
 	//----------------------------------------------------------------------------------------------
 
 	function loadPresets() {
-		global $registry;
-		$dims = $registry->search('images', 'images.size.');	//%	set of registry keys [dict]
+		global $kapenta;
+		$dims = $kapenta->registry->search('images', 'images.size.');	//%	set of registry keys [dict]
 		$this->presets = array();								//	clear presets
 
 		foreach($dims as $key => $value) {
@@ -89,6 +91,8 @@ class Images_Transforms {
 			}
 
 		}
+
+		$this->loaded = true;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -100,11 +104,14 @@ class Images_Transforms {
 	//returns: true on success, false on failure [bool]	
 
 	function addPreset($label, $width, $height, $watermark) {
+		if (false == $this->loaded) { $this->loadPresets(); }
+
 		$label = strtolower(trim($label));
 		if ('' == $label) { return false; }
 		$key = 'images.size.' . $label;
 		$value = (int)trim($width) . 'x' . (int)trim($height);
-		$check = $registry->set($key, $value);
+		$check = $kapenta->registry->set($key, $value);
+
 		$this->loadPresets();											//	reload from registry
 		return $check;
 	}
@@ -114,9 +121,9 @@ class Images_Transforms {
 	//----------------------------------------------------------------------------------------------
 
 	function presetExists($label) {
-		$exists = false;
-		if (true == array_key_exists($label, $this->presets)) { $exists = true; }
-		return $exists;
+		if (false == $this->loaded) { $this->loadPresets(); }
+		if (true == array_key_exists($label, $this->presets)) { return true; }
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -125,11 +132,14 @@ class Images_Transforms {
 	//arg: label - name of image size [string]
 
 	function removePreset($label) {
-		global $registry;
+		global $kapenta;
+		if (false == $this->loaded) { $this->loadPresets(); }
+
 		$check = false;													//%	return value [bool]
 		$key = 'images.size.' . trim(strtolower($label));
-		if ('' == $registry->get($key)) { return $check; }
-		$check = $registry->delete($key);
+		if ('' == $kapenta->registry->get($key)) { return $check; }
+		$check = $kapenta->registry->delete($key);
+
 		$this->loadPresets();											// reload from registry
 		return $check;
 	}
@@ -151,20 +161,37 @@ class Images_Transforms {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
+	//.	discover if a named transform exists
+	//----------------------------------------------------------------------------------------------
+
+	function has($label) {
+		global $kapenta;
+		if (false == $this->presetExists($label)) { return false; }
+
+		$fileName = $this->fileName($label);
+		if (true == $kapenta->fs->exists($fileName)) { return true; }
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------
 	//.	load list of transforms available on this instance
 	//----------------------------------------------------------------------------------------------
 	//;	note that presets should be loaded before this is called
 
 	function load() {
+		//	performance profiling showed all these fileExists to be wasteful - now using
+		//	$this->loaded to refer to presets, strix, 2012-07-12
+		/*
 		global $kapenta;
 		$this->members = array();
 		foreach($this->presets as $preset) {
 			$fileName = $this->fileName($preset['label']);
-			if (true == $kapenta->fileExists($fileName)) {
+			if (true == $kapenta->fs->exists($fileName)) {
 				$this->members[$preset['label']] = $fileName;
 			}
 		}
 		$this->loaded = true;
+		*/
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -212,7 +239,7 @@ class Images_Transforms {
 	function loadImage() {
 		global $kapenta;
 		$check = false;												//%	return value [bool]
-		$raw = $kapenta->fileGetContents($this->sourceFile);		//%	raw file contents [string]
+		$raw = $kapenta->fs->get($this->sourceFile);		//%	raw file contents [string]
 		if (false === $raw) { return $check; }
 
 		$this->image = imagecreatefromstring($raw);					//%	GD handle [int]
@@ -239,7 +266,9 @@ class Images_Transforms {
 	//returns: handle to new image [int]
 
 	function scaleToWidth($width, $label) {
+		global $kapenta;
 		global $session;
+
 		if (-1 == $this->image) { $this->loadImage(); }
 		if (-1 == $this->image) { return false; }
 
@@ -255,6 +284,7 @@ class Images_Transforms {
 		);
 
 		if (true == $check) { 
+			$kapenta->fileMakeSubdirs($fileName);
 			$check = imagejpeg($newImg, $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
 			else { $session->msg('Could not save rescaled image.', 'bad'); }
@@ -324,7 +354,8 @@ class Images_Transforms {
 		}
 		
 		if (true == $check) {
-			$kapenta->filePutContents($fileName, '', true); 
+			$kapenta->fileMakeSubdirs($fileName);
+			$kapenta->fs->put($fileName, '', true); 
 			$check = imagejpeg($newImg, $kapenta->installPath . $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
 			else { $session->msg('Could not save rescaled image.', 'bad'); }
@@ -344,34 +375,56 @@ class Images_Transforms {
 
 	function reduce() {
 		global $kapenta;
-		global $registry;
+		global $kapenta;
 		global $session;
 
-		$fileSize = $kapenta->fileSize($this->sourceFile);
-		$maxSize = (int)$registry->get('images.maxsize');
+		$this->lasterr = '';
 
-		if (false == $this->loaded) { return false; }				//	no object loaded
+		$fileSize = $kapenta->fs->size($this->sourceFile);
+		$maxSize = (int)$kapenta->registry->get('images.maxsize');
 
-		if ($fileSize < $maxSize) { return true; }					//	no need to reduce
+		if ($fileSize < $maxSize) {return true; }					//	no need to reduce
 
-		if (false == $this->loadImage()) { return false; }			//	invalid image
-
-		if ($this->width <= 1024) { return false; }					//	(TODO) use registry
-
-		if ('' == $registry->get('images.size.widthmax')) {
-			$session->msg("Please review image settings for 'widthmax' preset.");
+		if (false == $this->loaded) {
+			$this->lasterr = "No object loaded.";
 			return false;
+		}
+
+		if (false == $this->loadImage()) {
+			$this->lasterr = "Could not loadImage(), invalid?";
+			return false;
+		}
+
+		if ($this->width <= 1024) {									//	(TODO) use registry
+			$this->lasterr = "Too small to reduce.";
+			return true;
+		}
+
+		if ('' == $kapenta->registry->get('images.size.widthmax')) {
+			$kapenta->registry->set('images.size.widthmax', '1024x*');
+			$session->msg("Set default 'widthmax' preset: 1024x*.");
 		}
 
 		//	scale down
 		$check = $this->make('widthmax');
-		if (false == $check) { return false; }
+
+		if (false == $check) {
+			$this->lasterr = "Failed to apply transform 'widthmax'.";
+			return false;
+		}
 
 		//	swap the new transform for the original
 		$newFile = $this->fileName('widthmax');
 
-		if (false == $kapenta->fileExists($newFile)) { return false; }
-		if (false == $kapenta->fileExists($this->sourceFile)) { return false; }
+		if (false == $kapenta->fs->exists($newFile)) {
+			$this->lasterr = "Transform file could not be created, check directory permissions.";
+			return false;
+		}
+
+		if (false == $kapenta->fs->exists($this->sourceFile)) {
+			$this->lasterr = 'Source file does not exist to make tranform from.';
+			return false;
+		}
 
 		$kapenta->fileDelete($this->sourceFile, true);
 		$kapenta->fileCopy($newFile, $this->sourceFile);

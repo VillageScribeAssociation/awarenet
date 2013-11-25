@@ -13,21 +13,21 @@ class Calendar_Template {
 	var $dbSchema;			//_	database table definition [array]
 	var $loaded;			//_	set to true when an object has been loaded [bool]
 
-	var $UID;			//_ UID [string]
-	var $title;			//_ title [string]
+	var $UID;				//_ UID [string]
+	var $title;				//_ title [string]
 	var $category;			//_ varchar(100) [string]
-	var $venue;			//_ varchar(255) [string]
+	var $venue;				//_ varchar(255) [string]
 	var $content;			//_ wyswyg [string]
-	var $year;			//_ varchar(10) [string]
-	var $month;			//_ varchar(10) [string]
-	var $day;			//_ varchar(10) [string]
-	var $eventStart;			//_ varchar(50) [string]
+	var $year;				//_ varchar(10) [string]
+	var $month;				//_ varchar(10) [string]
+	var $day;				//_ varchar(10) [string]
+	var $eventStart;		//_ varchar(50) [string]
 	var $eventEnd;			//_ varchar(50) [string]
 	var $createdOn;			//_ datetime [string]
 	var $createdBy;			//_ ref:users_user [string]
 	var $editedOn;			//_ datetime [string]
 	var $editedBy;			//_ ref:users_user [string]
-	var $alias;			//_ alias [string]
+	var $alias;				//_ alias [string]
 
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
@@ -150,7 +150,7 @@ class Calendar_Template {
 		);
 
 		//revision history will be kept for these fields
-		$dbSchema['diff'] = array(
+		$dbSchema['nodiff'] = array(
 			'title',
 			'category',
 			'venue',
@@ -210,7 +210,7 @@ class Calendar_Template {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('calendar', 'calendar_template', 'view', $ext['UID'])) {
+		if (true == $user->authHas('calendar', 'calendar_template', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%calendar/showtemplate/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}

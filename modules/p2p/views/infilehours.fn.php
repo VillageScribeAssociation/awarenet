@@ -6,7 +6,7 @@
 
 function p2p_infilehours($args) {
 	global $kapenta;
-	global $registry;
+	global $kapenta;
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ function p2p_infilehours($args) {
 	//	look up file hours and check if we're in them
 	//----------------------------------------------------------------------------------------------
 	$inHours = false;			//%	return value [bool]
-	$fileHours = $registry->get('p2p.filehours');
+	$fileHours = $kapenta->registry->get('p2p.filehours');
 	$hours = explode(",", $fileHours);
 	$current = (int)date('G', $kapenta->time());
 

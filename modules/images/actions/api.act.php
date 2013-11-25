@@ -10,21 +10,21 @@
 
 	if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 
-	if (false == array_key_exists('refuid', $req->args)) { $page->doXmlError('refUID not given'); }
-	if (false == array_key_exists('refmodule', $req->args)) { $page->doXmlError('module not specified'); }
+	if (false == array_key_exists('refuid', $kapenta->request->args)) { $page->doXmlError('refUID not given'); }
+	if (false == array_key_exists('refmodule', $kapenta->request->args)) { $page->doXmlError('module not specified'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	list images 
 	//----------------------------------------------------------------------------------------------
 
-	if ('list' == $req->ref) {
+	if ('list' == $kapenta->request->ref) {
 
 		$conditions = array();
-		if (array_key_exists('refuid', $req->args) == true) 
-			{ $conditions[] = "refUID='" . $db->addMarkup($req->args['refuid']) . "'"; }
+		if (array_key_exists('refuid', $kapenta->request->args) == true) 
+			{ $conditions[] = "refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "'"; }
 
-		if (array_key_exists('refmodule', $req->args) == true) 
-			{ $conditions[] = "refModule='" . $db->addMarkup($req->args['refmodule']) . "'"; }
+		if (array_key_exists('refmodule', $kapenta->request->args) == true) 
+			{ $conditions[] = "refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) . "'"; }
 
 		$range = $db->loadRange('images_image', '*', $conditions);
 

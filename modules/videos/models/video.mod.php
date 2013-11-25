@@ -141,7 +141,7 @@ class Videos_Video {
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 
 		// add hash if missing and the file is available
-		if (('' == $this->hash) && (true == $kapenta->fileExists($this->fileName))) {
+		if (('' == $this->hash) && (true == $kapenta->fs->exists($this->fileName))) {
 			$this->hash = sha1_file($kapenta->installPath . $this->fileName);
 		}
 

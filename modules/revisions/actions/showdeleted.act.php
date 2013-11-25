@@ -10,19 +10,19 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) {$page->do403(); }
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 
-	$model = new Revisions_Deleted($req->ref);
+	$model = new Revisions_Deleted($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/revisions/actions/showdeleted.page.php');
-	$page->blockArgs['UID'] = $model->UID;
-	$page->blockArgs['refModule'] = $model->refModule;
-	$page->blockArgs['refModel'] = $model->refModel;
-	$page->blockArgs['refUID'] = $model->refUID;
-	$page->render();
+	$kapenta->page->load('modules/revisions/actions/showdeleted.page.php');
+	$kapenta->page->blockArgs['UID'] = $model->UID;
+	$kapenta->page->blockArgs['refModule'] = $model->refModule;
+	$kapenta->page->blockArgs['refModel'] = $model->refModel;
+	$kapenta->page->blockArgs['refUID'] = $model->refUID;
+	$kapenta->page->render();
 
 ?>

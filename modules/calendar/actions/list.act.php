@@ -20,12 +20,12 @@
 	$scope = '';
 	$period = '';
 
-	if (array_key_exists('day', $req->args)) 
-		{ $scope = 'day'; $period = $req->args['day']; }
-	if (array_key_exists('month', $req->args)) 
-		{ $scope = 'month'; $period = $req->args['month']; }
-	if (array_key_exists('year', $req->args)) 
-		{ $scope = 'year'; $period = $req->args['year']; }
+	if (array_key_exists('day', $kapenta->request->args)) 
+		{ $scope = 'day'; $period = $kapenta->request->args['day']; }
+	if (array_key_exists('month', $kapenta->request->args)) 
+		{ $scope = 'month'; $period = $kapenta->request->args['month']; }
+	if (array_key_exists('year', $kapenta->request->args)) 
+		{ $scope = 'year'; $period = $kapenta->request->args['year']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	default, show this month
@@ -34,11 +34,11 @@
 	if ($scope == '') {
 		$model = new Calendar_Entry();
 	
-		$page->load('modules/calendar/actions/month.page.php');
-		$page->blockArgs['year'] = date('Y');
-		$page->blockArgs['month'] = date('m');
-		$page->blockArgs['monthName'] = date('F');
-		$page->render();				
+		$kapenta->page->load('modules/calendar/actions/month.page.php');
+		$kapenta->page->blockArgs['year'] = date('Y');
+		$kapenta->page->blockArgs['month'] = date('m');
+		$kapenta->page->blockArgs['monthName'] = date('F');
+		$kapenta->page->render();				
 	}
 	
 	//----------------------------------------------------------------------------------------------
@@ -46,12 +46,12 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ($scope == 'year') { 
-		$page->load('modules/calendar/actions/year.page.php');
-		$page->blockArgs['scope'] = $scope;
-		$page->blockArgs['year'] = $period;
-		$page->blockArgs['nextyear'] = ($period + 1);
-		$page->blockArgs['prevyear'] = ($period - 1);
-		$page->render();
+		$kapenta->page->load('modules/calendar/actions/year.page.php');
+		$kapenta->page->blockArgs['scope'] = $scope;
+		$kapenta->page->blockArgs['year'] = $period;
+		$kapenta->page->blockArgs['nextyear'] = ($period + 1);
+		$kapenta->page->blockArgs['prevyear'] = ($period - 1);
+		$kapenta->page->render();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -66,11 +66,11 @@
 			$monthName = $model->getMonthName($bits[1]);
 			if ($monthName == false) { $page->do404(); }
 		
-			$page->load('modules/calendar/actions/month.page.php');
-			$page->blockArgs['year'] = $db->addMarkup($bits[0]);
-			$page->blockArgs['month'] = $db->addMarkup($bits[1]);
-			$page->blockArgs['monthName'] = $monthName;
-			$page->render();			
+			$kapenta->page->load('modules/calendar/actions/month.page.php');
+			$kapenta->page->blockArgs['year'] = $db->addMarkup($bits[0]);
+			$kapenta->page->blockArgs['month'] = $db->addMarkup($bits[1]);
+			$kapenta->page->blockArgs['monthName'] = $monthName;
+			$kapenta->page->render();			
 			
 		} else { $page->do404(); }
 	}
@@ -87,12 +87,12 @@
 			$monthName = $model->getMonthName($bits[1]);
 			if (false == $monthName) { $page->do404(); }
 		
-			$page->load('modules/calendar/actions/day.page.php');
-			$page->blockArgs['year'] = $db->addMarkup($bits[0]);
-			$page->blockArgs['month'] = $db->addMarkup($bits[1]);
-			$page->blockArgs['day'] = $db->addMarkup($bits[2]);
-			$page->blockArgs['monthName'] = $monthName;
-			$page->render();			
+			$kapenta->page->load('modules/calendar/actions/day.page.php');
+			$kapenta->page->blockArgs['year'] = $db->addMarkup($bits[0]);
+			$kapenta->page->blockArgs['month'] = $db->addMarkup($bits[1]);
+			$kapenta->page->blockArgs['day'] = $db->addMarkup($bits[2]);
+			$kapenta->page->blockArgs['monthName'] = $monthName;
+			$kapenta->page->render();			
 			
 		} else { $page->do404(); }
 	}

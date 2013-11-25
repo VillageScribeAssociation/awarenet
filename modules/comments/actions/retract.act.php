@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference, permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $page->do404(); }
 
-	$model = new Comments_Comment($req->ref);
+	$model = new Comments_Comment($kapenta->request->ref);
 	if (false == $model->loaded) { $page->do404(); }
 
 	$authorised = false;

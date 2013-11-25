@@ -5,13 +5,21 @@
 	<template>twocol-rightnav.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - projects - history</title>
 	<content>
+		<div class='block'>
 		[[:theme::navtitlebox::width=570::label=History:]]
 		[`|lt]h1[`|gt]Revision History: [`|pc][`|pc]articleTitle[`|pc][`|pc][`|lt]/h1[`|gt]
+		</div>
+		<div class='spacer'></div>
+
 		[[:live::river::mod=projects::view=showchanges::pv=pageNo::allow=UID|num::UID=[`|pc][`|pc]UID[`|pc][`|pc]::num=10:]]
+
 	</content>
 	<nav1>
+		<div class='block'>
+		<div class='spacer'></div>
 		[[:theme::navtitlebox::label=Details:]]
 		[[:projects::statsnav::raUID=[`|pc][`|pc]raUID[`|pc][`|pc]:]]
+		</div>
 		[`|lt]br/[`|gt]
 	</nav1>
 	<nav2></nav2>

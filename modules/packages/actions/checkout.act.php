@@ -29,7 +29,7 @@
 
 	foreach($package->files as $pf) {
 		$download = false;
-		if (false == $kapenta->fileExists($pf['path'])) { $download = true; }
+		if (false == $kapenta->fs->exists($pf['path'])) { $download = true; }
 		else {
 			if ($pf['hash'] != $package->getFileHash($pf['path'])) { $download = true; }
 		}

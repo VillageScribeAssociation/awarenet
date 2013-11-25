@@ -13,8 +13,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	try it out
 	//----------------------------------------------------------------------------------------------
-	$pubkey = $registry->get('p2p.server.pubkey');
-	$prvkey = $registry->get('p2p.server.prvkey');
+	$pubkey = $kapenta->registry->get('p2p.server.pubkey');
+	$prvkey = $kapenta->registry->get('p2p.server.prvkey');
 
 	$signature = null;
 	$data = "http://example.com/resources/bogus";

@@ -12,13 +12,13 @@
 
 	$size = 'full';									//%	preset image size [string]
 
-	if (true == array_key_exists('size', $req->args)) { $size = $req->args['size']; }
-	if (true == array_key_exists('s', $req->args)) { $size = $req->args['s']; }
-	if (true == array_key_exists('p', $req->args)) { $size = $req->args['p']; }
+	if (true == array_key_exists('size', $kapenta->request->args)) { $size = $kapenta->request->args['size']; }
+	if (true == array_key_exists('s', $kapenta->request->args)) { $size = $kapenta->request->args['s']; }
+	if (true == array_key_exists('p', $kapenta->request->args)) { $size = $kapenta->request->args['p']; }
 
-	if ('' == $req->ref) { $page->do404('Image not specified.'); }
+	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
 
-	$model = new Images_Image($req->ref);			//%	[object]
+	$model = new Images_Image($kapenta->request->ref);			//%	[object]
 
 	if (false == $model->loaded) { $page->do404('Image not found'); }
 	if ('' == $model->fileName) { $page->do404('File missing.'); }
@@ -68,12 +68,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	create the transform if it does not exist
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists($size, $model->transforms->members)) {
+	if (false == $model->transforms->has($size)) {
 		$model->transforms->make($size);
 	}
 
-	if (true == array_key_exists($size, $model->transforms->members)) {
-		$fileName = $model->transforms->members[$size];
+	if (true == $model->transforms->has($size)) {
+		$fileName = $model->transforms->fileName($size);
 	}
 
 	if ('' == $fileName) {
@@ -88,7 +88,7 @@
 	header('Last-Modified: ' . $lmDate);
 	header("ETag: \"" . md5($lmDate . $size) . "\"");
 	header('Cache-Control: max-age=3600');
-	header('Content-Length: ' . $kapenta->fileSize($fileName));
+	header('Content-Length: ' . $kapenta->fs->size($fileName));
 	readfile($kapenta->installPath . $fileName);	
 
 ?>

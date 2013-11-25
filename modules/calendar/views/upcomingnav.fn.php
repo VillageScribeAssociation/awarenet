@@ -8,7 +8,9 @@
 //opt: num - number of events to show [string]
 
 function calendar_upcomingnav($args) {
-	global $kapenta, $db;
+	global $kapenta;
+	global $db;
+
 	$html = '';				//%	return value [string]
 	$num = 10;
 
@@ -22,8 +24,8 @@ function calendar_upcomingnav($args) {
 	foreach($ev as $UID => $row) {
 		$model->loadArray($row);
 		$link = '%%serverPath%%calendar/' . $model->alias;
-		$date = strtotime($row['year'] . '-' . $row['month'] . '-' . $row['day']);
-		$date = date('jS F Y', $date);
+		$timestamp = $kapenta->strtotime($row['year'] . '-' . $row['month'] . '-' . $row['day']);
+		$date = date('jS F Y', $timestamp);
 		$desc = $model->title;
 		$html .= "<a class='black' href='$link'>$desc<br/><small>$date</small></a><br/>";
 	}

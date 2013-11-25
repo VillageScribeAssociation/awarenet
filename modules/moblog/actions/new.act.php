@@ -26,6 +26,7 @@
 			case 'alias':	$model->alias = $utils->cleanString($value); break;
 		}
 	}
+
 	$report = $model->save();
 
 	//----------------------------------------------------------------------------------------------

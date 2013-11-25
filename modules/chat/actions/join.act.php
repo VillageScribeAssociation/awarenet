@@ -13,9 +13,9 @@
 	//----------------------------------------------------------------------------------------------
 	if (('public' == $user->role) || ('banned' == $user->role)) { $page->doXmlError(''); }
 
-	if ('' == $req->ref) { $page->doXmlError('room not specified'); }
+	if ('' == $kapenta->request->ref) { $page->doXmlError('room not specified'); }
 
-	$room = new Chat_Room($req->ref);
+	$room = new Chat_Room($kapenta->request->ref);
 	if (false == $room->loaded) { $page->doXmlError('room not found'); }
 
 	//----------------------------------------------------------------------------------------------

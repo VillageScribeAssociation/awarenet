@@ -10,9 +10,7 @@
 <input type='submit' value='Change Title' />
 </form>
 <hr/>
-<br/>
 
-[[:theme::navtitlebox::label=Abstract:]]
 <form
 	id='frmEditAbstract%%UID%%'
 	name='editAbstract'
@@ -45,10 +43,4 @@
 </table>
 <br/>
 
-[[:theme::navtitlebox::label=Images::toggle=divAbsImages::hidden=yes:]]
-<div id='divAbsImages' style='visibility: hidden; display: none;'>
-[[:images::uploadmultiple::refModule=projects::refModel=projects_project::refUID=%%UID%%:]]
-<br/>
-</div>
-<br/>
 */ ?>

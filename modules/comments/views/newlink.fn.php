@@ -6,14 +6,33 @@
 //|	create a link to add a new comment to something
 //--------------------------------------------------------------------------------------------------
 //arg: refModule - the module that will own the new comment [string]
+//arg: refModel - type of object that will own the new comment [string]
 //arg: refUID - the record that will own the new announcment [string]
+//TODO: discover if this is used by anything and delete if not
 
 function comments_newlink($args) {
-	if ($user->authHas('comments', 'Comment_Comment', 'edit', $args) == false) { return false; }
-	if (array_key_exists('refModule', $args) == false) { return false; }
-	if (array_key_exists('refUID', $args) == false) { return false; }
-	$html = "<a href='/comments/new/refModule_" . $args['refModule']
-			 . "/refUID_" . $args['refUID'] . "/'>[add a new comment]</a>";
+	global $user;	
+
+	$html = '';
+
+	//----------------------------------------------------------------------------------------------
+	//	check arguments and permissions
+	//----------------------------------------------------------------------------------------------
+	if (false == $user->authHas('comments', 'comment_comment', 'edit')) { return ''; }
+
+	if (false == array_key_exists('refModule', $args)) { return false; }
+	if (false == array_key_exists('refModel', $args)) { return false; }
+	if (false == array_key_exists('refUID', $args)) { return false; }
+
+	//----------------------------------------------------------------------------------------------
+	//	make the link
+	//----------------------------------------------------------------------------------------------
+	$newUrl = "comments/new/"
+	 . "refModule_" . $args['refModule']
+	 . "refModel_" . $args['refModel']
+	 . "/refUID_" . $args['refUID'] . "/";
+
+	$html = "<a href='%%serverPath%%'>[add a new comment]</a>";
 	return $html;
 }
 

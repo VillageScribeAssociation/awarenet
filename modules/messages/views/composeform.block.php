@@ -1,27 +1,25 @@
 <? /*
 
-<script src='%%serverPath%%modules/messages/compose.js'></script>
+<script src='%%serverPath%%modules/messages/js/compose.js'></script>
 <h1>New Message</h1>
 <form name='sendMessage' method='POST' action='%%serverPath%%messages/send/' />
 <input type='hidden' name='action' value='sendMessage' />
 <input type='hidden' name='re' value='%%reMsg%%' />
 <input type='hidden' id='txtRecipients' name='recipients' value='%%jsRecipientUID%%' />
 
-<b>Subject: </b> <input type='text' name='subject' size='60' value='%%subject%%' /><br/>
-<table noborder>
+<table noborder width='100%'>
   <tr>
-    <td width='292' valign='top'>
-	  <b>To:</b><br/>
-	   <div id='composeDisplayRecip'>%%jsRecipientHtml%%</div>
-	</td>
-    <td valign='top'>
-       <iframe src='%%serverPath%%users/usersearch/' id='ifCUserSearch' name='userSearchIf'
-			frameborder='no' width='292' height='140'></iframe>
-    </td>
+    <td><b>Subject: </b></td>
+	<td><input type='text' name='subject' style='width: 100%;' value='%%subject%%' /></td>
+  </tr>
+  <tr>
+	<td valign='top'><b>To:</b></td>
+	<td><div id='divRecipients'></div></td>
   </tr>
 </table>
+<br/>
 
-[[:editor::add::name=content:]]
+[[:editor::add::name=content::height=400:]]
 <br/>
 
 <table noborder>
@@ -37,4 +35,5 @@
     </td>
   </tr>
 </table>
+
 */ ?>

@@ -71,25 +71,52 @@
 	$request = $req->toArray();						//	(DEPRECATED)
 	$ref = $req->ref;								//	(DEPRECATED)
 
-	if ('securesync/api/status' == $kapenta->request->raw or
-		'securesync/api/info' == $kapenta->request->raw) {
+	if (false !== strpos($kapenta->request->raw,'static/css') 
+		or false !== strpos($kapenta->request->raw,'static/images')
+		or false !== strpos($kapenta->request->raw,'static/data')
+		or false !== strpos($kapenta->request->raw,'static/js')
+		or false !== strpos($kapenta->request->raw,'static/video-js')
+		or false !== strpos($kapenta->request->raw,'content/')
+		or false !== strpos($kapenta->request->raw,'jsi18n/')
+		or false !== strpos($kapenta->request->raw,'api/info')
+		or false !== strpos($kapenta->request->raw,'api/status')
+		or false !== strpos($kapenta->request->raw,'api/get')
+		or false !== strpos($kapenta->request->raw,'api/start')
+		or false !== strpos($kapenta->request->raw,'api/delete')
+		or false !== strpos($kapenta->request->raw,'api/check_video')
+		or false !== strpos($kapenta->request->raw,'api/check_subtitle')
+		or false !== strpos($kapenta->request->raw,'api/cancel')
+		or false !== strpos($kapenta->request->raw,'math')
+		or false !== strpos($kapenta->request->raw,'science')
+		or false !== strpos($kapenta->request->raw,'humanities')
+		or false !== strpos($kapenta->request->raw,'test-prep')
+		or false !== strpos($kapenta->request->raw,'discovery-lab')
+		or false !== strpos($kapenta->request->raw,'exercisedashboard')
+		or false !== strpos($kapenta->request->raw,'coachreports/table')
+		or false !== strpos($kapenta->request->raw,'securesync/api/status')
+		or false !== strpos($kapenta->request->raw,'coachreports/scatter')
+		or false !== strpos($kapenta->request->raw,'coachreports/api')
+		or false !== strpos($kapenta->request->raw,'coachreports/timeline')
+		or false !== strpos($kapenta->request->raw,'coachreports/student')
+	) {
+		$rawdata = file_get_contents('php://input'); //for POSTS
+		
 		$requestURI = $_SERVER['REQUEST_URI'];
 		$requestQuery = $_SERVER['QUERY_STRING'];
 		$remoteAddr = $_SERVER['REMOTE_ADDR'];
 		$remotePort = $_SERVER['REMOTE_PORT'];
+		$requestMethod = $_SERVER['REQUEST_METHOD'];
+		$postArgs	= $rawdata;
 		$args = array(
+			'method' => $requestMethod,
 			'uri' => $requestURI,
 			'query' => $requestQuery,
 			'remoteAddr' => $remoteAddr,
 			'remotePort' => $remotePort,
-			'method' => $_SERVER['REQUEST_METHOD']
+			'postArgs' => $postArgs
 		);
 
 		$kapenta->raiseEvent('lessons', 'khanlite_request', $args);
-
-		//$kapenta->request->module = 'lessons';
-		//$kapenta->request->action = 'updatekhan';
-
 	}
 
 //--------------------------------------------------------------------------------------------------

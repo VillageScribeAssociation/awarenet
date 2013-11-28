@@ -31,8 +31,14 @@
 	//----------------------------------------------------------------------------------------------
 	$set = new Images_Images($refModule, $refModel, $refUID);
 
-	if (0 == count($set->members)) { $page->do302('images/unavailable/s_' . $size . '/'); }	
-
+if (0 == count($set->members)) { 
+		$file = new Videos_Video($refUID);
+		if (false !== strpos($file->fileName, 'mp3')) {
+			$page->do302('images/audio/s_' . $size . '/');
+		} else {
+			$page->do302('images/unavailable/s_' . $size . '/'); 
+		}
+	}	
 	$defaultAry = $set->members[0];
 
 	$page->do302('images/s_' . $size . '/' . $defaultAry['alias']);

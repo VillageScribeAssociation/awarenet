@@ -28,12 +28,13 @@ function notifications_list($args) {
 	if (false == array_key_exists('userUID', $args)) { return '(user not specified)'; }
 
 	$userUID = $args['userUID'];
+	
 	if (('teachers' == $userUID) || ('everyone' == $userUID)) {
 		// this is an aggregate feed, TODO: disable hiding of notifications
 	} else {
 		// this is a single user's feed
 		if (false == $db->objectExists('users_user', $userUID)) { return '(no such user)'; }
-		if (($userUID != $user->UID) && ('admin' != $user->role)) { 
+		if (($userUID != $user->UID) && (('admin' != $user->role) and ('teacher' != $user->role))) { 
 			return "<div class='inlinequote'>Your session has ezxpired, please log in.</div>"; 
 		}
 	}

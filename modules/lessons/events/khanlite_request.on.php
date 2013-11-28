@@ -1,16 +1,15 @@
 <?
 	require_once($kapenta->installPath . 'modules/lessons/inc/khan.inc.php');
 
-// require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
-
 //-------------------------------------------------------------------------------------------------
-//|	fired when a comment is added
+//|	fired when a KA Lite request is identified by index.php
 //-------------------------------------------------------------------------------------------------
-//arg: refModule - name of module to which a comment was attached [string]
-//arg: refModel - type of object to which comment was attached [string]
-//arg: refUID - UID of object to which comment was attached [string]
-//arg: commentUID - UID of the new comment [string]
-//arg: comment - text/html of comment [string]
+//arg: method - http POST or GET [string]
+//arg: uri - uri of http call [string]
+//arg: query - parameters in http call [string]
+//arg: remoteAddr - address of caller [string]
+//arg: remotePort - port of caller [string]
+//arg: remotePort - args of POST [string]
 
 function lessons__cb_khanlite_request($args) {
 	global $kapenta;
@@ -39,6 +38,9 @@ function lessons__cb_khanlite_request($args) {
 	$csrftoken = '';
 	$sessionid = '';
 	
+	//----------------------------------------------------------------------------------------------
+	//	get sessionid and csrftoken for KA Lite interaction
+	//----------------------------------------------------------------------------------------------	
 	if (true == $kapenta->session->has('c_sessionid')) {
 		$sessionid = $kapenta->session->get('c_sessionid');
 	}
@@ -48,6 +50,9 @@ function lessons__cb_khanlite_request($args) {
 		
 	$reply = '';
 
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for css files to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	if (false !== strpos($request, 'static/css')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -56,6 +61,9 @@ function lessons__cb_khanlite_request($args) {
 
 		header('Content-Type: text/css');
 	} 
+	//----------------------------------------------------------------------------------------------
+	//	redirect request for images files to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'static/images')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -64,6 +72,9 @@ function lessons__cb_khanlite_request($args) {
 	
 		header('Content-Type: text/image');
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect request for data to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'static/data')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -72,6 +83,9 @@ function lessons__cb_khanlite_request($args) {
 	
 		header('Content-Type: application/json');
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for video and image content to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'content/')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -84,6 +98,9 @@ function lessons__cb_khanlite_request($args) {
 			header('Content-Type: image/png');
 		}
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for java script code to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'static/js')) 
 	{
 		$cookies = '';
@@ -99,6 +116,9 @@ function lessons__cb_khanlite_request($args) {
 			header('Content-Type: application/javascript');
 		}
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for jsi18n to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'jsi18n')) 
 	{
 		$cookies = '';
@@ -108,6 +128,9 @@ function lessons__cb_khanlite_request($args) {
 	
 		header('Content-Type: text/html');
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for specific video functionality to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'static/video-js')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -120,6 +143,9 @@ function lessons__cb_khanlite_request($args) {
 			header('Content-Type: application/javascript');
 		}
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for api calls to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'api/info')) {
 		$cookies = '';
 		if ('GET' == $requestMethod) {
@@ -150,6 +176,8 @@ function lessons__cb_khanlite_request($args) {
 			or false !== strpos($request, 'api/delete')
 			or false !== strpos($request, 'api/cancel')
 			or false !== strpos($request, 'api/retry')
+			or false !== strpos($request,'coachreports/api')
+			or false !== strpos($request,'securesync/api/status')
 		) {
 		$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
 		$reply = $kapenta->utils->curlPost('http://localhost:8008' . $request, $postArgs, false, $cookies, 
@@ -157,6 +185,9 @@ function lessons__cb_khanlite_request($args) {
 
 		header('Content-Type: application/json');
 	}
+	//----------------------------------------------------------------------------------------------
+	//	redirect requests for sub items to KA Lite
+	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'math')
 		or false !== strpos($request, 'science')
 		or false !== strpos($request, 'humanities')	
@@ -174,7 +205,36 @@ function lessons__cb_khanlite_request($args) {
 		header('Content-Type: text/html');
 		$reply = removeLinksFromKhanLitePage($reply);
 
-		$kapenta->page->load('modules/lessons/actions/khan.page.php');
+		$kapenta->page->load('modules/lessons/actions/khansub.page.php');
+		$kapenta->page->blockArgs['kalisting'] = $reply;
+		$kapenta->page->render();	
+
+		die();	
+		return true;
+	}
+	else if (false !== strpos($request, 'coachreports/table')	
+		or false !== strpos($request,'coachreports/scatter')
+		or false !== strpos($request,'coachreports/timeline')
+		or false !== strpos($request,'coachreports/student')
+	)
+	{
+		$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
+		
+		if ('GET' == $requestMethod) {
+			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
+		}
+
+		header('Content-Type: text/html');
+		
+		if (!strlen($reply)){
+			$request = str_replace('/video', '/video/', $request);
+			$request = str_replace('/exercise', '/exercise/', $request);
+			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
+		}
+	
+		$reply = removeLinksFromKhanLitePage($reply);
+
+		$kapenta->page->load('modules/lessons/actions/khansub.page.php');
 		$kapenta->page->blockArgs['kalisting'] = $reply;
 		$kapenta->page->render();	
 

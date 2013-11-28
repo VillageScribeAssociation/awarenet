@@ -2,10 +2,9 @@
 <?xml version="1.0" ?>
 
 <page>
-	<template>twocol-rightnav.template.php</template>
-	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - build video lesson packages</title>
+	<template>onecol.template.php</template>
+	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - Kalite Integration</title>
 	<content>
-		[[:theme::navtitlebox::label=Download Video Lessons from Khan Academy API:]]
 		%%kalisting%%
 	</content>
 	<nav1></nav1>

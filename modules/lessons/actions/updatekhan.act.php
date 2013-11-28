@@ -2,6 +2,9 @@
 
 	require_once($kapenta->installPath . 'modules/lessons/inc/khan.inc.php');
 
+//--------------------------------------------------------------------------------------------------
+//*	This action starts the update videos and exercises functionality for KA Lite
+//--------------------------------------------------------------------------------------------------
 	global $kapenta;
 
 	if ('admin' !== $kapenta->user->role and 'teacher' !== $kapenta->user->role) { $kapenta->page->do403(); }
@@ -10,6 +13,9 @@
 	$csrftoken = '';
 	$kalite = $kapenta->registry->get('kalite.installation');
 	
+	//----------------------------------------------------------------------------------------------
+	//	check if user is already logged in into KA Lite, otherwise automatically create user (1st time) and log in
+	//----------------------------------------------------------------------------------------------
 	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
 		//signed in already, continue below
 //		echo "We are logged in with KhanLite already!<br/>\n";
@@ -18,14 +24,21 @@
 		createAndLoginKhanLite();
 	} 
 
+	//----------------------------------------------------------------------------------------------
+	//	call GET /coachreports from KA Lite Server
+	//----------------------------------------------------------------------------------------------
 	$sessionid = $kapenta->session->get('c_sessionid');
 	$raw = $kapenta->utils->curlGet($kalite.'/update/', '', false, 'sessionid='.$sessionid);
 
-	//5) remove links to other locations within khanlite from received html page
+	//----------------------------------------------------------------------------------------------
+	//	remove internal KA Lite links so that we can control what functionality of KA Lite is called from Awarenet
+	//----------------------------------------------------------------------------------------------
 	$replaced = removeLinksFromKhanLitePage($raw);
 
-	//6) display html page within the awarenet context
-	$kapenta->page->load('modules/lessons/actions/khan.page.php');
+	//----------------------------------------------------------------------------------------------
+	//	Render KA Lite sub page
+	//----------------------------------------------------------------------------------------------
+	$kapenta->page->load('modules/lessons/actions/khansub.page.php');
 	$kapenta->page->blockArgs['kalisting'] = $replaced;
 	$kapenta->page->render();	
 ?>

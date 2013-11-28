@@ -196,7 +196,7 @@ class KNotifications {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	add all admin users to a notification
+	//.	add all admin users and teachers to a notification
 	//----------------------------------------------------------------------------------------------
 	//arg: notificationUID - UID of a Notifications_Notification object [string]
 	//returns: true on success, false on failure [bool]
@@ -205,7 +205,7 @@ class KNotifications {
 		global $db;
 		$allOk = true;		//%	return value [bool]
 
-		$range = $db->loadRange('users_user', '*', array("role='admin'"));
+		$range = $db->loadRange('users_user', '*', array("role='admin' OR role ='teacher'"));
 		foreach($range as $row) {
 			if (false == $this->addUser($notificationUID, $row['UID'])) { $allOk = false; }
 		}

@@ -18,10 +18,10 @@
 
 	$model = $user;
 
-	if (('' != $kapenta->request->ref) && ('admin' == $user->role)) {
-		// only admins can see other peoples notification feed
-		$model = new Users_User($kapenta->request->ref);
-		if (false == $model->loaded) { $page->do404(); }
+/	if (('' != $kapenta->request) && (('admin' == $kapenta->user->role) or ('teacher' == $kapenta->user->role))) {
+		// only admins and teachers can see other peoples notification feed
+		$model = new Users_User($req->ref);
+		if (false == $model->loaded) { $kapenta->page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------

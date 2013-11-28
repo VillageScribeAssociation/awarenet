@@ -32,13 +32,7 @@ function videos_playeraudio($args) {
 	$ext['width'] = '560';
 	$ext['height'] = '440';
 
-	$ciBlock = "[[:images::default::size=width570::link=no"
-			. "::refModule=videos::refModel=videos_video::refUID=" . $model->UID . ":]]";
-
-	$ciTag = $theme->expandBlocks($ciBlock, '');
-	$parts = explode("'", $ciTag);
-
-	$ext['coverImage'] = $parts[1];
+	$ext['coverImage'] = $kapenta->serverPath . "modules/videos/assets/audio-icon_width570.png";
 
 	$html = $theme->replaceLabels($ext, $block);
 

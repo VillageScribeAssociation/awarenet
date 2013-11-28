@@ -1,42 +1,22 @@
 <?php
 
-	require_once($kapenta->installPath . 'modules/lessons/models/course.mod.php');
+//	require_once($kapenta->installPath . 'modules/lessons/models/course.mod.php');
+
+//--------------------------------------------------------------------------------------------------
+//*	KA Lite Integration helper functions
+//--------------------------------------------------------------------------------------------------
 	
-class Input {
-	public static $objStringOpen;
-	public static $objStringClose;
-	public static $objString;
-	public static $childrenStringOpen;
-	public static $childrenStringClose;
-	public static $outputString;
-	public static $depth;
-	public static $cursor;
-}	
-
-class Entry {
-
-	public static $objId;	
-	public static $depth;
-	public static $id;
-}
-
-//	public $id;
-//	public $objString;
-//	public $kind;
-//	public $title;
-//	public $description;
-//	public $ka_url;
-//	public $youtube_id;
-//	public $depth;		
-//	public $children;
-//	public $parentEntry = null;
-//	public $hasData = false;
-
+//--------------------------------------------------------------------------------------------------
+//	automatically create a KA Lite user if it is 1st time access
+//--------------------------------------------------------------------------------------------------
 function createAndLoginKhanLite() {
 	global $kapenta;
 	
 	//not signed in:
-	//1) Check if awarenet user exists in khanlite database
+	//
+	//----------------------------------------------------------------------------------------------
+	//	Check if awarenet user exists in khanlite database
+	//----------------------------------------------------------------------------------------------	
     $dbh = connectToKhanLiteDB();
 	
 	if (NULL !== $dbh) {
@@ -46,16 +26,25 @@ function createAndLoginKhanLite() {
 		executeSQLStatement($sth);
 		if (FALSE === $sth->fetch()) {
 			echo "no result\n";
-			//2) so now we have to insert the awarenet user but we are using the webfunctionalitye of khanlite's user creation 
-			//instead of direct sql insertion because of the many fields that need to be defined by that process
+			//----------------------------------------------------------------------------------------------
+			//	Check if awarenet user exists in khanlite database
+			//----------------------------------------------------------------------------------------------	
+			// so now we have to insert the awarenet user but we are using the webfunctionalitye of khanlite's user creation 
+			// instead of direct sql insertion because of the many fields that need to be defined by that process
 
 			$kaliteAdmin = $kapenta->registry->get('kalite.admin.user');
 			$kaliteAdminPwd = $kapenta->registry->get('kalite.admin.pwd');			
-			//2a) login as khanlite admin (stored in kapenta registry)
+			//----------------------------------------------------------------------------------------------
+			//	Check if awarenet user exists in khanlite database
+			//----------------------------------------------------------------------------------------------	
+			// login as khanlite admin (stored in kapenta registry)
 			loginToKhanLite($kaliteAdmin, $kaliteAdminPwd);
 		
 			
-			//2b) check if we need to create a student or a teacher
+			//----------------------------------------------------------------------------------------------
+			//	Check if awarenet user exists in khanlite database
+			//----------------------------------------------------------------------------------------------	
+			// check if we need to create a student or a teacher
 			if ('student' === $kapenta->user->role) {
 				createKhanLiteAccount('student');					
 			} else if ('teacher' === $kapenta->user->role or 'admin' === $kapenta->user->role) {
@@ -67,8 +56,10 @@ function createAndLoginKhanLite() {
 		$sth = null;
 		$dbh = null;
 		
-   		//3) Perform automatic login
-		loginToKhanLite('', '');
+		//----------------------------------------------------------------------------------------------
+		//	Perform automatic login
+		//----------------------------------------------------------------------------------------------	
+ 		loginToKhanLite('', '');
 
 
    	} else {
@@ -76,6 +67,11 @@ function createAndLoginKhanLite() {
    	}	
 }
 
+//--------------------------------------------------------------------------------------------------
+//	replace links in html page with awarenet links
+//--------------------------------------------------------------------------------------------------
+//arg: pageStr - html page returned from a request to KA Lite [string]
+//returns: the html page with the replaced values [string]
 function changeLocalLinksFromKhanLitePage($pageStr) {
 //	$replaced = str_replace("/math", "/lessons/mathkhan", $pageStr);
 	$replaced = str_replace("/science", "/lessons/sciencekhan", $pageStr);
@@ -86,6 +82,11 @@ function changeLocalLinksFromKhanLitePage($pageStr) {
 	return $replaced;
 }
 
+//--------------------------------------------------------------------------------------------------
+//	remove internal KA Links from html page
+//--------------------------------------------------------------------------------------------------
+//arg: pageStr - html page returned from a request to KA Lite [string]
+//returns: the html page with the replaced values [string]
 function removeLinksFromKhanLitePage($pageStr) {
 	$length = strlen($pageStr);
 	$start = 0;
@@ -122,6 +123,9 @@ function removeLinksFromKhanLitePage($pageStr) {
 	return $replaced;
 }
 
+//--------------------------------------------------------------------------------------------------
+//	logout from KA Lite
+//--------------------------------------------------------------------------------------------------
 function logoutKhanLite() {
 	global $kapenta;
 	
@@ -130,36 +134,37 @@ function logoutKhanLite() {
 	$kapenta->session->set('c_csrftoken', '');
 }
 
+//--------------------------------------------------------------------------------------------------
+//	creates a KA Lite user account automatically
+//--------------------------------------------------------------------------------------------------
+//arg: type - student, teacher or admin [string]
+//returns: the html page with the replaced values [string]
 function createKhanLiteAccount($type) {
 	global $kapenta;
-
-//	echo "Create a user of type ".$type."<br/>\n";
 	
-	//add awarenet user to khanlite
+	//--------------------------------------------------------------------------------------------------
+	//	add awarenet user to khanlite
+	//--------------------------------------------------------------------------------------------------
 	$id = $kapenta->session->get('c_sessionid');
 	$reply = $kapenta->utils->curlGet($kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', '', 
 			false, 'sessionid='.$id);
-
-    echo "KALite installation: " . $kapenta->registry->get('kalite.installation') . "<br/>";
-
 	$start = strpos($reply, "name='csrfmiddlewaretoken' value='") + 34;
-//	echo "start:".$start;
 	$end = strpos($reply, "'", $start);
-//	echo "end:".$end;
 	$csrftoken = substr($reply, $start, $end - $start);
-//	echo "csrftoken=".$csrftoken."<br/>\n";
 	$kapenta->session->set('c_csrftoken', $csrftoken);
-	//2c) extract facility id from page
+	//--------------------------------------------------------------------------------------------------
+	//	extract facility id from page
+	//--------------------------------------------------------------------------------------------------
 	$index = strpos($reply, 'name="facility" value=');
 	if (FALSE !== $index) {
-		//2d) set up arguments for post/login
+		//--------------------------------------------------------------------------------------------------
+		//	set up arguments for POST/add
+		//--------------------------------------------------------------------------------------------------
 		$pw = sha1($kapenta->user->password . '11111');
 		$kapass = 'sha_1$11111$' . $pw;
-//		echo "kapass=".$kapass."<br/>\n";
 		$start = strpos($reply, 'name="facility" value="', $index) + 23;
 		$end = strpos($reply, '" id="id_facility"', $start);
 		$facility = substr($reply, $start, $end - $start);
-//		echo "facility=".$facility."<br/>\n";
 		$args = 'csrfmiddlewaretoken='.$csrftoken."&";
 		$args = $args.'username='.$kapenta->user->username."&";
 		$args = $args.'first_name='.$kapenta->user->firstname."&";
@@ -168,30 +173,36 @@ function createKhanLiteAccount($type) {
 		$args = $args.'password_recheck='.$kapass."&";
 		$args = $args.'facility='.$facility;
 		
-//		echo "Create putArgs=".$args."<br/>\n";
-
 		$cookies = 'sessionid='.$id.';csrftoken='.$csrftoken;
 		$reply = $kapenta->utils->curlPost($kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', $args, 
 				true, $cookies);
-//		echo $reply;	
 	}	
 }
 
+//--------------------------------------------------------------------------------------------------
+//	automatically logs in user to KA Lite
+//--------------------------------------------------------------------------------------------------
+//arg: username, password - credentials of specified user [string]
 function loginToKhanLite($username, $password) {
 	global $kapenta;
 
-	//	a) firstly get securesync/login page and extract csrftoken from it
+	//--------------------------------------------------------------------------------------------------
+	//	get securesync/login page and extract csrftoken from it
+	//--------------------------------------------------------------------------------------------------
 	$kalite = $kapenta->registry->get('kalite.installation');
-//	echo $kalite;
 	$reply = $kapenta->utils->curlGet($kalite.'/securesync/login/', '', true, '');
 	$start = strpos($reply, 'Set-Cookie:  csrftoken=') + 23;
 	$end = strpos($reply, '; expires=', $start);
 	$csrftoken = substr($reply, $start, $end - $start);
 	$kapenta->session->set('c_csrftoken', $csrftoken);
-	//	b) extract facility id from page
+	//--------------------------------------------------------------------------------------------------
+	//	extract facility id from page
+	//--------------------------------------------------------------------------------------------------
 	$index = strpos($reply, '<select name="facility" id="id_facility">');
 	if (FALSE !== $index) {
-		// 	c) set up arguments for post/login
+		//--------------------------------------------------------------------------------------------------
+		//	set up arguments for POST/login
+		//--------------------------------------------------------------------------------------------------
 		$index = strpos($reply, '<option value="">---------</option', $index) + 7;
 		$start = strpos($reply, 'option value="', $index) + 14;
 		$end = strpos($reply, '" selected="selected">', $start);
@@ -212,9 +223,9 @@ function loginToKhanLite($username, $password) {
 		$args = $args.'username='.$user."&";
 		$args = $args.'password='.$pw;
 
-//		echo "Login putArgs=".$args."<br/>\n";
-
-		//	d) POST login data and retrieve sessionid cookie
+		//--------------------------------------------------------------------------------------------------
+		//	POST login data and retrieve sessionid cookie
+		//--------------------------------------------------------------------------------------------------
 		$reply = $kapenta->utils->curlPost($kalite.'/securesync/login/', $args, true, 'csrftoken='.$csrftoken, 
 			array('X-CSRFToken: '.$csrftoken));			
 		$start = strpos($reply, 'Set-Cookie:  sessionid=') + 23;
@@ -224,6 +235,10 @@ function loginToKhanLite($username, $password) {
 	}
 }
 
+//--------------------------------------------------------------------------------------------------
+//	execute SQL Statement with Sqllite db
+//--------------------------------------------------------------------------------------------------
+//arg: the Sql statement handle
 function executeSQLStatement($sth) {
 	try { $check = $sth->execute(); }
 	catch(PDOException $e) {
@@ -238,10 +253,13 @@ function executeSQLStatement($sth) {
 		if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
 		die();
 	}
-
-//	echo "Now we have executed a query<br/>";
 }
 
+//--------------------------------------------------------------------------------------------------
+//	prepare SQL Statement with Sqllite db
+//--------------------------------------------------------------------------------------------------
+//arg: dbh - the database handle, statement - the Sql statement [string]
+//returns: the Sql statement handle
 function prepareSQLStatement($dbh, $statement) {
 	if (NULL !== $dbh) {
     	try { $sth = $dbh->prepare($statement); }
@@ -253,10 +271,13 @@ function prepareSQLStatement($dbh, $statement) {
 		}
 	}	
 
- //   echo "We have prepared statement: ".$statement."<br/>";
     return $sth;
 }
 
+//--------------------------------------------------------------------------------------------------
+//	Connect to KA Lite database
+//--------------------------------------------------------------------------------------------------
+//returns: the database handle
 function connectToKhanLiteDB() {
 	global $kapenta;
 	
@@ -274,13 +295,43 @@ function connectToKhanLiteDB() {
 		die();
 	}
 
-//	echo "Connected to SQLite database.<br/>";
 	return $dbh;
 }
 
 //--------------------------------------------------------------------------------------------------
 //*	experimental interface to Khan Academy dataset
 //--------------------------------------------------------------------------------------------------
+/*
+class Input {
+	public static $objStringOpen;
+	public static $objStringClose;
+	public static $objString;
+	public static $childrenStringOpen;
+	public static $childrenStringClose;
+	public static $outputString;
+	public static $depth;
+	public static $cursor;
+}	
+
+class Entry {
+
+	public static $objId;	
+	public static $depth;
+	public static $id;
+}
+
+//	public $id;
+//	public $objString;
+//	public $kind;
+//	public $title;
+//	public $description;
+//	public $ka_url;
+//	public $youtube_id;
+//	public $depth;		
+//	public $children;
+//	public $parentEntry = null;
+//	public $hasData = false;
+
 function parseChildren($id) {
 	$char = '';
 	$cc = 0;
@@ -651,4 +702,5 @@ function lessons_getVideoID($videoUrl) {
 	if (false == $endPos) { return ''; }
 	return substr($raw, $startPos, $endPos - $startPos);
 }
+*/
 ?>

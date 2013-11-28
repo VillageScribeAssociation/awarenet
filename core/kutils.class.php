@@ -388,19 +388,19 @@ class KUtils {
 	//opt: cookie - cookie string to use for this request [string]
 	//returns: result of HTTP GET request, false if no cURL [string]
 
-	function curlPost($url, $postvars, $headers = false, $cookie = '') {
+	function curlPost($url, $postvars, $headers = false, $cookie = '', $headerArr = NULL) {
 		global $kapenta;
 	
 		if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
 
 		//------------------------------------------------------------------------------------------
-		//	create baisc cURL HTTP GET request
+		//	create baisc cURL HTTP POST request
 		//------------------------------------------------------------------------------------------
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
-
+		
 		$interface = $kapenta->hostInterface;
 		if ('' != $interface) { curl_setopt($ch, CURLOPT_INTERFACE, $interface); }
 		if (true == $headers) { curl_setopt($ch, CURLOPT_HEADER, true); }
@@ -418,6 +418,13 @@ class KUtils {
 				curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $credentials);
 			}
+		}
+
+		//------------------------------------------------------------------------------------------
+		//	add to request header
+		//------------------------------------------------------------------------------------------
+		if (NULL !== $headerArr) {
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
 		}
 
 		//------------------------------------------------------------------------------------------

@@ -20,8 +20,8 @@
 
 	if (('' != $kapenta->request) && (('admin' == $kapenta->user->role) or ('teacher' == $kapenta->user->role))) {
 		// only admins and teachers can see other peoples notification feed
-		$model = new Users_User($req->ref);
-		if (false == $model->loaded) { $kapenta->page->do404(); }
+		$model = new Users_User($kapenta->request->ref);
+		if (false == $model->loaded) { $page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -37,14 +37,14 @@
 		//------------------------------------------------------------------------------------------
 		//	require javascript and css which may be needed by mobile clients (AJAX)
 		//------------------------------------------------------------------------------------------
-		$page->requireCss('%%serverPath%%modules/images/css/pikachoose.mobile.css');
-		$page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
+		$kapenta->page->requireCss('%%serverPath%%modules/images/css/pikachoose.mobile.css');
+		$kapenta->page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	require javascript and css which may be needed by dynamically loaded content
 		//------------------------------------------------------------------------------------------
-		$page->requireCss('%%serverPath%%modules/images/css/pikachoose.css');
-		$page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
+		$kapenta->page->requireCss('%%serverPath%%modules/images/css/pikachoose.css');
+		$kapenta->page->requireJs('%%serverPath%%modules/images/js/jquery.pikachoose.full.js');
 	}
 
 	$kapenta->page->render()

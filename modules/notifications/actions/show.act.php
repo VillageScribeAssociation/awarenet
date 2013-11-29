@@ -16,9 +16,9 @@
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 
-	$model = $user;
+	$model = $kapenta->user;
 
-	if (('' != $kapenta->request) && (('admin' == $kapenta->user->role) or ('teacher' == $kapenta->user->role))) {
+	if (('' != $kapenta->request->ref) && (('admin' == $kapenta->user->role) or ('teacher' == $kapenta->user->role))) {
 		// only admins and teachers can see other peoples notification feed
 		$model = new Users_User($kapenta->request->ref);
 		if (false == $model->loaded) { $page->do404(); }

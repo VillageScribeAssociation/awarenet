@@ -1,5 +1,0 @@
-<? /*
-
-imgfiles := images.listfiles
-
-*/ ?>

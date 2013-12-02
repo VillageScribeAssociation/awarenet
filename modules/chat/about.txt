@@ -1,7 +1,0 @@
-<? /*
-
-The chat module provides the instant messaging capability in awareNet.  It can be thought of as two separate applications; a client-side javascript app running in the browser which subscribes to page notification channels, and server-side actions for routing messages between users and awareNet peer servers.  The chat can be extended with plugins to provide services such as language translation, sms relay, information services and more visual communications such as games.
-
-At persent the chat is a solely bilateral communicatiosn system, it only operates between two users and does not implement public 'rooms' in which groups of users can join in discussion.
-
-*/ ?>

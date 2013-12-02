@@ -1,9 +1,0 @@
-<? /*
-
-This module allows files to be attached to objects owned by other modules (projects, blog posts, etc) according to permissions specified by the module which maintains the object to which the files belong.  Its functions revolve around uploading, downloading and editing file metadata.  
-
-All user files (distinct from those which make up awareNet) are stored in %%installPath%%/data/files/ by their UID and their metadata, such as filename and description are stored by a corresponding database record.  As a security precaution files are stored with the extension (.xxx) and are not accessed directly, rather they are piped to the browser by the /download/ action which checks user permissions, can prevent hotlinking, etc.
-
-Future versions may create .htaccess files to prevent user files from being accessed directly.
-
-*/ ?>

@@ -1,7 +1,0 @@
-<? /*
-
-This module provides the WYSWYG editor used by awareNet for editing rich text such as blog posts.  The editor used is a modified version of HyperTextArea (http://hypertextarea.sourceforge.net) by Keith Alperin et al (http://kalperin.users.sourceforge.net/).
-
-As with several other modules, this requires Javascript to be enabled on the client browser.  It is tested in most modern browsers but has limited functionality in IE6.
-
-*/ ?>

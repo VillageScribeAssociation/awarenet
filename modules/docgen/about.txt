@@ -1,5 +1,0 @@
-<? /*
-
-The docgen module analyzes kapenta code and modules, extracts and presents their built-in documentation.
-
-*/ ?>

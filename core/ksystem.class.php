@@ -122,8 +122,8 @@ class KSystem {
 		$this->register('registry', 'KRegistry');
 		$this->register('revisions', 'KRevisions');
 		$this->register('blockcache', 'KCache');
-		$this->register('nitifications', 'KNotifications');
 		$this->register('aliases', 'KAliases');
+		$this->register('notifications', 'KNotifications');
 	}
 
 	//----------------------------------------------------------------------------------------------

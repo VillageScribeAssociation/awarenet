@@ -523,7 +523,7 @@ class KPage {
 	//==============================================================================================
 
 	//----------------------------------------------------------------------------------------------
-	//.	create a trigger for this page
+	//.	create a trigger for this page - DEPRECATED: page triggers no longer in use
 	//----------------------------------------------------------------------------------------------	
 	//arg: module - name of a kapenta module [string]
 	//arg: channel - name of trigger / channel [string]
@@ -531,6 +531,7 @@ class KPage {
 	//return: true on success, false on failure [bool]
 
 	function setTrigger($module, $channel, $block) {
+        /*
 		$model = new Live_Trigger();
 		$model->pageUID = $this->UID;
 		$model->module = $module;
@@ -538,16 +539,18 @@ class KPage {
 		$model->block = $block;
 		$report = $model->save();
 		if ('' == $report) { return true; }
-		return false;
+        */		
+        return false;
 	}
 
 	//----------------------------------------------------------------------------------------------
-	//.	fire a trigger on any pages listening for it
+	//.	fire a trigger on any pages listening for it - DEPRECATED: live triggers no longer supported
 	//----------------------------------------------------------------------------------------------	
 	//arg: module - module which provides block [string]
 	//arg: channel - name of channel on which there is a message [string]
 
 	function doTrigger($module, $channel) {
+        /*
 		global $db;
 
 		$conditions = array();
@@ -560,6 +563,7 @@ class KPage {
 			$model->loadArray($row);
 			$model->send();
 		}
+        */
 	}
 
 	//==============================================================================================

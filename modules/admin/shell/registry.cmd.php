@@ -51,7 +51,7 @@ function admin_WebShell_registry($args) {
 			//--------------------------------------------------------------------------------------
 			//	delete a registry key
 			//--------------------------------------------------------------------------------------
-			$registry->loadAll();
+			$kapenta->registry->loadAll();
 			if (false == array_key_exists(1, $args)) { return $ajw . "Key not given.</span>"; }
 			$key = trim($args[1]);
 			if (false == $kapenta->registry->has($key)) { return $ajw . "Unknown key.</span>"; }
@@ -64,7 +64,7 @@ function admin_WebShell_registry($args) {
 			//--------------------------------------------------------------------------------------
 			//	make a list of all registry sections
 			//--------------------------------------------------------------------------------------
-			$files = $registry->listFiles();
+			$files = $kapenta->registry->listFiles();
 			foreach($files as $file) {
 				$html .= "<tt>$file</tt><br/>";
 			}
@@ -99,13 +99,13 @@ function admin_WebShell_registry($args) {
 			//--------------------------------------------------------------------------------------
 			//	list all keys with a given prefix
 			//--------------------------------------------------------------------------------------
-			$registry->loadAll();	
+			$kapenta->registry->loadAll();	
 			$prefix = '';
 			if (true == array_key_exists(1, $args)) { $prefix = strtolower(trim($args[1])); }
 
 			$keys = array();
 			$prefixlen = strlen($prefix);
-			foreach($registry->keys as $key => $value) { 
+			foreach($kapenta->registry->keys as $key => $value) { 
 				if ((substr($key, 0, $prefixlen) == $prefix) || ('' == $prefix)) { 
 					$value = base64_decode($value);
 					$value = $utils->cleanTitle($value);
@@ -156,10 +156,10 @@ function admin_WebShell_registry($args) {
 
 			$find = mb_strtolower(trim($args[1]));
 
-			$registry->loadAll();	
+			$kapenta->registry->loadAll();	
 
 			$keys = array();
-			foreach($registry->keys as $key => $value) {
+			foreach($kapenta->registry->keys as $key => $value) {
 				$value = base64_decode($value);
 				if (
 					(false !== mb_strpos(mb_strtolower($value), $find, 0, 'UTF-8')) ||

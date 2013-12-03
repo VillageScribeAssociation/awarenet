@@ -1,0 +1,5 @@
+<? /*
+
+imgfiles := images.listfiles
+
+*/ ?>

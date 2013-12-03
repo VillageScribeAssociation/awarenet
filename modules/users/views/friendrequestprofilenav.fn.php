@@ -25,6 +25,7 @@ function users_friendrequestprofilenav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	look for an existing friend request
 	//----------------------------------------------------------------------------------------------
+
 	if (true == $user->friendships->hasConfirmed($args['userUID'])) { return ''; } 
 	//TODO:	perhaps add 'remove from friends' option in this case?
 	

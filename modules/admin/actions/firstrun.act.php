@@ -44,7 +44,7 @@
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]", '');	
 	echo "<h1>Configuring awareNet</h1>";
 	
-	$dba = new KDBAdminDriver();
+	$dba = new $kapenta->getDBAdminDriver();
 	
 	//---------------------------------------------------------------------------------------------
 	//	handle POSTs

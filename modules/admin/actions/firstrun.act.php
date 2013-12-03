@@ -28,6 +28,7 @@
 		'firstrun.dbr.host' => 'localhost',
 		'firstrun.dbr.user' => 'root',
 		'firstrun.dbr.password' => '',
+		'firstrun.db.driver' => 'MySQL',
 		'firstrun.db.user' => 'awarenet',
 		'firstrun.db.password' => $kapenta->createUID(),
 		'firstrun.adminuid' => $kapenta->createUID()
@@ -44,7 +45,7 @@
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]", '');	
 	echo "<h1>Configuring awareNet</h1>";
 	
-	$dba = $kapenta->getDBAdminDriver();
+	$dba = $kapenta->getDBAdminDriver('MySQL');
 	
 	//---------------------------------------------------------------------------------------------
 	//	handle POSTs

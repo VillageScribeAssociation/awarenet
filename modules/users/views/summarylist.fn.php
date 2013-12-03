@@ -10,7 +10,7 @@
 //opt: num - number of records per page (default is 300) [string]
 
 function users_summarylist($args) {
-	global $db, $req, $theme, $user;
+	global $db, $req, $theme, $user, $kapenta;
 	$num = 300;							//%	default number of items per page [int]
 	$start = 0;							//%	position in table [int]
 	$pageNo = 1;						//% starts at 1 [int]

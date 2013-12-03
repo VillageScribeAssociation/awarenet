@@ -122,6 +122,7 @@ class KSystem {
 		$this->register('registry', 'KRegistry');
 		$this->register('revisions', 'KRevisions');
 		$this->register('blockcache', 'KCache');
+		$this->register('nitifications', 'KNotifications');
 		$this->register('aliases', 'KAliases');
 	}
 
@@ -332,6 +333,7 @@ class KSystem {
 		$this->req('revisions');
 		$this->req('blockcache');
 		$this->req('aliases');
+		$this->req('notifications');
 		$this->theme = new KTheme();
 		$this->page = new KPage();
 	}

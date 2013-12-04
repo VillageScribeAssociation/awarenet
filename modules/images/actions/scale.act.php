@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/videos/models/video.mod.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	send an image at the specified size, managing browser cache, etc
@@ -77,8 +78,15 @@
 	}
 
 	if ('' == $fileName) {
-		$fileName = 'data/images/unavailable/unavailable_' . $size . '.jpg';
-		$page->do302($fileName);
+		$refUID = $kapenta->request->args['refUID'];
+		$file = new Videos_Video($refUID);
+		if (false !== strpos($file->fileName, 'mp3')) {
+			$fileName = 'modules/videos/assets/audio-icon_' . $size . '.png';
+			$page->do302($fileName);
+		} else {
+			$fileName = 'data/images/unavailable/unavailable_' . $size . '.jpg';
+			$page->do302($fileName);
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------

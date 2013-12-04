@@ -1,0 +1,19 @@
+
+div.imagesframe {
+	display: inline-block
+	padding: 1px;
+	background-color: #eee;
+	border-color: #ccc;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+}
+
+img.imagesframe {
+	border-radius: 3px;
+	margin-bottom: 4px;
+}
+
+div.imagesspacer {
+	height: 5px;
+}

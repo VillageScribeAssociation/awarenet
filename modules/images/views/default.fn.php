@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/videos/models/video.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	find and display the default image of some object
@@ -68,8 +69,15 @@ function images_default($args) {
 			//--------------------------------------------------------------------------------------
 			// no images found for this item
 			//--------------------------------------------------------------------------------------
-			$imgUrl = $kapenta->serverPath . 'data/images/unavailable/' . $size . '.jpg';
-			$html = "[[:images::unavailable::size=" . $size . "::display=$display:]]"; 
+			$refUID = $args['refUID'];
+			$file = new Videos_Video($refUID);
+			if (false !== strpos($file->fileName, 'mp3')) {
+				$imgUrl = $kapenta->serverPath . 'modules/videos/assets/audio-icon_' . $size . '.png';
+				$html = "[[:images::audio::size=" . $size . "::display=$display:]]"; 
+			} else {
+				$imgUrl = $kapenta->serverPath . 'data/images/unavailable/' . $size . '.jpg';
+				$html = "[[:images::unavailable::size=" . $size . "::display=$display:]]"; 
+			}
 
 		} else {
 			//--------------------------------------------------------------------------------------

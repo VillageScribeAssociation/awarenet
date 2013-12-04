@@ -1,6 +1,7 @@
 <?php
 	
 	require_once($kapenta->installPath . 'modules/images/models/images.set.php');
+	require_once($kapenta->installPath . 'modules/videos/models/video.mod.php');
 
 //--------------------------------------------------------------------------------------------------
 //|	display the default image associated with something
@@ -30,9 +31,15 @@
 	//	load set of images related to this object
 	//----------------------------------------------------------------------------------------------
 	$set = new Images_Images($refModule, $refModel, $refUID);
-
-	if (0 == count($set->members)) { $page->do302('images/unavailable/s_' . $size . '/'); }	
-
+	
+	if (0 == count($set->members)) { 
+		$file = new Videos_Video($refUID);
+		if (false !== strpos($file->fileName, 'mp3')) {
+			$page->do302('images/audio/s_' . $size . '/');
+		} else {
+			$page->do302('images/unavailable/s_' . $size . '/'); 
+		}
+	}	
 	$defaultAry = $set->members[0];
 
 	$page->do302('images/s_' . $size . '/' . $defaultAry['alias']);

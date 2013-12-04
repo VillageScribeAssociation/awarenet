@@ -213,7 +213,7 @@ class Images_Image {
 			//--------------------------------------------------------------------------------------
 			// add hash if missing and the file is available
 			//--------------------------------------------------------------------------------------
-			if ('' == $this->hash) { $this->hash = $kapenta->fileSha1($this->fileName); }
+			if ('' == $this->hash) { $this->hash = $kapenta->fs->sha1($this->fileName); }
 
 			//--------------------------------------------------------------------------------------
 			// check that this falls within the max filesize (half a MB by default)
@@ -477,7 +477,7 @@ class Images_Image {
 			 . substr($this->UID, 2, 1) . '/';
 
 		$this->fileName = $baseDir . $this->UID . '.jpg';
-		$kapenta->fileMakeSubdirs($this->fileName, true);				// ensure directory exists
+		$kapenta->fs->makePath($this->fileName, true);				// ensure directory exists
 		imagejpeg($img, $kapenta->installPath . $this->fileName, 95);	// save it
 		$this->format = 'jpg';
 	}
@@ -500,7 +500,7 @@ class Images_Image {
 		//	remove file
 		//------------------------------------------------------------------------------------------
 		if (true == $kapenta->fs->exists($this->fileName)) {
-			//$kapenta->fileDelete($this->fileName, true);
+			//$kapenta->fs->delete($this->fileName, true);
 			//NOTE: disabled as a safety precaution, and to allow undelete of images_image obejcts
 			//TODO: create admin action / display for deleting these files permenantly
 		}

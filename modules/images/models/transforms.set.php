@@ -284,7 +284,7 @@ class Images_Transforms {
 		);
 
 		if (true == $check) { 
-			$kapenta->fileMakeSubdirs($fileName);
+			$kapenta->fs->makePath($fileName);
 			$check = imagejpeg($newImg, $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
 			else { $session->msg('Could not save rescaled image.', 'bad'); }
@@ -354,7 +354,7 @@ class Images_Transforms {
 		}
 		
 		if (true == $check) {
-			$kapenta->fileMakeSubdirs($fileName);
+			$kapenta->fs->makePath($fileName);
 			$kapenta->fs->put($fileName, '', true); 
 			$check = imagejpeg($newImg, $kapenta->installPath . $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
@@ -426,8 +426,8 @@ class Images_Transforms {
 			return false;
 		}
 
-		$kapenta->fileDelete($this->sourceFile, true);
-		$kapenta->fileCopy($newFile, $this->sourceFile);
+		$kapenta->fs->delete($this->sourceFile, true);
+		$kapenta->fs->copy($newFile, $this->sourceFile);
 
 		$msg = ''
 		 . "Reduced image '" . $this->imageUID . "' to maximum width.  "
@@ -464,7 +464,7 @@ class Images_Transforms {
 		global $kapenta;
 		$check = true;
 		foreach($this->members as $label => $fileName) {
-			if (false == $kapenta->fileDelete($fileName)) { $check = false; }
+			if (false == $kapenta->fs->delete($fileName)) { $check = false; }
 		}
 		return $check;
 	}

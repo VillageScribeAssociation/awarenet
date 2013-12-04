@@ -25,10 +25,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	delete current 'unavailable' images
 	//----------------------------------------------------------------------------------------------
-	$kapenta->fileMakeSubdirs('data/images/unavailable/na.txt');
+	$kapenta->fs->makePath('data/images/unavailable/na.txt');
 	$oldFiles = $kapenta->listFiles('data/images/unavailable/', '.jpg');
 	foreach($oldFiles as $oldFile) {
-		$check = $kapenta->fileDelete('data/images/unavailable/' . $oldFile);
+		$check = $kapenta->fs->delete('data/images/unavailable/' . $oldFile);
 		if (true == $check) { $session->msg("Removed: $oldFile", 'ok'); }
 		else { $session->msg("Cannot remove: $oldFile<br/>", 'bad'); }
 	}
@@ -43,7 +43,7 @@
 			$srcFile = $image->transforms->members[$preset['label']];
 			$destFile = 'data/images/unavailable/unavailable_' . $preset['label'] . '.jpg';
 			$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
-			$check = $kapenta->fileCopy($srcFile, $destFile);
+			$check = $kapenta->fs->copy($srcFile, $destFile);
 			if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 		} else {
 			$session->msg("Could not create transform: " . $preset['label'] . "<br/>\n", 'bad');
@@ -53,13 +53,13 @@
 	$srcFile = $image->fileName;
 	$destFile = 'data/images/unavailable/unavailable.jpg';
 	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
-	$check = $kapenta->fileCopy($srcFile, $destFile);
+	$check = $kapenta->fs->copy($srcFile, $destFile);
 	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 
 	$srcFile = $image->fileName;
 	$destFile = 'data/images/unavailable/unavailable_full.jpg';
 	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
-	$check = $kapenta->fileCopy($srcFile, $destFile);
+	$check = $kapenta->fs->copy($srcFile, $destFile);
 	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 
 	//----------------------------------------------------------------------------------------------

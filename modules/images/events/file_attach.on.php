@@ -93,7 +93,7 @@ function images__cb_file_attach($args) {
 	 . substr($model->UID, 2, 1) . '/'
 	 . $model->UID . '.jpg';
 
-	$kapenta->fileMakeSubdirs($model->fileName);
+	$kapenta->fs->makePath($model->fileName);
 
 	$report = $model->save();
 

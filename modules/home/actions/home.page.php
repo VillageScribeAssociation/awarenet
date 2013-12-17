@@ -38,10 +38,12 @@
 		</table>
 		</form>
 		</div>
-
+.
 		<br/><br/><br/>
 
-		[[:videos::player::width=300::height=200::raUID=awarenet-intro.flv:]]<br/>
+		<h2>Tutorials</h2> [[:videos::player::width=300::height=200::raUID=awarenet-getting-started.mp4:]]<br/>
+		[[:videos::player::width=300::height=200::raUID=awarenet-tutorial-2.mp4:]]<br/>
+		<h2>Technical Background</h2> [[:videos::player::width=300::height=200::raUID=awarenet-intro.flv:]]<br/>
 
 	</content>
 	<nav1></nav1>

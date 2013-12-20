@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //|	make a flowplayer to load a given video
 //--------------------------------------------------------------------------------------------------
-//arg: raUID - alias or UID of a Videos_Video object [string]
+//arg: raUID - alias or UID of a Videos_Video object [string] or filename of video file to be played
 //opt: videoUID - overrides raUID if present [string]
 //TODO: registry setup for video player sizes
 
@@ -23,35 +23,59 @@ function videos_player($args) {
 	$extra = '';				//%	additional controls defined by caller [string]
 	$like = 'yes';				//%	show like button [string]
 	$html = '';					//%	return value [string]
+	$filename = '';				//% file name of video to be played
+	$cover = '';				//% file name of cover image
+	$browserLink = '';				//% browser link	
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('videoUID', $args)) { $args['raUID'] = $args['videoUID']; }
-	if (false == array_key_exists('raUID', $args)) { return '(please specify a video)'; }
-
-	$model = new Videos_Video($args['raUID']);
-	if (false == $model->loaded) { return '(video not found)'; }
-	
-	if (('public' == $user->role) && ('public' != $model->category)) {
-		return "[[:users::pleaselogin:]]";
+	if (false == array_key_exists('raUID', $args)) { 
+		if (false == array_key_exists('filename', $args)) {
+			return '(please specify a video)'; 
+		} else {
+			$args['raUID'] = 'none';		
+		}
 	}
 
-	if ('mp3' == $model->format) { 
-		$block = "[[:videos::playeraudio::raUID=" . $model->UID . ":]]";
-		return $block;
+	$model = new Videos_Video($args['raUID']);
+	if (false == $model->loaded) { 
+		if (false == array_key_exists('filename', $args)) {
+			return '(video not found)'; 
+		}
+	}
+	
+	if (true == $model->loaded) {
+		if (('public' == $user->role) && ('public' != $model->category)) {
+			return "[[:users::pleaselogin:]]";
+		}
+	}
+	
+	if (true == $model->loaded) {
+		if ('mp3' == $model->format) { 
+			$block = "[[:videos::playeraudio::raUID=" . $model->UID . ":]]";
+			return $block;
+		}
 	}
 
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 	if (true == array_key_exists('like', $args)) { $like = $args['like']; }
 	if (true == array_key_exists('extra', $args)) { $extra = $args['extra']; }
 	if (true == array_key_exists('area', $args)) { $area = $args['area']; }
+	if (true == array_key_exists('filename', $args)) { 
+		$filename = $args['filename']; 		
+	} else {
+		$filename = $model->fileName;
+	}
+	if (true == array_key_exists('cover', $args)) { $cover = $args['cover']; }
+	if (true == array_key_exists('browserLink', $args)) { $browserLink = $args['browserLink']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that we actually have the file to be played
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $kapenta->fs->exists($model->fileName)) {
+	if (false == $kapenta->fs->exists($filename)) {
 		$block = $theme->loadBlock('modules/videos/views/nofile.block.php');
 		return $block;
 	}
@@ -89,36 +113,47 @@ function videos_player($args) {
 		//------------------------------------------------------------------------------------------
 		$page->requireJs($kapenta->serverPath . 'modules/videos/js/flowplayer-3.2.6.min.js');
 		$block = $theme->loadBlock('modules/videos/views/player.block.php');
-		$ext = $model->extArray();
+		
+		if (true == $model->loaded) {
+			$ext = $model->extArray();
+		} else {
+			$ext = array('fileName' => $filename);
+		}
 
 		$ext['area'] = $area;
 		$ext['width'] = $width;
 		$ext['height'] = $height;
-		$ext['rand'] = substr($kapenta->createUID(), 0, 5);
+		$ext['rand'] = substr($kapenta->createUID(), 0, 5);	
 
-		// load cover image (TODO: make this better)
-		$ciBlock = ''
-		 . "[[:images::default"
-		 . "::size=width570" // . $args['area']
-		 . "::link=no"
-		 . "::refModule=videos"
-		 . "::refModel=videos_video"
-		 . "::refUID=" . $model->UID
-		 . ":]]";
+		if (true == $model->loaded) {
+			// load cover image (TODO: make this better)
+			$ciBlock = ''
+			 . "[[:images::default"
+			 . "::size=width570" // . $args['area']
+			 . "::link=no"
+			 . "::refModule=videos"
+			 . "::refModel=videos_video"
+			 . "::refUID=" . $model->UID
+			 . ":]]";
 
-		$ext['like'] = ''
-		 . '[[:like::link'
-		 . '::refModule=videos'
-		 . '::refModel=videos_video'
-		 . '::refUID=' . $ext['UID']
-		 . ':]]';
+			$ext['like'] = ''
+			 . '[[:like::link'
+			 . '::refModule=videos'
+			 . '::refModel=videos_video'
+			 . '::refUID=' . $ext['UID']
+			 . ':]]';
+			$ciTag = $theme->expandBlocks($ciBlock, '');
+			$parts = explode("'", $ciTag);
+
+			$ext['coverImage'] = $parts[1];
+		} else {
+			$ext['coverImage'] = $cover;
+			$ext['browserLink'] = $browserLink;
+			$like = 'no';
+			$ext['extra'] = '';
+		}
 
 		if ('no' == $like) { $ext['like'] = ''; }
-
-		$ciTag = $theme->expandBlocks($ciBlock, '');
-		$parts = explode("'", $ciTag);
-
-		$ext['coverImage'] = $parts[1];
 
 		// assemble the block
 		$html = $theme->replaceLabels($ext, $block);

@@ -41,8 +41,11 @@
 .
 		<br/><br/><br/>
 
-		<h2>Tutorials</h2> [[:videos::player::width=300::height=200::raUID=awarenet-getting-started.mp4:]]<br/>
-		[[:videos::player::width=300::height=200::raUID=awarenet-tutorial-2.mp4:]]<br/>
+		<h2>Tutorials</h2> 
+		[[:videos::player::width=300::height=200
+		::filename=modules/videos/assets/awarenet_getting_started.mp4::cover=modules/videos/assets/awarenet_getting_started.png:]]<br/>
+		[[:videos::player::width=300::height=200
+		::filename=modules/videos/assets/awarenet_tutorial_2.mp4::cover=modules/videos/assets/awarenet_tutorial_2.png:]]<br/>
 		<h2>Technical Background</h2> [[:videos::player::width=300::height=200::raUID=awarenet-intro.flv:]]<br/>
 
 	</content>

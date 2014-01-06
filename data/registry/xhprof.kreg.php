@@ -1,3 +1,0 @@
-<?php /*
-xhprof.samplesize             MQ==
-*/ ?>

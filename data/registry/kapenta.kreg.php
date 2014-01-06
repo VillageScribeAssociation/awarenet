@@ -1,6 +1,6 @@
 <?php /*
 kapenta.installpath           L3Zhci93d3cvYXdhcmVuZXQtc3ZuLw==
-kapenta.serverpath            aHR0cDovLzEyNy4wLjAuMTo4MS8=
+kapenta.serverpath            aHR0cDovLzEwLjAuMC4xMTo4MS8=
 kapenta.sitename              YXdhcmVOZXQ=
 kapenta.themes.default        c21hbGxmcnk=
 kapenta.modules.default       aG9tZQ==

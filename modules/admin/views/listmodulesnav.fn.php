@@ -74,6 +74,7 @@ function admin_listmodulesnav($args) {
 		
 	}
 
+
 	$html = $theme->arrayToHtmlTable($table, true, true);
 	return $html;
 }

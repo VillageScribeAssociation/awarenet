@@ -10,10 +10,8 @@
 //opt: threadUID - UID of a Forums_Thread object, overrides raUID [string]
 
 function forums_editthreadform($args) {
-	global $user;
-	global $theme;
-	global $utils;
-	
+    global $kapenta;
+
 	$html = '';					//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -28,18 +26,18 @@ function forums_editthreadform($args) {
 	$model = new Forums_Thread($raUID);	//% the object we're editing [object:Forums_Thread]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('forums', 'forums_thread', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('forums', 'forums_thread', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/forums/views/editthreadform.block.php');
+	$block = $kkapenta->theme->loadBlock('modules/forums/views/editthreadform.block.php');
 	$labels = $model->extArray();
 	$labels['UIDJsClean'] = $model->UID;
-	$labels['content64'] = $utils->b64wrap($labels['content']);
+	$labels['content64'] = $kapenta->utils->b64wrap($labels['content']);
 	// ^ add any labels, block args, etc here
 
-	$html = $theme->replaceLabels($labels, $block);
+	$html = $kapenta->theme->replaceLabels($labels, $block);
 
 	return $html;
 }

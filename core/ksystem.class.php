@@ -452,6 +452,7 @@ class KSystem {
 			$d = dir($this->installPath . 'modules/');
 			while (false !== ($entry = $d->read())) {
 			  if (($entry != '.') AND ($entry != '..') AND ($entry != '.svn')) {
+
 				$newMod = array();
 				$newMod['name'] = strtolower($entry);
 				$newMod['abs'] = strtolower($this->installPath .'modules/'. $newMod['name'] .'/');

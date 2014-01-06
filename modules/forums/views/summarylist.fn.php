@@ -10,23 +10,24 @@
 //arg: school - UID of a school (not recordAlias) [string]
 
 function forums_summarylist($args) {
-	global $db, $user;
+    global $kapenta;
+
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('school', $args)) { return ''; }
-	if (false == $user->authHas('forums', 'forums_board', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'show')) { return ''; }
 
-	//----------------------------------------------------------------------------------------------
+	//  ----------------------------------------------------------------------------------------------
 	//	load boards from database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("school='" . $db->addMarkup($args['school']) . "'");
-	$range = $db->loadRange('forums_board', '*', $conditions, 'weight ASC');
+	$conditions = array("school='" . $kapenta->db->addMarkup($args['school']) . "'");
+	$range = $kapenta->db->loadRange('forums_board', '*', $conditions, 'weight ASC');
 
 	//$sql = "select * from Forums_Board "
-	//	 . "where school='" . $db->addMarkup($args['school']) . "' "
+	//	 . "where school='" . $kapenta->db->addMarkup($args['school']) . "' "
 	//	 . "order by weight DESC";
 
 	//----------------------------------------------------------------------------------------------

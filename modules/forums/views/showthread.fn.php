@@ -10,8 +10,7 @@
 //arg: threadUID - UID of a forum thread [string]
 
 function forums_showthread($args) {
-	global $theme;
-	global $user;
+    global $kapenta;
 
 	$html = '';						//%	return value [string]
 
@@ -21,14 +20,14 @@ function forums_showthread($args) {
 	if (false == array_key_exists('threadUID', $args)) { return '(thread UID not given)'; }
 
 	$model = new Forums_Thread($args['threadUID']);
-	if (false == $model->loaded) { return '(thread nto found)'; }
+	if (false == $model->loaded) { return '(thread not found)'; }
 	// TODO: permissions check here
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/forums/views/showthread.block.php');
-	$html = $theme->replaceLabels($model->extArray(), $block);
+	$block = $kapenta->theme->loadBlock('modules/forums/views/showthread.block.php');
+	$html = $kapenta->theme->replaceLabels($model->extArray(), $block);
 
 	return $html;
 }

@@ -77,23 +77,25 @@ function games_install_status_report() {
 	$installScripts = $kapenta->fileSearch('modules/games/inc/', '.install.php');
 
 	foreach($installScripts as $scriptFile) {
-		$game = str_replace('.install.php', '', basename($scriptFile));		
-		require_once($scriptFile);
+        if (-1 === strpos($scriptFile, '.svn')) {
+		    $game = str_replace('.install.php', '', basename($scriptFile));		
+		    require_once($scriptFile);
 
-		$statusFn = "games_install_" . $game . "_status_report";
-		$status = '';
+		    $statusFn = "games_install_" . $game . "_status_report";
+		    $status = '';
 
-		if (true == function_exists($statusFn)) {
-			$status = call_user_func($statusFn);
-		} else {
-			$msg = "Missing install status function: $statusFn in $scriptFile<br/>\n";
-			$session->msgAdmin($msg, 'bad');
-			$installed = false;
-		}
+		    if (true == function_exists($statusFn)) {
+			    $status = call_user_func($statusFn);
+		    } else {
+			    $msg = "Missing install status function: $statusFn in $scriptFile<br/>\n";
+			    $session->msgAdmin($msg, 'bad');
+			    $installed = false;
+		    }
 
-		if (false == strpos($status, "<!-- installed correctly -->")) { $installed = false; }
+		    if (false == strpos($status, "<!-- installed correctly -->")) { $installed = false; }
 
-		$report .= "<h2>$game</h2>\n" . $status;
+		    $report .= "<h2>$game</h2>\n" . $status;
+        }
 	}
 
 	//------------------------------------------------------------------------------------------

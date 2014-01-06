@@ -7,14 +7,14 @@ p2p.keylength                 MTAyNA==
 p2p.keytype                   UlNB
 p2p.server.fw                 eWVz
 p2p.worker                    N2FoZjN3ZjdoeGhwcXg3c3g2
-p2p.batchsize                 NTA=
+p2p.batchsize                 NTAw
 p2p.bacthsize                 MjAw
-p2p.batchparts                Mg==
+p2p.batchparts                MjAw
 p2p.filehours                 MCwgMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOSwgMTAsIDExLCAxMiwgMTMsIDE0LCAxNSwgMTYsIDE3ICwgMTgsIDE5LCAyMC4gMjEsIDIyLCAyMw==
 p2p.laststart                 MTM0NDI0ODY5MQ==
 p2p.server.pubkey             cGxhaW50ZXh0
 p2p.server.prvkey             cGxhaW50ZXh0
 p2p.mode                      YWN0aXZl
-p2p.started                   MjAxMy0wNi0wNSAxMjo1MDozMw==
+p2p.started                   MjAxMy0xMi0yMCAxNjo0NTo1Nw==
 p2p.debug                     eWVz
 */ ?>

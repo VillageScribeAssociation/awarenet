@@ -25,7 +25,8 @@ function videos_player($args) {
 	$html = '';					//%	return value [string]
 	$filename = '';				//% file name of video to be played
 	$cover = '';				//% file name of cover image
-	$browserLink = '';				//% browser link	
+	$browserLink = '';			//% browser link	
+	$autoPlay = 'no';			//% 'yes' or 'no' to affectuate autoplay of video
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -70,6 +71,8 @@ function videos_player($args) {
 	}
 	if (true == array_key_exists('cover', $args)) { $cover = $args['cover']; }
 	if (true == array_key_exists('browserLink', $args)) { $browserLink = $args['browserLink']; }
+	
+	if (true == array_key_exists('autoPlay', $args)) {$autoPlay = $args['autoPlay']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that we actually have the file to be played
@@ -112,7 +115,14 @@ function videos_player($args) {
 		//	flash or mp4 video
 		//------------------------------------------------------------------------------------------
 		$page->requireJs($kapenta->serverPath . 'modules/videos/js/flowplayer-3.2.6.min.js');
-		$block = $theme->loadBlock('modules/videos/views/player.block.php');
+		$blockFile = '';
+		if ('yes' == $autoPlay) {
+			$blockFile = 'modules/videos/views/playerAuto.block.php';
+		} else {
+			$blockFile = 'modules/videos/views/player.block.php';
+		}
+		
+		$block = $theme->loadBlock($blockFile);
 		
 		if (true == $model->loaded) {
 			$ext = $model->extArray();

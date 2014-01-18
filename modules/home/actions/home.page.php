@@ -4,7 +4,8 @@
 <page>
 	<template>home.template.php</template>
 	<title>[`|pc][`|pc]websiteName[`|pc][`|pc] - welcome</title>
-	<content>
+
+    <content>
 
 		[[:theme::registerbutton:]]
 
@@ -40,13 +41,60 @@
 		</div>
 .
 		<br/><br/><br/>
+				
+		<script src='%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js'></script>
 
 		<h2>Tutorials</h2> 
-		[[:videos::player::width=300::height=200
-		::filename=modules/tutorials/assets/awarenet_getting_started.mp4::cover=modules/tutorials/assets/awarenet_getting_started.png:]]<br/>
-		[[:videos::player::width=300::height=200
-		::filename=modules/tutorials/assets/awarenet_tutorial_2.mp4::cover=modules/tutorials/assets/awarenet_tutorial_2.png:]]<br/>
-		<h2>Technical Background</h2> [[:videos::player::width=300::height=200::raUID=awarenet-intro.flv:]]<br/>
+		<a href='#playTutorial1' id="play1">
+			<img src='%%serverPath%%modules/tutorials/assets/awarenet_getting_started.png' border='0' 'height="200" width="300"' />
+		</a>
+		<script type="text/javascript">
+		
+			$('#play1').click(function() {
+			myBlockTag = "[[" + 
+			":videos::player::width=600::height=400::filename=modules/tutorials/assets/awarenet_getting_started.mp4" +
+			"::cover=modules/tutorials/assets/awarenet_getting_started.png::autoPlay=yes:]]";
+			myDivId = "divLeftContent";
+			klive.removeBlock(myBlockTag, false);
+			klive.bindDivToBlock(myDivId, myBlockTag, false);
+			// disable the click
+			return false;		  
+			});		
+			  	
+		</script>	
+		<br/><br/>
+
+		<a href='#playTutorial2' id="play2">
+			<img src='%%serverPath%%modules/tutorials/assets/awarenet_tutorial_2.png' border='0' 'height="200" width="300"' />
+		</a>
+		<script type="text/javascript">
+		  	$('#play2').click(function() {
+				myBlockTag = "[[" + 
+				":videos::player::width=600::height=400::filename=modules/tutorials/assets/awarenet_tutorial_2.mp4" +
+				"::cover=modules/tutorials/assets/awarenet_tutorial_2.png::autoPlay=yes:]]";
+				myDivId = "divLeftContent";
+				klive.removeBlock(myBlockTag, false);
+				klive.bindDivToBlock(myDivId, myBlockTag, false);
+				// disable the click
+				return false;		  
+			});
+		</script>	
+
+		<h2>Technical Background</h2>
+		<a href='#playTutorial3' id="play3">
+			<img src='%%serverPath%%modules/tutorials/assets/awarenet_intro.png' border='0' 'height="200" width="300"' />
+		</a>
+		<script type="text/javascript">
+		  	$('#play3').click(function() {
+				myBlockTag = "[[" + 
+				":videos::player::width=600::height=400::raUID=awarenet-intro.flv::autoPlay=yes:]]";
+				myDivId = "divLeftContent";
+				klive.removeBlock(myBlockTag, false);
+				klive.bindDivToBlock(myDivId, myBlockTag, false);
+				// disable the click
+				return false;		  
+			});
+		</script>	
 
 	</content>
 	<nav1></nav1>

@@ -3,6 +3,19 @@
 <div class='block'>
 
 [[:theme::navtitlebox::label=Change Password::toggle=divChangePassForm:]]
+<div class='blockPictures'>
+<form name='changeUserPassPicture' method='POST' action='%%serverPath%%picturelogin/pictureloginchange/'>
+<input type='hidden' name='action' value='Pictures' />
+<input type='hidden' name='UID' value='%%UID%%' />
+
+<table border='1' width='100%'>
+  <tr>
+    <td><b><FONT COLOR="#FF0000">Password through Pictures</FONT></br></td>
+    <td align='center'><input type='submit' value='Pictures' /></td>
+  </tr>
+</table>
+</form>
+</div>
 <div id='divChangePassForm'>
 <form name='changeUserPass' method='POST' action='%%serverPath%%users/changepassword/'>
 <input type='hidden' name='action' value='changeUserPass' />

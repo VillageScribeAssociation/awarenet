@@ -19,6 +19,19 @@
 		</a>
 		<br/><br/>
 
+		<div class='blockPictures'>
+		<form name='siteLogin' method='POST' action='%%serverPath%%picturelogin/picturelogin/'>
+		<input type='hidden' name='action' value='Pictures' />
+
+		<table border='1' width='100%'>
+		  <tr>
+		    <td><b><FONT COLOR="#FF0000">Password through Pictures</FONT></br></td>
+		    <td align='center'><input type='submit' value='Pictures' /></td>
+		  </tr>
+		</table>
+		</form>
+		</div>
+
 		<div class='block'>
 		<form name='siteLogin' method='POST' action='%%serverPath%%users/login/'>
 		<input type='hidden' name='action' value='login' />

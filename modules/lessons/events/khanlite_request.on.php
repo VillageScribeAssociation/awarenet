@@ -176,6 +176,7 @@ function lessons__cb_khanlite_request($args) {
 			or false !== strpos($request, 'api/delete')
 			or false !== strpos($request, 'api/cancel')
 			or false !== strpos($request, 'api/retry')
+			or false !== strpos($request, 'api/save')
 			or false !== strpos($request,'coachreports/api')
 			or false !== strpos($request,'securesync/api/status')
 		) {

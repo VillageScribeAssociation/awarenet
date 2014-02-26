@@ -70,7 +70,13 @@ function lessons__cb_khanlite_request($args) {
 			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
 		}
 	
-		header('Content-Type: text/image');
+		if (false !== strpos($request, 'png')) {
+			header('Content-Type: image/png');
+		} else if (false !== strpos($request, 'gif')) {
+			header('Content-Type: image/gif');
+		}else {
+			header('Content-Type: text/image');
+		}
 	}
 	//----------------------------------------------------------------------------------------------
 	//	redirect request for data to KA Lite
@@ -88,14 +94,50 @@ function lessons__cb_khanlite_request($args) {
 	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'content/')) {
 		$cookies = '';
-		if ('GET' == $requestMethod) {
-			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
-		}
+		if (false !== strpos($request, 'mp4')) {
+			if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
+			$ch = curl_init('http://localhost:8008' . $request);
+			$interface = $kapenta->hostInterface;
+			if ('' != $interface) { curl_setopt($ch, CURLOPT_INTERFACE, $interface); }
+			curl_setopt($ch, CURLOPT_HEADER, true);
+			if ('' != $cookies) { curl_setopt($ch, CURLOPT_COOKIE, $cookie); }
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			if ('yes' == $kapenta->proxyEnabled) {
+				$credentials = $kapenta->proxyUser . ':' . $kapenta->proxyPass;
+				curl_setopt($ch, CURLOPT_PROXY, $kapenta->proxyAddress);
+				curl_setopt($ch, CURLOPT_PROXYPORT, $kapenta->proxyPort);
+				curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+				if (trim($credentials) != ':') {
+					curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
+					curl_setopt($ch, CURLOPT_PROXYUSERPWD, $credentials);
+				}
+			}
+			$response = curl_exec($ch);
+			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+			$header = substr($response, 0, $header_size);
+			$reply = substr($response, $header_size);			
+			curl_close($ch);
+		} else {
+		
+			if ('GET' == $requestMethod) {
+				$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
+			}
+			
+		}	
 		
 		if (false !== strpos($request, 'mp4')) {
+			$pos = strpos($header, 'Content-Length:');
+			$pos1 = strpos($header, 'Content-Type:');
+			$pos2 = strpos($header, 'Accept-Ranges:');
+			$len = strlen('Content-Length: ');
+			$length = substr ( $header, ($pos + $len), $pos2 - ($pos + $len)  );
 			header('Content-Type: video/mp4');
+			header('Accept-Ranges: bytes');
+			header('Content-Length: '.$length);
 		} else if (false !== strpos($request, 'png')) {
 			header('Content-Type: image/png');
+		} else {
+			header('Content-Type: text/html');
 		}
 	}
 	//----------------------------------------------------------------------------------------------
@@ -139,6 +181,8 @@ function lessons__cb_khanlite_request($args) {
 		
 		if (false !== strpos($request, 'css')) {
 			header('Content-Type: text/css');
+		} else if (false !== strpos($request, 'png')) {
+			header('Content-Type: image/png');
 		} else {
 			header('Content-Type: application/javascript');
 		}

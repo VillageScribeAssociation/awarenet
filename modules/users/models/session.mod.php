@@ -422,14 +422,14 @@ class Users_Session {
 	//opt: icon - message icon [string]
 
 	function msg($message, $icon = 'info') {
-		global $theme;
-		$block = $theme->loadBlock('modules/home/views/sessionmsg.block.php');
+		global $kapenta;
+		$block = $kapenta->theme->loadBlock('modules/home/views/sessionmsg.block.php');
 		$labels = array('msg' => $message, 'icon' => $icon);
 
 		$messages = $this->get('messages');
 		$count = (int)$this->get('msgcount');		
 
-		$messages .= $theme->replaceLabels($labels, $block);
+		$messages .= $kapenta->theme->replaceLabels($labels, $block);
 		$this->set('messages', $messages);
 		$this->set('msgcount', $count + 1);
 	}
@@ -456,7 +456,6 @@ class Users_Session {
 
 	function messagesToHtml() {
 		global $kapenta;
-		global $theme;
 
 		$html = '';								//%	return value [string]
 
@@ -467,10 +466,10 @@ class Users_Session {
 		if (0 == $count) { return $html; }
 
 		if ($count >= $maxMessages) {
-			$html = $theme->tb($messages, $count . ' Notices', 'divSMessage', 'hide');
+			$html = $kapenta->theme->tb($messages, $count . ' Notices', 'divSMessage', 'hide');
 
 		} else {
-			$html = $theme->tb($messages, $count . ' Notices', 'divSMessage', 'show');
+			$html = $kapenta->theme->tb($messages, $count . ' Notices', 'divSMessage', 'show');
 		}
 
 		return $html;

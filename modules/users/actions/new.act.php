@@ -59,6 +59,10 @@
 
 	if ('' == $report) { $report = $model->save(); }
 
+    // reload session, fixed bug to do with new user obejct overriding current user session keys
+    $session->load($user->UID);
+    $session->save();
+
 	//----------------------------------------------------------------------------------------------
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------

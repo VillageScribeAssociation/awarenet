@@ -22,29 +22,29 @@
 			case 'kapenta_snstart':			$kapenta->registry->set('kapenta.snstart', $value);		break;
 			case 'kapenta_snend':			$kapenta->registry->set('kapenta.snend', $value);		break;
 
-			case 'kapenta_db_host':
-				$kapenta->registry->set('kapenta.db.host', $value);
+			case 'db_mysql_host':
+				$kapenta->registry->set('mysql.db.host', $value);
 				$kapenta->registry->set('db.host', $value);
 				break;		//......................................................................
 
-			case 'kapenta_db_name':
-				$kapenta->registry->set('kapenta.db.name', $value);
-				$kapenta->registry->set('db.name', $value);
+			case 'db_mysql_name':
+				$kapenta->registry->set('db.mysql.name', $value);
+				$kapenta->registry->set('db.mysql.name', $value);
 				break;		//......................................................................
 
-			case 'kapenta_db_user':
-				$kapenta->registry->set('kapenta.db.user', $value);
-				$kapenta->registry->set('db.user', $value);
+			case 'db_mysql_user':
+				$kapenta->registry->set('db.mysql.user', $value);
+				$kapenta->registry->set('db.mysql.user', $value);
 				break;		//......................................................................
 
-			case 'kapenta_db_password':
-				$kapenta->registry->set('kapenta.db.password', $value);
-				$kapenta->registry->set('db.password', $value);
+			case 'db_mysql_password':
+				$kapenta->registry->set('db.mysql.password', $value);
+				$kapenta->registry->set('db.mysql.password', $value);
 				break;		//......................................................................
 
-			case 'kapenta_db_persistent':
-				$kapenta->registry->set('kapenta.db.persistent', $value);
-				$kapenta->registry->set('db.persistent', $value);
+			case 'db_mysql_persistent':
+				$kapenta->registry->set('db.mysql.persistent', $value);
+				$kapenta->registry->set('db.mysql.persistent', $value);
 				break;		//......................................................................
 
 

@@ -62,8 +62,8 @@ class KDBDriver_SQLite {
 
 		//	recovery / backup store of this information
 		if ('' == $this->name) {
-			$this->name = $registry->get('kapenta.db.name');
-			if ('' != $this->name) { $registry->set('db.sqlite.name', $this->name); }
+			$this->name = $kapenta->registry->get('kapenta.db.name');
+			if ('' != $this->name) { $kapenta->registry->set('db.sqlite.name', $this->name); }
 		}
 
 		$this->tables = array();

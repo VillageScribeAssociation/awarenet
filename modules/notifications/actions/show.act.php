@@ -15,7 +15,6 @@
 	if ('public' == $user->role) { $page->do403(); }	// user must be logged in
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
-
 	$model = $kapenta->user;
 
 	if (('' != $kapenta->request->ref) && (('admin' == $kapenta->user->role) or ('teacher' == $kapenta->user->role))) {

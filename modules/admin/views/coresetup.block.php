@@ -30,25 +30,25 @@ paths) and on the network (for constructing URLs).  Both should end with a trail
   <table noborder>
     <tr>
 	  <td><b>DB Host:</b></td>
-	  <td><input type='text' name='kapenta_db_host' value='%%kapenta.db.host%%' size='30'></td>	
+	  <td><input type='text' name='db_mysql_host' value='%%db.mysql.host%%' size='30'></td>	
     </tr>
     <tr>
 	  <td><b>DB Name:</b></td>
-	  <td><input type='text' name='kapenta_db_name' value='%%kapenta.db.name%%' size='30'></td>	
+	  <td><input type='text' name='db_mysql_name' value='%%db.mysql.name%%' size='30'></td>	
     </tr>
     <tr>
 	  <td><b>DB User:</b></td>
-	  <td><input type='text' name='kapenta_db_user' value='%%kapenta.db.user%%' size='30'></td>	
+	  <td><input type='text' name='db_mysql_user' value='%%db.mysql.user%%' size='30'></td>	
     </tr>
     <tr>
 	  <td><b>DB Password:</b></td>
-	  <td><input type='text' name='kapenta_db_password' value='%%kapenta.db.password%%' size='30'></td>	
+	  <td><input type='text' name='db_mysql_password' value='%%db.mysql.password%%' size='30'></td>	
     </tr>
     <tr>
 	  <td><b>Persistent:</b></td>
 	  <td>
-		<select name='kapenta_db_persistent'>
-			<option value='%%kapenta.db.persistent%%'>%%kapenta.db.persistent%%</option>
+		<select name='db_mysql_persistent'>
+			<option value='%%db.mysql.persistent%%'>%%db.mysql.persistent%%</option>
 			<option value='yes'>yes</option>
 			<option value='no'>no</option>
 		</select> <small>(recommended)</small>

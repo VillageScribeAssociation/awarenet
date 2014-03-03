@@ -85,6 +85,7 @@
 		or false !== strpos($kapenta->request->raw,'api/delete')
 		or false !== strpos($kapenta->request->raw,'api/check_video')
 		or false !== strpos($kapenta->request->raw,'api/check_subtitle')
+		or false !== strpos($kapenta->request->raw,'api/save')
 		or false !== strpos($kapenta->request->raw,'api/cancel')
 		or false !== strpos($kapenta->request->raw,'math')
 		or false !== strpos($kapenta->request->raw,'science')

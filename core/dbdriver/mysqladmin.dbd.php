@@ -27,15 +27,15 @@ class KDBAdminDriver_MySQL {
 	//returns: true on success or false on error [bool]
 
 	function create($database) {
-		global $db, $user;
+		global $kapenta;
 
-		if ('admin' == $user->role) {
+		if ('admin' == $kapenta->user->role) {
 		$query = 'CREATE DATABASE ' . $database;
-		$connect = @mysql_pconnect($db->host, $db->user, $db->pass);
+		$connect = @mysql_pconnect($kapenta->db->host, $kapenta->db->user, $kapenta->db->pass);
 
 		if (false == $connect) { return false; }		
 
-		//$connect = mysql_connect($db->host, $db->user, $db->pass) or die("no connect");
+		//$connect = mysql_connect($kapenta->db->host, $kapenta->db->user, $kapenta->db->pass) or die("no connect");
 		$result = @mysql_query($query, $connect);
 		if (false == $result) { return false; }
 		return true;
@@ -49,12 +49,12 @@ class KDBAdminDriver_MySQL {
 	//returns: true on success, false on failure [bool]
 
 	function createTable($dbSchema) {
-		global $user, $db, $session;
+		global $kapenta;
 		//------------------------------------------------------------------------------------------
 		//	checks
 		//------------------------------------------------------------------------------------------
-		//if ('admin' != $user->role) { return false; }						// admins only
-		if (true == $db->tableExists($dbSchema['model'])) { return false; }	// table already exists
+		//if ('admin' != $kapenta->user->role) { return false; }						// admins only
+		if (true == $kapenta->db->tableExists($dbSchema['model'])) { return false; }	// table already exists
 		$table = $dbSchema['model'];
 
 		//------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class KDBAdminDriver_MySQL {
 				$prikey = ", PRIMARY KEY (" . $dbSchema['prikey'] . ")";
 				$dbSchema['fields'][$dbSchema['prikey']] .= " NOT NULL AUTO_INCREMENT";
 			} else {
-				$session->msgAdmin("Primary key not present.");
+				$kapenta->session->msgAdmin("Primary key not present.");
 			}
 		}
 
@@ -76,10 +76,10 @@ class KDBAdminDriver_MySQL {
 		$fields = array();
 		foreach($dbSchema['fields'] as $fName => $fType) { $fields[] = '  '. $fName .' '. $fType; }
 		$sql = "CREATE TABLE " . $table . " (\n" . implode(",\n", $fields) . $prikey . ");\n";
-		$db->query($sql);
+		$kapenta->db->query($sql);
 
-		$db->loadTables();
-		if (false == $db->tableExists($table)) { return false; }	// check it worked
+		$kapenta->db->loadTables();
+		if (false == $kapenta->db->tableExists($table)) { return false; }	// check it worked
 
 		//------------------------------------------------------------------------------------------
 		//	create indices
@@ -88,7 +88,7 @@ class KDBAdminDriver_MySQL {
 			$idxName = 'idx' . $table . $idxField;
 			$sql = "CREATE INDEX $idxName ON $table ($idxField($idxSize));";
 			if ('' == $idxSize) { $sql = "CREATE INDEX $idxName ON $table ($idxField);"; }
-			$db->query($sql);
+			$kapenta->db->query($sql);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ class KDBAdminDriver_MySQL {
 			foreach($indexes as $index) {
 				if ($index['Key_name'] == $idxName) { $found = true; }
 			}
-			if (false == $found) { $session->msgAdmin('Could not make index: ' . $idxName, 'bad'); }
+			if (false == $found) { $kapenta->session->msgAdmin('Could not make index: ' . $idxName, 'bad'); }
 		}
 
 		return true;
@@ -115,13 +115,13 @@ class KDBAdminDriver_MySQL {
 	//returns: array of index data, or false on failure [array][bool]
 
 	function getIndexes($tableName) {
-		global $db;		
+		global $kapenta;		
 		$indexes = array();		//	return value [array]
-		if (false == $db->tableExists($tableName)) { return false; }
+		if (false == $kapenta->db->tableExists($tableName)) { return false; }
 
 		$sql = "SHOW INDEXES FROM " . $tableName;
-		$result = $db->query($sql);
-		while($row = $db->fetchAssoc($result)) { $indexes[] = $row;	}
+		$result = $kapenta->db->query($sql);
+		while($row = $kapenta->db->fetchAssoc($result)) { $indexes[] = $row;	}
 		return $indexes;
 	}
 
@@ -134,15 +134,15 @@ class KDBAdminDriver_MySQL {
 	//returns: number of records copied [int]
 
 	function copyAll($fromTable, $toSchema, $rename) {
-		global $db;
+		global $kapenta;
 		$count = 0;			//%	return value, number of records copied [int]
 
-		if (false == $db->tableExists($fromTable)) { return false; }
-		if (false == $db->tableExists($toSchema['model'])) { return false; }		
+		if (false == $kapenta->db->tableExists($fromTable)) { return false; }
+		if (false == $kapenta->db->tableExists($toSchema['model'])) { return false; }		
 
-		$range = $db->loadRange($fromTable, '*', '');
+		$range = $kapenta->db->loadRange($fromTable, '*', '');
 		foreach($range as $row) {
-			if (false == $db->objectExists($toSchema['model'], $row['UID'])) {
+			if (false == $kapenta->db->objectExists($toSchema['model'], $row['UID'])) {
 				$newObj = array();
 
 				// default values
@@ -151,7 +151,7 @@ class KDBAdminDriver_MySQL {
 						case 'bigint':		$newObj[$fName] = '0';	break;
 						case 'int':			$newObj[$fName] = '0';	break;
 						case 'float':		$newObj[$fName] = '0';	break;
-						case 'datetime':	$newObj[$fName] = $db->datetime();	break;
+						case 'datetime':	$newObj[$fName] = $kapenta->db->datetime();	break;
 						default:			$newObj[$fName] = '';	break;
 					}
 					if (true == array_key_exists($fName, $row)) { $newObj[$fName] = $row[$fName]; }
@@ -160,7 +160,7 @@ class KDBAdminDriver_MySQL {
 				// rename fields
 				foreach($rename as $fromName => $toName) { $newObj[$toName] = $row[$fromName]; }
 
-				$db->save($newObj, $toSchema);	
+				$kapenta->db->save($newObj, $toSchema);	
 				$count++;
 			}
 		}
@@ -173,11 +173,11 @@ class KDBAdminDriver_MySQL {
 	//returns: array of table names [array]
 
 	function listTables() {
-		global $db;
+		global $kapenta;
 
 		$tables = array();
-		$result = $db->query("SHOW TABLES FROM " . $db->name);
-		while ($row = $db->fetchAssoc($result)) { foreach ($row as $table) { $tables[] = $table; } }
+		$result = $kapenta->db->query("SHOW TABLES FROM " . $kapenta->db->name);
+		while ($row = $kapenta->db->fetchAssoc($result)) { foreach ($row as $table) { $tables[] = $table; } }
 		return $tables;
 	}
 
@@ -189,7 +189,7 @@ class KDBAdminDriver_MySQL {
 	//returns: HTML table with kapenta 'scaffold' style [string]
 
 	function schemaToHtml($dbSchema, $title = '') {
-		global $theme, $session;
+		global $kapenta;
 
 		if ('' == $title) { $title = $dbSchema['model'] . " (dbSchema)"; }		// default title
 		$html = "<h2>" . $title . "</h2>\n";
@@ -204,7 +204,7 @@ class KDBAdminDriver_MySQL {
 			$rows[] = array($field, $type, $idx);
 		}
 
-		$html .= $theme->arrayToHtmlTable($rows, true, true);
+		$html .= $kapenta->theme->arrayToHtmlTable($rows, true, true);
 		return $html;
 	}
 
@@ -256,8 +256,9 @@ class KDBAdminDriver_MySQL {
 	//returns: true on success, false if it fails [bool]
 
 	function recreateTable($tableName, $dbSchema) {
-		global $kapenta, $db, $user, $session;
-		if ($user->role != 'admin') { return false; }	// only admins can do this
+		global $kapenta;
+
+		if ($kapenta->user->role != 'admin') { return false; }	// only admins can do this
 
 		//------------------------------------------------------------------------------------------
 		//	create a new, temporary table according to schema without indices and revisioning
@@ -276,7 +277,7 @@ class KDBAdminDriver_MySQL {
 
 		$check = $this->createTable($tmpSchema);
 		if (false == $check) { 
-			$session->msgAdmin("Could not create temp table: " . $tmpSchema['model'], 'bad');
+			$kapenta->session->msgAdmin("Could not create temp table: " . $tmpSchema['model'], 'bad');
 			return false;
 		}
 
@@ -284,10 +285,10 @@ class KDBAdminDriver_MySQL {
 		//	copy all records into temp table
 		//------------------------------------------------------------------------------------------
 		$sql = 'SELECT * FROM ' . $tableName;
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 		//TODO: more intelligence here
-		while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
+		while ($row = $kapenta->db->fetchAssoc($result)) { 
+			$row = $kapennta->db->rmArray($row);
 			foreach($dbSchema['fields'] as $fName => $fType) {
 				switch(strtolower($fType)) {
 					case 'bigint':
@@ -302,7 +303,7 @@ class KDBAdminDriver_MySQL {
 
 				}
 			}
-			$db->save($row, $tmpSchema); 
+			$kapenta->db->save($row, $tmpSchema); 
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -311,29 +312,29 @@ class KDBAdminDriver_MySQL {
 		$indexes = $this->getIndexes($tableName);
 		if ($indexes != false) {
 			foreach($indexes as $row) { 
-				$db->query("DROP INDEX " . $row['Key_name'] . " ON " . $tableName); 
+				$kapenta->db->query("DROP INDEX " . $row['Key_name'] . " ON " . $tableName); 
 			}
 		}
 
-		$db->query('DROP TABLE ' . $tableName);
-		$db->loadTables();
+		$kapenta->db->query('DROP TABLE ' . $tableName);
+		$kapenta->db->loadTables();
 
 		//------------------------------------------------------------------------------------------
 		//	create new table with indices and copy all records from temporary table
 		//------------------------------------------------------------------------------------------
 		$this->createTable($dbSchema);
 		$sql = "select * from " . $tmpSchema['model'];
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
-			$db->save($row, $dbSchema); 
+		$result = $kapenta->db->query($sql);
+		while ($row = $kapenta->db->fetchAssoc($result)) { 
+			$row = $kapenta->db->rmArray($row);
+			$kapenta->db->save($row, $dbSchema); 
 		}
 
 		//------------------------------------------------------------------------------------------
 		//	delete the temp table
 		//------------------------------------------------------------------------------------------
-		//$db->query('DROP TABLE ' . $tmpSchema['model']);
-		//$db->loadTables();
+		//$kapenta->db->query('DROP TABLE ' . $tmpSchema['model']);
+		//$kapenta->db->loadTables();
 
 		return true;
 	}
@@ -346,14 +347,14 @@ class KDBAdminDriver_MySQL {
 	//: TODO: remove this, redundant test code
 
 	function checkSchema($tableName, $dbSchema) {
-		global $db;
+		global $kapenta;
 
 		$report = '';
-		if (false == $db->tableExists($tableName)) { 
+		if (false == $kapenta->tableExists($tableName)) { 
 			$report .= "[*] Database table '$tableName' is not installed.<br/>\n";
 		} else {
 			$report .= "[*] Database table '$tableName' exists.<br/>\n";
-			$liveSchema = $db->getSchema($tableName);
+			$liveSchema = $kapenta->getSchema($tableName);
 			if (false == $this->compareSchema($dbSchema, $liveSchema)) {
 				$report .= "[*] Table '$tableName' exists but does not match schema.<br/>\n";
 			} else {
@@ -370,11 +371,11 @@ class KDBAdminDriver_MySQL {
 	//returns: html report of actions taken, false on failure [string]
 
 	function installTable($dbSchema) {
-		global $db, $user;
-		if ('admin' != $user->role) { return false; }	// only admins can do this
+		global $kapenta;
+		if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 		$report = '';
 
-		if ($db->tableExists($dbSchema['model']) == false) {	
+		if ($kapenta->db->tableExists($dbSchema['model']) == false) {	
 			//--------------------------------------------------------------------------------------
 			//	no such table, create it
 			//--------------------------------------------------------------------------------------
@@ -388,7 +389,7 @@ class KDBAdminDriver_MySQL {
 			//	table exists, check if its up to date
 			//--------------------------------------------------------------------------------------
 			$report .= $dbSchema['model'] . " table already exists...";	
-			$extantSchema = $db->getSchema($dbSchema['model']);	// get specifics of extant table
+			$extantSchema = $kapenta->db->getSchema($dbSchema['model']);	// get specifics of extant table
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == true) {
 				$report .= "<span class='ajaxmsg'>all correct</span><br/>";
@@ -412,17 +413,17 @@ class KDBAdminDriver_MySQL {
 	//returns: html report of actions taken [string]
 
 	function getTableInstallStatus($dbSchema) {
-		global $db, $user;
-		if ('admin' != $user->role) { return ''; }
+		global $kapenta;
+		if ('admin' != $kapenta->user->role) { return ''; }
 
 		$installed = true;
 		$report = '';
 
-		if ($db->tableExists($dbSchema['model']) == true) {
+		if ($kapenta->db->tableExists($dbSchema['model']) == true) {
 			//--------------------------------------------------------------------------------------
 			//	table present
 			//--------------------------------------------------------------------------------------
-			$extantSchema = $db->getSchema($dbSchema['model']);
+			$extantSchema = $kapenta->db->getSchema($dbSchema['model']);
 
 			if ($this->compareSchema($dbSchema, $extantSchema) == false) {
 				//----------------------------------------------------------------------------------
@@ -467,11 +468,11 @@ class KDBAdminDriver_MySQL {
 	//returns: name of table containing object, false if not found [string][bool]
 
 	function findByUID($UID) {
-		global $db;
+		global $kapenta;
 
-		$tables = $db->loadTables();
+		$tables = $kapnta->db->loadTables();
 		foreach($tables as $tableName) { 
-			if (true == $db->objectExists($tableName, $UID)) { return $tableName; }
+			if (true == $kapenta->db->objectExists($tableName, $UID)) { return $tableName; }
 		}
 
 		return false;

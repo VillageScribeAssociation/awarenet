@@ -144,7 +144,7 @@
 		
 			$msg = "Creating new database user for use by awareNet... ";
 		
-			$check = $db->query($sql);
+			$check = $kapenta->db->query($sql);
 			if (true == $check) {
 				$msg .= "<b>OK</b>.";
 				$kapenta->registry->set('firstrun.dbr.granted', 'yes');

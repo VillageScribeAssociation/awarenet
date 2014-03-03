@@ -10,9 +10,9 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('source', $kapenta->request->args)) { $page->do404('Source not given.'); }
+	if (false == array_key_exists('source', $req->args)) { $page->do404('Source not given.'); }
 
-	$source = base64_decode($kapenta->request->args['source']);
+	$source = base64_decode($req->args['source']);
 
 	//----------------------------------------------------------------------------------------------
 	//	remove the source

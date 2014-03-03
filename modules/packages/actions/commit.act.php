@@ -20,7 +20,7 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	if (true == array_key_exists('message', $_POST)) { $message = $_POST['message']; }
-	if (true == array_key_exists('UID', $kapenta->request->args)) { $packageUID = $kapenta->request->args['UID']; }
+	if (true == array_key_exists('UID', $req->args)) { $packageUID = $req->args['UID']; }
 
 	if ('' == $packageUID) { $page->do404('Package UID not given.'); }
 
@@ -37,9 +37,9 @@
 			$session->msg('No changelog message given, not updating repository.', 'bad');
 		}
 
-		$kapenta->page->load('modules/packages/actions/commit.page.php');
+		$page->load('modules/packages/actions/commit.page.php');
 		$kapenta->page->blockArgs['UID'] = $packageUID;
-		$kapenta->page->render();
+		$page->render();
 		die();
 	}
 

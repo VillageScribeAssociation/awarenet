@@ -14,7 +14,7 @@
 	<tr>
 		<td><b>Password:</b></td>
 		<td>
-			<input type='text' name='password' value='%%password%%' size='18' />
+			<input type='password' name='password' value='%%password%%' size='18' />
 			<small>(repository account for commits)</small>
 		</td>
 	</tr>

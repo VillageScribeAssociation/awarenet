@@ -7,7 +7,7 @@
 			'Commit',
 			'%%serverPath%%packages/commit/UID_%%packageUID%%/',
 			570, 400,
-			'themes/%%defaultTheme%%/images/icons/file.archive.png',
+			'%%serverPath%%themes/%%defaultTheme%%/images/icons/file.archive.png',
 			true
 		);
 

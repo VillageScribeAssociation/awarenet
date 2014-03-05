@@ -12,7 +12,9 @@
 
 	function picturelogin_generatePicturesScript() {
 		$charArr = getCharacterArray();
+		$specMap = getSpecCharacterMap('<=');
 		$count = count($charArr);
+		$countSpec = count($specMap);
 		$string = "<script>
 						function establishUsernameNum(username) {
 							var retVal = 0;
@@ -32,27 +34,46 @@
 
 		$string = $string . "return passChars;
 						};
+
+						function getMapChars() {
+							var passChars = new Object();";
+							
+							foreach($specMap as $key=>$value) {
+								$string = $string . "passChars['" . $key . "'] = '" . $value . "';"; 
+							}
+
+		$string = $string . "return passChars;
+						};
 						
 						function getPasswordCharacterArray(username, password) {
 							var retArr = new Array();
 							var passChars = getPassChars();
+							var mapChars = getMapChars();
 							var int = 0;
 							var txt = '';
 
 							var passChars1 = getPassChars();
 							var userNameI = establishUsernameNum(username);
 							var count = " . $count . ";
+							var spec = '';
 
 							for (var i = 0; i < password.length; i++) {
+								
+								spec = password.charAt(i);
 
-								int = passChars1.indexOf(password.charAt(i)) - userNameI;
+								if ('@' == password.charAt(i)) {
+									spec = mapChars[password.charAt(i)+password.charAt(i+1)+password.charAt(i+2)];
+									i = i + 2;
+								}
+								
+								int = passChars1.indexOf(spec) - userNameI;
 								
 								if (int < 0) {
 									int = int + count;
 								}
 																
 								txt = txt + int + '/';
-								txt = txt + passChars[int];
+								txt = txt + passChars1[int];
 								passChars[int] = '';
 							}			
 							

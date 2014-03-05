@@ -12,6 +12,7 @@
 
 	function picturelogin_generatePasswordScript() {
 		$charArr = getCharacterArray();
+		$specMap = getSpecCharacterMap('=>');
 		$count = count($charArr);
 		$string = "<script>
 						function establishUsernameNum(username) {
@@ -50,8 +51,14 @@
 							}
 							check = false;";
 														
-							for ($i = 0; $i < $count; $i++){
-								$string = $string . "passChars[" . $i . "] = '" . $charArr[$i] . "';"; 
+							for ($i = 0; $i < $count; $i++) {
+								if (isset($specMap[$charArr[$i]])) {
+									$char = $specMap[$charArr[$i]];
+								} else {
+									$char =$charArr[$i];
+								}
+								
+								$string = $string . "passChars[" . $i . "] = '" . $char . "';"; 
 							}
 
 		$string = $string . "var count = " . $count . ";

@@ -135,10 +135,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$kapenta->page->load('modules/picturelogin/actions/pictureloginchange.page.php');
-	$kapenta->page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
-	$kapenta->page->blockArgs['username'] = $user->username;
-	$kapenta->page->blockArgs['UID'] = $_POST['UID'];
-	$kapenta->page->render();
+	//legacy version
+	$page->load('modules/picturelogin/actions/pictureloginchange.page.php');
+	$page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
+	$page->blockArgs['username'] = $user->username;
+	$page->blockArgs['UID'] = $_POST['UID'];
+	$page->render();
+	//kapenta version 3
+//	$kapenta->page->load('modules/picturelogin/actions/pictureloginchange.page.php');
+//	$kapenta->page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
+//	$kapenta->page->blockArgs['username'] = $user->username;
+//	$kapenta->page->blockArgs['UID'] = $_POST['UID'];
+//	$kapenta->page->render();
 
 ?>

@@ -23,7 +23,7 @@ function groups_membercount($args) {
 	if (false == $model->loaded) { return '(unkown group)'; }
 	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
 
-	$memberCount = '' . count($model->members);
+	$memberCount = '' . count($model->getMembers());
 
 	return $memberCount;
 }

@@ -133,6 +133,9 @@ function removeLinksFromKhanLitePage($pageStr) {
 					or (strpos($pageStr, 'Update', $start) and strpos($pageStr, 'Update', $start) < $end)
 					or (strpos($pageStr, 'Coach', $start) and strpos($pageStr, 'Coach', $start) < $end)
 					or (strpos($pageStr, 'Logout', $start) and strpos($pageStr, 'Logout', $start) < $end)
+					or (strpos($pageStr, 'management/account', $start) and strpos($pageStr, 'Logout', $start) < $end)
+					or (strpos($pageStr, 'Practice Lessons', $start) and strpos($pageStr, 'Logout', $start) < $end)
+					or (strpos($pageStr, 'Watch Videos', $start) and strpos($pageStr, 'Logout', $start) < $end)
 					) {
 					$pageStr = substr_replace ($pageStr , '' , $start, $end - $start);
 				} else {
@@ -141,6 +144,11 @@ function removeLinksFromKhanLitePage($pageStr) {
 			}
 		}
 	}
+	
+	$start = strpos($pageStr, '<form action');
+	$end = strpos($pageStr, '</form>') + 7;
+	$pageStr = substr_replace ($pageStr , '' , $start, $end - $start);
+	
 
 	$replaced = str_replace('href="/"', '', $pageStr);
 	
@@ -172,7 +180,7 @@ function createKhanLiteAccount($type) {
 	$id = $kapenta->session->get('c_sessionid');
 
 	$reply = $kapenta->utils->curlGet(
-        $kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', 
+        $kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/', 
         '', 
 	    false, 
         'sessionid=' . $id
@@ -199,12 +207,17 @@ function createKhanLiteAccount($type) {
 		$args = $args.'username='.$kapenta->user->username."&";
 		$args = $args.'first_name='.$kapenta->user->firstname."&";
 		$args = $args.'last_name='.$kapenta->user->surname."&";
-		$args = $args.'password='.$kapass."&";
+		$args = $args.'password_first='.$kapass."&";
 		$args = $args.'password_recheck='.$kapass."&";
-		$args = $args.'facility='.$facility;
+		$args = $args.'facility='.$facility."&";
+		if ('student' == $type) {
+			$args = $args.'is_teacher=false';
+		} else {
+			$args = $args.'is_teacher=true';
+		}
 		
 		$cookies = 'sessionid='.$id.';csrftoken='.$csrftoken;
-		$reply = $kapenta->utils->curlPost($kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', $args, 
+		$reply = $kapenta->utils->curlPost($kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/', $args, 
 				true, $cookies);
 	}	
 }

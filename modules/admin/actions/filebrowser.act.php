@@ -50,7 +50,7 @@
 	//	list subfolders
 	//---------------------------------------------------------------------------------------------
 
-	$folders = $kapenta->fileList($browsePath, '', true);
+	$folders = $kapenta->fs->listDir($browsePath, '', true);
 	foreach($folders as $folder) {
 		$folder = str_replace($browsePath, '', $folder);
 		$path = $browsePath . $folder . '/';
@@ -62,7 +62,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	list files in this folder
 	//---------------------------------------------------------------------------------------------
-	$files = $kapenta->fileList($browsePath, '', false);
+	$files = $kapenta->fs->listDir($browsePath, '', false);
 	sort($files);
 	foreach($files as $file) {
 		$file = str_replace($browsePath, '', $file);

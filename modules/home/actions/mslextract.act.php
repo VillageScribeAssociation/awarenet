@@ -13,7 +13,7 @@
 	//	process html files
 	//----------------------------------------------------------------------------------------------
 	$tmpDir = 'data/exampapers/tmp/';
-	$files = $kapenta->fileList($tmpDir, '.html');
+	$files = $kapenta->fs->listDir($tmpDir, '.html');
 
 	$links = array();
 
@@ -48,7 +48,7 @@
 	//	get list of word documents
 	//----------------------------------------------------------------------------------------------
 	$wikiCode = '';
-	$docs = $kapenta->fileList('data/exampapers/', '.doc');
+	$docs = $kapenta->fs->listDir('data/exampapers/', '.doc');
 
 	foreach($docs as $doc) {
 		$equiv = str_replace('data/exampapers/', '', $doc);

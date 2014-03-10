@@ -9,7 +9,7 @@
 	if ('admin' != $user->role) { $page->do404(); }
 
 	$fromDir = 'data/khanacademy/';
-	$dirs = $kapenta->fileList($fromDir, '', true);
+	$dirs = $kapenta->fs->listDir($fromDir, '', true);
 	sort($dirs);
 
 	$courses = array();
@@ -34,7 +34,7 @@
 		//	add the videos
 		//------------------------------------------------------------------------------------------
 
-		$files = $kapenta->fileList($fromDir . '/'  . $dir . '/');
+		$files = $kapenta->fs->listDir($fromDir . '/'  . $dir . '/');
 		sort($files);
 
 		foreach($files as $file) {

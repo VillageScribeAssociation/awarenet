@@ -11,6 +11,9 @@
 
 function users_summarylist($args) {
 	global $db, $req, $theme, $user, $kapenta;
+
+    global $kapenta;
+
 	$num = 300;							//%	default number of items per page [int]
 	$start = 0;							//%	position in table [int]
 	$pageNo = 1;						//% starts at 1 [int]

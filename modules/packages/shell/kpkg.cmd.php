@@ -144,7 +144,7 @@ function packages_WebShell_kpkg($args) {
 			//--------------------------------------------------------------------------------------
 			//	delete cached manifests and package lists
 			//--------------------------------------------------------------------------------------
-			$files = $kapenta->fileList('data/packages/', '.xml.php');
+			$files = $kapenta->fs->listDir('data/packages/', '.xml.php');
 			
 			foreach($files as $file) {
 				$check = $kapenta->fileDelete($file);

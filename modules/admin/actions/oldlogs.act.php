@@ -14,7 +14,7 @@
 	//	go through logs
 	//----------------------------------------------------------------------------------------------
 
-	$list = $kapenta->fileList('data/log/', '.log.php');
+	$list = $kapenta->fs->listDir('data/log/', '.log.php');
 
 	foreach($list as $item) {
 		$date = '20' . substr($item, 9, 8);			//	date log was started

@@ -77,7 +77,7 @@ class P2P_Updates {
 			return $files;
 		}
 
-		$allFiles = $kapenta->fileList($this->bufferDir);
+		$allFiles = $kapenta->fs->listDir($this->bufferDir);
 
 		foreach($allFiles as $fileName) {
 			if (false == strpos($fileName, '.lock')) {

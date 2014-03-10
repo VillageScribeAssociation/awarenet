@@ -280,7 +280,7 @@ class Lessons_CourseXml {
 		global $kapenta;
 		$list = array();			//%	return value [string]	
 
-		$dirs = $kapenta->fileList($this->importDir, '', true);
+		$dirs = $kapenta->fs->listDir($this->importDir, '', true);
 		
 		//	remove cache and scraper dirs
 		foreach($dirs as $dir) {

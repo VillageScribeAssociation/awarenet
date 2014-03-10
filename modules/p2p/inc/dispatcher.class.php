@@ -35,7 +35,7 @@ class P2P_Dispatcher {
 
 		$pending = array();
 
-		$all = $kapenta->fileList($this->inbox);
+		$all = $kapenta->fs->listDir($this->inbox);
 		sort($all);
 
 		foreach ($all as $item) {

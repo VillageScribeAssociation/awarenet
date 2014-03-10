@@ -1,7 +1,7 @@
 <?
 
 //--------------------------------------------------------------------------------------------------
-//*	database driver (abstraction object) for mysql
+//*	database driver (abstraction object) for mysql */
 //--------------------------------------------------------------------------------------------------
 //+ These are wrapper functions to allow the same function names (and thus code) on different DBMS.
 //+ Note that % (sql wildcard) is stripped from UIDs from some functions as a security precaution.

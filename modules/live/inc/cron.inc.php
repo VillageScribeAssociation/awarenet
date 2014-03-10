@@ -18,12 +18,14 @@ function live_cron_tenmins() {
 
 	$report = "<h2>live_cron_tenmins</h2>\n";	//%	return value [string]
 
+    echo "live: running short cron<br>\n";
+
 	//----------------------------------------------------------------------------------------------
 	//	remove any mailboxes which have not been checked in 10 mins or more
 	//----------------------------------------------------------------------------------------------
 
 	$expired = ($kapenta->time() - (60 * 10));
-	$sql = "select * from live_mailbox where lastChecked < $expired ;";
+	$sql = "SELECT * FROM live_mailbox WHERE lastChecked < $expired LIMIT 100;";
 	$result = $db->query($sql);
 	while($row = $db->fetchAssoc($result)) {
 		$model = new Live_Mailbox();
@@ -54,13 +56,15 @@ function live_cron_daily() {
 	$maxAge = 60 * 60 * 24 * 7;					//%	one week (seconds), TODO: registry setting [int]
 	$report = "<h2>live_cron_daily</h2>\n";		//%	return value [string]
 
+    echo "live: running daily cron<br/>\n";
+
 	//----------------------------------------------------------------------------------------------
 	//	remove any file uploads which have not completed after a week
 	//----------------------------------------------------------------------------------------------
 	$files = array();
-	$list = $kapenta->fileList('data/live/uploads/', '.xxx');
+	$list = $kapenta->fs->listDir('data/live/uploads/', '.xxx');
 	foreach($list as $fileName) { $files[] = $fileName; }
-	$list = $kapenta->fileList('data/live/uploads/', '.xml.php');
+	$list = $kapenta->fs->listDir('data/live/uploads/', '.xml.php');
 	foreach($list as $fileName) { $files[] = $fileName; }
 
 	foreach($files as $fileName) {

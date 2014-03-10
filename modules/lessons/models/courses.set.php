@@ -91,7 +91,7 @@ class Lessons_Courses {
 		}
 
 		$report = '';												//%	return value [string]
-		$subdirs = $kapenta->fileList($this->dir, '', true);		//% subdirectories [array]
+		$subdirs = $kapenta->fs->listDir($this->dir, '', true);		//% subdirectories [array]
 
 		foreach($subdirs as $subdir) {
 			if ('/' == substr($subdir, -1)) { $subdir = substr($subdir, 0, strlen($subdir) - 1); }
@@ -138,7 +138,7 @@ class Lessons_Courses {
 		}
 
 		$report = '';												//%	return value [string]
-		$subdirs = $kapenta->fileList($this->dir, '', true);		//% subdirectories [array]
+		$subdirs = $kapenta->fs->listDir($this->dir, '', true);		//% subdirectories [array]
 
 		foreach($subdirs as $subdir) {
 			if ('/' == substr($subdir, -1)) { $subdir = substr($subdir, 0, strlen($subdir) - 1); }
@@ -181,7 +181,7 @@ class Lessons_Courses {
 		}
 
 		$report = '';												//%	return value [string]
-		$subdirs = $kapenta->fileList($this->dir, '', true);		//% subdirectories [array]
+		$subdirs = $kapenta->fs->listDir($this->dir, '', true);		//% subdirectories [array]
 
 		foreach($subdirs as $subdir) {
 			if ('/' == substr($subdir, -1)) { $subdir = substr($subdir, 0, strlen($subdir) - 1); }

@@ -10,7 +10,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	delete manifests
 	//---------------------------------------------------------------------------------------------
-	$files = $kapenta->fileList('data/p2p/transfer/meta/');
+	$files = $kapenta->fs->listDir('data/p2p/transfer/meta/');
 	foreach($files as $metaFile) {
 		$kapenta->fileDelete($metaFile);
 	}
@@ -19,7 +19,7 @@
 	//	delete file parts
 	//---------------------------------------------------------------------------------------------
 
-	$files = $kapenta->fileList('data/p2p/transfer/parts/');
+	$files = $kapenta->fs->listDir('data/p2p/transfer/parts/');
 	foreach($files as $partFile) {
 		$kapenta->fileDelete($partFile);
 	}

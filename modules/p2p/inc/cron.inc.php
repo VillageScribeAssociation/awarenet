@@ -24,7 +24,7 @@ function p2p_cron_tenmins() {
 	//	clear expired locks in event queue
 	//----------------------------------------------------------------------------------------------
 	
-	$allLocks = $kapenta->fileList('data/p2p/received/', '.lock');
+	$allLocks = $kapenta->fs->listDir('data/p2p/received/', '.lock');
 	foreach($allLocks as $lockFile) {
 		$datetime = $kapenta->fs->get($lockFile);
 		if ('' == $datetime) {
@@ -66,7 +66,7 @@ function p2p_cron_daily() {
 	
 	$minTime = $kapenta->time() - (60 * 60 * 24 * 7);		//	one week ago [string]
 
-	$allManifests = $kapenta->fileList('data/p2p/transfer/meta/', '.xml.php');
+	$allManifests = $kapenta->fs->listDir('data/p2p/transfer/meta/', '.xml.php');
 	foreach($allManifests as $manifestFile) {
 		echo $manifestFile . "<br/>\n";
 

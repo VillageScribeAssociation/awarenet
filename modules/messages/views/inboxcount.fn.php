@@ -8,12 +8,10 @@
 
 function messages_inboxcount($args) {
 	global $kapenta;
-	global $user;
-	global $db;
 
-	if ('public' == $user->role) { return '0'; }
+	if ('public' == $kapenta->user->role) { return '0'; }
 
-	$cacheKey = 'pmcount::' . $user->UID;
+	$cacheKey = 'pmcount::' . $kapenta->user->UID;
 
 	//----------------------------------------------------------------------------------------------
 	//	use memcached value if available
@@ -30,9 +28,9 @@ function messages_inboxcount($args) {
 	$conditions = array();
 	$conditions[] = "folder='inbox'";
 	$conditions[] = "status='unread'";
-	$conditions[] = "owner='" . $db->addMarkup($user->UID) . "'";
+	$conditions[] = "owner='" . $kapenta->db->addMarkup($kapenta->user->UID) . "'";
 
-	$newMessages = $db->countRange('messages_message', $conditions);
+	$newMessages = $kapenta->db->countRange('messages_message', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	cache the value for next time

@@ -10,7 +10,7 @@ class KUtils {
 	//	properties
 	//----------------------------------------------------------------------------------------------
 
-	var $maxDeprecatedNotices = 128;			//%	prevent excessive memory use [int]
+	var $maxDeprecatedNotices = 32;			//%	prevent excessive memory use [int]
 
 	//----------------------------------------------------------------------------------------------
 	//.	make a random number, compatability with older PHP versions
@@ -447,12 +447,23 @@ class KUtils {
 	function noteDeprecated($component, $method) {
 		global $kapenta;
 
+
+		if (0 > $this->maxDeprecatedNotices) { return; }
+        if (false == property_exists($kapenta, 'user')) { return; }
+        if (false == property_exists($kapenta, 'session')) { return; }
+
 		$this->maxDeprecatedNotices--;
-		if (0 <= $this->maxDeprecatedNotices) { return; }
+        $logLevel = (int)('0' . $kapenta->registry->get('kapenta.loglevel'));
 
-        if ('admin' !== $kapenta->user->role) { return; }
+        if ($logLevel <= 2) { return; }
+        if ('object' !== gettype($kapenta->session)) { return; }
 
-		$kapenta->session  ->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
+        $e = new Exception();
+        $msg = '<b>Deprecated: ' . $component . '::' . $method . "</b><br/>\n"
+             . '<small>' . str_replace("\n", "<br/>\n", $e->getTraceAsString()) . "</small>";
+
+        $kapenta->session->msgAdmin($msg, 'bad');
+
 		//echo 'Deprecated: ' . $component . '::' . $method . "<br/>\n";
 		//echo "<small>";
 		//debug_print_backtrace();

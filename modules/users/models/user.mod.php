@@ -85,7 +85,7 @@ class Users_User {
 		}							
 
 		if (false == $this->loaded) {						// check if we did
-			//note: we can't use $db->makeBlank yet, it requires global user
+			//note: we can't use $kapenta->db->makeBlank yet, it requires global user
 			$this->UID = 'public';
 			$this->role = 'public';							// set default role
 			$this->firstname = 'public';
@@ -104,8 +104,8 @@ class Users_User {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID = '') {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -117,9 +117,9 @@ class Users_User {
 	//returns: true on success, false on failure [bool]
 
 	function loadByName($username) {
-		global $db;
-		$conditions = array("username='" . $db->addMarkup($username) . "'");
-		$range = $db->loadRange('users_user', '*', $conditions);
+		global $kapenta;
+		$conditions = array("username='" . $kapenta->db->addMarkup($username) . "'");
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 		foreach($range as $objary) { return $this->loadArray($objary); }
 		return false;
 	}
@@ -163,15 +163,15 @@ class Users_User {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $kapenta;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$this->alias = $aliases->create('users', 'users_user', $this->UID, $this->username);
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$this->alias = $kapenta->aliases->create('users', 'users_user', $this->UID, $this->username);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -182,7 +182,7 @@ class Users_User {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		global $db;
+		global $kapenta;
 		$report = '';
 
 		//------------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ class Users_User {
 		if (strlen($this->password) < 6) 
 			{ $report .= "Please enter a password (6 characters or more).\n"; }
 
-		if (false == $db->objectExists('schools_school', $this->school)) 
+		if (false == $kapenta->db->objectExists('schools_school', $this->school)) 
 			{ $report .= "Please select a school for this user.\n"; }
 
 		//------------------------------------------------------------------------------------------
@@ -386,13 +386,13 @@ class Users_User {
 	//----------------------------------------------------------------------------------------------
 	//.	delete the current user
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -403,9 +403,9 @@ class Users_User {
 	//returns: UID if username exists, empty string if not [string]
 
 	function getUserUID($username) {
-		global $db;
-		$conditions = array("LOWER(username)='" . $db->addmarkup(strtolower($username)) . "'");
-		$range = $db->loadRange('users_user', '*', $conditions);
+		global $kapenta;
+		$conditions = array("LOWER(username)='" . $kapenta->db->addMarkup(strtolower($username)) . "'");
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 		foreach($range as $item) { return $item['UID']; }
 		return '';
 	}
@@ -597,7 +597,6 @@ class Users_User {
 
 	function loadRegistry() {
 		global $kapenta;
-		global $db;
 		global $session;
 
 		if (false == $this->loaded) { return false; }
@@ -614,7 +613,7 @@ class Users_User {
 		//------------------------------------------------------------------------------------------
 		//	(re)create the object is not present
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_registry', $this->settings)) {
+		if (false == $kapenta->db->objectExists('users_registry', $this->settings)) {
 			$model = new Users_Registry();
 			$model->UID = $this->settings;
 			$model->userUID = $this->UID;
@@ -677,16 +676,16 @@ class Users_User {
 	//	TODO: remove this
 	//==============================================================================================
 	//----------------------------------------------------------------------------------------------
-	//.	find users in the same grade as this user  //TODO: $db->loadRange
+	//.	find users in the same grade as this user  //TODO: $kapenta->db->loadRange
 	//----------------------------------------------------------------------------------------------
 	//returns: array of UID => row for loadArray [array]
 
 	function sameGrade() {
-		global $db;
+		global $kapenta;
 		$conditions = array();
-		$conditions[] = "school='" . $db->addMarkup($this->school) . "'";
-		$conditions[] = "grade='" . $db->addMarkup($this->grade) . "'";
-		$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
+		$conditions[] = "school='" . $kapenta->db->addMarkup($this->school) . "'";
+		$conditions[] = "grade='" . $kapenta->db->addMarkup($this->grade) . "'";
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'surname, firstname');
 		return $range;
 	}
 

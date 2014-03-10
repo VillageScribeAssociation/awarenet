@@ -1036,6 +1036,11 @@ class KLegacy_user {
 
 	public function __get($name) {
 		global $kapenta;
+
+        if ('object' !== gettype($kapenta->user)) {
+            return '';
+        }
+
 		switch($name) {
 			case 'data':	return $kapenta->user->data;	break;
 			case 'dbSchema':	return $kapenta->user->dbSchema;	break;

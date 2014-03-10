@@ -53,8 +53,8 @@
 //--------------------------------------------------------------------------------------------------
 
 /*
-	if ('yes' == $registry->get('xhprof.enabled')) {
-		if (mt_rand(1, (int)$registry->get('xhprof.samplesize')) == 1) {
+	if ('yes' == $kapenta->registry->get('xhprof.enabled')) {
+		if (mt_rand(1, (int)$kapenta->registry->get('xhprof.samplesize')) == 1) {
 			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_lib.php';
 			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_runs.php';
 			//xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
@@ -68,7 +68,7 @@
 //--------------------------------------------------------------------------------------------------
 
 
-	$request = $req->toArray();						//	(DEPRECATED)
+	$request = $kapenta->request->toArray();						//	(DEPRECATED)
 	$ref = $req->ref;								//	(DEPRECATED)
 
 	if (false !== strpos($kapenta->request->raw,'static/css') 
@@ -125,9 +125,9 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ((false == $req->local) && ('p2p' != $req->module)) {
-		$altInstance = $registry->get('kapenta.alternate');
+		$altInstance = $kapenta->registry->get('kapenta.alternate');
 		if (true == array_key_exists('alternate', $req->args)) {
-			$session->set('usealternate', $req->args['alternate']);
+			$kapenta->session->set('usealternate', $req->args['alternate']);
 		}
 
 		if (('' != $altInstance) && ('no' != $session->get('usealternate'))) {
@@ -177,7 +177,7 @@
 //--------------------------------------------------------------------------------------------------
 
 /*
-	if ('yes' == $registry->get('xhprof.enabled')) {
+	if ('yes' == $kapenta->registry->get('xhprof.enabled')) {
 		$skip = false;
 		//TODO: registry key
 

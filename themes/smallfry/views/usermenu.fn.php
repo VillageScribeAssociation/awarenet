@@ -5,9 +5,6 @@
 //--------------------------------------------------------------------------------------------------
 
 function theme_usermenu($args) {
-	global $user;
-	global $theme;
-	global $session;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
@@ -15,19 +12,21 @@ function theme_usermenu($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = 'publicmenu.block.php';
 
-	if (('public' != $user->role) && ('banned' != $user->role)) { $block = 'usermenu.block.php'; }
+	if (('public' != $kapenta->user->role) && ('banned' != $kapenta->user->role)) { 
+        $block = 'usermenu.block.php'; 
+    }
 
 	$adminCl = '';
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$adminCl = "<a href='%%serverPath%%admin/' class='menu'>Admin</a>";
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block
 	//----------------------------------------------------------------------------------------------
-	$html = $theme->loadBlock('themes/' . $kapenta->defaultTheme . '/views/' . $block);
+	$html = $kapenta->theme->loadBlock('themes/' . $kapenta->defaultTheme . '/views/' . $block);
 	$html = str_replace('%%adminConsoleLink%%', $adminCl, $html);
-	$html = str_replace('%%userUID%%', $user->UID, $html);
+	$html = str_replace('%%userUID%%', $kapenta->user->UID, $html);
 
 	return $html;
 }

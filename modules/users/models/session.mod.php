@@ -110,8 +110,8 @@ class Users_Session {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -123,7 +123,6 @@ class Users_Session {
 
 	function loadUser($userUID) {
 		global $kapenta;
-		global $db;
 
 		//------------------------------------------------------------------------------------------
 		//	try load from memcached
@@ -141,8 +140,8 @@ class Users_Session {
 
 		$conditions = array();
 		$conditions[] = "status='active'";
-		$conditions[] = "createdBy='" . $db->addMarkup($userUID) . "'";
-		$range = $db->loadRange('users_session', '*', $conditions);
+		$conditions[] = "createdBy='" . $kapenta->db->addMarkup($userUID) . "'";
+		$range = $kapenta->db->loadRange('users_session', '*', $conditions);
 
 		if (0 == count($range)) { return false; }
 
@@ -161,8 +160,8 @@ class Users_Session {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->user = $ary['createdBy'];
 		$this->status = $ary['status'];
@@ -182,11 +181,10 @@ class Users_Session {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
 		global $kapenta;
-		global $db;
 
 		// NB: not shared with other users via P2P (chat is more efficient)
 		$this->shared = 'no';
@@ -198,7 +196,7 @@ class Users_Session {
 		$objArray['editedBy'] = $this->user;
 		$objArray['editedOn'] = $kapenta->datetime();
 
-		$check = $db->save($objArray, $this->dbSchema, false);
+		$check = $kapenta->db->save($objArray, $this->dbSchema, false);
 		if (false == $check) { return "Database error.<br/>\n"; }
 
 		if (true == $kapenta->mcEnabled) {
@@ -337,8 +335,8 @@ class Users_Session {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		global $db;
-		$db->delete($this->UID, $this->dbSchema);
+		global $kapenta;
+		$kapenta->db->delete($this->UID, $this->dbSchema);
 
 		if (true == $kapenta->mcEnabled) {
 			$cacheKey = 'session::active::' . $this->createdBy;

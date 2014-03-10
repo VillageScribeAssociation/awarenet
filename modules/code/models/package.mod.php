@@ -432,6 +432,8 @@ class Code_Package {
 		global $db;
 		global $session;
 
+        if ('' == $this->name) { return ''; }
+
 		$conditions = array();
 		$conditions[] = "parent='root'";
 		$conditions[] = "package='" . $db->addMarkup($this->UID) . "'";

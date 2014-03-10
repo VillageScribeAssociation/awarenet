@@ -16,7 +16,6 @@
 
 function images_default($args) {
 	global $kapenta;
-	global $db;
 
 	$size = 'width300';				//%	default size [string]
 	$link = 'yes';					//%	link to image (yes|no) [string]
@@ -54,18 +53,18 @@ function images_default($args) {
 	//	attempt to load from memcache
 	if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
 		$imgUID = $kapenta->cacheGet($cacheKey);
-		$objAry = $db->getObject('images_image', $imgUID);
+		$objAry = $kapenta->db->getObject('images_image', $imgUID);
 		if (0 != count($objAry)) { $range[$imgUID] = $objAry; }
 	}
 
 	//	attempt database lookup
 	if (0 == count($range)) {
-		$conditions = array("refUID='" . $db->addMarkup($args['refUID']) . "'");
-		$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', '1');
+		$conditions = array("refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'");
+		$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight ASC', '1');
 	}
 
 	if (0 == count($range)) {
-		if (('' == $altUser) || (false == $db->objectExists('users_user', $altUser))) {
+		if (('' == $altUser) || (false == $kapenta->db->objectExists('users_user', $altUser))) {
 			//--------------------------------------------------------------------------------------
 			// no images found for this item
 			//--------------------------------------------------------------------------------------

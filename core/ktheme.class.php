@@ -50,8 +50,6 @@ class KTheme {
 
 	function loadBlock($fileName) {
 		global $kapenta;
-		//global $user;
-		//global $session;
 
 		//------------------------------------------------------------------------------------------
 		//	check for block customized to this device profile
@@ -216,7 +214,6 @@ class KTheme {
 		} else {
 			$msg = "api file does not exist: " . $apiFile;
 			$kapenta->logErr('blocks', 'runBlock', $msg);
-			//$session->msgAdmin("api file does not exist: " . $apiFile);
 
 		}
 
@@ -280,7 +277,7 @@ class KTheme {
 	//; TODO: overhaul this
 
 	function blockToArray($block) {
-		global $page, $session;
+		global $kapenta;
 		$ba = array();
 
 		$original = trim($block);
@@ -299,11 +296,11 @@ class KTheme {
 			//--------------------------------------------------------------------------------------
 			//	add page arguments
 			//--------------------------------------------------------------------------------------
-			if (false == is_array($page->blockArgs)) {
-				$page->blockArgs = array();
-				$session->msgAdmin("\$page->blockArgs not an array.", 'bug');
+			if (false == is_array($kapenta->page->blockArgs)) {
+				$kapenta->page->blockArgs = array();
+				$kapenta->session->msgAdmin("\$kapenta->page->blockArgs not an array.", 'bug');
 			} else {
-				foreach($page->blockArgs as $argName => $argValue) {
+				foreach($kapenta->page->blockArgs as $argName => $argValue) {
 					$ba['args'][$argName] = $argValue;
 				}
 			}
@@ -338,12 +335,11 @@ class KTheme {
 	//returns: txt with blocks recusively expanded [string]
 
 	function expandBlocks($txt, $area = 'content') {
-		global $page;
-		global $session;
+		global $kapenta;
 
 		$continue = true;
 
-		if ('mobile' == $session->get('mobile')) {
+		if ('mobile' == $kapenta->session->get('mobile')) {
 			switch($area) {
 				case 'indent':		$area = 'mobileindent'; 	break;
 				case 'content':		$area = 'mobile'; 			break;
@@ -352,7 +348,7 @@ class KTheme {
 			}
 		}
 
-		foreach($page->blockArgs as $find => $replace) {
+		foreach($kapenta->page->blockArgs as $find => $replace) {
 			$txt = str_replace('%%' . $find . '%%', $replace, $txt);
 		}
 

@@ -18,11 +18,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check if user is already logged in into KA Lite, otherwise automatically create user (1st time) and log in
 	//----------------------------------------------------------------------------------------------
-	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
+	$url = 'http://localhost/api/status';
+	$reply = $kapenta->utils->curlGet($url, '', false);
+	if (0 < strpos($reply, '"is_logged_in": true')) {
+//	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
 		//signed in already, continue below
-//		echo "We are logged in with KhanLite already!<br/>\n";
+		//echo "We are logged in with KhanLite already!<br/>\n";
 	} else {
 //		echo "We are not logged in with KhanLite!<br/>\n";
+		logoutKhanLite();
 		createAndLoginKhanLite();
 	} 
 

@@ -191,7 +191,15 @@ function lessons__cb_khanlite_request($args) {
 	//	redirect requests for api calls to KA Lite
 	//----------------------------------------------------------------------------------------------	
 	else if (false !== strpos($request, 'api/info')) {
-		$cookies = '';
+		$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
+		if ('GET' == $requestMethod) {
+			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
+		}
+
+		header('Content-Type: application/json');
+	}
+	else if (false !== strpos($request, 'api/updates/progress')) {
+		$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
 		if ('GET' == $requestMethod) {
 			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
 		}
@@ -199,7 +207,7 @@ function lessons__cb_khanlite_request($args) {
 		header('Content-Type: application/json');
 	}
 	else if (false !== strpos($request, 'api/status')) {
-		$cookies = 'sessionid='.$sessionid;
+		$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
 		if ('GET' == $requestMethod) {
 			$reply = $kapenta->utils->curlGet('http://localhost:8008' . $request, '', false, $cookies);
 		}
@@ -221,6 +229,7 @@ function lessons__cb_khanlite_request($args) {
 			or false !== strpos($request, 'api/cancel')
 			or false !== strpos($request, 'api/retry')
 			or false !== strpos($request, 'api/save')
+			or false !== strpos($request, 'api/videos')
 			or false !== strpos($request,'coachreports/api')
 			or false !== strpos($request,'securesync/api/status')
 		) {

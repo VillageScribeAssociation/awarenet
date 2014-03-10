@@ -20,6 +20,7 @@ function users_friendrequestprofilenav($args) {
 	//	check arguments and permissions 
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('userUID', $args)) { return '(userUID not given)'; }
+    if (false == property_exists($user, 'friendships')) { return '(friendships disabled)'; }
 	if ($args['userUID'] == $user->UID) { return ''; }		// cannot be friend with self
 
 	//----------------------------------------------------------------------------------------------

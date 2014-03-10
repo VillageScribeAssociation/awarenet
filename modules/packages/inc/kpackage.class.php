@@ -785,7 +785,7 @@ class KPackage {
 	//returns: true if privilege exists, false if not [bool]
 
 	function testCredentials($privilege) {
-		global $utils;
+		global $kapenta;
 		$postvars = array(
 			'mode' => 'basic',
 			'username' => $this->username,
@@ -795,7 +795,7 @@ class KPackage {
 			'return' => 'xml'
 		);
 
-		$result = $utils->curlPost($this->source . 'testcredentials/', $postvars);
+		$result = $kapenta->utils->curlPost($this->source . 'testcredentials/', $postvars);
 		if ('<ok/>' == $result) { return true; }
 		return false;
 	}
@@ -830,13 +830,17 @@ class KPackage {
 			'excludes' => $ext['excludes']
 		);
 
-		$result = $utils->curlPost($this->source . 'updatepackage/', $postvars);
-		//echo 'Posting to: ' . $this->source . 'updatepackage/<br/>';
-		//echo 'Registry returns: ' . $utils->cleanTitle($result) . "<br/>\n";
-		if ('<ok/>' == $result) { return true; }
-		else { 
+		$result = $kapenta->utils->curlPost($this->source . 'updatepackage/', $postvars);
+		echo 'Posting to: ' . $this->source . 'updatepackage/<br/>';
+		echo 'Registry returns: ' . $utils->cleanTitle($result) . "<br/>\n";
+		
+		if ('<ok/>' == $result) { 
+			echo "Package setting  updated successfully.<br/>"; flush();
+			return true; 
+		} else { 
 			$msg = "<textarea rows='10' cols='40' style='width: 100%;'>$result</textarea>";
-			$session->msg($msg, 'warn');
+			$kapenta->session->msg($msg, 'warn');
+			echo $msg . "<br/>\n";
 		}
 
 		return false;

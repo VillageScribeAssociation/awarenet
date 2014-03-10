@@ -82,9 +82,11 @@
 	//	detect IP adddress
 	//----------------------------------------------------------------------------------------------
 
-	$serverPath = 'http://' . $_SERVER['SERVER_ADDR'] . '/';
+    $serverPort = str_replace(':80', '', ':' . $_SERVER['SERVER_PORT']);
+	$serverPath = 'http://' . $_SERVER['SERVER_ADDR'] . $serverPort . '/';
 	$comment = '';
 
+ 
 	$badip = array('', '127.0.0.1', '127.0.1.1');
 
 	if ('windows' == $registry->get('kapenta.os')) {
@@ -122,7 +124,7 @@
 			if (false == in_array($candidate_ip, $badip)) {
 				echo "Interface: " . $candidate_name . "<br/>";
 				echo "Bound ip: " . $candidate_ip . "<br/>";
-				$serverPath = 'http://' . $candidate_ip . '/';
+				$serverPath = 'http://' . $candidate_ip . $serverPort . '/';
 				break;
 			}
 
@@ -160,7 +162,8 @@
 			if (false == in_array($candidate_ip, $badip)) {
 				echo "Interface: " . $candidate_name . "<br/>";
 				echo "Bound ip: " . $candidate_ip . "<br/>";
-				$serverPath = 'http://' . $candidate_ip . '/';
+                echo "Port: " . $_SERVER['SERVER_PORT'] . "<br/>";
+				$serverPath = 'http://' . $candidate_ip . $serverPort . '/';
 				break;
 			}
 		}

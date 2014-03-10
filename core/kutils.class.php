@@ -391,7 +391,10 @@ class KUtils {
 	function curlPost($url, $postvars, $headers = false, $cookie = '', $headerArr = NULL) {
 		global $kapenta;
 	
-		if (false == function_exists('curl_init')) { return false; }	// is cURL installed?
+		if (false == function_exists('curl_init')) { 
+			$kapenta->session->msgAdmin('Could not initialize cURL');
+			return false; 
+		}	// is cURL installed?
 
 		//------------------------------------------------------------------------------------------
 		//	create baisc cURL HTTP POST request
@@ -410,6 +413,7 @@ class KUtils {
 		//	use HTTP proxy if enabled
 		//------------------------------------------------------------------------------------------
 		if ('yes' == $kapenta->proxyEnabled) {
+			$kapenta->session->msgAdmin('Using proxy: ' . $kapenta->proxyAddress);
 			$credentials = $kapenta->proxyUser . ':' . $kapenta->proxyPass;
 			curl_setopt($ch, CURLOPT_PROXY, $kapenta->proxyAddress);
 			curl_setopt($ch, CURLOPT_PROXYPORT, $kapenta->proxyPort);
@@ -430,7 +434,9 @@ class KUtils {
 		//------------------------------------------------------------------------------------------
 		//	return result
 		//------------------------------------------------------------------------------------------
+		echo "Making curl request: $url<br/>";
 		$result = curl_exec($ch);
+		echo "Result: " . strlen($result) . "bytes<br/>";
 		return $result;
 	}
 

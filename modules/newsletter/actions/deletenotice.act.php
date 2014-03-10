@@ -10,12 +10,12 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do404(); }
+	if ('admin' != $user->role) { $kapenta->page->do404(); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given', true); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given', true); }
 
 	$model = new Newsletter_Notice($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('No such notice.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('No such notice.', true); }
 
 	$model->delete();
 

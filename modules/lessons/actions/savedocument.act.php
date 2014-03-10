@@ -11,13 +11,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST variables and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('manifestUID', $_POST)) { $page->do404('no manifestUID'); }
-	if (false == array_key_exists('documentUID', $_POST)) { $page->do404('no documentUID'); }
+	if (false == array_key_exists('manifestUID', $_POST)) { $kapenta->page->do404('no manifestUID'); }
+	if (false == array_key_exists('documentUID', $_POST)) { $kapenta->page->do404('no documentUID'); }
 
 	$model = new Lessons_Course($_POST['manifestUID']);
-	if (false == $model->loaded) { $page->do404('unknown manifest'); }
+	if (false == $model->loaded) { $kapenta->page->do404('unknown manifest'); }
 
 	$dUID = $_POST['documentUID'];
 
@@ -42,7 +42,7 @@
 
 			if (true == $check) {
 				$session->msg("Document updated: " . $document['title'] . ' (' . $dUID . ')', 'ok');
-				$page->do302('lessons/editmanifest/' . $model->UID);
+				$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 			} else {
 				echo $model->toXml();
 				die();
@@ -51,6 +51,6 @@
 		}
 	}
 
-	if (false == $found) { $page->do404('no such document in this manifest'); }
+	if (false == $found) { $kapenta->page->do404('no such document in this manifest'); }
 
 ?>

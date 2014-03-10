@@ -9,15 +9,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('saveNotice' != $_POST['action']) { $page->do404('Action not supported.'); } 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('saveNotice' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); } 
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed.'); }
 
 	$model = new Newsletter_Notice($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("could not load Notice $UID");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Notice $UID");}
 
 	if (false == $user->authHas('newsletter', 'Newsletter_Notice', 'edit', $model->UID))
-		{ $page->do403('You are not authorized to edit this Notice.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Notice.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
@@ -57,6 +57,6 @@
 
 		echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 
-	//} else { $page->do302('newsletter/editnotice/' . $model->UID); }
+	//} else { $kapenta->page->do302('newsletter/editnotice/' . $model->UID); }
 
 ?>

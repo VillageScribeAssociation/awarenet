@@ -15,7 +15,6 @@ function schools_WebShell_migrate($args) {
 	global $shell;
 	global $theme;
 	global $utils;
-	global $db;
 
 	$mode = 'migrate';						//%	operation [string]
 	$ajw = "<span class='ajaxwarn'>";		//%	tidy [string]
@@ -54,8 +53,8 @@ function schools_WebShell_migrate($args) {
 				//----------------------------------------------------------------------------------
 				//	move all users
 				//----------------------------------------------------------------------------------
-				$conditions = array("school='" . $db->addMarkup($fromSchool->UID) . "'");
-				$range = $db->loadRange('users_user', '*', $conditions);
+				$conditions = array("school='" . $kapenta->db->addMarkup($fromSchool->UID) . "'");
+				$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 				$success = "<span class='ajaxmsg'>Moved to " . $toSchool->name . ".</span>";
 
 				if (0 == count($range)) { return $ajw . 'No users attend this school.</span>'; }

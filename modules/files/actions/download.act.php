@@ -24,10 +24,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule not given', true); }
-	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel not given', true); }
-	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID not given', true); }
-	if (false == array_key_exists('URL', $_POST)) { $page->do404('URL not given', true); }
+	if (false == array_key_exists('refModule', $_POST)) { $kapenta->page->do404('refModule not given', true); }
+	if (false == array_key_exists('refModel', $_POST)) { $kapenta->page->do404('refModel not given', true); }
+	if (false == array_key_exists('refUID', $_POST)) { $kapenta->page->do404('refUID not given', true); }
+	if (false == array_key_exists('URL', $_POST)) { $kapenta->page->do404('URL not given', true); }
 
 	$refModule = $_POST['refModule'];
 	$refModel = $_POST['refModel'];
@@ -94,7 +94,7 @@
 			 . '/refModel_' . $refModel 
 			 . '/refUID_' . $refUID . '/';
 
-		$page->do302($retURL);
+		$kapenta->page->do302($retURL);
 	}
 
 ?>

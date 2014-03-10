@@ -15,8 +15,8 @@
 	//	find user whose post this is
 	//----------------------------------------------------------------------------------------------
 	$model = new Moblog_Post($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $page->do403(''); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $kapenta->page->do403(''); }
 
 	$thisUser = new Users_User($model->createdBy);
 

@@ -14,7 +14,6 @@ function videos_player($args) {
 	global $user;
 	global $session;
 	global $theme;
-	global $page;
 
 	$area = 'content';			//%	content area / column in which this is rendered [string]
 	$width = '570';				//%	player width, pixels [string]
@@ -114,7 +113,7 @@ function videos_player($args) {
 		//------------------------------------------------------------------------------------------
 		//	flash or mp4 video
 		//------------------------------------------------------------------------------------------
-		$page->requireJs($kapenta->serverPath . 'modules/videos/js/flowplayer-3.2.6.min.js');
+		$kapenta->page->requireJs($kapenta->serverPath . 'modules/videos/js/flowplayer-3.2.6.min.js');
 		$blockFile = '';
 		if ('yes' == $autoPlay) {
 			$blockFile = 'modules/videos/views/playerAuto.block.php';

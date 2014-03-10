@@ -10,15 +10,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
-	if ('checkout' != $_POST['action']) { $page->do404('Action not recognized.'); }
-	if (false == array_key_exists('packageUID', $_POST)) { $page->do404('Package UID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
+	if ('checkout' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
+	if (false == array_key_exists('packageUID', $_POST)) { $kapenta->page->do404('Package UID not given'); }
 
 	$packageUID = $_POST['packageUID'];
 
 	$package = new KPackage($packageUID);
-	if (false == $package->loaded) { $page->do404('Could not load package.'); }
+	if (false == $package->loaded) { $kapenta->page->do404('Could not load package.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	get all the files
@@ -61,6 +61,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	return to package listing
 	//----------------------------------------------------------------------------------------------
-	$page->do302('packages/showpackage/' . $package->UID);
+	$kapenta->page->do302('packages/showpackage/' . $package->UID);
 
 ?>

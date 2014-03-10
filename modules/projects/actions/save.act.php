@@ -18,10 +18,10 @@
 		$model->load($_POST['UID']);
 		if (true == $model->hasMember($user->UID)) { $authorised = true; }
 	
-	} else { $page->do404(); } // no such project, or UID not specified
+	} else { $kapenta->page->do404(); } // no such project, or UID not specified
 
 	if ('admin' == $user->role) { $authorised = true; }
-	if (false == $authorised) { $page->do403(); }
+	if (false == $authorised) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save changes to title
@@ -42,7 +42,7 @@
 		$model->title = $utils->cleanString($_POST['title']);
 		$model->save();
 		
-		$page->do302('projects/edit/' . $model->alias);
+		$kapenta->page->do302('projects/edit/' . $model->alias);
 	}
 
 
@@ -104,12 +104,12 @@
 			$session->msg('Could not save changes to abstract.', 'bad');
 		}		
 		
-		$page->do302('projects/edit/' . $model->alias);
+		$kapenta->page->do302('projects/edit/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	nothing doing, unsupported action requested?
 	//----------------------------------------------------------------------------------------------
-	$page->do404();
+	$kapenta->page->do404();
 
 ?>

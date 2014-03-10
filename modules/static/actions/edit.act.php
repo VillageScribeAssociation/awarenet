@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do302('home/list/'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do302('home/list/'); }
 	$UID = $aliases->findRedirect('Home_Static');
 	if (false == $user->authHas('home', 'Home_Static', 'edit', $UID))
-		{ $page->do403('you are not authorized to edit this page'); }
+		{ $kapenta->page->do403('you are not authorized to edit this page'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

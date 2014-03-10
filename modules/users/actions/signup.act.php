@@ -11,7 +11,7 @@
 
 	if (('no' == $kapenta->registry->get('users.allowpublicsignup')) && ('admin' != $user->role)) {
 		$session->msg('Public signup has been disabled.', 'bad');
-		$page->do403('Not authorized.');
+		$kapenta->page->do403('Not authorized.');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -113,11 +113,11 @@
 				$session->set('role', $model->role);				//	set current user role
 				$session->msg('You are now logged in.', 'ok');
 				$user->load($model->UID);
-				$page->do302('users/profile/');			// show user his profile
+				$kapenta->page->do302('users/profile/');			// show user his profile
 
 			} else {
 				$session->msg('Could not create account:<br/>' . $report, 'bad');
-				$page->do302('users/signup/');			// back to signup form
+				$kapenta->page->do302('users/signup/');			// back to signup form
 			}
 
 		} else {

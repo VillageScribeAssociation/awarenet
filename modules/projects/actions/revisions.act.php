@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	$model = new Projects_Project($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('projects', 'projects_revision', 'show')) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
+	if (false == $user->authHas('projects', 'projects_revision', 'show')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

@@ -12,7 +12,7 @@
 
 function images_pikachoose($args) {
 	global $user;
-	global $page;
+	global $kapenta;
 	global $session;
 
 	$size = 'slide';												//%	image preset
@@ -81,7 +81,7 @@ function images_pikachoose($args) {
 	//	add to jQuery initialization
 	//----------------------------------------------------------------------------------------------
 
-	//$page->jsinit .= "\n\t\t\t$('#pikame').PikaChoose({carousel:true});\n";
+	//$kapenta->page->jsinit .= "\n\t\t\t$('#pikame').PikaChoose({carousel:true});\n";
 
 	$jsInit = "
 		var link = $('<link>');
@@ -114,7 +114,7 @@ function images_pikachoose($args) {
 		}
 	";
 
-	//$page->jsinit .= $jsInit;
+	//$kapenta->page->jsinit .= $jsInit;
 
 	$html .= ''
 	 . "<script src='%%serverPath%%modules/images/js/jquery.pikachoose.full.js'></script>"

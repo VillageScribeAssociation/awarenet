@@ -9,33 +9,33 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Only admins can use this interface.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can use this interface.'); }
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified'); }
-	if ('saveNotification' != $_POST['action']) { $page->do404('action not supported'); } 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
+	if ('saveNotification' != $_POST['action']) { $kapenta->page->do404('action not supported'); } 
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed'); }
 
 	$UID = $_POST['UID'];
 
 	if (false == $user->authHas('notifications', 'notifications_notification', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Notification.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Notification.'); }
 	if (false == array_key_exists('refModule', $_POST))
-		{ $page->do404('reference module not specified', true); }
+		{ $kapenta->page->do404('reference module not specified', true); }
 	if (false == array_key_exists('refModel', $_POST))
-		{ $page->do404('reference model not specified', true); }
+		{ $kapenta->page->do404('reference model not specified', true); }
 	if (false == array_key_exists('refUID', $_POST))
-		{ $page->do404('reference object UID not specified', true); }
+		{ $kapenta->page->do404('reference object UID not specified', true); }
 	if (false == $kapenta->moduleExists($_POST['refModule']))
-		{ $page->do404('specified module does not exist', true); }
+		{ $kapenta->page->do404('specified module does not exist', true); }
 	if (false == $kapenta->db->objectExists($_POST['refModel'], $_POST['refUID']))
-		{ $page->do404('specified owner does not exist in database', true); }
+		{ $kapenta->page->do404('specified owner does not exist in database', true); }
 
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
 	$model = new Notifications_Notification($UID);
-	if (false == $model->loaded) { $page->do404("could not load Notification $UID");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Notification $UID");}
 
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
@@ -55,7 +55,7 @@
 	if ('' == $report) { $session->msg('Saved changes to Notification', 'ok'); }
 	else { $session->msg('Could not save Notification:<br/>' . $report, 'bad'); }
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('notifications/shownotification/' . $model->UID); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('notifications/shownotification/' . $model->UID); }
 
 ?>

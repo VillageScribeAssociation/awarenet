@@ -10,13 +10,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check authorisation
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('No blog post specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No blog post specified.'); }
 
 	$model = new Moblog_Post($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }	// no such post
+	if (false == $model->loaded) { $kapenta->page->do404(); }	// no such post
 
 	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
-		{ $page->do403('You are not authorized to edit this blog post.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this blog post.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the edit page

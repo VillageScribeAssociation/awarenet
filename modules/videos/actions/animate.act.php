@@ -9,14 +9,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('Animation not specified.'); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Animation not specified.'); }
 
 	$model = new Videos_Video($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Animation not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Animation not found.'); }
 	//TODO: permissions check here
 
-	if ('swf' != $model->format) { $page->do302('videos/play/' . $model->alias); }
+	if ('swf' != $model->format) { $kapenta->page->do302('videos/play/' . $model->alias); }
 
 	$navReturn = "
 		<table noborder>

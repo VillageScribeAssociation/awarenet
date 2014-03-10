@@ -15,7 +15,7 @@ function images_editform($args) {
 	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$html = '';			//%	return value [html]
 
@@ -57,7 +57,7 @@ function images_editform($args) {
 	}
 
 	if ((true == array_key_exists('edittags', $args)) && ('yes' == $args['edittags'])) {
-		$page->requireJs($kapenta->serverPath . 'modules/images/js/editor.js');
+		$kapenta->page->requireJs($kapenta->serverPath . 'modules/images/js/editor.js');
 		$labels['editTagsLink'] = ''
 		 . "<a href=\"javascript:Images_EditTags('" . $model->UID . "');\">[edit tags]</a>"
 		 . '';

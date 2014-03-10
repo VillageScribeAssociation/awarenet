@@ -4,7 +4,7 @@
 //*	test/development action to thrash the registry looking for problems
 //--------------------------------------------------------------------------------------------------
 
-	//if ('admin' != $user->role) { $page->do403(); }
+	//if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$keys = explode(' ', "Btrfs is under heavy development but every effort is being made to keep the filesystem stable and fast because of the speed of development, you should run the latest kernel you can (either the latest release kernel from kernel.org or the latest -rc kernel. Please email the Btrfs mailing list if you have any problems or questions while using Btrfs");
 

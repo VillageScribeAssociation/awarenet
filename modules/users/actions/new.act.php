@@ -10,16 +10,16 @@
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('users', 'users_user', 'new'))
-		{ $page->do403('You are not authorized to create new Users.'); }
+		{ $kapenta->page->do403('You are not authorized to create new Users.'); }
 
-	if (false == array_key_exists('username', $_POST)) { $page->do404(); }
+	if (false == array_key_exists('username', $_POST)) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//*	check that username is not already registered
 	//----------------------------------------------------------------------------------------------
 	if ('' != $user->getUserUID(strtolower($_POST['username']))) {
 		$session->msg('Could not create new User: Username already taken.<br/>');
-		$page->do302('users/' . $model->alias);
+		$kapenta->page->do302('users/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -68,10 +68,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new user: ' . $model->getNameLink() . '<br/>', 'ok');
-		$page->do302('users/profile/' . $model->alias);
+		$kapenta->page->do302('users/profile/' . $model->alias);
 	} else {
 		$session->msg('Could not create new User:<br/>' . $report);
-		$page->do302('users/' . $model->alias);
+		$kapenta->page->do302('users/' . $model->alias);
 	}
 
 ?>

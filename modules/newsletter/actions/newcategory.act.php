@@ -10,7 +10,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('newsletter', 'newsletter_category', 'new')) {
-		$page->do403('You are not authorized to create new Categorys.');
+		$kapenta->page->do403('You are not authorized to create new Categorys.');
 	}
 
 
@@ -36,11 +36,11 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new Category<br/>', 'ok');
-		//$page->do302('/newsletter/editcategory/' . $model->alias);
-		$page->do302('newslettter/listcategories/');
+		//$kapenta->page->do302('/newsletter/editcategory/' . $model->alias);
+		$kapenta->page->do302('newslettter/listcategories/');
 	} else {
 		$session->msg('Could not create new Category:<br/>' . $report);
-		$page->do302('newsletter/');
+		$kapenta->page->do302('newsletter/');
 	}
 
 ?>

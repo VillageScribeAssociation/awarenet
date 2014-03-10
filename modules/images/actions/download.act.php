@@ -32,8 +32,8 @@
 	$imgName = '';
 	
 	if (('' == $refUID) OR ('' == $refModule)  OR ('' == $refModel)) { 
-		if ('xml' == $return) { $page->doXmlError('Missing arguments to image download.'); }
-		$page->do404('Missing arguments to image download.', true); 
+		if ('xml' == $return) { $kapenta->page->doXmlError('Missing arguments to image download.'); }
+		$kapenta->page->do404('Missing arguments to image download.', true); 
 	}
 
 	switch(strtolower($return)) {
@@ -58,14 +58,14 @@
 			break;
 
 		default:
-			$page->do404('unknown return argument', true);
+			$kapenta->page->do404('unknown return argument', true);
 			break;
 	}
 
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { 
-		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
 		$session->msg('You are not authorised to add images to this item.', 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -80,9 +80,9 @@
 	}
 
 	if (false == $raw) { 
-		if ('xml' == $return) { $page->doXmlError('Image could not be downloaded.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Image could not be downloaded.'); }
 		$session->msg('Image could not be downloaded, check the URL?', 'bad'); 
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -90,9 +90,9 @@
 	//----------------------------------------------------------------------------------------------
 	$img = @imagecreatefromstring($raw); 
 	if (false == $img) {
-		if ('xml' == $return) { $page->doXmlError('Could not validate image.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Could not validate image.'); }
 		$session->msg('Could not validate image.', 'bad'); 
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 	
 	//----------------------------------------------------------------------------------------------
@@ -163,7 +163,7 @@
 		echo $model->toXml(true, '', true);
 		die();
 	} else {
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 ?>

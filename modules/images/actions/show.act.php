@@ -9,17 +9,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
 	//TODO: use a permission
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('images_image');	
 
 	$model = new Images_Image($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Image not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	bump popularity of this item if viewed by someone other than the creator

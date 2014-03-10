@@ -14,17 +14,17 @@
 	//----------------------------------------------------------------------------------------------	
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
-	if ('deleteRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
+	if ('deleteRecord' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given'); }
 
 	$model = new Code_File($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Code file not found.'); }
-	if (false == $user->authHas('code', 'code_file', 'delete', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404('Code file not found.'); }
+	if (false == $user->authHas('code', 'code_file', 'delete', $model->UID)) { $kapenta->page->do403(); }
 
 	$package = new Code_Package($model->package);
-	if (false == $package->loaded) { $page->do404('Unknown package.'); }
+	if (false == $package->loaded) { $kapenta->page->do404('Unknown package.'); }
 
 	//----------------------------------------------------------------------------------------------	
 	//	delete the object and increment revision
@@ -43,6 +43,6 @@
 	//----------------------------------------------------------------------------------------------	
 	//	redirect back to package
 	//----------------------------------------------------------------------------------------------
-	$page->do302('code/package/' . $package->UID);
+	$kapenta->page->do302('code/package/' . $package->UID);
 
 ?>

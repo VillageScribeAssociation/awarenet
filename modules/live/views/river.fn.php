@@ -14,7 +14,7 @@
 function live_river($args) {
 	global $kapenta;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$riverpagevar = 'pageno';		//%	pagination variable [string]
 	$allow = array();				//%	arguments to pass forward [array]
@@ -41,7 +41,7 @@ function live_river($args) {
 	//	temporary hack to make videos work right
 	//----------------------------------------------------------------------------------------------
 
-	$page->requireJs('%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js');
+	$kapenta->page->requireJs('%%serverPath%%modules/videos/js/flowplayer-3.2.6.min.js');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the thing

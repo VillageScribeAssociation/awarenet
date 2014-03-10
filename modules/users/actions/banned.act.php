@@ -7,8 +7,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Admins only.'); }
-	//if (false == $user->authHas('users', 'users_user', 'list')) { $page->do403(''); }
+	if ('admin' != $user->role) { $kapenta->page->do403('Admins only.'); }
+	//if (false == $user->authHas('users', 'users_user', 'list')) { $kapenta->page->do403(''); }
 
 	$pageNo = 1;
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }

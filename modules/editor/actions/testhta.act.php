@@ -4,7 +4,7 @@
 //*	development action to diagnose problems with HyperTextArea
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	if (true == array_key_exists('moose', $_POST)) {
 		$session->msg('<b>Posted:</b><br/>' . $_POST['moose'], 'ok');

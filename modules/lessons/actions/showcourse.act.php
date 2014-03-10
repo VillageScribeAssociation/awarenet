@@ -7,7 +7,7 @@
 //*	display a single course
 //--------------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $page->do302('Please log in to access this course.'); }
+	if ('public' == $user->role) { $kapenta->page->do302('Please log in to access this course.'); }
 
 	$model = new 
 	//TODO:

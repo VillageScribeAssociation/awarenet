@@ -10,11 +10,11 @@
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
 
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
-	if (false == $model->loaded) { $page->do404('no such group'); }
+	if (false == $model->loaded) { $kapenta->page->do404('no such group'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	determine if current user is authorised to administer this group
@@ -25,7 +25,7 @@
 		if (($member['userUID'] == $user->UID) AND ('yes' == $member['admin'])) { $admin = true; } 
 	}
 
-	if ($admin == false) { $page->do403(); }
+	if ($admin == false) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	accept HTTP POSTs to add new members

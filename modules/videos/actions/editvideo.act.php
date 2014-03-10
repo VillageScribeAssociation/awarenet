@@ -10,12 +10,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check page arguments and authorisation
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$model = new Videos_Video($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Video not found.'); }
-	//if ('' == $model->fileName) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404('Video not found.'); }
+	//if ('' == $model->fileName) { $kapenta->page->do404(); }
 	if (false == $user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID))
-		{ $page->do403('You are not authorized to edit this video.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this video.'); }
 	
 	//TODO: add more auth options here
 

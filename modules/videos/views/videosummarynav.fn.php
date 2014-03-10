@@ -12,7 +12,7 @@
 function videos_videosummarynav($args) {
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$behavior = 'link';						//%	behavior of links [string]
 	$html = '';		//%	return value [html]
@@ -38,7 +38,7 @@ function videos_videosummarynav($args) {
 	$labels['extra'] = '';
 
 	if ('editmodal' == $behavior) {
-		$page->requireJs('%%serverPath%%modules/videos/js/editor.js');
+		$kapenta->page->requireJs('%%serverPath%%modules/videos/js/editor.js');
 		$labels['viewUrl'] = "javascript:Videos_EditModal('" . $model->UID . "');";
 		$labels['controls'] = ''
 		 . "<span style='float: right;'>"

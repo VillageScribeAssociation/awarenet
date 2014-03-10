@@ -11,12 +11,12 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) {  
 		$session->msg('No entry specified.');
-		$page->do302('calendar/');
+		$kapenta->page->do302('calendar/');
 	}
 
 	$UID = $aliases->findRedirect('calendar_entry');
 	$model = new Calendar_Entry($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('No such calendar entry.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('No such calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

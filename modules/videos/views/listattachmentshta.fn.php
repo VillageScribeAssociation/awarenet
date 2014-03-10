@@ -16,7 +16,7 @@ function videos_listattachmentshta($args) {
 	global $user;
 	global $theme;
 	global $kapenta;
-	global $page;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
@@ -41,7 +41,7 @@ function videos_listattachmentshta($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load videos attached to this object
 	//----------------------------------------------------------------------------------------------
-	$page->requireJs('%%serverPath%%modules/videos/js/editor.js');
+	$kapenta->page->requireJs('%%serverPath%%modules/videos/js/editor.js');
 	$set = new Videos_Videos($refModule, $refModel, $refUID);
 	if (0 == $set->count()) { return ''; }
 	

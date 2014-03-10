@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check referenace and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == trim($kapenta->request->ref)) { $page->do404(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == trim($kapenta->request->ref)) { $kapenta->page->do404(); }
 
 	$model = new P2P_Peer($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown peer.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown peer.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

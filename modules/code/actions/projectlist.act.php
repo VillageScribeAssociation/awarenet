@@ -7,7 +7,7 @@
 
 
 	if ($kapenta->request->ref != '') { $kapenta->request->args['project'] = $kapenta->request->ref; }
-	if (array_key_exists('project', $kapenta->request->args) == false) { $page->do404(); }
+	if (array_key_exists('project', $kapenta->request->args) == false) { $kapenta->page->do404(); }
 
 	$args = array('project' => $kapenta->request->args['project']);
 

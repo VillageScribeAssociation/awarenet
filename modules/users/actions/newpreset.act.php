@@ -11,9 +11,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST fields and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('userRa', $_POST)) { $page->do404('User not specified'); }
+	if (false == array_key_exists('userRa', $_POST)) { $kapenta->page->do404('User not specified'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	create the object and load user theme customizations
@@ -22,7 +22,7 @@
 	$check = $model->loadUserTheme($_POST['userRa']);
 	$model->cat = 'theme';
 
-	if (false == $check) { $page->do404('Could not load user theme customizations.'); }
+	if (false == $check) { $kapenta->page->do404('Could not load user theme customizations.'); }
 
 	foreach($_POST as $key => $value) {
 		switch($key) {
@@ -39,10 +39,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new preset.<br/>', 'ok');
-		$page->do302('/users/themepresets/' . $model->alias);
+		$kapenta->page->do302('/users/themepresets/' . $model->alias);
 	} else {
 		$session->msg('Could not create new preset:<br/>' . $report);
-		$page->do302('/users/themepresets/');
+		$kapenta->page->do302('/users/themepresets/');
 	}
 
 ?>

@@ -11,14 +11,14 @@
 	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->alias; }
 	$UID = $aliases->findRedirect('users_user');
 	$model = new Users_User($UID);
-	if (false == $model->loaded) { $page->do404('no such user'); }
+	if (false == $model->loaded) { $kapenta->page->do404('no such user'); }
 
 	$userRef = $model->alias;
 	$userUID = $model->UID;
 	$userName = $model->getName();
 
 	if (false == $user->authHas('users', 'users_user', 'viewprofile', $UID))
-		{ $page->do403('you cannot view this profile'); }
+		{ $kapenta->page->do403('you cannot view this profile'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	user dependant  //TODO: use $model->extArray() for this
@@ -47,7 +47,7 @@
 	$kapenta->page->blockArgs['raUID'] = $model->alias;
 	$kapenta->page->blockArgs['UID'] = $model->UID;
 	$kapenta->page->blockArgs['userName'] = $userName;
-	$page->title = 'awareNet - ' . $userName . ' (profile)';
+	$kapenta->page->title = 'awareNet - ' . $userName . ' (profile)';
 
 	$kapenta->page->render();
 

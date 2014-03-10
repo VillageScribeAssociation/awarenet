@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('grade', $kapenta->request->args)) { $page->do404('grade not given'); }
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if (false == array_key_exists('grade', $kapenta->request->args)) { $kapenta->page->do404('grade not given'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 
 	$model = new Schools_School($kapenta->request->ref);
 	//TODO: permission check here

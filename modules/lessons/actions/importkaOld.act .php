@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //	Note: fragile and inefficient, just meant to get the job done
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make listing from scraper output

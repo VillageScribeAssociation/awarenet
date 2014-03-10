@@ -10,14 +10,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not given', true); }
-	if ('addAnswer' != $_POST['action']) { $page->do404('action not recognized', true); }
-	if (false == array_key_exists('question', $_POST)) { $page->do404('no question', true); }
-	if (false == array_key_exists('answer', $_POST)) { $page->do404('no answer', true); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not given', true); }
+	if ('addAnswer' != $_POST['action']) { $kapenta->page->do404('action not recognized', true); }
+	if (false == array_key_exists('question', $_POST)) { $kapenta->page->do404('no question', true); }
+	if (false == array_key_exists('answer', $_POST)) { $kapenta->page->do404('no answer', true); }
 
 	$question = new Polls_Question($_POST['question']);
 
-	if (false == $question->loaded) { $page->do404('question not given', true); }
+	if (false == $question->loaded) { $kapenta->page->do404('question not given', true); }
 	//TODO: permissions check here
 
 	//----------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@
 		. '/refModel_' . $question->refModel
 		. '/refUID_' . $question->refUID . '/';
 
-	$page->do302($url);
+	$kapenta->page->do302($url);
 	
 
 ?>

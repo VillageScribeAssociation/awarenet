@@ -12,16 +12,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not given'); }
-	if ('incrementSection' != $_POST['action']) { $page->do404('action not recognized'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not given'); }
+	if ('incrementSection' != $_POST['action']) { $kapenta->page->do404('action not recognized'); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->doXmlError("UID not given"); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->doXmlError("UID not given"); }
 
 	$model = new Projects_Section($_POST['UID']);
-	if (false == $model->loaded) { $page->doXmlError("Section not found."); }
+	if (false == $model->loaded) { $kapenta->page->doXmlError("Section not found."); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
-		$page->do403();
+		$kapenta->page->do403();
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@
 	//----------------------------------------------------------------------------------------------
 	$set = new Projects_Sections($model->projectUID);
 	$check = $set->decWeight($model->UID);
-	if (false == $check) { $page->doXmlError("Could not increment weight."); }
+	if (false == $check) { $kapenta->page->doXmlError("Could not increment weight."); }
 
 	echo "<ok/>";
 ?>

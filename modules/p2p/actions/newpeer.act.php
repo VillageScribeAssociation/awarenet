@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); } // only admins can use this module
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('newPeer' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); } // only admins can use this module
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('newPeer' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
 	$UID = '';
 	$name = '';
@@ -25,15 +25,15 @@
 	if (true == array_key_exists('firewalled', $_POST)) { $firewalled = trim($_POST['firewalled']);}
 	if (true == array_key_exists('pubkey', $_POST)) { $pubkey = trim($_POST['pubkey']); }
 
-	if ('' == $UID) { $page->do404('Server UID not given.'); }
-	if ('' == $name) { $page->do404('Server name not given.'); }
-	if ('' == $url) { $page->do404('Server URL not given.'); }
-	if ('' == $firewalled) { $page->do404('Server firewall status not given.'); }
-	if ('' == $pubkey) { $page->do404('Server RSA key not given.'); }
+	if ('' == $UID) { $kapenta->page->do404('Server UID not given.'); }
+	if ('' == $name) { $kapenta->page->do404('Server name not given.'); }
+	if ('' == $url) { $kapenta->page->do404('Server URL not given.'); }
+	if ('' == $firewalled) { $kapenta->page->do404('Server firewall status not given.'); }
+	if ('' == $pubkey) { $kapenta->page->do404('Server RSA key not given.'); }
 
 	if (true == $kapenta->db->objectExists('p2p_peer', $UID)) { 
 		$session->msg('Peer already exists in database.', 'warn');
-		$page->do302('p2p/peers/');
+		$kapenta->page->do302('p2p/peers/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 	if ('' == $report) { $session->msg('Created new peer server: ' . $model->name, 'ok'); }
 	else { $session->msg('Could not save Server:<br/>' . $report, 'bad'); }
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('/p2p/peers/' . $model->UID); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('/p2p/peers/' . $model->UID); }
 
 ?>

@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('forums_thread');
 	if (false == $user->authHas('forums', 'forums_thread', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this thread.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this thread.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

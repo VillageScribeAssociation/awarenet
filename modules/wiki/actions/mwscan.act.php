@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Admins only.', true); }
+	if ('admin' != $user->role) { $kapenta->page->do403('Admins only.', true); }
 
 	if (false == array_key_exists('wikiUrl', $_POST)) {
 		$kapenta->page->load('modules/wiki/actions/mwscan.if.page.php');

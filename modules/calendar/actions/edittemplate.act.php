@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('calendar_template');
 	if (false == $user->authHas('calendar', 'calendar_template', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Templates.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Templates.'); }
 
 
 	//----------------------------------------------------------------------------------------------

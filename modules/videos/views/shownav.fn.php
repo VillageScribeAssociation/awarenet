@@ -11,7 +11,7 @@ function videos_shownav($args) {
 	global $kapenta;
 	global $theme;
 	global $user;
-	global $page;
+	global $kapenta;
 
 	$area = 'nav1';						//%	assume nav formatting [string]
 	$html = '';							//%	return value [string]
@@ -27,7 +27,7 @@ function videos_shownav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
 	$block = $theme->loadBlock('modules/videos/views/shownav.block.php');
 
 	$labels = $model->extArray();

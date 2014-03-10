@@ -4,7 +4,7 @@
 //*	API of moblog module. No public actions. DEPRECATED
 //--------------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $page->doXmlError('not logged in'); }
+	if ('public' == $user->role) { $kapenta->page->doXmlError('not logged in'); }
 
 	//--------------------------------------------------------------------------------------------------
 	//	list records owned by the current user

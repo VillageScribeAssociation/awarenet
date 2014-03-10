@@ -2,7 +2,7 @@
 
 	require_once($kapenta->installPath . 'modules/lessons/inc/khan.inc.php');
 
-	if ('admin' !== $user->role) { $page->do404(); }
+	if ('admin' !== $user->role) { $kapenta->page->do404(); }
 	
 	$kapenta->fileMakeSubDirs('data/lessons/scraper/x.x');
 

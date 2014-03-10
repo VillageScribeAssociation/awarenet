@@ -11,7 +11,7 @@
 	//---------------------------------------------------------------------------------------------
 	if ('yes' == $kapenta->registry->get('firstrun.complete')) {
 		$session->msg('awareNet initialized.');
-		$page->do302('');
+		$kapenta->page->do302('');
 	}
 
 	// override default max execution time in case Apache has not been restarted.
@@ -99,7 +99,7 @@
 		$db->host = $kapenta->registry->get('firstrun.dbr.host');
 		$db->user = $kapenta->registry->get('firstrun.dbr.user');;
 		$db->pass = $kapenta->registry->get('firstrun.dbr.password');;
-		$db->name = $kapenta->registry->get('firstrun.dbr.name');
+		$kapenta->db->name = $kapenta->registry->get('firstrun.dbr.name');
 	
 		//-----------------------------------------------------------------------------------------
 		//	create the database itself
@@ -107,7 +107,7 @@
 	
 		if ('yes' !== $kapenta->registry->get('firstrun.dbr.created')) {
 			
-			$check = $dba->create($db->name);
+			$check = $dba->create($kapenta->db->name);
 			
 			$msg = "Creating database `awareNet` using default XAMPP root user... ";
 			if (true == $check) {
@@ -115,7 +115,7 @@
 				$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				echo "<div class='chatmessagegreen'>$msg</div>";
 			
-				if (true == $dba->dbExists($db->name)) {
+				if (true == $dba->dbExists($kapenta->db->name)) {
 					$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				}
 			
@@ -139,7 +139,7 @@
 			$newPass = $kapenta->registry->get('firstrun.db.password');
 			
 			$sql = ''
-				. "GRANT ALL ON " . $db->name . ".* "
+				. "GRANT ALL ON " . $kapenta->db->name . ".* "
 				. "TO '$newUser'@'localhost' IDENTIFIED BY '$newPass' ";
 		
 			$msg = "Creating new database user for use by awareNet... ";
@@ -151,7 +151,7 @@
 				$kapenta->registry->set('kapenta.db.user', $newUser);
 				$kapenta->registry->set('kapenta.db.password', $newPass);
 				$kapenta->registry->set('kapenta.db.host', 'localhost');
-				$kapenta->registry->set('kapenta.db.name', $db->name);
+				$kapenta->registry->set('kapenta.db.name', $kapenta->db->name);
 				echo "<div class='chatmessagegreen'>$msg</div>";
 				
 			} else {

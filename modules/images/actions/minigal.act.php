@@ -9,20 +9,20 @@
 	//	check req arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('refModule', $kapenta->request->args))
-		{ $page->do404('refModule not given', true); }
+		{ $kapenta->page->do404('refModule not given', true); }
 
 	if (false == array_key_exists('refModel', $kapenta->request->args))
-		{ $page->do404('refModel not given', true); }
+		{ $kapenta->page->do404('refModel not given', true); }
 
 	if (false == array_key_exists('refUID', $kapenta->request->args))
-		{ $page->do404('refUID not given', true); }
+		{ $kapenta->page->do404('refUID not given', true); }
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404("No such module."); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404("No such owner."); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404("No such module."); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404("No such owner."); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load all images associated with this record
@@ -42,7 +42,7 @@
 			
 	if (0 == count($range)) {
 		$kapenta->page->load('modules/images/actions/minigal.page.php');
-		$page->content = '';
+		$kapenta->page->content = '';
 		$kapenta->page->render();
 		die();
 	}
@@ -100,7 +100,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$kapenta->page->load('modules/images/actions/minigal.page.php');
-	$page->content = $html;
+	$kapenta->page->content = $html;
 	$kapenta->page->render();
 
 ?>

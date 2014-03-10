@@ -6,9 +6,9 @@
 //*	API to automatically configure a peer
 //-------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('url', $_POST)) { $page->do404('URL not given'); }
-	if (false == array_key_exists('recover', $_POST)) { $page->do404('password not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('url', $_POST)) { $kapenta->page->do404('URL not given'); }
+	if (false == array_key_exists('recover', $_POST)) { $kapenta->page->do404('password not given'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	attempt to download peer's public manifest
@@ -20,7 +20,7 @@
 
 	if (false == strpos($raw, '</peer>')) {
 		$session->msg("Could not load peer autoconfiguration file.");
-		$page->do302('p2p/peers/');
+		$kapenta->page->do302('p2p/peers/');
 	}
 
 	$xd = new KXmlDocument($raw);
@@ -96,6 +96,6 @@
 	//	redirect back to peers listing
 	//---------------------------------------------------------------------------------------------
 	
-	$page->do302('p2p/peers/');
+	$kapenta->page->do302('p2p/peers/');
 
 ?>

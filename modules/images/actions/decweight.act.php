@@ -12,13 +12,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and request args
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('Image not specified', true); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Image not specified', true); }
 	
 	$model = new Images_Image($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Image not found', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editimage', $model->refUID)) 
-		{ $page->do403('You are not authorized to edit this image.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this image.'); }
 
 	$set = new Images_Images($model->refModule, $model->refModel, $model->refUID);
 	$set->decWeight($model->UID);
@@ -52,10 +52,10 @@
 			break;
 
 		default:
-			$page->do302('images/edit/' . $model->alias);
+			$kapenta->page->do302('images/edit/' . $model->alias);
 			break;
 	}
 		
-	$page->do302($returnUrl);		
+	$kapenta->page->do302($returnUrl);		
 
 ?>

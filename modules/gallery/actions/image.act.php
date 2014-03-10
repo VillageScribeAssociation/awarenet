@@ -10,17 +10,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	anyone can view images TODO: add permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('images_image');
 	$model = new Images_Image($UID);
-	if (false == $model->loaded) { $page->do404('Image not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load models
 	//----------------------------------------------------------------------------------------------
 	$userRa = $aliases->getDefault('users_user', $model->createdBy);
 	$gallery = new Gallery_Gallery($model->refUID);
-	//if (false == $gallery->loaded) { $page->do404('Gallery not found.'); } TODO
+	//if (false == $gallery->loaded) { $kapenta->page->do404('Gallery not found.'); } TODO
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

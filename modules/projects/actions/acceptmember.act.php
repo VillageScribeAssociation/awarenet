@@ -13,10 +13,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified'); }
-	if ('acceptMember' != $_POST['action']) { $page->do404('Action not recognized'); }
-	if (false == array_key_exists('projectUID', $_POST)) { $page->do404('Project not specified.'); }
-	if (false == array_key_exists('userUID', $_POST)) { $page->do404('User not specified.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified'); }
+	if ('acceptMember' != $_POST['action']) { $kapenta->page->do404('Action not recognized'); }
+	if (false == array_key_exists('projectUID', $_POST)) { $kapenta->page->do404('Project not specified.'); }
+	if (false == array_key_exists('userUID', $_POST)) { $kapenta->page->do404('User not specified.'); }
 
 	$projectUID = $_POST['projectUID'];
 	$userUID = $_POST['userUID'];
@@ -25,25 +25,25 @@
 	//	load the project and check permissions, request
 	//----------------------------------------------------------------------------------------------
 	$project = new Projects_Project($projectUID);
-	if (false ==  $project->loaded) { $page->do404('No such project.'); }	// no project
+	if (false ==  $project->loaded) { $kapenta->page->do404('No such project.'); }	// no project
 	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $project->UID)) {
-		$page->do403();
+		$kapenta->page->do403();
 	}
 
-	if (false == $project->memberships->hasAsked($userUID)) { $page->do404('Request not found.'); }
+	if (false == $project->memberships->hasAsked($userUID)) { $kapenta->page->do404('Request not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, grant membership
 	//----------------------------------------------------------------------------------------------
 	$membershipUID = $project->memberships->getUID($userUID);
-	if ('' == $membershipUID) { $page->do404('Membership not found.'); }
+	if ('' == $membershipUID) { $kapenta->page->do404('Membership not found.'); }
 	
 	$model = new Projects_Membership($membershipUID);	
-	if (false == $model->loaded) { $page->do404('Could not load membership.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load membership.'); }
 	$model->role = 'member';
 	$report = $model->save();
 
-	if ('' != $report) { $page->do404("Database error, could not grant membership:<br/>$report"); }
+	if ('' != $report) { $kapenta->page->do404("Database error, could not grant membership:<br/>$report"); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, create notification
@@ -75,6 +75,6 @@
 	//----------------------------------------------------------------------------------------------
 	$nameBlock = '[[:users::namelink::userUID=' . $model->userUID . ':]]';
 	$session->msg("You have added $nameBlock as a new member of this project.", 'ok');
-	$page->do302('projects/' . $project->alias);
+	$kapenta->page->do302('projects/' . $project->alias);
 
 ?>

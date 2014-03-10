@@ -12,12 +12,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); } 
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); } 
 	$UID = $aliases->findRedirect('wiki_article');
 
 	$model = new Wiki_Article($UID);
-	if (false == $model->loaded) { $page->do404('Could not load parent article.'); }
-	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load parent article.'); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $kapenta->page->do403(); }
 
 	$kapenta->page->load('modules/wiki/actions/talk.page.php');
 	$kapenta->page->blockArgs['UID'] = $model->UID;

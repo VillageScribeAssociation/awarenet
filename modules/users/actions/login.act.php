@@ -28,7 +28,7 @@
 					//	details correct, but user is banhammered
 					//------------------------------------------------------------------------------
 					$session->msg('You have been banned, you are not logged in.', 'no');
-					$page->do302(''); 									// redirect to homepage
+					$kapenta->page->do302(''); 									// redirect to homepage
 
 				} else {
 
@@ -43,14 +43,14 @@
 					$user->loadArray($row);
 
 					if (true == array_key_exists('redirect', $_POST)) { 
-						$page->do302($_POST['redirect']); 				// retry action after login
+						$kapenta->page->do302($_POST['redirect']); 				// retry action after login
 					} else {
 						//--------------------------------------------------------------------------
 						//	user is logged in, raise event and redirect
 						//--------------------------------------------------------------------------
 						$args = array('userUID' => $row['UID']);
 						$kapenta->raiseEvent('*', 'users_login', $args);
-						$page->do302('notifications/'); 				// default landing page
+						$kapenta->page->do302('notifications/'); 				// default landing page
 					}
 
 				}

@@ -13,7 +13,7 @@
 
 function groups_listmembersnav($args) {
 	global $user;
-	global $page;
+	global $kapenta;
 
 	$editmode = 'no';
 	$html = '';				//%	return value [string]
@@ -36,7 +36,7 @@ function groups_listmembersnav($args) {
 	$isAdmin = $model->hasEditAuth($user->UID);		//TODO: use permission for this
 
 	$channel = 'members-' . $model->UID;
-	$page->setTrigger('groups', $channel, $args['rawblock']);
+	// $kapenta->page->setTrigger('groups', $channel, $args['rawblock']);
 
 	$divId = 'divMembers' . $model->UID;
 	$html .= "<div id='$divId'>\n";

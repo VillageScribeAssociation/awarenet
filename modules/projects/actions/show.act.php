@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	$model = new Projects_Project($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Could not load project.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load project.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page

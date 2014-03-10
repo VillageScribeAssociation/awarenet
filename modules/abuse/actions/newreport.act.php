@@ -8,18 +8,18 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('refModule', $_POST))
-		{ $page->do404('reference module not specified'); }
+		{ $kapenta->page->do404('reference module not specified'); }
 	if (false == array_key_exists('refModel', $_POST))
-		{ $page->do404('reference model not specified'); }
+		{ $kapenta->page->do404('reference model not specified'); }
 	if (false == array_key_exists('refUID', $_POST))
-		{ $page->do404('reference object UID not specified'); }
+		{ $kapenta->page->do404('reference object UID not specified'); }
 	if (false == $kapenta->moduleExists($_POST['refModule']))
-		{ $page->do404('specified module does not exist'); }
+		{ $kapenta->page->do404('specified module does not exist'); }
 	if (false == $kapenta->db->objectExists($_POST['refModel'], $_POST['refUID']))
-		{ $page->do404('specified owner does not exist in database: ' . $_POST['refModel'] . ' - '. $_POST['refUID']); }
+		{ $kapenta->page->do404('specified owner does not exist in database: ' . $_POST['refModel'] . ' - '. $_POST['refUID']); }
 
 	//----------------------------------------------------------------------------------------------
 	//*	create the object
@@ -51,10 +51,10 @@
 	if ('' == $report) {
 		$msg = "Report Submitted.<br/>Thank you for letting us know. fromurl:" . $model->fromurl . "\n";
 		$session->msg($msg, 'ok');
-		$page->do302($model->fromurl);
+		$kapenta->page->do302($model->fromurl);
 	} else {
 		$session->msg('Could not create new Report:<br/>' . $report, 'bad');
-		$page->do302($model->fromurl);
+		$kapenta->page->do302($model->fromurl);
 	}
 
 ?>

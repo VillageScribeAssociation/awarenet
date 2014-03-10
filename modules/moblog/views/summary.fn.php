@@ -12,7 +12,7 @@
 function moblog_summary($args) {
 	global $theme;
 	global $user;
-	global $page;
+	global $kapenta;
 
 	$html = '';			//%	return value [string]
 
@@ -37,7 +37,7 @@ function moblog_summary($args) {
 	//	set AJAX triggers
 	//----------------------------------------------------------------------------------------------
 	//$channel = 'post-' . $model->UID;
-	//$page->setTrigger('moblog', $channel, $args['rawblock']);
+	//// $kapenta->page->setTrigger('moblog', $channel, $args['rawblock']);
 
 	$html = $theme->expandBlocks($html, $args['area']);
 	$html = str_replace('[1 comments]', '[1 comment]', $html);

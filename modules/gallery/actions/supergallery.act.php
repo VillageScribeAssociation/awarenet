@@ -8,10 +8,10 @@
 	//----------------------------------------------------------------------------------------------
 	// permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $page->do403(); }
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $kapenta->page->do403(); }
 	
 	$kapenta->page->load('modules/gallery/actions/supergallery.page.php');
-	$page->allowBlockArgs('page');
+	$kapenta->page->allowBlockArgs('page');
 	$kapenta->page->render();
 
 ?>

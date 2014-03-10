@@ -7,18 +7,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('savePage' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('savePage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
-	if (false == array_key_exists('module', $_POST)) { $page->do404('Module not specified.'); }
-	if (false == array_key_exists('page', $_POST)) { $page->do404('Module not specified.'); }
+	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not specified.'); }
+	if (false == array_key_exists('page', $_POST)) { $kapenta->page->do404('Module not specified.'); }
 	$fileName = 'modules/' . $_POST['module'] . '/actions/' . $_POST['page'];
 
-	if (false == $kapenta->fs->exists($fileName)) { $page->do404('No such template.'); }
+	if (false == $kapenta->fs->exists($fileName)) { $kapenta->page->do404('No such template.'); }
 
 	$model = new KPage($fileName);
-	if (false == $model->loaded) { $page->do404('Could not load template.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load template.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save the changes
@@ -49,6 +49,6 @@
 	//	redirect back to list
 	//----------------------------------------------------------------------------------------------
 	
-	$page->do302('admin/listpages/');
+	$kapenta->page->do302('admin/listpages/');
 
 ?>

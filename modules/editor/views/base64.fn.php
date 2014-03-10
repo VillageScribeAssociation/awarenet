@@ -10,7 +10,7 @@
 //opt: areaname - name of javascript object [string]
 
 function editor_base64($args) {
-	global $page;
+	global $kapenta;
 
 	$width = 570;
 	$height = 400;

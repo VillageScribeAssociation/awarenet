@@ -31,9 +31,9 @@
 	$srcName = '';					//%	original name of file as given by browser [string]
 	$errmsg = '';
 
-	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule missing', true); }
-	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel missing', true); }
-	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID missing', true); }
+	if (false == array_key_exists('refModule', $_POST)) { $kapenta->page->do404('refModule missing', true); }
+	if (false == array_key_exists('refModel', $_POST)) { $kapenta->page->do404('refModel missing', true); }
+	if (false == array_key_exists('refUID', $_POST)) { $kapenta->page->do404('refUID missing', true); }
 
 	if (true == array_key_exists('module', $_POST)) { $module = $_POST['module']; }
 	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
@@ -169,7 +169,7 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ($return == 'xml') {
-		if ('' !== $errmsg) { $page->doXmlError($errmsg); }
+		if ('' !== $errmsg) { $kapenta->page->doXmlError($errmsg); }
 		echo "<ok/>";
 		die();
 	}
@@ -177,6 +177,6 @@
 	if ('' == $errmsg) { $session->msg("Uploaded image: $srcName <br/>\n", 'ok'); }
 	else { $session->msg($errmsg, 'bad'); }
 
-	$page->do302($return);
+	$kapenta->page->do302($return);
 
 ?>

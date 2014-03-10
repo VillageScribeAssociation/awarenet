@@ -9,22 +9,22 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permission
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }			// public users can't add friends
+	if ('public' == $user->role) { $kapenta->page->do403(); }			// public users can't add friends
 	
 	if (false == array_key_exists('action', $_POST)) {
-		$page->doXmlError('Action not specified.');
+		$kapenta->page->doXmlError('Action not specified.');
 	}
 
 	if ('addFriendReq' != $_POST['action']) {
-		$page->doXmlError('Action not supported.');
+		$kapenta->page->doXmlError('Action not supported.');
 	}
 
 	if (false == array_key_exists('friendUID', $_POST)) {
-		$page->doXmlError('No friendUID given.');
+		$kapenta->page->doXmlError('No friendUID given.');
 	}
 
 	if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) {
-		$page->doXmlError("User not found.");
+		$kapenta->page->doXmlError("User not found.");
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	ignore duplicates (if we're already a friend or have already requested to be)
 	//----------------------------------------------------------------------------------------------
-	if (true == $model->linkExists($user->UID, $friendUID)) {$page->do302($retLink);}
+	if (true == $model->linkExists($user->UID, $friendUID)) {$kapenta->page->do302($retLink);}
 
 	//----------------------------------------------------------------------------------------------
 	//	confirm friendship if other party has already asked to be our friend

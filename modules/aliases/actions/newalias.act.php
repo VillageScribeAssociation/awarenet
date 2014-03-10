@@ -10,16 +10,16 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('aliases', 'aliases_alias', 'new'))
-		{ $page->do403('You are not authorized to create new aliases.'); }
+		{ $kapenta->page->do403('You are not authorized to create new aliases.'); }
 
 	if (false == array_key_exists('module', $_POST))
-		{ $page->do404('reference module not specified', true); }
+		{ $kapenta->page->do404('reference module not specified', true); }
 	if (false == array_key_exists('model', $_POST))
-		{ $page->do404('reference model not specified', true); }
+		{ $kapenta->page->do404('reference model not specified', true); }
 	if (false == array_key_exists('UID', $_POST))
-		{ $page->do404('reference object UID not specified', true); }
-	if (false == moduleExists($_POST['module'])) { $page->do404(); }
-	if (false == $kapenta->db->objectExists($_POST['model'], $_POST['UID'])) { $page->do404('no model specified', true); }
+		{ $kapenta->page->do404('reference object UID not specified', true); }
+	if (false == moduleExists($_POST['module'])) { $kapenta->page->do404(); }
+	if (false == $kapenta->db->objectExists($_POST['model'], $_POST['UID'])) { $kapenta->page->do404('no model specified', true); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		//$session->msg('New Alias.');
-		$page->do302('/alias/editalias/' . $model->UID);
+		$kapenta->page->do302('/alias/editalias/' . $model->UID);
 	} else {
 		$session->msg('Could not create new Alias:<br/>' . $report);
 	}

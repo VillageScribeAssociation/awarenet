@@ -9,8 +9,8 @@
 	//	check that a valid css file has been requested
 	//----------------------------------------------------------------------------------------------
 	$files = array('default.css', 'windows.css', 'iframe.css', 'mobile.css', 'tablet.css');
-	if ('' == $kapenta->request->ref) { $page->do404(); }
-	if (false == in_array($kapenta->request->ref, $files)) { $page->do404("Unknown stylesheet."); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
+	if (false == in_array($kapenta->request->ref, $files)) { $kapenta->page->do404("Unknown stylesheet."); }
 
 	if (('default.css' == $kapenta->request->ref) && (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) {
 		$kapenta->request->ref = 'iesucks.css';

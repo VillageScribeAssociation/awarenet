@@ -11,16 +11,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Image not specified.'); }
 
 	$model = new Images_image($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown image.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown image.'); }
 
 	if (false == $kapenta->fs->exists($model->fileName)) {
 		$msg = 'Image not available on this node, you can not set it as a profile picture.';
 		$session->msg($msg, 'bad');
-		$page->do302('users/editprofile/' . $user->alias);
+		$kapenta->page->do302('users/editprofile/' . $user->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@
 	if (false == $check) {
 		$msg = 'Unable to copy image to your profile.';
 		$session->msg($msg, 'bad');
-		$page->do302('users/editprofile/' . $user->alias);
+		$kapenta->page->do302('users/editprofile/' . $user->alias);
 	}
 
 	$model->fileName = $newFile;
@@ -69,6 +69,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect to edit profile form
 	//----------------------------------------------------------------------------------------------
-	$page->do302('users/editprofile/' . $user->alias);
+	$kapenta->page->do302('users/editprofile/' . $user->alias);
 
 ?>

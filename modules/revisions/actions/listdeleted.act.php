@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role (only administrators may do this)
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 	if (true == array_key_exists('type', $kapenta->request->args)) { $objectType = $kapenta->request->args['type']; }
 

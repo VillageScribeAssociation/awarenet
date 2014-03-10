@@ -11,7 +11,7 @@
 		//	user was not logged in
 		//------------------------------------------------------------------------------------------
 		$session->msg("You are already logged out.<br/>\n");
-		$page->do302(''); // homepage		
+		$kapenta->page->do302(''); // homepage		
 
 	} else {
 		//------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 		else { $session->msg('Logout incomplete.', 'bad'); }
 
 		$kapenta->raiseEvent('*', 'users_logout', $args);
-		$page->do302('');
+		$kapenta->page->do302('');
 
 	}
 

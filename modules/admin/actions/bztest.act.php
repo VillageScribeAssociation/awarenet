@@ -4,7 +4,7 @@
 //*	temporary action to test BZIP
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$fileName = 'data/test.bz';
 
@@ -55,7 +55,7 @@ The eventful political climate of the day saw the Hundred Years' War, where the 
 
 	$bFH = bzopen($fileName, 'w');
 
-	if (false == $bFH) { $page->do404("Could not open file for writing."); }
+	if (false == $bFH) { $kapenta->page->do404("Could not open file for writing."); }
 
 	echo "File handle: " . $bFH . "<br/>\n";
 

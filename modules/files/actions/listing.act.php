@@ -41,7 +41,7 @@
 		}
 		
 		$kapenta->page->load('modules/files/listing.page.php');
-		$page->content = $html;
+		$kapenta->page->content = $html;
 		$kapenta->page->render();
 		
 	}

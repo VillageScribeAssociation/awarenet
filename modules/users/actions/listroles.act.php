@@ -9,7 +9,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('users', 'users_role', 'list'))
-		{ $page->do403('You are not authorized to list Roles.'); }
+		{ $kapenta->page->do403('You are not authorized to list Roles.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

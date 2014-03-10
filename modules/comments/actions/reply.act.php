@@ -13,16 +13,16 @@
 	//	check POST arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('action', $_POST)) { $page->doXmlError('action not given'); }
-	if ('addReply' != $_POST['action']) { $page->doXmlError('action not supported'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->doXmlError('action not given'); }
+	if ('addReply' != $_POST['action']) { $kapenta->page->doXmlError('action not supported'); }
 
-	if (false == array_key_exists('parentUID', $_POST)) { $page->doXmlError('parentUUID missing'); }
+	if (false == array_key_exists('parentUID', $_POST)) { $kapenta->page->doXmlError('parentUUID missing'); }
 
 	$parent = new Comments_Comment($_POST['parentUID']);
-	if (false == $parent->loaded) { $page->doXmlError('Unknown parent comment.'); }
+	if (false == $parent->loaded) { $kapenta->page->doXmlError('Unknown parent comment.'); }
 
 	if (false == array_key_exists('reply' . $_POST['parentUID'], $_POST)) {
-		$page->doXmlError('No comment sent. reply' . $_POST['parentUID']);
+		$kapenta->page->doXmlError('No comment sent. reply' . $_POST['parentUID']);
 	}
 
 	$commentTxt = $utils->cleanHtml($_POST['reply' . $_POST['parentUID']]);
@@ -39,7 +39,7 @@
 	$model->comment = $commentTxt;	
 
 	$report = $model->save();
-	if ('' != $report) { $page->doXmlError($report); }
+	if ('' != $report) { $kapenta->page->doXmlError($report); }
 
 	//----------------------------------------------------------------------------------------------
 	//	done

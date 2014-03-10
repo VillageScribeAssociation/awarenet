@@ -9,15 +9,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('savePartner' != $_POST['action']) { $page->do404('Action not supported.'); } 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('savePartner' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); } 
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed.'); }
 
 	$model = new Home_Partner($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("could not load Partner $UID");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Partner $UID");}
 
 	if (false == $user->authHas('home', 'Home_Partner', 'edit', $model->UID))
-		{ $page->do403('You are not authorized to edit this Partner.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Partner.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
@@ -39,7 +39,7 @@
 	if ('' == $report) { $session->msg('Saved changes to Partner', 'ok'); }
 	else { $session->msg('Could not save Partner:<br/>' . $report, 'bad'); }
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('home/showpartner/' . $model->alias); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('home/showpartner/' . $model->alias); }
 
 ?>

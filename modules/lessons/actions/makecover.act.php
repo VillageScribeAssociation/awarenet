@@ -12,13 +12,13 @@
 	//	check post args and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('manifest', $kapenta->request->args)) { $page->do404('No manifest'); }
-	if (false == array_key_exists('document', $kapenta->request->args)) { $page->do404('No document'); }
+	if (false == array_key_exists('manifest', $kapenta->request->args)) { $kapenta->page->do404('No manifest'); }
+	if (false == array_key_exists('document', $kapenta->request->args)) { $kapenta->page->do404('No document'); }
 
 	$model = new Lessons_Course($kapenta->request->args['manifest']);
-	if (false == $model->loaded) { $page->do404('unknown course'); }
+	if (false == $model->loaded) { $kapenta->page->do404('unknown course'); }
 
 	$document = array();
 	$index = -1;
@@ -30,7 +30,7 @@
 		}
 	}
 
-	if (0 == count($document)) { $page->do404('unknown document'); }
+	if (0 == count($document)) { $kapenta->page->do404('unknown document'); }
 
 	$kapenta->fileMakeSubdirs('data/lessons/' . $model->UID . '/covers/x.txt');
 	$kapenta->fileMakeSubdirs('data/lessons/' . $model->UID . '/thumbs/x.txt');

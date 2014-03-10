@@ -11,16 +11,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('savePackage' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('savePackage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given.'); }
 
 	$prefix = 'pkg.' . trim($_POST['UID']) . '.';
 
 	$package = new KPackage($_POST['UID']);
-	if (false == $package->loaded) { $page->do404('Could not load package.'); }
+	if (false == $package->loaded) { $kapenta->page->do404('Could not load package.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the changes
@@ -91,6 +91,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to package
 	//----------------------------------------------------------------------------------------------
-	$page->do302('packages/show/' . $package->UID);
+	$kapenta->page->do302('packages/show/' . $package->UID);
 
 ?>

@@ -9,7 +9,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('newsletter', 'Newsletter_Adunit', 'list'))
-		{ $page->do403('You are not authorized to list Adunits.'); }
+		{ $kapenta->page->do403('You are not authorized to list Adunits.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

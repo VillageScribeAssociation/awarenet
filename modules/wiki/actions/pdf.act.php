@@ -68,6 +68,6 @@
 	$kapenta->page->load('modules/wiki/actions/pdf.page.php');
 	$kapenta->page->blockArgs['raUID'] = $raUID;
 	foreach($extArray as $key => $value) { $kapenta->page->blockArgs[$key] = $value; }
-	$page->renderPdf();
+	$kapenta->page->renderPdf();
 
 ?>

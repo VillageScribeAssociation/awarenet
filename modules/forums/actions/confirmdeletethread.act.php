@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given.'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $kapenta->page->do404('UID not given.'); }
 
 	$model = new Forums_Thread($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404('Forum thread not found'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Forum thread not found'); }
 
 	if (false == $user->authHas('forums', 'forums_thread', 'delete', $model->UID))
-		{ $page->do403('You are not authorized to delete this forum thread.'); }	
+		{ $kapenta->page->do403('You are not authorized to delete this forum thread.'); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	make the cofirmation form
@@ -29,6 +29,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	show confirmation form on item to be deleted
 	//----------------------------------------------------------------------------------------------
-	$page->do302('forums/showthread/' . $model->alias);
+	$kapenta->page->do302('forums/showthread/' . $model->alias);
 
 ?>

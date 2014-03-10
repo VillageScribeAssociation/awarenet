@@ -6,12 +6,12 @@
 //*	create a new static page
 //--------------------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('home', 'home_static', 'new')) { $page->do403(); }
+	if (false == $user->authHas('home', 'home_static', 'new')) { $kapenta->page->do403(); }
 	
 	$model = new Home_Static();
 	$model->menu1 = '[[:home::menu:]]';
 	$model->save();
 	
-	$page->do302('home/edit/' . $model->alias);
+	$kapenta->page->do302('home/edit/' . $model->alias);
 
 ?>

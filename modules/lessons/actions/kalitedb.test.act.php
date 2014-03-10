@@ -4,7 +4,7 @@
 //* test connectivity to kalite database
 //--------------------------------------------------------------------------------------------------
 
-    if ('admin' !== $kapenta->user->role) { $page->do403(); }
+    if ('admin' !== $kapenta->user->role) { $kapenta->page->do403(); }
 
     $dbFile = 'data/export/data.sqlite';
     $connected = false;

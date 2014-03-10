@@ -4,7 +4,7 @@
 //*	development action to test javascript encoding of binary files
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$fileName = 'themes/clockface/images/locbardiv.png';
 

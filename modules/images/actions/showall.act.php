@@ -8,13 +8,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('images', 'images_image', 'list')) { $page->do403(); }
+	if (false == $user->authHas('images', 'images_image', 'list')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	$kapenta->page->load('modules/images/actions/showall.page.php');
-	$page->allowBlockArgs('page,refMod');
+	$kapenta->page->allowBlockArgs('page,refMod');
 	$kapenta->page->render();
 
 ?>

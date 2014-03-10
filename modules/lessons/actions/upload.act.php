@@ -12,16 +12,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('manifestUID', $_POST)) { $page->do404('no manifest uid'); }
+	if (false == array_key_exists('manifestUID', $_POST)) { $kapenta->page->do404('no manifest uid'); }
 	if (false == array_key_exists('title', $_POST)) { 
 		print_r($_POST);
-		$page->do404('no title');
+		$kapenta->page->do404('no title');
 	}
 
 	$model = new Lessons_Course($_POST['manifestUID']);
-	if (false == $model->loaded) { $page->do404('Course not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Course not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	get document metadata
@@ -56,7 +56,7 @@
 
 			default:
 				$session->msg("Files of type $ext are not current supported by this server.", 'bad');
-				$page->do302('lessons/editmanifest/' . $model->UID);
+				$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 				break;
 		}
 
@@ -80,7 +80,7 @@
 
 			if (false == $kapenta->fs->exists($destName)) {
 				$session->msg("Error during file upload, please try again.", 'bad');
-				$page->do302('lessons/editmanifest/' . $model->UID);				
+				$kapenta->page->do302('lessons/editmanifest/' . $model->UID);				
 			}
 
 			$newDoc['file'] = $destName;
@@ -93,11 +93,11 @@
 			lessons_extractImages($model->UID, $newDoc);
 
 		} else {
-			$page->do404('No file uploaded.');
+			$kapenta->page->do404('No file uploaded.');
 		}
 	
 	} else { 
-		$page->do404('No file uploaded.'); 
+		$kapenta->page->do404('No file uploaded.'); 
 	}
 
 
@@ -109,7 +109,7 @@
 	$check = $model->save();
 
 	if (true == $check) {
-		$page->do302('lessons/editmanifest/' . $model->UID);
+		$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 	} else {
 		echo "<textarea rows='20' cols='100'>" . $model->toXML() . "</textarea>";
 	}

@@ -10,14 +10,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send messages
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check submitted form
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('sendMessage' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('recipients', $_POST)) { $page->do404('Recipients unspecified.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('sendMessage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('recipients', $_POST)) { $kapenta->page->do404('Recipients unspecified.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make array of all recipients
@@ -86,6 +86,6 @@
 	//	redirect back to inbox
 	//------------------------------------------------------------------------------------------
 	
-	$page->do302('messages/inbox/');
+	$kapenta->page->do302('messages/inbox/');
 
 ?>

@@ -7,12 +7,12 @@
 //*	test pull updates from a peer
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if ('' == $kapenta->request->ref) { $page->do404('peer not found'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('peer not found'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->do403(); }
+	if (false == $peer->loaded) { $kapenta->page->do403(); }
 
 	header('Content-type: text/plain');
 	$msg = $peer->getUpdates();

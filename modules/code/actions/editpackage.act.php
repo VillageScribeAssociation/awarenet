@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('code_package');
 	if (false == $user->authHas('code', 'code_package', 'edit', $UID)) { 
-		$page->do403('You are not authorized to edit this Packages.'); 
+		$kapenta->page->do403('You are not authorized to edit this Packages.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------

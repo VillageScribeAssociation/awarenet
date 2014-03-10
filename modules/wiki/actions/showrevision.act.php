@@ -10,14 +10,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$model = new Wiki_Revision($kapenta->request->ref);
-	if (false == $model->loaded) {$page->do404(); }
-	if (false == $user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) {$kapenta->page->do404(); }
+	if (false == $user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { $kapenta->page->do403(); }
 
 	$article = new Wiki_Article($model->articleUID);
-	if (false == $article->loaded) {$page->do404(); };
-	if (false == $user->authHas('wiki', 'wiki_article', 'show', $article->UID)) { $page->do403(); }
+	if (false == $article->loaded) {$kapenta->page->do404(); };
+	if (false == $user->authHas('wiki', 'wiki_article', 'show', $article->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page

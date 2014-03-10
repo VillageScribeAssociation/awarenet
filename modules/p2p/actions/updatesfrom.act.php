@@ -7,12 +7,12 @@
 //*	receive updates from a peer by HTTP POST
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $kapenta->request->ref) { $page->doXmlError('peer not specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->doXmlError('peer not specified.'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->doXmlError('unknown peer'); }
+	if (false == $peer->loaded) { $kapenta->page->doXmlError('unknown peer'); }
 
-	if (false == array_key_exists('m', $_POST)) { $page->doXmlError('no message'); }
+	if (false == array_key_exists('m', $_POST)) { $kapenta->page->doXmlError('no message'); }
 	$msg = $peer->unpack($_POST['m']);
 
 	echo "file: " . $msg['file'] . "\n";
@@ -29,7 +29,7 @@
 		$updates->explode($msg['message'], $msg['priority'], $peer->UID);
 
 	} else {
-		$page->doXmlError('could not verify signature.');
+		$kapenta->page->doXmlError('could not verify signature.');
 	}
 
 	echo "<ok/>";

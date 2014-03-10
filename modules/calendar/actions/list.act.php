@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (disallow public access)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show calendar events for given period
@@ -64,7 +64,7 @@
 			
 			$model = new Calendar_Entry();
 			$monthName = $model->getMonthName($bits[1]);
-			if ($monthName == false) { $page->do404(); }
+			if ($monthName == false) { $kapenta->page->do404(); }
 		
 			$kapenta->page->load('modules/calendar/actions/month.page.php');
 			$kapenta->page->blockArgs['year'] = $kapenta->db->addMarkup($bits[0]);
@@ -72,7 +72,7 @@
 			$kapenta->page->blockArgs['monthName'] = $monthName;
 			$kapenta->page->render();			
 			
-		} else { $page->do404(); }
+		} else { $kapenta->page->do404(); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@
 	
 			$model = new Calendar_Entry();
 			$monthName = $model->getMonthName($bits[1]);
-			if (false == $monthName) { $page->do404(); }
+			if (false == $monthName) { $kapenta->page->do404(); }
 		
 			$kapenta->page->load('modules/calendar/actions/day.page.php');
 			$kapenta->page->blockArgs['year'] = $kapenta->db->addMarkup($bits[0]);
@@ -94,7 +94,7 @@
 			$kapenta->page->blockArgs['monthName'] = $monthName;
 			$kapenta->page->render();			
 			
-		} else { $page->do404(); }
+		} else { $kapenta->page->do404(); }
 	}
 	
 ?>

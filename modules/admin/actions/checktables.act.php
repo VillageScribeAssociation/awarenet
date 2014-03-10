@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -15,10 +15,10 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ((true == array_key_exists('action', $_POST)) && ('repair' == $_POST['action'])) {
-		if (false == array_key_exists('tableName', $_POST)) { $page->do404('Table not given.'); }
+		if (false == array_key_exists('tableName', $_POST)) { $kapenta->page->do404('Table not given.'); }
 		$tableName = $_POST['tableName'];
-		if ('' == $tableName) { $page->do404('Table name not given.'); }
-		if (false == $kapenta->db->tableExists($tableName)) { $page->do404('Unknown table.'); }
+		if ('' == $tableName) { $kapenta->page->do404('Table name not given.'); }
+		if (false == $kapenta->db->tableExists($tableName)) { $kapenta->page->do404('Unknown table.'); }
 		$sql = "REPAIR TABLE `" . $tableName . "`";
 		$result = $kapenta->db->query($sql);
 		

@@ -454,13 +454,13 @@ class Users_User {
 	function authHas($module, $model, $permission, $UID = '') {
 		global $kapenta;
 		global $role;
-		global $page;
+		global $kapenta;
 
 		if ('admin' == $this->role) { return true; }			//	admins have all permissions
 		if (false == $role->loaded) { return false; }			//	no such role
 		$model = strtolower($model);							//	fixes some calls
 
-		$page->logDebugItem('auth', "Checking: $module - $model - $permission - $UID <br/>\n");
+		$kapenta->page->logDebugItem('auth', "Checking: $module - $model - $permission - $UID <br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	check role permisisons first
@@ -473,7 +473,7 @@ class Users_User {
 						//--------------------------------------------------------------------------
 						//	user has permission on all objects of this type
 						//--------------------------------------------------------------------------
-						$page->logDebugItem('auth', "Role has blanket permission.<br/>\n");
+						$kapenta->page->logDebugItem('auth', "Role has blanket permission.<br/>\n");
 						return true; 		
 					}
 
@@ -490,7 +490,7 @@ class Users_User {
 						);
 
 						if (true == $met) {
-							$page->logDebugItem('auth', "Condition met: ". $p['condition'] ."<br/>\n");
+							$kapenta->page->logDebugItem('auth', "Condition met: ". $p['condition'] ."<br/>\n");
 							return true;
 						}
 					}
@@ -498,7 +498,7 @@ class Users_User {
 			}
 		}
 
-		$page->logDebugItem('auth', "Role does not support permission.<br/>\n");
+		$kapenta->page->logDebugItem('auth', "Role does not support permission.<br/>\n");
 
 		//------------------------------------------------------------------------------------------
 		//	if role does not authorize action, try user-specific permissions

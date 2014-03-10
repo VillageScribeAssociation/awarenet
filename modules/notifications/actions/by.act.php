@@ -7,8 +7,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
-	if (('teachers' != $kapenta->request->ref) && ('everyone' != $kapenta->request->ref)) { $page->do404('Unknown feed.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
+	if (('teachers' != $kapenta->request->ref) && ('everyone' != $kapenta->request->ref)) { $kapenta->page->do404('Unknown feed.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

@@ -6,7 +6,7 @@
 //*	temporary / development action to clear spurious error messages
 //-------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$sql = "select * from messages_message where title='Kapenta Error Message'";
 	$result = $kapenta->db->query($sql);

@@ -10,16 +10,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference, args and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
-	if (array_key_exists('move', $kapenta->request->args) == false) { $page->do404(); }
-	if (array_key_exists('section', $kapenta->request->args) == false) { $page->do404(); } 
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
+	if (array_key_exists('move', $kapenta->request->args) == false) { $kapenta->page->do404(); }
+	if (array_key_exists('section', $kapenta->request->args) == false) { $kapenta->page->do404(); } 
 
 	$model = new Projects_Project($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	// check section exists
 	$sectionUID = $kapenta->request->args['section'];
-	if (false == array_key_exists($sectionUID, $model->sections) == false) { $page->do404(); }
+	if (false == array_key_exists($sectionUID, $model->sections) == false) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this project
@@ -28,7 +28,7 @@
 	if ($model->hasMember($user->UID) == true) { $authorised = true; }
 	if ('admin' == $user->role) { $authorised = true; }
 
-	if ($authorised == false) { $page->do403(); }
+	if ($authorised == false) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	move the section up (decrease weight)
@@ -51,7 +51,7 @@
 				break;
 			}
 		}
-		$page->do302('projects/edit/' . $model->alias);
+		$kapenta->page->do302('projects/edit/' . $model->alias);
 	} 
 
 	//----------------------------------------------------------------------------------------------
@@ -76,12 +76,12 @@
 			}
 		}
 
-		$page->do302('projects/edit/' . $model->alias);
+		$kapenta->page->do302('projects/edit/' . $model->alias);
 	} 
 
 	//----------------------------------------------------------------------------------------------
 	//	if unhandled
 	//----------------------------------------------------------------------------------------------
-	$page->do404();
+	$kapenta->page->do404();
 
 ?>

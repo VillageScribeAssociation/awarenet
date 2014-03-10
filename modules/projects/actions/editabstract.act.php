@@ -7,17 +7,17 @@
 //*	edit a project abstract
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is authorised to edit this projects abstract
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($UID);
-	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
-		$page->do403('You are not permitted to edit this project abstract.');
+		$kapenta->page->do403('You are not permitted to edit this project abstract.');
 	}
 
 	//----------------------------------------------------------------------------------------------

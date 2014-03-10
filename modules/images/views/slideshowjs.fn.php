@@ -11,7 +11,7 @@
 
 function images_slideshowjs($args) {
 	global $user;
-	global $page;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 

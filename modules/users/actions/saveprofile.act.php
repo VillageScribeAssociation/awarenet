@@ -9,17 +9,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('saveProfile' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('User not specified (UID).'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('saveProfile' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('User not specified (UID).'); }
 
 	$model = new Users_User($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Unkonw user.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkonw user.'); }
 
 	$authorised = false;
 	if ($user->UID == $_POST['UID']) { $authorised = true; }
 	if ('admin' == $user->role) { $authorised = true; }
-	if (false == $authorised) { $page->do403('Upi cannot edit this profile'); }
+	if (false == $authorised) { $kapenta->page->do403('Upi cannot edit this profile'); }
 	//TODO: more rigorous, standard permissions
 
 	//----------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@
 	//------------------------------------------------------------------------------------------
 	//	redirect back to profile
 	//------------------------------------------------------------------------------------------
-	if (array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	$page->do302('users/profile/' . $model->alias);
+	if (array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	$kapenta->page->do302('users/profile/' . $model->alias);
 
 ?>

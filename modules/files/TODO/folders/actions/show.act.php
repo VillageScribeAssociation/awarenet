@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }							// check ref
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }							// check ref
 	$UID = $aliases->findRedirect('files_folder'); 						// check correct ref
 
 	$model = new folder($kapenta->request->ref);	
-	if (false == $model->loaded) { $page->do404('no such folder'); }
-	if (false == $user->authHas('files', 'files_folder', 'show', $model->UID)) { $page->do403(); }		
+	if (false == $model->loaded) { $kapenta->page->do404('no such folder'); }
+	if (false == $user->authHas('files', 'files_folder', 'show', $model->UID)) { $kapenta->page->do403(); }		
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

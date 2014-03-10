@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 
 	$fileName = 'data/log/' . $kapenta->request->ref;
-	if (false == $kapenta->fs->exists($fileName)) { $page->do404('No such log file.'); }
+	if (false == $kapenta->fs->exists($fileName)) { $kapenta->page->do404('No such log file.'); }
 	
 	if (true == array_key_exists('format', $kapenta->request->args)) { $format = $kapenta->request->args['format']; }
 
@@ -37,7 +37,7 @@
 			break;
 
 		default:
-			$page->do403();
+			$kapenta->page->do403();
 			break;
 	}
 

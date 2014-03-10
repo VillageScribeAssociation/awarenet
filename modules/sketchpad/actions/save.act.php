@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('img64', $_POST)) { $page->doXmlError('Could not save image.'); }
-	if (false == array_key_exists('title64', $_POST)) { $page->doXmlError('Could not save image.'); }
+	if (false == array_key_exists('img64', $_POST)) { $kapenta->page->doXmlError('Could not save image.'); }
+	if (false == array_key_exists('title64', $_POST)) { $kapenta->page->doXmlError('Could not save image.'); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -35,13 +35,13 @@
 		$model->schoolName = $theme->expandBlocks($schoolNameBlock);
 
 		$report = $model->save();
-		if ('' != $report) { $page->doXmlError($report); }
+		if ('' != $report) { $kapenta->page->doXmlError($report); }
 
 		$user->set('sketchpad.gallery', $model->UID);
 	}
 	
 	$model->load($user->get('sketchpad.gallery'));
-	if (false == $model->loaded) { $page->doXmlError('Could not find gallery.'); }
+	if (false == $model->loaded) { $kapenta->page->doXmlError('Could not find gallery.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	Convert submitted image and attach to gallery
@@ -78,7 +78,7 @@
 
 		$outcome = $kapenta->raiseEvent('images', 'file_attach', $args);
 		foreach($outcome as $mod => $eventError) { $errmsg .= $eventError; }
-		if ('' != $errmsg) { $page->doXmlError($errmsg); }
+		if ('' != $errmsg) { $kapenta->page->doXmlError($errmsg); }
 	}
 
 	echo 'gallery/' . $model->alias;

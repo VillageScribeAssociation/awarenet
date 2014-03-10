@@ -11,7 +11,7 @@
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	if ('' == $kapenta->request->ref) {
 		//TODO:  list dates
@@ -19,7 +19,7 @@
 
 	$logFile = 'data/log/' . $kapenta->request->ref  . '-pageview.log.php';
 
-	if (false == $kapenta->fs->exists($logFile)) { $page->do404('no such log'); }
+	if (false == $kapenta->fs->exists($logFile)) { $kapenta->page->do404('no such log'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	parse into array

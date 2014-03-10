@@ -48,7 +48,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Wiki_Article($raUID);
-	if ('talk' == $model->namespace) { $page->do302('wiki/talk/' . $model->talkFor); }
+	if ('talk' == $model->namespace) { $kapenta->page->do302('wiki/talk/' . $model->talkFor); }
 
 	//----------------------------------------------------------------------------------------------
 	//	increment hit count

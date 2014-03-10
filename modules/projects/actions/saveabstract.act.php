@@ -13,18 +13,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified'); }
-	if ('saveAbstract' != $_POST['action']) { $page->do404('action not supported'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not specified'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
+	if ('saveAbstract' != $_POST['action']) { $kapenta->page->do404('action not supported'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not specified'); }
 
 	$model = new Projects_Project($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
-		$page->do403('You are not authorized to edit this project.'); 
+		$kapenta->page->do403('You are not authorized to edit this project.'); 
 	}
 
-	if (false == array_key_exists('abstract', $_POST)) { $page->do404('abstract not given'); }
+	if (false == array_key_exists('abstract', $_POST)) { $kapenta->page->do404('abstract not given'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	note the revision
@@ -68,7 +68,7 @@
 		$session->msg('Could not save changes to abstract: ' . $report, 'bad');
 	}		
 		
-	$page->do302('projects/edit/' . $model->alias);
+	$kapenta->page->do302('projects/edit/' . $model->alias);
 
 ?>
 

@@ -14,19 +14,19 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('no refModule', true); }
-	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('no refModel', true); }
-	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('no refUID', true); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $kapenta->page->do404('no refModule', true); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $kapenta->page->do404('no refModel', true); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $kapenta->page->do404('no refUID', true); }
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404('unknown module', true); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('unknown owner', true); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('unknown module', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('unknown owner', true); }
 
 	if (false == $user->authHas($refModule, $refModel, 'polls-add', $refUID)) { 
-		$page->do403('You are not authorized to add polls to this item.', true);
+		$kapenta->page->do403('You are not authorized to add polls to this item.', true);
 	}
 
 	//----------------------------------------------------------------------------------------------

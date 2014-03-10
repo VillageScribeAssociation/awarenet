@@ -6,7 +6,7 @@
 //*	test daily cron / cleanup
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	echo live_cron_daily();
 

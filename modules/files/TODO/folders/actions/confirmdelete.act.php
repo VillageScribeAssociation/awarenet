@@ -7,11 +7,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('uid', $kapenta->request->args)) { $page->do404(); }
+	if (false == array_key_exists('uid', $kapenta->request->args)) { $kapenta->page->do404(); }
 
 	$model = new Files_Folder($kapenta->request->args['uid']);
-	if (false == $model->loaded) { $page->do404('Folder not found.'); }
-	if (false == $user->authHas('files', 'files_folder', 'delete', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404('Folder not found.'); }
+	if (false == $user->authHas('files', 'files_folder', 'delete', $model->UID)) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block and show the item to be deleted
@@ -22,6 +22,6 @@
 	$html = $theme->replaceLabels($labels, $block);
 	
 	$session->msg($html, 'warn');
-	$page->do302('folder/' . $model->alias);
+	$kapenta->page->do302('folder/' . $model->alias);
 
 ?>

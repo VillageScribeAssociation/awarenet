@@ -8,7 +8,7 @@
 	// check basic permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $page->do403(); }	
+	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $kapenta->page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	get order and page
@@ -43,7 +43,7 @@
 	$kapenta->page->blockArgs['orderLabel'] = $orderLabel;
 	$kapenta->page->blockArgs['userUID'] = $user->UID;
 	$kapenta->page->blockArgs['userRa'] = $user->alias;
-	$page->title = 'awareNet - all galleries ' . $orderLabel . ' (page ' . $pageNo . ')';
+	$kapenta->page->title = 'awareNet - all galleries ' . $orderLabel . ' (page ' . $pageNo . ')';
 	$kapenta->page->render();													
 
 ?>

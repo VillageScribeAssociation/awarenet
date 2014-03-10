@@ -4,7 +4,7 @@
 //*	confirm receipt of a file, can be removed from local queue
 //--------------------------------------------------------------------------------------------------
 
-	if ('' == $kapenta->request->ref) { $page->doXmlError('file not specified'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->doXmlError('file not specified'); }
 
 	$fileName = $kapenta->request->ref;
 	$fileName = str_replace('..', '', $fileName);
@@ -17,7 +17,7 @@
 
 	$fileName = 'data/p2p/pending/' . $peerUID . '/' . $fileName;
 
-	if (false == $kapenta->fs->exists($fileName)) { $page->doXmlError('no such file'); }
+	if (false == $kapenta->fs->exists($fileName)) { $kapenta->page->doXmlError('no such file'); }
 
 	$check = $kapenta->fileDelete($fileName, true);
 	if (true == $check) {

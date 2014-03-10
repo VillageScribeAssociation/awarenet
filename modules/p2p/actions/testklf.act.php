@@ -6,7 +6,7 @@
 //*	test local KLargeFile object
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$klf = new KLargeFile('data/videos/2/1/1/211976849720202474');
 	$klf->makeFromFile();

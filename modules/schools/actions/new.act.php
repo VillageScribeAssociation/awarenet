@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'schools_school', 'new')) { $page->do403(); }
+	if (false == $user->authHas('schools', 'schools_school', 'new')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the school and redirect to edit form
@@ -18,6 +18,6 @@
 	$model->save();
 	//TODO: checks and options	
 
-	$page->do302('schools/edit/' . $model->UID);
+	$kapenta->page->do302('schools/edit/' . $model->UID);
 
 ?>

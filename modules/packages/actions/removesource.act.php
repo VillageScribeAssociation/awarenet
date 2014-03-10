@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('source', $kapenta->request->args)) { $page->do404('Source not given.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('source', $kapenta->request->args)) { $kapenta->page->do404('Source not given.'); }
 
 	$source = base64_decode($kapenta->request->args['source']);
 
@@ -33,6 +33,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to packages console
 	//----------------------------------------------------------------------------------------------
-	$page->do302('packages/');
+	$kapenta->page->do302('packages/');
 	
 ?>

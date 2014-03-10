@@ -60,14 +60,14 @@
 		$model->save();
 
 		$session->msg("Thread moved: " . $model->title, 'ok');
-		$page->do302('forums/showthread/' . $model->alias); 
+		$kapenta->page->do302('forums/showthread/' . $model->alias); 
 
 	} else {
 		//-----------------------------------------------------------------------------------------
 		//	something went wrong
 		//-----------------------------------------------------------------------------------------
 		$session->msg("Could not move forum thread: $msg", 'bad');
-		$page->do302('forums/');
+		$kapenta->page->do302('forums/');
 
 	}
 

@@ -8,10 +8,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404("User UID or alias not given."); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404("User UID or alias not given."); }
 
 	$model = new Users_User($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unknown user.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unknown user.'); }
 
 	$kapenta->request->args['module'] = 'users';
 	$kapenta->request->args['model'] = 'users_user';

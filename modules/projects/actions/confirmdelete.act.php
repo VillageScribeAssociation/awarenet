@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------		
-	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $kapenta->page->do404(); }
 
 	$model = new Projects_Project($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 	if (false == $user->authHas('projects', 'projects_project', 'delete', $model->UID))
-		{ $page->do403('You are not authorized to delete this project.'); }	
+		{ $kapenta->page->do403('You are not authorized to delete this project.'); }	
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the confirmation block
@@ -23,6 +23,6 @@
 	$block = $theme->loadBlock('modules/projects/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	$session->msg($html, 'warn');
-	$page->do302('projects/' . $model->alias);
+	$kapenta->page->do302('projects/' . $model->alias);
 
 ?>

@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and registry
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('This is an administratice action.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403('This is an administratice action.'); }
 	if (false == $kapenta->registry->has('images.maxsize')) { $kapenta->registry->set('images.maxsize', '524288'); }
 
 	$maxSize = $kapenta->registry->get('images.maxsize');
@@ -45,6 +45,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to admin console
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/');
+	$kapenta->page->do302('admin/');
 
 ?>

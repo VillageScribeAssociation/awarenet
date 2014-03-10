@@ -9,15 +9,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('savePackage' != $_POST['action']) { $page->do404('Action not supported.'); } 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('savePackage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); } 
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed.'); }
 
 	$model = new Code_Package($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("could not load Package $UID");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Package $UID");}
 
 	if (false == $user->authHas('code', 'Code_Package', 'edit', $model->UID))
-		{ $page->do403('You are not authorized to edit this Package.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Package.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
@@ -38,7 +38,7 @@
 	if ('' == $report) { $session->msg('Saved changes to Package', 'ok'); }
 	else { $session->msg('Could not save Package:<br/>' . $report, 'bad'); }
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('code/showpackage/' . $model->alias); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('code/showpackage/' . $model->alias); }
 
 ?>

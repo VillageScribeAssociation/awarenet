@@ -13,26 +13,26 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permission
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	
 	$model = new Projects_Change($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Revision not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Revision not found.'); }
 
 	$project = new Projects_project($model->projectUID);
-	if (false == $project->loaded) { $page->do404('Project not found.'); }
+	if (false == $project->loaded) { $kapenta->page->do404('Project not found.'); }
 
-	if ('open' != $project->status) { $page->do403($project->status); }
+	if ('open' != $project->status) { $kapenta->page->do403($project->status); }
 
 	$section = new Projects_Section();
 	if (('' != $model->sectionUID) && ('*' != $model->sectionUID)) {
 		$section->load($model->sectionUID);
-		if (false == $section->loaded) { $page->do404('Section not found.'); }
+		if (false == $section->loaded) { $kapenta->page->do404('Section not found.'); }
 	}
 
 	$changes = new Projects_Changes($model->projectUID, $model->sectionUID);
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
-		$page->do403('You are not permitted to edit this project.', true);
+		$kapenta->page->do403('You are not permitted to edit this project.', true);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -87,6 +87,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to project
 	//----------------------------------------------------------------------------------------------
-	$page->do302('projects/' . $model->projectUID);
+	$kapenta->page->do302('projects/' . $model->projectUID);
 
 ?>

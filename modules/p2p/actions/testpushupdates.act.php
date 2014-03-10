@@ -7,19 +7,19 @@
 //*	development / admin script to manually push the next set of messages in the queue
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	header('Content-type: text/plain');
 
-	if ('' == $kapenta->request->ref) { $page->doXmlError('Peer not given.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->doXmlError('Peer not given.'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->doXmlError('Could not load peer.'); }
+	if (false == $peer->loaded) { $kapenta->page->doXmlError('Could not load peer.'); }
 
 	$updates = new P2P_Updates($peer->UID);
 
 	$myUID = $kapenta->registry->get('p2p.server.uid');
-	if ('' == $myUID) { $page->doXmlError('this peer does not have a UID'); }
+	if ('' == $myUID) { $kapenta->page->doXmlError('this peer does not have a UID'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	first look for any locked files, by priority (complete batches, more efficent)

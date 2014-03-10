@@ -13,27 +13,27 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and message signature
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('message', $_POST)) { $page->doXmlError('No message sent.'); }
-	if (false == array_key_exists('signature', $_POST)) { $page->doXmlError('No signature sent.'); }
-	if (false == array_key_exists('peer', $_POST)) { $page->doXmlError('Peer UID not sent.'); }
+	if (false == array_key_exists('message', $_POST)) { $kapenta->page->doXmlError('No message sent.'); }
+	if (false == array_key_exists('signature', $_POST)) { $kapenta->page->doXmlError('No signature sent.'); }
+	if (false == array_key_exists('peer', $_POST)) { $kapenta->page->doXmlError('Peer UID not sent.'); }
 
 	$peer = new P2P_Peer($_POST['peer']);
-	if (false == $peer->loaded) { $page->doXmlError('Peer not recognized.'); }
+	if (false == $peer->loaded) { $kapenta->page->doXmlError('Peer not recognized.'); }
 
 	$message = base64_decode($_POST['message']);
 	$signature = base64_decode($_POST['signature']);
 
-	if (false == $peer->checkMessage($message, $signature)) { $page->doXmlError('Bad signature.'); }
+	if (false == $peer->checkMessage($message, $signature)) { $kapenta->page->doXmlError('Bad signature.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check and store the manifest
 	//----------------------------------------------------------------------------------------------
 	$klf = new KLargeFile();
 	$klf->loadMetaXml($message);
-	if (false == $klf->loaded) { $page->doXmlError('Could not load manifest.'); }
+	if (false == $klf->loaded) { $kapenta->page->doXmlError('Could not load manifest.'); }
 
 	$check = $klf->saveMetaXml();	
-	if (false == $check) { $page->doXmlError('Could not save manifest.'); }
+	if (false == $check) { $kapenta->page->doXmlError('Could not save manifest.'); }
 
 	echo "<ok/>";
 

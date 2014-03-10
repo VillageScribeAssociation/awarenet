@@ -8,13 +8,13 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('userUID', $_POST)) { $page->doXmlError('No userUID'); }
-	if (false == array_key_exists('partnerUID', $_POST)) { $page->doXmlError('No partnerUID'); }
+	if (false == array_key_exists('userUID', $_POST)) { $kapenta->page->doXmlError('No userUID'); }
+	if (false == array_key_exists('partnerUID', $_POST)) { $kapenta->page->doXmlError('No partnerUID'); }
 
 	$userUID = $_POST['userUID'];
 	$partnerUID = $_POST['partnerUID'];
 
-	if ($user->UID != $userUID) { $page->doXmlError('Not your chat.'); }
+	if ($user->UID != $userUID) { $kapenta->page->doXmlError('Not your chat.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	change state of all messages to dismissed

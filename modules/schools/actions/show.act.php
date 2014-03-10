@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (public users no longer banned)
 	//----------------------------------------------------------------------------------------------
-	//if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
+	//if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	check reference
@@ -21,7 +21,7 @@
 	//	load model
 	//----------------------------------------------------------------------------------------------
 	$model = new Schools_School($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('could not find school: ' . $kapenta->request->ref); }
+	if (false == $model->loaded) { $kapenta->page->do404('could not find school: ' . $kapenta->request->ref); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render page

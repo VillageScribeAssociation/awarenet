@@ -24,18 +24,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and message signature
 	//----------------------------------------------------------------------------------------------
-	if ('yes' != $kapenta->registry->get('p2p.enabled')) { $page->doXmlError('P2P disabled on this peer.'); }
-	if (false == array_key_exists('message', $_POST)) { $page->doXmlError('No message sent.'); }
-	if (false == array_key_exists('signature', $_POST)) { $page->doXmlError('No signature sent.'); }
-	if (false == array_key_exists('peer', $_POST)) { $page->doXmlError('Peer UID not sent.'); }
+	if ('yes' != $kapenta->registry->get('p2p.enabled')) { $kapenta->page->doXmlError('P2P disabled on this peer.'); }
+	if (false == array_key_exists('message', $_POST)) { $kapenta->page->doXmlError('No message sent.'); }
+	if (false == array_key_exists('signature', $_POST)) { $kapenta->page->doXmlError('No signature sent.'); }
+	if (false == array_key_exists('peer', $_POST)) { $kapenta->page->doXmlError('Peer UID not sent.'); }
 
 	$peer = new P2P_Peer($_POST['peer']);
-	if (false == $peer->loaded) { $page->doXmlError('Peer not recognized.'); }
+	if (false == $peer->loaded) { $kapenta->page->doXmlError('Peer not recognized.'); }
 
 	$message = base64_decode($_POST['message']);
 	$signature = base64_decode($_POST['signature']);
 
-	if (false == $peer->checkMessage($message, $signature)) { $page->doXmlError('Bad signature.'); }
+	if (false == $peer->checkMessage($message, $signature)) { $kapenta->page->doXmlError('Bad signature.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	parse into array
@@ -43,14 +43,14 @@
 	$xd = new KXmlDocument($message);
 	$detail = $xd->getChildren2d();
 
-	if (false == array_key_exists('path', $detail)) { $page->doXmlError('Path not given'); }
-	if (false == array_key_exists('index', $detail)) { $page->doXmlError('index not given'); }
-	if (false == array_key_exists('size', $detail)) { $page->doXmlError('size not given'); }
-	if (false == array_key_exists('hash', $detail)) { $page->doXmlError('hash not given'); }
-	if (false == array_key_exists('content64', $detail)) { $page->doXmlError('content not given'); }
+	if (false == array_key_exists('path', $detail)) { $kapenta->page->doXmlError('Path not given'); }
+	if (false == array_key_exists('index', $detail)) { $kapenta->page->doXmlError('index not given'); }
+	if (false == array_key_exists('size', $detail)) { $kapenta->page->doXmlError('size not given'); }
+	if (false == array_key_exists('hash', $detail)) { $kapenta->page->doXmlError('hash not given'); }
+	if (false == array_key_exists('content64', $detail)) { $kapenta->page->doXmlError('content not given'); }
 
 	$meta = new KLargeFile($detail['path']);
-	if (false == $meta->loaded) { $page->doXmlError('Unknown manifest.'); }
+	if (false == $meta->loaded) { $kapenta->page->doXmlError('Unknown manifest.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check hash, if we still want this, etc
@@ -58,13 +58,13 @@
 	$allOk = true;
 	$raw = base64_decode($detail['content64']);
 	$hash = sha1($raw);
-	if ($hash != $detail['hash']) { $page->doXmlError('Hash mismatch.'); }
+	if ($hash != $detail['hash']) { $kapenta->page->doXmlError('Hash mismatch.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save part to disk
 	//----------------------------------------------------------------------------------------------
 	$check = $meta->storePart($detail['index'], $detail['content64'], $detail['hash']);
-	if (false == $check) { $page->doXmlError('Cound not store part.'); }
+	if (false == $check) { $kapenta->page->doXmlError('Cound not store part.'); }
 	$meta->saveMetaXml();
 
 	//----------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@
 	if (true == $meta->checkCompletion()) {
 		//	stitch together
 		$check = $meta->stitchTogether();
-		if (false == $check) { $page->doXmlError('Could not join file parts'); }
+		if (false == $check) { $kapenta->page->doXmlError('Could not join file parts'); }
 		
 		//	raise an event on receipt of file (triggers sharing with other peers)
 
@@ -99,14 +99,14 @@
 
 		//	delete the manifest
 		$check = $meta->delete();
-		if (false == $check) { $page->doXmlError('Could not remove meta file.'); }
+		if (false == $check) { $kapenta->page->doXmlError('Could not remove meta file.'); }
 
 		//	remove file from download list
 		$downloads = new P2P_Downloads($peer->UID);
 		$check = $downloads->remove($detail['path']);
-		if (false == $check) { $page->doXmlError('Could not remove completed download.'); }
+		if (false == $check) { $kapenta->page->doXmlError('Could not remove completed download.'); }
 		$check = $downloads->save();
-		if (false == $check) { $page->doXmlError('Could not save download list.'); }
+		if (false == $check) { $kapenta->page->doXmlError('Could not save download list.'); }
 	}
 
 	//----------------------------------------------------------------------------------------------

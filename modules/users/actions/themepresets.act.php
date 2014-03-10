@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only  //TODO: consider adding teachers to this role, or use users_user:edit auth
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('You are not authroized to manage presets.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403('You are not authroized to manage presets.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page

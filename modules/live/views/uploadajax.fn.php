@@ -9,7 +9,7 @@
 
 function live_uploadajax($args) {
 	global $kapenta;
-	global $page;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -33,7 +33,7 @@ function live_uploadajax($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block and inject dependencies into page header
 	//----------------------------------------------------------------------------------------------
-	$page->requireJs($kapenta->serverPath . 'modules/live/js/uploader.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/live/js/uploader.js');
 
 	$block = $theme->loadBlock('modules/live/views/uploadajax.block.php');
 

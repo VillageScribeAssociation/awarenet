@@ -12,23 +12,23 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Project UID not given.'); }
-	if (false == array_key_exists('status', $_POST)) { $page->do404('New status not given.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Project UID not given.'); }
+	if (false == array_key_exists('status', $_POST)) { $kapenta->page->do404('New status not given.'); }
 
-	if ('changeStatus' != $_POST['action']) { $page->do404('Action not recognized.'); }
+	if ('changeStatus' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
 
 	if (
 		('open' != $_POST['status']) &&
 		('closed' != $_POST['status']) &&
 		('locked' != $_POST['status'])
-	) { $page->do403('Invalid status.'); }
+	) { $kapenta->page->do403('Invalid status.'); }
 
 	$model = new Projects_Project($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Project not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
-		$page->do403("You are not permitted to change this project's status."); 
+		$kapenta->page->do403("You are not permitted to change this project's status."); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -42,6 +42,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to the project otions page
 	//----------------------------------------------------------------------------------------------
-	$page->do302('projects/editabstract/' . $model->alias);	
+	$kapenta->page->do302('projects/editabstract/' . $model->alias);	
 
 ?>

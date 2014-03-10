@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }		// admins only
+	if ('admin' != $user->role) { $kapenta->page->do403(); }		// admins only
 
 	$moduleName = $kapenta->request->ref;
-	if (false == $kapenta->moduleExists($moduleName)) { $page->do404(); }
+	if (false == $kapenta->moduleExists($moduleName)) { $kapenta->page->do404(); }
 
 	$module = new KModule($moduleName);
 	if (false == $module->loaded) {

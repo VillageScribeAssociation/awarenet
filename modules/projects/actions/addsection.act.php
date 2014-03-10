@@ -16,12 +16,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified'); }
-	if ('addSection' != $_POST['action']) { $page->do404('action not supported'); }
-	if (false == array_key_exists('projectUID', $_POST)) { $page->do404('Project UID not given'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
+	if ('addSection' != $_POST['action']) { $kapenta->page->do404('action not supported'); }
+	if (false == array_key_exists('projectUID', $_POST)) { $kapenta->page->do404('Project UID not given'); }
 
 	$project = new Projects_Project($_POST['projectUID']);
-	if (false == $project->loaded) { $page->do404('Project not found.'); }	
+	if (false == $project->loaded) { $kapenta->page->do404('Project not found.'); }	
 
 	//TODO: permissions check here
 
@@ -74,6 +74,6 @@
 	//	redirect back to project page
 	//----------------------------------------------------------------------------------------------
 
-	$page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
+	$kapenta->page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
 
 ?>

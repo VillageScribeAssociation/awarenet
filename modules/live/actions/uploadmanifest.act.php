@@ -15,15 +15,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments, file type and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->doXmlError('action not given.'); }
-	if ('addManifest' != $_POST['action']) { $page->doXmlError('Unknown action.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->doXmlError('action not given.'); }
+	if ('addManifest' != $_POST['action']) { $kapenta->page->doXmlError('Unknown action.'); }
 
-	if (false == array_key_exists('refModule', $_POST)) { $page->doXmlError('refModule not given'); }
-	if (false == array_key_exists('refModel', $_POST)) { $page->doXmlError('refModel not given'); }
-	if (false == array_key_exists('refUID', $_POST)) { $page->doXmlError('refUID not given'); }
-	if (false == array_key_exists('hash', $_POST)) { $page->doXmlError('hash not given'); }
-	if (false == array_key_exists('manifest64', $_POST)) { $page->doXmlError('manifest missing'); }
-	if (false == array_key_exists('path', $_POST)) { $page->doXmlError('path not given'); }
+	if (false == array_key_exists('refModule', $_POST)) { $kapenta->page->doXmlError('refModule not given'); }
+	if (false == array_key_exists('refModel', $_POST)) { $kapenta->page->doXmlError('refModel not given'); }
+	if (false == array_key_exists('refUID', $_POST)) { $kapenta->page->doXmlError('refUID not given'); }
+	if (false == array_key_exists('hash', $_POST)) { $kapenta->page->doXmlError('hash not given'); }
+	if (false == array_key_exists('manifest64', $_POST)) { $kapenta->page->doXmlError('manifest missing'); }
+	if (false == array_key_exists('path', $_POST)) { $kapenta->page->doXmlError('path not given'); }
 
 	$refModule = $_POST['refModule'];
 	$refModel = $_POST['refModel'];
@@ -31,15 +31,15 @@
 	$hash = $_POST['hash'];
 	$path = base64_decode($_POST['path']);
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->doXmlError('unknown module'); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->doXmlError('no such owner'); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->doXmlError('unknown module'); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->doXmlError('no such owner'); }
 
 	$module = $theme->expandBlocks('[[:live::fileassociation::path=' . $path . ':]]');
 
-	if ('' == $module) { $page->doXmlError('Files of this type cannot be attached.'); }
+	if ('' == $module) { $kapenta->page->doXmlError('Files of this type cannot be attached.'); }
 
 	if (false == $user->authHas($refModule, $refModel, $module . '-add', $refUID)) { 
-		$page->doXmlError('You are not permitted to attach files to this object.');
+		$kapenta->page->doXmlError('You are not permitted to attach files to this object.');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 		//------------------------------------------------------------------------------------------
 		$upload->loadXml($xml);
 		if (true == $upload->loaded) { $upload->saveXml(); }
-		else { $page->doXmlError('Could not load manifest.'); }
+		else { $kapenta->page->doXmlError('Could not load manifest.'); }
 
 	} else {
 		//------------------------------------------------------------------------------------------

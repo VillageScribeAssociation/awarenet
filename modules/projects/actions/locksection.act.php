@@ -12,9 +12,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404("Action not given."); }	
-	if ('lockSection' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404("UID not given."); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404("Action not given."); }	
+	if ('lockSection' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404("UID not given."); }
 
 	$model = new Projects_Section($_POST['UID']);
 	if (false == $model->loaded) { echo "<fail>Uknown section.</fail>"; die(); }

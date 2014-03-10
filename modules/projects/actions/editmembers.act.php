@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and load project
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	//$UID = $aliases->findRedirect('projects_project');
 
 	$model = new Projects_Project($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkonwn project.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkonwn project.', true); }
 	$members = $model->getMembers();
 
 	//----------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@
 		{ if (($userUID == $user->UID) AND ($urole == 'admin')) { $admin = true; } }
 
 	//if ($admin == false) 
-	//	{ $page->do403("You cannot administer memberships of this project.<br/>\n", true); }
+	//	{ $kapenta->page->do403("You cannot administer memberships of this project.<br/>\n", true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	accept HTTP POSTs to add new members

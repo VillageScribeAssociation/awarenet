@@ -8,26 +8,26 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('refModule', $kapenta->request->args)) 
-		{ $page->do404('Module not specified.', true); }
+		{ $kapenta->page->do404('Module not specified.', true); }
 
 	if (false == array_key_exists('refModel', $kapenta->request->args))
-		{ $page->do404('Model not specified.', true); }
+		{ $kapenta->page->do404('Model not specified.', true); }
 
 	if (false == array_key_exists('refUID', $kapenta->request->args))
-		{ $page->do404('UID not specified.', true); }
+		{ $kapenta->page->do404('UID not specified.', true); }
 
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
-	if (false == $kapenta->db->tableExists($refModel)) { $page->do404('Object type not recognized.', true); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('No such module.', true); }
+	if (false == $kapenta->db->tableExists($refModel)) { $kapenta->page->do404('Object type not recognized.', true); }
 	if (false == $kapenta->db->objectExists($refModel, $refUID))
-		{ $page->do404('Owner object does not exist.', false); }
+		{ $kapenta->page->do404('Owner object does not exist.', false); }
 
 	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID))
-		{ $page->do403('You are not authorized to add videos to this object.', true); }
+		{ $kapenta->page->do403('You are not authorized to add videos to this object.', true); }
 
 	$tags = 'no';
 	if ((true == array_key_exists('tags', $kapenta->request->args)) && ('yes' == $kapenta->request->args['tags']))

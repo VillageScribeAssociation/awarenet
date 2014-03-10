@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	$fileList = '';										//%	page content [string:html]
 	$postUrl = '%%serverPath%%admin/listtempfiles/';	//%	post back to self [string]
 	$foundAny = false;									//%	have any junk files been found [bool]

@@ -6,19 +6,19 @@
 //*	save changes to a Files_File object
 //--------------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.', true); }
-	if ('savefile' != $_POST['action']) { $page->do404('Unkown action requested.', true); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.', true); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.', true); }
+	if ('savefile' != $_POST['action']) { $kapenta->page->do404('Unkown action requested.', true); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check reference and authorisation
 	//----------------------------------------------------------------------------------------------
 	   
 	$model = new Files_File($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('File not found.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('File not found.', true); }
 		
 	if (false == $user->authHas($model->refModule, $model->refModel, 'files-edit', $model->refUID)) 
-			{ $page->do403('Not authorized', true); }
+			{ $kapenta->page->do403('Not authorized', true); }
 
 	//TODO: more permission options here
 
@@ -48,10 +48,10 @@
 				 . '/refModule_' . $model->refModule 
 				 . '/refModel_' . $model->refModel
 				 . '/refUID_' . $model->refUID . '/';
-			$page->do302($retUrl);
+			$kapenta->page->do302($retUrl);
 		}
 	}
 
-	$page->do302('files/edit/' . $model->alias);
+	$kapenta->page->do302('files/edit/' . $model->alias);
 
 ?>

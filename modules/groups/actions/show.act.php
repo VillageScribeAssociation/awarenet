@@ -11,12 +11,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
-	if (false == $model->loaded) { $page->do404('Could not load group.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load group.'); }
 
 	//$model->schools->updateSchoolsIndex($model->members->get());
 

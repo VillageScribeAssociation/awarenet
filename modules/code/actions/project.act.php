@@ -4,9 +4,9 @@
 //	show a code project
 //--------------------------------------------------------------------------------------------------
 	
-	if ($kapenta->request->ref == '') { $page->do404(); }
+	if ($kapenta->request->ref == '') { $kapenta->page->do404(); }
 	$owner = raGetOwner($kapenta->request->ref, 'codeprojects');
-	if ($owner == false) { $page->do404(); }
+	if ($owner == false) { $kapenta->page->do404(); }
 	
 	require_once($kapenta->installPath . 'modules/code/models/codeproject.mod.php');
 

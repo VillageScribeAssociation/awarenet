@@ -10,12 +10,12 @@
 
 	$model = new Users_User();
 
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
 	//TODO: more advanced permisions for blog - tie to profile
 
 	if ('' != $kapenta->request->ref) {
 		$model->load($kapenta->request->ref);
-		if (false == $model->loaded) { $page->do404(); }
+		if (false == $model->loaded) { $kapenta->page->do404(); }
 	} else { $model->load($user->UID); }
 
 	//----------------------------------------------------------------------------------------------
@@ -33,8 +33,8 @@
 	$kapenta->page->blockArgs['userRa'] = $model->alias;
 	$kapenta->page->blockArgs['userName'] = $model->getName();
 	$kapenta->page->blockArgs['newPostForm'] = $newPostForm;
-	$page->allowBlockArgs('page,tag');
-	$page->title = 'awareNet - blogs - ' . $model->getName();
+	$kapenta->page->allowBlockArgs('page,tag');
+	$kapenta->page->title = 'awareNet - blogs - ' . $model->getName();
 	$kapenta->page->render();
 
 ?>

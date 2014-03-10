@@ -6,8 +6,8 @@
 //*	development action to test download list
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('peerUID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('peerUID not given'); }
 
 	$dnset = new P2P_Downloads($kapenta->request->ref);
 

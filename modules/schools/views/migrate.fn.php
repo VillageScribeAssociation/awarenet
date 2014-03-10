@@ -6,21 +6,20 @@
 
 function schools_migrate($args) {
 	global $db;
-	global $user;
 
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }	
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }	
 
 	// ^ add any arguments here
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$html = $theme->loadBlock('modules/schools/views/migrate.block.php');
+	$html = $kapenta->theme->loadBlock('modules/schools/views/migrate.block.php');
 	return $html;
 }
 

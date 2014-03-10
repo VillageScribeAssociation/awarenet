@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authorization - only admins can delete a user account
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	OK, delete it
@@ -16,6 +16,6 @@
 	$_SESSION['sMessage'] .= "Deleted user: " . $model->getName() . "<br/>";
 	$model->delete();
 
-	$page->do302('users/');
+	$kapenta->page->do302('users/');
 
 ?>

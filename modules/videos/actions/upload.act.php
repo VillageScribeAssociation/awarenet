@@ -46,10 +46,10 @@
 	$imgName = '';
 	
 	if ('' == $refUID) { 
-		$page->do404('(refUID not given or upload too large)', true); 
+		$kapenta->page->do404('(refUID not given or upload too large)', true); 
 	}
-	if ('' == $refModule) { $page->do404('(refModule not given)', true); }
-	if ('' == $refModel) { $page->do404('(refModel not given)', true); }
+	if ('' == $refModule) { $kapenta->page->do404('(refModule not given)', true); }
+	if ('' == $refModel) { $kapenta->page->do404('(refModel not given)', true); }
 
 	switch(strtolower($return)) {
 		case 'uploadmultiple':
@@ -73,29 +73,29 @@
 			break;	//..............................................................................
 
 		default:
-			$page->do404('unknown return argument', true);
+			$kapenta->page->do404('unknown return argument', true);
 			break;
 	}
 
 	// check module
 	if (false == $kapenta->moduleExists($refModule)) { 
-		if ('xml' == $return) { $page->doXmlError('No such module.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('No such module.'); }
 		$session->msg('No such module.', 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	// check owner object
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { 
-		if ('xml' == $return) { $page->doXmlError('No such owner obejct.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('No such owner obejct.'); }
 		$session->msg('No such owner obejct.', 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	// check permissions
 	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID)) {
-		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
 		$session->msg('You are not authorised to add videos to this item.', 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -114,9 +114,9 @@
 			if (substr($revName, 0, 4) == 'fws.') { $format = 'swf'; }
 			if (substr($revName, 0, 4) == '3pm.') { $format = 'mp3'; }
 			if ('' == $format) {
-				if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
+				if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
 				$session->msg('Format not supported (must be flv, swf, mp3 or mp4).', 'bad'); 
-				$page->do302($returnUrl);
+				$kapenta->page->do302($returnUrl);
 			}
 
 			$fileName .= "." . $format;
@@ -129,7 +129,7 @@
 			$check = copy($tempFile, $kapenta->installPath . $fileName);
 			if (false == $check) {
 				$session->msg('Could not move image (disk full?).', 'bad'); 
-				$page->do302($returnUrl);
+				$kapenta->page->do302($returnUrl);
 			}
 			@unlink($tempFile);
 
@@ -138,14 +138,14 @@
 			//--------------------------------------------------------------------------------------
 			
 		} else {
-			if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
+			if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
 			$session->msg('No file uploaded.', 'bad'); 
-			$page->do302($returnUrl);			
+			$kapenta->page->do302($returnUrl);			
 		}
 	
 	} else { 
 		$session->msg('No file uploaded.', 'bad'); 
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 	
 	//----------------------------------------------------------------------------------------------
@@ -234,11 +234,11 @@
 		}
 
 		$session->msg("Uploaded video: $srcName", 'ok');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 
 	} else {
 		$session->msg("Could not save video object.", 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 ?>

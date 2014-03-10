@@ -9,8 +9,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that user is authorized to create new forums
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('forums', 'forums_board', 'new')) { $page->do403(); }
-	//if ('admin' != $user->role) { $page->do403('Only administrators can create new boards.'); }
+	if (false == $user->authHas('forums', 'forums_board', 'new')) { $kapenta->page->do403(); }
+	//if ('admin' != $user->role) { $kapenta->page->do403('Only administrators can create new boards.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make a new board and redirect to edit form (TODO: use stanard generated code here)
@@ -20,6 +20,6 @@
 	$model->school = $user->school;
 	$model->save();
 
-	$page->do302('forums/edit/' . $model->alias);
+	$kapenta->page->do302('forums/edit/' . $model->alias);
 
 ?>

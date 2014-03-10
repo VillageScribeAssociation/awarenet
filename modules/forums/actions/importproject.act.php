@@ -16,19 +16,19 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that the project and board both exist
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('project', $_POST)) { $page->do404('project not specified'); }
-	if (false == array_key_exists('board', $_POST)) { $page->do404('board not specified'); }
+	if (false == array_key_exists('project', $_POST)) { $kapenta->page->do404('project not specified'); }
+	if (false == array_key_exists('board', $_POST)) { $kapenta->page->do404('board not specified'); }
 
 	$project = new Projects_Project($_POST['project']);
-	if (false == $project->loaded) { $page->do404('project not found'); }
+	if (false == $project->loaded) { $kapenta->page->do404('project not found'); }
 
 	$board = new Forums_Board($_POST['board']);
-	if (false == $board->loaded) { $page->do404('board not found'); }
+	if (false == $board->loaded) { $kapenta->page->do404('board not found'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make new forum thread
@@ -58,7 +58,7 @@
 
 	} else {
 		$session->msg('Could not import project: ' . $project->title, 'bad');
-		$page->do302('admin/');
+		$kapenta->page->do302('admin/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -96,6 +96,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect to the new thread
 	//----------------------------------------------------------------------------------------------
-	$page->do302('forums/showthread/' . $thread->UID);
+	$kapenta->page->do302('forums/showthread/' . $thread->UID);
 
 ?>

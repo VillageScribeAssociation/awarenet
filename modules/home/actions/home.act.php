@@ -14,7 +14,7 @@
 		$kapenta->page->load('modules/home/actions/home.page.php');
 		$kapenta->page->render();
 	} else {
-		$page->do302('notifications/');
+		$kapenta->page->do302('notifications/');
 	}
 
 ?>

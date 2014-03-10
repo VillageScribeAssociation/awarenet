@@ -7,7 +7,7 @@
 //arg: block - name of a block [string]
 
 function admin_editblockform($args) {
-		global $page;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 		global $utils;

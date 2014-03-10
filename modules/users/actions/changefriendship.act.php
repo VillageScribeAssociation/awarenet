@@ -10,12 +10,12 @@
 	//---------------------------------------------------------------------------------------------
 	//	load the record and make sure the correct user is changing it
 	//---------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Friendship UID not given.'); }
-	if (false == array_key_exists('relationship', $_POST)) { $page->do404('no relationship'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Friendship UID not given.'); }
+	if (false == array_key_exists('relationship', $_POST)) { $kapenta->page->do404('no relationship'); }
 
 	$model = new Users_Friendship($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Relationship not found.'); }
-	if ($model->userUID != $user->UID) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404('Relationship not found.'); }
+	if ($model->userUID != $user->UID) { $kapenta->page->do403(); }
 
 	$relationship = $utils->cleanTitle($_POST['relationship']);
 
@@ -57,6 +57,6 @@
 	//---------------------------------------------------------------------------------------------
 	//	redirect back to friends list
 	//---------------------------------------------------------------------------------------------	
-	$page->do302('users/friends/' . $user->alias);
+	$kapenta->page->do302('users/friends/' . $user->alias);
 
 ?>

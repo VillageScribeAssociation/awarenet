@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //TODO: once this feature is stable	
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//$check = $user->set('test.setting', '1234value');
 	//if (false == $check) { echo "could not store test setting.<br/>\n"; }

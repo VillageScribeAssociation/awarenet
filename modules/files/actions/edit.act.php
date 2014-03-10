@@ -10,13 +10,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check page arguments and authorisation
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('File not specified (UID).'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('File not specified (UID).'); }
 
 	$model = new Files_File($kapenta->request->ref);
 
-	if (false == $model->loaded) { $page->do404('File not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('File not found.'); }
 	if (false == $user->authHas($model->refModule, $model->refModel, 'files-add', $model->refUID))
-		{ $page->do403(); }
+		{ $kapenta->page->do403(); }
 	
 	$return = '';
 	if (true == array_key_exists('return', $kapenta->request->args)) { $return = $kapenta->request->args['return']; }

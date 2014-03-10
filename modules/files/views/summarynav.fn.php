@@ -13,7 +13,7 @@
 function files_summarynav($args) {
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$behavior = 'link';						//%	behavior of links [string]
 	$html = '';								//%	return value [string]
@@ -42,7 +42,7 @@ function files_summarynav($args) {
 	$labels['onClick'] = '';
 
 	if ('editmodal' == $behavior) {
-		$page->requireJs('%%serverPath%%modules/files/js/editor.js');
+		$kapenta->page->requireJs('%%serverPath%%modules/files/js/editor.js');
 		$labels['viewUrl'] = "javascript:Files_EditModal('" . $model->UID . "');";
 		$labels['controls'] = ''
 		 . "<span style='float: right;'>"

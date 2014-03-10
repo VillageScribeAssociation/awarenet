@@ -5,6 +5,6 @@
 //--------------------------------------------------------------------------------------------------
 //DEPRECATED: remove this action when data is clean [string]
 
-	$page->do302('images/s_thumb90/' . $kapenta->request->ref);
+	$kapenta->page->do302('images/s_thumb90/' . $kapenta->request->ref);
 
 ?>

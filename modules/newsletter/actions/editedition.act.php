@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('newsletter_edition');
 	if (false == $user->authHas('newsletter', 'newsletter_edition', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Editions.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Editions.'); }
 
 
 	//----------------------------------------------------------------------------------------------

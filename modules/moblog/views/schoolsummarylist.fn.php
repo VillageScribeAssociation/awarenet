@@ -74,7 +74,7 @@ function moblog_schoolsummarylist($args) {
 		$html .= $theme->replaceLabels($labels, $block);
 
 		$channel = 'post-' . $model->UID;
-		$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
+		// $kapenta->page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 	}
 
 	if (($start + $num) >= $totalItems) { $html .= "<!-- end of results -->"; }

@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ($kapenta->request->ref == '') { $page->do404(); }
+	if ($kapenta->request->ref == '') { $kapenta->page->do404(); }
 	
 	$model = new Code_File($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown item.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown item.'); }
 	//TODO: permission check here
 
 	//----------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@
 		case 'gif':					$pageName = 'showtxt.page.php';			break;
 		case 'ttf':					$pageName = 'showtxt.page.php';			break;
 
-		default: $page->do404('Unkown object type: ' . $model->type); 	break;
+		default: $kapenta->page->do404('Unkown object type: ' . $model->type); 	break;
 
 	}
 

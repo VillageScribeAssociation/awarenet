@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions 
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	//TODO: permission
 
 	$school = '';			//%	UID fo a schools_school object [string]

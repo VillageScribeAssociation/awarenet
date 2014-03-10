@@ -13,16 +13,16 @@
 	//----------------------------------------------------------------------------------------------
 
 	if (false == array_key_exists('course', $kapenta->request->args)) {
-		$page->do404('Course not specified', true);
+		$kapenta->page->do404('Course not specified', true);
 	}
 
 	if (false == array_key_exists('document', $kapenta->request->args)) {
-		$page->do404('Course not specified', true);
+		$kapenta->page->do404('Course not specified', true);
 	}
 
 	$model = new Lessons_Course($kapenta->request->args['course']);
-	if (false == $model->loaded) { $page->do404('Course not found.', true); }
-	if (false == $model->has($kapenta->request->args['document'])) { $page->do404('Unknown document.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Course not found.', true); }
+	if (false == $model->has($kapenta->request->args['document'])) { $kapenta->page->do404('Unknown document.', true); }
 
 	$pdf = $kapenta->serverPath . $model->documents[$kapenta->request->args['document']]['file'];
 	echo $pdf;

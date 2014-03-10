@@ -16,7 +16,7 @@
 
 function images_show($args) {
 	global $kapenta;
-	global $page;
+	global $kapenta;
 	global $session;
 
 	$display = 'block';							//%	css display mode (inline|block) [string]
@@ -98,7 +98,7 @@ function images_show($args) {
 
 	}
 
-	$page->requireCss('%%serverPath%%modules/images/css/images.css');
+	$kapenta->page->requireCss('%%serverPath%%modules/images/css/images.css');
 
 	return $html;
 }

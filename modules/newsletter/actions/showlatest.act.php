@@ -11,13 +11,13 @@
 		//------------------------------------------------------------------------------------------
 		//	There is no latest edition, redirect to category list
 		//------------------------------------------------------------------------------------------
-		$page->do302('newsletter/listeditions/');
+		$kapenta->page->do302('newsletter/listeditions/');
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	Show the edition
 		//------------------------------------------------------------------------------------------
 		$item = array_pop($range);
-		$page->do302('newsletter/showedition/' . $item['alias']);
+		$kapenta->page->do302('newsletter/showedition/' . $item['alias']);
 	}
 
 ?>

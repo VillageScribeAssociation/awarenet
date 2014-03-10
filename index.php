@@ -168,7 +168,7 @@
 	 . 'modules/' . $kapenta->request->module
 	 . '/actions/' . $kapenta->request->action . '.act.php';
 
-	if (false == $kapenta->fs->exists($actionFile)) { $page->do404('Unknown action'); }
+	if (false == $kapenta->fs->exists($actionFile)) { $kapenta->page->do404('Unknown action'); }
 
 	require_once($actionFile);
 

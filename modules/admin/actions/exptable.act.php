@@ -4,7 +4,7 @@
 //	exports table dbSchemas as php code, for making install script
 //-------------------------------------------------------------------------------------------------
 
-if ('admin' != $user->role) { $page->do403(); }
+if ('admin' != $user->role) { $kapenta->page->do403(); }
 if (('' == $kapenta->request->ref) || ($kapenta->db->tableExists($kapenta->request->ref) == false)) { 
 	echo "no table specified";
 	die(); 

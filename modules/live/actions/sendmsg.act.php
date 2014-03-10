@@ -10,26 +10,26 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->doXmlError('Not logged in.'); }
-	if ('banned' == $user->role) { $page->doXmlError('Banhammered.'); }
+	if ('public' == $user->role) { $kapenta->page->doXmlError('Not logged in.'); }
+	if ('banned' == $user->role) { $kapenta->page->doXmlError('Banhammered.'); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->doXmlError('UID not given.'); }
-	if (false == array_key_exists('fromUID', $_POST)) { $page->doXmlError('fromUID not given.'); }
-	if (false == array_key_exists('toUID', $_POST)) { $page->doXmlError('toUID not given.'); }
-	if (false == array_key_exists('msg', $_POST)) { $page->doXmlError('msg not given.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->doXmlError('UID not given.'); }
+	if (false == array_key_exists('fromUID', $_POST)) { $kapenta->page->doXmlError('fromUID not given.'); }
+	if (false == array_key_exists('toUID', $_POST)) { $kapenta->page->doXmlError('toUID not given.'); }
+	if (false == array_key_exists('msg', $_POST)) { $kapenta->page->doXmlError('msg not given.'); }
 
 	$UID = $_POST['UID'];
 	$fromUID = $_POST['fromUID'];
 	$toUID = $_POST['toUID'];
 	$msg = $_POST['msg'];
 	
-	if ($fromUID != $user->UID) { $page->doXmlError('Not logged in.'); }
+	if ($fromUID != $user->UID) { $kapenta->page->doXmlError('Not logged in.'); }
 
 	if (false == $kapenta->db->objectExists('users_user', $fromUID))
-		{ $page->doXmlError('No such user (fromUID)'); }
+		{ $kapenta->page->doXmlError('No such user (fromUID)'); }
 
 	if (false == $kapenta->db->objectExists('users_user', $toUID))
-		{ $page->doXmlError('No such user (fromUID)'); }
+		{ $kapenta->page->doXmlError('No such user (fromUID)'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save creator's copy (outbox)

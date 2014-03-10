@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('No Package specified.'); } 
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No Package specified.'); } 
 	$UID = $aliases->findRedirect('code_package');
 	$model = new Code_Package($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404("Unkown Package");}
+	if (false == $model->loaded) { $kapenta->page->do404("Unkown Package");}
 
 	if (false == $user->authHas('code', 'Code_Package', 'view', $model->UID)) {
-		$page->do403('You are not authorized to view this Package.'); 
+		$kapenta->page->do403('You are not authorized to view this Package.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------

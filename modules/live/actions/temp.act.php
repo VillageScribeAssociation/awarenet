@@ -7,7 +7,7 @@
 //*	TEST development action - stitch all parts together
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$all = '';
 	$upload = new Live_Upload('9956abbde74a56f2bf6503a71f6ade2935254390');

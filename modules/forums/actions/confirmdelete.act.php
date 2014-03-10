@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given.'); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $kapenta->page->do404('UID not given.'); }
 
 	$model = new Forums_Board($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404('No such forum.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('No such forum.'); }
 
 	if (false == $user->authHas('forums', 'forums_board', 'delete', $model->UID))
-		{ $page->do403('You cannot delete this forum (insufficient privilege).'); }
+		{ $kapenta->page->do403('You cannot delete this forum (insufficient privilege).'); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the confirmation form
@@ -28,6 +28,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	show confirmation for above item to be deleted
 	//----------------------------------------------------------------------------------------------
-	$page->do302('forums/' . $model->alias);
+	$kapenta->page->do302('forums/' . $model->alias);
 
 ?>

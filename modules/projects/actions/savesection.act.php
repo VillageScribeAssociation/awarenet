@@ -15,25 +15,25 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified'); }
-	if ('saveSection' != $_POST['action']) { $page->do404('action not supported'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not specified'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
+	if ('saveSection' != $_POST['action']) { $kapenta->page->do404('action not supported'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not specified'); }
 
 	$model = new Projects_Section($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Project section not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Project section not found.'); }
 
 	$project = new Projects_Project($model->projectUID);
-	if (false == $project->loaded) { $page->do404('Project not found.'); }
+	if (false == $project->loaded) { $kapenta->page->do404('Project not found.'); }
 
 	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
-		$page->do403('You are not authorized to edit this section.'); 
+		$kapenta->page->do403('You are not authorized to edit this section.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	check lock
 	//----------------------------------------------------------------------------------------------
 	//if ($user->UID != $model->checkLock()) {
-	//	$page->do403('Could not save, you do not own the lock on this section.');
+	//	$kapenta->page->do403('Could not save, you do not own the lock on this section.');
 	//}
 
 	//----------------------------------------------------------------------------------------------
@@ -80,6 +80,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to project page
 	//----------------------------------------------------------------------------------------------
-	$page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
+	$kapenta->page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
 
 ?>

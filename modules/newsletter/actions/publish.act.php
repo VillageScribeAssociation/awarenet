@@ -14,11 +14,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Edition UID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Edition UID not given'); }
 
 	$model = new Newsletter_Edition($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('unknown edition'); }
+	if (false == $model->loaded) { $kapenta->page->do404('unknown edition'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	compose the email
@@ -28,7 +28,7 @@
 	echo "<h2>Sending out: " . $model->subject . "</h2>";
 
 	$emailHtml = $theme->expandBlocks('[[:newsletter::mailtemplate::UID=' . $model->UID . ':]]');
-	if ('' == $emailHtml) { $page->do404('Error composing email'); }
+	if ('' == $emailHtml) { $kapenta->page->do404('Error composing email'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	send the mail
@@ -73,7 +73,7 @@
 	echo "<h2>Done.</h2>";
 	echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]');
 
-	//$page->do302('newsletter');
+	//$kapenta->page->do302('newsletter');
 
 
 ?>

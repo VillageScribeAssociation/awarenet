@@ -10,14 +10,14 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified.'); }
-	if ('saveRecord' != $_POST['action']) { $page->do404('unsupported action.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified.'); }
+	if ('saveRecord' != $_POST['action']) { $kapenta->page->do404('unsupported action.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given.'); }
 
 	$model = new Gallery_Gallery($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Unknown gallery.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unknown gallery.'); }
 	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) { 
-		$page->do403('You are not authorized to edit this gallery.'); 
+		$kapenta->page->do403('You are not authorized to edit this gallery.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -43,6 +43,6 @@
 		$session->msg('Could not save changes to gallery:<br/>' . $report, 'bad');
 	}
 
-	$page->do302('gallery/' . $model->alias);			
+	$kapenta->page->do302('gallery/' . $model->alias);			
 
 ?>

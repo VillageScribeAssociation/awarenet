@@ -11,10 +11,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Image not specified (UID).'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Image not specified (UID).'); }
 
 	$model = new Images_Image($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Image not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found.'); }
 
 	//TODO: add other permissions here?
 	$auth = false;
@@ -25,7 +25,7 @@
 		$auth = true;
 	}
 
-	if (false == $auth) { $page->do403('You cannot delete this image.'); }
+	if (false == $auth) { $kapenta->page->do403('You cannot delete this image.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the image
@@ -53,11 +53,11 @@
 				echo "<?xml version=\"1.0\"?>\n";
 				echo "<notice>Image " . $model->UID . " deleted</notice>\n";
 				die();
-			} else { $page->doXmlError('Could not delete image.'); }
+			} else { $kapenta->page->doXmlError('Could not delete image.'); }
 
-		} else { $page->do302($_POST['return']); }
+		} else { $kapenta->page->do302($_POST['return']); }
 	}
 
-	$page->do302('images/');
+	$kapenta->page->do302('images/');
 
 ?>

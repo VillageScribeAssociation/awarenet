@@ -10,15 +10,15 @@
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	//TODO: pick an action and implement it
-	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given.'); }
+	if ('saveRecord' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given.'); }
 
 	$model = new Moblog_Post($_POST['UID']);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
-		{ $page->do403('You cannot edit this blog post.'); }
+		{ $kapenta->page->do403('You cannot edit this blog post.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	update the record	//TODO: use a switch here
@@ -87,7 +87,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect to post
 	//----------------------------------------------------------------------------------------------
-	$page->do302('moblog/' . $model->alias);
+	$kapenta->page->do302('moblog/' . $model->alias);
 	
 
 ?>

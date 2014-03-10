@@ -13,17 +13,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $_POST)) { $page->do403('Image UID not given.'); }
-	if (false == array_key_exists('direction', $_POST)) { $page->do403('Direction not given.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do403('Image UID not given.'); }
+	if (false == array_key_exists('direction', $_POST)) { $kapenta->page->do403('Direction not given.'); }
 
 	$model = new Images_Image($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("Image not found."); }
+	if (false == $model->loaded) { $kapenta->page->do404("Image not found."); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'images-add', $model->refUID)) {
-		$page->do403('You are not authorized to edit this image.'); 
+		$kapenta->page->do403('You are not authorized to edit this image.'); 
 	}
 
-	if (false == $kapenta->fs->exists($model->fileName)) { $page->do404('File missing.'); }
+	if (false == $kapenta->fs->exists($model->fileName)) { $kapenta->page->do404('File missing.'); }
 
 	$angle = 270;
 	if (
@@ -70,6 +70,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to images module
 	//----------------------------------------------------------------------------------------------
-	$page->do302('images/show/' . $model->alias);
+	$kapenta->page->do302('images/show/' . $model->alias);
 
 ?>

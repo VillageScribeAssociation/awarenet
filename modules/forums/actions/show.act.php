@@ -14,10 +14,10 @@
 	//----------------------------------------------------------------------------------------------	
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------	
-	if ('' == $kapenta->request->ref) { $page->do404('no such forum'); }					// check ref
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('no such forum'); }					// check ref
 	$UID = $aliases->findRedirect('forums_board'); 							// check correct ref
 	if (false == $user->authHas('forums', 'forums_board', 'show', $UID)) 
-		{ $page->do403('You are not authorized to view this forum.'); }
+		{ $kapenta->page->do403('You are not authorized to view this forum.'); }
 
 	//----------------------------------------------------------------------------------------------	
 	// load the model

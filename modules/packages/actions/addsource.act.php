@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('addSource' != $_POST['action']) { $page->do404('Action not recognized.'); }
-	if (false == array_key_exists('source', $_POST)) { $page->do404('Source not given.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('addSource' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
+	if (false == array_key_exists('source', $_POST)) { $kapenta->page->do404('Source not given.'); }
 
 	$source = trim($_POST['source']);
 
@@ -37,6 +37,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to package manager
 	//----------------------------------------------------------------------------------------------
-	$page->do302('packages/');
+	$kapenta->page->do302('packages/');
 
 ?>

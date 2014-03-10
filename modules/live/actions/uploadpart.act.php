@@ -13,10 +13,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('filehash', $_POST)) { $page->doXmlError('filehash not given'); }
-	if (false == array_key_exists('parthash', $_POST)) { $page->doXmlError('parthash not given'); }
-	if (false == array_key_exists('index', $_POST)) { $page->doXmlError('index not given'); }
-	if (false == array_key_exists('part64', $_POST)) { $page->doXmlError('part not given'); }
+	if (false == array_key_exists('filehash', $_POST)) { $kapenta->page->doXmlError('filehash not given'); }
+	if (false == array_key_exists('parthash', $_POST)) { $kapenta->page->doXmlError('parthash not given'); }
+	if (false == array_key_exists('index', $_POST)) { $kapenta->page->doXmlError('index not given'); }
+	if (false == array_key_exists('part64', $_POST)) { $kapenta->page->doXmlError('part not given'); }
 
 	$filehash = $_POST['filehash'];
 	$parthash = $_POST['parthash'];
@@ -52,22 +52,22 @@
 		 . "";
 		// . "<textarea rows='10' cols='80'>$part</textarea>\n"
 
-		$page->doXmlError($msg);
+		$kapenta->page->doXmlError($msg);
 	}
 
 	//echo "filehash: $filehash<br/>";
 
 	$upload = new Live_Upload($filehash);
-	if (false == $upload->loaded) { $page->doXmlError('Unknown upload.'); }
+	if (false == $upload->loaded) { $kapenta->page->doXmlError('Unknown upload.'); }
 
-	if (false == array_key_exists($index, $upload->parts)) { $page->doXmlError('Unexpected part.'); }
-	if ('ok' == $upload->parts[$index]['status']) { $page->doXmlError('Already have this'); }
+	if (false == array_key_exists($index, $upload->parts)) { $kapenta->page->doXmlError('Unexpected part.'); }
+	if ('ok' == $upload->parts[$index]['status']) { $kapenta->page->doXmlError('Already have this'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add the part
 	//----------------------------------------------------------------------------------------------
 	$check = $upload->storePart($index, $part64, $parthash);
-	if (false == $check) { $page->doXmlError('Could not store part.'); }
+	if (false == $check) { $kapenta->page->doXmlError('Could not store part.'); }
 	else { $upload->saveXml(); }
 
 	echo '<b>' . $upload->getBitmapTemp() . '</b>';

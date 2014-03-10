@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('Subscription not specified'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Subscription not specified'); }
 	$UID = $kapenta->request->ref;
-	if (false == $kapenta->db->objectExists('newsletter_subscription', $UID)) { $page->do404(); }
+	if (false == $kapenta->db->objectExists('newsletter_subscription', $UID)) { $kapenta->page->do404(); }
 	if (false == $user->authHas('newsletter', 'newsletter_subscription', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Subscriptions.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Subscriptions.'); }
 
 
 	//----------------------------------------------------------------------------------------------

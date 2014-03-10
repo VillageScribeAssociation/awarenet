@@ -9,17 +9,17 @@
 function imgSend($size) {
 	global $kapenta;
 	global $req;
-	global $page;
+	global $kapenta;
 	global $sync;
 
 	//----------------------------------------------------------------------------------------------
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
 	
-	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Image not specified.'); }
 	$model = new Images_Image($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Image not found'); }
-	if ('' == $model->fileName) { $page->do404('File missing.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found'); }
+	if ('' == $model->fileName) { $kapenta->page->do404('File missing.'); }
 	
 	$lmDate = date(DATE_RFC1123, $kapenta->strtotime($model->editedOn));
 	$eTag = md5($lmDate . $size . $model->hash);
@@ -68,7 +68,7 @@ function imgSend($size) {
 				case 'width570':	$thumb = $model->scaleToWidth(570);		break;
 				case 'widtheditor':	$thumb = $model->scaleToWidth(530);		break;
 				case 'slide':		$thumb = $model->scaleToBox(560, 300);	break;
-				default: $page->do404();
+				default: $kapenta->page->do404();
 			}
 
 			$thumbFile = str_replace('.jpg', '_' . $size . '.jpg', $model->fileName);
@@ -90,7 +90,7 @@ function imgSend($size) {
 			header('Cache-Control: max-age=3600');
 			readfile($kapenta->installPath . $thumbFile);	
 
-		} else { $page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/'. $size .'.jpg'); }
+		} else { $kapenta->page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/'. $size .'.jpg'); }
 
 
 	} else {
@@ -114,7 +114,7 @@ function imgSend($size) {
 			//	file does not exist on this peer, find it
 			//-------------------------------------------------------------------------------------
 			//$sync->requestFile($model->transforms[$size]);	//TODO: re-add this with sync object
-			$page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/loading'. $size .'.jpg');
+			$kapenta->page->do302('themes/'. $kapenta->defaultTheme .'/unavailable/loading'. $size .'.jpg');
 
 		}
 	}

@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 	$model = new Projects_Project($UID);
-	if (false == $model->loaded) { $page->do404('No such project.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('No such project.'); }
 
 	$pageNo = 1;
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }

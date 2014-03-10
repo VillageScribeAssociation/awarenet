@@ -12,11 +12,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check postargs and user role
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('address', $_POST)) { $page->do404('address not specified'); }	
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('edition not specified'); }
+	if (false == array_key_exists('address', $_POST)) { $kapenta->page->do404('address not specified'); }	
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('edition not specified'); }
 
 	$model = new Newsletter_Edition($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Unknown edition'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unknown edition'); }
 
 	$address = $_POST['address'];
 
@@ -35,6 +35,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to edition
 	//----------------------------------------------------------------------------------------------
-	$page->do302('newsletter/edition/' . $model->alias);
+	$kapenta->page->do302('newsletter/edition/' . $model->alias);
 
 ?>

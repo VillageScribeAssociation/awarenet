@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not apecified.'); }
-	if ('deleteModel' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not apecified.'); }
+	if ('deleteModel' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
 	$modulename = '';
 	$modelname = '';
@@ -22,8 +22,8 @@
 	if (true == array_key_exists('model', $_POST)) { $modelname = $_POST['model']; }
 
 	$module = new KModule($modulename);
-	if (false == $module->loaded) { $page->do404('Unkown module'); }
-	if (false == $module->hasModel($modelname)) { $page->do404('Unkown model'); }
+	if (false == $module->loaded) { $kapenta->page->do404('Unkown module'); }
+	if (false == $module->hasModel($modelname)) { $kapenta->page->do404('Unkown model'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	remove the model
@@ -41,6 +41,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to /editmodule/
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/editmodule/' . $modulename);
+	$kapenta->page->do302('admin/editmodule/' . $modulename);
 
 ?>

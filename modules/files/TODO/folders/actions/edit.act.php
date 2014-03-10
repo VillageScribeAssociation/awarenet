@@ -8,13 +8,13 @@
 	//	load the model
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }			// check basic permissions
-	if ('' == $kapenta->request->ref) { $page->do404(); }								// check for ref
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }			// check basic permissions
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }								// check for ref
 	
 	require_once($kapenta->installPath . 'modules/folder/folder.mod.php');
 
 	$model = new folder();
-	if ($model->load($kapenta->request->ref) == false)  { $page->do404(); }
+	if ($model->load($kapenta->request->ref) == false)  { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be admin or own folder to edit)
@@ -24,7 +24,7 @@
 	if ('admin' == $user->role) { $auth = true; }
 	if ($user->UID == $model->createdBy) { $auth = true; }
 	// possibly more to come here...
-	if ($auth == false) { $page->do404(); }
+	if ($auth == false) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	if (true == array_key_exists('clear', $kapenta->request->args)) {
 		$model = new Projects_Section($kapenta->request->args['clear']);
@@ -24,7 +24,7 @@
 			if ('' == $report) {
 				$ext = $model->extArray();
 				$session->msg('Cleared lock on section: ' . $ext['titleLink'], 'bad');
-				$page->do302('projects/showlocks/');
+				$kapenta->page->do302('projects/showlocks/');
 			} else {
 				$session->msg('Could not clear lock:<br/>' . $report, 'bad');
 			}

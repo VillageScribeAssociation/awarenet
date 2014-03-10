@@ -9,17 +9,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
 
-	if ('' == $kapenta->request->ref) { $page->do404('No image specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No image specified.'); }
 
 	$model = new Images_Image($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown image'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown image'); }
 
 	$model->transforms->load();
 	$check = $model->transforms->loadImage();
 
-	if (false == $check) { $page->do404('Could not load image file (s).'); }
+	if (false == $check) { $kapenta->page->do404('Could not load image file (s).'); }
 
 	//echo ''
 	//	 . "Image dimensions: "

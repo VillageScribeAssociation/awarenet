@@ -11,10 +11,10 @@
 	//----------------------------------------------------------------------------------------------
 
 	//TODO: check user and timeousness...
-	if ('' == $kapenta->request->ref) { $page->do404('Reply not specified.', true); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Reply not specified.', true); }
 
 	$model = new Forums_Reply($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown reply.', true); }	
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown reply.', true); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

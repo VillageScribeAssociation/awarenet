@@ -9,11 +9,11 @@
 	//-------------------------------------------------------------------------------------------------
 	//	check arguments and user roles
 	//-------------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$model = new P2P_Peer($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Peer Not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Peer Not found.'); }
 
 	//-------------------------------------------------------------------------------------------------
 	//	find all objects which have 'fileName' and 'hash' fields
@@ -88,6 +88,6 @@
 
 	} // end foreah table
 
-	$page->do302('p2p/peers/');
+	$kapenta->page->do302('p2p/peers/');
 
 ?>

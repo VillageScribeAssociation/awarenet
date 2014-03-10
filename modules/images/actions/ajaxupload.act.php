@@ -45,7 +45,7 @@
 
 	//TODO: check this permission name
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) {
-		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
 		die('You are not authorised to add images to this item.');
 	}
 

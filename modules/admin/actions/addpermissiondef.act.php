@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';		//%	name of a kapenta module [string]
 	$modelname = '';		//%	name of object type [string]
@@ -23,11 +23,11 @@
 		$permission = $utils->cleanTitle($_POST['permission']); 
 	}
 
-	if ('' == trim($permission)) { $page->do404('Permission not specified.'); }
+	if ('' == trim($permission)) { $kapenta->page->do404('Permission not specified.'); }
 
 	$module = new KModule($modulename);
-	if (false == $module->loaded) { $page->do404('Unkown module.'); }
-	if (false == $module->hasModel($modelname)) { $page->do404('Unknown model.'); }
+	if (false == $module->loaded) { $kapenta->page->do404('Unkown module.'); }
+	if (false == $module->hasModel($modelname)) { $kapenta->page->do404('Unknown model.'); }
 
 	$model = new KModel();
 	$model->loadArray($module->models[$modelname]);
@@ -46,6 +46,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to /editmodule/
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/editmodule/' . $modulename);
+	$kapenta->page->do302('admin/editmodule/' . $modulename);
 
 ?>

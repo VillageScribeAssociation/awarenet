@@ -27,7 +27,7 @@ class KLog {
 	//TODO: consider adding some of these local variables as members of $kapemta
 
 	function logPageView() {
-		global $db, $page, $user, $session;
+		global $kapenta;
 
 		$fileName = 'data/log/' . date("y-m-d") . "-pageview.log.php";
 		if (false == $this->fileExists($fileName)) { $this->makeEmptyLog($fileName);	}
@@ -38,24 +38,24 @@ class KLog {
 
 		$performance = ''
 		 . 'time=' . (microtime(true) - $this->loadtime)
-		 . '|queries=' . $db->count
-		 . '|db_time=' . $db->time;
+		 . '|queries=' . $kapenta->db->count
+		 . '|db_time=' . $kapenta->db->time;
 
 		if (true == function_exists('memory_get_peak_usage')) {
 			$peakMemory = memory_get_peak_usage(true);
 			$performance .= "|mem=" . $peakMemory . '';
 		}
 
-		$remoteHost = $session->get('remotehost');
+		$remoteHost = $kapenta->session->get('remotehost');
 		if ('' == $remoteHost) {
 
 			if (
 				('10.' == substr($_SERVER['REMOTE_ADDR'], 0, 3)) ||
 				('192.' == substr($_SERVER['REMOTE_ADDR'], 0, 4))
 			) {
-				$session->set('remotehost', $_SERVER['REMOTE_ADDR']);			
+				$kapenta->session->set('remotehost', $_SERVER['REMOTE_ADDR']);			
 			} else {
-				$session->set('remotehost', gethostbyaddr($_SERVER['REMOTE_ADDR']));
+				$kapenta->session->set('remotehost', gethostbyaddr($_SERVER['REMOTE_ADDR']));
 			}
 		}
 
@@ -67,14 +67,14 @@ class KLog {
 		$entry = "<entry>\n"
 			. "\t<timestamp>" . $this->time() . "</timestamp>\n"
 			. "\t<mysqltime>" . $this->datetime() . "</mysqltime>\n"
-			. "\t<user>" . $user->username . "</user>\n"
+			. "\t<user>" . $kapenta->user->username . "</user>\n"
 			. "\t<remotehost>" . $remoteHost . "</remotehost>\n"
 			. "\t<remoteip>" . $_SERVER['REMOTE_ADDR'] . "</remoteip>\n"
 			. "\t<request>" . $_SERVER['REQUEST_URI'] . "</request>\n"
 			. "\t<referrer>" . $referer . "</referrer>\n"
 			. "\t<useragent>" . $userAgent . "</useragent>\n"
 			. "\t<performace>$performance</performance>\n"
-			. "\t<uid>" . $page->UID . "</uid>\n"
+			. "\t<uid>" . $kapenta->page->UID . "</uid>\n"
 			. "</entry>\n";
 
 		$result = $this->filePutContents($fileName, $entry, true, false, 'a+');
@@ -85,7 +85,7 @@ class KLog {
 		}
 
 		//notifyChannel('admin-syspagelog', 'add', base64_encode($entry));
-		//$entry = $kapenta->datetime() . " - " . $user->username . ' - ' . $_SERVER['REQUEST_URI'];
+		//$entry = $kapenta->datetime() . " - " . $kapenta->user->username . ' - ' . $_SERVER['REQUEST_URI'];
 		//notifyChannel('admin-syspagelogsimple', 'add', base64_encode($entry));
 
 		return $result;
@@ -118,7 +118,7 @@ class KLog {
 	//returns: true on success or false on failure [bool]
 
 	function logEvent($log, $subsystem, $fn, $msg) {
-		global $user, $db, $session;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	create new log files as necessary and try get user's IP address
@@ -133,8 +133,8 @@ class KLog {
 		//------------------------------------------------------------------------------------------
 		//	add a new entry to the log file
 		//------------------------------------------------------------------------------------------
-		$sessUID = isset($session) ? $session->UID : 'undefined' ;
-		$userUID = isset($user) ? $user->UID : 'public';
+		$sessUID = ('object' == gettype($kapenta->session)) ? $kapenta->session->UID : 'undefined' ;
+		$userUID = ('object' == gettype($kapenta->user)) ? $kapenta->user->UID : 'public';
 
 		$entry = "<event>\n";
 		$entry .= "\t<datetime>" . $this->datetime() . "</datetime>\n";

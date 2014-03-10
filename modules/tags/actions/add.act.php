@@ -15,8 +15,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	//if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified', true); }
-	//if ('addTag' != $_POST['action']) { $page->do404('action not specified', true); }
+	//if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified', true); }
+	//if ('addTag' != $_POST['action']) { $kapenta->page->do404('action not specified', true); }
 
 	if (true == array_key_exists('refModule', $_POST)) { $refModule = $_POST['refModule']; }
 	if (true == array_key_exists('refModel', $_POST)) { $refModel = $_POST['refModel']; }
@@ -28,24 +28,24 @@
 	if (true == array_key_exists('refUID', $kapenta->request->args)) { $refUID = $kapenta->request->args['refUID']; }
 	if (true == array_key_exists('tagName', $kapenta->request->args)) { $tagName = $kapenta->request->args['tagName']; }
 
-	if ('' == $refModule) { $page->do403('No refModule specified.'); }
-	if ('' == $refModel) { $page->do403('No refModel specified.'); }
-	if ('' == $refUID) { $page->do403('No refUID specified.'); }
-	if ('' == $tagName) { $page->do403('Tag Name not specified.'); }
+	if ('' == $refModule) { $kapenta->page->do403('No refModule specified.'); }
+	if ('' == $refModel) { $kapenta->page->do403('No refModel specified.'); }
+	if ('' == $refUID) { $kapenta->page->do403('No refUID specified.'); }
+	if ('' == $tagName) { $kapenta->page->do403('Tag Name not specified.'); }
 
 	$tagName = $aliases->stringToAlias($tagName);
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('No such owner.', true); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('No such module.', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('No such owner.', true); }
 
 	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
-		{ $page->do403('Not authorized to edit tags.', true); }
+		{ $kapenta->page->do403('Not authorized to edit tags.', true); }
 	
 	$return = "tags/edittags/refModule_$refModule/refModel_$refModel/refUID_$refUID/";
 
 	if ('' == trim($tagName)) {
 		$session->msg("No tag given.", 'bad');
-		$page->do302($return);
+		$kapenta->page->do302($return);
 	}
 
 	/*
@@ -61,7 +61,7 @@
 		if ('' == $report) { $session->msg('Started new tag: ' . $tagName); }
 		else {
 			$session->msg("Could not create tag: " . $report, 'bad');
-			$page->do302($return);
+			$kapenta->page->do302($return);
 		}
 	}
 
@@ -73,7 +73,7 @@
 	$tagUID = $model->getTagIndexUID($refModule, $refModel, $refUID, $tag->UID);
 	if (false != $tagUID) {
 		$session->msg("Tag already added: " . $tagName, 'info');
-		$page->do302($return);
+		$kapenta->page->do302($return);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -102,6 +102,6 @@
 
 	$kapenta->raiseEvent('*', 'tags_add', $args);
 
-	$page->do302($return);
+	$kapenta->page->do302($return);
 
 ?>

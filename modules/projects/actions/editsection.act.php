@@ -11,12 +11,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('section not specified'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('section not specified'); }
 	$model = new Projects_Section($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('section not found', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('section not found', true); }
 
 	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
-		$page->do403('You are not permitted to edit this project.', true);
+		$kapenta->page->do403('You are not permitted to edit this project.', true);
 	}
 
 	//----------------------------------------------------------------------------------------------

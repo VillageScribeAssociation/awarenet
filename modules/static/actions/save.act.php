@@ -4,7 +4,7 @@
 //	save submitted changes, redirect to /static/Saved-Page
 //--------------------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('home', 'Home_Static', 'save', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('home', 'Home_Static', 'save', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }
 	require_once($kapenta->installPath . 'modules/static/models/static.mod.php');
 
 	if ( (array_key_exists('action', $_POST) 
@@ -22,8 +22,8 @@
 		}
 		
 		$model->save();
-		$page->do302('static/' . $model->alias);
+		$kapenta->page->do302('static/' . $model->alias);
 		
-	} else { $page->do404(); }
+	} else { $kapenta->page->do404(); }
 
 ?>

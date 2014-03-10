@@ -5,14 +5,14 @@
 //--------------------------------------------------------------------------------------------------
 
 	if ($kapenta->request->ref != '') { $kapenta->request->args['file'] = $kapenta->request->ref; }
-	if (array_key_exists('file', $kapenta->request->args) == false) { $page->do404(); }
+	if (array_key_exists('file', $kapenta->request->args) == false) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	// load the record
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from code where UID='" . $kapenta->db->addMarkup($kapenta->request->args['file']) . "'";
 	$result = $kapenta->db->query($sql);	
-	if ($kapenta->db->numRows($result) == 0) { $page->do404(); }
+	if ($kapenta->db->numRows($result) == 0) { $kapenta->page->do404(); }
 	$row = $kapenta->db->fetchAssoc($result);
 	$row = $kapenta->db->rmArray($row);
 

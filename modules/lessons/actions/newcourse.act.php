@@ -11,10 +11,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST args and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$model = new Lessons_Course($_POST['uid']);
-	if (true == $model->loaded) { $page->do403('UID already exists'); }
+	if (true == $model->loaded) { $kapenta->page->do403('UID already exists'); }
 
 	foreach($_POST as $key => $value) {
 		switch($key) {
@@ -26,14 +26,14 @@
 		}
 	}
 
-	if (('' == $model->title) || ('' == $model->UID)) { $page->do404('missing field'); }
+	if (('' == $model->title) || ('' == $model->UID)) { $kapenta->page->do404('missing field'); }
 	$model->loaded = true;
 
 	//echo "<textarea rows='10' cols='80'>" . $model->toXml() . "</textarea>\n";
 
 	$check = $model->save();
-	if (false == $check) { $page->do404("Could not save manifest."); }
+	if (false == $check) { $kapenta->page->do404("Could not save manifest."); }
 
-	$page->do302('lessons/editmanifest/' . $model->UID);
+	$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 
 ?>

@@ -10,16 +10,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Image not specified'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Image not specified'); }
 
 	$image = new Images_Image($_POST['UID']);
-	if (false == $image->loaded) { $page->do404('Image not found.'); }
+	if (false == $image->loaded) { $kapenta->page->do404('Image not found.'); }
 
 	$image->transforms->loadImage();
 	if (-1 == $image->transforms->image) {
 		$session->msg('Cannot create transforms from this image.', 'bad');
-		$page->do302('images/settings/');
+		$kapenta->page->do302('images/settings/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -65,6 +65,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to image settings page
 	//----------------------------------------------------------------------------------------------
-	$page->do302('images/settings/');
+	$kapenta->page->do302('images/settings/');
 
 ?>

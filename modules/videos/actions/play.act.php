@@ -9,16 +9,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('Video not specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Video not specified.'); }
 
 	$model = new Videos_Video($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Video not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Video not found.'); }
 
-	if (('public' == $user->role) && ('public' != $model->category)) { $page->do403(); }
+	if (('public' == $user->role) && ('public' != $model->category)) { $kapenta->page->do403(); }
 
 	// temporarily disabled while permissions are in flux  TODO: add this back in when stable
 	if (false == $user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
-		$page->do403(); 
+		$kapenta->page->do403(); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@
 		 . "</div><br/>\n";
 	}
 
-	if ('swf' == $model->format) { $page->do302('videos/animate/' . $model->alias); }
+	if ('swf' == $model->format) { $kapenta->page->do302('videos/animate/' . $model->alias); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

@@ -10,13 +10,13 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not given'); }
-	if ('newModule' != $_POST['action']) { $page->do404('action not recognized'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not given'); }
+	if ('newModule' != $_POST['action']) { $kapenta->page->do404('action not recognized'); }
 
-	if (false == array_key_exists('moduleName', $_POST)) { $page->do404(''); }
-	if (false == array_key_exists('baseName', $_POST)) { $page->do404(''); }
-	if (false == $kapenta->moduleExists($_POST['baseName'])) { $page->do404('No such module.'); }
+	if (false == array_key_exists('moduleName', $_POST)) { $kapenta->page->do404(''); }
+	if (false == array_key_exists('baseName', $_POST)) { $kapenta->page->do404(''); }
+	if (false == $kapenta->moduleExists($_POST['baseName'])) { $kapenta->page->do404('No such module.'); }
 
 	$moduleName = trim($_POST['moduleName']);
 	$baseName = trim($_POST['baseName']);

@@ -14,12 +14,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role (admins only)
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('module', $_POST)) { $page->do404('Module not specified'); }
-	if (false == array_key_exists('model', $_POST)) { $page->do404('Model not specified'); }
-	if (false == array_key_exists('role', $_POST)) { $page->do404('Role not given'); }
-	if (false == array_key_exists('permission', $_POST)) { $page->do404('Permission not given'); }
+	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not specified'); }
+	if (false == array_key_exists('model', $_POST)) { $kapenta->page->do404('Model not specified'); }
+	if (false == array_key_exists('role', $_POST)) { $kapenta->page->do404('Role not given'); }
+	if (false == array_key_exists('permission', $_POST)) { $kapenta->page->do404('Permission not given'); }
 
 	$module = $_POST['module'];
 	$model = $_POST['model'];
@@ -27,13 +27,13 @@
 	$relationship = '';
 	
 	$role = new Users_Role($_POST['role'], true);
-	if (false == $role->loaded) { $page->do404('Unknown role.'); }
+	if (false == $role->loaded) { $kapenta->page->do404('Unknown role.'); }
 
 	if (true == array_key_exists('relationship', $_POST)) {
 		$relationship = $_POST['relationship']; 
 	}
 
-	if (false == $kapenta->moduleExists($module)) { $page->do404('Unknown module.'); }
+	if (false == $kapenta->moduleExists($module)) { $kapenta->page->do404('Unknown module.'); }
 
 	//TODO: more checks here
 
@@ -50,6 +50,6 @@
 	//	redirect back to admin module page
 	//----------------------------------------------------------------------------------------------
 
-	$page->do302('admin/module/' . $module);
+	$kapenta->page->do302('admin/module/' . $module);
 
 ?>

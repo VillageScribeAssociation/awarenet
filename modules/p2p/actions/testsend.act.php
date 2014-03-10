@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$model = new P2P_Peer($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unkown peer.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unkown peer.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	send the message (server returns <ok/> if trusted
@@ -34,6 +34,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to peers console either way
 	//----------------------------------------------------------------------------------------------
-	$page->do302('p2p/peers/');
+	$kapenta->page->do302('p2p/peers/');
 
 ?>

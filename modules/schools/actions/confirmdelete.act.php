@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('uid', $kapenta->request->args)) { $page->do404('School not specified (UID)'); }
+	if (false == array_key_exists('uid', $kapenta->request->args)) { $kapenta->page->do404('School not specified (UID)'); }
 
 	$model = new Schools_School($kapenta->request->args['uid']);
-	if (false == $model->loaded) { $page->do404('School not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('School not found.'); }
 
 	if (false == $user->authHas('schools', 'schools_school', 'delete', $model->UID))
-		{ $page->do403('You are not authorized to delete this school.'); }
+		{ $kapenta->page->do403('You are not authorized to delete this school.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the confirmation box and redirect to the school's page
@@ -26,6 +26,6 @@
 	$html = $theme->replaceLabels($labels, $block);
 	
 	$session->msg($html, 'warn');
-	$page->do302('schools/' . $model->alias);
+	$kapenta->page->do302('schools/' . $model->alias);
 
 ?>

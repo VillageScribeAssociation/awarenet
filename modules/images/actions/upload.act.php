@@ -36,7 +36,7 @@
 	$imgName = '';
 	
 	if (('' == $refUID) OR ('' == $refModule) OR ('' == $refModel)) 
-		{ $page->do404('(missing arguments to image upload)', true); }
+		{ $kapenta->page->do404('(missing arguments to image upload)', true); }
 
 	switch(strtolower($return)) {
 		case 'uploadmultiple':
@@ -60,15 +60,15 @@
 			break;
 
 		default:
-			$page->do404('unknown return argument', true);
+			$kapenta->page->do404('unknown return argument', true);
 			break;
 	}
 
 	//TODO: chck this permission name
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) {
-		if ('xml' == $return) { $page->doXmlError('Not authorized.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
 		$session->msg('You are not authorised to add images to this item.', 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -81,14 +81,14 @@
 			$raw = @implode(@file($tempFile));
 		} else { 
 			$raw = ''; 
-			if ('xml' == $return) { $page->doXmlError('No file uploaded.'); }
+			if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
 			$session->msg('No file uploaded.', 'bad'); 
-			$page->do302($returnUrl);			
+			$kapenta->page->do302($returnUrl);			
 		}
 	
 	} else { 
 		$session->msg('No file uploaded.', 'bad'); 
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 	
 
@@ -98,9 +98,9 @@
 	$img = false;
 	if ('' != $raw) { $img = @imagecreatefromstring($raw); }
 	if (false == $img) {
-		if ('xml' == $return) { $page->doXmlError('Could not validate image.'); }
+		if ('xml' == $return) { $kapenta->page->doXmlError('Could not validate image.'); }
 		$session->msg('Could not validate image.', 'bad'); 
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 	
 	//----------------------------------------------------------------------------------------------
@@ -195,6 +195,6 @@
 
 	if ('' == $report) { $report = "Uploaded image: $srcName <br/>\n"; }
 	$session->msg($report, 'ok');
-	$page->do302($returnUrl);
+	$kapenta->page->do302($returnUrl);
 
 ?>

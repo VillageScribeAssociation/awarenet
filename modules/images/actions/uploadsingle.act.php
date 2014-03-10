@@ -26,24 +26,24 @@
 	//----------------------------------------------------------------------------------------------
 
 	if (false == array_key_exists('refModule', $kapenta->request->args))
-		{ $page->do404('module not given', true); }
+		{ $kapenta->page->do404('module not given', true); }
 
 	if (false == array_key_exists('refModel', $kapenta->request->args))
-		{ $page->do404('model not specified', true); }
+		{ $kapenta->page->do404('model not specified', true); }
 
 	if (false == array_key_exists('refUID', $kapenta->request->args))
-		{ $page->do404('UID of owner object not specified', true); }
+		{ $kapenta->page->do404('UID of owner object not specified', true); }
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such module', true); }
-	if (false == $kapenta->db->tableExists($refModel)) { $page->do404('model not recognized', true); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('no such module', true); }
+	if (false == $kapenta->db->tableExists($refModel)) { $kapenta->page->do404('model not recognized', true); }
 	if (false == $kapenta->db->objectExists($refModel, $refUID))
-		{ $page->do404('owner object does not exist', true); }
+		{ $kapenta->page->do404('owner object does not exist', true); }
 
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { $page->do403(); }
+	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { $kapenta->page->do403(); }
 	//TODO: check this image permission
 
 	//----------------------------------------------------------------------------------------------

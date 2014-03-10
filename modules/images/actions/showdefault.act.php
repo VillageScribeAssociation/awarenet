@@ -10,17 +10,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('refModule not given'); }
-	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('refModel not given'); }
-	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('refUID not given'); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $kapenta->page->do404('refModule not given'); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $kapenta->page->do404('refModel not given'); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $kapenta->page->do404('refUID not given'); }
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 	$size = 'full';
 
-	if (false == $kapenta->moduleExists($refModule)) { $page->do404('Unknown module'); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('Unknown owner'); }
+	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('Unknown module'); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('Unknown owner'); }
 
 	//TODO: permissions check here
 
@@ -35,13 +35,13 @@
 	if (0 == count($set->members)) { 
 		$file = new Videos_Video($refUID);
 		if (false !== strpos($file->fileName, 'mp3')) {
-			$page->do302('images/audio/s_' . $size . '/');
+			$kapenta->page->do302('images/audio/s_' . $size . '/');
 		} else {
-			$page->do302('images/unavailable/s_' . $size . '/'); 
+			$kapenta->page->do302('images/unavailable/s_' . $size . '/'); 
 		}
 	}	
 	$defaultAry = $set->members[0];
 
-	$page->do302('images/s_' . $size . '/' . $defaultAry['alias']);
+	$kapenta->page->do302('images/s_' . $size . '/' . $defaultAry['alias']);
 
 ?>

@@ -4,4 +4,4 @@
 //*	default action for tghis module is to start the game
 //--------------------------------------------------------------------------------------------------
 
-	$page->do302('games/list/');
+	$kapenta->page->do302('games/list/');

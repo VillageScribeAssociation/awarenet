@@ -4,7 +4,7 @@
 //*	temprary / development action to fill deleted images with random ones
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make a list of random images

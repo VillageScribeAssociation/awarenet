@@ -10,12 +10,12 @@
 	//------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not supplied'); }
-	if ('savePage' != $_POST['action']) { $page->do404('action not supported'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not supplied'); }
+	if ('savePage' != $_POST['action']) { $kapenta->page->do404('action not supported'); }
 
 	$model = new Wiki_Article($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('no such article'); }
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404('no such article'); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
 
 	//------------------------------------------------------------------------------------------
 	//	save any changes
@@ -49,7 +49,7 @@
 		//	couldn't save it, bail here and don't save a revision
 		//------------------------------------------------------------------------------------------
 		$session->msg("Could not save changes to wiki article:<br/> $report", 'bad');
-		$page->do302($retUrl);
+		$kapenta->page->do302($retUrl);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -75,6 +75,6 @@
 	//--------------------------------------------------------------------------------------
 	//	done, 302 back to the article
 	//--------------------------------------------------------------------------------------
-	$page->do302($retUrl);			
+	$kapenta->page->do302($retUrl);			
 
 ?>

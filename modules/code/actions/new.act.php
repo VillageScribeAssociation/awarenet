@@ -4,7 +4,7 @@
 //	create a new project
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('code', 'edit', '') == false) { $page->do403(); }
+	if (authHas('code', 'edit', '') == false) { $kapenta->page->do403(); }
 
 	if (array_key_exists('project', $_POST)) { 
 
@@ -19,7 +19,7 @@
 
 		$c->save();
 	
-		$page->do302('code/edit/' . $c->data['UID']);
+		$kapenta->page->do302('code/edit/' . $c->data['UID']);
 
 	}
 

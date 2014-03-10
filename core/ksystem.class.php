@@ -873,8 +873,8 @@ class KSystem {
 
 		$performance = ''
 		 . 'time=' . (microtime(true) - $this->loadtime)
-		 . '|queries=' . $db->count
-		 . '|db_time=' . $db->time;
+		 . '|queries=' . $this->db->count
+		 . '|db_time=' . $this->db->time;
 
 		if (true == function_exists('memory_get_peak_usage')) {
 			$peakMemory = memory_get_peak_usage(true);
@@ -909,7 +909,7 @@ class KSystem {
 			. "\t<referrer>" . $referer . "</referrer>\n"
 			. "\t<useragent>" . $userAgent . "</useragent>\n"
 			. "\t<performace>$performance</performance>\n"
-			. "\t<uid>" . $page->UID . "</uid>\n"
+			. "\t<uid>" . $this->page->UID . "</uid>\n"
 			. "</entry>\n";
 
 		$result = $this->filePutContents($fileName, $entry, true, false, 'a+');

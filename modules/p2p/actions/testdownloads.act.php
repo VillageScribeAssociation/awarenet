@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given.'); }
 
 	$peer = new P2p_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->do404('Peer not found.'); }
+	if (false == $peer->loaded) { $kapenta->page->do404('Peer not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	get download list from peer

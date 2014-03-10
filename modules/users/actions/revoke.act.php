@@ -13,19 +13,19 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('role', $kapenta->request->args)) { $page->do404('Role not given.'); }
-	if (false == array_key_exists('module', $kapenta->request->args)) { $page->do404('Module not given.'); }
-	if (false == array_key_exists('model', $kapenta->request->args)) { $page->do404('Model not given.'); }
-	if (false == array_key_exists('permission', $kapenta->request->args)) { $page->do404('Perm not given.'); }
+	if (false == array_key_exists('role', $kapenta->request->args)) { $kapenta->page->do404('Role not given.'); }
+	if (false == array_key_exists('module', $kapenta->request->args)) { $kapenta->page->do404('Module not given.'); }
+	if (false == array_key_exists('model', $kapenta->request->args)) { $kapenta->page->do404('Model not given.'); }
+	if (false == array_key_exists('permission', $kapenta->request->args)) { $kapenta->page->do404('Perm not given.'); }
 
 	$module = $kapenta->request->args['module'];
 	$model = $kapenta->request->args['model'];
 	$permission = $kapenta->request->args['permission'];
 
 	$role = new Users_Role($kapenta->request->args['role'], true);
-	if (false == $role->loaded) { $page->do404('Unknown role.'); }	
+	if (false == $role->loaded) { $kapenta->page->do404('Unknown role.'); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	remove the permission from this role
@@ -42,6 +42,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to admin console for this module
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/module/' . $module);
+	$kapenta->page->do302('admin/module/' . $module);
 
 ?>

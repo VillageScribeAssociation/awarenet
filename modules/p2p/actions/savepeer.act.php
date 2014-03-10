@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); } // only admins can use this module
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('savePeer' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Server not specified (UID).'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); } // only admins can use this module
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('savePeer' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Server not specified (UID).'); }
 
 	$model = new P2P_Peer($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("could not load Peer Server");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Peer Server");}
 
 	//----------------------------------------------------------------------------------------------
 	//	update the P2P_Peer object
@@ -39,7 +39,7 @@
 	if ('' == $report) { $session->msg('Saved changes to peer server: ' . $model->name, 'ok'); }
 	else { $session->msg('Could not save Server:<br/>' . $report, 'bad'); }
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('/p2p/peers/' . $model->UID); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('/p2p/peers/' . $model->UID); }
 
 ?>

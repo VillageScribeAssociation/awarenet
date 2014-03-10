@@ -37,8 +37,8 @@ function groups__cb_member_removed($args) {
 	//---------------------------------------------------------------------------------------------
 	//	pull triggers
 	//---------------------------------------------------------------------------------------------
-	$page->doTrigger('groups', 'members-' . $model->UID);
-	$page->doTrigger('groups', 'members-any');
+	// $kapenta->page->doTrigger('groups', 'members-' . $model->UID);
+	// $kapenta->page->doTrigger('groups', 'members-any');
 
 	//---------------------------------------------------------------------------------------------
 	//	create notice

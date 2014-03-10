@@ -12,13 +12,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and request args
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('Video not specified', true); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Video not specified', true); }
 	
 	$model = new Videos_Video($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Video not found', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Video not found', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'editvideo', $model->refUID)) 
-		{ $page->do403('You are not authorized to edit this video.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this video.'); }
 
 	$set = new Videos_Videoset($model->refModule, $model->refModel, $model->refUID);
 	$set->decWeight($model->UID);
@@ -52,10 +52,10 @@
 			break;
 
 		default:
-			$page->do302('videos/edit/' . $model->alias);
+			$kapenta->page->do302('videos/edit/' . $model->alias);
 			break;
 	}
 		
-	$page->do302($returnUrl);		
+	$kapenta->page->do302($returnUrl);		
 
 ?>

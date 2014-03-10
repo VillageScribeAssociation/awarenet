@@ -6,7 +6,7 @@
 
 	require_once($kapenta->installPath . 'modules/users/models/friendship.mod.php');
 
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('users', 'addfriend', 'users', $kapenta->request->ref);
 
 	//----------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 	$friend = new Users_User($UID);
 	if ($user->isFriend($friend->UID)) {
 		$session->msg("You are already friends.", 'bad');
-		$page->do302('users/profile/' . $kapenta->request->ref);
+		$kapenta->page->do302('users/profile/' . $kapenta->request->ref);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -32,6 +32,6 @@
 	//	redirect back to user's profile
 	//----------------------------------------------------------------------------------------------
 	$session->msg("You have made a friend request.<br/>", 'ok');
-	$page->do302('users/profile/' . $kapenta->request->ref);
+	$kapenta->page->do302('users/profile/' . $kapenta->request->ref);
 
 ?>

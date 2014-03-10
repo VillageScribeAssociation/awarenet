@@ -9,17 +9,17 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('No Edition specified.'); } 
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No Edition specified.'); } 
 	$UID = $aliases->findRedirect('newsletter_edition');
 	$model = new Newsletter_Edition($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404("Unkown Edition");}
+	if (false == $model->loaded) { $kapenta->page->do404("Unkown Edition");}
 
 	if (
 		(false == $user->authHas('newsletter', 'Newsletter_Edition', 'view', $model->UID)) && 
 		(false == array_key_exists('allow', $kapenta->request->args))
 	) {
 		if ('published' != $model->status) {
-			$page->do403('You are not authorized to view this Edition.');
+			$kapenta->page->do403('You are not authorized to view this Edition.');
 		} 
 	}
 

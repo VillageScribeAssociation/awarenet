@@ -7,9 +7,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('refModule', $kapenta->request->args)) { $page->do404('(no module)'); }
-	if (false == array_key_exists('refModel', $kapenta->request->args)) { $page->do404('(no model)'); }
-	if (false == array_key_exists('refUID', $kapenta->request->args)) { $page->do404('(no UID)'); }
+	if (false == array_key_exists('refModule', $kapenta->request->args)) { $kapenta->page->do404('(no module)'); }
+	if (false == array_key_exists('refModel', $kapenta->request->args)) { $kapenta->page->do404('(no model)'); }
+	if (false == array_key_exists('refUID', $kapenta->request->args)) { $kapenta->page->do404('(no UID)'); }
 	
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];

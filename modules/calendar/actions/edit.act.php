@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$model = new Calendar_Entry($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }	
+	if (false == $model->loaded) { $kapenta->page->do404('Calendar entry not found.'); }	
 	if (false == $user->authHas('calendar', 'calendar_entry', 'edit', $model->UID))
-		{ $page->do403('You cannot edit this calendar entry.'); }
+		{ $kapenta->page->do403('You cannot edit this calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the page

@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Only admins can do this.', true); }	
+	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can do this.', true); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page  //TODO: make a generic window template

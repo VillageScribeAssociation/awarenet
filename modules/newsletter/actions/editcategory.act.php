@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('newsletter_category');
 	if (false == $user->authHas('newsletter', 'newsletter_category', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Categorys.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Categorys.'); }
 
 
 	//----------------------------------------------------------------------------------------------

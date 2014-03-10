@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 //DEPRECATED: image files are no longer kept after deletion TODO: remove
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$sql = "select * from images_image";
 	$result = $kapenta->db->query($sql);

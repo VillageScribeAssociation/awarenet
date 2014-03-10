@@ -8,10 +8,10 @@
 	//	check that user is logged in and refmodule, refuid supplied
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->role == 'public') { $page->doXmlError('not logged in'); }
+	if ($user->role == 'public') { $kapenta->page->doXmlError('not logged in'); }
 
-	if (false == array_key_exists('refuid', $kapenta->request->args)) { $page->doXmlError('refUID not given'); }
-	if (false == array_key_exists('refmodule', $kapenta->request->args)) { $page->doXmlError('module not specified'); }
+	if (false == array_key_exists('refuid', $kapenta->request->args)) { $kapenta->page->doXmlError('refUID not given'); }
+	if (false == array_key_exists('refmodule', $kapenta->request->args)) { $kapenta->page->doXmlError('module not specified'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	list images 

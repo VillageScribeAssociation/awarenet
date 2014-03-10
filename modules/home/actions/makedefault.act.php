@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the page and redirect to it
@@ -20,6 +20,6 @@
 	$model->content = "<h1>Welcome</h1><p>Thanks for installing Kapenta.</p>";
 	$model->save();
 
-	$page->do302('home/' . $model->alias);
+	$kapenta->page->do302('home/' . $model->alias);
 
 ?>

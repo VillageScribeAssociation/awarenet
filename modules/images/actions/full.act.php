@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	load the image record
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$model = new Images_Image($kapenta->request->ref);
-	if ($model->fileName == '') { $page->do404(); }
+	if ($model->fileName == '') { $kapenta->page->do404(); }
 			
 	//----------------------------------------------------------------------------------------------
 	//	return the original file

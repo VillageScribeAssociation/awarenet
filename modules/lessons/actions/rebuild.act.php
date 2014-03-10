@@ -7,7 +7,7 @@
 //	administrative / devlopment action to rebuild the index.dat.php
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]");
 

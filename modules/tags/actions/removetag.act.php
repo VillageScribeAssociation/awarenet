@@ -10,13 +10,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('Reference UID not given.', 'true'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Reference UID not given.', 'true'); }
 
 	$model = new Tags_Index($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Not Tagged.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Not Tagged.', true); }
 
 	if (false == $user->authHas($model->refModule, $model->refModel, 'tags-manage', $model->refUID))
-		{ $page->do403('Not authorized to edit tags.', true); }
+		{ $kapenta->page->do403('Not authorized to edit tags.', true); }
 
 	$return = 'tags/edittags'
 		 . '/refModule_' . $model->refModule
@@ -56,6 +56,6 @@
 	//----------------------------------------------------------------------------------------------
 	// redirect back to /tags/edittags/ iframe
 	//----------------------------------------------------------------------------------------------
-	$page->do302($return);
+	$kapenta->page->do302($return);
 
 ?>

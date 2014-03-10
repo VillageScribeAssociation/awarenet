@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Video not specified.', true); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Video not specified.', true); }
 
 	$model = new Videos_Video($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Video not found.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Video not found.', true); }
 
 	//TODO: add other permissions here?
 	$auth = false;
@@ -24,7 +24,7 @@
 		$auth = true;
 	}
 
-	if (false == $auth) { $page->do403('You cannot delete this video.', true); }
+	if (false == $auth) { $kapenta->page->do403('You cannot delete this video.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the image
@@ -38,9 +38,9 @@
 			echo "<notice>Image " . $model->UID . " deleted</notice>\n";
 			die();
 
-		} else { $page->do302($_POST['return']); }
+		} else { $kapenta->page->do302($_POST['return']); }
 	}
 
-	$page->do302('/videos/');
+	$kapenta->page->do302('/videos/');
 
 ?>

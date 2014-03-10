@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments (permissions should be checked by blocks)
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('b', $_POST)) { $page->doXmlError('no request sent'); }
+	if (false == array_key_exists('b', $_POST)) { $kapenta->page->doXmlError('no request sent'); }
 	$block = base64_decode($_POST['b']);
 	$area = 'content';
 	//echo $block . "<br/>\n";

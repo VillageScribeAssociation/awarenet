@@ -4,6 +4,6 @@
 //*	default action of kjs module is to display js source files
 //--------------------------------------------------------------------------------------------------
 
-	$page->do302('kjs/list/');
+	$kapenta->page->do302('kjs/list/');
 
 ?>

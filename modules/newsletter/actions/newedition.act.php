@@ -10,7 +10,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('newsletter', 'newsletter_edition', 'new')) {
-		$page->do403('You are not authorized to create new Editions.');
+		$kapenta->page->do403('You are not authorized to create new Editions.');
 	}
 
 
@@ -38,10 +38,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new Edition<br/>', 'ok');
-		$page->do302('/newsletter/editedition/' . $model->alias);
+		$kapenta->page->do302('/newsletter/editedition/' . $model->alias);
 	} else {
 		$session->msg('Could not create new Edition:<br/>' . $report);
-		$page->do302('/newsletter/');
+		$kapenta->page->do302('/newsletter/');
 	}
 
 ?>

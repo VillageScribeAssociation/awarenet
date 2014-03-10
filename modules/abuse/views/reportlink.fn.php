@@ -11,7 +11,7 @@
 function abuse_reportlink($args) {
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 	global $kapenta;
 
 	$title = 'Submit Abuse Report';			//%	default windoe banner text [string]
@@ -31,7 +31,7 @@ function abuse_reportlink($args) {
 	$labels['refUID'] = $args['refUID'];
 	$labels['title'] = $title;
 
-	$page->requireJs($kapenta->serverPath . 'modules/abuse/js/report.js');		//	add client-side
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/abuse/js/report.js');		//	add client-side
 
 	//----------------------------------------------------------------------------------------------
 	//	make the button

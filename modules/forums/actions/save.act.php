@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('saveRecord' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
 	$model = new Forums_Board($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Board not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Board not found.'); }
 	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID))
-		{ $page->do403('You are not authorised to edit this board.'); }
+		{ $kapenta->page->do403('You are not authorised to edit this board.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save any changes
@@ -40,7 +40,7 @@
 	} else { 
 		$session->msg('Could not save changes:<br/>' . $report, 'bad'); 
 	}
-	$page->do302('forums/' . $model->alias);			
+	$kapenta->page->do302('forums/' . $model->alias);			
 
 	//----------------------------------------------------------------------------------------------
 	//	add a user to list of moderators/members/bans
@@ -49,7 +49,7 @@
 	if ($_POST['action'] == 'addForumUser') {
 		// TODO			
 		$_SESSION['sMessage'] .= "Saved changes to forums.<br/>\n";
-		$page->do302('forums/' . $model->alias);			
+		$kapenta->page->do302('forums/' . $model->alias);			
 	}
 	*/
 

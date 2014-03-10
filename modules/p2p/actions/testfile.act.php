@@ -7,13 +7,13 @@
 //*	development action to test request of large file metadata
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$fileName = 'data/videos/1/1/0/110908755616157252';
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->do404('Unkown peer.'); }
+	if (false == $peer->loaded) { $kapenta->page->do404('Unkown peer.'); }
 
 	$xml = $peer->sendMessage('file', $fileName);
 

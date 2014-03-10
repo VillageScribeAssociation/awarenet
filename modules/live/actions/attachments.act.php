@@ -12,22 +12,22 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $page->do403('', true); }
+	if ('public' == $user->role) { $kapenta->page->do403('', true); }
 
 	if (
 		(false == array_key_exists('refModule', $kapenta->request->args)) ||
 		(false == array_key_exists('refModel', $kapenta->request->args)) ||
 		(false == array_key_exists('refUID', $kapenta->request->args))
 	) {
-		$page->do404('Must specify refModule, refModel and refUID', true);
+		$kapenta->page->do404('Must specify refModule, refModel and refUID', true);
 	}
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
 	$refUID = $kapenta->request->args['refUID'];
 
-	if (false == $kapenta->moduleExists($refModule, $refUID)) { $page->do404('No module', true); }
-	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('No owner', true); }
+	if (false == $kapenta->moduleExists($refModule, $refUID)) { $kapenta->page->do404('No module', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('No owner', true); }
 
 	//	TODO: permissions checks here
 

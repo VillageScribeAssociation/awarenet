@@ -10,7 +10,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == authHas('Code', 'bug', 'new')) {
-		$page->do403('You are not authorized to create new Bugs.');
+		$kapenta->page->do403('You are not authorized to create new Bugs.');
 	}
 
 
@@ -39,7 +39,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new Bug<br/>', 'ok');
-		$page->do302('/Code/editbug/' . $model->alias);
+		$kapenta->page->do302('/Code/editbug/' . $model->alias);
 	} else {
 		$session->msg('Could not create new Bug:<br/>' . $report);
 	}

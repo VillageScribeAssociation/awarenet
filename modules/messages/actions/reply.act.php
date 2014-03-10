@@ -9,16 +9,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send mail
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403(); }
+	if ('public' == $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	is this to be sent to a specific user, or in response to another message
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('re', $kapenta->request->args)) { $page->do404('message not specified'); }
+	if (false == array_key_exists('re', $kapenta->request->args)) { $kapenta->page->do404('message not specified'); }
 	$msgUID = str_replace('?', '', $kapenta->request->args['re']);		// TODO: better removal of querystring
 	$model = new Messages_Message($msgUID);		
-	if (false == $model->loaded) { $page->do404('Message not found'); }
-	if ($model->owner != $user->UID) { $page->do403('not owner of message'); }	// not your message
+	if (false == $model->loaded) { $kapenta->page->do404('Message not found'); }
+	if ($model->owner != $user->UID) { $kapenta->page->do403('not owner of message'); }	// not your message
 
 	$jsrUID = $model->fromUID;
 

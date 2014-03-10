@@ -54,8 +54,8 @@
 		//------------------------------------------------------------------------------------------
 		//	check argument and user role
 		//------------------------------------------------------------------------------------------
-		if ('public' == $user->role) { $page->doXmlError('please log in.'); }	// no public users
-		if ('banned' == $user->role) { $page->doXmlError('banned.'); }			// banhammered
+		if ('public' == $user->role) { $kapenta->page->doXmlError('please log in.'); }	// no public users
+		if ('banned' == $user->role) { $kapenta->page->doXmlError('banned.'); }			// banhammered
 
 		$uUID = $kapenta->db->addMarkup($user->UID);
 		$datetime = $_POST['chatsince'];

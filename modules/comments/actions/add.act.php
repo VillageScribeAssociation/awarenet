@@ -10,10 +10,10 @@
 	//	check request vars 
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('refModule', $_POST)) { $page->do404('refModule not given'); }
-	if (false == array_key_exists('refModel', $_POST)) { $page->do404('refModel not given'); }
-	if (false == array_key_exists('refUID', $_POST)) { $page->do404('refUID not given'); }
-	if (false == array_key_exists('return', $_POST)) { $page->do404('no return url'); }
+	if (false == array_key_exists('refModule', $_POST)) { $kapenta->page->do404('refModule not given'); }
+	if (false == array_key_exists('refModel', $_POST)) { $kapenta->page->do404('refModel not given'); }
+	if (false == array_key_exists('refUID', $_POST)) { $kapenta->page->do404('refUID not given'); }
+	if (false == array_key_exists('return', $_POST)) { $kapenta->page->do404('no return url'); }
 
 	$refModule = $_POST['refModule'];
 	$refModel = $_POST['refModel'];
@@ -24,7 +24,7 @@
 	if (true == array_key_exists('replyTo', $_POST)) {
 		$replyTo = $_POST['replyTo'];
 		if (false == $kapenta->db->objectExists('comments_comment', $replyTo)) {
-			$page->do404('(cannot reply to missing comment');
+			$kapenta->page->do404('(cannot reply to missing comment');
 		}
 	}
 
@@ -32,15 +32,15 @@
 	//	check permissions, valid module
 	//----------------------------------------------------------------------------------------------
 	//TODO: check that model exists
-	if (false == in_array($refModule, $kapenta->listModules())) { $page->do404(); }
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { $page->do403(); }
+	if (false == in_array($refModule, $kapenta->listModules())) { $kapenta->page->do404(); }
+	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	dont save blank comments
 	//----------------------------------------------------------------------------------------------
 	if ('' == trim($_POST['comment'])) { 
 		$session->msg('No comment entered', 'bad');
-		$page->do302($return); 
+		$kapenta->page->do302($return); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -73,6 +73,6 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ('none' == $return) { echo '#COMMENT ADDED\n'; }	//TODO: XML option
-	else { $page->do302($return); }
+	else { $kapenta->page->do302($return); }
 
 ?>

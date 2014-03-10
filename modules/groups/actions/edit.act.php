@@ -12,9 +12,9 @@
 	$UID = $aliases->findRedirect('groups_group');
 
 	$model = new Groups_Group($UID);
-	if (false == $model->loaded) { $page->do404('Could not load group.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Could not load group.'); }
 	if (false == $user->authHas('groups', 'groups_group', 'edit', $model->UID))
-		{ $page->do403('You cannot edit this group.'); }
+		{ $kapenta->page->do403('You cannot edit this group.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

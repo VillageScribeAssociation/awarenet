@@ -10,7 +10,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('newsletter', 'newsletter_subscription', 'new')) {
-		$page->do403('You are not authorized to create new Subscriptions.');
+		$kapenta->page->do403('You are not authorized to create new Subscriptions.');
 	}
 
 
@@ -34,10 +34,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new Subscription<br/>', 'ok');
-		$page->do302('/newsletter/listsubscriptions/' . $model->UID);
+		$kapenta->page->do302('/newsletter/listsubscriptions/' . $model->UID);
 	} else {
 		$session->msg('Could not create new Subscription:<br/>' . $report);
-		$page->do302('/newsletter/');
+		$kapenta->page->do302('/newsletter/');
 	}
 
 ?>

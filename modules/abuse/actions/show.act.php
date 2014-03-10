@@ -9,14 +9,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) {
 		$session->msg("Abuse report not speicified (UID).", 'bad'); 
-		$page->do302('abuse/'); 
+		$kapenta->page->do302('abuse/'); 
 	}
 
 	$model = new Abuse_Report($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Report not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Report not found.'); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page

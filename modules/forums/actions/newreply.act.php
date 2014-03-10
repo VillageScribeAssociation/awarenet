@@ -9,14 +9,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('newThreadReply' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('thread', $_POST)) { $page->do404('Thread not specified.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('newThreadReply' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('thread', $_POST)) { $kapenta->page->do404('Thread not specified.'); }
 
 	$thread = new Forums_Thread($_POST['thread']);
-	if (false == $thread->loaded) { $page->do404('Thread not found.'); }
+	if (false == $thread->loaded) { $kapenta->page->do404('Thread not found.'); }
 	if (false == $user->authHas('forums', 'forums_reply', 'new', $thread->UID)) { 
-		$page->do403('You are not permitted to post in this thread.'); 
+		$kapenta->page->do403('You are not permitted to post in this thread.'); 
 	}
 
 	//------------------------------------------------------------------------------------------
@@ -80,6 +80,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to thread
 	//----------------------------------------------------------------------------------------------
-	$page->do302('forums/showthread/' . $thread->alias);
+	$kapenta->page->do302('forums/showthread/' . $thread->alias);
 
 ?>

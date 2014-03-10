@@ -11,8 +11,8 @@
 	//	check $_POST argument and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not posted'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not posted'); }
 
 	$courses = lessons_listKhan();
 	$model = new Lessons_Course();
@@ -22,7 +22,7 @@
 		if ($course->UID == $_POST['UID']) { $model = $course; }
 	}
 
-	if ('' == $model->UID) { $page->do404('Unknown course.'); }
+	if ('' == $model->UID) { $kapenta->page->do404('Unknown course.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	scrape for youtube links

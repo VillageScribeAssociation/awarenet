@@ -11,11 +11,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if ('' == trim($kapenta->request->ref)) { $page->do404('Peer not specified.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('' == trim($kapenta->request->ref)) { $kapenta->page->do404('Peer not specified.'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->do404('Unknown peer.'); }
+	if (false == $peer->loaded) { $kapenta->page->do404('Unknown peer.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	search for files
@@ -40,6 +40,6 @@
 	//	redirect pack to peers page
 	//----------------------------------------------------------------------------------------------
 	echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', '');
-	//$page->do302('p2p/peers/');
+	//$kapenta->page->do302('p2p/peers/');
 
 ?>

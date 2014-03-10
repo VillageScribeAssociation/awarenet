@@ -9,7 +9,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('wiki', 'wiki_article', 'new'))
-		{ $page->do403('You are not authorized to create new Articles.'); }
+		{ $kapenta->page->do403('You are not authorized to create new Articles.'); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -33,10 +33,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created New Article<br/>', 'ok');
-		$page->do302('wiki/edit/' . $model->alias);
+		$kapenta->page->do302('wiki/edit/' . $model->alias);
 	} else {
 		$session->msg('Could not create new Article:<br/>' . $report, 'bad');
-		$page->do302('wiki/');
+		$kapenta->page->do302('wiki/');
 	}
 
 

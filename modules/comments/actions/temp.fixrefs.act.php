@@ -6,7 +6,7 @@
 //*	temporary administrative action to fix references to gallery images
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	change image comments to point to image and not gallery

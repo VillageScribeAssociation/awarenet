@@ -22,6 +22,6 @@
 			if (true == $kapenta->fs->exists($testFile)) { $size = $kapenta->request->args['s']; }
 	}
 
-	$page->do302('modules/videos/assets/audio-icon_' . $size . '.png');
+	$kapenta->page->do302('modules/videos/assets/audio-icon_' . $size . '.png');
 
 ?>

@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }			// check for ref
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }			// check for ref
 	$UID = $aliases->findRedirect('wiki_article');		// check correct ref
 
 	$model = new Wiki_Article($UID);
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $page->do403(); }
+	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	// create talk page if it does not exist
@@ -33,8 +33,8 @@
 		if ('' == $report) { $session->msg("Created talk page for: " . $model->alias, 'ok'); }
 		else {  
 			$msg = "Could not create talk page for " . $model->alias . ":<br/>" . $report;
-			$session->msg($msg, 'ok');
-			$page->doError();
+			$kapenta->session->msg($msg, 'ok');
+			$kapenta->page->doXmlError();
 		}
 
 		$talkUID = $talk->UID;

@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Preset not given.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Preset not given.'); }
 
 	$model = new Users_Preset($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Preset not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Preset not found.'); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -28,6 +28,6 @@
 		$session->msg($msg, 'bad');
 	}
 
-	$page->do302('users/themepresets/');
+	$kapenta->page->do302('users/themepresets/');
 
 ?>

@@ -98,7 +98,7 @@ function comments_list($args) {
 	//		. "</div>";
 	//
 	//	$channel = 'comment-' . $refModel . '-' . $refUID;
-	//	$page->setTrigger('comments', $channel, $args['rawblock']);
+	//	// $kapenta->page->setTrigger('comments', $channel, $args['rawblock']);
 
 
 	return $html;

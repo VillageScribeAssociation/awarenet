@@ -68,7 +68,7 @@ function moblog_summarylist($args) {
 		//$labels['rawblock64'] = base64_encode('[[:moblog::summary::UID=' . $row['UID'] . ':]]');
 		//$html .= $theme->replaceLabels($labels, $block);
 		//$channel = 'post-' . $model->UID;
-		//$page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
+		//// $kapenta->page->setTrigger('moblog', $channel, "[[:moblog::summary::UID=" . $row['UID'] . ":]]");
 
 		$html .= "[[:moblog::summary::UID=" . $row['UID'] . ":]]";
 

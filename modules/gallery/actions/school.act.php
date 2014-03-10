@@ -10,10 +10,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404('school not given'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('school not given'); }
 
 	$model = new Schools_School($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('Unknown school.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unknown school.'); }
 
 	//TODO: permissions check here
 

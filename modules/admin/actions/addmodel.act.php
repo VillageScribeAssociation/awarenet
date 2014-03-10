@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not spciefid.'); }
-	if ('addModel' != $_POST['action']) { $page->do404('Unkown action.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not spciefid.'); }
+	if ('addModel' != $_POST['action']) { $kapenta->page->do404('Unkown action.'); }
 
 	$modulename = '';
 	$modelname = '';
@@ -21,11 +21,11 @@
 	if (true == array_key_exists('model', $_POST)) { $modelname = $_POST['model']; }
 
 	$module = new KModule($modulename);
-	if (false == $module->loaded) { $page->do404('unknown module'); }
-	if ('' == trim($modelname)) { $page->do404('Model name not given.'); }
+	if (false == $module->loaded) { $kapenta->page->do404('unknown module'); }
+	if ('' == trim($modelname)) { $kapenta->page->do404('Model name not given.'); }
 
 	if (true == array_key_exists($modelname, $module->models)) {
-		$page->do404('Model already exists.');
+		$kapenta->page->do404('Model already exists.');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -40,6 +40,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to editmodule
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/editmodule/' . $modulename);	
+	$kapenta->page->do302('admin/editmodule/' . $modulename);	
 
 ?>

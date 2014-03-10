@@ -7,7 +7,7 @@
 //*	show project index with edit links
 //-------------------------------------------------------------------------------------------------
 
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
 
 	//----------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@
 	if ((false == $model->hasMember($user->UID)) && ('admin' != $user->role)) {
 		// TODO: use a permission for this
 		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
-		$page->do302('projects/' . $model->alias);
+		$kapenta->page->do302('projects/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------

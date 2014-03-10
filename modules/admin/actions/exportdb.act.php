@@ -15,7 +15,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@
 		//	set export options
 		//------------------------------------------------------------------------------------------
 
-		$db->cacheSize = 1;
+		$kapenta->db->cacheSize = 1;
 	
 		$format = "txt";
 
@@ -36,7 +36,7 @@
 
 		$fileName = ''
 		 . $kapenta->installPath . 'data/export/'
-		 . $kapenta->datetime() . '-' . basename($db->name);
+		 . $kapenta->datetime() . '-' . basename($kapenta->db->name);
 
 		$fileName = str_replace(':', '-', $fileName);
 		$kapenta->fileMakeSubdirs($fileName);
@@ -109,7 +109,7 @@
 			$sql = "SELECT * FROM " . $tableName;
 			$result = $kapenta->db->query($sql);
 
-			if (true == method_exists($db, 'transactionStart')) { $db->transactionStart(); }
+			if (true == method_exists($db, 'transactionStart')) { $kapenta->db->transactionStart(); }
 
 			$rowCount = 100;
 
@@ -127,7 +127,7 @@
 
 			echo "<br/>\n";
 
-			if (true == method_exists($db, 'transactionEnd')) { $db->transactionEnd(); }
+			if (true == method_exists($db, 'transactionEnd')) { $kapenta->db->transactionEnd(); }
 
 			echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', '');
 

@@ -17,12 +17,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->doXmlError("Action not given"); }
-	if ('deleteSection' != $_POST['action']) { $page->doXmlError('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->doXmlError("Section UID not given"); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->doXmlError("Action not given"); }
+	if ('deleteSection' != $_POST['action']) { $kapenta->page->doXmlError('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->doXmlError("Section UID not given"); }
 
 	$model = new Projects_Section($_POST['UID']);
-	if (false == $model->loaded) { $page->doXmlError('Section not found.'); }
+	if (false == $model->loaded) { $kapenta->page->doXmlError('Section not found.'); }
 
 	//TODO: permissions check here
 
@@ -38,11 +38,11 @@
 		if ('' == $check) {
 			// nothing to add here yet, notification maybe?
 		} else {
-			$page->doXmlError('Could not save revision.');
+			$kapenta->page->doXmlError('Could not save revision.');
 		}
 
 	} else {
-		$page->doXmlError('Could not delete section.');
+		$kapenta->page->doXmlError('Could not delete section.');
 	}
 
 	//----------------------------------------------------------------------------------------------

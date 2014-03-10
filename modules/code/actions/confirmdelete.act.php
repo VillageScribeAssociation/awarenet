@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check UID and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $kapenta->page->do404(); }
 
 	$model = new Code_File($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404(); }
-	if (false == $user->authHas('code', 'code_file', 'commit', $model->UID)) { $page->do403(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
+	if (false == $user->authHas('code', 'code_file', 'commit', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add confirmation form as a session message and redirect back to item
@@ -24,6 +24,6 @@
 	$html = $theme->replaceLabels($labels, $block);
 	
 	$session->msg($html);
-	$page->do302('code/show/' . $model->UID);
+	$kapenta->page->do302('code/show/' . $model->UID);
 
 ?>

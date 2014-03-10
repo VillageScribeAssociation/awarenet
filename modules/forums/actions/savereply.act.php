@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.', true); }
-	if ('saveReply' != $_POST['action']) { $page->do404('Action not supported.', true); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.', true); }
+	if ('saveReply' != $_POST['action']) { $kapenta->page->do404('Action not supported.', true); }
 
 	$model = new Forums_Reply($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Reply not found'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Reply not found'); }
 
-	//if ($user->UID != $model->createdBy) { $page->do403('Not your post to edit.'); }
+	//if ($user->UID != $model->createdBy) { $kapenta->page->do403('Not your post to edit.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	update the reply
@@ -29,6 +29,6 @@
 		$session->msg('Changes could not be saved:<br/>' . $report, 'bad');
 	}
 
-	$page->do302('forums/showthread/' . $model->thread);
+	$kapenta->page->do302('forums/showthread/' . $model->thread);
 
 ?>

@@ -7,13 +7,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and permissions
 	//----------------------------------------------------------------------------------------------
-	if ($user->role == 'public') { $page->do403(); }			// public users cannot have friends
+	if ($user->role == 'public') { $kapenta->page->do403(); }			// public users cannot have friends
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('confirmFriendReq' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('friendUID', $_POST)) { $page->do404('No friendUID sent.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('confirmFriendReq' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('friendUID', $_POST)) { $kapenta->page->do404('No friendUID sent.'); }
 	if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID']))
-		{ $page->do404('Friend UID not found.'); }
+		{ $kapenta->page->do404('Friend UID not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	OK, confirm the request
@@ -26,10 +26,10 @@
 	$model = new Users_Friendship();
 	
 	// if friendship already exists
-	if (true == $model->linkExists($user->UID, $_POST['friendUID'])) {$page->do302($retLink);}
+	if (true == $model->linkExists($user->UID, $_POST['friendUID'])) {$kapenta->page->do302($retLink);}
 
 	// if friend request has been withdrawn
-	if (false == $model->linkExists($_POST['friendUID'], $user->UID)) {$page->do302($retLink);}
+	if (false == $model->linkExists($_POST['friendUID'], $user->UID)) {$kapenta->page->do302($retLink);}
 
 	//----------------------------------------------------------------------------------------------
 	//	add return link
@@ -73,6 +73,6 @@
 	//----------------------------------------------------------------------------------------------
 
 	$session->msg('You have confirmed a friend request.', 'ok');
-	$page->do302($retLink);
+	$kapenta->page->do302($retLink);
 
 ?>

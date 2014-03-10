@@ -10,16 +10,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user identity
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('moveImage' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('(Image) UID not given.'); }
-	if (false == array_key_exists('gallery', $_POST)) { $page->do404('(Gallery) UID not given.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('moveImage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('(Image) UID not given.'); }
+	if (false == array_key_exists('gallery', $_POST)) { $kapenta->page->do404('(Gallery) UID not given.'); }
 
 	$model = new Images_Image($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Image not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found.'); }
 
 	$gallery = new Gallery_Gallery($_POST['gallery']);
-	if (false == $gallery->loaded) { $page->do404('Gallery not found.'); }
+	if (false == $gallery->loaded) { $kapenta->page->do404('Gallery not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	move the image
@@ -39,6 +39,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to new gallery
 	//----------------------------------------------------------------------------------------------
-	$page->do302('gallery/' . $gallery->alias);
+	$kapenta->page->do302('gallery/' . $gallery->alias);
 
 ?>

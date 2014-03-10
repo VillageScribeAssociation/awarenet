@@ -10,15 +10,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given'); }
 
 	$model = new Revisions_Deleted($_POST['UID']);
-	if (false == $model->loaded) { $page->do404("Deleted item not found."); }
+	if (false == $model->loaded) { $kapenta->page->do404("Deleted item not found."); }
 
-	if (false == $kapenta->moduleExists($model->refModule)) { $page->do404('Unknown module.'); }
-	if (false == $kapenta->db->tableExists($model->refModel)) { $page->do404('Unknown model / table.'); }
+	if (false == $kapenta->moduleExists($model->refModule)) { $kapenta->page->do404('Unknown module.'); }
+	if (false == $kapenta->db->tableExists($model->refModel)) { $kapenta->page->do404('Unknown model / table.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	restore this object
@@ -42,6 +42,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to deleted items
 	//----------------------------------------------------------------------------------------------
-	$page->do302('revisions/listdeleted/');
+	$kapenta->page->do302('revisions/listdeleted/');
 
 ?>

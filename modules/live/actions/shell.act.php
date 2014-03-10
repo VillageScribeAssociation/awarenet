@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403('Please log in to use the shell.', true); }	
+	if ('public' == $user->role) { $kapenta->page->do403('Please log in to use the shell.', true); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page  //TODO: make a generic window template

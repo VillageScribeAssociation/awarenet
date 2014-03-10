@@ -4,7 +4,7 @@
 //*	action to earch for and replace binary unsafe string functions
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$mbfns = array(
 		'strpos' => 'mb_strpos',

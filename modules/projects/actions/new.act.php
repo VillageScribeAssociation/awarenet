@@ -10,9 +10,9 @@
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('projects', 'projects_project', 'new')) 
-		{ $page->do403('you are not authorized to create new projects'); }
+		{ $kapenta->page->do403('you are not authorized to create new projects'); }
 
-	if ('public' == $user->role) { $page->do403('Only registered users can create projects.'); }
+	if ('public' == $user->role) { $kapenta->page->do403('Only registered users can create projects.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	create project
@@ -24,7 +24,7 @@
 		$model->title = $utils->cleanTitle($_POST['title']);
 		if ('' == $model->title)  {
 			$session->msg("Please choose a name to create your project with.", 'bad');
-			$page->do302('projects/');
+			$kapenta->page->do302('projects/');
 		}
 	}
 
@@ -49,6 +49,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect to edit page
 	//----------------------------------------------------------------------------------------------
-	$page->do302('projects/edit/' . $model->alias);
+	$kapenta->page->do302('projects/edit/' . $model->alias);
 
 ?>

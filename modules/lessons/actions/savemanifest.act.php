@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST args and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('No UID given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('No UID given'); }
 
 	$model = new Lessons_Course($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Unknown course.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Unknown course.'); }
 
 	//echo "<textarea rows='40' cols='100'>";
 	//print_r($_POST);
@@ -33,9 +33,9 @@
 	$check = $model->save();
 
 	if (true == $check) {
-		$page->do302('lessons/editmanifest/' . $model->UID);
+		$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 	} else {
-		$page->do404('Could not save manifest.');
+		$kapenta->page->do404('Could not save manifest.');
 	}
 
 	//echo "<textarea rows='40' cols='100'>" . $model->toXml() . "</textarea>\n";

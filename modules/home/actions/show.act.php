@@ -10,30 +10,30 @@
 	//	check references and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $kapenta->request->ref = 'frontpage'; }
-	$UID = $aliases->findRedirect('home_static');
+	$UID = $kapenta->aliases->findRedirect('home_static');
 	$model = new Home_Static($UID);
 	if (false == $model->loaded) {
-		if ('frontpage' == $kapenta->request->ref) { $page->do404('no front page'); }
-		else { $page->do404('page not found'); }
+		if ('frontpage' == $kapenta->request->ref) { $kapenta->page->do404('no front page'); }
+		else { $kapenta->page->do404('page not found'); }
 	}
 
-	if (false == $user->authHas('home', 'home_static', 'show', $UID)) { $page->do403();}
+	if (false == $user->authHas('home', 'home_static', 'show', $UID)) { $kapenta->page->do403();}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->template = 'twocol-rightnav.template.php';
-	$page->content = $model->content;
-	$page->nav1 = $model->nav1;
-	$page->nav2 = $model->nav2;
-	$page->menu1 = $model->menu1;
-	$page->menu2 = $model->menu2;
-	$page->title = $model->title;
-	$page->script = $model->script;
-	$page->breadcrumb = $model->breadcrumb;
+	$kapenta->page->template = 'twocol-rightnav.template.php';
+	$kapenta->page->content = $model->content;
+	$kapenta->page->nav1 = $model->nav1;
+	$kapenta->page->nav2 = $model->nav2;
+	$kapenta->page->menu1 = $model->menu1;
+	$kapenta->page->menu2 = $model->menu2;
+	$kapenta->page->title = $model->title;
+	$kapenta->page->script = $model->script;
+	$kapenta->page->breadcrumb = $model->breadcrumb;
 
 	if ('admin' == $user->role) { 
-		$page->content .= "<br/><a href='/home/edit/" . $model->alias
+		$kapenta->page->content .= "<br/><a href='/home/edit/" . $model->alias
 					. "'>[edit static page]</a><br/>\n";
 	}
 	

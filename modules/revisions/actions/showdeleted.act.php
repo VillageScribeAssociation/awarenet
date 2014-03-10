@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) {$page->do403(); }
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('admin' != $user->role) {$kapenta->page->do403(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 
 	$model = new Revisions_Deleted($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

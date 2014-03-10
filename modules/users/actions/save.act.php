@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
-	if ('saveUserRecord' != $_POST['action']) { $page->do404('Action not supported.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
+	if ('saveUserRecord' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed.'); }
 
 	$model = new Users_User($_POST['UID']);	
-	if (false == $model->loaded) { $page->do404('User not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('User not found.'); }
 	$oldRole = $model->role;
 
 	//----------------------------------------------------------------------------------------------
@@ -53,8 +53,8 @@
 		if ('' == $report) { $session->msg('User account updated.', 'ok'); }
 		else { $session->msg($report, 'bad'); }
 
-		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-		$page->do302('users/profile/' . $model->alias);
+		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+		$kapenta->page->do302('users/profile/' . $model->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@
 	//----------------------------------------------------------------------------------------------
 	if (($user->UID == $_POST['UID']) AND ('admin' != $user->role)) {
 		$model = new Users_User($_POST['UID']);
-		if (false == $model->loaded) { $page->do404("Could not load User " . $model->UID);}
+		if (false == $model->loaded) { $kapenta->page->do404("Could not load User " . $model->UID);}
 		foreach($_POST as $field => $value) {
 			switch(strtolower($field)) {
 				case 'firstname':	$model->firstname = $utils->cleanString($value); 	break;
@@ -75,8 +75,8 @@
 		if ('' == $report) { $session->msg('Your account has been updated.', 'ok'); }
 		else { $session->msg($report, 'bad'); }
 		
-		if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-		$page->do302('users/profile/' . $model->alias);		
+		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+		$kapenta->page->do302('users/profile/' . $model->alias);		
 
 	}
 

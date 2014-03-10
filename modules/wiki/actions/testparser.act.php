@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->request->ref = 'Pink'; }
 
 	$model = new Wiki_Article($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference

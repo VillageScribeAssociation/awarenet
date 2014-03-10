@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Admins only', true); }
+	if ('admin' != $user->role) { $kapenta->page->do403('Admins only', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	change association if submitted
@@ -29,7 +29,7 @@
 			}
 			if (false == $kapenta->moduleExists($module)) {
 				$allOk = false;
-				$page->do404('Unknown module: ' . $module);
+				$kapenta->page->do404('Unknown module: ' . $module);
 			}
 
 			if (true == $allOk) {

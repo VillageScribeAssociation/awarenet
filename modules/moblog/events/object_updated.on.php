@@ -115,10 +115,10 @@ function moblog__cb_object_updated($args) {
 	/*
 	if ('moblog' == $args['module']) {
 		$kapenta->logLive('in moblog callback, setting triggers ');
-		$page->doTrigger('moblog', 'post-any');
-		$page->doTrigger('moblog', 'post-' . $args['UID']);
+		// $kapenta->page->doTrigger('moblog', 'post-any');
+		// $kapenta->page->doTrigger('moblog', 'post-' . $args['UID']);
 		if (true == array_key_exists('createdBy', $args['data'])) {
-			$page->doTrigger('moblog', 'post-by-' . $args['data']['createdBy']);
+			// $kapenta->page->doTrigger('moblog', 'post-by-' . $args['data']['createdBy']);
 		}
 	}
 	*/

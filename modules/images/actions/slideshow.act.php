@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 
 	if (false == array_key_exists('refModule', $kapenta->request->args))
-		{ $page->do404('refModule not given', true); }
+		{ $kapenta->page->do404('refModule not given', true); }
 
 	if (false == array_key_exists('refModel', $kapenta->request->args))
-		{ $page->do404('refModel not given', true); }
+		{ $kapenta->page->do404('refModel not given', true); }
 
 	if (false == array_key_exists('refUID', $kapenta->request->args))
-		{ $page->do404('refUID not given', true); }
+		{ $kapenta->page->do404('refUID not given', true); }
 
 	$refModule = $kapenta->request->args['refModule'];
 	$refModel = $kapenta->request->args['refModel'];
@@ -80,7 +80,7 @@
 	$html = $img . $nav;
 		
 	$kapenta->page->load('modules/images/actions/slideshow.page.php');
-	$page->content = $html;
+	$kapenta->page->content = $html;
 	$kapenta->page->render();
 
 ?>

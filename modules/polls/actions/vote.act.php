@@ -13,14 +13,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('question', $_POST)) { $page->do404('Question not specified'); }
-	if (false == array_key_exists('answer', $_POST)) { $page->do404('Answer not specified'); }
+	if (false == array_key_exists('question', $_POST)) { $kapenta->page->do404('Question not specified'); }
+	if (false == array_key_exists('answer', $_POST)) { $kapenta->page->do404('Answer not specified'); }
 
 	$question = new Polls_Question($_POST['question']);
-	if (false == $question->loaded) { $page->do404('Question not found.'); }
+	if (false == $question->loaded) { $kapenta->page->do404('Question not found.'); }
 
 	$answer = new Polls_Answer($_POST['answer']);
-	if (false == $answer->loaded) { $page->do404('Unkown Answer.'); }
+	if (false == $answer->loaded) { $kapenta->page->do404('Unkown Answer.'); }
 
 	$refModule = $question->refModule;
 	$refModel = $question->refModel;
@@ -40,7 +40,7 @@
 
 	if (true == $question->hasVoted($user->UID)) {
 		$session->msg("You have already voted in this poll.", 'bad');
-		$page->do302($returnUrl);
+		$kapenta->page->do302($returnUrl);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -60,6 +60,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to owner
 	//----------------------------------------------------------------------------------------------
-	$page->do302($returnUrl);
+	$kapenta->page->do302($returnUrl);
 
 ?>

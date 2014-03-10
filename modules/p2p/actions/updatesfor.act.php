@@ -9,10 +9,10 @@
 
 	header('Content-type: text/plain');
 
-	if ('' == $kapenta->request->ref) { $page->doXmlError('Peer not given.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->doXmlError('Peer not given.'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);
-	if (false == $peer->loaded) { $page->doXmlError('Could not load peer.'); }
+	if (false == $peer->loaded) { $kapenta->page->doXmlError('Could not load peer.'); }
 
 	$updates = new P2P_Updates($peer->UID);
 

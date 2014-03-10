@@ -90,12 +90,12 @@ class KMemcache {
 			$objStr = $this->mc->get($key);
 			if (false == $objStr) {
 				if ((true == isset($kapenta->page)) && (true == $kapenta->page->logDebug)) {
-					$page->logDebugItem('memcached', "cache miss: $key (cacheGet)");
+					$kapenta->page->logDebugItem('memcached', "cache miss: $key (cacheGet)");
 				}
 				return '';
 			}					//	no such key
 
-			if ((true == isset($page)) && (true == $page->logDebug)) {
+			if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
 				$kapenta->page->logDebugItem('memcached', "cache hit: $key (cacheGet)");
 			}
 			return $objStr;
@@ -127,7 +127,7 @@ class KMemcache {
 		}
 
 		if ((true == isset($kapenta->page)) && (true == $kapenta->page->logDebug)) {
-			$page->logDebugItem('memcached', "cache hit: $key (cacheHas)");
+			$kapenta->page->logDebugItem('memcached', "cache hit: $key (cacheHas)");
 		}
 		return true;
 	}

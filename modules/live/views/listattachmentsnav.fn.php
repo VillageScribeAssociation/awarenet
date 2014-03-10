@@ -12,7 +12,7 @@ function live_listattachmentsnav($args) {
 	global $kapenta;
 	global $kapenta;
 	global $user;
-	global $page;
+	global $kapenta;
 	
 	$html = '';				//%	return value
 
@@ -35,10 +35,10 @@ function live_listattachmentsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$page->requireJs($kapenta->serverPath . 'modules/live/js/attachments.js');
-	$page->requireJs($kapenta->serverPath . 'modules/images/js/editor.js');
-	$page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
-	$page->requireJs($kapenta->serverPath . 'modules/files/js/editor.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/live/js/attachments.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/images/js/editor.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
+	$kapenta->page->requireJs($kapenta->serverPath . 'modules/files/js/editor.js');
 
 	$displaySet = explode(',', $display);
 

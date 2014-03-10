@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }	// only admins may perform these actions
+	if ('admin' != $user->role) { $kapenta->page->do403(); }	// only admins may perform these actions
 
 	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 		//------------------------------------------------------------------------------------------
 
 		$mods = $kapenta->listModules();
-		if (false == in_array($kapenta->request->ref, $mods)) { $page->do404(); }	// no such module
+		if (false == in_array($kapenta->request->ref, $mods)) { $kapenta->page->do404(); }	// no such module
 
 		$kapenta->page->load('modules/admin/actions/runmaintenance.page.php');
 		$kapenta->page->blockArgs['modName'] = $kapenta->request->ref;

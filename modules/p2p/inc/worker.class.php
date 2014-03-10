@@ -371,7 +371,7 @@ class P2P_Worker {
 				$updates = new P2P_Updates($peer->UID);
 
 				$myUID = $kapenta->registry->get('p2p.server.uid');
-				if ('' == $myUID) { $page->doXmlError('this peer does not have a UID'); }
+				if ('' == $myUID) { $kapenta->page->doXmlError('this peer does not have a UID'); }
 
 				//----------------------------------------------------------------------------------
 				//	first look for any locked files, by priority (complete batches, more efficent)

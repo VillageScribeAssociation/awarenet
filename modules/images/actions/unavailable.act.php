@@ -22,6 +22,6 @@
 			if (true == $kapenta->fs->exists($testFile)) { $size = $kapenta->request->args['s']; }
 	}
 
-	$page->do302('data/images/unavailable/unavailable_' . $size . '.jpg');
+	$kapenta->page->do302('data/images/unavailable/unavailable_' . $size . '.jpg');
 
 ?>

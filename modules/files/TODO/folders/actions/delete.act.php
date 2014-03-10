@@ -4,7 +4,7 @@
 //	delete a record
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }
 
 	if ( (array_key_exists('action', $_POST)) 
 	  AND ($_POST['action'] == 'deleteRecord') 
@@ -20,8 +20,8 @@
 		
 		$model->delete();
 		
-		$page->do302('folder/');
+		$kapenta->page->do302('folder/');
 	  
-	} else { $page->do404(); }
+	} else { $kapenta->page->do404(); }
 
 ?>

@@ -7,21 +7,21 @@
 //*	current user is requesting to join a project
 //--------------------------------------------------------------------------------------------------
 	
-	if ('public' == $user->role) { $page->do403(); }	// public and banned users can't do this	
+	if ('public' == $user->role) { $kapenta->page->do403(); }	// public and banned users can't do this	
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
-	if ('askToJoin' != $_POST['action']) { $page->do404('Action not supported.'); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('Project not specified (UID).'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
+	if ('askToJoin' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Project not specified (UID).'); }
 
 	$project = new Projects_Project($_POST['UID']);	
-	if (false == $project->loaded) { $page->do403(); }
+	if (false == $project->loaded) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check for an existing request
 	//----------------------------------------------------------------------------------------------
 	if (true == $project->memberships->hasAsked($user->UID)) {
 		$session->msg('You have already asked to join this project.', 'bad');
-		$page->do302('projects/' . $project->alias); 
+		$kapenta->page->do302('projects/' . $project->alias); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -64,6 +64,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	return to project page
 	//----------------------------------------------------------------------------------------------
-	$page->do302('projects/' . $project->alias);
+	$kapenta->page->do302('projects/' . $project->alias);
 
 ?>

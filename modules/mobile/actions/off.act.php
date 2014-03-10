@@ -17,7 +17,7 @@
 	//	redirect to front page or user notifications
 	//----------------------------------------------------------------------------------------------
 
-	if (('public' == $user->role) || ('banned' == $user->role)) { $page->do302('/'); }
-	$page->do302('notifications/');
+	if (('public' == $user->role) || ('banned' == $user->role)) { $kapenta->page->do302('/'); }
+	$kapenta->page->do302('notifications/');
 
 ?>

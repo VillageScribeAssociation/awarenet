@@ -12,7 +12,7 @@
 function moblog_show($args) {
 	global $theme;
 	global $user;
-	global $page;
+	global $kapenta;
 
 	$html = '';				//% return value [string]
 
@@ -38,7 +38,7 @@ function moblog_show($args) {
 	//	set AJAX triggers
 	//----------------------------------------------------------------------------------------------
 	$channel = 'post-' . $model->UID;
-	$page->setTrigger('moblog', $channel, $args['rawblock']);
+	// $kapenta->page->setTrigger('moblog', $channel, $args['rawblock']);
 
 	return $html;
 }

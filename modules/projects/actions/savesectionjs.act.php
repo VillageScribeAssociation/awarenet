@@ -15,23 +15,23 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('UID', $_POST)) { $page->doXmlError('UID not specified'); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->doXmlError('UID not specified'); }
 
 	$model = new Projects_Section($_POST['UID']);
-	if (false == $model->loaded) { $page->doXmlError('Project section not found.'); }
+	if (false == $model->loaded) { $kapenta->page->doXmlError('Project section not found.'); }
 
 	$project = new Projects_Project($model->projectUID);
-	if (false == $project->loaded) { $page->doXmlError('Project not found.'); }
+	if (false == $project->loaded) { $kapenta->page->doXmlError('Project not found.'); }
 
 	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
-		$page->doXmlError('You are not authorized to edit this section.'); 
+		$kapenta->page->doXmlError('You are not authorized to edit this section.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	check lock
 	//----------------------------------------------------------------------------------------------
 	//if ($user->UID != $model->checkLock()) {
-	//	$page->do403('Could not save, you do not own the lock on this section.');
+	//	$kapenta->page->do403('Could not save, you do not own the lock on this section.');
 	//}
 
 	//----------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@
 	if ('' == $report) {
 		//$session->msg('Updated project section: ' . $model->title, 'ok');
 	} else {
-		$page->doXmlError('Could not save section:<br/>' . $report, 'bad');
+		$kapenta->page->doXmlError('Could not save section:<br/>' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to project page
 	//----------------------------------------------------------------------------------------------
-	//$page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
+	//$kapenta->page->do302('projects/show/' . $project->alias . '#s' . $model->UID);
 
 	echo "<ok/>";
 	die();

@@ -11,9 +11,9 @@
 	//---------------------------------------------------------------------------------------------- 
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('module', $kapenta->request->args)) { $page->doXmlError('Module not given'); }
-	if (false == array_key_exists('model', $kapenta->request->args)) { $page->doXmlError('Model not given'); }
-	if (false == array_key_exists('uid', $kapenta->request->args)) { $page->doXmlError('UID not given'); }
+	if (false == array_key_exists('module', $kapenta->request->args)) { $kapenta->page->doXmlError('Module not given'); }
+	if (false == array_key_exists('model', $kapenta->request->args)) { $kapenta->page->doXmlError('Model not given'); }
+	if (false == array_key_exists('uid', $kapenta->request->args)) { $kapenta->page->doXmlError('UID not given'); }
 
 	$size = 'width300';			// default
 	if (true == array_key_exists('s', $kapenta->request->args)) { $size = $kapenta->request->args['s']; }
@@ -31,11 +31,11 @@
 	if (0 == count($range)) {
 		// display 'not found' image
 		//TODO: fix this up
-		$page->do302("images/s_" . $size . "/" . $kapenta->createUID()); 
+		$kapenta->page->do302("images/s_" . $size . "/" . $kapenta->createUID()); 
 
 	} else {
 		$item = array_pop($range);
-		$page->do302("images/s_" . $size . "/" . $item['alias']); 
+		$kapenta->page->do302("images/s_" . $size . "/" . $item['alias']); 
 	}
 
 

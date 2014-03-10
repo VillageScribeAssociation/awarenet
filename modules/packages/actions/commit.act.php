@@ -17,12 +17,12 @@
 	$packageUID = '';
 	$message = '';
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	if (true == array_key_exists('message', $_POST)) { $message = $_POST['message']; }
 	if (true == array_key_exists('UID', $kapenta->request->args)) { $packageUID = $kapenta->request->args['UID']; }
 
-	if ('' == $packageUID) { $page->do404('Package UID not given.'); }
+	if ('' == $packageUID) { $kapenta->page->do404('Package UID not given.'); }
 
 	$package = new KPackage($packageUID);
 	$um = new KUpdateManager();
@@ -49,7 +49,7 @@
 
 	$ext = $package->extArray();
 	if ('' == $ext['username']) {
-		$page->do404('No credentials, cannot update repository.', true);
+		$kapenta->page->do404('No credentials, cannot update repository.', true);
 	}
 
 	//----------------------------------------------------------------------------------------------

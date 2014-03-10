@@ -10,12 +10,12 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('UID', $kapenta->request->args))
-		{ $page->do404('Calendar entry not specified.'); }
+		{ $kapenta->page->do404('Calendar entry not specified.'); }
 
 	$model = new Calendar_Entry($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404('Calendar entry not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Calendar entry not found.'); }
 	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
-		{ $page->do403('You are not authorized to delete this calendar entry.'); }
+		{ $kapenta->page->do403('You are not authorized to delete this calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the confirmation block and redirect to the entry page
@@ -26,6 +26,6 @@
 	$html = $theme->replaceLabels($labels, $block);
 	
 	$session->msg($html, 'warn');
-	$page->do302('calendar/' . $model->alias);
+	$kapenta->page->do302('calendar/' . $model->alias);
 
 ?>

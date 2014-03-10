@@ -13,7 +13,7 @@ function comments_show($args) {
 	global $theme;
 	global $user;
 	global $session;
-	global $page;
+	global $kapenta;
 	
 	$html = '';							//%	return value [string]
 
@@ -30,7 +30,7 @@ function comments_show($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$page->requireJs('%%serverPath%%modules/comments/js/comments.js');
+	$kapenta->page->requireJs('%%serverPath%%modules/comments/js/comments.js');
 
 	$block = $theme->loadBlock('modules/comments/views/show.block.php');
 

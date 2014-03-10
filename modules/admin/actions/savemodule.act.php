@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('module', $_POST)) { $page->do404('Module not supplied.'); }
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.'); }
+	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not supplied.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
 
 	$module = new KModule($_POST['module']);
-	if (false == $module->loaded) { $page->do404('Could not load module.'); }	
+	if (false == $module->loaded) { $kapenta->page->do404('Could not load module.'); }	
 
 	switch($_POST['action']) { 
 
@@ -40,7 +40,7 @@
 			//	save default permission set	//TODO check format, etc
 			//--------------------------------------------------------------------------------------
 			$defperms = array();
-			if (false == array_key_exists('defaultpermissions', $_POST)) { $page->do404(); }
+			if (false == array_key_exists('defaultpermissions', $_POST)) { $kapenta->page->do404(); }
 			$lines = explode("\n", $_POST['defaultpermissions']);
 			foreach($lines as $line) {
 				$session->msg('line: ' . $line);
@@ -53,7 +53,7 @@
 			break;	//..............................................................................
 
 		default:
-			$page->do404('Action not recognized');
+			$kapenta->page->do404('Action not recognized');
 			break;	//..............................................................................
 
 	}
@@ -61,6 +61,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to edit form
 	//----------------------------------------------------------------------------------------------
-	$page->do302('admin/editmodule/' . $module->modulename);
+	$kapenta->page->do302('admin/editmodule/' . $module->modulename);
 
 ?>

@@ -4,7 +4,7 @@
 //	save a code entry
 //--------------------------------------------------------------------------------------------------
 
-	if (authHas('code', 'edit', '') == false) { $page->do403(); }
+	if (authHas('code', 'edit', '') == false) { $kapenta->page->do403(); }
 	require_once($kapenta->installPath . 'modules/code/models/code.mod.php');
 	require_once($kapenta->installPath . 'modules/code/models/coderevision.mod.php');
 
@@ -29,7 +29,7 @@
 			$c->data['content'] = $_POST['content'];
 			$c->data['author'] = $user->UID;
 			$c->save();
-			$page->do302('code/' . $c->data['recordAlias']);
+			$kapenta->page->do302('code/' . $c->data['recordAlias']);
 
 		}
 
@@ -37,7 +37,7 @@
 		//	save from edit form
 		//------------------------------------------------------------------------------------------
 		if ($_POST['action'] == 'saveCodeRecord') {
-			if ($kapenta->db->objectExists('code', $_POST['UID']) == false) { $page->do404(); }
+			if ($kapenta->db->objectExists('code', $_POST['UID']) == false) { $kapenta->page->do404(); }
 			$c = new Code($_POST['UID']);
 
 			//--------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@
 			$c->data['revision'] = ($c->data['revision'] + 1);
 			$c->save();
 			$session->msg("Updated code record.<br/>\n");
-			$page->do302('code/' . $c->data['recordAlias']);
+			$kapenta->page->do302('code/' . $c->data['recordAlias']);
 			
 		}
 
@@ -89,7 +89,7 @@
 			$c->data['content'] = '';
 			$c->data['author'] = $user->UID;
 			$c->save();
-			$page->do302('code/' . $c->data['UID']);
+			$kapenta->page->do302('code/' . $c->data['UID']);
 
 		}
 	}

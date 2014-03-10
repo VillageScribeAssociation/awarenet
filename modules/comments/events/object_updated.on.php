@@ -28,17 +28,17 @@ function comments__cb_object_updated($args) {
 	//---------------------------------------------------------------------------------------------
 	if ('comments' == $args['module']) {
 		$kapenta->logLive('in comments callback, setting triggers ');
-		$page->doTrigger('comments', 'comment-any');
+		// $kapenta->page->doTrigger('comments', 'comment-any');
 
 		if ((true == array_key_exists('refModel', $args['data']))
 			&& (true == array_key_exists('refUID', $args['data']))) {
 			$channel = 'comment-' . $args['data']['refModel'] . '-' . $args['data']['refUID'];
 			$kapenta->logLive('setting trigger on channel: ' . $channel );
-			$page->doTrigger('comments', $channel);
+			// $kapenta->page->doTrigger('comments', $channel);
 		}
 
 		if (true == array_key_exists('createdBy', $args['data'])) {
-			$page->doTrigger('comments', 'comment-by-' . $args['data']['createdBy']);
+			// $kapenta->page->doTrigger('comments', 'comment-by-' . $args['data']['createdBy']);
 		}
 	}
 

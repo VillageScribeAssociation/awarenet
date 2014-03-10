@@ -11,13 +11,13 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: check user auth
 
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('files_file');
 
 	$model = new Files_File($UID);
-	if (false == $model->loaded) { $page->do404('File not found.'); }
-	if ('' == $model->fileName) { $page->do404('File nto found'); }
-	if (false == file_exists($kapenta->installPath . $model->fileName)) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404('File not found.'); }
+	if ('' == $model->fileName) { $kapenta->page->do404('File nto found'); }
+	if (false == file_exists($kapenta->installPath . $model->fileName)) { $kapenta->page->do404(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	return the file

@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	define default file associations
@@ -68,10 +68,10 @@
 	//	add a preset image size
 	//----------------------------------------------------------------------------------------------
 	if ((true == array_key_exists('action', $_POST)) && ('addPreset' == $_POST['action'])) {
-		if (false == array_key_exists('label', $_POST)) { $page->do404('Label not given'); }
-		if (false == array_key_exists('width', $_POST)) { $page->do404('Width not given'); }
-		if (false == array_key_exists('height', $_POST)) { $page->do404('Height not given'); }
-		if (false == array_key_exists('watermark', $_POST)) { $page->do404('WM not given'); }
+		if (false == array_key_exists('label', $_POST)) { $kapenta->page->do404('Label not given'); }
+		if (false == array_key_exists('width', $_POST)) { $kapenta->page->do404('Width not given'); }
+		if (false == array_key_exists('height', $_POST)) { $kapenta->page->do404('Height not given'); }
+		if (false == array_key_exists('watermark', $_POST)) { $kapenta->page->do404('WM not given'); }
 		
 		$label = trim(strtolower($_POST['label']));		//TODO: better sanitzation
 		$width = (int)$_POST['width'];
@@ -89,7 +89,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ((true == array_key_exists('action', $_POST)) && ('deletePreset' == $_POST['action'])) {
-		if (false == array_key_exists('label', $_POST)) { $page->do404('Label not given'); }	
+		if (false == array_key_exists('label', $_POST)) { $kapenta->page->do404('Label not given'); }	
 		$label = trim(strtolower($_POST['label']));		//TODO: better sanitzation
 		$kapenta->registry->delete('images.size.' . $label);
 	}

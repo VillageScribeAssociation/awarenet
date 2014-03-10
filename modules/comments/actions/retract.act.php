@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference, permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 
 	$model = new Comments_Comment($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	$authorised = false;
 
@@ -25,7 +25,7 @@
 	if (true == $user->authHas($model->refModule, $model->refModel, 'comments-retract', $model->refUID)) 
 		{ $authorised = true; }
 
-	if (false == $authorised) { $page->do403(); }
+	if (false == $authorised) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	blank the comment body
@@ -47,8 +47,8 @@
 		$referer = str_replace($kapenta->serverPath, '', $referer);
 		$referer = str_replace('//', '/', $referer);
 		if (substr($referer, 0, 1) == '/') { $referer = substr($referer, 1); }
-		$page->do302($referer);
+		$kapenta->page->do302($referer);
 
-	} else { $page->do302('users/profile/'); }
+	} else { $kapenta->page->do302('users/profile/'); }
 
 ?>

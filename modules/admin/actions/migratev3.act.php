@@ -57,12 +57,33 @@
         '$db->createTable(' => '$kapenta->db->createTable(',
         '$db->count' => '$kapenta->db->count',
         '$db->time' => '$kapenta->db->time',
+        '$db->name' => '$kapenta->db->name',
+        '$db->tables' => '$kapenta->db->tables',
+        '$db->unserialize(' => '$kapenta->db->unserialize(',
+        '$db->transactionStart(' => '$kapenta->db->transactionStart(',
+        '$db->transactionEnd(' => '$kapenta->db->transactionEnd(',
 
         'global $page;' => 'global $kapenta;',
 		'$page->blockArgs[' => '$kapenta->page->blockArgs[',
 		'$page->load(' => '$kapenta->page->load(',
 		'$page->render(' => '$kapenta->page->render(',
-
+		'$page->do404(' => '$kapenta->page->do404(',
+        '$page->do403(' => '$kapenta->page->do403(',
+        '$page->do302(' => '$kapenta->page->do302(',
+        '$page->do301(' => '$kapenta->page->do301(',
+        '$page->doXmlError(' => '$kapenta->page->doXmlError(',
+        '$page->doTrigger(' => '// $kapenta->page->doTrigger(',
+        '$page->setTrigger(' => '// $kapenta->page->setTrigger(',
+        '$page->allowBlockArgs(' => '$kapenta->page->allowBlockArgs(',
+        '$page->title' => '$kapenta->page->title',
+        '$page->UID' => '$kapenta->page->UID',
+        '$page->jsinit' => '$kapenta->page->jsinit',
+        '$page->requireJs' => '$kapenta->page->requireJs',
+        '$page->requireCss' => '$kapenta->page->requireCss',
+        '$page->logDebug(' => '$kapenta->page->logDebug(',
+        '$page->save(' => '$kapenta->page->save(',
+        '$page->content' => '$kapenta->page->content',
+        
 	);
 
 	//----------------------------------------------------------------------------------------------

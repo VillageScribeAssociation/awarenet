@@ -12,7 +12,7 @@
 	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->UID; }
 	
 	$model = new Users_User($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 	//TODO: permissions check here (same as profile?)
 
 	//----------------------------------------------------------------------------------------------
@@ -27,8 +27,8 @@
 	$kapenta->page->blockArgs['userUID'] = $model->UID;
 	$kapenta->page->blockArgs['userName'] = $model->getName();
 
-	$page->menu2 = "[[:users::menu::userUID=" . $model->UID . ":]]";
-	$page->title = 'awareNet - ' . $model->getName() . ' (classmates )';
+	$kapenta->page->menu2 = "[[:users::menu::userUID=" . $model->UID . ":]]";
+	$kapenta->page->title = 'awareNet - ' . $model->getName() . ' (classmates )';
 
 	$kapenta->page->render();
 

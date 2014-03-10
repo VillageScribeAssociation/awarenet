@@ -4,9 +4,9 @@
 //	save a folder entry
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
-	if (array_key_exists('UID', $_POST) == false) { $page->do404(); }
-	if ($kapenta->db->objectExists('folders', $_POST['UID']) == false) { $page->do404(); }
+	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }
+	if (array_key_exists('UID', $_POST) == false) { $kapenta->page->do404(); }
+	if ($kapenta->db->objectExists('folders', $_POST['UID']) == false) { $kapenta->page->do404(); }
 
 	require_once($kapenta->installPath . 'modules/folders/models/folder.mod.php');
 
@@ -19,7 +19,7 @@
 	$authorised = false;
 	if ($model->createdBy == $user->UID) { $authorised = true; }
 	if ('admin' == $user->role) { $authorised = false; }
-	if ($authorised == false) { $page->do403(); }
+	if ($authorised == false) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	authorised, save any changes
@@ -30,6 +30,6 @@
 	$model->description = $_POST['description'];	// not currently used
 	$model->save();
 
-	$page->do302('folders/' . $model->alias);
+	$kapenta->page->do302('folders/' . $model->alias);
 
 ?>

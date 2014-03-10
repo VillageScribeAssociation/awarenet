@@ -11,18 +11,18 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('fromThread', $_POST)) { $page->do404('fromThread not POSTed'); }
-	if (false == array_key_exists('toThread', $_POST)) { $page->do404('toThread not POSTed'); }
+	if (false == array_key_exists('fromThread', $_POST)) { $kapenta->page->do404('fromThread not POSTed'); }
+	if (false == array_key_exists('toThread', $_POST)) { $kapenta->page->do404('toThread not POSTed'); }
 
 	$fromThread = new Forums_Thread($_POST['fromThread']);
-	if (false == $fromThread->loaded) { $page->do404('No such fromThread.'); }	
+	if (false == $fromThread->loaded) { $kapenta->page->do404('No such fromThread.'); }	
 
 	$toThread = new Forums_Thread($_POST['toThread']);
-	if (false == $toThread->loaded) { $page->do404('No such toThread.'); }	
+	if (false == $toThread->loaded) { $kapenta->page->do404('No such toThread.'); }	
 
-	if ($fromThread->UID == $toThread->UID) { $page->do404('Cannot merge thread with itself.'); }
+	if ($fromThread->UID == $toThread->UID) { $kapenta->page->do404('Cannot merge thread with itself.'); }
 
 	$msg = "<br/><div class='inlinequote'>Moved by " . $user->getNameLink()
 		 . " on " . $kapenta->db->datetime() . "</div>";
@@ -98,6 +98,6 @@
 	//	redirect to merged thread
 	//----------------------------------------------------------------------------------------------
 
-	$page->do302('forums/showthread/' . $toThread->alias);
+	$kapenta->page->do302('forums/showthread/' . $toThread->alias);
 
 ?>

@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------------------
 
 	if (authHas('code', 'edit', '') == false) { do304(); }
-	if ($kapenta->request->ref == '') { $page->do404(); }
+	if ($kapenta->request->ref == '') { $kapenta->page->do404(); }
 	
 	$UID = raFindRedirect('code', 'edit', 'code', $kapenta->request->ref);
 

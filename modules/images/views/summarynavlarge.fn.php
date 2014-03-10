@@ -13,7 +13,7 @@
 function images_summarynavlarge($args) {
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$behavior = 'link';						//%	behavior of links [string]
 	$html = '';								//%	return value [string]
@@ -42,7 +42,7 @@ function images_summarynavlarge($args) {
 	$labels['onClick'] = '';
 
 	if ('editmodal' == $behavior) {
-		$page->requireJs('%%serverPath%%modules/images/js/editor.js');
+		$kapenta->page->requireJs('%%serverPath%%modules/images/js/editor.js');
 		$labels['viewUrl'] = "javascript:Images_EditModal('" . $model->UID . "');";
 		$labels['controls'] = ''
 		 . "<span style='float: right;'>"

@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if (false == $user->authHas('moblog', 'moblog_post', 'show', ''))
-		{ $page->do403('You are not authorized to view blog posts.'); }
+		{ $kapenta->page->do403('You are not authorized to view blog posts.'); }
 
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = floor($kapenta->request->args['page']); }
 

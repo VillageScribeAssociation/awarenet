@@ -12,11 +12,11 @@
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403("Not authorized", true); }
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not given', true); }
+	if ('admin' != $user->role) { $kapenta->page->do403("Not authorized", true); }
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given', true); }
 
 	$model = new Newsletter_Category($_POST['UID']);
-	if (false == $model->loaded) { $page->do404('Category not found', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('Category not found', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that no notices are currently in this category

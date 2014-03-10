@@ -14,15 +14,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$UID = '';				//%	UID of package [string]
 
-	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not given.', true); }
-	if ('removePackage' != $_POST['action']) { $page->do404('Action not recognized.'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.', true); }
+	if ('removePackage' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
 
 	if (true == array_key_exists('UID', $_POST)) { $UID = $_POST['UID']; }
-	if ('' == trim($UID)) { $page->do404('UID not given.'); }
+	if ('' == trim($UID)) { $kapenta->page->do404('UID not given.'); }
 
 	$um = new KUpdateManager();
 	$package = new KPackage($UID);
@@ -60,6 +60,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	done
 	//----------------------------------------------------------------------------------------------
-	$page->do302('packages/');
+	$kapenta->page->do302('packages/');
 
 ?>

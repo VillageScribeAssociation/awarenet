@@ -9,7 +9,7 @@
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
 	if (false == $user->authHas('moblog', 'moblog_post', 'new'))
-		{ $page->do403('You are not authorized to create new Posts.'); }
+		{ $kapenta->page->do403('You are not authorized to create new Posts.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	create the object
@@ -34,11 +34,11 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$session->msg('Created new blog post.<br/>', 'ok');
-		$page->do302('moblog/edit/' . $model->alias);
+		$kapenta->page->do302('moblog/edit/' . $model->alias);
 
 	} else {
 		$session->msg('Could not create new Post:<br/>' . $report);
-		$page->do302('moblog/blog/' . $user->alias);
+		$kapenta->page->do302('moblog/blog/' . $user->alias);
 	}
 
 

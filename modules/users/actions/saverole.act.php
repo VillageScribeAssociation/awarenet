@@ -9,20 +9,20 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('action', $_POST)) { $page->do404('action not specified'); }
-	if ('saveRole' != $_POST['action']) { $page->do404('action not supported'); } 
-	if (false == array_key_exists('UID', $_POST)) { $page->do404('UID not POSTed'); }
+	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
+	if ('saveRole' != $_POST['action']) { $kapenta->page->do404('action not supported'); } 
+	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not POSTed'); }
 
 	$UID = $_POST['UID'];
 
 	if (false == $user->authHas('users', 'users_role', 'edit', $UID))
-		{ $page->do403('You are not authorized to edit this Role.'); }
+		{ $kapenta->page->do403('You are not authorized to edit this Role.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load and update the object
 	//----------------------------------------------------------------------------------------------
 	$model = new Users_Role($UID);
-	if (false == $model->loaded) { $page->do404("could not load Role $UID");}
+	if (false == $model->loaded) { $kapenta->page->do404("could not load Role $UID");}
 
 	foreach($_POST as $field => $value) {
 		switch(strtolower($field)) {
@@ -42,7 +42,7 @@
 		$session->msg('Could not save Role:<br/>' . $report);
 	}
 
-	if (true == array_key_exists('return', $_POST)) { $page->do302($_POST['return']); }
-	else { $page->do302('/users/showrole/' . $model->alias); }
+	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
+	else { $kapenta->page->do302('/users/showrole/' . $model->alias); }
 
 ?>

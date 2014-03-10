@@ -11,8 +11,8 @@
 	//-------------------------------------------------------------------------------------------------
 	//	check arguments and user roles
 	//-------------------------------------------------------------------------------------------------
-	//if ('admin' != $user->role) { $page->do403(); }
-	//if ('' == $kapenta->request->ref) { $page->do404('Peer UID not given'); }
+	//if ('admin' != $user->role) { $kapenta->page->do403(); }
+	//if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$usage_notes = ''
 	 . "Usage: pullfiles.php [peerUID]|[peerName]|[peerUrl]\n"

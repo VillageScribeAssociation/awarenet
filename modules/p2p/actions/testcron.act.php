@@ -6,7 +6,7 @@
 //|	temporary /development action to test p2p cron scripts
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	echo p2p_cron_tenmins();
 	echo p2p_cron_daily();

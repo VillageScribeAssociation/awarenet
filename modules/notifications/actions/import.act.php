@@ -7,7 +7,7 @@
 //	import user notifications from pervious version of module (XML)
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	$conditions = array("1=1");
 	//$conditions[] = "user='admin'";

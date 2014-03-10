@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $page->do403('Please log in to use the chat.', true); }	
+	if ('public' == $user->role) { $kapenta->page->do403('Please log in to use the chat.', true); }	
 
-	if ('' == $kapenta->request->ref) { $page->do404('User not specified.', true); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('User not specified.', true); }
 	$model = new Users_User($kapenta->request->ref);
-	if (false == $model->loaded) { $page->do404('User not found.', true); }
+	if (false == $model->loaded) { $kapenta->page->do404('User not found.', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page  //TODO: make a generic window template

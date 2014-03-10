@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->doXmlError('Package not specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->doXmlError('Package not specified.'); }
 	//TODO: add code to support private and restricted packages (requiring authentication)
 
 	$model = new Code_Package($kapenta->request->ref);
-	if (false == $model->loaded) { $page->doXmlError('Package not found.'); }
+	if (false == $model->loaded) { $kapenta->page->doXmlError('Package not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	return the document - previous, deprecated version (could not handle very large packages)

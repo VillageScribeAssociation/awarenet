@@ -11,11 +11,11 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Schools_School();
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $page->do403(); }
+	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
 
 	if ('' != $kapenta->request->ref) {
 		$model->load($kapenta->request->ref);
-		if (false  == $model->loaded) { $page->do404(); }
+		if (false  == $model->loaded) { $kapenta->page->do404(); }
 
 	} else { $model->load($user->school); }
 
@@ -29,7 +29,7 @@
 	$kapenta->page->blockArgs['schoolUID'] = $model->UID;
 	$kapenta->page->blockArgs['schoolName'] = $model->name;
 	$kapenta->page->blockArgs['schoolRa'] = $model->alias;
-	$page->allowBlockArgs('page,tag');
+	$kapenta->page->allowBlockArgs('page,tag');
 	$kapenta->page->render();
 
 ?>

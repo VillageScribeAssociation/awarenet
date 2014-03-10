@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and form vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
-	if (false == array_key_exists('modulename', $_POST)) { $page->do404('module not specified'); }	
+	if (false == array_key_exists('modulename', $_POST)) { $kapenta->page->do404('module not specified'); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	install the module
@@ -30,7 +30,7 @@
 
 	} else {
 		$model = new KModule($_POST['modulename']);
-		if (false == $model->loaded) { $page->do404('module not found: ' . $_POST['modulename']); }
+		if (false == $model->loaded) { $kapenta->page->do404('module not found: ' . $_POST['modulename']); }
 
 		$report = $model->install();
 	}

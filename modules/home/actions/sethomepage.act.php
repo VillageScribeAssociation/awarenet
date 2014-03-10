@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403('Only admins can perform this action.'); }
+	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can perform this action.'); }
 
-	if (false == array_key_exists('homepage', $_POST)) { $page->do404('No homepage set.'); }
+	if (false == array_key_exists('homepage', $_POST)) { $kapenta->page->do404('No homepage set.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	set registry value
@@ -29,6 +29,6 @@
 	//	redirect back to admin console
 	//----------------------------------------------------------------------------------------------
 
-	$page->do302('admin/');
+	$kapenta->page->do302('admin/');
 
 ?>

@@ -5,13 +5,13 @@
 //--------------------------------------------------------------------------------------------------
 
 	if (('admin' !== $user->role) && ('teacher' !== $user->role)) {
-		$page->do403('You are not permitted to edit this course', true);
+		$kapenta->page->do403('You are not permitted to edit this course', true);
 	}
 
-	if ('' == $kapenta->request->ref) { $page->do404('Course not specified.', true); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Course not specified.', true); }
 
 	if (false = $kapenta->fs->exists('data/lessons/' . $kapenta->request->ref)) {
-		$page->do404('No such course.', true);
+		$kapenta->page->do404('No such course.', true);
 	}
 
 	$kapenta->page->load('modules/lessons/actions/editcourse.page.php');

@@ -4,7 +4,7 @@
 //*	test local memcached installation
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 	error_reporting(E_ALL & ~E_NOTICE);
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');

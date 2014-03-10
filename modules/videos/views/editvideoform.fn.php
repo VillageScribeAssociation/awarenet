@@ -12,7 +12,7 @@ function videos_editvideoform($args) {
 	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$html = '';			//%	return value [html]
 
@@ -58,7 +58,7 @@ function videos_editvideoform($args) {
 	}
 
 	if ((true == array_key_exists('edittags', $args)) && ('yes' == $args['edittags'])) {
-		$page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
+		$kapenta->page->requireJs($kapenta->serverPath . 'modules/videos/js/editor.js');
 		$labels['editTagsLink'] = ''
 		 . "<a href=\"javascript:Videos_EditTags('" . $model->UID . "');\">[edit tags]</a>"
 		 . '';

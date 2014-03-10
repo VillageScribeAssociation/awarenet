@@ -9,13 +9,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	administrators only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load test data
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Project($kapenta->request->ref);
-	//if (false == $model->selectionsLoaded) { $page->do404('could not load project sections', true); }
+	//if (false == $model->selectionsLoaded) { $kapenta->page->do404('could not load project sections', true); }
 
 	foreach($model->sections as $idx => $section) {
 		echo $idx . " -> " . $section['title'] . "(UID: " . $section['UID'] . " weight: " . $section['weight'] . ")<br/>\n";

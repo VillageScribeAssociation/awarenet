@@ -12,17 +12,17 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == array_key_exists('preset', $_POST)) { $page->do404("Preset not specified."); }
-	if (false == array_key_exists('to', $_POST)) { $page->do404("Missing field 'to'"); }
+	if (false == array_key_exists('preset', $_POST)) { $kapenta->page->do404("Preset not specified."); }
+	if (false == array_key_exists('to', $_POST)) { $kapenta->page->do404("Missing field 'to'"); }
 
 	$model = new Users_Preset($_POST['preset']);
-	if (false == $model->loaded) { $page->do404('Preset not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Preset not found.'); }
 
 	if ('self' == $_POST['to']) {
 		$check = $model->applyTo($user->UID);
 		if (true == $check) { $session->msg('Set theme customization: ' . $model->title, 'ok'); }
 		else { $session->msg('Could not set theme customization.', 'bad'); }
-		$page->do302('users/myaccount/');
+		$kapenta->page->do302('users/myaccount/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -30,12 +30,12 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ('user' == $_POST['to']) {
-		if (false == array_key_exists('userRa', $_POST)) { $page->do404('userRa not given'); }
+		if (false == array_key_exists('userRa', $_POST)) { $kapenta->page->do404('userRa not given'); }
 		
 		$toUser = new Users_User($_POST['userRa']);
 		if (false == $toUser->loaded) { 
 			$toUser->loadByName($_POST['userRa']);  		// try load by username if not found
-			if (false == $toUser->loaded) { $page->do404('Unknown User'); }		// give up
+			if (false == $toUser->loaded) { $kapenta->page->do404('Unknown User'); }		// give up
 		}
 
 		$check = $model->applyTo($toUser->UID);
@@ -49,7 +49,7 @@
 			$session->msg($msg, 'bad');
 		}
 
-		$page->do302('users/themepresets/');
+		$kapenta->page->do302('users/themepresets/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -57,8 +57,8 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ('grade' == $_POST['to']) {
-		if (false == array_key_exists('school', $_POST)) { $page->do404('School not given.'); }
-		if (false == array_key_exists('grade', $_POST)) { $page->do404('Grade not given.'); }
+		if (false == array_key_exists('school', $_POST)) { $kapenta->page->do404('School not given.'); }
+		if (false == array_key_exists('grade', $_POST)) { $kapenta->page->do404('Grade not given.'); }
 
 		//------------------------------------------------------------------------------------------
 		//	query database
@@ -84,7 +84,7 @@
 			}
 		}
 
-		$page->do302('users/themepresets/');
+		$kapenta->page->do302('users/themepresets/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@
 	//----------------------------------------------------------------------------------------------
 	
 	if ('school' == $_POST['to']) {
-		if (false == array_key_exists('school', $_POST)) { $page->do404('School not given.'); }
+		if (false == array_key_exists('school', $_POST)) { $kapenta->page->do404('School not given.'); }
 
 		//------------------------------------------------------------------------------------------
 		//	query database
@@ -117,7 +117,7 @@
 			}
 		}
 
-		$page->do302('users/themepresets/');
+		$kapenta->page->do302('users/themepresets/');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -152,6 +152,6 @@
 	//----------------------------------------------------------------------------------------------
 
 	$session->msg("Unrecognized: " . $_POST['to'], 'bad');
-	$page->do302('users/themepresets/');
+	$kapenta->page->do302('users/themepresets/');
 
 ?>

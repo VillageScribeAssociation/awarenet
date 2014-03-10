@@ -9,10 +9,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do302('home/list/'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do302('home/list/'); }
 	$UID = $aliases->findRedirect('home_static');
 	if (false == $user->authHas('home', 'home_static', 'edit', $UID)) 
-		{ $page->do403('you cannot edit this static page'); }
+		{ $kapenta->page->do403('you cannot edit this static page'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

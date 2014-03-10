@@ -4,7 +4,7 @@
 //	API of galleries module. No public actions.
 //--------------------------------------------------------------------------------------------------
 
-if ($user->role == 'public') { $page->doXmlError('not logged in'); }
+if ($user->role == 'public') { $kapenta->page->doXmlError('not logged in'); }
 
 //--------------------------------------------------------------------------------------------------
 //	list records owned by the current user

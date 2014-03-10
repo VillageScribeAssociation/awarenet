@@ -125,7 +125,6 @@ class KAliases {
 	function findRedirect($model) {
 		global $kapenta;
 		global $req;
-		global $page;
 
 		$model = strtolower($model);
 		$safeAlias = strtolower($kapenta->db->addMarkup($req->ref));
@@ -150,7 +149,7 @@ class KAliases {
 				//TODO: use $request object to reconstruct URI, include args
 				$URI = $req->module . '/' . $req->action . '/' . $default;
 				$URI = str_replace('//', '/', $URI);
-				$page->do301($URI);
+				$kapenta->page->do301($URI);
 
 				return '';		//..................................................................
 			}
@@ -169,7 +168,7 @@ class KAliases {
 			//	we have an alias object, find canonical and compare
 			//--------------------------------------------------------------------------------------
 			$canonical = $this->getDefault($model, $item['refUID']);
-			if ($canonical == '') { $page->do404(); }							//	no such object
+			if ($canonical == '') { $kapenta->page->do404(); }							//	no such object
 	
 			//--------------------------------------------------------------------------------------
 			//	cache for next time
@@ -197,7 +196,7 @@ class KAliases {
 				//TODO: use $request object to reconstruct URI, include args
 				$URI = $req->module . '/' . $req->action . '/' . $canonical;
 				$URI = str_replace('//', '/', $URI);
-				$page->do301($URI);
+				$kapenta->page->do301($URI);
 
 			}
 	
@@ -220,7 +219,7 @@ class KAliases {
 			}
 		}
 
-		$page->do404('Could not find aliased item');
+		$kapenta->page->do404('Could not find aliased item');
 		return '';
 	}
 

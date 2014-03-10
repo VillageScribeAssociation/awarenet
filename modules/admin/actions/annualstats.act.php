@@ -4,7 +4,7 @@
 //*	script to compile annual stats for this instance
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $page->do403(); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
 
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]");
 

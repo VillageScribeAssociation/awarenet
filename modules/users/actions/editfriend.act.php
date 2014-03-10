@@ -9,13 +9,13 @@
 	//---------------------------------------------------------------------------------------------
 	//	load the friendship and check identity/permissions
 	//---------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $page->do404(); }
-	if (false == $kapenta->db->objectExists('users_user', $kapenta->request->ref)) { $page->do404(); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
+	if (false == $kapenta->db->objectExists('users_user', $kapenta->request->ref)) { $kapenta->page->do404(); }
 
 	$friendUID = $kapenta->request->ref;
 	$model = new Users_Friendship();
 	$model->loadFriend($user->UID, $friendUID);
-	if (false == $model->loaded) { $page->do404(); }
+	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	render page

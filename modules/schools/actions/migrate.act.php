@@ -10,25 +10,25 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }			//	admins only
+	if ('admin' != $user->role) { $kapenta->page->do403(); }			//	admins only
 
-	if (false == array_key_exists('from', $args)) { $page->do404("Source school not given."); }
-	if (false == array_key_exists('to', $args)) { $page->do404("Destination school not given."); }
-	if (false == array_key_exists('user', $args)) { $page->do404("User(s) not spcified."); }
+	if (false == array_key_exists('from', $args)) { $kapenta->page->do404("Source school not given."); }
+	if (false == array_key_exists('to', $args)) { $kapenta->page->do404("Destination school not given."); }
+	if (false == array_key_exists('user', $args)) { $kapenta->page->do404("User(s) not spcified."); }
 
 	$fromSchool = new Schools_School($_POST['from']);
-	if (false == $fromSchool->loaded) { $page->do404('Source school not found.'); }
+	if (false == $fromSchool->loaded) { $kapenta->page->do404('Source school not found.'); }
 
 	$toSchool = new Schools_School($_POST['to']);
-	if (false == $toSchool->loaded) { $page->do404('Destination school not found.'); }
+	if (false == $toSchool->loaded) { $kapenta->page->do404('Destination school not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	move all users from a school
 	//----------------------------------------------------------------------------------------------
 
 	if ('*' == $_POST['user']) { 
-		$conditions = array("school='" . $db->addMarkup($fromSchool->UID) . "'");
-		$range = $db->loadRange('users_user', '*', $conditions);
+		$conditions = array("school='" . $kapenta->db->addMarkup($fromSchool->UID) . "'");
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 		foreach($range as $item) {
 			
 			$model = new Users_User($item['UID']);
@@ -53,6 +53,6 @@
 	//	TODO: handle other cases
 	//----------------------------------------------------------------------------------------------
 
-	$page->do404("Not yet implemented.");
+	$kapenta->page->do404("Not yet implemented.");
 
 ?>

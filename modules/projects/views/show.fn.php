@@ -13,7 +13,7 @@
 
 function projects_show($args) {
 		global $theme;
-		global $page;
+		global $kapenta;
 		global $user;
 
 	$html = '';				//%	return value [string]

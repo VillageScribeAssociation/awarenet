@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('filehash', $_POST)) { $page->doXmlError('File hash not given'); }
+	if (false == array_key_exists('filehash', $_POST)) { $kapenta->page->doXmlError('File hash not given'); }
 	
 	$errmsg = '';
 
@@ -20,10 +20,10 @@
 	//	load upload manifest and stitch file parts together
 	//----------------------------------------------------------------------------------------------
 	$upload = new Live_Upload($_POST['filehash']);
-	if (false == $upload->loaded) { $page->doXmlError('Manifest not found.'); }
+	if (false == $upload->loaded) { $kapenta->page->doXmlError('Manifest not found.'); }
 	
 	$check = $upload->stitchTogether();
-	if (false == $check) { $page->doXmlError('Could not stitch file together.'); }
+	if (false == $check) { $kapenta->page->doXmlError('Could not stitch file together.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	get extension and discover which module handles files of this type

@@ -60,7 +60,7 @@ function images_listattachmentsnav($args) {
 		//------------------------------------------------------------------------------------------
 		//	show large preview for first two items
 		//------------------------------------------------------------------------------------------
-		$page->requireJs('%%serverPath%%modules/images/js/editor.js');
+		$kapenta->page->requireJs('%%serverPath%%modules/images/js/editor.js');
 		foreach($set->members as $item) {
 			$html .= ''
 			 . "[[:images::summarynavlarge::imageUID=" . $item['UID'] . "::behavior=editmodal:]]";

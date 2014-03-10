@@ -4,7 +4,7 @@
 //	convert all text documents to linux newline format
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->role != 'admin') { $page->do403(); }
+	if ($user->role != 'admin') { $kapenta->page->do403(); }
 	require_once($kapenta->installPath . 'modules/code/models/code.mod.php');
 
 	$sql = "select * from code";

@@ -13,11 +13,11 @@
 	$require = array('recover', 'uid', 'name', 'url', 'pubkey', 'firewalled');
 
 	foreach($require as $key) {
-		if (false == array_key_exists($key, $_POST)) { $page->doXmlError("Missing $key"); }
+		if (false == array_key_exists($key, $_POST)) { $kapenta->page->doXmlError("Missing $key"); }
 	}
 
 	if ($_POST['recover'] != $kapenta->registry->get('kapenta.recoverypassword')) {
-		$page->doXmlError('Invalid password.');
+		$kapenta->page->doXmlError('Invalid password.');
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@
 		echo "<ok/>";
 
 	} else {
-		$page->doXmlError($report);
+		$kapenta->page->doXmlError($report);
 	}
 
 ?>

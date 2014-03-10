@@ -9,11 +9,11 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $page->do403(); }
-	if (false == array_key_exists('UID', $kapenta->request->args)) { $page->do404('UID not given'); }
+	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if (false == array_key_exists('UID', $kapenta->request->args)) { $kapenta->page->do404('UID not given'); }
 
 	$model = new Users_Preset($kapenta->request->args['UID']);
-	if (false == $model->loaded) { $page->do404('Preset not found.'); }
+	if (false == $model->loaded) { $kapenta->page->do404('Preset not found.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make confirmation form
@@ -26,6 +26,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to post to be deleted
 	//----------------------------------------------------------------------------------------------	
-	$page->do302('users/themepresets/' . $model->alias);
+	$kapenta->page->do302('users/themepresets/' . $model->alias);
 
 ?>

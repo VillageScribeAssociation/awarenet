@@ -13,7 +13,7 @@
 function images_imagesetdetail($args) {
 		global $kapenta;
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';					//%	return value [string]
@@ -32,7 +32,7 @@ function images_imagesetdetail($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no owner)'; }
 
 	if (false == $user->authHas($refModule, $refModel, 'images-show', $refUID)) { return ''; }
 	//TODO: check the permission, work out naming convention for inheritance
@@ -41,13 +41,13 @@ function images_imagesetdetail($args) {
 	//	load images from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
 
-	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
-	//     . "' and refUID='" . $db->addMarkup($args['refUID']) . "' order by floor(weight)";
+	//$sql = "select * from Images_Image where refModule='" . $kapenta->db->addMarkup($args['refModule']) 
+	//     . "' and refUID='" . $kapenta->db->addMarkup($args['refUID']) . "' order by floor(weight)";
 	
-	$range = $db->loadRange('images_image', '*', $conditions, 'floor(weight)');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'floor(weight)');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

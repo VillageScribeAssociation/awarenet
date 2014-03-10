@@ -11,7 +11,7 @@
 //opt: isShared - true if object is shared with other peers [bool]
 
 function revisions__cb_object_deleted($args) {
-	global $db;
+	global $kapenta;
 	global $session;
 	global $revisions;
 
@@ -38,7 +38,7 @@ function revisions__cb_object_deleted($args) {
 	//	copy to recycle bin (unless set to 'no' archive)	//TODO: move this to /revisions/
 	//------------------------------------------------------------------------------------------
 	if ((false == array_key_exists('archive', $dbSchema)) || ('no' != $dbSchema['archive'])) {
-		foreach($data as $name => $value) { $data[$name] = $db->addMarkup($value); }
+		foreach($data as $name => $value) { $data[$name] = $kapenta->db->addMarkup($value); }
 		$revisions->recordDeletion($data, $dbSchema, $args['isShared']);
 		//$session->msgAdmin("recording deletion of " . $dbSchema['model'] . '::' . $data['UID']);
 	}

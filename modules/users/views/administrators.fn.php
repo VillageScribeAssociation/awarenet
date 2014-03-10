@@ -5,14 +5,14 @@
 //--------------------------------------------------------------------------------------------------
 
 function users_administrators($args) {
-	global $db;
+	global $kapenta;
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("role='" . $db->addMarkup('admin') . "'");
-	$range = $db->loadRange('users_user', '*', $conditions, 'firstname, surname');
+	$conditions = array("role='" . $kapenta->db->addMarkup('admin') . "'");
+	$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'firstname, surname');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

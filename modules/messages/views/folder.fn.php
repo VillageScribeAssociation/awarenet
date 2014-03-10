@@ -11,8 +11,8 @@
 //opt: num - number of messages to show (default is 50) [string]
 
 function messages_folder($args) {
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -53,17 +53,17 @@ function messages_folder($args) {
 	//	count total records owned by this module
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "owner='" . $db->addMarkup($owner) . "'";
-	$conditions[] = "folder='" . $db->addMarkup($folder) . "'";
+	$conditions[] = "owner='" . $kapenta->db->addMarkup($owner) . "'";
+	$conditions[] = "folder='" . $kapenta->db->addMarkup($folder) . "'";
 
-	$totalItems = $db->countRange('messages_message', $conditions);
+	$totalItems = $kapenta->db->countRange('messages_message', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load page of messages
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageNo - 1) * $num);
-	$range = $db->loadRange('messages_message', '*', $conditions, $orderBy, $num, $start);
+	$range = $kapenta->db->loadRange('messages_message', '*', $conditions, $orderBy, $num, $start);
 
 	//	$sql = "select * from messages "
 	//		 . "where owner='" . $owner . "' and folder='" . $folder . "' "
@@ -133,7 +133,7 @@ function messages_folder($args) {
 
 	$link = '%%serverPath%%messages/inbox/';
 
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	$html = $pagination . $listing . $pagination;

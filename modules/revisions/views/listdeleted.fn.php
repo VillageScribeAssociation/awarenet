@@ -8,7 +8,7 @@
 //opt: num - number of objects per page, default is 50 (int) [string]
 
 function revisions_listdeleted($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 		global $revisions;
@@ -29,7 +29,7 @@ function revisions_listdeleted($args) {
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
 
 	if ((true == array_key_exists('objectType', $args)) && ('*' != $args['objectType'])) {
-		if (false == $db->tableExists($args['objectType'])) { return '(unknown object type)'; }
+		if (false == $kapenta->db->tableExists($args['objectType'])) { return '(unknown object type)'; }
 		$objectType = $args['objectType'];
 	}
 
@@ -37,15 +37,15 @@ function revisions_listdeleted($args) {
 	//	count matching objects and load a page of deleted objects from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	if ('*' != $objectType) { $conditions[] = "refModel='" . $db->addMarkup($objectType) . "'"; }
+	if ('*' != $objectType) { $conditions[] = "refModel='" . $kapenta->db->addMarkup($objectType) . "'"; }
 	//TODO: add conditions here
 
-	$totalItems = $db->countRange('revisions_deleted', $conditions);
+	$totalItems = $kapenta->db->countRange('revisions_deleted', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	$start = (($pageNo - 1) * $num);
 
-	$range = $db->loadRange('revisions_deleted', '*', $conditions, 'editedOn', $num, $start);
+	$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions, 'editedOn', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -119,15 +119,15 @@
 	if ((true == array_key_exists('action', $_POST)) && ('uploadSingleImage' == $_POST['action'])) {
 
 		//$sql = "select * from Images_Image "
-		//	 . "where refUID='" . $db->addMarkup($refUID) . "'"
+		//	 . "where refUID='" . $kapenta->db->addMarkup($refUID) . "'"
 		// . " and refModule='" . $sb->addMarkup($refModule) . "'";
 
 		$conditions = array();
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
 	
-		$range = $db->loadRange('images_image', '*', $conditions);
+		$range = $kapenta->db->loadRange('images_image', '*', $conditions);
 		foreach ($range as $row) {
 			$oldImg = new Images_Image($row['UID']);
 			$oldImg->delete();

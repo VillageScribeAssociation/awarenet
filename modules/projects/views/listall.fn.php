@@ -9,11 +9,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function projects_listall($args) {
-	global $db;
+	global $kapenta;
 	$sql = "select * from projects_project order by createdOn DESC";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html = '';
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$html .= "[[:projects::summary::raUID=" . $row['UID'] . ":]]";
 	}
 	return $html;

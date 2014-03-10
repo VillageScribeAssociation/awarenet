@@ -6,7 +6,7 @@
 //opt: date - date to be shown, default is today, YYYY-MM-DD [string]
 
 function moblog_twitterdaily($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$date = substr($kapenta->datetime(), 0, 10);
@@ -21,8 +21,8 @@ function moblog_twitterdaily($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count new objects
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("DATE(createdOn) = '" . $db->addMarkup($date) . "'");
-	$newPosts = $db->countRange('moblog_post', $conditions);
+	$conditions = array("DATE(createdOn) = '" . $kapenta->db->addMarkup($date) . "'");
+	$newPosts = $kapenta->db->countRange('moblog_post', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the snippet

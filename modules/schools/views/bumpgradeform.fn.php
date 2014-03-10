@@ -6,9 +6,9 @@
 
 function schools_bumpgradeform($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
-		global $registry;
+		global $kapenta;
 
 	$html = '';
 
@@ -21,7 +21,7 @@ function schools_bumpgradeform($args) {
 	//	load list of schools
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("hidden='no'");
-	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'name');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the form

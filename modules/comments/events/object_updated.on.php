@@ -11,9 +11,9 @@
 
 function comments__cb_object_updated($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
-		global $page;
+		global $kapenta;
 
 
 	$kapenta->logLive('in comments callback: ' . $args['module']);

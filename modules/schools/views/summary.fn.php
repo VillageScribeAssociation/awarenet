@@ -44,7 +44,7 @@ function schools_summary($args) {
 	//----------------------------------------------------------------------------------------------
 
 	//if (array_key_exists('raUID', $args) == false) { return false; }
-	//$model = new Schools_School($db->addMarkup($args['raUID']));	
+	//$model = new Schools_School($kapenta->db->addMarkup($args['raUID']));	
 	//$html = $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/schools/views/summary.block.php'));
 	//return $html;
 }

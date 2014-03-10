@@ -12,7 +12,7 @@
 //opt: num - TODO, number of items per page [string]
 
 function moblog_tagged($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';			//%	return value [string]
@@ -32,19 +32,19 @@ function moblog_tagged($args) {
 	//----------------------------------------------------------------------------------------------
 	$sql = "SELECT moblog_post.UID as postUID from moblog_post, tags_index "
 		 . "WHERE moblog_post.UID=tags_index.refUID "
-		 . "AND tags_index.tagUID='" . $db->addMarkup($tag->UID) . "' "
+		 . "AND tags_index.tagUID='" . $kapenta->db->addMarkup($tag->UID) . "' "
 		 . "ORDER by moblog_post.title";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	if (0 == $db->numRows($result)) { return "(nothing with this tag at present)"; }
+	if (0 == $kapenta->db->numRows($result)) { return "(nothing with this tag at present)"; }
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$html .= "[[:moblog::summary::raUID=" . $row['postUID'] . ":]]";
 	}
 

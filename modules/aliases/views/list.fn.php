@@ -10,8 +10,8 @@
 
 function aliases_list($args) {
 		global $kapenta;
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -42,7 +42,7 @@ function aliases_list($args) {
 	}
 
 	if ((true == array_key_exists('filterModel', $args)) && ('*' != $args['filterModel'])) {
-		if (true == $db->tableExists($args['filterModel'])) { $fModel = $args['filterModel']; }
+		if (true == $kapenta->db->tableExists($args['filterModel'])) { $fModel = $args['filterModel']; }
 	}
 
 	if ((true == array_key_exists('filterUID', $args)) && ('*' != $args['filterUID'])) {
@@ -53,18 +53,18 @@ function aliases_list($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	if ('*' != $fModule) { $conditions[] = "refModule='" . $db->addMarkup($fModule) . "'"; }
-	if ('*' != $fModel) { $conditions[] = "refModel='" . $db->addMarkup($fModel) . "'"; }
-	if ('*' != $fUID) { $conditions[] = "refUID='" . $db->addMarkup($fUID) . "'"; }
+	if ('*' != $fModule) { $conditions[] = "refModule='" . $kapenta->db->addMarkup($fModule) . "'"; }
+	if ('*' != $fModel) { $conditions[] = "refModel='" . $kapenta->db->addMarkup($fModel) . "'"; }
+	if ('*' != $fUID) { $conditions[] = "refUID='" . $kapenta->db->addMarkup($fUID) . "'"; }
 	
-	$total = $db->countRange('aliases_alias', $conditions);
+	$total = $kapenta->db->countRange('aliases_alias', $conditions);
 
 	$totalPages = ceil($total / $num);
 	if (($pageNo - 1) > $totalPages) { $pageNo = $totalPages; }
 
 	$start = (($pageNo - 1) * $num);
 
-	$range = $db->loadRange('aliases_alias', '*', $conditions, 'refModule, refModel, refUID', $num, $start);
+	$range = $kapenta->db->loadRange('aliases_alias', '*', $conditions, 'refModule, refModel, refUID', $num, $start);
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the table

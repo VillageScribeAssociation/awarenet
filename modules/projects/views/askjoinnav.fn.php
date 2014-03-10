@@ -10,7 +10,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_askjoinnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 

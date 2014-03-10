@@ -10,7 +10,7 @@
 //opt: default - set default value (should be a group UID) [string]
 
 function groups_select($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$varname = 'group';
@@ -27,7 +27,7 @@ function groups_select($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make and return the select element
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('groups_group', '*', '', 'name');
+	$range = $kapenta->db->loadRange('groups_group', '*', '', 'name');
 	//$sql = "select * from Groups_Group order by name";
 
 	$html .= "<select name='" . $varname . "'>\n";

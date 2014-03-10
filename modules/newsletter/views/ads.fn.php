@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function newsletter_ads($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';													//%	return value [string]
@@ -25,7 +25,7 @@ function newsletter_ads($args) {
 	$conditions = array("pinned='yes'");
 	$orderBy = 'weight';
 	//TODO: casts for MySQL and SQLite
-	$range = $db->loadRange('newsletter_adunit', '*', $conditions, $orderBy);
+	$range = $kapenta->db->loadRange('newsletter_adunit', '*', $conditions, $orderBy);
 
 	foreach($range as $item) {
 		$html .= '[[:newsletter::showadunit::adunitUID=' . $item['UID'] . ':]]';
@@ -37,7 +37,7 @@ function newsletter_ads($args) {
 	$conditions = array("pinned='no'");
 	$orderBy = 'weight';
 	//TODO: casts for MySQL and SQLite
-	$range = $db->loadRange('newsletter_adunit', '*', $conditions, $orderBy);
+	$range = $kapenta->db->loadRange('newsletter_adunit', '*', $conditions, $orderBy);
 
 	shuffle($range);
 

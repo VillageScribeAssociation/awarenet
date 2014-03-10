@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID if present [string]
 
 function projects_summary($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $user;
 	global $session;
@@ -31,7 +31,7 @@ function projects_summary($args) {
 	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
-	$model = new Projects_Project($db->addMarkup($args['raUID']));	
+	$model = new Projects_Project($kapenta->db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
 
 	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }

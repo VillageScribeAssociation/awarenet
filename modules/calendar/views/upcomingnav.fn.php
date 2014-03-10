@@ -9,7 +9,7 @@
 
 function calendar_upcomingnav($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$html = '';				//%	return value [string]
 	$num = 10;
@@ -17,7 +17,7 @@ function calendar_upcomingnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (array_key_exists('num', $args)) { $num = $db->addMarkup($args['num']); }
+	if (array_key_exists('num', $args)) { $num = $kapenta->db->addMarkup($args['num']); }
 	$model = new Calendar_Entry();
 	$ev = $model->loadAllUpcoming($num);
 

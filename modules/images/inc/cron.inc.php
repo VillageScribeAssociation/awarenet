@@ -12,7 +12,7 @@
 //returns: HTML report of any actions taken [string]
 
 function images_cron_daily() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
@@ -24,9 +24,9 @@ function images_cron_daily() {
 
 	$sql = "select * from images_image where hash=''";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		if (('' != $item['fileName']) && (true == $kapenta->fs->exists($item['fileName']))) {
 
 			$model = new Images_Image($item['UID']);

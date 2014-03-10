@@ -9,7 +9,7 @@
 //arg: grade - grade which studenta are in [string]
 
 function users_showgrade($args) {
-	global $db;
+	global $kapenta;
 	$html = '';								//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -22,15 +22,15 @@ function users_showgrade($args) {
 	//	load members from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "school='" . $db->addMarkup($args['schoolUID']) . "'";
-	$conditions[] = "grade='" . $db->addMarkup($args['grade']) . "'";
+	$conditions[] = "school='" . $kapenta->db->addMarkup($args['schoolUID']) . "'";
+	$conditions[] = "grade='" . $kapenta->db->addMarkup($args['grade']) . "'";
 	$conditions[] = "role != 'banned'";
 
-	$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
+	$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'surname, firstname');
 
 	//$sql = "select * from users "
-	//	 . "where school='" . $db->addMarkup($args['schoolUID']) . "' "
-	//	 . "and grade='" . $db->addMarkup($args['grade']) . "' "
+	//	 . "where school='" . $kapenta->db->addMarkup($args['schoolUID']) . "' "
+	//	 . "and grade='" . $kapenta->db->addMarkup($args['grade']) . "' "
 	//	 . "order by surname, firstname";
 
 	//----------------------------------------------------------------------------------------------

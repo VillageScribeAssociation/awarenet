@@ -14,7 +14,7 @@
 function projects_revisionsnav($args) {
 	global $kapenta;
 	global $user;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -36,11 +36,11 @@ function projects_revisionsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//TODO: update this to use collection object of section revisions
 	$sql = "select * from projects_revision "
-		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
+		 . "where refUID='" . $kapenta->db->addMarkup($args['UID']) . "' order by editedOn";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		$revisionLink = '/projects/revision/' . $row['UID'];
 		$revisionDate = date('Y-m-d', $kapenta->strtotime($row['editedOn']));

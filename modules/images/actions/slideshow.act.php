@@ -28,13 +28,13 @@
 	$rows = array();
 
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";  
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";  
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 
-	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) 
-	//		. "' and refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
+	//$sql = "select * from Images_Image where refModule='" . $kapenta->db->addMarkup($kapenta->request->args['refmodule']) 
+	//		. "' and refUID='" . $kapenta->db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
 
 				
 	$index = 0;
@@ -45,7 +45,7 @@
 		$rows[$row['UID']]['index'] = $index;
 	}
 		
-	if (array_key_exists('show', $kapenta->request->args)) { $show = $db->addMarkup($kapenta->request->args['show']); }
+	if (array_key_exists('show', $kapenta->request->args)) { $show = $kapenta->db->addMarkup($kapenta->request->args['show']); }
 		
 	//----------------------------------------------------------------------------------------------
 	//	show the current image

@@ -9,7 +9,7 @@
 function admin__cb_admin_error($args) {
 	global $kapenta;
 	global $user;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -21,7 +21,7 @@ function admin__cb_admin_error($args) {
 	//	send a pm to all the admins
 	//----------------------------------------------------------------------------------------------
 	
-	$range = $db->loadRange('users_user', '*', array("role='admin'"));
+	$range = $kapenta->db->loadRange('users_user', '*', array("role='admin'"));
 
 	foreach($range as $item) {
 

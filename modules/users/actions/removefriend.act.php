@@ -13,7 +13,7 @@
 
 	if ((true == array_key_exists('action', $_POST)) && ('removeFriend' == $_POST['action'])) {
 		if (false == array_key_exists('friendshipUID', $_POST)) { $page->do404(); }
-		if (false == $db->objectExists('users_friendship', $_POST['friendshipUID']))
+		if (false == $kapenta->db->objectExists('users_friendship', $_POST['friendshipUID']))
 		{ $page->do404(); }
 
 		$model = new Users_Friendship($_POST['friendshipUID']);
@@ -41,7 +41,7 @@
 		$model = new Users_Friendship();
 
 		if (false == array_key_exists('friendUID', $_POST)) { $page->do404(); }
-		if (false == $db->objectExists('users_user', $_POST['friendUID'])) { $page->do404(); }
+		if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) { $page->do404(); }
 
 		$loaded = $model->loadFriend($_POST['friendUID'], $user->UID);
 		if (false == $loaded) { $page->doXmlError('friend request not found.'); }
@@ -64,7 +64,7 @@
 	if ((true == array_key_exists('action', $_POST)) && ('withdrawRequest' == $_POST['action'])) {
 		$model = new Users_Friendship();
 		if (false == array_key_exists('friendUID', $_POST)) { $page->do404(); }
-		if (false == $db->objectExists('users_user', $_POST['friendUID'])) { $page->do404(); }
+		if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) { $page->do404(); }
 
 		$loaded = $model->loadFriend($user->UID, $_POST['friendUID']);
 		if (false == $loaded) { $page->doXmlError('friend request not found.'); }

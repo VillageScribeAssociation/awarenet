@@ -11,7 +11,7 @@
 //returns: UID of Like_Something object, empty string if not found or error [bool]
 
 function like_byuser($args) {
-	global $db;
+	global $kapenta;
 
 	$notCancelled = 'no';				//%	ignore cancelled likes (yes|no) [string]
 	$UID = '';							//%	return value [string]
@@ -30,14 +30,14 @@ function like_byuser($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
 
 	if ('yes' == $notCancelled) { $conditions[] = "cancelled='no'"; }
 
-	$range = $db->loadRange('like_something', '*', $conditions);
+	$range = $kapenta->db->loadRange('like_something', '*', $conditions);
 	foreach($range as $item) { $UID = $item['UID']; }
 	return $UID;
 }

@@ -9,22 +9,22 @@
 	if ('admin' != $user->role) { $page->do403(); }
 
 	$sql = "select UID, path from code_backup";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	$model = new Code_File();
 
-	while($row = $db->fetchAssoc($result)) {
+	while($row = $kapenta->db->fetchAssoc($result)) {
 
-		$conditions = array("UID='" . $db->addMarkup($row['UID']) . "'");
-		$range = $db->loadRange('code_backup', '*', $conditions);
+		$conditions = array("UID='" . $kapenta->db->addMarkup($row['UID']) . "'");
+		$range = $kapenta->db->loadRange('code_backup', '*', $conditions);
 
-		$extant = $db->loadRange('code_file', '*', $conditions);
+		$extant = $kapenta->db->loadRange('code_file', '*', $conditions);
 
 		if (0 == count($extant)) {
 
 			foreach($range as $item) {
 				echo $item['UID'] . " - " . $item['path'] . "<br/>\n";
-				$db->save($item, $model->getDbSchema());
+				$kapenta->db->save($item, $model->getDbSchema());
 			}
 		} else {
 			echo $item['UID'] . " - " . $item['path'] . " (exists)<br/>\n";

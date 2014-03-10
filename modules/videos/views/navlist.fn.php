@@ -8,7 +8,7 @@
 //arg: userUID - user whose galleries we wish to show [string]
 
 function videos_navlist($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -24,13 +24,13 @@ function videos_navlist($args) {
 	//	load from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
 
 	//$sql = "SELEcT * FROM Videos_Gallery "
-	//	   . "WHERE createdBy='" . $db->addMarkup($args['userUID']) . "' "
+	//	   . "WHERE createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "' "
 	//	   . "ORDER BY title";
 
-	$range = $db->loadRange('videos_gallery', '*', $conditions, 'title');
+	$range = $kapenta->db->loadRange('videos_gallery', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

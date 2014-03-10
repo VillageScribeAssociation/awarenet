@@ -7,7 +7,7 @@
 function twitter_settings($args) {
 		global $theme;
 		global $user;
-		global $registry;
+		global $kapenta;
 
 	$html = '';			//%	return value [string:html]
 

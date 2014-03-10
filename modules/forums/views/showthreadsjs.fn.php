@@ -11,8 +11,8 @@
 //opt: num - number of threads per page (default is 20) [string]
 
 function forums_showthreadsjs($args) {
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 
 	$pageno = 1; 		//%	current page number [int]
@@ -32,8 +32,8 @@ function forums_showthreadsjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count all threads on this forum
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("board='" . $db->addMarkup($model->UID) . "'");
-	$totalItems = $db->countRange('forums_thread', $conditions);
+	$conditions = array("board='" . $kapenta->db->addMarkup($model->UID) . "'");
+	$totalItems = $kapenta->db->countRange('forums_thread', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------

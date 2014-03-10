@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function lessons_listcoursesnav($args) {
-	global $db;
+	global $kapenta;
 
 	$subject = '';
 	$grade = '';
@@ -23,7 +23,7 @@ function lessons_listcoursesnav($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array("mediagroup='" . $args['group'] . "'");
-	$range = $db->loadRange('lessons_collection', '*', $conditions, 'subject, grade');
+	$range = $kapenta->db->loadRange('lessons_collection', '*', $conditions, 'subject, grade');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

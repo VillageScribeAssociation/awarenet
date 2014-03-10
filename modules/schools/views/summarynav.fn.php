@@ -9,13 +9,13 @@
 //opt: schoolUID - overrides raUID [string]
 
 function schools_summarynav($args) {
-	global $db;
+	global $kapenta;
 
 	global $theme;
 
 	if (array_key_exists('schoolUID', $args) == true) { $args['raUID'] = $args['schoolUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$c = new Schools_School($db->addMarkup($args['raUID']));	
+	$c = new Schools_School($kapenta->db->addMarkup($args['raUID']));	
 	return $theme->replaceLabels($c->extArray(), $theme->loadBlock('modules/schools/views/summarynav.block.php'));
 }
 

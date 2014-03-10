@@ -12,7 +12,7 @@
 //opt: link - link to larger image (yes|no) (default is yes) [string]
 
 function users_avatar($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $user;
 

@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/packages/actions/list.page.php');
-	$page->render();
+	$kapenta->page->load('modules/packages/actions/list.page.php');
+	$kapenta->page->render();
 
 ?>

@@ -10,13 +10,13 @@
 
 	$xgroup = 'videolessons';
 
-	if ('' != $req->ref) { $xgroup = $req->ref; }
+	if ('' != $kapenta->request->ref) { $xgroup = $kapenta->request->ref; }
 
 	$set = new Lessons_Courses($xgroup);
 	if (false == $set->loaded) { $page->do404('No lessons yet added.'); }
 
-	$page->load('modules/lessons/actions/list.page.php');
+	$kapenta->page->load('modules/lessons/actions/list.page.php');
 	$kapenta->page->blockArgs['courseGroup'] = $xgroup;
-	$page->render();
+	$kapenta->page->render();
 
 ?>

@@ -10,7 +10,7 @@
 //arg: projectUID - UID pf project to count members for [string]
 
 function projects_membercount($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$num = '0';				//% return value [string]
@@ -28,13 +28,13 @@ function projects_membercount($args) {
 		{ return ''; }
 
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 	$conditions[] = "role != 'asked'";
 
 	//$sql = "select count(UID) as memberCount from Projects_Membership "
 	//	 . "where projectUID='" . $args['projectUID'] . "' and role != 'asked'";
 
-	$num = $db->countRange('projects_membership', $conditions) . '';
+	$num = $kapenta->db->countRange('projects_membership', $conditions) . '';
 
 	return $num;
 }

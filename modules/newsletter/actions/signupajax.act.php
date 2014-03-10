@@ -39,8 +39,8 @@
 	//	check database
 	//----------------------------------------------------------------------------------------------
 
-	$conditions = array("email='" . $db->addMarkup($email) . "'");
-	$range = $db->loadRange('newsletter_subscription', '*', $conditions);
+	$conditions = array("email='" . $kapenta->db->addMarkup($email) . "'");
+	$range = $kapenta->db->loadRange('newsletter_subscription', '*', $conditions);
 	$extant = false;
 
 	foreach($range as $item) {

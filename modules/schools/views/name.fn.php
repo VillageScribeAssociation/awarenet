@@ -11,7 +11,7 @@
 //opt: link - link to this record? Default is 'no' (yes|no) [string]
 
 function schools_name($args) {
-	global $db;
+	global $kapenta;
 	$link = 'no';
 	$html = '';		//%	return value [string]
 
@@ -22,7 +22,7 @@ function schools_name($args) {
 	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
-	$model = new Schools_School($db->addMarkup($args['raUID']));	
+	$model = new Schools_School($kapenta->db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

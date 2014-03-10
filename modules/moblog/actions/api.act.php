@@ -13,13 +13,13 @@
 	if ('myrecords' == $kapenta->request->ref) {
 		$sql = ''
 		 . "select * from moblog_post where"
-		 . " createdBy='" . $db->addMarkup($user->UID) . "' order by title";
+		 . " createdBy='" . $kapenta->db->addMarkup($user->UID) . "' order by title";
 
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 	
 		echo "<?xml version=\"1.0\"?>\n";
 		echo "<recordset>\n";
-		while ($row = $db->rmArray($db->fetchAssoc($result))) { 
+		while ($row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result))) { 
 			$ary = array(
 				'uid' => $row['UID'], 
 				'module' => 'moblog',

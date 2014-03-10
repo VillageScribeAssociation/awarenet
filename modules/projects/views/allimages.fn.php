@@ -12,7 +12,7 @@
 //opt: size - size to display images (default is width300) [string]
 
 function projects_allimages($args) {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 		global $user;
 		global $theme;
@@ -22,16 +22,16 @@ function projects_allimages($args) {
 	$size = 'width300';
 	if (array_key_exists('size', $args) == true) { $size = $args['size']; }
 	
-	$model = new Projects_Project(|$db->addMarkup($args['raUID']));	
+	$model = new Projects_Project(|$kapenta->db->addMarkup($args['raUID']));	
 	$sql = "select * from images_image where refModule='projects' and refUID='" . $model->UID 
 	     . "' order by weight";
 	
 	$html = '';
 	
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			$html .= "<a href='/images/show/" . $row['alias'] . "'>" 
 				. "<img src='/images/" . $size . "/" . $row['alias'] 
 				. "' border='0' alt='" . $model->name . "'></a>";

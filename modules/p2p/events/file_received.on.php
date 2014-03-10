@@ -15,7 +15,7 @@
 function p2p__cb_file_received($args) {
 	global $kapenta;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -43,7 +43,7 @@ function p2p__cb_file_received($args) {
 	//	add as a gift for all other peers
 	//----------------------------------------------------------------------------------------------
 	/* previous version using offer system
-	$range = $db->loadRange('p2p_peer', '*', '');
+	$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 	foreach($range as $item) {
 		if ($item['UID'] != $args['peer']) {
 			$offers = new P2P_Offers($item['UID']);

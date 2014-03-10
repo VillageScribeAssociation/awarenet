@@ -11,26 +11,26 @@
 // * $args['project'] = project UID
 
 function code_mkprojectlist($args) {
-	global $db;
+	global $kapenta;
 
 	if (array_key_exists('project', $args) == false) { return false; }
-	$sql = "select * from code where project='". $db->addMarkup($args['project']) ."' and parent='root'";
-	$result = $db->query($sql);
-	if ($db->numRows($result) == 0) { return false; }
-	$row = $db->fetchAssoc($result);
+	$sql = "select * from code where project='". $kapenta->db->addMarkup($args['project']) ."' and parent='root'";
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) == 0) { return false; }
+	$row = $kapenta->db->fetchAssoc($result);
 	$txt = code__mkprojectlistfrom($row['UID'], '/');
 	return $txt;
 }
 
 function code__mkprojectlistfrom($UID, $relPath) {
-	global $db;
+	global $kapenta;
 
 	$txt = '';
 	$sql = "select * from code where parent='" . $UID . "'";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$txt .= $row['UID'] . "\t" 
 				. sha1($row['content']) . "\t" 
 				. $row['type'] . "\t" 

@@ -14,7 +14,7 @@
 
 function live_cron_tenmins() {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$report = "<h2>live_cron_tenmins</h2>\n";	//%	return value [string]
 
@@ -26,10 +26,10 @@ function live_cron_tenmins() {
 
 	$expired = ($kapenta->time() - (60 * 10));
 	$sql = "SELECT * FROM live_mailbox WHERE lastChecked < $expired LIMIT 100;";
-	$result = $db->query($sql);
-	while($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while($row = $kapenta->db->fetchAssoc($result)) {
 		$model = new Live_Mailbox();
-		$model->loadArray($db->rmArray($row));
+		$model->loadArray($kapenta->db->rmArray($row));
 		$model->delete();
 
 		$msg = "[i] Removed old mailbox (UID: ". $model->UID ." page: ". $model->pageUID ." )<br/>";
@@ -51,7 +51,7 @@ function live_cron_tenmins() {
 
 function live_cron_daily() {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$maxAge = 60 * 60 * 24 * 7;					//%	one week (seconds), TODO: registry setting [int]
 	$report = "<h2>live_cron_daily</h2>\n";		//%	return value [string]

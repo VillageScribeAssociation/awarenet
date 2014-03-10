@@ -45,8 +45,8 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 
-	$page->load('modules/lessons/actions/importka.page.php');
+	$kapenta->page->load('modules/lessons/actions/importka.page.php');
 	$kapenta->page->blockArgs['kalisting'] = $listing;
-	$page->render();
+	$kapenta->page->render();
 
 ?>

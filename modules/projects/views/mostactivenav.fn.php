@@ -6,7 +6,7 @@
 //opt: num - number of projects to display, default is 10 (int) [string]
 
 function projects_mostactivenav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 		global $session;
@@ -36,13 +36,13 @@ function projects_mostactivenav($args) {
 		 . "GROUP BY projectUID "
 		 . "ORDER BY numRevisions DESC LIMIT $num";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$html .= "[[:projects::summarynav::projectUID=" . $row['projectUID'] . ":]]";
 	}
 	

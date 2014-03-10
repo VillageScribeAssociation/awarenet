@@ -10,7 +10,7 @@
 //opt: pageNo - results page, starting from 1, default is 1 (int) [string]
 
 function tags_listuids($args) {
-	global $db;
+	global $kapenta;
 
 	$num = 10;				//%	max results to return [int]
 	$pageNo = 1;			//%	page number [int]
@@ -30,13 +30,13 @@ function tags_listuids($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "tagUID='" . $db->addMarkup($args['tagUID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "tagUID='" . $kapenta->db->addMarkup($args['tagUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
 
 	$start = ($pageNo - 1) * $num;
 
-	$range = $db->loadRange('tags_index', '*', $conditions, 'createdOn', $num, $start);
+	$range = $kapenta->db->loadRange('tags_index', '*', $conditions, 'createdOn', $num, $start);
 	if (false === $range) { return $txt; }
 
 	//----------------------------------------------------------------------------------------------

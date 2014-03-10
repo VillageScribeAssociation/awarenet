@@ -6,12 +6,12 @@
 //opt: default - name of a course type
 
 function lessons_selectgroup($args) {
-	global $registry;
+	global $kapenta;
 
 	$default = 'videolessons';
 	$html = '';								//%	return value [string]
 
-	$groups = explode('|', $registry->get('lessons.groups'));
+	$groups = explode('|', $kapenta->registry->get('lessons.groups'));
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments

@@ -15,7 +15,7 @@
 //TODO: implement hours for which objects and files may be synced
 
 function p2p_cron_tenmins() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	
 	$report = "<h2>p2p_cron_tenmins</h2>\n";	//%	return value [string]
@@ -55,7 +55,7 @@ function p2p_cron_tenmins() {
 //--------------------------------------------------------------------------------------------------
 
 function p2p_cron_daily() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	
 	$report = "<h2>p2p_cron_daily</h2>\n";	//%	return value [string]

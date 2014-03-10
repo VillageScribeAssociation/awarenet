@@ -7,13 +7,13 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_listallpackages($args) {
-	global $db;
+	global $kapenta;
 	$html = '';			//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('code_package', '*', array(), 'name ASC');
+	$range = $kapenta->db->loadRange('code_package', '*', array(), 'name ASC');
 
 	$html .= "<h1>All Packages</h1>";
 	if (0 == count($range)) { $html .= "(none)"; }

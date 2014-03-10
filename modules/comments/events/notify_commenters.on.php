@@ -10,7 +10,7 @@
 
 function comments__cb_notify_commenters($args) {
 	global $notifications;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -24,11 +24,11 @@ function comments__cb_notify_commenters($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('comments_comment', '*', $conditions);
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	add everyone who commented to notification

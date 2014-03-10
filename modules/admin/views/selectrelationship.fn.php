@@ -10,7 +10,7 @@
 //opt: varname - html form element name, default is role [string]
 
 function admin_selectrelationship($args) {
-	global $db;
+	global $kapenta;
 
 	$default = '';					//%	reserved [string]
 	$varname = 'relationship';		//%	html field name [string]

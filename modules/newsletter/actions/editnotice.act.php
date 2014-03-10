@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $page->do404('Notice not specified'); }
 	$UID = $kapenta->request->ref;
-	if (false == $db->objectExists('newsletter_notice', $UID)) { $page->do404(); }
+	if (false == $kapenta->db->objectExists('newsletter_notice', $UID)) { $page->do404(); }
 	if (false == $user->authHas('newsletter', 'newsletter_notice', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Notices.'); }
 

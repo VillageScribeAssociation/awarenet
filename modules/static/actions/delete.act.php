@@ -9,7 +9,7 @@
 	if ( (array_key_exists('action', $_POST)) 
 	     AND ($_POST['action'] == 'deleteStaticPage') 
 	     AND (array_key_exists('UID', $_POST)) 
-	     AND ( $db->objectExists('static', $db->addMarkup($_POST['UID']))) 
+	     AND ( $kapenta->db->objectExists('static', $kapenta->db->addMarkup($_POST['UID']))) 
 	   ) {
 	   
 		require_once($kapenta->installPath . 'modules/static/models/static.mod.php');

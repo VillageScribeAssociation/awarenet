@@ -12,12 +12,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	do it
 	//----------------------------------------------------------------------------------------------
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 
 	foreach($tables as $table) {
 		$sql = "RENAME TABLE $table TO " . strtolower($table);
 		echo $sql . "<br/>\n";
-		$db->query($sql);
+		$kapenta->db->query($sql);
 
 		//if ('tmp_' == substr($table, 0, 4)) {
 		//	$sql = "drop table $table;";

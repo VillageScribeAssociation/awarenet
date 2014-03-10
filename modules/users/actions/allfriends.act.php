@@ -17,12 +17,12 @@
 	//---------------------------------------------------------------------------------------------
 
 	$sql = "select * from User_Friendships";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$ds = array();
 	$report = '';
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$ds[] = array(
 						'UID' => $row['UID'],
 						'userUID' => $row['userUID'], 

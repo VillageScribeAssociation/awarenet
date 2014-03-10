@@ -10,7 +10,7 @@
 
 function projects__cb_object_deleted($args) {
 	global $cache;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -46,8 +46,8 @@ function projects__cb_object_deleted($args) {
 		//------------------------------------------------------------------------------------------
 		//	relationships between projects beased on user membership need to change, clear cache
 		//------------------------------------------------------------------------------------------
-		$conditions = array("userUID='" . $db->addMarkup($data['userUID']) . "'");
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$conditions = array("userUID='" . $kapenta->db->addMarkup($data['userUID']) . "'");
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 
 		foreach($range as $item) {
 			$cache->clear('projects-samemembersnav-' . $item['projectUID']);

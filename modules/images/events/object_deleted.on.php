@@ -9,7 +9,7 @@ require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 //arg: UID - UID of deleted record
 
 function images__cb_object_deleted($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $session;
 
@@ -22,10 +22,10 @@ function images__cb_object_deleted($args) {
 	//	delete any images owned by this record
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['module']) . "'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, '', '', '');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, '', '', '');
 
 	foreach($range as $row) {
 		$model = new Images_Image();

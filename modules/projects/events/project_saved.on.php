@@ -14,7 +14,7 @@ function projects__cb_project_saved($args) {
 	global $notifications;	
 	global $user;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -39,13 +39,13 @@ function projects__cb_project_saved($args) {
 	$content = "" 
 		. "[[:users::namelink::userUID=" . $user->UID . ":]] "
 		. "edited the '" . $args['section'] . "' section of this project.<br/>"
-		. "<small>" . $db->datetime() . "</small><br/>";
+		. "<small>" . $kapenta->db->datetime() . "</small><br/>";
 
 	if ('title' == $args['section']) { 
 		$content = ''
 			. "[[:users::namelink::userUID=" . $user->UID . ":]] "
 			. "changed the title of this project to '" . $model->title . "'.<br/>"
-			. "<small>" . $db->datetime() . "</small><br/>";
+			. "<small>" . $kapenta->db->datetime() . "</small><br/>";
 	}
 
 

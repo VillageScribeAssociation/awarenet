@@ -6,7 +6,7 @@
 
 function schools_listhidden($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';		//%	return value [string]
@@ -17,7 +17,7 @@ function schools_listhidden($args) {
 	//	make the list
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("hidden='yes'");
-	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'name');
 	
 	foreach($range as $row) { $html .= "[[:schools::summary::raUID=" . $row['UID'] . ":]]"; }
 

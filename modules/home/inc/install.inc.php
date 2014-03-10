@@ -14,7 +14,7 @@
 
 function home_install_module() {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
@@ -41,7 +41,7 @@ function home_install_module() {
 	//	create and set a front page if one does not exist
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("UID <> ''");
-	$numPages = $db->countRange('home_static', $conditions);
+	$numPages = $kapenta->db->countRange('home_static', $conditions);
 
 	if (0 == $numPages) {
 		$newPage = new Home_Static();

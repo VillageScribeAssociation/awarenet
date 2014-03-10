@@ -14,7 +14,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function schools_install_module() {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $kapenta;
 	global $kapenta;
@@ -44,7 +44,7 @@ function schools_install_module() {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array("UID <> ''");
-	$totalSchools = $db->countRange('schools_school', $conditions);
+	$totalSchools = $kapenta->db->countRange('schools_school', $conditions);
 	
 	if (0 == $totalSchools) {
 		//------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ function schools_install_module() {
 		//------------------------------------------------------------------------------------------
 		//	get oldest school record
 		//------------------------------------------------------------------------------------------
-		$range = $db->loadRange('schools_school', '*', '', 'createdOn', '1');
+		$range = $kapenta->db->loadRange('schools_school', '*', '', 'createdOn', '1');
 		foreach($range as $item) {
 			$kapenta->registry->set('firstrun.firstschool', $item['UID']);
 			$report .= "Set default school to oldest record: " . $item['name'] . "<br/>\n";

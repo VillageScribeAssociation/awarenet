@@ -11,11 +11,11 @@
 function users_loginstats($args) {
 		global $user;
 		global $theme;
-		global $db;
+		global $kapenta;
 
 	$html = '';		//%	return value
-	$startDate = $db->datetime();
-	$endDate = $db->datetime();
+	$startDate = $kapenta->db->datetime();
+	$endDate = $kapenta->db->datetime();
 
 	//----------------------------------------------------------------------------------------------
 	//	check user role and arguments
@@ -35,7 +35,7 @@ function users_loginstats($args) {
 	$conditions[] = "CAST(lastOnline AS DATE) <= CAST('" . $startDate . "' AS DATE)";
 	$conditions[] = "CAST(lastOnline AS DATE) > CAST('" . $endDate . "' AS DATE)";
 
-	$range = $db->loadRange('users_user', $fields, $conditions, 'CAST(lastOnline AS DATETIME)');
+	$range = $kapenta->db->loadRange('users_user', $fields, $conditions, 'CAST(lastOnline AS DATETIME)');
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block

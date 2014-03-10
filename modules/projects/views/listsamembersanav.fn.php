@@ -11,7 +11,7 @@
 //opt: num - maximum number of projects to show, default is 10 [string]
 
 function projects_listsamembersanav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $cache;
@@ -34,15 +34,15 @@ function projects_listsamembersanav($args) {
 	if (false == array_key_exists('UID', $args)) { return '';}	
 	//if (false == $user->authHas('projects', 'projects_project', 'show', $args['UID'])){return '';}
 	if (true == array_key_exists('limit', $args)) { $limit = (int)$args['limit']; }
-	if (false == $db->objectExists('projects_project', $args['UID'])) { return ''; }
+	if (false == $kapenta->db->objectExists('projects_project', $args['UID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get all members of this project
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($args['UID']) . "'"; // members of this project
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($args['UID']) . "'"; // members of this project
 	$conditions[] = "(role='admin' OR role='member')";				// only those who are confirmed
-	$membersRange = $db->loadRange('projects_membership', '*', $conditions, '', '', '');
+	$membersRange = $kapenta->db->loadRange('projects_membership', '*', $conditions, '', '', '');
 
 	//----------------------------------------------------------------------------------------------
 	//	get all projects belonging to these members, and count overlap of members
@@ -51,9 +51,9 @@ function projects_listsamembersanav($args) {
 	foreach($membersRange as $member) {
 		$conditions = array();
 		$conditions[] = "userUID='" . $member['userUID'] . "'";				// same member
-		$conditions[] = "projectUID!='" . $db->addMarkup($args['UID']) . "'";// but not this project
+		$conditions[] = "projectUID!='" . $kapenta->db->addMarkup($args['UID']) . "'";// but not this project
 		$conditions[] = "(role='admin' OR role='member')";					// only confirmed
-		$projectsRange = $db->loadRange('projects_membership', '*', $conditions, '', '', '');
+		$projectsRange = $kapenta->db->loadRange('projects_membership', '*', $conditions, '', '', '');
 
 		//------------------------------------------------------------------------------------------
 		//	collect project UIDs in an array, counting the number of times they show up

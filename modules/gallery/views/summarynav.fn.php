@@ -8,7 +8,7 @@
 //arg: galleryUID - UID of a gallery record, required [string]
 
 function gallery_summarynav($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $cache;
 

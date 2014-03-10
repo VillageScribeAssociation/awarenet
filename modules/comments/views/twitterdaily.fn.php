@@ -6,7 +6,7 @@
 //opt: date - date to be shown, default is today, YYYY-MM-DD [string]
 
 function comments_twitterdaily($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$date = substr($kapenta->datetime(), 0, 10);
@@ -21,8 +21,8 @@ function comments_twitterdaily($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count new objects
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("DATE(createdOn) = '" . $db->addMarkup($date) . "'");
-	$newComments = $db->countRange('comments_comment', $conditions);
+	$conditions = array("DATE(createdOn) = '" . $kapenta->db->addMarkup($date) . "'");
+	$newComments = $kapenta->db->countRange('comments_comment', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the snippet

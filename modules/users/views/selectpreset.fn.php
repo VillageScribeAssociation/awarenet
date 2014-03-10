@@ -9,7 +9,7 @@
 function users_selectpreset($args) {
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$default = '';				//%	default value of this select element [string]
 	$varname = 'preset';		//%	HTML form field name [string]
@@ -27,7 +27,7 @@ function users_selectpreset($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the select element
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('users_preset', '*', '', 'title ASC');
+	$range = $kapenta->db->loadRange('users_preset', '*', '', 'title ASC');
 
 	$html .= "<select name='$varname'>";
 	foreach($range as $item) {

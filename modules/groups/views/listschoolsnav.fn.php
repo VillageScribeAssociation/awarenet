@@ -6,7 +6,7 @@
 //arg: groupUID - UID of a Groups_Group object [string]
 
 function groups_listschoolsnav($args) {
-	global $db;
+	global $kapenta;
 	$html = '';							//%	return value [html]
 
 	//----------------------------------------------------------------------------------------------
@@ -17,8 +17,8 @@ function groups_listschoolsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("groupUID='" . $db->addMarkup($args['groupUID']) . "'");
-	$range = $db->loadRange('groups_schoolindex', '*', $conditions);
+	$conditions = array("groupUID='" . $kapenta->db->addMarkup($args['groupUID']) . "'");
+	$range = $kapenta->db->loadRange('groups_schoolindex', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

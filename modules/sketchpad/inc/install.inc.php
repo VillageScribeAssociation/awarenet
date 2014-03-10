@@ -12,7 +12,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function sketchpad_install_module() {
-		global $db;
+		global $kapenta;
 		global $user;
 
 

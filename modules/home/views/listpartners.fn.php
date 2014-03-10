@@ -10,7 +10,7 @@
 //opt: orderBy - field to order the list by (defualt is createdOn) [string]
 
 function home_listpartners($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -41,9 +41,9 @@ function home_listpartners($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('home_partner', $conditions);	//% total number of items [int]
+	$total = $kapenta->db->countRange('home_partner', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('home_partner', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $kapenta->db->loadRange('home_partner', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>no partners yet added</div><br/>\n";

@@ -10,7 +10,7 @@
 //arg: varname - field name, default is 'user' [string]
 
 function users_select($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$varname = 'user';
@@ -28,9 +28,9 @@ function users_select($args) {
 	$sql = "select UID, firstname, surname, username, alias "	// TODO: $db->loadRange _
 		 . "from users_user order by firstname, surname";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$name = $row['firstname'] . ' ' . $row['surname'];
 		$checked = '';
 		if ($row['UID'] == $default) { $checked = "checked='checked'"; }

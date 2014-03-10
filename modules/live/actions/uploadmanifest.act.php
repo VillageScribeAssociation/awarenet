@@ -32,7 +32,7 @@
 	$path = base64_decode($_POST['path']);
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->doXmlError('unknown module'); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->doXmlError('no such owner'); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->doXmlError('no such owner'); }
 
 	$module = $theme->expandBlocks('[[:live::fileassociation::path=' . $path . ':]]');
 

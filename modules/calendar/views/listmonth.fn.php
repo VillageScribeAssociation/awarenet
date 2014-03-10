@@ -11,7 +11,7 @@
 function calendar_listmonth($args) {
 		global $theme;
 		global $user;
-		global $db;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------
@@ -19,8 +19,8 @@ function calendar_listmonth($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('month', $args)) { return ''; }
 	if (false == array_key_exists('year', $args)) { return ''; }
-	$year = $db->addMarkup($args['year']);
-	$month = $db->addMarkup($args['month']);
+	$year = $kapenta->db->addMarkup($args['year']);
+	$month = $kapenta->db->addMarkup($args['month']);
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

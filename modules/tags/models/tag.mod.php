@@ -31,7 +31,7 @@ class Tags_Tag {
 	//opt: byName - if true then load by name rather than by UID [bool]
 
 	function Tags_Tag($UID = '', $byName = false) {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 
 		if ('' != $UID) { 									// try load an object from the database
@@ -40,7 +40,7 @@ class Tags_Tag {
 		}
 
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->name = 'New Tag ' . $this->UID;			// set default name
 			$this->namels = strtolower($this->name);		// set default name
@@ -55,8 +55,8 @@ class Tags_Tag {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -68,7 +68,7 @@ class Tags_Tag {
 	//returns: true on success, false on failure [bool]
 
 	function loadByName($tagName) {
-		global $db;
+		global $kapenta;
 
 		$tagUID = $this->getTagUID($tagName);		//	this causes the tag object to become cached
 		if (false == $tagUID) { return false; }		//	no such object
@@ -83,8 +83,8 @@ class Tags_Tag {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		//if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		//if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->name = $ary['name'];
 		$this->namelc = strtolower(trim($ary['name']));
@@ -102,15 +102,15 @@ class Tags_Tag {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -272,11 +272,11 @@ class Tags_Tag {
 	//returns: UID of a Tags_Tag object, or false on failure [string][bool]
 
 	function getTagUID($tagName) {
-		global $db;
+		global $kapenta;
 
 		$tagName = strtolower(trim($tagName));
 		$conditions = array("namelc='" . $tagName . "'");
-		$range = $db->loadRange('tags_tag', '*', $conditions);
+		$range = $kapenta->db->loadRange('tags_tag', '*', $conditions);
 
 		foreach($range as $row) { return $row['UID']; }
 		return false;
@@ -285,13 +285,13 @@ class Tags_Tag {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -302,13 +302,13 @@ class Tags_Tag {
 	//returns: true if count is changed, false if not (or error) [bool]
 
 	function updateObjectCount() {
-		global $db;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	count direct references	
 		//------------------------------------------------------------------------------------------
-		$conditions = array("tagUID='" . $db->addMarkup($this->UID) . "'");
-		$objectCount = (int)$db->countRange('tags_index', $conditions);
+		$conditions = array("tagUID='" . $kapenta->db->addMarkup($this->UID) . "'");
+		$objectCount = (int)$kapenta->db->countRange('tags_index', $conditions);
 
 		//------------------------------------------------------------------------------------------
 		//	count references to embeddable objects (TODO) improve on this, registry?
@@ -318,9 +318,9 @@ class Tags_Tag {
 
 		foreach($allow as $embeddable) {
 			$conditions = array();
-			$conditions[] = "tagUID='" . $db->addMarkup($this->UID) . "'";
-			$conditions[] = "refModel='" . $db->addMarkup($embeddable) . "'";
-			$embedCount += (int)$db->countRange('tags_index', $conditions);
+			$conditions[] = "tagUID='" . $kapenta->db->addMarkup($this->UID) . "'";
+			$conditions[] = "refModel='" . $kapenta->db->addMarkup($embeddable) . "'";
+			$embedCount += (int)$kapenta->db->countRange('tags_index', $conditions);
 		}
 
 		if (($objectCount != (int)$this->objectCount) || ($embedCount != (int)$this->embedCount)) {

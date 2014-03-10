@@ -12,7 +12,7 @@
 //returns: HTML report of any actions taken [string]
 
 function projects_cron_tenmins() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$report = "<h2>projects_cron_tenmins</h2>\n";		//%	return value [string]
@@ -22,7 +22,7 @@ function projects_cron_tenmins() {
 	//	load all locked project sections and remove any expired locks
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("lockedBy != ''");
-	$range = $db->loadRange('projects_section', '*', $conditions);
+	$range = $kapenta->db->loadRange('projects_section', '*', $conditions);
 	
 	foreach($range as $item) {
 		$expires = $kapenta->strtotime($item['lockedOn']) + $lockTimeout;

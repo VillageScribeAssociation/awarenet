@@ -29,11 +29,11 @@ class Notifications_UserIndex {
 	//opt: UID - UID of a UserIndex object [string]
 
 	function Notifications_UserIndex($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->status = 'show';							// visible in feed by default
 			$this->loaded = false;
@@ -47,8 +47,8 @@ class Notifications_UserIndex {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -61,8 +61,8 @@ class Notifications_UserIndex {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->userUID = $ary['userUID'];
 		$this->notificationUID = $ary['notificationUID'];
@@ -79,15 +79,15 @@ class Notifications_UserIndex {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -252,31 +252,31 @@ class Notifications_UserIndex {
 	//returns: array of HTML notes on any action taken [array:string:html]
 
 	function maintain() {
-		global $db;
+		global $kapenta;
 		$notes = array();
 		
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $this->userUID)) {
+		if (false == $kapenta->db->objectExists('users_user', $this->userUID)) {
 			// TODO: take action here, delete?
 			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
 					 . 'in field userUID<!-- error -->';
 		}
 
-		if (false == $db->objectExists('notifications_notification', $this->notificationUID)) {
+		if (false == $kapenta->db->objectExists('notifications_notification', $this->notificationUID)) {
 			// TODO: take action here, delete?
 			$notes[] = 'object ' . $this->UID . ' has invalid reference to notification ' 
 					 . $this->notificationUID . 'in field notificationUID<!-- error -->';
 		}
 
-		if (false == $db->objectExists('users_user', $this->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $this->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
 					 . 'in field createdBy<!-- error -->';
 		}
 
-		if (false == $db->objectExists('users_user', $this->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $this->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$notes[] = 'object ' . $this->UID . ' has invalid reference to user ' . $this->userUID
 					 . 'in field editedBy<!-- error -->';
@@ -288,13 +288,13 @@ class Notifications_UserIndex {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -304,13 +304,13 @@ class Notifications_UserIndex {
 	//returns: true on if exists, false if not [bool]
 
 	function exists($notificationUID, $userUID) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "notificationUID='" . $db->addMarkup($notificationUID) . "'";	
-		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";	
+		$conditions[] = "notificationUID='" . $kapenta->db->addMarkup($notificationUID) . "'";	
+		$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";	
 
-		$num = $db->countRange('notifications_userindex', $conditions);
+		$num = $kapenta->db->countRange('notifications_userindex', $conditions);
 		if ($num > 0) { return true; }
 		return false;
 	}

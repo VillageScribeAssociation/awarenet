@@ -15,7 +15,7 @@
 
 	if (1 == count($argv)) { echo $argv[1] = ''; }
 
-	$range = $db->loadRange('p2p_peer', '*');
+	$range = $kapenta->db->loadRange('p2p_peer', '*');
 	$peerUID = '';
 
 	foreach($range as $item) {
@@ -45,7 +45,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$tables = array();
-	$allTables = $db->loadTables();
+	$allTables = $kapenta->db->loadTables();
 	foreach($allTables as $table)
 	{
 		if (('p2p_gift' != $table) && ('wiki_mwimport' != $table)) { $tables[] = $table; }
@@ -55,7 +55,7 @@
 	//	check all items in this table
 	//----------------------------------------------------------------------------------------------
 	foreach($tables as $table) {
-		$dbSchema = $db->getSchema($table);					//% db table definition [array]
+		$dbSchema = $kapenta->db->getSchema($table);					//% db table definition [array]
 		$sql = "select * from " . strtolower($table);		//%	everything in table [string]
 		$so = '';											//%	filter to shared items [string]
 
@@ -63,13 +63,13 @@
 			$so = " where shared='yes'";
 		}
 
-		$result = $db->query($sql);							//%	recordset handle [int]
+		$result = $kapenta->db->query($sql);							//%	recordset handle [int]
 
 		if (true == $print) { echo "Searching table: $table\n"; }
 		if (true == $print) { echo "Query: " . $sql . "<br/>\n"; }
 
-		while($row = $db->fetchAssoc($result)) {
-			$item = $db->rmArray($row);						//%	clean of db markup [dict]
+		while($row = $kapenta->db->fetchAssoc($result)) {
+			$item = $kapenta->db->rmArray($row);						//%	clean of db markup [dict]
 			$add = true;									//%	not everything is added [bool]
 
 			if (true == $print) {
@@ -80,7 +80,7 @@
 				echo "This item is deleted... ";
 				$add = false;
 			}
-			if (false == $db->isShared($table, $item['UID'])) {
+			if (false == $kapenta->db->isShared($table, $item['UID'])) {
 				echo "This item is not shared... ";
 				$add = false;
 			}

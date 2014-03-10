@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function gallery_maintenance() {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 
@@ -25,10 +25,10 @@ function gallery_maintenance() {
 	$errors[] = array('UID', 'Title', 'Image Count', 'error');
 
 	$sql = "select * from gallery_gallery";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$recorded = $row['imagecount'];
 
 		//-----------------------------------------------------------------------------------------

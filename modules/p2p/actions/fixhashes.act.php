@@ -6,7 +6,7 @@
 
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$tables = $db->listTables();
+	$tables = $kapenta->db->listTables();
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 
@@ -15,7 +15,7 @@
 	//---------------------------------------------------------------------------------------------
 
 	foreach($tables as $table) {
-		$dbSchema = $db->getSchema($table);
+		$dbSchema = $kapenta->db->getSchema($table);
 		if (
 			(true == array_key_exists('hash', $dbSchema['fields'])) &&		//	has hash field
 			(true == array_key_exists('fileName', $dbSchema['fields'])) &&	//	has fileName field
@@ -26,9 +26,9 @@
 			flush();
 
 			$sql = "select * from " . $table . " where hash='';";
-			$result = $db->query($sql);
-			while ($row = $db->fetchAssoc($result)) {
-				$item = $db->rmArray($row);
+			$result = $kapenta->db->query($sql);
+			while ($row = $kapenta->db->fetchAssoc($result)) {
+				$item = $kapenta->db->rmArray($row);
 				$hasFile = $kapenta->fs->exists($item['fileName']);
 
 				if (true == $hasFile) {

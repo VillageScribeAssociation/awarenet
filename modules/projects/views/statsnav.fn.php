@@ -9,7 +9,7 @@
 //arg: raUID - alias or UID of a Projects_Project object [string]
 
 function projects_statsnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -29,7 +29,7 @@ function projects_statsnav($args) {
 	//	look up revision stats
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("projectUID='" . $model->UID . "'");
-	$extArray['totalRevisions'] = $db->countRange('projects_change', $conditions);
+	$extArray['totalRevisions'] = $kapenta->db->countRange('projects_change', $conditions);
 
 	//$sql = "select * from Projects_Revision where projectUID='" . $extArray['UID'] . "'";
 

@@ -12,7 +12,7 @@
 //opt: num - number of records per page (default 10) [string]
 
 function comments_listnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	
@@ -44,11 +44,11 @@ function comments_listnav($args) {
 	//	count comments on this item
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 
-	$total = $db->countRange('comments_comment', $conditions);
+	$total = $kapenta->db->countRange('comments_comment', $conditions);
 	if ($start >= $total) {
 		return '<!-- end of results -->';
 	}
@@ -56,7 +56,7 @@ function comments_listnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a page of comments from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

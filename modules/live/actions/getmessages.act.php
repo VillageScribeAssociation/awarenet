@@ -57,20 +57,20 @@
 		if ('public' == $user->role) { $page->doXmlError('please log in.'); }	// no public users
 		if ('banned' == $user->role) { $page->doXmlError('banned.'); }			// banhammered
 
-		$uUID = $db->addMarkup($user->UID);
+		$uUID = $kapenta->db->addMarkup($user->UID);
 		$datetime = $_POST['chatsince'];
 		if (('' == $datetime) || ('0' == $datetime) || ('undefined' == $datetime))
-			{ $datetime = $db->datetime(time() - 1000000); }
+			{ $datetime = $kapenta->db->datetime(time() - 1000000); }
 
 		//------------------------------------------------------------------------------------------
 		//	load any new messsages from the database
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "createdOn > cast('" . $db->addMarkup($datetime) . "' as datetime)";
+		$conditions[] = "createdOn > cast('" . $kapenta->db->addMarkup($datetime) . "' as datetime)";
 		$conditions[] = "ownerUID='" . $uUID . "'";
 		$conditions[] = "state='new'";
 
-		$range = $db->loadRange('live_chat', '*', $conditions, 'createdOn ASC');
+		$range = $kapenta->db->loadRange('live_chat', '*', $conditions, 'createdOn ASC');
 
 		if (0 == count($range)) {
 			echo "NOCHAT: no new messages ($datetime)\n";

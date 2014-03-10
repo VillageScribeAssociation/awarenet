@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function moblog_schoolstatsnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $aliases;
@@ -40,7 +40,7 @@ function moblog_schoolstatsnav($args) {
 
 	//echo $sql;
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -48,11 +48,11 @@ function moblog_schoolstatsnav($args) {
 	$aryTable = array();
 	$aryTable[] = array('School', 'Posts');
 
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		//TODO: remove inermodule dependancy (block on schools module?)
-		$row = $db->rmArray($row);
+		$row = $kapenta->db->rmArray($row);
 		$schoolUID = $row['school'];
-		if (true == $db->objectExists('schools_school', $schoolUID)) {
+		if (true == $kapenta->db->objectExists('schools_school', $schoolUID)) {
 			$schoolRa = $aliases->getDefault('schools_school', $schoolUID);
 			$nameBlock = '[[:schools::name::schoolUID='. $schoolUID .'::link=no:]]';
 			$schoolName = $theme->expandBlocks($nameBlock, '');

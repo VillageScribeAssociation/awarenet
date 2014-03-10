@@ -16,7 +16,7 @@
 
 function p2p__cb_object_received($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -36,7 +36,7 @@ function p2p__cb_object_received($args) {
 	//----------------------------------------------------------------------------------------------
 	//	notify any other peers
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('p2p_peer', '*');
+	$range = $kapenta->db->loadRange('p2p_peer', '*');
 	foreach($range as $item) {
 		if ($item['UID'] != $args['peer']) {
 			$offers = new P2P_Offers($peer->UID);

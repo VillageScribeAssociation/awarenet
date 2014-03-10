@@ -11,7 +11,7 @@
 //opt: size - size of image (default is 'thumbsm') [string]
 
 function forums_randomimage($args) {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 
@@ -20,13 +20,13 @@ function forums_randomimage($args) {
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }
 
 	$sql = "select * from images_image "
-		 . "where refUID='" . $db->addMarkup($args['forumsUID']) . "' and refModule='forums' "
+		 . "where refUID='" . $kapenta->db->addMarkup($args['forumsUID']) . "' and refModule='forums' "
 		 . "order by RAND() limit 0,1";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//TODO: get rid of this $aliases check, 
-	while ($row = $db->rmArray($db->fetchAssoc($result))) {
+	while ($row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result))) {
 		$imgUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
 		$forumsUrl = '%%serverPath%%forums/' . $aliases->getDefault('forums', $args['forumsUID']);
 		$html .= "<a href='" . $forumsUrl . "'><img src='" . $imgUrl . "' border='0'></a>";

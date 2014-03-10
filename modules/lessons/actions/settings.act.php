@@ -56,7 +56,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	render the page
 	//----------------------------------------------------------------------------------------------
-	$page->load('modules/lessons/actions/settings.page.php');
-	$page->render();
+	$kapenta->page->load('modules/lessons/actions/settings.page.php');
+	$kapenta->page->render();
 
 ?>

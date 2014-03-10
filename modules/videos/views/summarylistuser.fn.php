@@ -8,7 +8,7 @@
 //arg: userUID - user whose galleries to list [string]
 
 function videos_summarylistuser($args) {
-	global $db;
+	global $kapenta;
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
@@ -20,11 +20,11 @@ function videos_summarylistuser($args) {
 	//	load user's galleries from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
-	$range = $db->loadRange('videos_gallery', '*', $conditions, 'title DESC');
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
+	$range = $kapenta->db->loadRange('videos_gallery', '*', $conditions, 'title DESC');
 
 	//$sql = "select * from Videos_Gallery "
-	//	 . "where parent='root' and createdBy='" . $db->addMarkup($args['userUID']) . "' "
+	//	 . "where parent='root' and createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "' "
 	//	 . "order by title DESC";
 
 	//----------------------------------------------------------------------------------------------

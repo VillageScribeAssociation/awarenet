@@ -11,8 +11,8 @@
 //opt: pagination - display pagination bar (yes|no) [string]
 
 function gallery_recentthumbsall($args) {
-	global $page;
-	global $db;
+	global $kapenta;
+	global $kapenta;
 	global $user;
 
 	$pageNo = 1; 					//%	page number as shown to users, starts at 1 [int]
@@ -39,13 +39,13 @@ function gallery_recentthumbsall($args) {
 	//	count total records owned by this module
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refModule='gallery'");
-	$totalItems = $db->countRange('images_image', $conditions);
+	$totalItems = $kapenta->db->countRange('images_image', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make thumbs of images on this page
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	foreach ($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];

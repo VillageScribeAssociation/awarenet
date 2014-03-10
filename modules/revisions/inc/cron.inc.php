@@ -13,7 +13,7 @@
 
 function revisions_cron_daily() {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$report = "<h2>revisions_cron_daily</h2>\n";						//%	return value [string]
 
@@ -23,12 +23,12 @@ function revisions_cron_daily() {
 
 	$report .= "<h2>Checking undelete</h2>";
 
-	$sql = "SELECT * FROM revisions_deleted WHERE status='" . $db->addMarkup('restore') ."'";
-	$result = $db->query($sql);
+	$sql = "SELECT * FROM revisions_deleted WHERE status='" . $kapenta->db->addMarkup('restore') ."'";
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
-		if (false == $db->objectExists($item['refModel'], $item['refUID'])) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
+		if (false == $kapenta->db->objectExists($item['refModel'], $item['refUID'])) {
 
 			$model = new Revisions_Deleted($item['UID']);
 			if (true == $model->loaded) {

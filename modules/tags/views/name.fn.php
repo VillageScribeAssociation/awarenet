@@ -12,7 +12,7 @@
 //opt: module - name of a kapenta module [string]
 
 function tags_name($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 		global $kapenta;

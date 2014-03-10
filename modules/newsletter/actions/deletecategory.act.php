@@ -22,8 +22,8 @@
 	//	check that no notices are currently in this category
 	//----------------------------------------------------------------------------------------------
 
-	$conditions = array("category='" . $db->addMarkup($model->UID) . "'");
-	$range = $db->loadRange('newsletter_notice', '*', $conditions);
+	$conditions = array("category='" . $kapenta->db->addMarkup($model->UID) . "'");
+	$range = $kapenta->db->loadRange('newsletter_notice', '*', $conditions);
 
 	if (0 != count($range)) {
 

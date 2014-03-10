@@ -19,7 +19,7 @@
 	if (false == array_key_exists('UID', $_POST))
 		{ $page->do404('reference object UID not specified', true); }
 	if (false == moduleExists($_POST['module'])) { $page->do404(); }
-	if (false == $db->objectExists($_POST['model'], $_POST['UID'])) { $page->do404('no model specified', true); }
+	if (false == $kapenta->db->objectExists($_POST['model'], $_POST['UID'])) { $page->do404('no model specified', true); }
 
 
 	//----------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 
 function polls_newquestionform($args)  {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;	
 
@@ -23,7 +23,7 @@ function polls_newquestionform($args)  {
 	if (false == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
 
 	if (false == $kapenta->moduleExists($args['refModule'])) { return '(no such module)'; }
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return '(not found)'; }
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) { return '(not found)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

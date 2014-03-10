@@ -8,7 +8,7 @@
 //arg: refUID - UID of object which owns comments [string]
 
 function comments_count($args) {
-	global $db;
+	global $kapenta;
 	$html = '';						// return value (integer) [string]	
 
 	//----------------------------------------------------------------------------------------------
@@ -22,11 +22,11 @@ function comments_count($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 
-	$total = $db->countRange('comments_comment', $conditions);
+	$total = $kapenta->db->countRange('comments_comment', $conditions);
 	$html = (int)$total . '';
 
 	return $html;

@@ -12,7 +12,7 @@
 //arg: imageTitle - title of new image [string]
 
 function groups__cb_images_added($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $kapenta;
 

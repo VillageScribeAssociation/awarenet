@@ -10,7 +10,7 @@
 //arg: userUID - UID of a user [string]
 
 function projects_listuserprojectsnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -26,10 +26,10 @@ function projects_listuserprojectsnav($args) {
 	//	get list projects by checking memberships
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "userUID='" . $db->addMarkup($args['userUID']) . "'";	// this user
+	$conditions[] = "userUID='" . $kapenta->db->addMarkup($args['userUID']) . "'";	// this user
 	$conditions[] = "(role='admin' OR role='member')";						// only confirmed
 
-	$range = $db->loadRange('projects_membership', '*', $conditions, 'joined');
+	$range = $kapenta->db->loadRange('projects_membership', '*', $conditions, 'joined');
 
 	if (0 == count($range)) { return ''; }
 

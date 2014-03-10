@@ -12,7 +12,7 @@
 //TODO: fix this up
 
 function users_searchjs($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $utils;
 
@@ -30,7 +30,7 @@ function users_searchjs($args) {
 		 . "WHERE role != 'banned' "
 		 . "ORDER BY firstname, surname";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$count = 0;
 
 	$js = "<script src='%%serverPath%%modules/users/js/usersearch.js'></script>\n";
@@ -38,8 +38,8 @@ function users_searchjs($args) {
 	$js .= "<script>\n";
 	$js .= "var userList = new Array();\n";
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$matchRow = true;
 		$qs = ' ' . strtolower($row['qs']);
 

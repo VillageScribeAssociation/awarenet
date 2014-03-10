@@ -9,7 +9,7 @@
 //arg: num - number of items to resynchronize (integer) [string]
 
 function p2p__cb_p2p_resyncbatch_received($args) {
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -18,8 +18,8 @@ function p2p__cb_p2p_resyncbatch_received($args) {
 	if (false == array_key_exists('table', $args)) { return false; }
 	if (false == array_key_exists('start', $args)) { return false; }
 	if (false == array_key_exists('num', $args)) { return false; }
-	if (false == $db->tableExists($args['table'])) { return false; }
-	if (false == $db->objectExists('p2p_peer', $args['peer'])) { return false; }
+	if (false == $kapenta->db->tableExists($args['table'])) { return false; }
+	if (false == $kapenta->db->objectExists('p2p_peer', $args['peer'])) { return false; }
 
 	$table = $args['table'];
 	$start = (int)$args['start'];
@@ -28,16 +28,16 @@ function p2p__cb_p2p_resyncbatch_received($args) {
 	$objects = '';
 	$objectCount = 0;
 
-	$dbSchema = $db->getSchema($table);			//%	table schema [array]
+	$dbSchema = $kapenta->db->getSchema($table);			//%	table schema [array]
 
 	//----------------------------------------------------------------------------------------------
 	//	load a batch of objects
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange($table, '*', '', 'UID ASC', $num, $start);
+	$range = $kapenta->db->loadRange($table, '*', '', 'UID ASC', $num, $start);
 
 	foreach($range as $item) {
 
-		$isShared = $db->isShared($table, $item['UID']);			//%	share status [bool]
+		$isShared = $kapenta->db->isShared($table, $item['UID']);			//%	share status [bool]
 		$hasFile = array_key_exists('fileName', $item);	//% [bool]
 
 		//if (true == $isShared) { $html .= "Database reports that object is shared.<br/>"; }

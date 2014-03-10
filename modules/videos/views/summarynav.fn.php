@@ -8,7 +8,7 @@
 //arg: galleryUID - UID of a Videos_Gallery object [string]
 
 function videos_summarynav($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';				//%	return value [string]

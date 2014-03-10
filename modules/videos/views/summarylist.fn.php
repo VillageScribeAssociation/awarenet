@@ -13,7 +13,7 @@
 //returns: html list [string]
 
 function videos_summarylist($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$pageNo = 1;					//%	page to show, starting from 1 [int]
@@ -49,13 +49,13 @@ function videos_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = 'videocount > 0';								//	do not show empty galleries
-	$conditions[] = "origin='" . $db->addMarkup($origin) . "'";		//	divide by content source
+	$conditions[] = "origin='" . $kapenta->db->addMarkup($origin) . "'";		//	divide by content source
 
-	$totalItems = $db->countRange('videos_gallery', $conditions);
+	$totalItems = $kapenta->db->countRange('videos_gallery', $conditions);
 	$totalPages = ceil($totalItems / $pageSize);
 	$start = $num * ($pageNo - 1);
 
-	$range = $db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $num, $start);
+	$range = $kapenta->db->loadRange('videos_gallery', '*', $conditions, $orderBy . ' ' . $ad, $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

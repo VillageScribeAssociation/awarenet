@@ -10,7 +10,7 @@
 //;
 //;		* by by setting 'archive' member of dbSchema to 'no',
 //;		* by adding all fields to 'nodiff' in dbSchema (to not compare for revision),
-//;		* by setting the 'revision' argument of $db->save(...) to false,
+//;		* by setting the 'revision' argument of $kapenta->db->save(...) to false,
 //;	
 //;	In addition, default behavior specified by modules can be overridden by registry settings.  One
 //;	can set 'revisions.enabled' to 'no' in the registry to disable this module entirely, or create
@@ -26,7 +26,6 @@
 
 function revisions__cb_object_updated($args) {
 	global $kapenta;
-	global $db; 
 	global $user;
 	global $kapenta;
 	global $session;
@@ -76,19 +75,19 @@ function revisions__cb_object_updated($args) {
 
 	if (
 		('revisions_deleted' == $refModel) &&
-		(true == $db->tableExists($data['refModel'])) &&
-		(true == $db->objectExists($data['refModel'], $data['refUID'])) &&
+		(true == $kapenta->db->tableExists($data['refModel'])) &&
+		(true == $kapenta->db->objectExists($data['refModel'], $data['refUID'])) &&
 		('delete' == $data['status'])
 	) {
-		$dbSchema = $db->getSchema($data['refModel']);
-		$db->delete($data['refUID'], $dbSchema);
+		$dbSchema = $kapenta->db->getSchema($data['refModel']);
+		$kapenta->db->delete($data['refUID'], $dbSchema);
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	bail if revisions are not kept for any of the changed fields
 	//----------------------------------------------------------------------------------------------
-	if (false == $db->checkSchema($dbSchema)) {
-		$session->msgAdmin('Could not save revision, invalid schema.', 'bad');
+	if (false == $kapenta->db->checkSchema($dbSchema)) {
+		$kapenta->session->msgAdmin('Could not save revision, invalid schema.', 'bad');
 		return false;
 	}
 

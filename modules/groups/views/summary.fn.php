@@ -9,12 +9,12 @@
 //arg: raUID - recordAlias or UID or groups entry [string]
 
 function groups_summary($args) {
-	global $db;
+	global $kapenta;
 
 	global $theme;
 
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$g = new Groups_Group($db->addMarkup($args['raUID']));	
+	$g = new Groups_Group($kapenta->db->addMarkup($args['raUID']));	
 	return $theme->replaceLabels($g->extArray(), $theme->loadBlock('modules/groups/views/summary.block.php'));
 }
 

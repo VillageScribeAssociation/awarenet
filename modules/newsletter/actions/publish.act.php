@@ -34,7 +34,7 @@
 	//	send the mail
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("status='subscribed'");
-	$range = $db->loadRange('newsletter_subscription', '*', $conditions);
+	$range = $kapenta->db->loadRange('newsletter_subscription', '*', $conditions);
 
 	foreach($range as $item) {
 		//TODO: send the email

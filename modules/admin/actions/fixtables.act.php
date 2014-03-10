@@ -29,73 +29,73 @@
 	$html = '';
 
 	/*
-	if (true == $db->tableExists('aliases_alias')) { $db->query("drop table Aliases_Alias"); }
+	if (true == $kapenta->db->tableExists('aliases_alias')) { $kapenta->db->query("drop table Aliases_Alias"); }
 	$html .= aliases_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('announcements_announcement')) { $db->query("drop table Announcements_Announcement"); }
+	if (true == $kapenta->db->tableExists('announcements_announcement')) { $kapenta->db->query("drop table Announcements_Announcement"); }
 	$html .= announcements_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('calendar_entry')) { $db->query("drop table Calendar_Entry"); }
+	if (true == $kapenta->db->tableExists('calendar_entry')) { $kapenta->db->query("drop table Calendar_Entry"); }
 	$html .= calendar_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('comments_comment')) { $db->query("drop table Comments_Comment"); }
+	if (true == $kapenta->db->tableExists('comments_comment')) { $kapenta->db->query("drop table Comments_Comment"); }
 	$html .= comments_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('files_file')) { $db->query("drop table Files_File"); }
-	if (true == $db->tableExists('files_folder')) { $db->query("drop table Files_Folder"); }
+	if (true == $kapenta->db->tableExists('files_file')) { $kapenta->db->query("drop table Files_File"); }
+	if (true == $kapenta->db->tableExists('files_folder')) { $kapenta->db->query("drop table Files_Folder"); }
 	$html .= files_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('forums_board')) { $db->query("drop table Forums_Board"); }
-	if (true == $db->tableExists('forums_thread')) { $db->query("drop table Forums_Thread"); }
-	if (true == $db->tableExists('forums_reply')) { $db->query("drop table Forums_Reply"); }
+	if (true == $kapenta->db->tableExists('forums_board')) { $kapenta->db->query("drop table Forums_Board"); }
+	if (true == $kapenta->db->tableExists('forums_thread')) { $kapenta->db->query("drop table Forums_Thread"); }
+	if (true == $kapenta->db->tableExists('forums_reply')) { $kapenta->db->query("drop table Forums_Reply"); }
 	$html .= forums_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('groups_group')) { $db->query("drop table Groups_Group"); }
-	if (true == $db->tableExists('groups_membership')) { $db->query("drop table Groups_Membership"); }
+	if (true == $kapenta->db->tableExists('groups_group')) { $kapenta->db->query("drop table Groups_Group"); }
+	if (true == $kapenta->db->tableExists('groups_membership')) { $kapenta->db->query("drop table Groups_Membership"); }
 	$html .= groups_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('home_static')) { $db->query("drop table Home_Static"); }
+	if (true == $kapenta->db->tableExists('home_static')) { $kapenta->db->query("drop table Home_Static"); }
 	$html .= home_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('images_image')) { $db->query("drop table Images_Image"); }
+	if (true == $kapenta->db->tableExists('images_image')) { $kapenta->db->query("drop table Images_Image"); }
 	$html .= images_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('messages_message')) { $db->query("drop table Messages_Message"); }
+	if (true == $kapenta->db->tableExists('messages_message')) { $kapenta->db->query("drop table Messages_Message"); }
 	$html .= messages_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('moblog_post')) { $db->query("drop table Moblog_Post"); }
+	if (true == $kapenta->db->tableExists('moblog_post')) { $kapenta->db->query("drop table Moblog_Post"); }
 	$html .= moblog_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('projects_project')) { $db->query("drop table Projects_Project"); }
-	if (true == $db->tableExists('projects_membership')) { $db->query("drop table Projects_Membership"); }
-	if (true == $db->tableExists('projects_revision')) { $db->query("drop table Projects_Revision"); }
+	if (true == $kapenta->db->tableExists('projects_project')) { $kapenta->db->query("drop table Projects_Project"); }
+	if (true == $kapenta->db->tableExists('projects_membership')) { $kapenta->db->query("drop table Projects_Membership"); }
+	if (true == $kapenta->db->tableExists('projects_revision')) { $kapenta->db->query("drop table Projects_Revision"); }
 	$html .= projects_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('schools_school')) { $db->query("drop table Schools_School"); }
+	if (true == $kapenta->db->tableExists('schools_school')) { $kapenta->db->query("drop table Schools_School"); }
 	$html .= schools_install_module();
 	$html .= "<br/>\n";
 
-	if (true == $db->tableExists('sync_server')) { $db->query("drop table Sync_Server"); }
-	if (true == $db->tableExists('sync_notice')) { $db->query("drop table Sync_Notice"); }
-	if (true == $db->tableExists('sync_download')) { $db->query("drop table Sync_Download"); }
+	if (true == $kapenta->db->tableExists('sync_server')) { $kapenta->db->query("drop table Sync_Server"); }
+	if (true == $kapenta->db->tableExists('sync_notice')) { $kapenta->db->query("drop table Sync_Notice"); }
+	if (true == $kapenta->db->tableExists('sync_download')) { $kapenta->db->query("drop table Sync_Download"); }
 	$html .= sync_install_module();
 	$html .= "<br/>\n";
 	
-	if (true == $db->tableExists('users_user')) { $db->query("drop table Users_User"); }
-	if (true == $db->tableExists('users_role')) { $db->query("drop table Users_Role"); }
-	if (true == $db->tableExists('users_friendship')) { $db->query("drop table Users_Friendship"); }
+	if (true == $kapenta->db->tableExists('users_user')) { $kapenta->db->query("drop table Users_User"); }
+	if (true == $kapenta->db->tableExists('users_role')) { $kapenta->db->query("drop table Users_Role"); }
+	if (true == $kapenta->db->tableExists('users_friendship')) { $kapenta->db->query("drop table Users_Friendship"); }
 	$html .= users_install_module();
 	$html .= "<br/>\n";
 	*/
@@ -135,15 +135,15 @@
 	$dba = new KDBAdminDriver();
 
 	foreach($rename as $oldname => $newname) {
-		if (true == $db->tableExists($newname)) {
+		if (true == $kapenta->db->tableExists($newname)) {
 
-			$dbSchema = $db->getSchema($newname);
+			$dbSchema = $kapenta->db->getSchema($newname);
 		
 			$sql = "select * from $newname";
-			$result = $db->query($sql);
-			while ($row = $db->fetchAssoc($result)) {
+			$result = $kapenta->db->query($sql);
+			while ($row = $kapenta->db->fetchAssoc($result)) {
 				$dirty = false;
-				$row = $db->rmArray($row);
+				$row = $kapenta->db->rmArray($row);
 
 				if (true == array_key_exists('refModule', $row)) {
 
@@ -173,7 +173,7 @@
 
 				}
 
-				if (true == $dirty) { $db->save($row, $dbSchema); }
+				if (true == $dirty) { $kapenta->db->save($row, $dbSchema); }
 
 			} // end foreach record
 

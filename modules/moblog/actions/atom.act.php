@@ -33,7 +33,7 @@
 	$conditions[] = "published='yes'";
 	if ('' != $userUID) { $conditions[] = "createdBy='$userUID'"; }
 
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $numItems);
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $numItems);
 
 	//----------------------------------------------------------------------------------------------
 	//	render the feed

@@ -29,7 +29,7 @@
 			case 'sticky':		$model->sticky = $utils->cleanYesNo($value);		break;
 
 			case 'board':		
-				if (true == $db->objectExists('forums_board', $value)) { $model->board = $value; }
+				if (true == $kapenta->db->objectExists('forums_board', $value)) { $model->board = $value; }
 				break;
 		}
 	}

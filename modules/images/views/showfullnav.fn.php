@@ -9,7 +9,7 @@
 
 function images_showfullnav($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -30,10 +30,10 @@ function images_showfullnav($args) {
 	$sql = "select * from images_image where refModule='" . $model->refModule 
 	     . "' order by refUID='" . $model->refUID . "' limit 20";
 	
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 	  if ($row['UID'] != $model->UID) {
-		$row = $db->rmArray($row);
+		$row = $kapenta->db->rmArray($row);
 		$showUrl = '%%serverPath%%images/show/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%images/thumb90/' . $row['alias'];
 		$related .= "<a href='" . $showUrl . "'><img src='" . $thumbUrl 

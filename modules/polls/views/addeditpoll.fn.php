@@ -11,7 +11,7 @@
 
 function polls_addeditpoll($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;	
 
@@ -25,7 +25,7 @@ function polls_addeditpoll($args) {
 	if (false == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
 
 	if (false == $kapenta->moduleExists($args['refModule'])) { return '(no such module)'; }
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return '(not found)'; }
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) { return '(not found)'; }
 
 	if (false == array_key_exists('width', $args)) { $args['width'] = '570'; }
 	if (false == array_key_exists('height', $args)) { $args['height'] = '400'; }

@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_checktables($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -19,11 +19,11 @@ function admin_checktables($args) {
 	//----------------------------------------------------------------------------------------------
 	$range = array();
 	
-	$tables = $db->listTables();
+	$tables = $kapenta->db->listTables();
 	foreach ($tables as $table) {
 		$sql = "CHECK TABLE `" . $table . "`;";
-		$result = $db->query($sql);
-		while($row = $db->fetchAssoc($result)) { 
+		$result = $kapenta->db->query($sql);
+		while($row = $kapenta->db->fetchAssoc($result)) { 
 			$row['tableName'] = $table;
 			$range[] = $row;
 		}

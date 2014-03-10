@@ -13,7 +13,7 @@
 
 function images_uploadmultiple($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';				//%	return value [string]
@@ -33,7 +33,7 @@ function images_uploadmultiple($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such object)'; }
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

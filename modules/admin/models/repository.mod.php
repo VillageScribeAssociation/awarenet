@@ -207,7 +207,7 @@ class CodeRepository {
 
 	function storeFile($path, $type, $hash) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
 
@@ -216,7 +216,7 @@ class CodeRepository {
 		//------------------------------------------------------------------------------------------
 		$raw = implode(file($kapenta->installPath . $path));
 		$dirname = str_replace("\\", '', dirname($path)) . '/';
-		$description = '(automatically uploaded ' . $db->datetime() . ')';
+		$description = '(automatically uploaded ' . $kapenta->db->datetime() . ')';
 		$isbinary = 'no';
 		$binary = '';
 		$content = '';

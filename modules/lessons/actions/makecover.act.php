@@ -14,17 +14,17 @@
 
 	if ('admin' != $user->role) { $page->do403(); }
 
-	if (false == array_key_exists('manifest', $req->args)) { $page->do404('No manifest'); }
-	if (false == array_key_exists('document', $req->args)) { $page->do404('No document'); }
+	if (false == array_key_exists('manifest', $kapenta->request->args)) { $page->do404('No manifest'); }
+	if (false == array_key_exists('document', $kapenta->request->args)) { $page->do404('No document'); }
 
-	$model = new Lessons_Course($req->args['manifest']);
+	$model = new Lessons_Course($kapenta->request->args['manifest']);
 	if (false == $model->loaded) { $page->do404('unknown course'); }
 
 	$document = array();
 	$index = -1;
 
 	foreach($model->documents as $idx => $doc) {
-		if ($doc['uid'] == $req->args['document']) {
+		if ($doc['uid'] == $kapenta->request->args['document']) {
 			$document = $doc;
 			$index = $idx;
 		}

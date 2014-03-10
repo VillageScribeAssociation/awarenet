@@ -10,7 +10,7 @@
 	//	load the friendship and check identity/permissions
 	//---------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $page->do404(); }
-	if (false == $db->objectExists('users_user', $kapenta->request->ref)) { $page->do404(); }
+	if (false == $kapenta->db->objectExists('users_user', $kapenta->request->ref)) { $page->do404(); }
 
 	$friendUID = $kapenta->request->ref;
 	$model = new Users_Friendship();

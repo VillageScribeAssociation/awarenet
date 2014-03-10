@@ -19,19 +19,19 @@
 	//	find all objects which have 'fileName' and 'hash' fields
 	//-------------------------------------------------------------------------------------------------
 
-	$tables = $db->listTables();
+	$tables = $kapenta->db->listTables();
 
 	foreach($tables as $tableName) {
-		$dbSchema = $db->getSchema($tableName);
+		$dbSchema = $kapenta->db->getSchema($tableName);
 		if (
 			(true == array_key_exists('fileName', $dbSchema['fields'])) &&
 			(true == array_key_exists('hash', $dbSchema['fields']))
 		) {
 			
 			$sql = "select * from $tableName";
-			$result = $db->query($sql);
-			while ($row = $db->fetchAssoc($result)) {
-				$item = $db->rmArray($row);
+			$result = $kapenta->db->query($sql);
+			while ($row = $kapenta->db->fetchAssoc($result)) {
+				$item = $kapenta->db->rmArray($row);
 				if (false == $kapenta->fs->exists($item['fileName'])) {
 					$msg = "Missing: " . $item['fileName'] . "<br/>";
 					$want = true;

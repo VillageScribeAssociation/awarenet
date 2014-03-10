@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 if ('admin' != $user->role) { $page->do403(); }
-if (('' == $kapenta->request->ref) || ($db->tableExists($kapenta->request->ref) == false)) { 
+if (('' == $kapenta->request->ref) || ($kapenta->db->tableExists($kapenta->request->ref) == false)) { 
 	echo "no table specified";
 	die(); 
 
@@ -44,9 +44,9 @@ if (('' == $kapenta->request->ref) || ($db->tableExists($kapenta->request->ref) 
 
 
 function xdbGetSchema($tableName) {
-	global $db;
+	global $kapenta;
 
-	if ($db->tableExists($tableName) == false) { return false; }
+	if ($kapenta->db->tableExists($tableName) == false) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	create dbSchema array
@@ -57,17 +57,17 @@ function xdbGetSchema($tableName) {
 	//----------------------------------------------------------------------------------------------
 	//	add fields
 	//----------------------------------------------------------------------------------------------
-	$sql = "describe " . $db->addMarkup($tableName);
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) 
+	$sql = "describe " . $kapenta->db->addMarkup($tableName);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) 
 		{ $dbSchema['fields'][$row['Field']] = strtoupper($row['Type']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add indices
 	//----------------------------------------------------------------------------------------------
-	$sql = "show indexes from " . $db->addMarkup($tableName);
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) 
+	$sql = "show indexes from " . $kapenta->db->addMarkup($tableName);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) 
 		{ $dbSchema['indices'][$row['Column_name']] = $row['Sub_part']; }
 
 	return $dbSchema;

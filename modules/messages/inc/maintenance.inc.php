@@ -13,7 +13,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function messages_maintenance() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $user;
 		global $theme;
@@ -32,10 +32,10 @@ function messages_maintenance() {
 	$model = new Messages_Message();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from messages_message";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -43,13 +43,13 @@ function messages_maintenance() {
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
 		/*
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:Users_User)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:Users_User)');
 			$errorCount++;

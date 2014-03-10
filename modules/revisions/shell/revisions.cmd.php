@@ -9,7 +9,7 @@
 function revisions_WebShell_revisions($args) {
 	global $kapenta;
 	global $user;
-	global $db;
+	global $kapenta;
 	global $shell;
 	global $theme;
 	global $kapenta;
@@ -88,7 +88,7 @@ function revisions_WebShell_revisions($args) {
 			//--------------------------------------------------------------------------------------
 
 			if ('' != $byUser) { 
-				if (false == $db->objectExists('users_user', $byUser)) {	//	find by UID
+				if (false == $kapenta->db->objectExists('users_user', $byUser)) {	//	find by UID
 					$tempUser = new Users_User($byUser);					//	find by alias
 					if (true == $tempUser->loaded) {
 						$byUser = $tempUser->UID;
@@ -109,12 +109,12 @@ function revisions_WebShell_revisions($args) {
 			//--------------------------------------------------------------------------------------
 			$conditions = array();
 
-			if ('' != $byUser) { $conditions[] = "createdBy='" . $db->addMarkup($byUser) . "'"; }
-			if ('' != $refModule) { $conditions[] = "refModule='" . $db->addMarkup($refModule) . "'"; }
-			if ('' != $refModel) { $conditions[] = "refModel='" . $db->addMarkup($refModel) . "'"; }
-			if ('' != $refUID) { $conditions[] = "refUID='" . $db->addMarkup($refUID) . "'"; }
+			if ('' != $byUser) { $conditions[] = "createdBy='" . $kapenta->db->addMarkup($byUser) . "'"; }
+			if ('' != $refModule) { $conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'"; }
+			if ('' != $refModel) { $conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'"; }
+			if ('' != $refUID) { $conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'"; }
 
-			$range = $db->loadRange('revisions_revision', '*', $conditions, 'createdOn DESC', $max);
+			$range = $kapenta->db->loadRange('revisions_revision', '*', $conditions, 'createdOn DESC', $max);
 
 			//--------------------------------------------------------------------------------------
 			//	display results

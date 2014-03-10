@@ -39,7 +39,7 @@ class P2P_Offers {
 	//returns: true on success, false on failure [bool]
 
 	function load($type) {
-		global $db;
+		global $kapenta;
 		if ('' == $this->peerUID) { return false; }
 
 		$this->members = array();
@@ -49,18 +49,18 @@ class P2P_Offers {
 		//------------------------------------------------------------------------------------------
 
 		$conditions = array();
-		$conditions[0] = "peer='" . $db->addmarkup($this->peerUID) . "'";
+		$conditions[0] = "peer='" . $kapenta->db->addMarkup($this->peerUID) . "'";
 		$conditions[1] = "(status='waiting' OR status='want' OR status='')";
-		$conditions[2] = "refModel != '" . $db->addMarkup('revisions_revision') . "'";
+		$conditions[2] = "refModel != '" . $kapenta->db->addMarkup('revisions_revision') . "'";
 		if ('files' == $type) { $conditions[3] = "type='file'"; }
 		if ('objects' == $type) { $conditions[3] = "type='object'"; }
 
-		$totalItems = $db->countRange('p2p_gift', $conditions);
+		$totalItems = $kapenta->db->countRange('p2p_gift', $conditions);
 
 		if (0 == $totalItems) { $conditions[2] = '1=1'; }	//	nothing else waiting, send revisions
 
-		$ob = "refModel='" . $db->addMarkup('aliases_alias') . "', createdOn";	//	aliases first
-		$range = $db->loadRange('p2p_gift', '*', $conditions, $ob, $this->maxGifts);
+		$ob = "refModel='" . $kapenta->db->addMarkup('aliases_alias') . "', createdOn";	//	aliases first
+		$range = $kapenta->db->loadRange('p2p_gift', '*', $conditions, $ob, $this->maxGifts);
 
 		$this->members = $range;
 		$this->loaded = true;
@@ -119,7 +119,7 @@ class P2P_Offers {
 	//----------------------------------------------------------------------------------------------
 
 	function evaluate() {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 		global $revisions;	
 
@@ -133,11 +133,11 @@ class P2P_Offers {
 			//	decide if we want an object on offer
 			//--------------------------------------------------------------------------------------
 			if ('object' == $offer['type']) {				
-				$item = $db->getObject($offer['refModel'], $offer['refUID']);
+				$item = $kapenta->db->getObject($offer['refModel'], $offer['refUID']);
 				if (0 == count($item)) {
 
 					if (
-						(true == $db->tableExists($offer['refModel'])) &&
+						(true == $kapenta->db->tableExists($offer['refModel'])) &&
 						(false == $revisions->isDeleted($offer['refModel'], $offer['refUID']))
 					) {
 						$this->members[$idx]['status'] = 'want';
@@ -147,7 +147,7 @@ class P2P_Offers {
 
 				}
 				else {
-					$xml = $db->getObjectXml($offer['refModel'], $offer['refUID']);
+					$xml = $kapenta->db->getObjectXml($offer['refModel'], $offer['refUID']);
 					$hash = sha1($xml);
 
 					$localTime = $kapenta->strtotime($item['editedOn']);
@@ -196,17 +196,17 @@ class P2P_Offers {
 	//returns: UID of P2P_Gift object on success, empty string on failure [string]
 
 	function getGiftUID($type, $refModel, $refUID, $fileName = '') {
-		global $db;
+		global $kapenta;
 		$conditions = array();
-		$conditions[] = "type='" . $db->addMarkup($type) . "'";
-		$conditions[] = "peer='" . $db->addMarkup($this->peerUID) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "type='" . $kapenta->db->addMarkup($type) . "'";
+		$conditions[] = "peer='" . $kapenta->db->addMarkup($this->peerUID) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
 		//NOTE: for now only one attached file per object
-		//if ('file' == $type) { $conditions[] = "fileName='" . $db->addMarkup($fileName) . "'"; }
+		//if ('file' == $type) { $conditions[] = "fileName='" . $kapenta->db->addMarkup($fileName) . "'"; }
 
-		$range = $db->loadRange('p2p_gift', '*', $conditions);
+		$range = $kapenta->db->loadRange('p2p_gift', '*', $conditions);
 		foreach($range as $item) { return $item['UID']; }
 		return ''; 
 	}
@@ -219,7 +219,7 @@ class P2P_Offers {
 	//arg: properties - keys and values [dict]
 
 	function isShared($model, $UID, $properties) {
-		global $db;
+		global $kapenta;
 
 		// everything is shared by default
 		$shared = true;
@@ -235,7 +235,7 @@ class P2P_Offers {
 			(true == array_key_exists('refModel', $properties)) &&
 			(true == array_key_exists('refUID', $properties))
 		) {
-			$parent = $db->getObject($properties['refModel'], $properties['refUID']);
+			$parent = $kapenta->db->getObject($properties['refModel'], $properties['refUID']);
 			if (0 != count($parent)) {
 				$shared = $this->isShared($properties['refModel'], $properties['refUID'], $parent);
 			}
@@ -251,7 +251,7 @@ class P2P_Offers {
 	//returns: number of gifts created / fixed [int]
 
 	function scanDb($print = false) {
-		global $db;
+		global $kapenta;
 		global $session;
 		global $revisions;
 		$count = 0;												//%	return value [string]
@@ -264,7 +264,7 @@ class P2P_Offers {
 		//	get list of tables
 		//------------------------------------------------------------------------------------------
 		$tables = array();
-		$allTables = $db->loadTables();
+		$allTables = $kapenta->db->loadTables();
 		foreach($allTables as $table) {
 			if (('p2p_gift' != $table) && ('wiki_mwimport' != $table)) { $tables[] = $table; }
 		}
@@ -273,7 +273,7 @@ class P2P_Offers {
 		//	check all items in this table
 		//------------------------------------------------------------------------------------------
 		foreach($tables as $table) {
-			$dbSchema = $db->getSchema($table);					//% db table definition [array]
+			$dbSchema = $kapenta->db->getSchema($table);					//% db table definition [array]
 			$lf = 100;											//%	line counter [int]
 			$sql = "select * from " . strtolower($table);		//%	everything in table [string]
 			$so = '';											//%	filter to shared items [string]
@@ -282,13 +282,13 @@ class P2P_Offers {
 				$so = " where shared='yes'";
 			}
 
-			$result = $db->query($sql);							//%	recordset handle [int]
+			$result = $kapenta->db->query($sql);							//%	recordset handle [int]
 
 			if (true == $print) { echo "<h2>Searching table: $table</h2>\n"; }
 			if (true == $print) { echo "Query: " . $sql . "<br/>\n"; }
 
-			while($row = $db->fetchAssoc($result)) {
-				$item = $db->rmArray($row);						//%	clean of db markup [dict]
+			while($row = $kapenta->db->fetchAssoc($result)) {
+				$item = $kapenta->db->rmArray($row);						//%	clean of db markup [dict]
 				$add = true;									//%	not everything is added [bool]
 
 				if (true == $print) {
@@ -406,12 +406,12 @@ class P2P_Offers {
 	//returns: true if gift was updated, false if no change [bool]
 
 	function updateObject($model, $UID, $properties) {
-		global $db;
+		global $kapenta;
 		global $session;
 
 		$check = false;											//%	return value [bool]
 		$giftUID = $this->getGiftUID('object', $model, $UID);	//%	ref:P2P_Gift [string]	
-		$xml = $db->getObjectXml($model, $UID);					//% xml serialized object [string]
+		$xml = $kapenta->db->getObjectXml($model, $UID);					//% xml serialized object [string]
 		$hash = sha1($xml);										//% sha1 hash of xml [string]
 
 		if ('' != $giftUID) {
@@ -469,7 +469,7 @@ class P2P_Offers {
 
 	function updateFile($model, $UID, $fileName) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $session;
 
 		//$session->msg("p2p::offers::updateFile(model: $model, UID: $UID, file: $fileName)");
@@ -571,14 +571,14 @@ class P2P_Offers {
 	//returns: status string if found, 'missing' string if not [string]
 
 	function status($model, $UID) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "peer='" . $db->addMarkup($this->peerUID) . "'";
-		$conditions[] = "refModule='" . $db->addMarkup($model) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
+		$conditions[] = "peer='" . $kapenta->db->addMarkup($this->peerUID) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($model) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($UID) . "'";
 
-		$range = $db->loadRange('p2p_gift', '*', $conditions);
+		$range = $kapenta->db->loadRange('p2p_gift', '*', $conditions);
 
 		foreach($range as $item) { return $item['status']; }
 		return 'missing';

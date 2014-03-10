@@ -10,7 +10,7 @@
 //opt: size - image size (thumb90, thumbsm, width300, etc) [string]
 
 function gallery_gallerynav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $utils;
 
@@ -28,13 +28,13 @@ function gallery_gallerynav($args) {
 	//	load images js into array
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['galleryUID']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['galleryUID']) . "'";
 	$conditions[] = "refModule='gallery'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//$sql = "select UID, title, weight, recordAlias from Images_Image "
-	//	 . "where refUID='" . $db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
+	//	 . "where refUID='" . $kapenta->db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
 	//	 . "order by weight ";
 
 	$images = array();

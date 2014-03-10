@@ -37,7 +37,7 @@
 		//	save from edit form
 		//------------------------------------------------------------------------------------------
 		if ($_POST['action'] == 'saveCodeRecord') {
-			if ($db->objectExists('code', $_POST['UID']) == false) { $page->do404(); }
+			if ($kapenta->db->objectExists('code', $_POST['UID']) == false) { $page->do404(); }
 			$c = new Code($_POST['UID']);
 
 			//--------------------------------------------------------------------------------------

@@ -60,13 +60,13 @@ class Images_Image {
 	//opt: raUID - UID or alias of a Image object [string]
 
 	function Images_Image($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				//	initialise table schema
 		$this->transforms = new Images_Transforms();		//	initialize transforms object
 
 		if ('' != $raUID) { $this->load($raUID); }			//	try load an object from the database
 		if (false == $this->loaded) {						//	check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	//	make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	//	make new object
 			$this->loadArray($this->data);					//	initialize
 			$this->title = 'New Image ' . $this->UID;		//	set default title
 			$this->weight = 10000;							//	end of list (corrected on save())
@@ -443,13 +443,13 @@ class Images_Image {
 	//returns: UID of image, or false if one was not found [string][bool]
 
 	function findSingle($refModule, $refUID, $category) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$conditions[] = "category='" . $db->addMarkup($category) . "'";
-		$range = $db->loadRange('images_image', '*', $conditions, 'weight', '1', '');
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$conditions[] = "category='" . $kapenta->db->addMarkup($category) . "'";
+		$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight', '1', '');
 
 		foreach($range as $row) {
 			$this->load($row['UID']); 
@@ -489,7 +489,7 @@ class Images_Image {
 	function delete() {
 		global $kapenta;
 		global $session;
-		global $db;
+		global $kapenta;
 
 		$check = false;
 
@@ -514,7 +514,7 @@ class Images_Image {
 		//	remove it from the database
 		//------------------------------------------------------------------------------------------
 		$session->msg("Deleting image: " . $this->title . " (" . $this->UID . ")<br/>");
-		$check = $db->delete($this->UID, $this->dbSchema);
+		$check = $kapenta->db->delete($this->UID, $this->dbSchema);
 
 		//------------------------------------------------------------------------------------------
 		//	invalidate owner's default image in memcached

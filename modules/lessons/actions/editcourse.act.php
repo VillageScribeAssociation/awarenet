@@ -8,14 +8,14 @@
 		$page->do403('You are not permitted to edit this course', true);
 	}
 
-	if ('' == $req->ref) { $page->do404('Course not specified.', true); }
+	if ('' == $kapenta->request->ref) { $page->do404('Course not specified.', true); }
 
-	if (false = $kapenta->fs->exists('data/lessons/' . $req->ref)) {
+	if (false = $kapenta->fs->exists('data/lessons/' . $kapenta->request->ref)) {
 		$page->do404('No such course.', true);
 	}
 
-	$page->load('modules/lessons/actions/editcourse.page.php');
-	$kapenta->page->blockArgs['UID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/lessons/actions/editcourse.page.php');
+	$kapenta->page->blockArgs['UID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

@@ -9,7 +9,7 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_filesetdetail($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 		global $user;
@@ -28,7 +28,7 @@ function files_filesetdetail($args) {
 	$refUID = $args['refUID'];
 	
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
 
 	if (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
 
@@ -37,10 +37,10 @@ function files_filesetdetail($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('files_file', '*', $conditions);
+	$range = $kapenta->db->loadRange('files_file', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make table of files

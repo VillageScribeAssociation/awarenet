@@ -9,7 +9,7 @@
 //arg: school - UID of school [string]
 
 function users_onlineschoolnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';
@@ -24,18 +24,18 @@ function users_onlineschoolnav($args) {
 	//	query database  //TODO: remove this join
 	//----------------------------------------------------------------------------------------------
 	$sql = "SELECT users_user.UID, firstname, surname, grade, alias FROM users_session, users_user "
-		 . "WHERE users_user.school='" . $db->addMarkup($args['school']) . "' "
+		 . "WHERE users_user.school='" . $kapenta->db->addMarkup($args['school']) . "' "
 		 . "AND users_user.UID=users_session.createdBy "
 		 . "AND users_session.status='active' "
 		 . "ORDER BY firstname";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	while($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$html .= "<a href='%%serverPath%%/users/profile/" . $row['alias'] . "'>"
 			  . $row['firstname'] . ' ' . $row['surname'] . "</a> "
 			  . "<small>(" . $row['grade'] . ")</small><br/>";	

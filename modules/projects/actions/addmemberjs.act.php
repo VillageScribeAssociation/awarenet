@@ -29,7 +29,7 @@
 	$projectUID = $_POST['projectUID'];
 	$xrole = $utils->cleanTitle($_POST['role']);		// $role is already global object
 
-	if (false == $db->objectExists('users_user', $userUID)) 
+	if (false == $kapenta->db->objectExists('users_user', $userUID)) 
 		{ echo "<span class='ajaxerror'>User not recognized.</span>"; die(); }
 
 	$model = new Projects_Project($_POST['projectUID']);

@@ -43,7 +43,7 @@
 	// eg /projects/editmembers/removemember_8237146489/Some-Project
 
 	if (true == array_key_exists('removemember', $kapenta->request->args)) {
-		//AND (true == $db->objectExists('users_user', $kapenta->request->args['removemember'])) ) {
+		//AND (true == $kapenta->db->objectExists('users_user', $kapenta->request->args['removemember'])) ) {
 		$model->removeMember($kapenta->request->args['removemember']);
 		$session->msg("Removed member from " . $model->title . ".", 'ok');
 	}

@@ -9,7 +9,7 @@
 //opt: schoolUID - overrides raUID [string]
 
 function schools_allgrades($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';
@@ -40,9 +40,9 @@ function schools_allgrades($args) {
 	$sql = "select grade, count(UID) as members from users_user "
 		 . "where school='" . $model->UID . "' and (role != 'banned') group by grade";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$link = '%%serverPath%%schools/grade/grade_' . base64_encode($row['grade'])
 			  . '/' . $model->alias;
 

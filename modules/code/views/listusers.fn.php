@@ -5,14 +5,14 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_listusers($args) {
-	global $db;
+	global $kapenta;
 
 	$sql = "select * from codeprojects order by title"; // for all projects
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html = '';
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$link = '%%serverPath%%code/project/' . $row['recordAlias'];
 		$html .= "<h2><a href='" . $link . "'>" . $row['title'] . "</a></h2>\n"
 			   . "[[:code::listprojectusers::projectUID=" . $row['UID'] . ":]]\n"

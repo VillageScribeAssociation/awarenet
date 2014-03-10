@@ -6,7 +6,7 @@
 //TODO: paginate
 
 function users_banned($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -22,7 +22,7 @@ function users_banned($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("role='banned'");
 	$fields = 'UID, username, firstname, surname, editedOn, editedBy, alias';
-	$range = $db->loadRange('users_user', $fields, $conditions, 'surname, firstname');
+	$range = $kapenta->db->loadRange('users_user', $fields, $conditions, 'surname, firstname');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

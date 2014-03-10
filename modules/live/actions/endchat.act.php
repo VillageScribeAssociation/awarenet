@@ -24,7 +24,7 @@
 		 . "WHERE (fromUID='" . $userUID . "' AND toUID='" . $partnerUID . "') "
 		 . "OR (fromUID='" . $partnerUID . "' AND toUID='" . $userUID . "')";
 
-	$db->query($sql);
+	$kapenta->db->query($sql);
 
 	echo "DISMISSED CHAT MESSAGES";
 

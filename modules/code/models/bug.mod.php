@@ -33,11 +33,11 @@ class Code_Bug {
 	//opt: raUID - UID or alias of a Bug object [string]
 
 	function Code_Bug($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();		// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }	// try load an object from the database
 		if (false == $this->loaded) {			// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize
 		}
 	}
 
@@ -48,8 +48,8 @@ class Code_Bug {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID = '') {
-		global $db;
-		$objary = $db->loadAlias('Code_Bug', $raUID);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias('Code_Bug', $raUID);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -83,14 +83,14 @@ class Code_Bug {
 	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
 		global $db, $aliases;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('code', 'Code_Bug', $this->UID, $this->UID);
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 	}
 
@@ -217,13 +217,13 @@ class Code_Bug {
 	//----------------------------------------------------------------------------------------------
 	//.	delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

@@ -12,7 +12,7 @@
 //opt: altUser - UID of user, display avatar if no images [string]
 
 function images_randomimages($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 

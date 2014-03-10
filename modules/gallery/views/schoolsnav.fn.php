@@ -6,7 +6,7 @@
 
 function gallery_schoolsnav($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';							//%	return value [string]
@@ -20,15 +20,15 @@ function gallery_schoolsnav($args) {
 	 . 'FROM gallery_gallery group by schoolUID '
 	 . 'ORDER BY numGalleries DESC';
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$table = array();
 	$table[] = array('School', '#');
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		$block = "[[:schools::name::link=yes::schoolUID=" . $item['schoolUID'] . ":]]";
 		$table[] = array($block, $item['numGalleries']);
 	}

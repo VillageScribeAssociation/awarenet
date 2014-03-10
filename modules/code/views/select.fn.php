@@ -12,7 +12,7 @@
 // * $args['default'] = current value
 
 function code_select($args) {
-	global $db;
+	global $kapenta;
 
 	$varname = 'person';
 	$default = '';
@@ -21,9 +21,9 @@ function code_select($args) {
 	$html = '';
 	
 	$sql = "select * from code order by name";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html .= "<select name='" . $varname . "'>\n";
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		if ($row['UID'] == $default) {
 			$html .= "<option value='" . $row['UID'] . "' CHECKED='CHECKED'>" 
 			      . $row['name'] . "</option>\n";

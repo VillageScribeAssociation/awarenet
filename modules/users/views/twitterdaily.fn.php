@@ -6,7 +6,7 @@
 //opt: date - date to be shown, default is today, YYYY-MM-DD [string]
 
 function users_twitterdaily($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$date = substr($kapenta->datetime(), 0, 10);
@@ -21,10 +21,10 @@ function users_twitterdaily($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count new objects
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("DATE(createdOn) = '" . $db->addMarkup($date) . "'");
-	$newUser = $db->countRange('users_user', $conditions);
-	$newSession = $db->countRange('users_session', $conditions);
-	$newFriendship = $db->countRange('users_friendship', $conditions);
+	$conditions = array("DATE(createdOn) = '" . $kapenta->db->addMarkup($date) . "'");
+	$newUser = $kapenta->db->countRange('users_user', $conditions);
+	$newSession = $kapenta->db->countRange('users_session', $conditions);
+	$newFriendship = $kapenta->db->countRange('users_friendship', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the snippet

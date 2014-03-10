@@ -48,7 +48,7 @@
 	foreach($children as $childId) {
 		$request = $xd->getChildren2d($childId);
 		if ((true == array_key_exists('model', $request)) && (array_key_exists('UID', $request))) {
-			$xml = $db->getObjectXml($request['model'], $request['UID']);
+			$xml = $kapenta->db->getObjectXml($request['model'], $request['UID']);
 			$log .= "raw xml:<br/>\n$xml<br/>\n\n";
 			$log .= "object xml: " . strlen($xml) . " bytes<br/>\n";
 			$hash = sha1($xml);
@@ -58,13 +58,13 @@
 				// hashes do not match, check that this object is correct in the gifts table
 				//----------------------------------------------------------------------------------
 				$log .= "WARNING: hash mismatch - $hash != " . $request['hash'] . "<br/>";
-				$properties = $db->getObject($request['model'], $request['UID']);
+				$properties = $kapenta->db->getObject($request['model'], $request['UID']);
 				if (false == $properties) {				
 					// no such objects, delete from gifts table
 					$sql = "DELETE FROM p2p_gift"
-					 . " WHERE refModel='" . $db->addMarkup($request['model']) . "' "
-					 . "AND refUID='" . $db->addMarkup($request['UID']) . "'";
-					$db->query($sql);
+					 . " WHERE refModel='" . $kapenta->db->addMarkup($request['model']) . "' "
+					 . "AND refUID='" . $kapenta->db->addMarkup($request['UID']) . "'";
+					$kapenta->db->query($sql);
 					//echo $sql . "<br/>\n";
 
 				} else {

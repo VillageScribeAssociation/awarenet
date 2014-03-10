@@ -23,7 +23,7 @@ class KJS_Builder {
 		if (false == $buffered) { 	header('Content-type: text/javascript'); }
 
 		if ('' !== $makeFile) {
-			$this->makeFile = $kapenta->fileGetContents('data/kjs/build.txt');
+			$this->makeFile = $kapenta->fs->get('data/kjs/build.txt');
 			$this->process();
 		}
 	}
@@ -110,9 +110,9 @@ class KJS_Builder {
 		global $kapenta;
 
 		$js = '';
-		if (true == $kapenta->fileExists($fileName)) {
+		if (true == $kapenta->fs->exists($fileName)) {
 			$js .= "/* KapentaJS import " . $fileName . " */\n\n";
-			$js .= $kapenta->fileGetContents($fileName);
+			$js .= $kapenta->fs->get($fileName);
 		} else {
 			$js .= "/* ERROR: KapentaJS import, missing: " . $fileName . " */\n";
 		}
@@ -130,7 +130,7 @@ class KJS_Builder {
 		$baseDir = 'data/kjs/modules/' . $moduleName . '/';
 		$js = '';
 
-		if (true == $kapenta->fileExists($baseDir)) {
+		if (true == $kapenta->fs->exists($baseDir)) {
 
 			$this->throwJs(''
 			 . "/* KapentaJS adding module: " . $moduleName . " */\n\n"
@@ -283,7 +283,7 @@ class KJS_Builder {
 	function addBlock($moduleName, $fileName) {
 		global $kapenta;
 
-		if (false == $kapenta->fileExists($fileName)) {
+		if (false == $kapenta->fs->exists($fileName)) {
 			$this->throwJs("/*  ERROR: missing block file $fileName */");
 			return;
 		}

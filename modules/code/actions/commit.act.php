@@ -86,7 +86,7 @@
 	//	check if this item already exists in this project
 	//----------------------------------------------------------------------------------------------
 	$model = new Code_File();
-	if (true == $db->objectExists('code_file', $fileUID)) {
+	if (true == $kapenta->db->objectExists('code_file', $fileUID)) {
 		$model->load($fileUID);
 
 		//------------------------------------------------------------------------------------------

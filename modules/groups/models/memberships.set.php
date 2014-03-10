@@ -33,13 +33,13 @@ class Groups_Memberships {
 	//returns: true on success, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 
 		if ('' == $this->groupUID) { return false; }
-		if (false == $db->objectExists('groups_group', $this->groupUID)) { return false; }
+		if (false == $kapenta->db->objectExists('groups_group', $this->groupUID)) { return false; }
 
-		$conditions = array("groupUID='" . $db->addMarkup($this->groupUID) . "'");
-		$this->members = $db->loadRange('groups_membership', '*', $conditions);
+		$conditions = array("groupUID='" . $kapenta->db->addMarkup($this->groupUID) . "'");
+		$this->members = $kapenta->db->loadRange('groups_membership', '*', $conditions);
 		$this->loaded = true;
 		$this->deleteDuplicates();
 		return true;
@@ -82,7 +82,7 @@ class Groups_Memberships {
 
 	function add($userUID, $position, $admin) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $session;
 
 		if (false == $this->loaded) { $this->load(); }		//	effectively checks $this->groupUID
@@ -102,7 +102,7 @@ class Groups_Memberships {
 			$model->groupUID = $this->groupUID;
 			$model->position = $position;
 			$model->admin = $admin;
-			$model->joined = $db->datetime();
+			$model->joined = $kapenta->db->datetime();
 			$report = $model->save();
 
 		} else {

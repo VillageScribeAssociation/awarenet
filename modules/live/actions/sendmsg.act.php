@@ -25,10 +25,10 @@
 	
 	if ($fromUID != $user->UID) { $page->doXmlError('Not logged in.'); }
 
-	if (false == $db->objectExists('users_user', $fromUID))
+	if (false == $kapenta->db->objectExists('users_user', $fromUID))
 		{ $page->doXmlError('No such user (fromUID)'); }
 
-	if (false == $db->objectExists('users_user', $toUID))
+	if (false == $kapenta->db->objectExists('users_user', $toUID))
 		{ $page->doXmlError('No such user (fromUID)'); }
 
 	//----------------------------------------------------------------------------------------------

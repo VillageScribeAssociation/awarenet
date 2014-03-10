@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function moblog_maintenance() {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 
@@ -21,10 +21,10 @@ function moblog_maintenance() {
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "select * from moblog_post";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		echo "maintain: " . $item['UID'] . ' - ' . $item['title'] . "<br/>\n"; flush();
 		$model = new Moblog_Post();
 		$model->loadArray($item);

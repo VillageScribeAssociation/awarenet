@@ -22,11 +22,11 @@
 	//	look up default image and redirect
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($kapenta->request->args['module']) ."'";
-	$conditions[] = "refModel='" . $db->addMarkup($kapenta->request->args['model']) ."'";
-	$conditions[] = "refUID='" . $db->addMarkup($kapenta->request->args['uid']) ."'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($kapenta->request->args['module']) ."'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($kapenta->request->args['model']) ."'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($kapenta->request->args['uid']) ."'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight', '1');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight', '1');
 
 	if (0 == count($range)) {
 		// display 'not found' image

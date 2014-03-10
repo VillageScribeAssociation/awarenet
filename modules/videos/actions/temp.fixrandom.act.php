@@ -30,10 +30,10 @@
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "select * from videos_video";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		if (false == $kapenta->fs->exists($item['fileName'])) {
 			echo $item['fileName'] . "<br/>\n";
 

@@ -16,7 +16,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function live_install_module() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $user;
 

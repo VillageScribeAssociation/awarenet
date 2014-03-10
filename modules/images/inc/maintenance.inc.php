@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function images_maintenance() {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 		global $aliases;
@@ -26,17 +26,17 @@ function images_maintenance() {
 	$errors[] = array('UID', 'Title', 'error');
 
 	$sql = "select * from images_image";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Images_Image($row['UID']);
 
 		//-----------------------------------------------------------------------------------------
 		//	check that this object has a reference
 		//-----------------------------------------------------------------------------------------
 		if ('' == $model->refUID) {
-			$db->delete($model->UID, $model->dbSchema);
+			$kapenta->db->delete($model->UID, $model->dbSchema);
 			$errorCount++;
 			$errors[] = array($row['UID'], $row['title'], 'No reference.');
 		}

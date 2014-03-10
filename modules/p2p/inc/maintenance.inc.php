@@ -8,7 +8,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function p2p_maintenance() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -25,11 +25,11 @@ function p2p_maintenance() {
 	$recordCount++;
 
 	$sql = "select * from p2p_peer";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$recordCount++;
-		$row = $db->rmArray($row);
+		$row = $kapenta->db->rmArray($row);
 		$peer = new P2P_Peer();
 		$peer->loadArray($row);
 
@@ -81,13 +81,13 @@ function p2p_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'refModel', 'refUID', 'error');
 
-	$dbSchema = $db->getSchema('p2p_gift');
+	$dbSchema = $kapenta->db->getSchema('p2p_gift');
 
 	$sql = "select * from p2p_gift";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$recordCount++;
-		$item = $db->rmArray($row);
+		$item = $kapenta->db->rmArray($row);
 
 		//------------------------------------------------------------------------------------------
 		//	check references to files, delete offer if bad
@@ -103,8 +103,8 @@ function p2p_maintenance() {
 				$errorCount++;
 				$fixCount++;
 
-				$sql = "delete from p2p_gift where UID='" . $db->addMarkup($item['UID']) . "'";
-				$db->query($sql);
+				$sql = "delete from p2p_gift where UID='" . $kapenta->db->addMarkup($item['UID']) . "'";
+				$kapenta->db->query($sql);
 			}
 		}
 
@@ -112,7 +112,7 @@ function p2p_maintenance() {
 		//	check references to objects, delete offer if bad
 		//------------------------------------------------------------------------------------------
 		if ('object' == $item['type']) {
-			if (false == $db->objectExists($item['refModel'], $item['refUID'])) { 
+			if (false == $kapenta->db->objectExists($item['refModel'], $item['refUID'])) { 
 				$errors[] = array(
 					$item['UID'],
 					$item['refModel'],
@@ -122,8 +122,8 @@ function p2p_maintenance() {
 				$errorCount++;
 				$fixCount++;
 
-				$sql = "delete from p2p_gift where UID='" . $db->addMarkup($item['UID']) . "'";
-				$db->query($sql);
+				$sql = "delete from p2p_gift where UID='" . $kapenta->db->addMarkup($item['UID']) . "'";
+				$kapenta->db->query($sql);
 			}
 		}
 
@@ -140,8 +140,8 @@ function p2p_maintenance() {
 			$errorCount++;
 			$fixCount++;
 
-			$sql = "delete from p2p_gift where UID='" . $db->addMarkup($item['UID']) . "'";
-			$db->query($sql);
+			$sql = "delete from p2p_gift where UID='" . $kapenta->db->addMarkup($item['UID']) . "'";
+			$kapenta->db->query($sql);
 		}
 
 	}

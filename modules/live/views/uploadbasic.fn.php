@@ -11,7 +11,7 @@ function live_uploadbasic($args) {
 	global $user;
 	global $theme;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
@@ -28,7 +28,7 @@ function live_uploadbasic($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(unknown module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(owner object not found)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(owner object not found)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

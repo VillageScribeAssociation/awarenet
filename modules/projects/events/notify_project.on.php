@@ -8,7 +8,7 @@
 
 function projects__cb_notify_project($args) {
 	global $notifications;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -20,10 +20,10 @@ function projects__cb_notify_project($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($args['projectUID']) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($args['projectUID']) . "'";
 	$conditions[] = "(role='admin' OR role='member')";
 
-	$range = $db->loadRange('projects_membership', '*', $conditions);
+	$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	add all members of this project

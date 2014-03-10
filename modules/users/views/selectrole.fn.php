@@ -7,7 +7,7 @@
 //opt: varname - html form element name, default is role [string]
 
 function users_selectrole($args) {
-	global $db;
+	global $kapenta;
 
 	$varname = 'role';				//%	html field name [string]
 	$default = 'public';			//%	default list item [string]
@@ -22,7 +22,7 @@ function users_selectrole($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load all roles from database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('users_role', '*', '', 'name ASC');
+	$range = $kapenta->db->loadRange('users_role', '*', '', 'name ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

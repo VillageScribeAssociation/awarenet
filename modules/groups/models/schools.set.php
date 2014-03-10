@@ -33,13 +33,13 @@ class Groups_Schools {
 	//returns: true on success, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 
 		if ('' == $this->groupUID) { return false; }
-		if (false == $db->objectExists('groups_group', $this->groupUID)) { return false; }
+		if (false == $kapenta->db->objectExists('groups_group', $this->groupUID)) { return false; }
 
-		$conditions = array("groupUID='" . $db->addMarkup($this->groupUID) . "'");
-		$this->members = $db->loadRange('groups_schoolindex', '*', $conditions);
+		$conditions = array("groupUID='" . $kapenta->db->addMarkup($this->groupUID) . "'");
+		$this->members = $kapenta->db->loadRange('groups_schoolindex', '*', $conditions);
 		$this->loaded = true;
 		return true;
 
@@ -88,7 +88,7 @@ class Groups_Schools {
 
 	function add($schoolUID, $memberCount) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $session;
 
 		if (false == $this->loaded) { $this->load(); }	//	effectively checks $this->groupUID
@@ -200,7 +200,7 @@ class Groups_Schools {
 
 	function updateSchoolsIndex($memberships) {
 		global $theme;
-		global $db;
+		global $kapenta;
 		global $session;
 
 		if (false == $this->loaded) { $this->load(); }

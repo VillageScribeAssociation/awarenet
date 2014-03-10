@@ -14,7 +14,7 @@ function images_uploadmultipleform($args) {
 		global $kapenta;
 		global $theme;
 		global $user;
-		global $db;
+		global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$tags = 'no';
@@ -32,7 +32,7 @@ function images_uploadmultipleform($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(owner not found)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(owner not found)'; }
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

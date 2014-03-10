@@ -15,15 +15,15 @@
 	//---------------------------------------------------------------------------------------------
 	//	gather some system data
 	//---------------------------------------------------------------------------------------------
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 
 	//---------------------------------------------------------------------------------------------
 	//	go through image table looking for dead references
 	//---------------------------------------------------------------------------------------------
 	$sql = "select UID, refUID, refModule, title from images_image";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$extenuate = false;											// some are just shorter
 		if ($row['refUID'] == 'admin') { $extenuate = true; }		// administrator
 
@@ -44,14 +44,14 @@
 				$sql = "select UID from " . $row['refModule'] . " "
 					 . "where LEFT(UID, " . strlen($row['refUID']) . ") = '" . $row['refUID'] . "'";
 			
-				$try = $db->query($sql);
-				if ($db->numRows($try) > 0) {
+				$try = $kapenta->db->query($sql);
+				if ($kapenta->db->numRows($try) > 0) {
 					// found it, repair
-					$match = $db->fetchAssoc($try);
+					$match = $kapenta->db->fetchAssoc($try);
 					echo "found matching UID: " . $match['UID'] . " ~ " . $row['refUID'] . "<br/>\n";
 
 					$sql = "update images_image set refUID='" . $match['UID'] . "' where UID='" . $row['UID'] . "'";
-					$db->query($sql);
+					$kapenta->db->query($sql);
 					echo $sql . "<br/>\n";
 
 				} else {

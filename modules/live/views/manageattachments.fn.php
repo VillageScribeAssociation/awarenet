@@ -11,7 +11,7 @@ function live_manageattachments($args) {
 	global $user;	
 	global $theme;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 
@@ -29,7 +29,7 @@ function live_manageattachments($args) {
 	if (false == $user->authHas($refModule, $refModel, 'edit', $refUID)) { return ''; }
 	
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner object)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

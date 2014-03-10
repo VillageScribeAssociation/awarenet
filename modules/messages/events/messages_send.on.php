@@ -12,7 +12,7 @@
 //opt: re - UID of a messages_message object this is in reply to [string]
 
 function messages__cb_messages_send($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $utils;
@@ -40,8 +40,8 @@ function messages__cb_messages_send($args) {
 
 	$content = $utils->cleanHtml($args['content']);
 
-	if (false == $db->objectExists('users_user', $fromUID)) { return false; }	//	must exist
-	if (false == $db->objectExists('users_user', $toUID)) { return false; }		//	must exist
+	if (false == $kapenta->db->objectExists('users_user', $fromUID)) { return false; }	//	must exist
+	if (false == $kapenta->db->objectExists('users_user', $toUID)) { return false; }		//	must exist
 
 	//echo "passed basic tests.<br/>\n";
 

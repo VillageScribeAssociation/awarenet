@@ -35,7 +35,7 @@
 	//----------------------------------------------------------------------------------------------
 	$content = $theme->expandBlocks('[[:projects::show::raUID='. $project->UID .':]]', '')
 		. "<br/><div class='inlinequote'>Moved from projects module by "
-		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $db->datetime() . ".</div>";
+		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>";
 
 	$content = str_replace("\n", '', $content);
 	$content = str_replace("\r", '', $content);
@@ -66,13 +66,13 @@
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "refModule='projects'";
-	$conditions[] = "refUID='" . $db->addMarkup($project->UID) . "'";
-	$range = $db->loadRange('comments_comment', '*', $conditions);
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($project->UID) . "'";
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions);
 
 	foreach($range as $item) {
 		$comment = $item['comment']
 		. "<br/><div class='inlinequote'>Moved from comments module by "
-		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $db->datetime() . ".</div>\n";
+		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>\n";
 
 		$reply = new Forums_Reply();
 		$reply->forum = $board->UID;

@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function home_maintenance() {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$recordCount = 0;
@@ -22,10 +22,10 @@ function home_maintenance() {
 	//	check all static pages
 	//---------------------------------------------------------------------------------------------
 	$sql = "select * from home_static";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		$model = new Home_Static();
 		$model->loadArray($row);

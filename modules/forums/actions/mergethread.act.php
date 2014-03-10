@@ -25,7 +25,7 @@
 	if ($fromThread->UID == $toThread->UID) { $page->do404('Cannot merge thread with itself.'); }
 
 	$msg = "<br/><div class='inlinequote'>Moved by " . $user->getNameLink()
-		 . " on " . $db->datetime() . "</div>";
+		 . " on " . $kapenta->db->datetime() . "</div>";
 
 	//----------------------------------------------------------------------------------------------
 	//	recast orignal thread as reply
@@ -56,9 +56,9 @@
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "thread='" . $db->addMarkup($fromThread->UID) . "'";
+	$conditions[] = "thread='" . $kapenta->db->addMarkup($fromThread->UID) . "'";
 	
-	$range = $db->loadRange('forums_reply', '*', $conditions);
+	$range = $kapenta->db->loadRange('forums_reply', '*', $conditions);
 
 	if (0 == count($range)) { $session->msg('Thread has no replies, none to move.', 'info'); }
 

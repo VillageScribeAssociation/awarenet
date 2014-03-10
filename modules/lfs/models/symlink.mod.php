@@ -32,11 +32,11 @@ class LFS_Symlink {
 	//opt: UID - UID of a Symlink object [string]
 
 	function LFS_Symlink($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();		// initialise table schema
 		if ('' != $UID) { $this->load($UID); }	// try load an object from the database
 		if (false == $this->loaded) {			// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize
 			$this->loaded = false;
 		}
 	}
@@ -48,8 +48,8 @@ class LFS_Symlink {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -82,15 +82,15 @@ class LFS_Symlink {
 	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 	}
 
@@ -220,13 +220,13 @@ class LFS_Symlink {
 	//----------------------------------------------------------------------------------------------
 	//.	delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

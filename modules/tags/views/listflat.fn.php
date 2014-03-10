@@ -11,7 +11,7 @@
 
 function tags_listflat($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $user;
 
@@ -30,7 +30,7 @@ function tags_listflat($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) { return ''; }
 
 	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
@@ -44,7 +44,7 @@ function tags_listflat($args) {
 		$uids = explode('|', $kapenta->cacheGet($cacheKey));
 		foreach($uids as $uid) {
 			if ('' != trim($uid)) {
-				$objAry = $db->getObject('tags_index', $uid);
+				$objAry = $kapenta->db->getObject('tags_index', $uid);
 				if (count($objAry) > 0) { $range[$uid] = $objAry; }
 			}
 		}
@@ -55,10 +55,10 @@ function tags_listflat($args) {
 	//----------------------------------------------------------------------------------------------	
 	if (0 == count($range)) {
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-		$range = $db->loadRange('tags_index', '*', $conditions);
+		$range = $kapenta->db->loadRange('tags_index', '*', $conditions);
 
 		//------------------------------------------------------------------------------------------
 		//	cache for next time

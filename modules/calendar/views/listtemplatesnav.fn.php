@@ -8,7 +8,7 @@
 
 function calendar_listtemplatesnav($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';			//%	return value [string:html]
@@ -23,7 +23,7 @@ function calendar_listtemplatesnav($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("createdBy='" . $user->UID . "'");
-	$range = $db->loadRange('calendar_template', '*', $conditions, 'title');
+	$range = $kapenta->db->loadRange('calendar_template', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -11,15 +11,15 @@
 //TODO: move to images module or discard
 
 function forums_imagecount($args) {
-	global $db;
+	global $kapenta;
 
 	if (false == array_key_exists('forumUID', $args)) { return ''; }
 
 	$sql = "select count(UID) as numRecords from images_image "
-		 . "where refModule='forums' and refUID='" . $db->addMarkup($args['forumUID']) . "'";
+		 . "where refModule='forums' and refUID='" . $kapenta->db->addMarkup($args['forumUID']) . "'";
 
-	$result = $db->query($sql);
-	$row = $db->rmArray($db->fetchAssoc($result));
+	$result = $kapenta->db->query($sql);
+	$row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result));
 	return $row['numRecords'];
 }
 

@@ -6,7 +6,7 @@
 
 function revisions_listdeletedtypes($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';								//%	return value [string]
@@ -25,15 +25,15 @@ function revisions_listdeletedtypes($args) {
 	 . "GROUP BY refModel "
 	 . "ORDER BY refModel";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$table = array();
 	$table[]  = array('Object Type', 'Count');
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		$listUrl = '%%serverPath%%revisions/listdeleted/type_' . $item['refModel'] . '/';
 		$listLink = "<a href='" . $listUrl . "'>" . $item['refModel'] . "</a>";
 		$table[] = array($listLink, $item['numObjects']);

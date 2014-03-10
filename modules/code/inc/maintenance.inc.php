@@ -18,7 +18,7 @@ function code_maintenance() {
 	//----------------------------------------------------------------------------------------------
 	//	load set of packages
 	//----------------------------------------------------------------------------------------------
-	$packages = $db->loadRange('code_package', 'UID, name', array());
+	$packages = $kapenta->db->loadRange('code_package', 'UID, name', array());
 
 	//----------------------------------------------------------------------------------------------
 	//	check file inheritance and package
@@ -28,17 +28,17 @@ function code_maintenance() {
 	$errors[] = array('UID', 'Title', 'error');
 
 	$sql = "select UID, package, parent, LENGTH(content) as filelen from code_file";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Code_File($row['UID']);
 
 		//-----------------------------------------------------------------------------------------
 		//	check that this file belongs to an extand package
 		//-----------------------------------------------------------------------------------------
 		if ('' == $model->package) {
-			//$db->delete($model->UID, $model->dbSchema);
+			//$kapenta->db->delete($model->UID, $model->dbSchema);
 			$errorCount++;
 			$errors[] = array($row['UID'], $row['title'], 'No package.');
 		}
@@ -49,7 +49,7 @@ function code_maintenance() {
 		}
 
 		if (false == $packageFound) {
-			$db->delete($model->UID, $model->dbSchema);
+			$kapenta->db->delete($model->UID, $model->dbSchema);
 			$errorCount++;
 			$errors[] = array($row['UID'], $row['title'], 'Unknown package.');
 		}
@@ -61,7 +61,7 @@ function code_maintenance() {
 		if (($model->parent != '') && ($model->parent != 'root')) {
 			$parent = new Code_File($model->parent);
 			if (false == $parent->loaded) {
-				//$db->delete($model->UID, $model->dbSchema);
+				//$kapenta->db->delete($model->UID, $model->dbSchema);
 				$errorCount++;
 				$errors[] = array($row['UID'], $row['title'], 'Unknown parent (' . $model->parent . ').');
 			}

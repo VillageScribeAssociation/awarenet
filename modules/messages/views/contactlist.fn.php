@@ -10,7 +10,7 @@
 //TODO: consider adding a 'contacts' object/index table to avoid the need to the query below.
 
 function messages_contactlist($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 
@@ -32,17 +32,17 @@ function messages_contactlist($args) {
 
 	$sql = ''
 	 . "SELECT count(UID) as numSent, toUID FROM messages_message"
-	 . " WHERE owner='" . $db->addMarkup($owner) . "'"
-	 . " AND fromUID='" . $db->addMarkup($owner) . "'"
+	 . " WHERE owner='" . $kapenta->db->addMarkup($owner) . "'"
+	 . " AND fromUID='" . $kapenta->db->addMarkup($owner) . "'"
 	 . " GROUP BY toUID"
 	 . " ORDER BY numSent"
 	 . " LIMIT $num";
 	
 	$arrowLeft = '%%serverPath%%themes/%%defaultTheme%%/images/icons/arrow_left_green.png';
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		if ('' != $row['toUID']) {
 
 			//	PREVIOUS VERSION - may still be useful, for example on profile

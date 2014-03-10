@@ -41,11 +41,11 @@ class Code_Package {
 	//opt: raUID - UID or alias of a Package object [string]
 
 	function Code_Package($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();		//	initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }	// try load an object from the database
 		if (false == $this->loaded) {				// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize blank
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize blank
 			$this->name = 'New Package ' . $this->UID;
 			$this->description = 'Describe your package here.';
 		}
@@ -58,8 +58,8 @@ class Code_Package {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID = '') {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -97,7 +97,7 @@ class Code_Package {
 	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
 		global $db, $aliases;
@@ -117,7 +117,7 @@ class Code_Package {
 	//	print_r($this->toArray());
 	//	die();
 
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 	}
 
@@ -245,13 +245,13 @@ class Code_Package {
 	//----------------------------------------------------------------------------------------------
 	//.	delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -288,7 +288,7 @@ class Code_Package {
 	//----------------------------------------------------------------------------------------------
 
 	function toXml() {
-		global $db;
+		global $kapenta;
 
 		$xml = '';						//%	return value [string]
 		$filter = '';
@@ -308,11 +308,11 @@ class Code_Package {
 		#$range = $this->getFiles();			//	uses too much memory for very large packages
 		#foreach($range as $item) { removed }	//	removed
 
-		$sql = "select * from code_file where package='" . $db->addMarkup($this->UID) . "'";
-		$result = $db->query($sql);
+		$sql = "select * from code_file where package='" . $kapenta->db->addMarkup($this->UID) . "'";
+		$result = $kapenta->db->query($sql);
 
-		while($row = $db->fetchAssoc($result)) { 
-			$item = $db->rmArray($row);
+		while($row = $kapenta->db->fetchAssoc($result)) { 
+			$item = $kapenta->db->rmArray($row);
 			$xml .= ''
 			 . "\t\t<file>\n"
 			 . "\t\t\t<uid>" . $item['UID'] . "</uid>\n"
@@ -378,9 +378,9 @@ class Code_Package {
 	//returns: set of serialized Code_UserIndex objects [array]
 
 	function getUserIndex() {
-		global $db;
+		global $kapenta;
 		$conditions = array("packageUID='" . $this->UID . "'");
-		$range = $db->loadRange('code_userindex', '*', $conditions);
+		$range = $kapenta->db->loadRange('code_userindex', '*', $conditions);
 		return $range;
 	}
 
@@ -413,9 +413,9 @@ class Code_Package {
 	//returns: set of Code_File objects [array]
 
 	function getFiles() {
-		global $db;
-		$conditions = array("package='" . $db->addMarkup($this->UID) . "'");
-		$range = $db->loadRange('code_file', '*', $conditions);
+		global $kapenta;
+		$conditions = array("package='" . $kapenta->db->addMarkup($this->UID) . "'");
+		$range = $kapenta->db->loadRange('code_file', '*', $conditions);
 		return $range;
 	}
 
@@ -429,17 +429,17 @@ class Code_Package {
 	//returns: UID of root folder, creating it if need be, empty string on failure [string]
 
 	function getRootFolder() {
-		global $db;
+		global $kapenta;
 		global $session;
 
         if ('' == $this->name) { return ''; }
 
 		$conditions = array();
 		$conditions[] = "parent='root'";
-		$conditions[] = "package='" . $db->addMarkup($this->UID) . "'";
-		$conditions[] = "type='" . $db->addMarkup('folder') . "'";
+		$conditions[] = "package='" . $kapenta->db->addMarkup($this->UID) . "'";
+		$conditions[] = "type='" . $kapenta->db->addMarkup('folder') . "'";
 
-		$range = $db->loadRange('code_file', '*', $conditions);
+		$range = $kapenta->db->loadRange('code_file', '*', $conditions);
 		if (0 == count($range)) { 
             
 			$session->msg("package.mod: Package root folder does not exist, creating... " . $this->name);
@@ -477,7 +477,7 @@ class Code_Package {
 	//returns: UID of folder [string]
 
 	function getParentFolder($path) {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 
 		$parent = $this->getRootFolder();			//%	start from root [string]
@@ -489,12 +489,12 @@ class Code_Package {
 		foreach($parts as $part) {
 
 			$conditions = array();
-			$conditions[] = "package='" . $db->addMarkup($this->UID) . "'";
-			$conditions[] = "parent='" . $db->addMarkup($parent) . "'";
-			$conditions[] = "type='" . $db->addMarkup('folder') . "'";
-			$conditions[] = "path='" . $db->addMarkup($build . $part . '/') . "'";
+			$conditions[] = "package='" . $kapenta->db->addMarkup($this->UID) . "'";
+			$conditions[] = "parent='" . $kapenta->db->addMarkup($parent) . "'";
+			$conditions[] = "type='" . $kapenta->db->addMarkup('folder') . "'";
+			$conditions[] = "path='" . $kapenta->db->addMarkup($build . $part . '/') . "'";
 
-			$range = $db->loadRange('code_file', '*', $conditions);
+			$range = $kapenta->db->loadRange('code_file', '*', $conditions);
 
 			foreach($range as $item) { $parent = $item['UID']; }
 

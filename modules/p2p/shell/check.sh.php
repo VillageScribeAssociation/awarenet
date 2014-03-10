@@ -6,7 +6,7 @@
 //	check/maintain gifts table
 //--------------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('p2p_peer', '*');
+	$range = $kapenta->db->loadRange('p2p_peer', '*');
 	$peers = array();
 	$count_deleted = 0;
 
@@ -25,9 +25,9 @@
 	}
 
 	$sql = "select * from p2p_gift";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 
 		echo "p2p_gift::" . $item['UID'] . " peer=" . $item['peer'] . "\n";
 
@@ -76,7 +76,7 @@
 		//	check references to objects, delete offer if bad
 		//------------------------------------------------------------------------------------------
 		if ('object' == $item['type']) {
-			if (false == $db->objectExists($item['refModel'], $item['refUID'])) { 
+			if (false == $kapenta->db->objectExists($item['refModel'], $item['refUID'])) { 
 				echo ''
 				 . 'p2p_gift::' . $item['UID'] . ' for '
 				 . $item['refModel'] . '::' . $item['refUID']
@@ -87,7 +87,7 @@
 				$fixCount++;
 
 			} else {
-				if (false == $db->isShared($item['refModel'], $item['refUID'])) {
+				if (false == $kapenta->db->isShared($item['refModel'], $item['refUID'])) {
 					echo ''
 					 . 'p2p_gift::' . $item['UID'] . ' for '
 					 . $item['refModel'] . '::' . $item['refUID']
@@ -104,11 +104,11 @@
 		//	check for duplicates
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "peer='" . $db->addMarkup($item['peer']) . "'";		
-		$conditions[] = "type='" . $db->addMarkup($item['type']) . "'";		
-		$conditions[] = "refModel='" . $db->addMarkup($item['refModel']) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($item['refUID']) . "'";
-		$range = $db->loadRange('p2p_gift', '*', $conditions);
+		$conditions[] = "peer='" . $kapenta->db->addMarkup($item['peer']) . "'";		
+		$conditions[] = "type='" . $kapenta->db->addMarkup($item['type']) . "'";		
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($item['refModel']) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($item['refUID']) . "'";
+		$range = $kapenta->db->loadRange('p2p_gift', '*', $conditions);
 
 		if (count($range) > 1) {
 			$first = true;
@@ -132,10 +132,10 @@
 
 
 	function delete_gift($UID) {
-		global $db;
+		global $kapenta;
 		global $count_deleted;
 		$sql = "delete from p2p_gift where UID='" . $UID . "'";
-		$db->query($sql);
+		$kapenta->db->query($sql);
 		$count_deleted++;
 	}
 

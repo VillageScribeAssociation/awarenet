@@ -6,7 +6,7 @@
 
 function admin_temptables($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';						//%	return value [string]
@@ -20,7 +20,7 @@ function admin_temptables($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 	$list = array();
 	$list[] = array('Table', 'Rows', '[x]');
 
@@ -33,9 +33,9 @@ function admin_temptables($args) {
 			//--------------------------------------------------------------------------------------
 			$rowCount = '???';
 			$sql = "select count(UID) as rowCount from $tableName";
-			$result = $db->query($sql);
+			$result = $kapenta->db->query($sql);
 			if (false != $result) {
-				$ary = $db->fetchAssoc($result);
+				$ary = $kapenta->db->fetchAssoc($result);
 				$rowCount = $ary['rowCount'];
 			}
 

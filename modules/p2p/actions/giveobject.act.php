@@ -59,16 +59,16 @@
 	foreach($children as $childId) {
 		$add = true;
 		$objXml = $xd->getInnerXml($childId, true);
-		$objAry = $db->objectXmlToArray($objXml);
+		$objAry = $kapenta->db->objectXmlToArray($objXml);
 		$state = '';
 
 		if (0 == count($objAry)) { $add = false; echo "<!-- COULD NOT PARSE XML -->\n"; }
 
-		if (true == $db->objectExists($objAry['model'], $objAry['fields']['UID'])) {
+		if (true == $kapenta->db->objectExists($objAry['model'], $objAry['fields']['UID'])) {
 			//--------------------------------------------------------------------------------------
 			//	check that this object is newer than our own, if we have it
 			//--------------------------------------------------------------------------------------
-			$local = $db->getObject($objAry['model'], $objAry['fields']['UID']);
+			$local = $kapenta->db->getObject($objAry['model'], $objAry['fields']['UID']);
 			$localTime = $kapenta->strtotime($local['editedOn']);
 			$newTime = $kapenta->strtotime($objAry['fields']['editedOn']);
 
@@ -82,7 +82,7 @@
 		//	try save it if we want it
 		//--------------------------------------------------------------------------------------
 		if (true == $add) {
-			$check = $db->storeObjectXml($objXml, false, false, false);
+			$check = $kapenta->db->storeObjectXml($objXml, false, false, false);
 			if (true == $check) {
 				$state = 'has'; }							// we now have it
 			else {

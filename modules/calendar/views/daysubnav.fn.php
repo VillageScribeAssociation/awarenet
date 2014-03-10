@@ -10,15 +10,15 @@
 //arg: day - day (dd) 01 to 31 [string]
 
 function calendar_daysubnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	if (array_key_exists('day', $args) == false) { return false; }
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
-	$year = $db->addMarkup($args['year']);
-	$month = $db->addMarkup($args['month']);
-	$day = $db->addMarkup($args['day']);
+	$year = $kapenta->db->addMarkup($args['year']);
+	$month = $kapenta->db->addMarkup($args['month']);
+	$day = $kapenta->db->addMarkup($args['day']);
 	$html = '';
 	
 	$model = new Calendar_Entry();

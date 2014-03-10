@@ -7,7 +7,7 @@
 
 function newsletter_selectcategory($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 
 	$default = '';
 	$html = '';									//%	return value [string]
@@ -21,7 +21,7 @@ function newsletter_selectcategory($args) {
 	//	load all categories
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('newsletter_category', '*', '', 'name');
+	$range = $kapenta->db->loadRange('newsletter_category', '*', '', 'name');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

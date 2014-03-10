@@ -13,7 +13,7 @@
 //opt: num - number of changes to show per page (int) [string]
 
 function projects_showchanges($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $session;
@@ -45,14 +45,14 @@ function projects_showchanges($args) {
 	//	count changes
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 
-	$totalItems = $db->countRange('projects_change', $conditions);
+	$totalItems = $kapenta->db->countRange('projects_change', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('projects_change', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('projects_change', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

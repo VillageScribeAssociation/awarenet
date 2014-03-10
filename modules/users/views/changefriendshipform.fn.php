@@ -9,7 +9,7 @@
 //arg: friendshipUID - UID of relationship record [string]
 
 function users_changefriendshipform($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -19,7 +19,7 @@ function users_changefriendshipform($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('friendshipUID', $args)) { return ''; }
-	if (false == $db->objectExists('users_friendship', $args['friendshipUID'])) { return ''; }
+	if (false == $kapenta->db->objectExists('users_friendship', $args['friendshipUID'])) { return ''; }
 	//TODO: permissions check here
 
 	$model = new Users_Friendship($args['friendshipUID']);

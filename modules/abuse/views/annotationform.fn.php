@@ -7,7 +7,7 @@
 
 function abuse_annotationform($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';													//%	return value [string]

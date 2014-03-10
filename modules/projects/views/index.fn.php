@@ -9,7 +9,7 @@
 
 function projects_index($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';							//%	return value [string]

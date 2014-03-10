@@ -12,7 +12,7 @@
 //opt: num - number of records per page (default is 4) [string]
 
 function comments_listnavjs($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 		global $utils;
@@ -44,9 +44,9 @@ function comments_listnavjs($args) {
 	//	load comments from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC');
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

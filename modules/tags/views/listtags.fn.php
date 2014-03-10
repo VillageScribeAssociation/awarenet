@@ -9,7 +9,7 @@
 
 function tags_listtags($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -27,18 +27,18 @@ function tags_listtags($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load any tags from database
 	//----------------------------------------------------------------------------------------------	
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('tags_index', '*', $conditions);
+	$range = $kapenta->db->loadRange('tags_index', '*', $conditions);
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block

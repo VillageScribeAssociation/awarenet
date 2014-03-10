@@ -10,7 +10,7 @@
 //opt: orderBy - field to order the list by (defualt is createdOn) [string]
 
 function newsletter_listadunits($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -42,9 +42,9 @@ function newsletter_listadunits($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('newsletter_adunit', $conditions);	//% total number of items [int]
+	$total = $kapenta->db->countRange('newsletter_adunit', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('newsletter_adunit', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $kapenta->db->loadRange('newsletter_adunit', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>no Roles yet added</div><br/>\n";

@@ -10,15 +10,15 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_allthumbs($args) {
-	global $db;
+	global $kapenta;
 
 	global $kapenta;
 	$sql = "select * from images where refModule='code' order by weight";
 	$html = '';
 	
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) {
 			$coinRa = raGetDefault('code', $row['refUID']);
 			$html .= "<a href='/code/show/" . $coinRa . "'>" 
 				. "<img src='/images/thumb90/" . $row['recordAlias'] 

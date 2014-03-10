@@ -6,7 +6,7 @@
 //opt: date - date to be shown, default is today, YYYY-MM-DD [string]
 
 function projects_twitterdaily($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$date = substr($kapenta->datetime(), 0, 10);
@@ -21,10 +21,10 @@ function projects_twitterdaily($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count new objects
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("DATE(createdOn) = '" . $db->addMarkup($date) . "'");
-	$newProjects = $db->countRange('projects_project', $conditions);
-	$newRevisions = $db->countRange('projects_change', $conditions);
-	$newMembers = $db->countRange('projects_membership', $conditions);
+	$conditions = array("DATE(createdOn) = '" . $kapenta->db->addMarkup($date) . "'");
+	$newProjects = $kapenta->db->countRange('projects_project', $conditions);
+	$newRevisions = $kapenta->db->countRange('projects_change', $conditions);
+	$newMembers = $kapenta->db->countRange('projects_membership', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the snippet

@@ -10,7 +10,7 @@
 //opt: revisionUID - overrides UID if present [string]
 
 function projects_showrevision($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 

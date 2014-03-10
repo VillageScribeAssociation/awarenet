@@ -12,7 +12,7 @@ require_once($kapenta->installPath . 'modules/twitter/models/tweet.mod.php');
 
 function twitter__cb_microblog_event($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
@@ -21,7 +21,7 @@ function twitter__cb_microblog_event($args) {
 	if (false == array_key_exists('message', $args)) { return false; }
 
 	if (false == $kapenta->moduleExists($args['refModule'])) { return false; }
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return false; }
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) { return false; }
 
 	$message = substr($args['message'], 0, 140);
 

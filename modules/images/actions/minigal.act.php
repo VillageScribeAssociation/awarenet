@@ -22,7 +22,7 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404("No such module."); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->do404("No such owner."); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404("No such owner."); }
 
 	//----------------------------------------------------------------------------------------------
 	//	load all images associated with this record
@@ -31,14 +31,14 @@
 	$rows = array();
 
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 
-	//	$sql = "select * from Images_Image where refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) 
-	//		. "' and refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
+	//	$sql = "select * from Images_Image where refModule='" . $kapenta->db->addMarkup($kapenta->request->args['refmodule']) 
+	//		. "' and refUID='" . $kapenta->db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
 			
 	if (0 == count($range)) {
 		$kapenta->page->load('modules/images/actions/minigal.page.php');
@@ -55,7 +55,7 @@
 	}
 		
 	if (array_key_exists('show', $kapenta->request->args)) 
-		{ $show = $db->addMarkup($kapenta->request->args['show']); }
+		{ $show = $kapenta->db->addMarkup($kapenta->request->args['show']); }
 		
 	//------------------------------------------------------------------------------------------
 	//	show the current image
@@ -63,15 +63,15 @@
 	$imgRow = $rows[$show];
 	$attrib = '';
 	if ($imgRow['attribName'] != '') {
-		$attrib = $db->removeMarkup($imgRow['attribName']);
+		$attrib = $kapenta->db->removeMarkup($imgRow['attribName']);
 		if ($imgRow['attribURL'] != '') {
-			$attrib = "<a href='" . $db->removeMarkup($imgRow['attribURL']) . "'>$attrib</a>";
+			$attrib = "<a href='" . $kapenta->db->removeMarkup($imgRow['attribURL']) . "'>$attrib</a>";
 		}
 	}
 		
 	$img = "
 	<img src='/images/width560/" . $imgRow['alias'] . "' /><br/>
-	<b>" . $imgRow['title'] . "</b> " . $db->removeMarkup($imgRow['caption']) . "
+	<b>" . $imgRow['title'] . "</b> " . $kapenta->db->removeMarkup($imgRow['caption']) . "
 	<a href='#' onClick=\"window.parent.location='%%serverPath%%images/full/" 
 	. $imgRow['alias'] . "'\">[view larger]</a>
 	<br/>

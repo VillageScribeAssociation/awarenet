@@ -10,10 +10,10 @@
 //returns: dict of 'module', 'model' and 'UID', or empty array if not found [array]
 
 function videos_fileOwner($path) {
-	global $db;
+	global $kapenta;
 	$owner = array();
-	$conditions = array("fileName='" . $db->addMarkup($path) . "'");
-	$range = $db->loadRange('videos_video', '*', $conditions);
+	$conditions = array("fileName='" . $kapenta->db->addMarkup($path) . "'");
+	$range = $kapenta->db->loadRange('videos_video', '*', $conditions);
 
 	foreach($range as $item) {
 		$owner['module'] = 'videos';

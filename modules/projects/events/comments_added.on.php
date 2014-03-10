@@ -13,7 +13,7 @@ require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 
 function projects__cb_comments_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $notifications;
 

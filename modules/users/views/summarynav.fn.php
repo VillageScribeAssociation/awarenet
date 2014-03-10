@@ -11,7 +11,7 @@
 //opt: target - a URL or _parent, for iFrames [string]
 
 function users_summarynav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $cache;

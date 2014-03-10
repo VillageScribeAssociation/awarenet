@@ -10,7 +10,7 @@
 //opt: num - maximum number of tags to show, default is 30 (int) [string]
 
 function tags_modelcloud($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $cache;
@@ -42,15 +42,15 @@ function tags_modelcloud($args) {
 
 	$sql = "SELECT tagUID, count(UID) as weight "
 		 . "FROM tags_index "
-		 . "WHERE refModule='" . $db->addMarkup($refModule) . "' "
-		 . "AND refModel='" . $db->addMarkup($refModel) . "' "
+		 . "WHERE refModule='" . $kapenta->db->addMarkup($refModule) . "' "
+		 . "AND refModel='" . $kapenta->db->addMarkup($refModel) . "' "
 		 . "GROUP BY tagUID "
 		 . "ORDER BY weight DESC "
 	     . "LIMIT $num";
 
 	//echo $sql;
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -58,8 +58,8 @@ function tags_modelcloud($args) {
 
 	$tags = array();
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Tags_Tag($row['tagUID']);
 		$tags[$model->name] = array(
 			'name' => strtolower($model->name),

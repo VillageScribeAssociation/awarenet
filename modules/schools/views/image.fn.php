@@ -12,7 +12,7 @@
 //: deprecated, TODO: remove this and replace blocks with call to images module
 
 function schools_image($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$size = 'width300';
@@ -30,15 +30,15 @@ function schools_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new Schools_School($db->addMarkup($args['raUID']));	
+	$model = new Schools_School($kapenta->db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
 
 	$sql = "select * from images_image where refModule='schools' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		if ('yes' == $link) {
 			return "<a href='%%serverPath%%images/show/" . $row['alias'] . "'>" 
 				. "<img src='%%serverPath%%images/" . $size . "/" . $row['alias'] 

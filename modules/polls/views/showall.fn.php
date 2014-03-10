@@ -11,7 +11,7 @@
 
 function polls_showall($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;	
 
@@ -33,11 +33,11 @@ function polls_showall($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('polls_question', '*', $conditions, 'content ASC');
+	$range = $kapenta->db->loadRange('polls_question', '*', $conditions, 'content ASC');
 
 	if (0 == count($range)) { return ''; }
 

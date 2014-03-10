@@ -8,9 +8,9 @@
 	//	load all notifications from the database
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from notifications_notification where refModule='gallery'";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Notifications_Notification();
 		$model->loadArray($row);
 
@@ -21,11 +21,11 @@
 			
 			$conditions = array();
 			$conditions[] = "refModule='gallery'";
-			$conditions[] = "refEvent='" . $db->addMarkup('images_added') . "'";
-			$conditions[] = "createdBy='" . $db->addMarkup($model->createdBy) . "'";
-			$conditions[] = "UID != '" . $db->addMarkup($model->UID) . "'";
+			$conditions[] = "refEvent='" . $kapenta->db->addMarkup('images_added') . "'";
+			$conditions[] = "createdBy='" . $kapenta->db->addMarkup($model->createdBy) . "'";
+			$conditions[] = "UID != '" . $kapenta->db->addMarkup($model->UID) . "'";
 
-			$range = $db->loadRange('notifications_notification', '*', $conditions);
+			$range = $kapenta->db->loadRange('notifications_notification', '*', $conditions);
 			$dates = array();
 
 			$mdate = substr($model->createdOn, 0, 10);
@@ -56,11 +56,11 @@
 					foreach($items as $item) {
 						if ($item['UID'] != $longestUID) {
 							echo "delete: " . $item['UID'] . "<br/>\n";
-							$db->delete($item['UID'], $model->dbSchema);
+							$kapenta->db->delete($item['UID'], $model->dbSchema);
 						}
 					}
 
-					$result = $db->query($sql);
+					$result = $kapenta->db->query($sql);
 
 				}
 			}

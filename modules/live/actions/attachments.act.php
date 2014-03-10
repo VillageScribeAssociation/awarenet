@@ -27,7 +27,7 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule, $refUID)) { $page->do404('No module', true); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('No owner', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('No owner', true); }
 
 	//	TODO: permissions checks here
 

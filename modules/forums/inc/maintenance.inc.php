@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function forums_maintenance() {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 		global $aliases;
@@ -28,10 +28,10 @@ function forums_maintenance() {
 	$errors[] = array('UID', 'Title', 'error');
 
 	$sql = "SELECT * from forums_board";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$raAll = $aliases->getAll('forums', 'forums_board', $row['UID']);
 
 		//------------------------------------------------------------------------------------------
@@ -96,10 +96,10 @@ function forums_maintenance() {
 	$errors[] = array('UID', 'Title', 'error');
 
 	$sql = "SELECT * from forums_thread";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$raAll = $aliases->getAll('forums', 'forums_thread', $row['UID']);
 
 		//------------------------------------------------------------------------------------------
@@ -122,8 +122,8 @@ function forums_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check reply counts
 		//------------------------------------------------------------------------------------------
-		$conditions = array("thread='" . $db->addMarkup($row['UID']) . "'");
-		$numReplies = $db->countRange('forums_reply', $conditions);
+		$conditions = array("thread='" . $kapenta->db->addMarkup($row['UID']) . "'");
+		$numReplies = $kapenta->db->countRange('forums_reply', $conditions);
 
 		if ($numReplies != (int)$row['replies']) { 
 			$model = new Forums_Thread($row['UID']);

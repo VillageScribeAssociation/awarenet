@@ -10,7 +10,7 @@
 function like_link($args) {
 	global $theme;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';						//%	return value [string]
@@ -29,7 +29,7 @@ function like_link($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($args['refModule'])) { return 'Unknown module.'; }
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return '(unk UID)'; }
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) { return '(unk UID)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check if user already likes this item

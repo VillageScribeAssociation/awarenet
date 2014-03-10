@@ -11,7 +11,7 @@
 //opt: format - format of list to return (xml|csv|html), default xml [string]
 
 function images_listfiles($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $kapenta;
 
@@ -32,9 +32,9 @@ function images_listfiles($args) {
 	//	consider files of all image records
 	//----------------------------------------------------------------------------------------------
 	$sql = "select UID, fileName, hash from images_image";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) { 
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) { 
+		$row = $kapenta->db->rmArray($row);
 		$currFile = array($row['UID'], $row['fileName'], $row['hash']);
 
 		if ('all' == $status) {

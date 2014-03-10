@@ -15,7 +15,7 @@
 //opt: cbicon - image to use for result button [string]
 
 function users_searchresults($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $kapenta;
@@ -58,20 +58,20 @@ function users_searchresults($args) {
 
 	foreach($parts as $part) {
 		if ('' != $part) {
-			if ('MySQL' == $db->type) {
-				$conditions[] = "LOCATE('". $db->addMarkup($part) ."', $qsField) > 0";
+			if ('MySQL' == $kapenta->db->type) {
+				$conditions[] = "LOCATE('". $kapenta->db->addMarkup($part) ."', $qsField) > 0";
 			}
-			if ('SQLite' == $db->type) {
+			if ('SQLite' == $kapenta->db->type) {
 				$conditions[] = ''
-				 . "LIKE('%". $db->addMarkup($part) ."%', username || surname || firstname)";
+				 . "LIKE('%". $kapenta->db->addMarkup($part) ."%', username || surname || firstname)";
 			}
 		}
 	}
 
 	//print_r($conditions);
 
-	$totalItems = $db->countRange('users_user', $conditions);
-	$range = $db->loadRange(
+	$totalItems = $kapenta->db->countRange('users_user', $conditions);
+	$range = $kapenta->db->loadRange(
 		'users_user', "UID",
 		$conditions, 'surname', $num, $start
 	);

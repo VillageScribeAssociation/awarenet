@@ -15,7 +15,7 @@
 //opt: cbicon - image to use for result button [string]
 
 function users_search($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $kapenta;
@@ -57,11 +57,11 @@ function users_search($args) {
 	$conditions[] = "role <> 'public'";
 
 	foreach($parts as $part) {
-		if ('' != $part) { $conditions[] = "LOCATE('". $db->addMarkup($part) ."', $qsField) > 0"; }
+		if ('' != $part) { $conditions[] = "LOCATE('". $kapenta->db->addMarkup($part) ."', $qsField) > 0"; }
 	}
 
-	$totalItems = $db->countRange('users_user', $conditions);
-	$range = $db->loadRange(
+	$totalItems = $kapenta->db->countRange('users_user', $conditions);
+	$range = $kapenta->db->loadRange(
 		'users_user', "UID, $qsField as qs",
 		$conditions, 'surname', $num, $start
 	);

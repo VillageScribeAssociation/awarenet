@@ -12,9 +12,9 @@
 //opt: refUID - UID of object this editor is for [string]
 
 function editor_add($args) {
-	global $page;
 	global $kapenta;
-	global $db;
+	global $kapenta;
+	global $kapenta;
 
 	$name = 'wyswyg';				//%	name of HTML form field [string]
 	$width = 568;					//%	width of area, pixels [int]
@@ -46,7 +46,7 @@ function editor_add($args) {
 		$refUID = $args['refUID'];
 
 		if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-		if (false == $db->objectExists($refModel, $refUID)) {
+		if (false == $kapenta->db->objectExists($refModel, $refUID)) {
 			//return '(no such owner ' . $refModel . '::' . $refUID . ')';
 		}
 

@@ -10,7 +10,7 @@
 //opt: num - number of posts to show (default is 10) [string]
 
 function moblog_schoolrecentnav($args) {
-		global $db;
+		global $kapenta;
 		global $page;
 		global $user;
 
@@ -23,21 +23,21 @@ function moblog_schoolrecentnav($args) {
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('schoolUID', $args)) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	//if (false == $db->objectExists('schools_school', $args['schoolUID'])) { return ''; }
+	//if (false == $kapenta->db->objectExists('schools_school', $args['schoolUID'])) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get recent posts from this school
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "school='". $db->addMarkup($args['schoolUID']) ."'";
+	$conditions[] = "school='". $kapenta->db->addMarkup($args['schoolUID']) ."'";
 	$conditions[] = "published='yes'";
 
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
 	if (0 == count($range)) { return ''; }
 
 	//$sql = "select UID from moblog " 
-	//	 . "where school='". $db->addMarkup($args['schoolUID']) ."' and published='yes'"
-	//	 . "order by createdOn limit " . $db->addMarkup($num);
+	//	 . "where school='". $kapenta->db->addMarkup($args['schoolUID']) ."' and published='yes'"
+	//	 . "order by createdOn limit " . $kapenta->db->addMarkup($num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

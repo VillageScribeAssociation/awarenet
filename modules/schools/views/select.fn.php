@@ -9,7 +9,7 @@
 //opt: default - default value (should be the UID of a school record) [string]
 
 function schools_select($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$varname = 'school';
@@ -26,7 +26,7 @@ function schools_select($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permisisons
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('schools_school', '*', '', 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', '', 'name');
 	//$sql = "select * from Schools_School order by name";
 	
 	$html .= "<select name='" . $varname . "' style='width: 200px'>\n";

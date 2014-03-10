@@ -12,7 +12,7 @@
 //opt: num - TODO, number of items per page [string]
 
 function projects_tagged($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';			//%	return value [string]
@@ -32,19 +32,19 @@ function projects_tagged($args) {
 	//----------------------------------------------------------------------------------------------
 	$sql = "SELECT projects_project.UID as projectUID from projects_project, tags_index "
 		 . "WHERE projects_project.UID=tags_index.refUID "
-		 . "AND tags_index.tagUID='" . $db->addMarkup($tag->UID) . "' "
+		 . "AND tags_index.tagUID='" . $kapenta->db->addMarkup($tag->UID) . "' "
 		 . "ORDER by projects_project.title";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	if (0 == $db->numRows($result)) { return "(nothing with this tag at present)"; }
+	if (0 == $kapenta->db->numRows($result)) { return "(nothing with this tag at present)"; }
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$html .= "[[:projects::summary::raUID=" . $row['projectUID'] . ":]]";
 	}
 

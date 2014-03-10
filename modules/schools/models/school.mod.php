@@ -36,11 +36,11 @@ class Schools_School {
 	//opt: raUID - UID or alias of a School object [string]
 
 	function Schools_School($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->name = 'New School ' . $this->UID;		// set default name
 			$this->hidden = 'yes';							// do not show by default
@@ -55,8 +55,8 @@ class Schools_School {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID) {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -68,8 +68,8 @@ class Schools_School {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->name = $ary['name'];
 		$this->description = $ary['description'];
@@ -93,16 +93,16 @@ class Schools_School {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('schools', 'schools_school', $this->UID, $this->name);
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -264,16 +264,16 @@ class Schools_School {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 
 		//TODO: check that there are no students at this school before deleting
 
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

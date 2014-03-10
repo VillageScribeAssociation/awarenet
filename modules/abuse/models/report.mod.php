@@ -51,8 +51,8 @@ class Abuse_Report {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if (false == $objary) { return false; }
 		if (false == $this->loadArray($objary)) { return false; }
 		return true;
@@ -66,8 +66,8 @@ class Abuse_Report {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		//if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		//if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];
@@ -89,15 +89,15 @@ class Abuse_Report {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -286,13 +286,13 @@ class Abuse_Report {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -303,12 +303,12 @@ class Abuse_Report {
 
 	function annotate($userUID, $note) {
 		global $user;
-		global $db;
+		global $kapenta;
 
 		if ('' == trim($note)) { return false; }
 		$this->notes .= "<!-- annotation -->\n"
 			. "<b>" . $user->getNameLink() . "</b>"
-			. " (added: " . $db->datetime() . ")<br/>"
+			. " (added: " . $kapenta->db->datetime() . ")<br/>"
 			. str_replace("\n", "<br/>\n", $note) . "<br/>"
 			. ""
 			. "<hr/>";

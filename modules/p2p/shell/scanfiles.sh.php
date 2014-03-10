@@ -15,7 +15,7 @@
 
 	if (1 == count($argv)) { echo $argv[1] = ''; }
 
-	$range = $db->loadRange('p2p_peer', '*');
+	$range = $kapenta->db->loadRange('p2p_peer', '*');
 	$peerUID = '';
 
 	foreach($range as $item) {

@@ -13,7 +13,7 @@
 //opt: link - link to larger image (yes|no) [string]
 
 function projects_image($args) {
-	global $db;
+	global $kapenta;
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
@@ -31,7 +31,7 @@ function projects_image($args) {
 	
 	$row = imgGetDefault('projects', $args['raUID']);
 
-	$model = new Projects_Project($db->addMarkup($args['raUID']));	
+	$model = new Projects_Project($kapenta->db->addMarkup($args['raUID']));	
 	    
 	if ($row == false) {
 		// no images found for this project

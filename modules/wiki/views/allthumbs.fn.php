@@ -12,7 +12,7 @@
 //opt: size - size of images (default is thumb90) [string]
 
 function wiki_allthumbs($args) {
-	global $db;
+	global $kapenta;
 	$size = 'thumb90';
 	$html = '';			//%	return value [string]
 
@@ -25,11 +25,11 @@ function wiki_allthumbs($args) {
 	     . "' order by weight";
 	
 	
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		if ($db->numRows($result) > 6) { $size = 'width145'; }
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) > 0) {
+		if ($kapenta->db->numRows($result) > 6) { $size = 'width145'; }
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			$html .= "<a href='/images/show/" . $row['alias'] . "'>" 
 				. "<img src='/images/" . $size . "/" . $row['alias'] 
 				. "' border='0' alt='" . $row['title'] . "'></a>";

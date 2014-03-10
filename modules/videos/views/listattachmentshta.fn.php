@@ -15,7 +15,7 @@ function videos_listattachmentshta($args) {
 	global $kapenta;
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 	global $page;
 
 	$html = '';						//%	return value [string]
@@ -34,7 +34,7 @@ function videos_listattachmentshta($args) {
 	$hta = $args['hta'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return "(Unknown module: $refModule)"; }
-	if (false == $db->objectExists($refModel, $refUID)) { return "(missing owner object)"; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return "(missing owner object)"; }
 
 	//TODO: permissions check here
 

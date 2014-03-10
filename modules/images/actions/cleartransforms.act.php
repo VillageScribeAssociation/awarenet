@@ -16,9 +16,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	delete all transforms 
 	//----------------------------------------------------------------------------------------------
-	$result = $db->query("select * from images_image");
-	while($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query("select * from images_image");
+	while($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Images_Image($row['UID']);
 
 		$msg = ''

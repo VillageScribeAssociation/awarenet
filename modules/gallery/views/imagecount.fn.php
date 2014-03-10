@@ -8,17 +8,17 @@
 //arg: galleryUID - UID of a gallery [string]
 
 function gallery_imagecount($args) {
-	global $db;
+	global $kapenta;
 
 	if (false == array_key_exists('galleryUID', $args)) { return ''; }
 
 	$sql = "select count(UID) as numRecords from images_image "
-		 . "where refModule='gallery' and refUID='" . $db->addMarkup($args['galleryUID']) . "'";
+		 . "where refModule='gallery' and refUID='" . $kapenta->db->addMarkup($args['galleryUID']) . "'";
 
-	//TODO: use $db->countRange
+	//TODO: use $kapenta->db->countRange
 
-	$result = $db->query($sql);
-	$row = $db->rmArray($db->fetchAssoc($result));
+	$result = $kapenta->db->query($sql);
+	$row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result));
 	return $row['numRecords'];
 }
 

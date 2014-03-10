@@ -10,7 +10,7 @@
 
 function notifications_list($args) {
 	global $page;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $session;
@@ -33,7 +33,7 @@ function notifications_list($args) {
 		// this is an aggregate feed, TODO: disable hiding of notifications
 	} else {
 		// this is a single user's feed
-		if (false == $db->objectExists('users_user', $userUID)) { return '(no such user)'; }
+		if (false == $kapenta->db->objectExists('users_user', $userUID)) { return '(no such user)'; }
 		if (($userUID != $user->UID) && (('admin' != $user->role) and ('teacher' != $user->role))) { 
 			return "<div class='inlinequote'>Your session has ezxpired, please log in.</div>"; 
 		}
@@ -52,10 +52,10 @@ function notifications_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//TODO: tidy so as not to count results when pagination disabled
 	$conditions = array();
-	$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+	$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";
 	$conditions[] = "status='show'";
 
-	$totalItems = $db->countRange('notifications_userindex', $conditions);
+	$totalItems = $kapenta->db->countRange('notifications_userindex', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	if (0 == $totalItems) { 
@@ -64,13 +64,13 @@ function notifications_list($args) {
 	}
 
 	$link = '%%serverPath%%notifications/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of notifications from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('notifications_userindex', '*', $conditions, $by, $num, $start);
+	$range = $kapenta->db->loadRange('notifications_userindex', '*', $conditions, $by, $num, $start);
 	$block = $theme->loadBlock('modules/notifications/views/show.block.php');
 
 	if (0 == count($range)) { $html .= "<!-- end of results -->"; }
@@ -79,7 +79,7 @@ function notifications_list($args) {
 		$model = new Notifications_Notification($row['notificationUID']);
 		if (
 			(true == $model->loaded) &&										//	notification exists
-			(true == $db->objectExists($model->refModel, $model->refUID))	//	subject exists
+			(true == $kapenta->db->objectExists($model->refModel, $model->refUID))	//	subject exists
 		) {
 			$labels = $model->extArray();
 

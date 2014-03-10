@@ -7,14 +7,14 @@
 
 function p2p__cb_p2p_resynchronize_received($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('peer', $args)) { return false; }
 
-	$tables = $db->listTables();			//	array of table names [array:string]
+	$tables = $kapenta->db->listTables();			//	array of table names [array:string]
 	$peerUID = $args['peer'];				//	UID of a P2P_Peer object [string]
 	$priority = '2';						//	queue priority [int]
 

@@ -8,7 +8,7 @@
 //opt: pageNo - page number [string]
 
 function images_recent($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$pageNo = 1;					//%	result page to show [string]
@@ -39,7 +39,7 @@ function images_recent($args) {
 	$conditions = array();
 	//^ add any conditions here
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -13,7 +13,7 @@
 	if ('saveRecord' != $_POST['action']) { $page->do404('Action not supported.'); } 
 	if (false == array_key_exists('UID', $_POST)) { $page->do404('School not specified (UID).'); }
 
-	$model = new Schools_School($db->addMarkup($_POST['UID']));
+	$model = new Schools_School($kapenta->db->addMarkup($_POST['UID']));
 	if (false == $model->loaded) { $page->do404("could not load School $UID");}
 	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID))
 		{ $page->do403('You are not authorized to edit this school.'); }

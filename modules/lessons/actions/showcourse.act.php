@@ -12,8 +12,8 @@
 	$model = new 
 	//TODO:
 
-	$page->load('modules/lessons/actions/showcourse.act.php');
-	$kapenta->page->blockArgs['UID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/lessons/actions/showcourse.act.php');
+	$kapenta->page->blockArgs['UID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

@@ -39,7 +39,7 @@
 	$position = $utils->cleanTitle($_POST['position']);
 	$isAdmin = $utils->cleanYesNo($_POST['admin']);
 
-	if (false == $db->objectExists('users_user', $userUID)) 
+	if (false == $kapenta->db->objectExists('users_user', $userUID)) 
 		{ echo "<span class='ajaxerror'>User not recognized.</span>"; die(); }
 
 	$model = new Groups_Group($_POST['groupUID']);

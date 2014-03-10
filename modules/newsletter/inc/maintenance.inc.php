@@ -16,7 +16,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function newsletter_maintenance() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $user;
 		global $theme;
@@ -35,10 +35,10 @@ function newsletter_maintenance() {
 	$model = new Newsletter_Category();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from newsletter_category";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -55,13 +55,13 @@ function newsletter_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->name, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->name, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
@@ -87,10 +87,10 @@ function newsletter_maintenance() {
 	$model = new Newsletter_Edition();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from newsletter_edition";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -107,13 +107,13 @@ function newsletter_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->subject, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->subject, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
@@ -139,23 +139,23 @@ function newsletter_maintenance() {
 	$model = new Newsletter_Notice();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from newsletter_notice";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
@@ -181,23 +181,23 @@ function newsletter_maintenance() {
 	$model = new Newsletter_Subscription();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from newsletter_subscription";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a users_user
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:users_user)');
 			$errorCount++;

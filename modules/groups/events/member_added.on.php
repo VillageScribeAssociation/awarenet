@@ -13,10 +13,10 @@
 
 function groups__cb_member_added($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
-		global $page;
+		global $kapenta;
 		global $notifications;
 
 

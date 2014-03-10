@@ -9,7 +9,7 @@
 //opt: videoUID - replaces raUID if present [string]
 
 function videos_samegallerynav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -29,10 +29,10 @@ function videos_samegallerynav($args) {
 	//	load siblings from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModel='" . $db->addMarkup($model->refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($model->refUID) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($model->refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($model->refUID) . "'";
 
-	$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC');
+	$range = $kapenta->db->loadRange('videos_video', '*', $conditions, 'weight ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

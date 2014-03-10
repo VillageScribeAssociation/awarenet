@@ -8,7 +8,7 @@
 //arg: userUID - user whose galleries we wish to show [string]
 
 function gallery_navlist($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $user;
 
@@ -27,9 +27,9 @@ function gallery_navlist($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'createdOn DESC', $num);
+	$range = $kapenta->db->loadRange('gallery_gallery', '*', $conditions, 'createdOn DESC', $num);
 	
 	//$block = $theme->loadBlock('modules/gallery/views/summarynav.block.php');
 

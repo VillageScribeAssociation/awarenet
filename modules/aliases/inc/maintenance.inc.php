@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function aliases_maintenance() {
-	global $db;
+	global $kapenta;
 	global $revisions;
 	global $theme;
 
@@ -24,13 +24,13 @@ function aliases_maintenance() {
 	$errors = array();
 	$errors[] = array('UID', 'refModel', 'refUID', 'alias', 'error');
 
-	$db->loadTables();
+	$kapenta->db->loadTables();
 	$tables = $db->tables;
 
 	$sql = "select * from aliases_alias";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		//------------------------------------------------------------------------------------------
 		//	check that refModel and refUID exist

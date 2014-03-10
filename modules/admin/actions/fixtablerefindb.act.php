@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('admin' != $user->role) { $page->do403(); }
 
-	echo "<html><body><h1>Fixing database table references " . $db->datetime() . "</h1><small><pre>\n";
+	echo "<html><body><h1>Fixing database table references " . $kapenta->db->datetime() . "</h1><small><pre>\n";
 
 	$tables = array();
 	$tables[] = 'Abuse_Report';
@@ -67,7 +67,7 @@
 	$tables[] = 'Wiki_Revision';
 
 	/*
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 	foreach($tables as $table) {
 		if (false != strpos($table, '_')) {
 			$pieces = explode('_', $table);
@@ -83,10 +83,10 @@
 	//	get all table schemas
 	//----------------------------------------------------------------------------------------------
 
-	$extant = $db->loadTables();
+	$extant = $kapenta->db->loadTables();
 
 	foreach($extant as $tableName) {
-		$schema = $db->getSchema($tableName);
+		$schema = $kapenta->db->getSchema($tableName);
 		foreach($schema['fields'] as $fieldName => $fieldType) {
 			if (('refModel' == $fieldName) || ('refTable' == $fieldName)) {
 				echo "table: $tableName field: $fieldName\n";
@@ -97,14 +97,14 @@
 				$sql = "select UID, $fieldName from $tableName";
 				echo $sql . "\n";
 
-				$result = $db->query($sql);
-				while($row = $db->fetchAssoc($result)) {
+				$result = $kapenta->db->query($sql);
+				while($row = $kapenta->db->fetchAssoc($result)) {
 					if (($row[$fieldName] != strtolower($row[$fieldName])) && ('' != $tableName)) {
 						$sql = "update $tableName "
 							 . "set $fieldName='" . strtolower($row[$fieldName]) . "' "
-							 . "where UID='" . $db->addMarkup($row['UID']) . "';";
+							 . "where UID='" . $kapenta->db->addMarkup($row['UID']) . "';";
 						echo $sql . "\n";
-						$db->query($sql);
+						$kapenta->db->query($sql);
 						echo $row['UID'] . "--> " . $row[$fieldName] . " (fixed)\n"; flush();
 					}
 				}				
@@ -122,12 +122,12 @@
 	$dba = new KDBAdminDriver();
 
 	$sql = "select * from aliases_alias";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 
 		if (false != strpos($row['refModel'], '_')) { $row['refModel'] = 'wiki_mwimport'; }
 
-		$row = $db->rmArray($row);
+		$row = $kapenta->db->rmArray($row);
 		if ('wiki_mwimport' == $row['refModel']) {
 			echo "bad alias: "
 				. $row['refModule'] . ' - '
@@ -139,10 +139,10 @@
 			if (false != $correct) {
 				echo "correct refModel: $correct \n"; flush();
 				$sql = "update aliases_alias "
-					 . "set refModel='" . $db->addmarkup($correct) . "' where UID='" . $db->addMarkup($row['UID']) . "';";
+					 . "set refModel='" . $kapenta->db->addMarkup($correct) . "' where UID='" . $kapenta->db->addMarkup($row['UID']) . "';";
 
 				echo "$sql \n";
-				$db->query($sql);
+				$kapenta->db->query($sql);
 			}
 
 		}
@@ -157,7 +157,7 @@
 					. $row['alias'] . "\n";
 
 				$sql = "delete from aliases_alias where UID='" . $row['UID'] . "';";
-				$db->query($sql);
+				$kapenta->db->query($sql);
 
 			}
 		}

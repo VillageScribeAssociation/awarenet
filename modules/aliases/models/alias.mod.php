@@ -48,8 +48,8 @@ class Aliases_Alias {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$ary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$ary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($ary != false) { $this->loadArray($ary); return true; }
 		return false;
 	}
@@ -82,7 +82,7 @@ class Aliases_Alias {
 
 	function save() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
@@ -93,10 +93,10 @@ class Aliases_Alias {
 			$kapenta->cacheDelete('aliasalt::' . $this->refModel . '::' . strtolower($this->alias));
 		}
 
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 
 		if (true == $check) { return ''; }
-		else { return "Database error: " . $db->lasterr . "\n"; }
+		else { return "Database error: " . $kapenta->db->lasterr . "\n"; }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -218,9 +218,9 @@ class Aliases_Alias {
 
 	function delete() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 
 		if (true == $kapenta->mcEnabled) {
 			$kapenta->cacheDelete('alias::' . $this->refModel . '::' . strtolower($this->alias));

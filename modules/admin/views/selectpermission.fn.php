@@ -12,7 +12,7 @@
 
 function admin_selectpermission($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$default = '';					//%	reserved [string]
 	$varname = 'permission';		//%	html field name [string]

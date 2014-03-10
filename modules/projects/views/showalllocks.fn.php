@@ -6,7 +6,7 @@
 
 function projects_showalllocks($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 	global $user;
@@ -23,7 +23,7 @@ function projects_showalllocks($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("lockedBy != ''");
-	$range = $db->loadRange('projects_section', '*', $conditions, 'projectUID');
+	$range = $kapenta->db->loadRange('projects_section', '*', $conditions, 'projectUID');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

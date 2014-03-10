@@ -52,7 +52,7 @@
 	$return = "live/attachments/refModule_$refModule/refModel_$refModel/refUID_$refUID/";
 
 	if (false == $kapenta->moduleExists($refModule)) { $errmsg = 'Missing owner module.'; }
-	if (false == $db->objectExists($refModel, $refUID)) { $errmsg = 'Owner object not found.'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $errmsg = 'Owner object not found.'; }
 
 	if (true == array_key_exists('userfile', $_FILES)) {
 		$tempFile = $_FILES['userfile']['tmp_name'];

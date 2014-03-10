@@ -13,8 +13,8 @@
 //opt: pagination - make / display pagination bar, default is yes (yes|no) [string]
 
 function forums_showreplies($args) {
-	global $db;
-	global $page;
+	global $kapenta;
+	global $kapenta;
 	global $theme;
 	global $user;
 
@@ -42,13 +42,13 @@ function forums_showreplies($args) {
 	//	count all replies in this thread
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("thread='" . $model->UID . "'");
-	$totalItems = $db->countRange('forums_reply', $conditions);
+	$totalItems = $kapenta->db->countRange('forums_reply', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('forums_reply', '*', $conditions, 'createdOn ASC', $num, $start);
+	$range = $kapenta->db->loadRange('forums_reply', '*', $conditions, 'createdOn ASC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page

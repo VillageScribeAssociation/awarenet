@@ -9,7 +9,7 @@
 //arg: table - name of table to resync/reannounce [string]
 
 function p2p__cb_p2p_resynctable_received($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
@@ -17,8 +17,8 @@ function p2p__cb_p2p_resynctable_received($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('peer', $args)) { return false; }
 	if (false == array_key_exists('table', $args)) { return false; }
-	if (false == $db->tableExists($args['table'])) { return false; }
-	if (false == $db->objectExists('p2p_peer', $args['peer'])) { return false; }
+	if (false == $kapenta->db->tableExists($args['table'])) { return false; }
+	if (false == $kapenta->db->objectExists('p2p_peer', $args['peer'])) { return false; }
 
 	$priority = '2';						//	queue priority [int]
 	$batchsize = 50;						//	number of items per child event [int]
@@ -27,7 +27,7 @@ function p2p__cb_p2p_resynctable_received($args) {
 	//----------------------------------------------------------------------------------------------
 	//	break table into batches of objects
 	//----------------------------------------------------------------------------------------------
-	$total = $db->countRange($args['table']);
+	$total = $kapenta->db->countRange($args['table']);
 
 	for ($start = 0; $start < $total; $start += $batchsize) {
 

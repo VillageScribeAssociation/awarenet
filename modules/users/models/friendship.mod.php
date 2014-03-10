@@ -34,12 +34,12 @@ class Users_Friendship {
 
 	function Users_Friendship($UID = '') {
 		global $user;
-		global $db;
+		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();
 		if ($UID != '') { $this->load($UID); }
 		if (false == $this->loaded) {
-			$this->data = $db->makeBlank($this->dbSchema);
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);
 			$this->loadArray($this->data);
 			$this->userUID = $user->UID;
 			$this->status = 'unconfirmed';
@@ -55,14 +55,14 @@ class Users_Friendship {
 	//returns: true on success, false if not found [bool]
 
 	function loadFriend($userUID, $friendUID) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
-		$conditions[] = "friendUID='" . $db->addMarkup($friendUID) . "'";
+		$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";
+		$conditions[] = "friendUID='" . $kapenta->db->addMarkup($friendUID) . "'";
 		//$conditions[] = "status='confirmed'";
 
-		$range = $db->loadRange('users_friendship', '*', $conditions, '', '', '');
+		$range = $kapenta->db->loadRange('users_friendship', '*', $conditions, '', '', '');
 
 		if (count($range) > 0) { 
 			$this->loadArray(array_pop($range)); 
@@ -78,8 +78,8 @@ class Users_Friendship {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -91,8 +91,8 @@ class Users_Friendship {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->userUID = $ary['userUID'];
 		$this->friendUID = $ary['friendUID'];
@@ -110,15 +110,15 @@ class Users_Friendship {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -212,14 +212,14 @@ class Users_Friendship {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
-		global $db;
+		global $kapenta;
 		$report = "<h3>Installing Friendships Table</h3>\n";
 
 		//------------------------------------------------------------------------------------------
 		//	create friendships table if it does not exist
 		//------------------------------------------------------------------------------------------
 
-		if ($db->tableExists('friendships') == false) {	
+		if ($kapenta->db->tableExists('friendships') == false) {	
 			dbCreateTable($this->dbSchema);	
 			$this->report .= 'created friendships table and indices...<br/>';
 		} else {
@@ -232,13 +232,13 @@ class Users_Friendship {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -269,12 +269,12 @@ class Users_Friendship {
 	//returns: true if a link exists, false if one does not [bool]
 
 	function linkExists($userUID, $friendUID) {
-		global $db;
+		global $kapenta;
 		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
-		$conditions[] = "friendUID='" . $db->addMarkup($friendUID) . "'";
+		$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";
+		$conditions[] = "friendUID='" . $kapenta->db->addMarkup($friendUID) . "'";
 
-		$result = $db->loadRange('users_friendship', '*', $conditions, '', '', '');
+		$result = $kapenta->db->loadRange('users_friendship', '*', $conditions, '', '', '');
 		if (count($result) > 0) { return true; }
 		return false;
 	}	

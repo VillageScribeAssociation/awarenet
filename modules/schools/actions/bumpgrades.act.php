@@ -60,7 +60,7 @@
 					//	load all students at this school
 					//------------------------------------------------------------------------------
 					$conditions = array("school='" . $model->UID . "'");
-					$range = $db->loadRange('users_user', '*', $conditions, 'surname, firstname');
+					$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'surname, firstname');
 
 					foreach($range as $item) {
 						if (true == array_key_exists($item['grade'], $bumpMap)) {
@@ -79,7 +79,7 @@
 					}
 
 					$bumpContent .= $theme->arrayToHtmlTable($table, true, true);					
-					$model->lastBump = $db->datetime();
+					$model->lastBump = $kapenta->db->datetime();
 					$model->save();
 				}
 

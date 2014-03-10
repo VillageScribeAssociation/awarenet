@@ -14,7 +14,7 @@
 function tags__cb_tags_add($args) {
 	global $kapenta;
 	global $user;
-	global $db;
+	global $kapenta;
 	global $session;
 	global $utils;
 	global $cache;
@@ -52,7 +52,7 @@ function tags__cb_tags_add($args) {
 		$session->msgAdmin('tags_add: unknown module.');
 		return false;
 	}
-	if (false == $db->objectExists($refModel, $refUID)) {
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) {
 		$session->msgAdmin('tags_add: unknown owner object.');
 		return false;
 	}

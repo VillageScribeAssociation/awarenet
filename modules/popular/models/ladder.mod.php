@@ -32,7 +32,7 @@ class Popular_Ladder {
 	//opt: byName - set to true if loading a ladder by name [bool]
 
 	function Popular_Ladder($raUID = '', $byName = false) {
-		global $db;
+		global $kapenta;
 
 		$this->entries = array();
 		$this->dbSchema = $this->getDbSchema();						// initialise table schema
@@ -43,7 +43,7 @@ class Popular_Ladder {
 		}	
 
 		if (false == $this->loaded) {								// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));		// initialize
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));		// initialize
 			$this->shared = 'no';									// these are never shared
 			$this->loaded = false;
 		}
@@ -56,8 +56,8 @@ class Popular_Ladder {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -69,10 +69,10 @@ class Popular_Ladder {
 	//returns: true on success, false on failure [bool]
 
 	function loadByName($name) {
-		global $db;
+		global $kapenta;
 
-		$conditions = array("name='" . $db->addMarkup($name) . "'");
-		$range = $db->loadRange('popular_ladder', '*', $conditions);
+		$conditions = array("name='" . $kapenta->db->addMarkup($name) . "'");
+		$range = $kapenta->db->loadRange('popular_ladder', '*', $conditions);
 		foreach($range as $item) {
 			$this->loadArray($item);
 			return true;
@@ -104,13 +104,13 @@ class Popular_Ladder {
 	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -233,13 +233,13 @@ class Popular_Ladder {
 	//----------------------------------------------------------------------------------------------
 	//.	delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }					// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

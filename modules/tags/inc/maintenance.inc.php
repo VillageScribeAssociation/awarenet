@@ -14,7 +14,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function tags_maintenance() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $user;
 		global $theme;
@@ -37,10 +37,10 @@ function tags_maintenance() {
 	$dbSchema = $model->getDbSchema();
 
 	$sql = "select * from tags_index";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -49,26 +49,26 @@ function tags_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//TODO: complete this check, make sure tagged objects exist
 		/*
-		if (false == $db->objectExists('*_*', $model->refUID)) {
+		if (false == $kapenta->db->objectExists('*_*', $model->refUID)) {
 			// TODO: take action here, if possibe assign valid reference to a *_*
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (refUID:*_*)');
 			$errorCount++;
 		}
 		*/
 
-		if (false == $db->objectExists('tags_tag', $model->tagUID)) {
+		if (false == $kapenta->db->objectExists('tags_tag', $model->tagUID)) {
 			// TODO: take action here, if possibe assign valid reference to a Tags_Tag
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (tagUID:tags_tag)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->UID, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
@@ -100,10 +100,10 @@ function tags_maintenance() {
 	$dbSchema = $model->getDbSchema();
 
 	$sql = "select * from tags_tag";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);				// load into model
 		$recordCount++;
 
@@ -124,13 +124,13 @@ function tags_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->name, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->name, 'invalid reference (editedBy:users_user)');
 			$errorCount++;

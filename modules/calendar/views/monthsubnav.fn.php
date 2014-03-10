@@ -9,13 +9,13 @@
 //arg: month - month (mm) 01 to 12 [string]
 
 function calendar_monthsubnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
-	$year = $db->addMarkup($args['year']);
-	$month = $db->addMarkup($args['month']);
+	$year = $kapenta->db->addMarkup($args['year']);
+	$month = $kapenta->db->addMarkup($args['month']);
 	$html = '';
 	
 	$model = new Calendar_Entry();

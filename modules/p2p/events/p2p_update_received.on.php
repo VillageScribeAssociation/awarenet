@@ -8,7 +8,7 @@
 //arg: fields - base64 encoded field set [string]
 
 function p2p__cb_p2p_update_received($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $revisions;
@@ -27,7 +27,7 @@ function p2p__cb_p2p_update_received($args) {
 
 	$model = $args['model'];
 	$fields64 = $args['fields'];
-	$fields = $db->unserialize($fields64);
+	$fields = $kapenta->db->unserialize($fields64);
 
 	if ('yes' == $kapenta->registry->get('p2p.debug')) {
 		echo "$model:\n";
@@ -38,12 +38,12 @@ function p2p__cb_p2p_update_received($args) {
 	//	check if we need / want this update
 	//----------------------------------------------------------------------------------------------
 	
-	if (false == $db->tableExists($model)) { return false; }
+	if (false == $kapenta->db->tableExists($model)) { return false; }
 	if (false == array_key_exists('UID', $fields)) { return false; }
 	if (false == array_key_exists('editedOn', $fields)) { return false; }
 
-	if (true == $db->objectExists($model, $fields['UID'])) {
-		$objAry = $db->getObject($model, $fields['UID']);
+	if (true == $kapenta->db->objectExists($model, $fields['UID'])) {
+		$objAry = $kapenta->db->getObject($model, $fields['UID']);
 		if (count($objAry) == 0) { return false; }								//	database error
 		if (false == array_key_exists('editedOn', $objAry)) { return false; }	//	invalid
 
@@ -87,19 +87,19 @@ function p2p__cb_p2p_update_received($args) {
 	//----------------------------------------------------------------------------------------------
 	//	store in database, quietly, not raising object_updated event
 	//----------------------------------------------------------------------------------------------
-	$dbSchema = $db->getSchema($model);
+	$dbSchema = $kapenta->db->getSchema($model);
 	if (false == array_key_exists('prikey', $dbSchema)) { $dbSchema['prikey'] = ''; }
 	$check = false;
 
-	if (true == $db->objectExists($model, $fields['UID'])) {
+	if (true == $kapenta->db->objectExists($model, $fields['UID'])) {
 
 		$setter = array();
 		foreach ($fields as $fieldName => $value) {
-			$fVal = $db->addMarkup($value);
+			$fVal = $kapenta->db->addMarkup($value);
 
 			if (
 				(true == array_key_exists($fieldName, $dbSchema['fields'])) &&
-				(true == $db->quoteType($dbSchema['fields'][$fieldName])) 
+				(true == $kapenta->db->quoteType($dbSchema['fields'][$fieldName])) 
 			) { $fVal = "\"" . $fVal . "\""; }
 
 			$setter[] = "`" . $fieldName . "`=" . $fVal;
@@ -108,11 +108,11 @@ function p2p__cb_p2p_update_received($args) {
 		$sql = ''
 		 . "UPDATE $model SET "
 		 . implode(", ", $setter)
-		 . " WHERE UID='" . $db->addMarkup($fields['UID']) . "'";
+		 . " WHERE UID='" . $kapenta->db->addMarkup($fields['UID']) . "'";
 
 		if ('yes' == $kapenta->registry->get('p2p.debug')) { echo $sql . "\n\n"; }
 
-		$db->query($sql);
+		$kapenta->db->query($sql);
 		//TODO: check for database error her.
 
 	} else {
@@ -126,8 +126,8 @@ function p2p__cb_p2p_update_received($args) {
 		foreach ($dbSchema['fields'] as $fName => $fType) {
 			$value = '';
 			if (true == array_key_exists($fName, $fields))
-				{ $value = $db->addMarkup($fields[$fName]); }		// prevent SQL injection
-			if (true == $db->quoteType($fType)) 
+				{ $value = $kapenta->db->addMarkup($fields[$fName]); }		// prevent SQL injection
+			if (true == $kapenta->db->quoteType($fType)) 
 				{ $value = "\"" . $value . "\""; }					// quote string values
 
 			if ($fName !== $dbSchema['prikey']) {
@@ -146,7 +146,7 @@ function p2p__cb_p2p_update_received($args) {
 			echo $sql . "\n\n";
 		}
 
-		$db->query($sql);
+		$kapenta->db->query($sql);
 		//TODO: check for database error here
 
 		//-----------------------------------------------------------------------------------------

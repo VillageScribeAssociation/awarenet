@@ -9,7 +9,7 @@
 //opt: revisionUID - overrides UID if present [string]
 
 function revisions_showrevision($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;	
 

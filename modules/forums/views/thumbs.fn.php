@@ -13,7 +13,7 @@
 //TODO: move this to the images module
 
 function forums_thumbs($args) {
-	global $db;
+	global $kapenta;
 
 	$limit = ''; $html = ''; $size = 'thumb';
 	if (false == array_key_exists('UID', $args)) { return ''; }
@@ -21,12 +21,12 @@ function forums_thumbs($args) {
 	if (true == array_key_exists('num', $args)) { $limit = 'limit ' . $args['num']; }
 
 	$sql = "select * from images_image "
-		 . "where refUID='" . $db->addMarkup($args['UID']) . "' and refModule='forums' "
+		 . "where refUID='" . $kapenta->db->addMarkup($args['UID']) . "' and refModule='forums' "
 		 . "order by createdOn DESC $limit";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$viewUrl = '%%serverPath%%forums/image/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
 		$html .= "<a href='" . $viewUrl . "'>"

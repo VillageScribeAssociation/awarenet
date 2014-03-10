@@ -12,7 +12,7 @@
 
 function code_showtree($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -35,9 +35,9 @@ function code_showtree($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "type='folder'";
-	$conditions[] = "parent='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "parent='" . $kapenta->db->addMarkup($model->UID) . "'";
 
-	$range = $db->loadRange('code_file', '*', $conditions, 'title ASC');
+	$range = $kapenta->db->loadRange('code_file', '*', $conditions, 'title ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

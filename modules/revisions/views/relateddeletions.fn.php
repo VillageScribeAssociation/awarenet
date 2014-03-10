@@ -11,7 +11,7 @@ function revisions_relateddeletions($args) {
 	global $kapenta;
 	global $user;
 	global $theme;
-	global $db;	
+	global $kapenta;	
 
 	$html = '';								//%	return value [string]
 
@@ -29,17 +29,17 @@ function revisions_relateddeletions($args) {
 	$UID = $args['UID'];
 
 	if (false == $kapenta->moduleExists($module)) { return '(unknown module)'; }
-	if (false == $db->tableExists($model)) { return '(unknown model)'; }
+	if (false == $kapenta->db->tableExists($model)) { return '(unknown model)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($module) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($module) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($model) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($UID) . "'";
 
-	$range = $db->loadRange('revisions_deleted', '*', $conditions, 'createdOn DESC');
+	$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions, 'createdOn DESC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

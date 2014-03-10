@@ -22,12 +22,12 @@
 	//	load projects one at a time and convert all revisions
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from projects_project";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$project = new Projects_Project($row['UID']);
 
 		$conditions = array("projectUID='" . $project->UID . "'");
-		$range = $db->loadRange($table, '*', $conditions, 'createdOn ASC');
+		$range = $kapenta->db->loadRange($table, '*', $conditions, 'createdOn ASC');
 		echo "project: {$project->title} ({$project->UID}) has " . count($range) . " revisions.<br/>";
 
 		$lastTitle = '';						//%	comparison

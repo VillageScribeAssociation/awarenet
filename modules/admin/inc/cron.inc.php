@@ -12,7 +12,7 @@
 //returns: HTML report of any actions taken [string]
 
 function admin_cron_daily() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 

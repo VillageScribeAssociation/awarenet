@@ -12,7 +12,7 @@
 //: images are ordered by weight, future versions may have more options if need arises
 
 function images_randomuids($args) {
-	global $db;
+	global $kapenta;
 	//TODO: remove this
 	$limit = ''; $separator = '|'; $retVal = array();
 
@@ -28,10 +28,10 @@ function images_randomuids($args) {
 	//	load UIDs
 	//---------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
 
-	$range = $db->loadRange('images_image', 'UID', $conditions, 'RAND()', $limit, '');
+	$range = $kapenta->db->loadRange('images_image', 'UID', $conditions, 'RAND()', $limit, '');
 	//---------------------------------------------------------------------------------------------
 	//	return as string
 	//---------------------------------------------------------------------------------------------

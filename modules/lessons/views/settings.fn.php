@@ -7,7 +7,7 @@
 function lessons_settings($args) {
 		global $theme;
 		global $user;
-		global $registry;
+		global $kapenta;
 		global $kapenta;
 
 

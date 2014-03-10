@@ -13,7 +13,7 @@
 //returns: HTML report of any actions taken [string]
 
 function packages_cron_daily() {
-	global $db;
+	global $kapenta;
 	$report = "<h2>packages_cron_tenmins</h2>\n";	//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

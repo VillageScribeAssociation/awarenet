@@ -13,7 +13,7 @@
 	$model = new Projects_Project();
 
 	if ( (true == array_key_exists('UID', $_POST)) 
-		AND (true == $db->objectExists('projects_project', $_POST['UID'])) ) {
+		AND (true == $kapenta->db->objectExists('projects_project', $_POST['UID'])) ) {
 
 		$model->load($_POST['UID']);
 		if (true == $model->hasMember($user->UID)) { $authorised = true; }

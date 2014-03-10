@@ -18,7 +18,7 @@
 	if (false == $model->loaded) { $page->do404("Deleted item not found."); }
 
 	if (false == $kapenta->moduleExists($model->refModule)) { $page->do404('Unknown module.'); }
-	if (false == $db->tableExists($model->refModel)) { $page->do404('Unknown model / table.'); }
+	if (false == $kapenta->db->tableExists($model->refModel)) { $page->do404('Unknown model / table.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	restore this object

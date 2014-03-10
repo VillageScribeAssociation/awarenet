@@ -7,7 +7,7 @@
 // * $args['varname'] = field name, default is 'user'
 
 function code_selectproject($args) {
-	global $db;
+	global $kapenta;
 
 	$varname = 'project';
 	$default = '';
@@ -17,9 +17,9 @@ function code_selectproject($args) {
 	$html = "<select name='" . $varname . "'>\n";
 	$sql = "select UID, title from codeprojects order by title";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$checked = '';
 		if ($row['UID'] == $default) { $checked = "checked='checked'"; }
 		$html .= "\t<option value='" . $row['UID'] ."' $checked>". $row['title'] ."</option>";

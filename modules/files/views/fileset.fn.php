@@ -9,7 +9,7 @@
 //arg: refUID - number of files per page [string]
 
 function files_fileset($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';
@@ -26,13 +26,13 @@ function files_fileset($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the file records and make html
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from files_file where refModule='" . $db->addMarkup($args['refModule']) 
-	     . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$sql = "select * from files_file where refModule='" . $kapenta->db->addMarkup($args['refModule']) 
+	     . "' and refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 	
 	//TODO: $db->loadRange
 
-	$result = $db->query($sql);
-	while($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while($row = $kapenta->db->fetchAssoc($result)) {
 		
 		$imgUrl = '%%serverPath%%files/thumb/' . $row['alias'];
 		$editURL = '%%serverPath%%files/edit/return_uploadmultiple/' . $row['alias'];

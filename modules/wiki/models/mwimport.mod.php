@@ -37,13 +37,13 @@ class Wiki_MWImport {
 	//opt: raUID - UID or alias of a MWImport object [string]
 
 	function Wiki_MWImport($raUID = '') {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New MWImport ' . $this->UID;	// set default title
 			$this->loaded = false;
@@ -61,8 +61,8 @@ class Wiki_MWImport {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID) {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -75,8 +75,8 @@ class Wiki_MWImport {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->title = $ary['title'];
 		$this->wikiUrl = $ary['wikiUrl'];
@@ -99,16 +99,16 @@ class Wiki_MWImport {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = '';
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -282,13 +282,13 @@ class Wiki_MWImport {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -298,9 +298,9 @@ class Wiki_MWImport {
 	//returns: UID if found, empty string if not [string]
 
 	function articleExists($pageId) {
-		global $db;
-		$conditions = array("pageid='" . $db->addMarkup($pageId) . "'");
-		$range = $db->loadRange('Wiki_MWImport', '*', $conditions);
+		global $kapenta;
+		$conditions = array("pageid='" . $kapenta->db->addMarkup($pageId) . "'");
+		$range = $kapenta->db->loadRange('Wiki_MWImport', '*', $conditions);
 		if (0 == count($range)) { return ''; }
 		foreach($range as $row) { return $row['UID']; }
 	}

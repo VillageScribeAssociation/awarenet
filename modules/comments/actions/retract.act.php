@@ -32,7 +32,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model->comment = '<small>This comment has been retracted by the poster. '
-							. $db->datetime() . '</small>';
+							. $kapenta->db->datetime() . '</small>';
 	$model->save();
 
 	$session->msg("Your comment has been retracted.");

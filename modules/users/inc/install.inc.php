@@ -20,7 +20,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function users_install_module() {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $kapenta;
 	global $kapenta;
@@ -173,7 +173,7 @@ function users_install_module() {
 	$firstSchool = $kapenta->registry->get('firstrun.firstschool');
 	
 	if (('' !== $adminUID) && ('' !== $adminUser) && ('' !== $adminPass)) {
-		if (false == $db->objectExists('users_user', $adminUID)) {
+		if (false == $kapenta->db->objectExists('users_user', $adminUID)) {
 			$model = new Users_User();
 			$model->UID = $adminUID;
 			$model->role = 'admin';

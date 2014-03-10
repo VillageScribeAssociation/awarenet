@@ -7,7 +7,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function users_maintenance() {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 	global $aliases;
@@ -27,10 +27,10 @@ function users_maintenance() {
 	$errors[] = array('UID', 'Title', 'error');
 
 	$sql = "select * from users_user";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$model = new Users_User();
 		$model->loadArray($row);
 

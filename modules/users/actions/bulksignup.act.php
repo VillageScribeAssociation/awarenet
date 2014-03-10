@@ -29,7 +29,7 @@
 			$ok = false;
 		}
 
-		if (('' != $school) && (false == $db->objectExists('schools_school', $school))) {
+		if (('' != $school) && (false == $kapenta->db->objectExists('schools_school', $school))) {
 			$session->msg('Unknown school.', 'bad');
 			$ok = false;
 		}
@@ -65,8 +65,8 @@
 					$model->password = sha1($parts[3] . $model->UID);
 
 					$model->lang = 'en';
-					$model->lastOnline = $db->datetime();
-					$model->createdOn = $db->datetime();
+					$model->lastOnline = $kapenta->db->datetime();
+					$model->createdOn = $kapenta->db->datetime();
 					$model->createdBy = $user->UID;
 
 					$tableRow = array($parts[0], $parts[1], $parts[2], $parts[3]);

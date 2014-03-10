@@ -18,7 +18,7 @@
 	$reMsg = '';
 
 	if ( (true == array_key_exists('to', $kapenta->request->args))
-		&& (true == $db->objectExists('users_user', $kapenta->request->args['to'])) ) { 
+		&& (true == $kapenta->db->objectExists('users_user', $kapenta->request->args['to'])) ) { 
 	
 		$jsrUID = $kapenta->request->args['to'];
 		$userBlock = $theme->expandBlocks("[[:users::summarynav::userUID=" . $jsrUID . ":]]", '');

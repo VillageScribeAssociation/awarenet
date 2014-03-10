@@ -9,7 +9,7 @@
 //opt: num = max number to show, default is 10 (int) [string]
 
 function gallery_randomgalleriesnav($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -29,7 +29,7 @@ function gallery_randomgalleriesnav($args) {
 	$orderBy = 'RAND()';
 	if ('SQLite' == $kapenta->registry->get('db.driver')) { $orderBy = 'RANDOM()'; }
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy, $num);
+	$range = $kapenta->db->loadRange('gallery_gallery', '*', $conditions, $orderBy, $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

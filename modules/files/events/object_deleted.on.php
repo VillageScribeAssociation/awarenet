@@ -10,7 +10,7 @@ require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 //arg: UID - UID of deleted record
 
 function files__cb_object_deleted($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $session;
 
@@ -23,10 +23,10 @@ function files__cb_object_deleted($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['module']) . "'";
 
-	$range = $db->loadRange('files_file', '*', $conditions, '', '', '');
+	$range = $kapenta->db->loadRange('files_file', '*', $conditions, '', '', '');
 
 	foreach($range as $item) {
 		$model = new Files_File();

@@ -29,11 +29,11 @@ class Folder {
 	//opt: raUID - UID or recordAlias of a folder [string]
 
 	function Folder($raUID = '') {
-		global $db;
+		global $kapenta;
 
 		global $user;
 		$this->dbSchema = $this->getDbSchema();
-		$this->data = $db->makeBlank($this->dbSchema);
+		$this->data = $kapenta->db->makeBlank($this->dbSchema);
 		$this->parent = 'root';
 		$this->title = 'New folder ' . $this->UID;
 		$this->children = '';
@@ -48,9 +48,9 @@ class Folder {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID) {
-		global $db;
+		global $kapenta;
 
-		$ary = $db->loadAlias($raUID, $this->dbSchema);
+		$ary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -71,7 +71,7 @@ class Folder {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-		global $db;
+		global $kapenta;
 
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
@@ -82,7 +82,7 @@ class Folder {
 		$this->alias = raSetAlias(	'folder', $this->UID, 
 													$this->title, 'folder'	);
 
-		$db->save($this->data, $this->dbSchema); 
+		$kapenta->db->save($this->data, $this->dbSchema); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -233,7 +233,7 @@ class Folder {
 	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
-	global $db;
+	global $kapenta;
 
 		$report = "<h3>Installing folder Module</h3>\n";
 
@@ -241,7 +241,7 @@ class Folder {
 		//	create folder table if it does not exist
 		//------------------------------------------------------------------------------------------
 
-		if ($db->tableExists('folder') == false) {	
+		if ($kapenta->db->tableExists('folder') == false) {	
 			echo "installing folder module\n";
 			dbCreateTable($this->dbSchema);	
 			$this->report .= 'created folder table and indices...<br/>';
@@ -257,7 +257,7 @@ class Folder {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		global $db;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	delete subfolders
@@ -284,7 +284,7 @@ class Folder {
 		//------------------------------------------------------------------------------------------
 		//	delete this record and its recordAlias
 		//------------------------------------------------------------------------------------------
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -293,16 +293,16 @@ class Folder {
 	//----------------------------------------------------------------------------------------------
 
 	function updateChildren() {
-		global $db;
+		global $kapenta;
 
 		$this->children = array();
 
 		$sql = "select * from folders where parent='" . $this->UID . "' order by title";
 		//TODO: $db->loadRange
 
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+		$result = $kapenta->db->query($sql);
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 
 			$childSubfolders = unserialize($row['children']);	// TODO: use XML?
 			$row['children'] = '';								// remove list of subfolders
@@ -321,7 +321,7 @@ class Folder {
 	//----------------------------------------------------------------------------------------------
 
 	function updateFiles() {
-	global $db;
+	global $kapenta;
 
 		$this->files = array();
 
@@ -329,9 +329,9 @@ class Folder {
 			 . "where refModule='folders' and refUID='" . $this->UID . "' "
 			 . "order by title";
 
-		$result = $db->query($sql);
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+		$result = $kapenta->db->query($sql);
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			$this->files[$row['UID']] = $row;
 		}
 	}

@@ -9,8 +9,8 @@
 //opt: num - number of records per page (default 300) [string]
 
 function home_list($args) {
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -32,7 +32,7 @@ function home_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('home_static', '*', '', 'title', $num, $start);
+	$list = $kapenta->db->loadRange('home_static', '*', '', 'title', $num, $start);
 	
 	//TODO: use $theme->arrayToHtmlTable();
 	$html = "<table noborder>\n";

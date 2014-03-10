@@ -9,7 +9,7 @@
 //opt: num - TODO, number of items per page [string]
 
 function videos_tagged($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 

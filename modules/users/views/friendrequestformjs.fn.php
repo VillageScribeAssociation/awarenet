@@ -9,7 +9,7 @@
 
 function users_friendrequestformjs($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$ajw = "<span class='ajaxwarn'>";	//%	for error messages [string]
@@ -24,7 +24,7 @@ function users_friendrequestformjs($args) {
 
 	$friendUID = $args['friendUID'];
 
-	if (false == $db->objectExists('users_user', $friendUID)) { return '(friend is unknown user)'; }
+	if (false == $kapenta->db->objectExists('users_user', $friendUID)) { return '(friend is unknown user)'; }
 
 	$set = new Users_Friendships($user->UID);
 	

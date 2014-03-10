@@ -10,7 +10,7 @@
 //opt: ntb - add navtitlebox (yes|no) [string]
 
 function groups_listusergroupsnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -26,8 +26,8 @@ function groups_listusergroupsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the user's groups (if any)
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("userUID='" . $db->addMarkup($args['userUID']) . "'");
-	$range = $db->loadRange('groups_membership', '*', $conditions, "admin='yes'");
+	$conditions = array("userUID='" . $kapenta->db->addMarkup($args['userUID']) . "'");
+	$range = $kapenta->db->loadRange('groups_membership', '*', $conditions, "admin='yes'");
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -42,11 +42,11 @@ class Files_File {
 	//opt: raUID - UID or alias of a File object [string]
 
 	function Files_File($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->loaded = false;
 		}
@@ -59,8 +59,8 @@ class Files_File {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID) {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -72,8 +72,8 @@ class Files_File {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];
@@ -103,16 +103,16 @@ class Files_File {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('files', 'files_file', $this->UID, $this->title);
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -286,17 +286,17 @@ class Files_File {
 	//TODO: discover if this is used by anything, remove if not
 
 	function findSingle($refModule, $refModel, $refUID) {
-		global $db;
+		global $kapenta;
 
-		// $sql = "select * from Files_File where refModule='" . $db->addMarkup($refModule) 
-		//    . "' and refUID='" . $db->addMarkup($refUID) . "' "
-		//	  . " and category = '" . $db->addMarkup($category). "'";
+		// $sql = "select * from Files_File where refModule='" . $kapenta->db->addMarkup($refModule) 
+		//    . "' and refUID='" . $kapenta->db->addMarkup($refUID) . "' "
+		//	  . " and category = '" . $kapenta->db->addMarkup($category). "'";
 
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-		$range = $db->loadRange('files_file', '*', $conditions);
+		$range = $kapenta->db->loadRange('files_file', '*', $conditions);
 
 		foreach ($range as $row) { 
 			$this->load($row['UID']); 
@@ -346,7 +346,7 @@ class Files_File {
 
 	function delete() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		if ($this->fileName == '') { return false; }
 		
@@ -364,7 +364,7 @@ class Files_File {
 		//	delete the record
 		//-----------------------------------------------------------------------------------------		
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 	

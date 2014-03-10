@@ -63,8 +63,8 @@ class Calendar_Entry {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID = '') {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -77,8 +77,8 @@ class Calendar_Entry {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		//if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		//if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->title = $ary['title'];
 		$this->category = $ary['category'];
@@ -105,16 +105,16 @@ class Calendar_Entry {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('calendar', 'calendar_entry', $this->UID, $this->title);
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -435,20 +435,20 @@ class Calendar_Entry {
 	//returns: nested array of calendar entries [array]	
 
 	function loadMonth($month, $year) {
-		global $db;
+		global $kapenta;
 		$retVal = array();
 
 		if (1 == strlen(trim($month))) { $month = '0' . $month; }
 
 		$conditions = array();
-		$conditions[] = "year='" . $db->addMarkup($year) . "'";
-		$conditions[] = "month='" . $db->addMarkup($month) . "'";
+		$conditions[] = "year='" . $kapenta->db->addMarkup($year) . "'";
+		$conditions[] = "month='" . $kapenta->db->addMarkup($month) . "'";
 		$conditions[] = "published='yes'";
 
-		$range = $db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
+		$range = $kapenta->db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
 
-		// $sql = "select * from Calendar_Entry where year='". $db->addMarkup($year) ."' and month=" 
-		//     . $db->addMarkup($month) . " and published='yes' order by year, month, day, eventStart";
+		// $sql = "select * from Calendar_Entry where year='". $kapenta->db->addMarkup($year) ."' and month=" 
+		//     . $kapenta->db->addMarkup($month) . " and published='yes' order by year, month, day, eventStart";
 	
 		foreach($range as $row) { $retVal[$row['UID']] = $row; }
 		return $retVal;
@@ -463,21 +463,21 @@ class Calendar_Entry {
 	//returns: nested array of calendar entries [array]	
 
 	function loadDay($day, $month, $year) {
-		global $db;
+		global $kapenta;
 		$retVal = array();
 
 		if (1 == strlen($day)) { $day = '0' . $day; }
 
 		$conditions = array();
-		$conditions[] = "year='" . $db->addMarkup($year) . "'";
-		$conditions[] = "month='" . $db->addMarkup($month) . "'";
-		$conditions[] = "day='" . $db->addMarkup($day) . "'";
+		$conditions[] = "year='" . $kapenta->db->addMarkup($year) . "'";
+		$conditions[] = "month='" . $kapenta->db->addMarkup($month) . "'";
+		$conditions[] = "day='" . $kapenta->db->addMarkup($day) . "'";
 		$conditions[] = "published='yes'";
 
-		$range = $db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
+		$range = $kapenta->db->loadRange('calendar_entry', '*', $conditions, 'year, month, day, eventStart');
 
-		// $sql = "select * from Calendar_Entry where year='". $db->addMarkup($year) ."' and month=" 
-		//   . $db->addMarkup($month) . " and day=" . $db->addMarkup($day) . " and published='yes' " 
+		// $sql = "select * from Calendar_Entry where year='". $kapenta->db->addMarkup($year) ."' and month=" 
+		//   . $kapenta->db->addMarkup($month) . " and day=" . $kapenta->db->addMarkup($day) . " and published='yes' " 
 		//   . "order by year, month, day, eventStart";
 	
 		foreach($range as $row) { $retVal[$row['UID']] = $row; }
@@ -544,12 +544,12 @@ class Calendar_Entry {
 	//returns: nested array of calendar entries [array]	
 
 	function loadUpcoming($category, $num) {
-	global $db;
+	global $kapenta;
 
 		$retVal = array();
 		
 		$conditions = array();
-		$conditions[] = "category='" . $db->addMarkup($category) . "'";
+		$conditions[] = "category='" . $kapenta->db->addMarkup($category) . "'";
 		$conditions[] = "year >= " . date('Y');
 		$conditions[] = "month >= " . date('m');
 		$conditions[] = "day >= " . date('j');
@@ -561,9 +561,9 @@ class Calendar_Entry {
 	
 		$by = "year, month, day, eventStart";
 		
-		$range = $db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
+		$range = $kapenta->db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
 
-		foreach($range as $row) { $retVal[$row['UID']] = $db->rmArray($row); }
+		foreach($range as $row) { $retVal[$row['UID']] = $kapenta->db->rmArray($row); }
 		return $retVal;
 	}
 
@@ -574,7 +574,7 @@ class Calendar_Entry {
 	//returns: nested array of calendar entries [array]	
 
 	function loadAllUpcoming($num) {
-		global $db;
+		global $kapenta;
 
 		$retVal = array();
 
@@ -590,9 +590,9 @@ class Calendar_Entry {
 		//     . date('m') . " and day >= " . date('j') . " and published='yes' " 
 		//     . "order by year, month, day, eventStart limit $num";
 	
-		$range = $db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
+		$range = $kapenta->db->loadRange('calendar_entry', '*', $conditions, $by, (int)$num, '');
 
-		foreach($range as $row) { $retVal[$row['UID']] = $db->rmArray($row); }
+		foreach($range as $row) { $retVal[$row['UID']] = $kapenta->db->rmArray($row); }
 		return $retVal;
 	}
 	
@@ -684,13 +684,13 @@ class Calendar_Entry {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 	

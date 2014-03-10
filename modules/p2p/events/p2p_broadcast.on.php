@@ -10,7 +10,7 @@
 //arg: priority - 0 to 9, default is 9 [string]
 
 function p2p__cb_p2p_broadcast($args) {
-	global $db;	
+	global $kapenta;	
 
 	$priority = 9;
 	$exclude = '';
@@ -25,7 +25,7 @@ function p2p__cb_p2p_broadcast($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load list of peers from database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('p2p_peer', '*', '');
+	$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 
 	foreach($range as $item) {
 		if ($exclude != $item['UID']) {

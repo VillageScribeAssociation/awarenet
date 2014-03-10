@@ -14,7 +14,7 @@
 function comments_listjs($args) {
 		global $theme;
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
 		global $utils;
 
@@ -37,8 +37,8 @@ function comments_listjs($args) {
 	//TODO: use db->loadRange() for this
 
 	$sql = "select * from comments_comment "
-		 . "where refModule='" . $db->addMarkup($args['refModule']) . "' "
-		 . "and refUID='" . $db->addMarkup($args['refUID']) . "' "
+		 . "where refModule='" . $kapenta->db->addMarkup($args['refModule']) . "' "
+		 . "and refUID='" . $kapenta->db->addMarkup($args['refUID']) . "' "
 		 . "order by createdOn DESC";
 
 	$blockTemplate = $theme->loadBlock('modules/comments/views/summary.block.php');
@@ -51,10 +51,10 @@ function comments_listjs($args) {
 	$js .= "var commentsPage = 0;\n";
 	$js .= "var aryComments = new Array();\n";
 	
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			$model = new Comments_Comment();
 			$model->loadArray($row);
 			$ext = $model->extArray();

@@ -7,7 +7,7 @@
 function users_listpresets() {
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
@@ -20,7 +20,7 @@ function users_listpresets() {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("cat='theme'");
-	$range = $db->loadRange('users_preset', '*', $conditions, 'title');
+	$range = $kapenta->db->loadRange('users_preset', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

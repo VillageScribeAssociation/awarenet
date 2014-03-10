@@ -10,15 +10,15 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_listallnav($args) {
-	global $db;
+	global $kapenta;
 
 	global $kapenta;
 	$html = '';
 
 	$sql = "select UID, title, recordAlias from code";
-	$result = $db->query($sql);
-	while($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$link = $kapenta->serverPath . 'code/' . $row['recordAlias'];
 		$html .= "<a href='" . $link . "' class='black'>" . strtoupper($row['title']) . "</a><br/>";
 	}

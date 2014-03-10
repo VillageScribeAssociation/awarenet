@@ -12,7 +12,7 @@
 
 function projects_history($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$pageNo = 1;			//%	default results page to start from (first) [int]
@@ -40,10 +40,10 @@ function projects_history($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 	//TODO: add any other conditions here (namespace, etc)
 
-	$totalItems = $db->countRange('projects_revision', $conditions);
+	$totalItems = $kapenta->db->countRange('projects_revision', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	if ($pageNo > $totalPages) { $pageNo = $totalPages; }
 	$start = (($pageNo - 1) * $num);
@@ -52,7 +52,7 @@ function projects_history($args) {
 	//	load a page of results from the database and make the block
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('projects_revision', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('projects_revision', '*', $conditions, 'editedOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/projects/views/revisionsummary.block.php');
 
 	//	$sql = "select * from Projects_Revision "

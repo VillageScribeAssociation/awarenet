@@ -45,9 +45,9 @@
 
 	if ((true == array_key_exists('clear', $kapenta->request->args)) && ('yes' == $kapenta->request->args['clear'])) {
 		foreach($questions as $UID => $txt) {
-			$db->query("DELETE FROM `polls_vote` WHERE question='$UID'");
-			$db->query("DELETE FROM `polls_answer` WHERE question='$UID'");
-			$db->query("DELETE FROM `polls_question` WHERE UID='$UID'");
+			$kapenta->db->query("DELETE FROM `polls_vote` WHERE question='$UID'");
+			$kapenta->db->query("DELETE FROM `polls_answer` WHERE question='$UID'");
+			$kapenta->db->query("DELETE FROM `polls_question` WHERE UID='$UID'");
 		}
 		echo "Deleted $UID := $txt and answers.<br/>\n";
 	}

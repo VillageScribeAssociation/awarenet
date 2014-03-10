@@ -15,7 +15,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function videos_install_module() {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $kapenta;
 	global $kapenta;

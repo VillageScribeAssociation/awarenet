@@ -67,8 +67,8 @@
 			if ($monthName == false) { $page->do404(); }
 		
 			$kapenta->page->load('modules/calendar/actions/month.page.php');
-			$kapenta->page->blockArgs['year'] = $db->addMarkup($bits[0]);
-			$kapenta->page->blockArgs['month'] = $db->addMarkup($bits[1]);
+			$kapenta->page->blockArgs['year'] = $kapenta->db->addMarkup($bits[0]);
+			$kapenta->page->blockArgs['month'] = $kapenta->db->addMarkup($bits[1]);
 			$kapenta->page->blockArgs['monthName'] = $monthName;
 			$kapenta->page->render();			
 			
@@ -88,9 +88,9 @@
 			if (false == $monthName) { $page->do404(); }
 		
 			$kapenta->page->load('modules/calendar/actions/day.page.php');
-			$kapenta->page->blockArgs['year'] = $db->addMarkup($bits[0]);
-			$kapenta->page->blockArgs['month'] = $db->addMarkup($bits[1]);
-			$kapenta->page->blockArgs['day'] = $db->addMarkup($bits[2]);
+			$kapenta->page->blockArgs['year'] = $kapenta->db->addMarkup($bits[0]);
+			$kapenta->page->blockArgs['month'] = $kapenta->db->addMarkup($bits[1]);
+			$kapenta->page->blockArgs['day'] = $kapenta->db->addMarkup($bits[2]);
 			$kapenta->page->blockArgs['monthName'] = $monthName;
 			$kapenta->page->render();			
 			

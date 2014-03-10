@@ -7,11 +7,11 @@
 
 	if ('admin'  != $user->role) { $page->do403(); }
 
-	if (false == $kapenta->fs->exists('data/lessons/' . $req->ref . '/manifest.xml')) { $page->do404(); }
+	if (false == $kapenta->fs->exists('data/lessons/' . $kapenta->request->ref . '/manifest.xml')) { $page->do404(); }
 
-	$page->load('modules/lessons/actions/editmanifest.page.php');
-	$kapenta->page->blockArgs['UID'] = $req->ref;
-	$kapenta->page->blockArgs['manifestUID'] = $req->ref;
-	$page->render();
+	$kapenta->page->load('modules/lessons/actions/editmanifest.page.php');
+	$kapenta->page->blockArgs['UID'] = $kapenta->request->ref;
+	$kapenta->page->blockArgs['manifestUID'] = $kapenta->request->ref;
+	$kapenta->page->render();
 
 ?>

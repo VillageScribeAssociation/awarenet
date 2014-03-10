@@ -11,7 +11,7 @@
 //opt: link - link to list of items sharing this tag, default is no (yes|no) [string]
 
 function tags_count($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 

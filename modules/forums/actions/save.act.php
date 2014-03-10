@@ -29,7 +29,7 @@
 			case 'weight':			$model->weight = (int)$value; 							break;
 
 			case 'school':
-				if (true == $db->objectExists('schools_school', $value)) { $model->school = $value;}
+				if (true == $kapenta->db->objectExists('schools_school', $value)) { $model->school = $value;}
 				break;
 		}
 	}

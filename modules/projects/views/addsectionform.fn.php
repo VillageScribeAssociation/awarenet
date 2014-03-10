@@ -14,7 +14,7 @@
 function projects_addsectionform($args) {
 	global $theme;
 	global $user;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 

@@ -31,7 +31,7 @@
 	if ('' == $firewalled) { $page->do404('Server firewall status not given.'); }
 	if ('' == $pubkey) { $page->do404('Server RSA key not given.'); }
 
-	if (true == $db->objectExists('p2p_peer', $UID)) { 
+	if (true == $kapenta->db->objectExists('p2p_peer', $UID)) { 
 		$session->msg('Peer already exists in database.', 'warn');
 		$page->do302('p2p/peers/');
 	}

@@ -10,7 +10,7 @@
 
 function users_teachercontacts($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';			//%	return value [string]
@@ -24,16 +24,16 @@ function users_teachercontacts($args) {
 
 	$sUID = $args['schoolUID'];			//%	shortcut [string]
 
-	if (false == $db->objectExists('schools_school', $sUID)) { return '(err: bad schoolUID)'; }
+	if (false == $kapenta->db->objectExists('schools_school', $sUID)) { return '(err: bad schoolUID)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "(role='teacher' OR role='admin')";
-	$conditions[] = "school='" . $db->addMarkup($sUID) . "'";
+	$conditions[] = "school='" . $kapenta->db->addMarkup($sUID) . "'";
 	
-	$range = $db->loadRange('users_user', '*', $conditions, 'surname');
+	$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'surname');
 	if (0 == count($range)) { return ''; }		
 
 	//----------------------------------------------------------------------------------------------

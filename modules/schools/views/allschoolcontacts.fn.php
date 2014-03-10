@@ -8,7 +8,7 @@
 
 function schools_allschoolcontacts($args) {
 		global $theme;
-		global $db;
+		global $kapenta;
 
 	$html = '';			//%	return value [string]
 
@@ -24,7 +24,7 @@ function schools_allschoolcontacts($args) {
 	$conditions[] = "hidden='no'";
 	// add any other conditions here
 
-	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'name');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the display

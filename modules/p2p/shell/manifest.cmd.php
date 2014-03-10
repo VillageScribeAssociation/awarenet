@@ -12,7 +12,7 @@ function p2p_WebShell_manifest($args) {
 	global $kapenta;
 	global $user;
 	global $shell;
-	global $db;
+	global $kapenta;
 
 	$mode = 'pull';			//%	operation [string]
 	$html = '';				//%	return value [string]

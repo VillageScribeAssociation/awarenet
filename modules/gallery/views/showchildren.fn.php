@@ -8,7 +8,7 @@
 //arg: UID - UID of a gallery [string]
 
 function gallery_showchildren($args) {
-	global $db;
+	global $kapenta;
 	return '';		// nested galleries not enabled on awareNet
 
 	$html = "<h2>Read More</h2>\n";
@@ -16,10 +16,10 @@ function gallery_showchildren($args) {
 	if (false == array_key_exists('UID', $args)) { return ''; }
 
 	$sql = "select * from gallery_gallery where parent='" . $args['UID'] . "' order by title DESC";	
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) 
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) 
 			{ $html .= "[[:gallery::summary::pageUID=" . $row['UID'] . ":]]"; }	
 
 	} else { $html = "<br/>\n"; }

@@ -33,7 +33,7 @@ class Live_Mailbox {
 
 	function Live_Mailbox($UID = '', $isPage = false) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 
@@ -43,7 +43,7 @@ class Live_Mailbox {
 		}
 
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->lastChecked = $kapenta->time();			// when mailbox was last accessed
 			$this->shared = 'no';
@@ -58,8 +58,8 @@ class Live_Mailbox {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -71,9 +71,9 @@ class Live_Mailbox {
 	//returns: true on success, false on failure [bool]
 
 	function loadPage($pageUID) {
-		global $db;
-		$conditions = array("pageUID='" . $db->addMarkup($pageUID) . "'");
-		$range = $db->loadRange('live_mailbox', '*', $conditions);
+		global $kapenta;
+		$conditions = array("pageUID='" . $kapenta->db->addMarkup($pageUID) . "'");
+		$range = $kapenta->db->loadRange('live_mailbox', '*', $conditions);
 		if (0 == count($range)) { return false; }
 		foreach($range as $row) { $this->loadArray($row); }
 		return true;
@@ -86,8 +86,8 @@ class Live_Mailbox {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->pageUID = $ary['pageUID'];
 		$this->userUID = $ary['userUID'];
@@ -106,15 +106,15 @@ class Live_Mailbox {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -268,18 +268,18 @@ class Live_Mailbox {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
 
 		// clear any triggers belonging to this page
-		$sql = "delete from live_trigger where pageUID='" . $db->addMarkup($this->pageUID) . "'";
-		$db->query($sql);
+		$sql = "delete from live_trigger where pageUID='" . $kapenta->db->addMarkup($this->pageUID) . "'";
+		$kapenta->db->query($sql);
 
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

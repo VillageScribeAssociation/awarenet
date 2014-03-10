@@ -76,9 +76,9 @@
 		$tables = array();
 
 		if (true == method_exists($db, 'listTables')) {
-			$tables = $db->listTables();
+			$tables = $kapenta->db->listTables();
 		} else {
-			$tables = $db->loadTables();
+			$tables = $kapenta->db->loadTables();
 		}
 
 
@@ -100,14 +100,14 @@
 			 . "</div>\n";
 			flush();
 
-			$dbSchema = $db->getSchema($tableName);
+			$dbSchema = $kapenta->db->getSchema($tableName);
 			$expAdmin->createTable($dbSchema);
 
 			//--------------------------------------------------------------------------------------
 			//	copy all objects to the name table
 			//--------------------------------------------------------------------------------------
 			$sql = "SELECT * FROM " . $tableName;
-			$result = $db->query($sql);
+			$result = $kapenta->db->query($sql);
 
 			if (true == method_exists($db, 'transactionStart')) { $db->transactionStart(); }
 
@@ -115,8 +115,8 @@
 
 			echo "<div class='chatmessagegreen'>\n";
 
-			while ($row = $db->fetchAssoc($result)) {
-				$item = $db->rmArray($row);
+			while ($row = $kapenta->db->fetchAssoc($result)) {
+				$item = $kapenta->db->rmArray($row);
 				$exp->save($item, $dbSchema, false, false, false);
 				echo ".";
 				$rowCount--;

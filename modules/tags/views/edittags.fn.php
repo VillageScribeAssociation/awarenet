@@ -9,7 +9,7 @@
 
 function tags_edittags($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -27,7 +27,7 @@ function tags_edittags($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 
 	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID)) 
 		{ return "[[:tags::showtags::refModule=$refModule::refModel=$refModel::refUID=$refUID:]]"; }

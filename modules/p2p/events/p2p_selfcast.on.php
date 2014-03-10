@@ -14,7 +14,7 @@
 
 function p2p__cb_p2p_selfcast($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	if ('yes' == $kapenta->registry->get('p2p.debug')) {
@@ -37,7 +37,7 @@ function p2p__cb_p2p_selfcast($args) {
 	$peerUID = $kapenta->registry->get('p2p.server.uid');
 	if ('' == $peerUID) { $peerUID = 'self'; }
 
-	if (false == $db->tableExists($model)) { return false; }
+	if (false == $kapenta->db->tableExists($model)) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	serialize and queue the event
@@ -47,7 +47,7 @@ function p2p__cb_p2p_selfcast($args) {
 	 . "  <selfcast>\n"
 	 . "    <model>$model</model>\n"
 	 . "    <fields64>\n"
-	 . $db->serialize($data)
+	 . $kapenta->db->serialize($data)
 	 . "    </fields64>\n"
 	 . "  </selfcast>\n";
 

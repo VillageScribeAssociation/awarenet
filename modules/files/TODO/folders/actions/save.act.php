@@ -6,7 +6,7 @@
 
 	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $page->do403(); }
 	if (array_key_exists('UID', $_POST) == false) { $page->do404(); }
-	if ($db->objectExists('folders', $_POST['UID']) == false) { $page->do404(); }
+	if ($kapenta->db->objectExists('folders', $_POST['UID']) == false) { $page->do404(); }
 
 	require_once($kapenta->installPath . 'modules/folders/models/folder.mod.php');
 

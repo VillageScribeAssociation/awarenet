@@ -8,7 +8,7 @@
 //arg: raUID - alias or UID of an object [string]
 
 function files_showfullnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';		
@@ -29,8 +29,8 @@ function files_showfullnav($args) {
 	$sql = "select * from files_file where refModule='" . $model->refModule 
 	     . "' order by refUID='" . $model->refUID . "' limit 20";
 	
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 	  if ($row['UID'] != $model->UID) {
 		$showUrl = '%%serverPathfiles/show/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%files/thumb90/' . $row['alias'];

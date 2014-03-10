@@ -8,7 +8,7 @@
 //arg: parentUID - UID fo a Comments_Comment object [string]
 
 function comments_replies($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -25,12 +25,12 @@ function comments_replies($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("parent='" . $db->addMarkup($model->UID) . "'");
-	$totalReplies = $db->countRange('comments_comment', $conditions);
+	$conditions = array("parent='" . $kapenta->db->addMarkup($model->UID) . "'");
+	$totalReplies = $kapenta->db->countRange('comments_comment', $conditions);
 
 	if (0 == $totalReplies) { return ''; }
 
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn ASC');
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

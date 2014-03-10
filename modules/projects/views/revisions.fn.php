@@ -14,7 +14,7 @@
 function projects_revisions($args) {
 	global $kapenta;
 	global $user;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -36,12 +36,12 @@ function projects_revisions($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "select * from projects_revision "
-		 . "where refUID='" . $db->addMarkup($args['UID']) . "' order by editedOn";
+		 . "where refUID='" . $kapenta->db->addMarkup($args['UID']) . "' order by editedOn";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$lastRow = array();
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		if (count($lastRow) > 0) {
 			$revisionLink = '/projects/revision/' . $row['UID'];

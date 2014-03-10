@@ -11,7 +11,7 @@
 
 	$conditions = array("1=1");
 	//$conditions[] = "user='admin'";
-	$range = $db->loadRange('notices', '*', $conditions);
+	$range = $kapenta->db->loadRange('notices', '*', $conditions);
 
 
 	foreach($range as $row) {
@@ -43,8 +43,8 @@
 					case 'url':			$model->refUrl = $value;	break;
 					case 'UID':			$model->UID = $value;		break;
 					case 'timestamp':	
-							$model->createdOn = $db->datetime($value);
-							$model->editedOn = $db->datetime($value);		
+							$model->createdOn = $kapenta->db->datetime($value);
+							$model->editedOn = $kapenta->db->datetime($value);		
 							break;
 
 				}

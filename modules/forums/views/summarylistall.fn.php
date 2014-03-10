@@ -10,7 +10,7 @@
 //opt: num - max number of threads to show per board (int) [string]
 
 function forums_summarylistall($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $aliases;
 	global $theme;
@@ -34,13 +34,13 @@ function forums_summarylistall($args) {
 		 . "GROUP BY school "
 		 . "ORDER BY totalWeight";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	while ($row = $db->fetchAssoc($result)) { 
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) { 
+		$row = $kapenta->db->rmArray($row);
 		$schoolName = '';
 		if ('' == $row['school']) { $schoolName = 'General'; }
 		else {

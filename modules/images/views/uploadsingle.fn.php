@@ -13,7 +13,7 @@
 
 function images_uploadsingle($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -37,8 +37,8 @@ function images_uploadsingle($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return ''; }
-	if (false == $db->tableExists($refModel)) { return ''; }
-	if (false == $db->objectExists($refModel, $refUID)) { return ''; }
+	if (false == $kapenta->db->tableExists($refModel)) { return ''; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return ''; }
 
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 	//TODO: check permission for uploading images

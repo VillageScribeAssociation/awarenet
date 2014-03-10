@@ -9,7 +9,7 @@
 //opt: format - format of list to return (xml|csv|html), default xml [string]
 
 function videos_listfiles($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $kapenta;
 
@@ -32,9 +32,9 @@ function videos_listfiles($args) {
 
 	//TODO: consider dbLoadRange (possible memory issue)
 	$sql = "select UID, fileName, hash from videos_video";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) { 
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) { 
+		$row = $kapenta->db->rmArray($row);
 		$currFile = array($row['UID'], $row['fileName'], $row['hash']);
 
 		if ('all' == $status) {

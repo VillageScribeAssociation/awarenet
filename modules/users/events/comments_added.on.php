@@ -12,7 +12,7 @@
 //arg: comment - text/html of comment [string]
 
 function users__cb_comments_added($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $notifications;
 
@@ -27,7 +27,7 @@ function users__cb_comments_added($args) {
 	$refUID = $args['refUID'];
 
 	if ($refModule != 'users') { return false; }
-	if (false == $db->objectExists('users_user', $refUID)) { return false; }
+	if (false == $kapenta->db->objectExists('users_user', $refUID)) { return false; }
 	
 	$model = new Users_User($refUID);
 	$creator = new Users_User($model->createdBy);

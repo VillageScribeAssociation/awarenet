@@ -21,12 +21,12 @@
 
 		$conditions = array();
 		if (array_key_exists('refuid', $kapenta->request->args) == true) 
-			{ $conditions[] = "refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "'"; }
+			{ $conditions[] = "refUID='" . $kapenta->db->addMarkup($kapenta->request->args['refuid']) . "'"; }
 
 		if (array_key_exists('refmodule', $kapenta->request->args) == true) 
-			{ $conditions[] = "refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) . "'"; }
+			{ $conditions[] = "refModule='" . $kapenta->db->addMarkup($kapenta->request->args['refmodule']) . "'"; }
 
-		$range = $db->loadRange('images_image', '*', $conditions);
+		$range = $kapenta->db->loadRange('images_image', '*', $conditions);
 
 		echo "<?xml version=\"1.0\"?>\n";
 		echo "<imageset>\n";	

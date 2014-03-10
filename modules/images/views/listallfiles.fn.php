@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function images_listallfiles($args) {
-	global $db;
+	global $kapenta;
  
 	global $user;
 	if ('admin' != $user->role) { return ''; }
@@ -16,8 +16,8 @@ function images_listallfiles($args) {
 	$list = '';
 
 	$sql = "select fileName from images_image";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) { $list .= sqlRemoveMarkup($row['fileName']). "\n"; }
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) { $list .= sqlRemoveMarkup($row['fileName']). "\n"; }
 	return $list;
 }
 

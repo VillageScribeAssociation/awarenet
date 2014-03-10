@@ -3,14 +3,14 @@
 	require_once($kapenta->installPath . 'modules/notifications/models/notification.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//|	fired when an object is deleted ($db->delete())
+//|	fired when an object is deleted ($kapenta->db->delete())
 //-------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted record [string]
 //arg: model - type of object which was deleted [string]
 //arg: UID - UID of deleted object [string]
 
 function notifications__cb_object_deleted($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	if (false == array_key_exists('module', $args)) { return false; }
@@ -21,9 +21,9 @@ function notifications__cb_object_deleted($args) {
 	//	delete any notifications owned by this record
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
-	$condiiions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
-	$range = $db->loadRange('notifications_notification', '*', $conditions, '', '', '');
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
+	$condiiions[] = "refModule='" . $kapenta->db->addMarkup($args['module']) . "'";
+	$range = $kapenta->db->loadRange('notifications_notification', '*', $conditions, '', '', '');
 
 	foreach($range as $item) {
 		$model = new Notifications_Notification();

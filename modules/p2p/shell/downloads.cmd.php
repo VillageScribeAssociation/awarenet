@@ -11,7 +11,7 @@ function p2p_WebShell_downloads($args) {
 		global $kapenta;
 		global $user;
 		global $shell;
-		global $db;
+		global $kapenta;
 
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
@@ -36,7 +36,7 @@ function p2p_WebShell_downloads($args) {
 	
 	switch($mode) {
 		case 'list':
-			$range = $db->loadRange('p2p_peer', '*', '');
+			$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 			foreach($range as $item) {
 				$html .= "<b>" . $item['name'] . " (" . $item['UID'] . ")</b><br/>\n";
 				$downloads = new P2P_Downloads($item['UID']);
@@ -47,7 +47,7 @@ function p2p_WebShell_downloads($args) {
 			break;	//..............................................................................
 
 		case 'wget':
-			$range = $db->loadRange('p2p_peer', '*', '');
+			$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 			$html .= "<pre>\n";
 			foreach($range as $item) {
 				$html .= "echo '" . $item['name'] . " (" . $item['UID'] . ")'\n";

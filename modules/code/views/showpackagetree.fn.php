@@ -10,7 +10,7 @@
 //opt: UID - overrides raUID if present [string]
 
 function code_showpackagetree($args) {
-	global $db;
+	global $kapenta;
 	$html = '';			//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------

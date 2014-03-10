@@ -8,7 +8,7 @@
 // opt: num = max number to show, default is 10 (int) [string]
 
 function videos_randomgalleriesnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$num = 10; 
@@ -23,14 +23,14 @@ function videos_randomgalleriesnav($args) {
 	//	load x random galleries from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array('videocount > 0');
-	$range = $db->loadRange('videos_gallery', '*', $conditions, 'RAND()', $num);
+	$range = $kapenta->db->loadRange('videos_gallery', '*', $conditions, 'RAND()', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	//$sql = "SELECT * FROM Videos_Gallery "
 	//	   . "WHERE videocount > 0 "
-	//	   . "ORDER BY RAND() limit 0," . $db->addMarkup($num);
+	//	   . "ORDER BY RAND() limit 0," . $kapenta->db->addMarkup($num);
 
 	$block = $theme->loadBlock('modules/videos/views/summarynav.block.php');
 

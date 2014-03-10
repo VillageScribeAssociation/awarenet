@@ -9,7 +9,7 @@
 
 function projects_revisionsummarynav($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';

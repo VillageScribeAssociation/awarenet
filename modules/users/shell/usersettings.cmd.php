@@ -12,7 +12,7 @@ function users_WebShell_usersettings($args) {
 	global $user;
 	global $shell;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]

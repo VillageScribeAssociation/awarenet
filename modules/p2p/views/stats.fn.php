@@ -10,7 +10,7 @@ function p2p_stats($args) {
 	global $kapenta;
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';								//%	return value [string]
 	$filter = '';							//%	result set filter [string]

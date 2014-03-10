@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $req->ref) { $req->ref == 'frontpage'; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref == 'frontpage'; }
 	$UID = $aliases->findRedirect('Home_Static');
-	$model = new StaticPage($req->ref);
+	$model = new StaticPage($kapenta->request->ref);
 	//permissions check suspended, anyone can view static pages
 	//if (false == $user->authHas('home', 'Home_Static', 'show', $UID)) { $page->do403(); }
 
@@ -32,7 +32,7 @@
 					. "'>[edit static page]</a><br/>\n";
 	}
 	
-	$page->blockArgs['staticTitle'] = $model->title;
-	$page->render();
+	$kapenta->page->blockArgs['staticTitle'] = $model->title;
+	$kapenta->page->render();
 	
 ?>

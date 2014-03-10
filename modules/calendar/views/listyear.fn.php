@@ -8,7 +8,7 @@
 //arg: year - show a year [string]
 
 function calendar_listyear($args) {	
-	global $db;
+	global $kapenta;
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

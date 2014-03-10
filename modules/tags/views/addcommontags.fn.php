@@ -11,7 +11,7 @@
 function tags_addcommontags($args) {
 		global $kapenta;
 		global $theme;
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';					//%	return value [string]
@@ -31,14 +31,14 @@ function tags_addcommontags($args) {
 	$refUID = $args['refUID'];	
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(unknown module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such object)'; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load n tags from database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('tags_tag', '*', '', 'objectCount DESC', $num);
+	$range = $kapenta->db->loadRange('tags_tag', '*', '', 'objectCount DESC', $num);
 	$tags = array();
 	foreach($range as $item) {
 		$link = '%%serverPath%%tags/add'

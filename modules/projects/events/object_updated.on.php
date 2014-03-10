@@ -9,7 +9,7 @@
 
 function projects__cb_object_updated($args) {
 	global $cache;
-	global $db;
+	global $kapenta;
 
 	if (false == array_key_exists('model', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }
@@ -42,8 +42,8 @@ function projects__cb_object_updated($args) {
 		//------------------------------------------------------------------------------------------
 		//	relationships between projects beased on user membership need to change, clear cache
 		//------------------------------------------------------------------------------------------
-		$conditions = array("userUID='" . $db->addMarkup($data['userUID']) . "'");
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$conditions = array("userUID='" . $kapenta->db->addMarkup($data['userUID']) . "'");
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 
 		foreach($range as $item) {
 			$cache->clear('projects-samemembersnav-' . $item['projectUID']);
@@ -56,8 +56,8 @@ function projects__cb_object_updated($args) {
 	//----------------------------------------------------------------------------------------------
 
 	if ('users_user' == $args['model']) {
-		$conditions = "userUID='" . $db->addMarkup($data['UID']) . "'";
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$conditions = "userUID='" . $kapenta->db->addMarkup($data['UID']) . "'";
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 
 		foreach($range as $item) {
 			$cache->clear('projects-summary-' . $item['projectUID']);

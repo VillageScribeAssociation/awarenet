@@ -13,7 +13,7 @@
 
 function videos__cb_comments_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $notifications;
@@ -29,7 +29,7 @@ function videos__cb_comments_added($args) {
 	$refUID = $args['refUID'];
 
 	if ('videos' != $refModule) { return false; }
-	if (false == $db->objectExists('videos_video', $refUID)) { return false; }
+	if (false == $kapenta->db->objectExists('videos_video', $refUID)) { return false; }
 	
 	$model = new Videos_Video($refUID);
 	if (false == $model->loaded) { return false; }

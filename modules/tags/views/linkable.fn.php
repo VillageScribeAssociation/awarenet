@@ -14,7 +14,7 @@
 
 function tags_linkable($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	//%	types which maybe attached [string]
@@ -48,9 +48,9 @@ function tags_linkable($args) {
 	$q = strtolower($q);
 
 	$conditions = array();
-	$conditions[] = "INSTR(namelc, '" . $db->addMarkup($q) . "') > 0";
+	$conditions[] = "INSTR(namelc, '" . $kapenta->db->addMarkup($q) . "') > 0";
 	$conditions[] = "objectCount <> '0'";
-	$range = $db->loadRange('tags_tag', '*', $conditions, 'namelc', 50);
+	$range = $kapenta->db->loadRange('tags_tag', '*', $conditions, 'namelc', 50);
 
 	if (0 == count($range)) { return ''; }		// nothign to search
 
@@ -60,8 +60,8 @@ function tags_linkable($args) {
 	$cursor = 0;
 
 	foreach($range as $item) {
-		$idxcond = array("tagUID='" . $db->addMarkup($item['UID']) . "'");
-		$idxrange = $db->loadRange('tags_index', '*', $idxcond);
+		$idxcond = array("tagUID='" . $kapenta->db->addMarkup($item['UID']) . "'");
+		$idxrange = $kapenta->db->loadRange('tags_index', '*', $idxcond);
 
 		foreach($idxrange as $match) {
 			if (true == in_array($match['refModel'], $displaySet)) {

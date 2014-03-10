@@ -9,7 +9,7 @@
 
 function users__cb_object_updated($args) {
 	global $cache;
-	global $db;
+	global $kapenta;
 
 	if (false == array_key_exists('model', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }

@@ -13,7 +13,7 @@ function admin_WebShell_describe($args) {
 	global $shell;
 	global $theme;
 	global $utils;
-	global $db;
+	global $kapenta;
 
 	$mode = 'html';							//%	operation [string]
 	$ajw = "<span class='ajaxwarn'>";		//%	tidy [string]
@@ -47,11 +47,11 @@ function admin_WebShell_describe($args) {
 			if (true == array_key_exists(1, $args)) { $tableName = $args[1]; }
 			if ('' == $tableName) { return $ajw . "Table name not given.</span>"; }
 			$tableName = str_replace(';', '', trim($tableName));
-			if (false == $db->tableExists($tableName)) { return $ajw . "No such table.</span>"; }
+			if (false == $kapenta->db->tableExists($tableName)) { return $ajw . "No such table.</span>"; }
 
 			$dba = new KDBAdminDriver();
 
-			$dbSchema = $db->getSchema($tableName);
+			$dbSchema = $kapenta->db->getSchema($tableName);
 			$html .= $dba->schemaToHtml($dbSchema) . "<hr/>\n";
 
 			break;	//..............................................................................
@@ -62,9 +62,9 @@ function admin_WebShell_describe($args) {
 			//--------------------------------------------------------------------------------------
 			if (false == array_key_exists(1, $args)) { return $ajw . "Table name not given.</span>"; }
 			$tableName = trim($args[1]);
-			if (false == $db->tableExists($tableName)) { return $ajw . "No such table.</span>"; }
+			if (false == $kapenta->db->tableExists($tableName)) { return $ajw . "No such table.</span>"; }
 
-			$dbSchema = $db->getSchema($tableName);
+			$dbSchema = $kapenta->db->getSchema($tableName);
 
 			$html .= "<small><pre>";
 			$html .= "|*| Field\t|| Type\t|| Index\t|| Comment\t||\n";

@@ -9,7 +9,7 @@
 //arg: refUID - UID of item which owns the images [string]
 
 function images_imageset($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';					//%	return value [string]
@@ -26,13 +26,13 @@ function images_imageset($args) {
 	//	load the image records and make html
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 
-	//$sql = "select * from Images_Image where refModule='" . $db->addMarkup($args['refModule']) 
-	//    . "' and refUID='" . $db->addMarkup($args['refUID']) . "'";
+	//$sql = "select * from Images_Image where refModule='" . $kapenta->db->addMarkup($args['refModule']) 
+	//    . "' and refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 	     
 	foreach ($range as $row) {
 		$imgUrl = '%%serverPath%%images/thumb/' . $row['alias'];

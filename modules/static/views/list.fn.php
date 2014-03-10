@@ -9,8 +9,8 @@
 //opt: num - number of records per page (default 300) [string]
 
 function static_list($args) {
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -31,7 +31,7 @@ function static_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('Home_Static', '*', '', 'title', $num, $start);
+	$range = $kapenta->db->loadRange('Home_Static', '*', '', 'title', $num, $start);
 	$block = $theme->loadBlock('modules/static/views/list.block.php');
 
 	$html = "<table noborder>\n";

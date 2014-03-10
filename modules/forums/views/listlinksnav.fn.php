@@ -6,7 +6,7 @@
 //TODO: opt to show with or without schools
 
 function forums_listlinksnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -20,7 +20,7 @@ function forums_listlinksnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load list from database and sort by school
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('forums_board', 'UID, school, title, weight', '', 'weight ASC');
+	$range = $kapenta->db->loadRange('forums_board', 'UID, school, title, weight', '', 'weight ASC');
 	
 	if (0 == count($range)) { return $html . "(no forums yet)"; }
 

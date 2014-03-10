@@ -19,10 +19,10 @@ class StaticPage {
 	//opt: raUID - recordAlias or UID of a static page [string]
 
 	function StaticPage($raUID = '') {
-	global $db;
+	global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();
-		$this->data = $db->makeBlank($this->dbSchema);
+		$this->data = $kapenta->db->makeBlank($this->dbSchema);
 		$this->title == 'New Static Page';
 		if ($raUID != '') { $this->load($raUID); }
 	}
@@ -33,9 +33,9 @@ class StaticPage {
 	//arg: raUID - recordAlias or UID of a school [string]
 
 	function load($raUID) {
-	global $db;
+	global $kapenta;
 
-		$ary = $db->loadAlias('static', $raUID);
+		$ary = $kapenta->db->loadAlias('static', $raUID);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -52,14 +52,14 @@ class StaticPage {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-	global $db;
+	global $kapenta;
 
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
 		$ra = raSetAlias('static', $this->UID, $this->title, 'static');
 		$this->alias = $ra;
-		$db->save($this->data, $this->dbSchema); 
+		$kapenta->db->save($this->data, $this->dbSchema); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -111,10 +111,10 @@ class StaticPage {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-	global $db;
+	global $kapenta;
 
 		if ($user->authHas('home', 'Home_Static', 'delete', 'TODO:UIDHERE') == false) { return false; }
-		$db->delete('static', $this->UID);
+		$kapenta->db->delete('static', $this->UID);
 
 		// allow other modules to respond to this event
 		$args = array('module' => 'static', 'UID' => $this->UID);
@@ -188,7 +188,7 @@ class StaticPage {
 	//, deprecated, this should be handled by ../inc/install.inc.inc.php
 
 	function install() {
-	global $db;
+	global $kapenta;
 
 		$report = "<h3>Installing Static Pages Module</h3>\n";
 
@@ -196,7 +196,7 @@ class StaticPage {
 		//	create static table if it does not exist
 		//----------------------------------------------------------------------------------------------
 		
-		if ($db->tableExists('static') == false) {	
+		if ($kapenta->db->tableExists('static') == false) {	
 			echo "installing static module\n";
 			dbCreateTable($this->dbSchema);	
 			$this->report .= 'created static table and indices...<br/>';

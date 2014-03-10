@@ -10,7 +10,7 @@
 //arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_statsnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -30,7 +30,7 @@ function wiki_statsnav($args) {
 	//	look up revision stats
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("articleUID='" . $model->UID . "'");
-	$extArray['totalRevisions'] = $db->countRange('wiki_revision', $conditions);
+	$extArray['totalRevisions'] = $kapenta->db->countRange('wiki_revision', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	assemble the block

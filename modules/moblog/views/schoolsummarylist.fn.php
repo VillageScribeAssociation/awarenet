@@ -12,11 +12,11 @@
 //opt: pagination - show pagination bar, default is 'yes' (yes|no) [string]
 
 function moblog_schoolsummarylist($args) {
-	global $page;
-	global $db;
+	global $kapenta;
+	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 	global $aliases;
 
 	$start = 0;
@@ -34,7 +34,7 @@ function moblog_schoolsummarylist($args) {
 	if (false == array_key_exists('schoolUID', $args)) { return '(No schoolUID)'; }
 
 	$schoolUID = $args['schoolUID'];
-	if (false == $db->objectExists('schools_school', $schoolUID)) { return 'No such schoolUID'; }
+	if (false == $kapenta->db->objectExists('schools_school', $schoolUID)) { return 'No such schoolUID'; }
 
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
@@ -48,20 +48,20 @@ function moblog_schoolsummarylist($args) {
 	//	count visible posts
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "school='" . $db->addMarkup($schoolUID) . "'";
+	$conditions[] = "school='" . $kapenta->db->addMarkup($schoolUID) . "'";
 	$conditions[] = " (published='yes' or createdBy='" . $user->UID . "') ";
 
-	$totalItems = $db->countRange('moblog_post', $conditions);
+	$totalItems = $kapenta->db->countRange('moblog_post', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	$link = '%%serverPath%%moblog/school/' . $schoolRa . '/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	$block = $theme->loadBlock('modules/moblog/views/summary.block.php');
 

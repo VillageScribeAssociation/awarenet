@@ -39,8 +39,8 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('no such module', true); }
-	if (false == $db->tableExists($refModel)) { $page->do404('model not recognized', true); }
-	if (false == $db->objectExists($refModel, $refUID))
+	if (false == $kapenta->db->tableExists($refModel)) { $page->do404('model not recognized', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID))
 		{ $page->do404('owner object does not exist', true); }
 
 	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { $page->do403(); }

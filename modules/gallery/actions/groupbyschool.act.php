@@ -16,10 +16,10 @@
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "select * from gallery_gallery";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);		
-		$creator = $db->getObject('users_user', $item['createdBy']);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);		
+		$creator = $kapenta->db->getObject('users_user', $item['createdBy']);
 
 		if ($creator['school'] != $item['schoolUID']) {
 			$model = new Gallery_Gallery($item['UID']);

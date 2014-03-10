@@ -64,9 +64,9 @@
 		//	query database
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "grade='" . $db->addMarkup($_POST['grade']) . "'";
-		$conditions[] = "school='" . $db->addMarkup($_POST['school']) . "'";
-		$range = $db->loadRange('users_user', '*', $conditions);
+		$conditions[] = "grade='" . $kapenta->db->addMarkup($_POST['grade']) . "'";
+		$conditions[] = "school='" . $kapenta->db->addMarkup($_POST['school']) . "'";
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 
 		//------------------------------------------------------------------------------------------
 		//	apply to all users
@@ -98,8 +98,8 @@
 		//	query database
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "school='" . $db->addMarkup($_POST['school']) . "'";
-		$range = $db->loadRange('users_user', '*', $conditions);
+		$conditions[] = "school='" . $kapenta->db->addMarkup($_POST['school']) . "'";
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 
 		//------------------------------------------------------------------------------------------
 		//	apply to all users
@@ -130,9 +130,9 @@
 		else { $session->msg('Could not replace default theme.', 'bad'); }
 
 		$sql = "select * from users_user";
-		$result = $db->query($sql);
-		while($row = $db->fetchAssoc($result)) {
-			$item = $db->rmArray($row);
+		$result = $kapenta->db->query($sql);
+		while($row = $kapenta->db->fetchAssoc($result)) {
+			$item = $kapenta->db->rmArray($row);
 			
 			$check = $model->applyTo($item['UID']);
 			if (true == $check) {

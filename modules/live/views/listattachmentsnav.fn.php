@@ -10,7 +10,7 @@
 
 function live_listattachmentsnav($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $page;
 	
@@ -30,7 +30,7 @@ function live_listattachmentsnav($args) {
 	$display = $args['display'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return "(Unknown module: $refModule)"; }
-	if (false == $db->objectExists($refModel, $refUID)) { return "(missing owner object)"; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return "(missing owner object)"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

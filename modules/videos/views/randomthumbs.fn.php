@@ -11,7 +11,7 @@
 //: note the direct use of images table - TODO: work around this
 
 function videos_randomthumbs($args) {
-	global $db;
+	global $kapenta;
 	$limit = 30;			//%	maximum number of thumbnails to display [int]
 	$html = '';				//%	return value [string]
 	$size = 'thumbsm';		//%	image size [string]
@@ -29,11 +29,11 @@ function videos_randomthumbs($args) {
 	//---------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "refModel='" . $db->addMarkup('videos_gallery') . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup('videos_gallery') . "'";
 	$conditions[] = "refModule='videos'";
-	if ('' != $userUID) { $conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'"; }
+	if ('' != $userUID) { $conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'"; }
 
-	$range = $db->loadRange('videos_video', '*', $conditions, 'RAND()', $limit, '');
+	$range = $kapenta->db->loadRange('videos_video', '*', $conditions, 'RAND()', $limit, '');
 
 	foreach($range as $item) {
 		$viewUrl = '%%serverPath%%videos/play/' . $item['alias'];

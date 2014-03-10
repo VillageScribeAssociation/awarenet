@@ -13,7 +13,7 @@
 
 function projects_historynav($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$pageNo = 1;			//%	default results page to start from (first) [int]
@@ -43,10 +43,10 @@ function projects_historynav($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 	//TODO: add any other conditions here (namespace, etc)
 
-	$totalItems = $db->countRange('projects_revision', $conditions);
+	$totalItems = $kapenta->db->countRange('projects_revision', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	if ($pageNo > $totalPages) { $pageNo = $totalPages; }
 	$start = (($pageNo - 1) * $num);
@@ -56,7 +56,7 @@ function projects_historynav($args) {
 	//	load a page of results from the database and make the block
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('projects_change', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('projects_change', '*', $conditions, 'editedOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/projects/views/revisionsummarynav.block.php');
 
 	if (0 == count($range)) { return ''; }

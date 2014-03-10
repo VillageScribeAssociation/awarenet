@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindexnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';				//%	return value [string]

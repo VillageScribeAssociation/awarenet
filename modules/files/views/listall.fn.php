@@ -10,8 +10,8 @@
 //opt: num - number of files per page [string]
 
 function files_listall($args) {
-		global $db;
-		global $page;
+		global $kapenta;
+		global $kapenta;
 		global $theme;
 
 	$num = 30;							//%	number of items per page [int]
@@ -32,7 +32,7 @@ function files_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the files
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('files_file', '*', '', 'createdOn', $num, $start);
+	$list = $kapenta->db->loadRange('files_file', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/blog/summary.block.php');
 
 	foreach($list as $UID => $row) {

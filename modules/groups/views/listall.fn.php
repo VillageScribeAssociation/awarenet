@@ -9,13 +9,13 @@
 //TODO: fix this up
 
 function groups_listall($args) {
-	global $db;
+	global $kapenta;
 	$html = '';
 
 	$sql = "select * from groups_group";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) 
+	while ($row = $kapenta->db->fetchAssoc($result)) 
 		{ $html .= "[[:groups::summary::raUID=" . $row['UID'] . ":]]"; }
 
 	return $html;

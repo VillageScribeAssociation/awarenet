@@ -10,7 +10,7 @@
 //opt: orderBy - field to order the list by (defualt is createdOn) [string]
 
 function newsletter_listeditions($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -45,9 +45,9 @@ function newsletter_listeditions($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('newsletter_edition', $conditions);	//% total number of items [int]
+	$total = $kapenta->db->countRange('newsletter_edition', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('newsletter_edition', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $kapenta->db->loadRange('newsletter_edition', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>no editions yet published</div><br/>\n";

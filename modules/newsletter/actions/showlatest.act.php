@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 	$conditions = array("status='published'");
-	$range = $db->loadRange('newsletter_edition', '*', $conditions, 'createdOn', 1);
+	$range = $kapenta->db->loadRange('newsletter_edition', '*', $conditions, 'createdOn', 1);
 	
 	if (0 == count($range)) {
 		//------------------------------------------------------------------------------------------

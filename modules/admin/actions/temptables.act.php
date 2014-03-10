@@ -18,9 +18,9 @@
 		if (true == array_key_exists('table', $_POST)) { $tableName = $_POST['table']; }
 		if ('tmp_' != substr($tableName, 0, 4)) { $tableName = ''; }	// ONLY tmp tables
 
-		if (('' != $tableName) && (true == $db->tableExists($tableName))) {
+		if (('' != $tableName) && (true == $kapenta->db->tableExists($tableName))) {
 			$sql = "drop table $tableName";
-			$check = $db->query($sql);
+			$check = $kapenta->db->query($sql);
 			if (false == $check) { $session->msg("Could not delete $tableName", 'bad'); }
 			else { $session->msg("Removed: $tableName", 'ok'); }
 		}

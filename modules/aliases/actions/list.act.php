@@ -22,7 +22,7 @@
 	}
 
 	if (true == array_key_exists('fmodel', $kapenta->request->args)) {
-		if (true == $db->tableExists($kapenta->request->args['fmodel'])) { $fModel = $kapenta->request->args['fmodule']; }
+		if (true == $kapenta->db->tableExists($kapenta->request->args['fmodel'])) { $fModel = $kapenta->request->args['fmodule']; }
 	}
 
 	if (('*' == $fModule) && ('*' == $fModel) && ('*' == $fUID)) { 

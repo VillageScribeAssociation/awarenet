@@ -10,7 +10,7 @@
 function calendar_yearsubnav($args) {
 		global $kapenta;
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';
@@ -22,7 +22,7 @@ function calendar_yearsubnav($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('year', $args)) { return ''; }
-	$year = $db->addMarkup($args['year']);
+	$year = $kapenta->db->addMarkup($args['year']);
 	//TODO: permissions check here
 	
 	$model = new Calendar_Entry();		//TODO: replace with utility/collection class

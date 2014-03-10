@@ -10,7 +10,7 @@
 //opt: fileUID - overrides raUID if present [string]
 
 function code_summary($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//%	return value [string:html]

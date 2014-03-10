@@ -8,7 +8,7 @@
 //arg: hidden - show hidden schools (yes|no) [string]
 
 function schools_listalllinksnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';				//%	return value [string]
@@ -29,7 +29,7 @@ function schools_listalllinksnav($args) {
 	$conditions = array("(hidden='no' OR hidden='')");
 	if (true == $showHidden) { $conditions = ''; }
 
-	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'name');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the list

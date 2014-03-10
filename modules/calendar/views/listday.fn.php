@@ -11,7 +11,7 @@
 
 function calendar_listday($args) {
 		global $theme;
-		global $db;
+		global $kapenta;
 
 	$html = '';
 
@@ -21,9 +21,9 @@ function calendar_listday($args) {
 	if (false == array_key_exists('day', $args)) { return ''; }
 	if (false == array_key_exists('month', $args)) { return ''; }
 	if (false == array_key_exists('year', $args)) { return ''; }
-	$year = $db->addMarkup($args['year']);
-	$month = $db->addMarkup($args['month']);
-	$day = $db->addMarkup($args['day']);
+	$year = $kapenta->db->addMarkup($args['year']);
+	$month = $kapenta->db->addMarkup($args['month']);
+	$day = $kapenta->db->addMarkup($args['day']);
 
 	if (1 == strlen(trim($day))) { $day = '0' . trim($day); }
 

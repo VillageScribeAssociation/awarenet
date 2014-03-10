@@ -13,9 +13,9 @@
 
 function p2p__cb_object_updated($args) {
 	global $kapenta;
-	global $db; 
+	global $kapenta; 
 	global $user;
-	global $page;
+	global $kapenta;
 	global $session;
 	global $revisions;
 
@@ -42,12 +42,12 @@ function p2p__cb_object_updated($args) {
 	}
 
 	if (true == $revisions->isDeleted($args['model'], $args['UID'])) { return false; }
-	if (false == $db->isShared($args['model'], $args['UID'])) { return false; }
+	if (false == $kapenta->db->isShared($args['model'], $args['UID'])) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	if an object has been updated assume all peers want to know about it
 	//---------------------------------------------------------------------------------------------
-	$range = $db->loadRange('p2p_peer', '*', '');
+	$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 	//$set = new P2P_Offers();						//	<-- remove this when possible
 
 	foreach($range as $item) {

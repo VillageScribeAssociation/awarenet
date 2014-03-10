@@ -7,7 +7,7 @@
 function users_activesessions($args) {
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -20,7 +20,7 @@ function users_activesessions($args) {
 	//	query databse
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("status='active'");
-	$range = $db->loadRange('users_session', '*', $conditions);
+	$range = $kapenta->db->loadRange('users_session', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

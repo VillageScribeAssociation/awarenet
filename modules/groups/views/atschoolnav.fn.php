@@ -7,7 +7,7 @@
 //opt: school - alias of above [string]
 
 function groups_atschoolnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$schoolUID = $user->school;		//%	school to display groups for [string]
@@ -24,9 +24,9 @@ function groups_atschoolnav($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "schoolUID='" . $db->addMarkup($schoolUID) . "'";
+	$conditions[] = "schoolUID='" . $kapenta->db->addMarkup($schoolUID) . "'";
 
-	$range = $db->loadRange('groups_schoolindex', '*', $conditions);
+	$range = $kapenta->db->loadRange('groups_schoolindex', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

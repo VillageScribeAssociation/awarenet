@@ -3,14 +3,14 @@
 	require_once($kapenta->installPath . 'modules/comments/models/comment.mod.php');
 
 //-------------------------------------------------------------------------------------------------
-//|	fired when an object is deleted ($db->delete())
+//|	fired when an object is deleted ($kapenta->db->delete())
 //-------------------------------------------------------------------------------------------------
 //arg: module - module which owned the deleted record [string]
 //arg: model - type of object which was deleted [string]
 //arg: UID - UID of deleted object [string]
 
 function comments__cb_object_deleted($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	if (false == array_key_exists('module', $args)) { return false; }
@@ -20,9 +20,9 @@ function comments__cb_object_deleted($args) {
 	//	delete any comments owned by this record
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
-	$condiiions[] = "refModule='" . $db->addMarkup($args['module']) . "'";
-	$range = $db->loadRange('comments_comment', '*', $conditions, '', '', '');
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
+	$condiiions[] = "refModule='" . $kapenta->db->addMarkup($args['module']) . "'";
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, '', '', '');
 
 	foreach($range as $item) {
 		$model = new Comments_Comment();

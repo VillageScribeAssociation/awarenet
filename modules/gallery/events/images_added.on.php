@@ -12,7 +12,7 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 function gallery__cb_images_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $notifications;
 	global $theme;

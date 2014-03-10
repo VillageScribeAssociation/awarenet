@@ -10,7 +10,7 @@
 //opt: num - number of threads to show (default is 10) [string]
 
 function forums_busiestthreads($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -31,7 +31,7 @@ function forums_busiestthreads($args) {
 	 . "WHERE replies > 0 ORDER BY score";
 
 	//	for SQLite
-	if ('SQLite' == $db->type) {
+	if ('SQLite' == $kapenta->db->type) {
 		$sql = ''
 		 ."SELECT"
 		 . " *,"
@@ -42,11 +42,11 @@ function forums_busiestthreads($args) {
 
 	$block = $theme->loadBlock('modules/forums/views/threadsummarynav.block.php');
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		if ($num > 0) {		
 			$thisThread = new Forums_Thread();
-			$thisThread->loadArray($db->rmArray($row));
+			$thisThread->loadArray($kapenta->db->rmArray($row));
 			$html .= $theme->replaceLabels($thisThread->extArray(), $block);
 			$num--;
 

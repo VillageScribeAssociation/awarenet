@@ -23,7 +23,7 @@
 	}
 
 	$conditions = array("UID='" . $model->UID . "'");
-	$range = $db->loadRange('projects', '*', $conditions);	
+	$range = $kapenta->db->loadRange('projects', '*', $conditions);	
 	foreach($range as $row) {
 		echo "<textarea rows='40' cols='80'>" . $row['content'] . "</textarea>\n";
 	}

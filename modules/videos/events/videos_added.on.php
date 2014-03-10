@@ -12,7 +12,7 @@ require_once($kapenta->installPath . 'modules/videos/models/gallery.mod.php');
 //arg: videoTitle - title of new video [string]
 
 function videos__cb_videos_added($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $notifications;	
 

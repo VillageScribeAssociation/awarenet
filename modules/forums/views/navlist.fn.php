@@ -10,7 +10,7 @@
 //arg: school - UID of school to show forums for [string]
 
 function forums_navlist($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -19,15 +19,15 @@ function forums_navlist($args) {
 	$html = '';
 
 	$sql = "select * from forums_board "
-		 . "where school='" . $db->addMarkup($args['school']) . "' "
+		 . "where school='" . $kapenta->db->addMarkup($args['school']) . "' "
 		 . "order by weight"; 
 
 	$block = $theme->loadBlock('modules/forums/views/summarynav.block.php');
 
-	$result = $db->query($sql);
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 
 			$model = new forums();
 			$model->loadArray($row);

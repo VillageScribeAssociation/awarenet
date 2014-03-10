@@ -44,7 +44,7 @@ class KJson {
 	function parse($fileName) {
 		global $kapenta;
 
-		$txt = $kapenta->fileGetContents($fileName);
+		$txt = $kapenta->fs->get($fileName);
 	}
 
 	function buildOutputStringArray($children) {

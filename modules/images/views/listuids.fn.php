@@ -12,7 +12,7 @@
 //: images are ordered by weight, future versions may have more options if need arises
 
 function images_listuids($args) {
-	global $db;
+	global $kapenta;
 	$limit = '';
 	$separator = '|';
 	$retVal = array();		//TODO: improve this
@@ -30,9 +30,9 @@ function images_listuids($args) {
 	//	load UIDs
 	//---------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$range = $db->loadRange('images_image', 'UID', $conditions, 'weight', '', $limit);
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$range = $kapenta->db->loadRange('images_image', 'UID', $conditions, 'weight', '', $limit);
 
 	//---------------------------------------------------------------------------------------------
 	//	return as string

@@ -11,7 +11,7 @@
 //opt: default - default selected item (set to a project UID) [string]
 
 function projects_select($args) {
-	global $db;
+	global $kapenta;
 
 	$varname = 'project';
 	$default = '';
@@ -20,10 +20,10 @@ function projects_select($args) {
 	$html = '';
 	
 	$sql = "select * from projects_project order by name";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html .= "<select name='" . $varname . "'>\n";
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		if ($row['UID'] == $default) {
 			$html .= "<option value='" . $row['UID'] . "' CHECKED='CHECKED'>" 
 			      . $row['name'] . "</option>\n";

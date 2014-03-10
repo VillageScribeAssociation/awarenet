@@ -12,7 +12,7 @@
 	if (false == array_key_exists('action', $_POST)) { $page->do404('Action not specified.'); }
 	if ('confirmFriendReq' != $_POST['action']) { $page->do404('Action not supported.'); }
 	if (false == array_key_exists('friendUID', $_POST)) { $page->do404('No friendUID sent.'); }
-	if (false == $db->objectExists('users_user', $_POST['friendUID']))
+	if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID']))
 		{ $page->do404('Friend UID not found.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@
 	$model->friendUID = $friendUID;
 	$model->relationship = $relationship;
 	$model->status = 'confirmed';
-	$model->createdOn = $db->datetime();
+	$model->createdOn = $kapenta->db->datetime();
 	$model->save();
 
 	//----------------------------------------------------------------------------------------------

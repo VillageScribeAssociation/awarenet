@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function p2p_selectpeer($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';
@@ -18,7 +18,7 @@ function p2p_selectpeer($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('p2p_peer', '*', '', 'name');
+	$range = $kapenta->db->loadRange('p2p_peer', '*', '', 'name');
 
 	$html = "<select id='selPeer' name='peer'>\n";
 

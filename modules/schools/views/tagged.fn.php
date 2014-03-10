@@ -12,7 +12,7 @@
 //opt: num - TODO, number of items per page [string]
 
 function schools_tagged($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';			//%	return value [string]
@@ -32,19 +32,19 @@ function schools_tagged($args) {
 	//----------------------------------------------------------------------------------------------
 	$sql = "SELECT schools_school.UID as schoolUID from schools_school, tags_index "
 		 . "WHERE schools_school.UID=tags_index.refUID "
-		 . "AND tags_index.tagUID='" . $db->addMarkup($tag->UID) . "' "
+		 . "AND tags_index.tagUID='" . $kapenta->db->addMarkup($tag->UID) . "' "
 		 . "ORDER by schools_school.name";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
-	if (0 == $db->numRows($result)) { return "(nothign with this tag at present)"; }
+	if (0 == $kapenta->db->numRows($result)) { return "(nothign with this tag at present)"; }
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$html .= "[[:schools::summary::raUID=" . $row['schoolUID'] . ":]]";
 	}
 

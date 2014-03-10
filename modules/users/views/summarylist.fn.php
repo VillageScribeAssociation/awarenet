@@ -10,7 +10,7 @@
 //opt: num - number of records per page (default is 300) [string]
 
 function users_summarylist($args) {
-		global $db;
+		global $kapenta;
 		global $req;
 		global $theme;
 		global $user;
@@ -42,7 +42,7 @@ function users_summarylist($args) {
 	$conditions[] = "role != 'banned'";			// we don't show banned users (for now)
 	$conditions[] = "role != 'inactive'";		// we don't show inactive users (for now)
 
-	$totalItems = $db->countRange('users_user', $conditions);
+	$totalItems = $kapenta->db->countRange('users_user', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	$start = ($pageNo - 1) * $num;
 
@@ -51,7 +51,7 @@ function users_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results from the database and make a list
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('users_user', '*', $conditions, 'username', $num, $start);
+	$range = $kapenta->db->loadRange('users_user', '*', $conditions, 'username', $num, $start);
 	$block = $theme->loadBlock('modules/users/views/summary.block.php');
 
 	foreach($range as $row) {
@@ -61,7 +61,7 @@ function users_summarylist($args) {
 	}  
 
 	$link = '%%serverPath%%users/list/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	$html = $pagination . $html . $pagination;

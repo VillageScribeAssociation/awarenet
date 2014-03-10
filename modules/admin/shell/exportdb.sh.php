@@ -26,7 +26,7 @@
 	}
 
 	echo "Exporting database: " . $format . "\n";
-	echo "Soure database type: " . $db->type . "\n";
+	echo "Soure database type: " . $kapenta->db->type . "\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	set export options
@@ -70,7 +70,7 @@
 	//	dump the current database
 	//----------------------------------------------------------------------------------------------
 
-	$tables = $db->listTables();
+	$tables = $kapenta->db->listTables();
 	print_r($tables);
 
 	foreach($tables as $tableName) {
@@ -87,20 +87,20 @@
 		//------------------------------------------------------------------------------------------
 		echo "Creating table " . $tableName . "\n\n";
 
-		$dbSchema = $db->getSchema($tableName);
+		$dbSchema = $kapenta->db->getSchema($tableName);
 		$expAdmin->createTable($dbSchema);
 
 		//------------------------------------------------------------------------------------------
 		//	copy all objects to the name table
 		//------------------------------------------------------------------------------------------
 		$sql = "SELECT * FROM " . $tableName;
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 
 		$exp->transactionStart();
 		$rowCount = 80;
 
-		while ($row = $db->fetchAssoc($result)) {
-			$item = $db->rmArray($row);
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$item = $kapenta->db->rmArray($row);
 			$exp->save($item, $dbSchema, false, false, false);
 			echo ".";
 			$rowCount--;

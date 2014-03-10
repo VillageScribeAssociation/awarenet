@@ -31,11 +31,11 @@ class Groups_Membership {
 	//opt: UID - UID of a Membership object [string]
 
 	function Groups_Membership($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $UID) { $this->load($UID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->loaded = false;
 		}
@@ -48,8 +48,8 @@ class Groups_Membership {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -62,12 +62,12 @@ class Groups_Membership {
 	//returns: true on success, false on failure [bool]
 
 	function loadMembership($userUID, $groupUID) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
-		$conditions[] = "groupUID='" . $db->addMarkup($groupUID) . "'";
-		$range = $db->loadRange('groups_membership', '*', $conditions);
+		$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";
+		$conditions[] = "groupUID='" . $kapenta->db->addMarkup($groupUID) . "'";
+		$range = $kapenta->db->loadRange('groups_membership', '*', $conditions);
 
 		foreach($range as $row) {
 			$this->loadArray($row);
@@ -84,8 +84,8 @@ class Groups_Membership {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->userUID = $ary['userUID'];
 		$this->groupUID = $ary['groupUID'];
@@ -104,15 +104,15 @@ class Groups_Membership {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -123,14 +123,14 @@ class Groups_Membership {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
-		global $db;
+		global $kapenta;
 		$report = '';
 
 		if (strlen($this->UID) < 5) 
 			{ $report .= "UID not present.\n"; }
-		if (false == $db->objectExists('users_user', $this->userUID)) 
+		if (false == $kapenta->db->objectExists('users_user', $this->userUID)) 
 			{ $report .= "Member does not exist."; }
-		if (false == $db->objectExists('groups_group', $this->groupUID)) 
+		if (false == $kapenta->db->objectExists('groups_group', $this->groupUID)) 
 			{ $report .= "Group does not exist."; }
 
 		return $report;
@@ -200,13 +200,13 @@ class Groups_Membership {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

@@ -13,10 +13,10 @@
 
 function comments_list($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$pageNo = 1;				//%	page number to show [int]
 	$num = 10;					//%	number of items per page [int]
@@ -52,17 +52,17 @@ function comments_list($args) {
 	//	count comments attached to this item
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 	$conditions[] = "parent=''";
 
-	$totalItems = $db->countRange('comments_comment', $conditions);
+	$totalItems = $kapenta->db->countRange('comments_comment', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of comments from the database
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

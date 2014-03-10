@@ -9,7 +9,7 @@
 
 	if ('admin' != $user->role) { $page->do403(); }
 
-	$tables = $db->listTables();
+	$tables = $kapenta->db->listTables();
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 
 	foreach($tables as $tableName) {
@@ -17,7 +17,7 @@
 		$rowCount = 0;
 		$errorCount = 0;
 
-		$dbSchema = $db->getSchema($tableName);
+		$dbSchema = $kapenta->db->getSchema($tableName);
 		if (
 			('aliases_alias' != $tableName) && 
 			('twitter_tweet' != $tableName) && 
@@ -27,10 +27,10 @@
 
 			echo "<div class='chatmessageblack'><h2>$tableName</h2></div>\n";
 
-			$result = $db->query("select * from " . $tableName);
-			while($row = $db->fetchAssoc($result)) {
+			$result = $kapenta->db->query("select * from " . $tableName);
+			while($row = $kapenta->db->fetchAssoc($result)) {
 				$rowCount++;
-				$item = $db->rmArray($row);
+				$item = $kapenta->db->rmArray($row);
 			
 				if ('' == trim($item['alias'])) {
 

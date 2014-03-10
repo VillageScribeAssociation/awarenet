@@ -13,11 +13,11 @@
 //opt: schoolUID - constrain to posts from this school (ref:Schools_School) [string]
 
 function moblog_summarylist($args) {
-	global $page;
-	global $db;
+	global $kapenta;
+	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 
 	$pageNo = 1;				//%	results page to display [int]
 	$num = 30;					//%	number of items per page [int]
@@ -42,22 +42,22 @@ function moblog_summarylist($args) {
 	$conditions = array();
 	$conditions[] = " (published='yes' or createdBy='" . $user->UID . "') ";
 	if (true == array_key_exists('userUID', $args)) 
-		{ $conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'"; }
+		{ $conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'"; }
 
 	if (true == array_key_exists('schoolUID', $args)) 
-		{ $conditions[] = "school='" . $db->addMarkup($args['schoolUID']) . "'"; }
+		{ $conditions[] = "school='" . $kapenta->db->addMarkup($args['schoolUID']) . "'"; }
 
-	$totalItems = $db->countRange('moblog_post', $conditions);
+	$totalItems = $kapenta->db->countRange('moblog_post', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	$link = '%%serverPath%%moblog/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	$block = $theme->loadBlock('modules/moblog/views/summary.block.php');
 

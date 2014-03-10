@@ -9,7 +9,7 @@
 //opt: noticeUID - replaces UID [string]
 
 function newsletter_shownotice($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 

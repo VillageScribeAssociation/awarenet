@@ -13,7 +13,7 @@
 
 function moblog__cb_comments_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $notifications;
@@ -29,7 +29,7 @@ function moblog__cb_comments_added($args) {
 	$refUID = $args['refUID'];
 
 	if ('moblog' != $refModule) { return false; }
-	if (false == $db->objectExists('moblog_post', $refUID)) { return false; }
+	if (false == $kapenta->db->objectExists('moblog_post', $refUID)) { return false; }
 	
 	$model = new Moblog_Post($refUID);
 	if (false == $model->loaded) { return false; }

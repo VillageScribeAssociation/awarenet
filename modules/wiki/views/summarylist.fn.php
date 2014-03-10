@@ -9,12 +9,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function wiki_summarylist($args) {
-	global $db;
+	global $kapenta;
 
 	$sql = "select * from wiki_article order by refno DESC";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html = '';
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$html .= "[[:wiki::summary::raUID=" . $row['UID'] . ":]]";
 	}
 	return $html;

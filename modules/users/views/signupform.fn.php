@@ -10,7 +10,7 @@
 
 function users_signupform($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $kapenta;
@@ -35,7 +35,7 @@ function users_signupform($args) {
 		'surname' => '',					'username' => '',	
 		'password' => '',					'lang' => 'en',	
 		'profile' => '',					'permissions' => '',	
-		'lastOnline' => $db->datetime(),	'createdOn' => $db->datetime(),	
+		'lastOnline' => $kapenta->db->datetime(),	'createdOn' => $kapenta->db->datetime(),	
 		'createdBy' => 'admin',				'pass1' => '',
 		'pass2' => ''	);
 

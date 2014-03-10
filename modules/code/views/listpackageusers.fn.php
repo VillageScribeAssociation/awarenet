@@ -10,7 +10,7 @@
 //opt: UID - overrides raUID if present [string]
 
 function code_listpackageusers($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';			//%	return value [string:html]
@@ -30,8 +30,8 @@ function code_listpackageusers($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "packageUID='" . $db->addMarkup($model->UID) . "'";
-	$range = $db->loadRange('code_userindex', '*', $conditions);
+	$conditions[] = "packageUID='" . $kapenta->db->addMarkup($model->UID) . "'";
+	$range = $kapenta->db->loadRange('code_userindex', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block (html table)

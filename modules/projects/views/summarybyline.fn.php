@@ -9,7 +9,7 @@
 
 function projects_summarybyline($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$num = 12;					//%	max members to display [int]
@@ -21,7 +21,7 @@ function projects_summarybyline($args) {
 	if (true == array_key_exists('projectUID', $args)) { $args['UID'] = $args['projectUID']; }
 	if (false == array_key_exists('UID', $args)) { return '(project UID not given)'; }
 
-	if (false == $db->objectExists('projects_project', $args['UID'])) { return '(unkown project)'; }
+	if (false == $kapenta->db->objectExists('projects_project', $args['UID'])) { return '(unkown project)'; }
 
 	if (true == array_key_exists('num', $args)) { $args['']; }
 
@@ -30,11 +30,11 @@ function projects_summarybyline($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "projectUID='" . $db->addMarkup($args['UID']) . "'";
+	$conditions[] = "projectUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
 	
-	$totalMembers = $db->countRange('projects_membership', $conditions);
+	$totalMembers = $kapenta->db->countRange('projects_membership', $conditions);
 
-	$range = $db->loadRange('projects_membership', '*', $conditions, 'role, joined', $num);
+	$range = $kapenta->db->loadRange('projects_membership', '*', $conditions, 'role, joined', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

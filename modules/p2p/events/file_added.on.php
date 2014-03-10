@@ -17,7 +17,7 @@
 function p2p__cb_file_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $db; 
+	global $kapenta; 
 	global $user;
 	global $page;
 	global $session;
@@ -44,12 +44,12 @@ function p2p__cb_file_added($args) {
 		$args['size'] = filesize($kapenta->installPath . $args['fileName']);
 	}
 
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) {
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) {
 		$session->msg("File added, but owner object does not exist.");
 		return false;
 	}
 
-	if (false == $db->isShared($args['refModel'], $args['refUID'])) {
+	if (false == $kapenta->db->isShared($args['refModel'], $args['refUID'])) {
 		$session->msgAdmin("File added, but owner object is not shared.");
 		return false;
 	}
@@ -65,7 +65,7 @@ function p2p__cb_file_added($args) {
 	//	assume all peers want to know about it (if owned by a valid, shared object)
 	//----------------------------------------------------------------------------------------------
 	/* previous version using update set
-	$range = $db->loadRange('p2p_peer', '*', '');
+	$range = $kapenta->db->loadRange('p2p_peer', '*', '');
 	//$set = new P2P_Offers();						//	<- remove when possible
 
 	foreach($range as $item) {

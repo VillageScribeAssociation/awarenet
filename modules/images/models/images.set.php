@@ -41,15 +41,15 @@ class Images_Images {
 	//returns: true of success, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 
 		$this->members = array();
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($this->refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($this->refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($this->refUID) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($this->refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($this->refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($this->refUID) . "'";
 
-		$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+		$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 		if (false == $range) { return false; }
 		
 		foreach($range as $row) { $this->members[] = $row; }

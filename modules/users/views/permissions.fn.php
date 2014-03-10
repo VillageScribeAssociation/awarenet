@@ -10,7 +10,7 @@
 //opt: role - filter to specific role, default is '*' [string]
 
 function users_permissions($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -32,8 +32,8 @@ function users_permissions($args) {
 	//	load all roles
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	if ('*' != $role) { $conditions[] = "name='" . $db->addMarkup($role) . "'"; }
-	$range = $db->loadRange('users_role', '*', $conditions);
+	if ('*' != $role) { $conditions[] = "name='" . $kapenta->db->addMarkup($role) . "'"; }
+	$range = $kapenta->db->loadRange('users_role', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	filter all permissions and make the block

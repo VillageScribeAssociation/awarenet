@@ -16,9 +16,9 @@
 	if ($kapenta->request->ref == 'myrecords') {
 
 		$conditions = array();
-		$conditions = "userUID='" . $db->addMarkup($user->UID) . "'";
+		$conditions = "userUID='" . $kapenta->db->addMarkup($user->UID) . "'";
 		$conditions = "(role='member' OR role='admin')";
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 
 		while ($range = $row) { 
 			$model = new Projects_Project($row['projectUID']);

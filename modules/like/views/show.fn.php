@@ -8,7 +8,7 @@
 //arg: refUID - UID of liked object [string]
 
 function like_show($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	
 	$html = '';						//%	return value [string]
@@ -26,12 +26,12 @@ function like_show($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'";
 	$conditions[] = "cancelled='no'";
 
-	$range = $db->loadRange('like_something', '*', $conditions);
+	$range = $kapenta->db->loadRange('like_something', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

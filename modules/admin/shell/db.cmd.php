@@ -11,7 +11,7 @@ function admin_WebShell_db($args) {
 		global $user;
 		global $shell;
 		global $theme;
-		global $db;
+		global $kapenta;
 
 	$mode = 'query';		//%	operation [string]
 	$html = '';				//%	return value [string]
@@ -37,14 +37,14 @@ function admin_WebShell_db($args) {
 			if (false == array_key_exists(0, $args)) { return admin_WebShell_db_help(); }
 			$sql = implode(' ', $args) . ';';
 			//$html = "executing database query: " . implode(' ', $args);
-			$result = $db->query($sql);
+			$result = $kapenta->db->query($sql);
 		
 			if (false === $result) { return "Database returns FALSE"; }
 			if (true === $result) { return "Database returns TRUE"; }
 
 			$table = array();
 
-			while ($row = $db->fetchAssoc($result)) {
+			while ($row = $kapenta->db->fetchAssoc($result)) {
 				if (0 == count($table)) {
 					$titles = array();
 					foreach($row as $key => $value) {	$titles[] = $key; }

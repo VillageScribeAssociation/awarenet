@@ -93,7 +93,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	foreach($galleries as $ary) {
-		if (false == $db->objectExists('videos_gallery', $ary['UID'])) {
+		if (false == $kapenta->db->objectExists('videos_gallery', $ary['UID'])) {
 			$gallery = new Videos_Gallery();
 			$gallery->UID = $ary['UID'];
 			$gallery->title = $ary['title'];
@@ -111,7 +111,7 @@
 		}
 
 		foreach($ary['videos'] as $videoUID => $item) {
-			if (false == $db->objectExists('videos_video', $item['videoUID'])) {
+			if (false == $kapenta->db->objectExists('videos_video', $item['videoUID'])) {
 				$video = new Videos_Video();
 				$video->UID = $item['videoUID'];
 				$video->refModule = 'videos';
@@ -131,7 +131,7 @@
 				else {  echo "could not save video: $report<br/>\n"; }
 			}
 
-			if (false == $db->objectExists('images_image', $item['imageUID'])){
+			if (false == $kapenta->db->objectExists('images_image', $item['imageUID'])){
 				$image = new Images_image();
 				$image->UID = $item['imageUID'];
 				$image->refModule = 'videos';

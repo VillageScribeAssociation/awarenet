@@ -11,7 +11,7 @@ function admin_WebShell_fileowner($args) {
 	global $user;
 	global $shell;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$mode = 'lookup';			//%	operation [string]
 	$html = '';					//%	return value [string]
@@ -55,13 +55,13 @@ function admin_WebShell_fileowner($args) {
 				$html .= "<span class='ajaxwarn'>Owner could not be identified.</span>";
 			} else {
 
-				$obj = $db->getObject($owner['model'], $owner['UID']);
+				$obj = $kapenta->db->getObject($owner['model'], $owner['UID']);
 				
 				$creatorBlock = '[[:users::name::userUID=' . $obj['createdBy'] . ':]]';
 				$creatorName = $theme->expandBlocks($creatorBlock);
 
 				$present = $kapenta->fs->exists($fileName) ? 'yes' : 'no';
-				$shared = $db->isShared($owner['model'], $owner['UID']) ? 'yes' : 'no';
+				$shared = $kapenta->db->isShared($owner['model'], $owner['UID']) ? 'yes' : 'no';
 
 				$fileHash = $kapenta->fs->exists($fileName) ? $kapenta->fileSha1($fileName) : 'na';
 				$fileSize = $kapenta->fs->exists($fileName) ? $kapenta->fs->size($fileName) : 'na';

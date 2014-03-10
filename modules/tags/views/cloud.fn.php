@@ -10,7 +10,7 @@
 //opt: channel - RESERVED [string]
 
 function tags_cloud($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -35,15 +35,15 @@ function tags_cloud($args) {
 
 	if (true == array_key_exists('refModule', $args)) {
 		if (true == $kapenta->moduleExists($args['refModule'])) {
-			$moduleCheck = "AND tags_index.refModule='" . $db->addMarkup($args['refModule']) . "'";
+			$moduleCheck = "AND tags_index.refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
 		}
 	}
 
 	if (true == array_key_exists('refModel', $args)) 
-		{ $modelCheck = "AND tags_index.refModel='" . $db->addMarkup($args['refModel']) . "'"; }
+		{ $modelCheck = "AND tags_index.refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'"; }
 
 	if (true == array_key_exists('refUID', $args)) 
-		{ $UIDCheck = "AND tags_index.refUID='" . $db->addMarkup($args['refUID']) . "'"; }
+		{ $UIDCheck = "AND tags_index.refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'"; }
 
 	$sql = "SELECT tags_tag.* FROM tags_index, tags_tag "
 		 . "WHERE tags_index.tagUID=tags_tag.UID "
@@ -53,16 +53,16 @@ function tags_cloud($args) {
 
 	//echo $sql;
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	proprocess and sort tags by name
 	//----------------------------------------------------------------------------------------------
-	if (0 == $db->numRows($result)) { return "<i>(no tags)</i>"; }
+	if (0 == $kapenta->db->numRows($result)) { return "<i>(no tags)</i>"; }
 
 	$tags = array();
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$tags[$row['namelc']] = array(
 			'UID' => $row['UID'],
 			'name' => $row['name'],

@@ -16,7 +16,7 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('No such object.', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('No such object.', true); }
 
 	if (
 		(false == $user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&

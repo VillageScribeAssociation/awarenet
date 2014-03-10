@@ -15,12 +15,12 @@
 	$conditions = array();
 	$conditions[] = "refModule='gallery'";
 
-	$range = $db->loadRange('comments_comment', '*', $conditions);
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions);
 
 	echo "<h2>Searching for broken references to gallery images</h2>";
 
 	foreach($range as $row) {
-		if (true == $db->objectExists('images_image', $row['refUID'])) {
+		if (true == $kapenta->db->objectExists('images_image', $row['refUID'])) {
 			$model = new Comments_Comment($row['UID']);
 			$model->refModule = 'images';
 			$model->refModel = 'images_image';

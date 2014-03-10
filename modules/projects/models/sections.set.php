@@ -37,14 +37,14 @@ class Projects_Sections {
 	//returns: true of success, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 		if ('' == $this->projectUID) { return false; }
 
 		$this->members = array();
 		$conditions = array();
-		$conditions[] = "projectUID='" . $db->addMarkup($this->projectUID) . "'";
+		$conditions[] = "projectUID='" . $kapenta->db->addMarkup($this->projectUID) . "'";
 
-		$range = $db->loadRange('projects_section', '*', $conditions, 'weight ASC');
+		$range = $kapenta->db->loadRange('projects_section', '*', $conditions, 'weight ASC');
 		if (false == $range) { return false; }
 		
 		foreach($range as $row) { 

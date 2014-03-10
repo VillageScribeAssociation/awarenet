@@ -16,7 +16,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function forums_install_module() {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $kapenta;
 

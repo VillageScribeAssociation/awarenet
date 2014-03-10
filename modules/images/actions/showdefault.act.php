@@ -20,7 +20,7 @@
 	$size = 'full';
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('Unknown module'); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('Unknown owner'); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('Unknown owner'); }
 
 	//TODO: permissions check here
 

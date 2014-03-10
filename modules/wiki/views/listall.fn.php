@@ -13,7 +13,7 @@
 //TODO: this could stand some TLC
 
 function wiki_listall($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -40,14 +40,14 @@ function wiki_listall($args) {
 	$conditions = array();
 	$conditions[] = "namespace='" . $namespace . "'";
 
-	$totalItems = $db->countRange('wiki_article', $conditions);
+	$totalItems = $kapenta->db->countRange('wiki_article', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of articles
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$range = $db->loadRange('wiki_article', '*', $conditions, 'title', $num, $start);
+	$range = $kapenta->db->loadRange('wiki_article', '*', $conditions, 'title', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make table

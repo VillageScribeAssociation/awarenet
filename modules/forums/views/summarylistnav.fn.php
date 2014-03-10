@@ -10,7 +10,7 @@
 //arg: school - UID of a school (not recordAlias) [string]
 
 function forums_summarylistnav($args) {
-	global $db;
+	global $kapenta;
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -24,14 +24,14 @@ function forums_summarylistnav($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "select * from forums_board "
-		 . "where school='" . $db->addMarkup($args['school']) . "' "
+		 . "where school='" . $kapenta->db->addMarkup($args['school']) . "' "
 		 . "order by weight DESC";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	if ($db->numRows($result) > 0) {
-		while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
+	if ($kapenta->db->numRows($result) > 0) {
+		while ($row = $kapenta->db->fetchAssoc($result)) { 
+			$row = $kapenta->db->rmArray($row);
 			$html .= "[[:forums::summarynav::forumUID=" . $row['UID'] . ":]]\n";
 		}	
 

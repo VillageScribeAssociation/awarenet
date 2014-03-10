@@ -14,14 +14,14 @@
 //returns: true on success, false on failure [bool]
 
 function code_authenticate($username, $password, $packageUID, $privilege, $mode = 'basic') {
-	global $db;
+	global $kapenta;
 	$auth = false;				//%	return value [bool]
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("username='" . $db->addMarkup($username) . "'");
-	$range = $db->loadRange('users_user', '*', $conditions);
+	$conditions = array("username='" . $kapenta->db->addMarkup($username) . "'");
+	$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 	// ^ "select * from Users_User where username='" . $username . "'";
 
 	if (count($range) > 0) {
@@ -29,11 +29,11 @@ function code_authenticate($username, $password, $packageUID, $privilege, $mode 
 		if ($row['password'] == sha1($password . $row['UID'])) {
 			// username and password match
 			$conditions = array();
-			$conditions[] = "userUID='" . $db->addMarkup($row['UID']) . "'";
-			$conditions[] = "packageUID='" . $db->addMarkup($packageUID) . "'";
-			$conditions[] = "privilege='" . $db->addMarkup($privilege) . "'";
+			$conditions[] = "userUID='" . $kapenta->db->addMarkup($row['UID']) . "'";
+			$conditions[] = "packageUID='" . $kapenta->db->addMarkup($packageUID) . "'";
+			$conditions[] = "privilege='" . $kapenta->db->addMarkup($privilege) . "'";
 
-			$range = $db->loadRange('code_userindex', '*', $conditions);
+			$range = $kapenta->db->loadRange('code_userindex', '*', $conditions);
 
 			foreach($range as $item) { $auth = true; }
 		}

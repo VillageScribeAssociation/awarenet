@@ -11,14 +11,14 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (false == array_key_exists('course', $req->args)) { $page->do404('Course not specified'); }
-	if (false == array_key_exists('document', $req->args)) { $page->do404('Document not specified'); }
+	if (false == array_key_exists('course', $kapenta->request->args)) { $page->do404('Course not specified'); }
+	if (false == array_key_exists('document', $kapenta->request->args)) { $page->do404('Document not specified'); }
 
-	$model = new Lessons_Course($req->args['course']);
+	$model = new Lessons_Course($kapenta->request->args['course']);
 	if (false == $model->loaded) { $page->do404('Course not found'); }
-	if (false == $model->has($req->args['document'])) { $page->do404('Document not found'); }
+	if (false == $model->has($kapenta->request->args['document'])) { $page->do404('Document not found'); }
 
-	$doc = $model->documents[$req->args['document']];
+	$doc = $model->documents[$kapenta->request->args['document']];
 
 	$width = '1000';
 	$height = '600';
@@ -29,7 +29,7 @@
 		$height = '200';
 	}
 
-	$page->load('modules/lessons/actions/showpdf.page.php');
+	$kapenta->page->load('modules/lessons/actions/showpdf.page.php');
 
 	foreach($doc as $key => $val) { $kapenta->page->blockArgs[$key] = $val; }
 
@@ -37,13 +37,13 @@
 		$kapenta->page->blockArgs['licence'] = $kapenta->page->blockArgs['licencename'];
 	}
 
-	$kapenta->page->blockArgs['courseUID'] = $req->args['course'];
-	$kapenta->page->blockArgs['documentUID'] = $req->args['document'];
+	$kapenta->page->blockArgs['courseUID'] = $kapenta->request->args['course'];
+	$kapenta->page->blockArgs['documentUID'] = $kapenta->request->args['document'];
 	$kapenta->page->blockArgs['document_title'] = $doc['title'];
 	$kapenta->page->blockArgs['fileName'] = $doc['file'];
 	$kapenta->page->blockArgs['coverImage'] = $kapenta->serverPath . $doc['cover'];
 	$kapenta->page->blockArgs['width'] = $width;
 	$kapenta->page->blockArgs['height'] = $height;
-	$page->render();
+	$kapenta->page->render();
 
 ?>

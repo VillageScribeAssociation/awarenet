@@ -7,7 +7,7 @@
 
 function admin_dbusage($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $theme;
@@ -45,9 +45,9 @@ function admin_dbusage($args) {
 		}
 
 		$sql = "select SUM(data_length) + SUM(index_length) as size from information_schema.tables"; 
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 		if (false == $result) { return '(unknown)'; }
-		while($row = $db->fetchAssoc($result)) {
+		while($row = $kapenta->db->fetchAssoc($result)) {
 			$sizeStr = $row['size'];
 			$size = (int)$row['size'];
 			if ($size > 1024) { $sizeStr = floor($size / 1024) . 'kb'; }

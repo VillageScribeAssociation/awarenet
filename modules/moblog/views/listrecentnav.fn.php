@@ -8,7 +8,7 @@
 //opt: num - max number of posts to show (default is 10) [string]
 
 function moblog_listrecentnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -25,7 +25,7 @@ function moblog_listrecentnav($args) {
 	//	load items from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("published='yes'");	
-	$range = $db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, 'createdOn DESC', $num);
 
 	//$sql = "select * from moblog"
 	//	 . " where published='yes'"
@@ -38,7 +38,7 @@ function moblog_listrecentnav($args) {
 
 	foreach ($range as $item) {
 		//$model = new Moblog_Post();
-		//$model->loadArray($db->rmArray($row));
+		//$model->loadArray($kapenta->db->rmArray($row));
 		//$html .= $theme->replaceLabels($model->extArray(), $block);
 		$html .= "[[:moblog::summarynav::postUID=" . $item['UID'] . ":]]";
 	}

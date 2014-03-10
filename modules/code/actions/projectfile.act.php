@@ -10,11 +10,11 @@
 	//----------------------------------------------------------------------------------------------
 	// load the record
 	//----------------------------------------------------------------------------------------------
-	$sql = "select * from code where UID='" . $db->addMarkup($kapenta->request->args['file']) . "'";
-	$result = $db->query($sql);	
-	if ($db->numRows($result) == 0) { $page->do404(); }
-	$row = $db->fetchAssoc($result);
-	$row = $db->rmArray($row);
+	$sql = "select * from code where UID='" . $kapenta->db->addMarkup($kapenta->request->args['file']) . "'";
+	$result = $kapenta->db->query($sql);	
+	if ($kapenta->db->numRows($result) == 0) { $page->do404(); }
+	$row = $kapenta->db->fetchAssoc($result);
+	$row = $kapenta->db->rmArray($row);
 
 	$content = base64wrap($row['content']);
 

@@ -33,7 +33,7 @@ class Users_Role {
 	//opt: byName - set to true if providing role name rather than UID [bool]
 
 	function Users_Role($raUID = '', $byName = false) {
-		global $db;
+		global $kapenta;
 
 		$this->permissions = new Users_Permissions();
 
@@ -43,7 +43,7 @@ class Users_Role {
 			else { $this->loadByName($raUID); }
 		}			
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->name = 'New Role ' . $this->UID;			// set default name
 			$this->loaded = false;
@@ -57,8 +57,8 @@ class Users_Role {
 	//returns: true on success, false on failure [bool]
 
 	function load($raUID) {
-		global $db;
-		$objary = $db->loadAlias($raUID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->loadAlias($raUID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -127,10 +127,10 @@ class Users_Role {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $kapenta;
 
@@ -141,7 +141,7 @@ class Users_Role {
 
 		$ary = $this->toArray();
 		//echo "<textarea rows='10' cols='80'>{$ary['permissions']}</textarea>";
-		$check = $db->save($ary, $this->dbSchema);
+		$check = $kapenta->db->save($ary, $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 
 		//	invalidate memcached entry
@@ -300,13 +300,13 @@ class Users_Role {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 
 		//	invalidate memcached entry
 		$cacheKey = 'role::name::' . $this->name;

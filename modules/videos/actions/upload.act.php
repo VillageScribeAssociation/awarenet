@@ -85,7 +85,7 @@
 	}
 
 	// check owner object
-	if (false == $db->objectExists($refModel, $refUID)) { 
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { 
 		if ('xml' == $return) { $page->doXmlError('No such owner obejct.'); }
 		$session->msg('No such owner obejct.', 'bad');
 		$page->do302($returnUrl);
@@ -165,11 +165,11 @@
 	if ((true == array_key_exists('action', $_POST)) && ('uploadSingleVideo' == $_POST['action'])) {
 
 		$conditions = array();
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
 	
-		$range = $db->loadRange('videos_video', '*', $conditions);
+		$range = $kapenta->db->loadRange('videos_video', '*', $conditions);
 		foreach ($range as $row) {
 			$oldVid = new Videos_Video($row['UID']);
 			$oldVid->delete();

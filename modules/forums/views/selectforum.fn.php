@@ -7,7 +7,7 @@
 //opt: default - UID of a forum for default item [string]
 
 function forums_selectforum($args) {
-	global $db;
+	global $kapenta;
 
 	$html = '';				//%	return value [string]
 	$default = '';
@@ -23,7 +23,7 @@ function forums_selectforum($args) {
 	//---------------------------------------------------------------------------------------------
 	//	load all forums into a select box
 	//---------------------------------------------------------------------------------------------
-	$range = $db->loadRange('forums_board', '*', '', 'title', '', '');
+	$range = $kapenta->db->loadRange('forums_board', '*', '', 'title', '', '');
 
 	$html = "<select name='" . $varname . "'>\n";
 	foreach($range as $row) {

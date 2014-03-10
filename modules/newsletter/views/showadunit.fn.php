@@ -11,7 +11,7 @@
 function newsletter_showadunit($args) {
 	global $user;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//% return value [string]
 

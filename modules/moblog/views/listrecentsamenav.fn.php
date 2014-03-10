@@ -11,7 +11,7 @@
 //opt: num - max number of posts to show (default 10) [string]
 
 function moblog_listrecentsamenav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $user;
 
@@ -34,10 +34,10 @@ function moblog_listrecentsamenav($args) {
 	//	load items from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($model->createdBy) . "'";
-	$conditions[] = "(published='yes' or createdBy='" . $db->addMarkup($user->UID) . "')";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($model->createdBy) . "'";
+	$conditions[] = "(published='yes' or createdBy='" . $kapenta->db->addMarkup($user->UID) . "')";
 
-	$range = $db->loadRange('moblog_post', '*', $conditions, "createdOn DESC", $num); 
+	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, "createdOn DESC", $num); 
 
 	//$sql = "select * from moblog"
 	//	 . " where createdBy='" . $model->createdBy . "'"

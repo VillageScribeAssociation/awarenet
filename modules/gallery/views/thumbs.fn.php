@@ -12,7 +12,7 @@
 //opt: galleryUID - overrides UID if present [string]
 
 function gallery_thumbs($args) {
-	global $db;
+	global $kapenta;
 	$limit = '';
 	$html = '';
 	$size = 'thumb';
@@ -34,9 +34,9 @@ function gallery_thumbs($args) {
 	//---------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "refModule='gallery'";
-	$conditions[] = "refUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight ASC', $limit, '');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight ASC', $limit, '');
 
 	foreach($range as $item) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $item['alias'];

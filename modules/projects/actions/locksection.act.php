@@ -30,7 +30,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model->lockedBy = $user->UID;
-	$model->lockedOn = $db->datetime();
+	$model->lockedOn = $kapenta->db->datetime();
 	$report = $model->save();
 
 	if ('' != $report) { echo "<fail>$report</fail>"; die(); }

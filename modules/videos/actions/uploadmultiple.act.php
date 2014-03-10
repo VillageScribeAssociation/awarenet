@@ -22,8 +22,8 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('No such module.', true); }
-	if (false == $db->tableExists($refModel)) { $page->do404('Object type not recognized.', true); }
-	if (false == $db->objectExists($refModel, $refUID))
+	if (false == $kapenta->db->tableExists($refModel)) { $page->do404('Object type not recognized.', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID))
 		{ $page->do404('Owner object does not exist.', false); }
 
 	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID))

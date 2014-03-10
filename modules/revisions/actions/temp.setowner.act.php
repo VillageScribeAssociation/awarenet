@@ -16,10 +16,10 @@
 	//	iterate through all deleted items
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from revisions_deleted";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		echo "Object: " . $item['UID'] . "<br/>\n";
 
 		$model = new Revisions_Deleted();

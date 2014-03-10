@@ -13,14 +13,14 @@
 		//------------------------------------------------------------------------------------------
 
 		$rows = array();
-		$sql = "select * from files_file where refModule='" . $db->addMarkup($kapenta->request->args['refmodule']) 
-			. "' and refUID='" . $db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
+		$sql = "select * from files_file where refModule='" . $kapenta->db->addMarkup($kapenta->request->args['refmodule']) 
+			. "' and refUID='" . $kapenta->db->addMarkup($kapenta->request->args['refuid']) . "' order by weight";
 			
 		//TODO: $db->loadRange
 
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 		$index = 0;
-		while ($row = $db->fetchAssoc($result)) {
+		while ($row = $kapenta->db->fetchAssoc($result)) {
 			if ($show == '') { $show = $row['UID']; }
 			$rows[$row['UID']] = $row;
 			$rows[$row['UID']]['index'] = $index;

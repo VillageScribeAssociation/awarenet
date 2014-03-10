@@ -12,11 +12,11 @@
 //opt: status - show only projects with the given status (open|locked|closed) [string]
 
 function projects_summarylist($args) {
-	global $page;
-	global $db;
+	global $kapenta;
+	global $kapenta;
 	global $user;
 	global $theme;
-	global $page;
+	global $kapenta;
 	global $session;
 
 	$start = 0;					//%	index of first item in result set [int]
@@ -51,17 +51,17 @@ function projects_summarylist($args) {
 	if ('closed' == $status) { $conditions[] = "(status='closed' OR status='')"; }
 	if ('notclosed' == $status) { $conditions[] = "(status='open' OR status='locked')"; }
 
-	$totalItems = $db->countRange('projects_project', $conditions);
+	$totalItems = $kapenta->db->countRange('projects_project', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	$link = '%%serverPath%%projects/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageNo) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageNo) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page worth of objects from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('projects_project', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('projects_project', '*', $conditions, 'editedOn DESC', $num, $start);
 
 	//$block = $theme->loadBlock('modules/projects/views/summary.block.php');
 

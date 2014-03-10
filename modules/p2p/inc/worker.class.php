@@ -49,7 +49,7 @@ class P2P_Worker {
 	function P2P_Worker($chatty = false) {
 		global $kapenta;
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		//	initialize self
 		$this->UID = $kapenta->createUID();
@@ -57,7 +57,7 @@ class P2P_Worker {
 		$this->startTime = $kapenta->time();
 		$this->dispatcher = new P2P_Dispatcher();
 
-		$this->peers = $db->loadRange('p2p_peer', '*');
+		$this->peers = $kapenta->db->loadRange('p2p_peer', '*');
 
 		$this->eventCount = (int)$kapenta->registry->get('p2p.batchsize');
 		if (0 == $this->eventCount) { $this->eventCount = 10; }

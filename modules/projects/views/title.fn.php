@@ -12,13 +12,13 @@
 //opt: link - link to this record? [string]
 
 function projects_title($args) {
-	global $db;
+	global $kapenta;
 
 	$link = 'no';
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	if (array_key_exists('link', $args) == false) { $link = $args['link']; }
-	$model = new Projects_Project($db->addMarkup($args['raUID']));	
+	$model = new Projects_Project($kapenta->db->addMarkup($args['raUID']));	
 	if ($link == 'no') {
 		return $model->title;
 	} else {

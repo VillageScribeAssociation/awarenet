@@ -10,7 +10,7 @@
 //opt: num - maximum number of thumbs to show (most recent first) (default is no limit) [string]
 
 function videos_thumbs($args) {
-	global $db;
+	global $kapenta;
 	$limit = '';
 	$html = '';
 	$size = 'thumb';
@@ -27,9 +27,9 @@ function videos_thumbs($args) {
 	//---------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "refModule='videos'";
-	$conditions[] = "refUID='" . $db->addMarkup($args['UID']) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($args['UID']) . "'";
 
-	$range = $db->loadRange('videos_video', '*', $conditions, 'weight ASC', $limit, '');
+	$range = $kapenta->db->loadRange('videos_video', '*', $conditions, 'weight ASC', $limit, '');
 
 	foreach($range as $item) {
 		$viewUrl = '%%serverPath%%videos/play/' . $item['alias'];

@@ -13,7 +13,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function schools_maintenance() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $user;
 		global $theme;
@@ -32,10 +32,10 @@ function schools_maintenance() {
 	$model = new Schools_School();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from schools_school";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -65,13 +65,13 @@ function schools_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('Users_User', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('Users_User', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->name, 'invalid reference (createdBy:Users_User)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('Users_User', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('Users_User', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->name, 'invalid reference (editedBy:Users_User)');
 			$errorCount++;

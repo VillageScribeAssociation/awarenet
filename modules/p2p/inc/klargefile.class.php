@@ -167,7 +167,7 @@ class KLargeFile {
 
 	function makeFromFile() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		$owner = $kapenta->fileOwner($this->path);
 
@@ -182,8 +182,8 @@ class KLargeFile {
 
 		if (!$kapenta->fs->exists($this->path)) { return false; }			//	no such file
 		if (!$kapenta->moduleExists($this->module)) { return false; }		//	no such module
-		if (!$db->objectExists($this->model, $this->UID)) { return false; }	//	no such object
-		if (!$db->isShared($this->model, $this->UID)) { return false; }		//	is not shared
+		if (!$kapenta->db->objectExists($this->model, $this->UID)) { return false; }	//	no such object
+		if (!$kapenta->db->isShared($this->model, $this->UID)) { return false; }		//	is not shared
 
 		$this->hash = $kapenta->fileSha1($this->path);
 		$this->size = $kapenta->fs->size($this->path);

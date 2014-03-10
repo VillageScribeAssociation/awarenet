@@ -10,7 +10,7 @@
 
 function gallery_movetogallery($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';		//%	return value [string]
@@ -29,10 +29,10 @@ function gallery_movetogallery($args) {
 	//	load list of user galleries from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($model->createdBy) . "'";
-	$conditions[] = "(UID != '" . $db->addMarkup($model->refUID) . "')";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($model->createdBy) . "'";
+	$conditions[] = "(UID != '" . $kapenta->db->addMarkup($model->refUID) . "')";
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, 'title');
+	$range = $kapenta->db->loadRange('gallery_gallery', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

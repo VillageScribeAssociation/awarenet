@@ -8,9 +8,9 @@
 	require_once($kapenta->installPath . 'modules/code/models/code.mod.php');
 
 	$sql = "select * from code";
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$c = new Code();
 		$c->loadArray($row);
 

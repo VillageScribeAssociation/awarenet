@@ -11,13 +11,13 @@
 //opt: forumUID - overrides raUID [string]
 
 function forums_summary($args) {
-	global $db;
+	global $kapenta;
 
 	global $theme;
 
 	if (array_key_exists('forumUID', $args)) { $args['forumUID'] = $args['pageUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
-	$model = new Forums_Board($db->addMarkup($args['raUID']));	
+	$model = new Forums_Board($kapenta->db->addMarkup($args['raUID']));	
 	return $theme->replaceLabels($model->extArray(), $theme->loadBlock('modules/forums/views/summary.block.php'));
 }
 

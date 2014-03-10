@@ -12,11 +12,11 @@ if ($user->role == 'public') { $page->doXmlError('not logged in'); }
 
 if ($kapenta->request->ref == 'myrecords') {
 	$sql = "select * from gallery_gallery where createdBy='" . $user->UID . "' order by title";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	
 	echo "<?xml version=\"1.0\"?>\n";
 	echo "<recordset>\n";
-	while ($row = $db->rmArray($db->fetchAssoc($result))) { 
+	while ($row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result))) { 
 		$ary = array(	'uid' => $row['UID'], 
 						'module' => 'gallery',
 						'title' => $row['title'],

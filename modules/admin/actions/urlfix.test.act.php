@@ -37,7 +37,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	perform database-wide search and replace
 	//----------------------------------------------------------------------------------------------
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 	$url = $_POST['url'];
 
 	foreach($tables as $table) {
@@ -47,8 +47,8 @@
 			$count = 0;
 
 			$sql = "select * from $table";
-			$result = $db->query($sql);
-			while($row = $db->fetchAssoc($result)) {
+			$result = $kapenta->db->query($sql);
+			while($row = $kapenta->db->fetchAssoc($result)) {
 
 				foreach($row as $field => $value) {
 					if (false !== strpos($value, $url)) {
@@ -66,7 +66,7 @@
 		
 						//echo htmlentities($sql) . "<br/>\n";
 
-						$db->query($sql);
+						$kapenta->db->query($sql);
 						$count++;
 					}
 				} 

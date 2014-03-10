@@ -8,7 +8,7 @@
 //arg: hidden - show hidden schools (yes|no) [string]
 
 function schools_listallnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';
@@ -19,7 +19,7 @@ function schools_listallnav($args) {
 	if ((true == array_key_exists('hidden', $args)) && ('yes' == $args['hidden']))
 		{ $conditions = ''; }
 
-	$range = $db->loadRange('schools_school', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'name');
 
 	foreach($range as $row) 
 		{ $html .= "[[:schools::summarynav::schoolUID=" . $row['UID'] . ":]]"; }

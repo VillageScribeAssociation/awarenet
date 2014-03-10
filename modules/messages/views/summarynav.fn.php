@@ -9,7 +9,7 @@
 //opt: owner - UID of message owner (default is current user) [string]
 
 function messages_summarynav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$owner = $user->UID;
@@ -19,8 +19,8 @@ function messages_summarynav($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { return ''; }
-	if (true == array_key_exists('owner', $args)) { $owner = $db->addMarkup($args['owner']); }
-	if (true == array_key_exists('folder', $args)) { $folder = $db->addMarkup($args['folder']); }
+	if (true == array_key_exists('owner', $args)) { $owner = $kapenta->db->addMarkup($args['owner']); }
+	if (true == array_key_exists('folder', $args)) { $folder = $kapenta->db->addMarkup($args['folder']); }
 
 	//----------------------------------------------------------------------------------------------
 	//	count all messages
@@ -29,13 +29,13 @@ function messages_summarynav($args) {
 	$conditions[] = "owner='" . $owner . "'";
 	$conditions[] = "folder='" . $folder . "'";
 
-	$totalMessages = $db->countRange('messages_message', $conditions);
+	$totalMessages = $kapenta->db->countRange('messages_message', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	count unread messages
 	//----------------------------------------------------------------------------------------------
 	$conditions[] = "status='unread'";
-	$newMessages = $db->countRange('messages_message', $conditions);
+	$newMessages = $kapenta->db->countRange('messages_message', $conditions);
 	$unread = '';	
 
 	if ('outbox' == $folder) { $newMessages = 'n/a'; }

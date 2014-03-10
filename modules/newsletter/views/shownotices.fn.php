@@ -7,7 +7,7 @@
 
 function newsletter_shownotices($args) {
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';								//%	return value [string]
 	
@@ -23,14 +23,14 @@ function newsletter_shownotices($args) {
 	//	load and sort categories
 	//----------------------------------------------------------------------------------------------
 
-	$categories = $db->loadRange('newsletter_category', '*', '', 'CAST(weight AS INTEGER)');
+	$categories = $kapenta->db->loadRange('newsletter_category', '*', '', 'CAST(weight AS INTEGER)');
 
 	//----------------------------------------------------------------------------------------------
 	//	load and sort notices
 	//----------------------------------------------------------------------------------------------
 
-	$conditions = array("edition='" . $db->addMarkup($model->UID) . "'");
-	$range = $db->loadRange('newsletter_notice', '*', $conditions, 'createdOn');
+	$conditions = array("edition='" . $kapenta->db->addMarkup($model->UID) . "'");
+	$range = $kapenta->db->loadRange('newsletter_notice', '*', $conditions, 'createdOn');
 
 	//----------------------------------------------------------------------------------------------
 	//	compile (assume n is pretty small)

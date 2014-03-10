@@ -16,7 +16,7 @@
 function images_allthumbs($args) {
 	global $req;
 
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -48,18 +48,18 @@ function images_allthumbs($args) {
 	$conditions = array();									//% to filter list by [array:string]
 
 	if (true == array_key_exists('refModule', $args)) 
-		{ $conditions[] = "refModule='" . $db->addMarkup($args['refModule']) . "'"; }
+		{ $conditions[] = "refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'"; }
 
 	if (true == array_key_exists('refModel', $args)) 
-		{ $conditions[] = "refModel='" . $db->addMarkup($args['refModel']) . "'"; }
+		{ $conditions[] = "refModel='" . $kapenta->db->addMarkup($args['refModel']) . "'"; }
 
 	if (true == array_key_exists('refUID', $args)) 
-		{ $conditions[] = "refUID='" . $db->addMarkup($args['refUID']) . "'"; }
+		{ $conditions[] = "refUID='" . $kapenta->db->addMarkup($args['refUID']) . "'"; }
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('images_image', $conditions);	//% total number of items [int]
+	$total = $kapenta->db->countRange('images_image', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('images_image', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>(no images)</div><br/>\n";

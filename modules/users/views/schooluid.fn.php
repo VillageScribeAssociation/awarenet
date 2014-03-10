@@ -10,7 +10,7 @@
 //opt: userUID - overrides raUID if present [string]
 
 function users_schooluid($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 

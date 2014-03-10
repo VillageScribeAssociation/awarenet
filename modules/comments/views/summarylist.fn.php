@@ -9,7 +9,7 @@
 //opt: num - number of records per page (default 30) [string]
 
 function comments_summarylist($args) {
-		global $db;
+		global $kapenta;
 		global $page;
 		global $theme;
 
@@ -33,7 +33,7 @@ function comments_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database and make block
 	//----------------------------------------------------------------------------------------------
-	$list = $db->loadRange('comments_comment', '*', '', 'createdOn', $num, $start);
+	$list = $kapenta->db->loadRange('comments_comment', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/comments/views/summary.block.php');
 
 	foreach($list as $UID => $row) {

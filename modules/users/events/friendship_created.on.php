@@ -10,7 +10,7 @@
 function users__cb_friendship_created($args) {
 	global $notifications;
 	global $user;
-	global $db;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
@@ -21,8 +21,8 @@ function users__cb_friendship_created($args) {
 	if (false == array_key_exists('friendUID', $args)) { return false; }
 	if (false == array_key_exists('relationship', $args)) { return false; }
 
-	if (false == $db->objectExists('users_user', $args['userUID'])) { return false; }
-	if (false == $db->objectExists('users_user', $args['friendUID'])) { return false; }  
+	if (false == $kapenta->db->objectExists('users_user', $args['userUID'])) { return false; }
+	if (false == $kapenta->db->objectExists('users_user', $args['friendUID'])) { return false; }  
 
 	$fromUser = new Users_User($args['userUID']);
 	$toUser = new Users_User($args['friendUID']);

@@ -69,17 +69,17 @@
 
 		// check if user is already registered
 		$sql = "select * from users_user"
-			 . " where lower(username)='" . $db->addMarkup(strtolower($formvars['username'])) ."'";
+			 . " where lower(username)='" . $kapenta->db->addMarkup(strtolower($formvars['username'])) ."'";
 
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 
-		if ($db->numRows($result) != 0) { 
+		if ($kapenta->db->numRows($result) != 0) { 
 			$report .= "[*] The username <i>" . $formvars['username']. "</i> has already been "
 					 . "registered, please choose another.<br/>\n"; 
 		}	
 
 		// check that school exists
-		if (false == $db->objectExists('schools_school', $formvars['school'])) 
+		if (false == $kapenta->db->objectExists('schools_school', $formvars['school'])) 
 			{ $report .= "[*] Please choose a school from the list.<br/>\n"; }	
 
 		if ('' == $report) {
@@ -99,8 +99,8 @@
 			$model->password = sha1($formvars['pass1'] . $model->UID);
 			$model->lang = 'en';
 			$model->profile = '';
-			$model->lastOnline = $db->datetime();
-			$model->createdOn = $db->datetime();
+			$model->lastOnline = $kapenta->db->datetime();
+			$model->createdOn = $kapenta->db->datetime();
 			$model->createdBy = 'admin';
 			$report = $model->save();
 

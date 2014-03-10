@@ -25,7 +25,7 @@
 	$cc = array();
 	$recips = explode("|", $_POST['recipients']);
 	foreach($recips as $toUID) 
-		{ if ((strlen($toUID) > 3) && $db->objectExists('users_user', $toUID)) { $cc[] = $toUID; } }
+		{ if ((strlen($toUID) > 3) && $kapenta->db->objectExists('users_user', $toUID)) { $cc[] = $toUID; } }
 	//TODO: tidy
 
 	//----------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 //: note the direct use of images table - TODO: work around this
 
 function gallery_randomthumbs($args) {
-	global $db;
+	global $kapenta;
 
 	$limit = '';
 	$html = '';
@@ -29,10 +29,10 @@ function gallery_randomthumbs($args) {
 	//---------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
 	$conditions[] = "refModule='gallery'";
 
-	$range = $db->loadRange('images_image', '*', $conditions, 'RAND()', $limit, '');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'RAND()', $limit, '');
 
 	foreach($range as $row) {
 		$viewUrl = '%%serverPath%%gallery/image/' . $row['alias'];

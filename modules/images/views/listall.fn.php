@@ -10,9 +10,9 @@
 
 function images_listall($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
-		global $page;
+		global $kapenta;
 
 	$num = 30;							//%	number of items per page [int]
 	$pageNo = 1;						//%	page number, starts from 1 [int]
@@ -34,7 +34,7 @@ function images_listall($args) {
 	//	load page of items from the database and make the block
 	//----------------------------------------------------------------------------------------------
 	//TODO: add any conditions here
-	$range = $db->loadRange('images_image', '*', '', 'createdOn', $num, $start);
+	$range = $kapenta->db->loadRange('images_image', '*', '', 'createdOn', $num, $start);
 	$block = $theme->loadBlock('modules/images/summary.block.php');
 
 	foreach($range as $UID => $row) {

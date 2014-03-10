@@ -13,7 +13,7 @@
 
 function projects__cb_images_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $notifications;
 	global $cache;

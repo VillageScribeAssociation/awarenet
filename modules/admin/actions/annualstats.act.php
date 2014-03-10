@@ -90,10 +90,10 @@
 			$endDate = $currYear . '-' . $currMonthS . '-31';
 
 			$condition = "createdOn BETWEEN '$startDate' AND '$endDate'";
-			$new = $db->countRange($objType, array($condition));
+			$new = $kapenta->db->countRange($objType, array($condition));
 
 			$condition = "editedOn BETWEEN '$startDate' AND '$endDate'";
-			$edit = $db->countRange($objType, array($condition));
+			$edit = $kapenta->db->countRange($objType, array($condition));
 
 			$row[] = $new . "<small>/$edit</small>";
 			$total += $new;

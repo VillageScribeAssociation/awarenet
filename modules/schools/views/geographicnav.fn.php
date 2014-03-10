@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_geographicnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';			//%	return value [string]
@@ -21,7 +21,7 @@ function schools_geographicnav($args) {
 	$conditions[] = "hidden='no' OR hidden=''";
 	//  any other conditions go here
 
-	$range = $db->loadRange('schools_school', '*', $conditions, 'country, region, name');
+	$range = $kapenta->db->loadRange('schools_school', '*', $conditions, 'country, region, name');
 
 	//----------------------------------------------------------------------------------------------
 	//	sort the list

@@ -13,7 +13,7 @@ function admin_WebShell_reattach($args) {
 	global $shell;
 	global $theme;
 	global $utils;
-	global $db;
+	global $kapenta;
 
 	$ajw = "<span class='ajaxwarn'>";		//%	tidy [string]
 	$html = '';								//%	return value [string]
@@ -45,10 +45,10 @@ function admin_WebShell_reattach($args) {
 			$ownerModel = $args[3];
 			$ownerUID = $args[4];
 
-			if (false == $db->objectExists($forModel, $forUID)) { return '(object not found)'; }
-			if (false == $db->objectExists($ownerModel, $ownerUID)) { return '(owner not found)'; }
+			if (false == $kapenta->db->objectExists($forModel, $forUID)) { return '(object not found)'; }
+			if (false == $kapenta->db->objectExists($ownerModel, $ownerUID)) { return '(owner not found)'; }
 
-			$objAry = $db->getObject($forModel, $forUID);
+			$objAry = $kapenta->db->getObject($forModel, $forUID);
 
 			if (
 				(false == array_key_exists('refModule', $objAry)) ||
@@ -67,12 +67,12 @@ function admin_WebShell_reattach($args) {
 
 			$sql = ''
 			 . "UPDATE $forModel SET"
-			 . " refModule='" . $db->addMarkup($ownerModule) . "',"
-			 . " refModel='" . $db->addMarkup($ownerModel) . "',"
-			 . " refUID='" . $db->addMarkup($ownerUID) . "'"
-			 . " WHERE UID='" . $db->addMarkup($forUID) . "'";
+			 . " refModule='" . $kapenta->db->addMarkup($ownerModule) . "',"
+			 . " refModel='" . $kapenta->db->addMarkup($ownerModel) . "',"
+			 . " refUID='" . $kapenta->db->addMarkup($ownerUID) . "'"
+			 . " WHERE UID='" . $kapenta->db->addMarkup($forUID) . "'";
 
-			$result = $db->query($sql);
+			$result = $kapenta->db->query($sql);
 			if (true == $result) { $html .= "<span class='ajaxmsg'>done</span>"; }
 			else { $html .= "<span class='ajaxwarn'>database error, could not reset.</span>"; }
 

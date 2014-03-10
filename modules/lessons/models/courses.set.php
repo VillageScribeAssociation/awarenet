@@ -257,11 +257,11 @@ class Lessons_Courses {
 	//returnns: HTML report of actions taken
 
 	function clearDbCache() {
-		global $db;
+		global $kapenta;
 
 		$report = '<b>Clearing db cache:</b><br/>';					//%	return value [string]
 
-		$range = $db->loadRange('lessons_collection', '*');
+		$range = $kapenta->db->loadRange('lessons_collection', '*');
 		foreach($range as $item) {
 			$report .= "Uncaching course/collection: " . $item['title'] . " (" . $item['UID'] . ")<br/>\n";
 			//simple deletion since these cache objects are never shared
@@ -269,7 +269,7 @@ class Lessons_Courses {
 			$report .= "$sql<br/>\n";
 		}
 
-		$range = $db->loadRange('lessons_stub', '*');
+		$range = $kapenta->db->loadRange('lessons_stub', '*');
 		foreach($range as $item) {
 			$report .= "Uncaching stub: " . $item['title'] . " (" . $item['UID'] . ")<br/>";
 			//simple deletion since these cache objects are never shared

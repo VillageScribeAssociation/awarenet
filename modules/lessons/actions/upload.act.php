@@ -78,7 +78,7 @@
 
 			copy($tempFile, $kapenta->installPath . $destName);
 
-			if (false == $kapenta->fileExists($destName)) {
+			if (false == $kapenta->fs->exists($destName)) {
 				$session->msg("Error during file upload, please try again.", 'bad');
 				$page->do302('lessons/editmanifest/' . $model->UID);				
 			}

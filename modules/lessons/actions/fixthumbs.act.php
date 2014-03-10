@@ -14,7 +14,7 @@
 
 	if ('admin' != $user->role) { $page->do403(); }
 	$setName = 'videolessons';
-	if ('' != $req->ref) { $setName = $req->ref; }
+	if ('' != $kapenta->request->ref) { $setName = $kapenta->request->ref; }
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 

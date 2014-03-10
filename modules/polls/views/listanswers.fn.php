@@ -9,7 +9,7 @@
 //opt: questionUID - overrides UID if present [string]
 
 function polls_listanswers($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = '';			//%	return value;

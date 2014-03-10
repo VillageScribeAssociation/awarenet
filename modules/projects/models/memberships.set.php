@@ -36,11 +36,11 @@ class Projects_Memberships {
 	//returns: true on succes, false on failure
 
 	function load() {
-		global $db;
+		global $kapenta;
 		$this->members = array();
 		if ('' == $this->projectUID) { return false; }
-		$conditions = array("projectUID='" . $db->addMarkup($this->projectUID) . "'");
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$conditions = array("projectUID='" . $kapenta->db->addMarkup($this->projectUID) . "'");
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 		$this->members = $range;
 		$this->loaded = true;
 	}
@@ -53,8 +53,8 @@ class Projects_Memberships {
 	//returns: true on success, false on failure [bool]
 
 	function add($userUID, $role) {
-		global $db;
-		if (false == $db->objectExists('users_user', $userUID)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->objectExists('users_user', $userUID)) { return false; }
 		if (false == $this->loaded) { $this->load(); }
 		if (false == $this->loaded) { return false; }
 
@@ -66,7 +66,7 @@ class Projects_Memberships {
 				$model = new Projects_Membership();
 				$model->loadArray($item);
 				$model->role = $role;
-				$model->joined = $db->datetime();
+				$model->joined = $kapenta->db->datetime();
 				$check = $model->save();
 				$this->load();							// reload memberships
 				if ('' != $check) { return false; }
@@ -81,7 +81,7 @@ class Projects_Memberships {
 		$model->projectUID = $this->projectUID;
 		$model->userUID = $userUID;
 		$model->role = $role;
-		$model->joined = $db->datetime();
+		$model->joined = $kapenta->db->datetime();
 		$model->save();
 		$check = $model->save();
 		$this->load();									// reload memberships

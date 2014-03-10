@@ -13,7 +13,7 @@
 	if ('admin' != $user->role) { $page->do403('Only admins can use this interface.'); }
 
 	$UID = $kapenta->request->ref;
-	if (false == $db->objectExists('notifications_notification', $UID)) { $page->do404(); }
+	if (false == $kapenta->db->objectExists('notifications_notification', $UID)) { $page->do404(); }
 	if (false == $user->authHas('notifications', 'notifications_notification', 'edit', $UID))
 		{ $page->do403('You are not authorized to edit this Notifications.'); }
 

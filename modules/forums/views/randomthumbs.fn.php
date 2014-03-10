@@ -13,7 +13,7 @@
 //TODO: move this to the images module
 
 function forums_randomthumbs($args) {
-	global $db;
+	global $kapenta;
 
 	$limit = '';
 	$size = 'thumbsm';
@@ -30,12 +30,12 @@ function forums_randomthumbs($args) {
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from images_image "
-		 . "where createdBy='" . $db->addMarkup($args['userUID']) . "' and refModule='forums' "
+		 . "where createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "' and refModule='forums' "
 		 . "order by RAND() $limit";
 
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 		$viewUrl = '%%serverPath%%forums/image/' . $row['alias'];
 		$thumbUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
 		$html .= "<a href='" . $viewUrl . "'>"

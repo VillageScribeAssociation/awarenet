@@ -42,19 +42,19 @@ class Projects_Changes {
 	//returns: true on success, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 
 		if ('' == trim($this->projectUID)) { return false; }
 
 		$changes = array();								//%	return value [array]
 		$conditions = array();							//%	recordset filter [array]
 
-		$conditions[] = "projectUID='" . $db->addMarkup($this->projectUID) . "'";
+		$conditions[] = "projectUID='" . $kapenta->db->addMarkup($this->projectUID) . "'";
 		if (('*' != $this->sectionUID) && ('' != $this->sectionUID)) {
-			$conditions[] = "sectionUID='" . $db->addMarkup($this->sectionUID) . "'";
+			$conditions[] = "sectionUID='" . $kapenta->db->addMarkup($this->sectionUID) . "'";
 		}
 
-		$range = $db->loadRange('projects_change', '*', $conditions, 'createdOn ASC');
+		$range = $kapenta->db->loadRange('projects_change', '*', $conditions, 'createdOn ASC');
 		foreach($range as $item) {
 			$changes[$item['UID']] = $item;		
 		}

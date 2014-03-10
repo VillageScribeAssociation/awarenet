@@ -7,7 +7,7 @@
 function live_testblock($args) {
 		global $user;
 		global $theme;
-		global $db;
+		global $kapenta;
 
 	$html = '';
 
@@ -15,7 +15,7 @@ function live_testblock($args) {
 
 	$labels = array(
 		'userLink' => $user->getNameLink(),
-		'datetime' => $db->datetime()
+		'datetime' => $kapenta->db->datetime()
 	);
 
 	$html = $theme->replaceLabels($labels, $block);

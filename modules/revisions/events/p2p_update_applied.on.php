@@ -10,7 +10,7 @@
 //arg: fields - dict of key => value pairs [array]
 
 function revisions__cb_p2p_update_applied($args) {
-	global $db;
+	global $kapenta;
 	global $revisions;
 	global $kapenta;
 	global $kapenta;
@@ -31,7 +31,7 @@ function revisions__cb_p2p_update_applied($args) {
 	$model = $args['model'];
 	$fields = $args['fields'];
 
-	if (false == $db->tableExists($model)) { return false; }				//	no such table
+	if (false == $kapenta->db->tableExists($model)) { return false; }				//	no such table
 	if (false == array_key_exists('UID', $fields)) { return false; }		//	invalid
 	if (false == array_key_exists('status', $fields)) { return false; }		//	invalid
 
@@ -44,12 +44,12 @@ function revisions__cb_p2p_update_applied($args) {
 	//---------------------------------------------------------------------------------------------
 	if (
 		(('deleted' == $fields['status']) || ('delete' == $fields['status'])) &&
-		(true == $db->objectExists($fields['refModel'], $fields['refUID']))
+		(true == $kapenta->db->objectExists($fields['refModel'], $fields['refUID']))
 	) {
 
 		//	loaded first to reduce impact of potential SQL injection in UID field
 		//	TODO: improve on this
-		$objAry = $db->getObject($fields['refModel'], $fields['refUID']);
+		$objAry = $kapenta->db->getObject($fields['refModel'], $fields['refUID']);
 
 		//	remove from memcache, TODO: move to cache_invalidation event on admin module
 		$cacheKey = $fields['refModel'] . '::' . $fields['refUID'];
@@ -57,7 +57,7 @@ function revisions__cb_p2p_update_applied($args) {
 		
 
 		$sql = "DELETE FROM `" . $fields['refModel'] . "` where UID='" . $fields['refUID'] . "';";
-		$db->query($sql);
+		$kapenta->db->query($sql);
 		//	TODO: check result and log any errors
 
 		if ('yes' == $kapenta->registry->get('p2p.debug')) { echo "SQL: $sql \n"; }
@@ -82,7 +82,7 @@ function revisions__cb_p2p_update_applied($args) {
 	//---------------------------------------------------------------------------------------------
 	if (
 		('restore' == $fields['status']) &&
-		(false == $db->objectExists($fields['refModel'], $fields['refUID']))
+		(false == $kapenta->db->objectExists($fields['refModel'], $fields['refUID']))
 	) {
 		$model = new Revisions_Deleted($fields['UID']);
 		$check = $model->restore();

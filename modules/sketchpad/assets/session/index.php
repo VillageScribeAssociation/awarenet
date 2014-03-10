@@ -51,7 +51,7 @@ if($canvas_ext || $canvas_uri) {
 }
 
 if(1) {
- $revisions = $db->query("SELECT id_canvas_revision,canvas_ext,canvas_uri
+ $revisions = $kapenta->db->query("SELECT id_canvas_revision,canvas_ext,canvas_uri
 	FROM cj_canvas_revision
 	WHERE id_canvas = '$id_canvas'
 	AND id_canvas_revision > '$id_prior'

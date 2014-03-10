@@ -23,7 +23,7 @@
 	$refUID = $_POST['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->doXmlError('No such module.'); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->doXmlError('No such object.'); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->doXmlError('No such object.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check if the user already likes this item

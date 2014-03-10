@@ -11,7 +11,7 @@
 function files_downloadmultipleform($args) {
 		global $theme;
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
 
 
@@ -27,7 +27,7 @@ function files_downloadmultipleform($args) {
 	$refUID = $args['refUID'];
 	
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
 
 	if (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)) { return '(noauth)'; }
 

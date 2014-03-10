@@ -30,7 +30,7 @@
 		$raUID = $aliases->getOwner('wiki', 'wiki_article', $kapenta->request->ref);	// maybe its an alias
 		if (false == $raUID) {							// no? maybe its a UID
 
-			if ($db->objectExists('wiki_article', $kapenta->request->ref) == true) {
+			if ($kapenta->db->objectExists('wiki_article', $kapenta->request->ref) == true) {
 				$raUID = $kapenta->request->ref;			
 			} else {
 				$kapenta->page->load('modules/wiki/actions/notfound.page.php');
@@ -60,7 +60,7 @@
 
 	$newHit = $extArray['viewcount'] + 1;
 	//$sql = "update wiki set viewcount='" . $newHit . "' where UID='" . $extArray['UID'] . "'";
-	//$db->query($sql);
+	//$kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	show it

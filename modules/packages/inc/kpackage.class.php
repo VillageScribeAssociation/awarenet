@@ -584,7 +584,7 @@ class KPackage {
 	function storeFile($path, $type, $hash) {
 		//TODO: reimplement
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
 
@@ -593,7 +593,7 @@ class KPackage {
 		//------------------------------------------------------------------------------------------
 		$raw = implode(file($kapenta->installPath . $path));
 		$dirname = str_replace("\\", '', dirname($path)) . '/';
-		$description = '(automatically uploaded ' . $db->datetime() . ')';
+		$description = '(automatically uploaded ' . $kapenta->db->datetime() . ')';
 		$isbinary = 'no';
 		$binary = '';
 		$content = '';

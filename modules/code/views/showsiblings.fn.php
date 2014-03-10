@@ -11,7 +11,7 @@
 function code_showsiblings($args) {
 	global $kapenta;
 	global $theme;
-	global $db;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -29,8 +29,8 @@ function code_showsiblings($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "parent='" . $db->addMarkup($model->parent) . "'"; 
-	$range = $db->loadRange('code_file', '*', $conditions, "type='folder', title");
+	$conditions[] = "parent='" . $kapenta->db->addMarkup($model->parent) . "'"; 
+	$range = $kapenta->db->loadRange('code_file', '*', $conditions, "type='folder', title");
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

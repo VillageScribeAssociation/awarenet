@@ -8,7 +8,7 @@
 //arg: uid - UID of an object [string]
 
 function p2p__cb_p2p_request_received($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
@@ -29,15 +29,15 @@ function p2p__cb_p2p_request_received($args) {
 	//	check we have this
 	//----------------------------------------------------------------------------------------------
 	
-	if (false == $db->tableExists($model)) { return false; }
-	if (false == $db->objectExists($model, $UID)) { return false; }
+	if (false == $kapenta->db->tableExists($model)) { return false; }
+	if (false == $kapenta->db->objectExists($model, $UID)) { return false; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	narrowcast to this peer
 	//----------------------------------------------------------------------------------------------
 
-	$objAry = $db->getObject($model, $UID);
-	$fields64 = $db->serialize($objAry);
+	$objAry = $kapenta->db->getObject($model, $UID);
+	$fields64 = $kapenta->db->serialize($objAry);
 
 	$msg = ''
 	 . "  <update>\n"

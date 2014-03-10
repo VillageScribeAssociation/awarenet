@@ -42,8 +42,8 @@
 				//----------------------------------------------------------------------------------
 				//	discover if this article exists in the database
 				//----------------------------------------------------------------------------------
-				$conditions = array("pageid='" . $db->addMarkup($article['id']) . "'");
-				$num = $db->countRange('wiki_mwimport', $conditions);
+				$conditions = array("pageid='" . $kapenta->db->addMarkup($article['id']) . "'");
+				$num = $kapenta->db->countRange('wiki_mwimport', $conditions);
 
 				if (0 == $num) {
 					$newCount++;

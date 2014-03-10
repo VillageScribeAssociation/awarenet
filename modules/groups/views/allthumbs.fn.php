@@ -9,7 +9,7 @@
 //TODO: this should be moved to the images module
 
 function groups_allthumbs($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $aliases;
 
@@ -24,7 +24,7 @@ function groups_allthumbs($args) {
 	//	load images from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("refModule='groups'");
-	$range = $db->loadRange('images_image', '*', $conditions, 'weight');
+	$range = $kapenta->db->loadRange('images_image', '*', $conditions, 'weight');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

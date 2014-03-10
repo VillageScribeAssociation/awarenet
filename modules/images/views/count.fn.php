@@ -10,19 +10,19 @@
 //arg: refUID - alias or UID of owbject which may own images [string]
 
 function images_count($args) {
-	global $db;
+	global $kapenta;
 	$return = '';
 
 	if (false == array_key_exists('refUID', $args)) { return ''; }
 	if (false == array_key_exists('refModule', $args)) { return ''; }
 
-	//TODO: $db->countRange
+	//TODO: $kapenta->db->countRange
 	$sql = "SELECT count(UID) as countImages FROM images_image "
-		 . "WHERE refUID='" . $db->addMarkup($args['refUID']) . "' "
-		 . "AND refModule='" . $db->addMarkup($args['refModule']) . "'";
+		 . "WHERE refUID='" . $kapenta->db->addMarkup($args['refUID']) . "' "
+		 . "AND refModule='" . $kapenta->db->addMarkup($args['refModule']) . "'";
 
-	$result = $db->query($sql);
-	$row = $db->fetchAssoc($result);
+	$result = $kapenta->db->query($sql);
+	$row = $kapenta->db->fetchAssoc($result);
 	
 	return $row['countImages'];
 }

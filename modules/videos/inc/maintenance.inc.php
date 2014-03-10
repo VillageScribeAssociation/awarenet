@@ -15,7 +15,7 @@
 
 function videos_maintenance() {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $aliases;
 	global $user;
 	global $theme;
@@ -34,10 +34,10 @@ function videos_maintenance() {
 	$model = new Videos_Gallery();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from videos_gallery";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);				// load into model
 		$model->videosLoaded = false;
 		$model->loadVideos();		
@@ -87,13 +87,13 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;
@@ -128,10 +128,10 @@ function videos_maintenance() {
 	$model = new Videos_Video();
 	$dbSchema = $model->getDbSchema();
 	$sql = "select * from videos_video";
-	$handle = $db->query($sql);
+	$handle = $kapenta->db->query($sql);
 
-	while ($objAry = $db->fetchAssoc($handle)) {
-		$objAry = $db->rmArray($objAry);		// remove database markup
+	while ($objAry = $kapenta->db->fetchAssoc($handle)) {
+		$objAry = $kapenta->db->rmArray($objAry);		// remove database markup
 		$model->loadArray($objAry);		// load into model
 		$recordCount++;
 
@@ -178,19 +178,19 @@ function videos_maintenance() {
 		//------------------------------------------------------------------------------------------
 		//	check references to other objects
 		//------------------------------------------------------------------------------------------
-		if (false == $db->objectExists($model->refModel, $model->refUID)) {
+		if (false == $kapenta->db->objectExists($model->refModel, $model->refUID)) {
 			// TODO: take action here, if possibe assign valid reference
 			$errors[] = array($model->UID, $model->title, 'invalid reference (refModel:refUID)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->createdBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->createdBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (createdBy:users_user)');
 			$errorCount++;
 		}
 
-		if (false == $db->objectExists('users_user', $model->editedBy)) {
+		if (false == $kapenta->db->objectExists('users_user', $model->editedBy)) {
 			// TODO: take action here, if possibe assign valid reference to a Users_User
 			$errors[] = array($model->UID, $model->title, 'invalid reference (editedBy:users_user)');
 			$errorCount++;

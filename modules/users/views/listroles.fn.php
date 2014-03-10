@@ -11,7 +11,7 @@
 
 function users_listroles($args) {
 		global $req;
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 
@@ -43,9 +43,9 @@ function users_listroles($args) {
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 
 	$start = (($pageNo - 1) * $pageSize);					//% list ordinal of first item [int]	
-	$total = $db->countRange('users_role', $conditions);	//% total number of items [int]
+	$total = $kapenta->db->countRange('users_role', $conditions);	//% total number of items [int]
 	$totalPages = ceil($total / $pageSize);					//% number of pages [int]
-	$range = $db->loadRange('users_role', '*', $conditions, $orderBy, $pageSize, $start);
+	$range = $kapenta->db->loadRange('users_role', '*', $conditions, $orderBy, $pageSize, $start);
 
 	if (0 == count($range)) {
 		$html = "<div class='inlinequote'>no Roles yet added</div><br/>\n";

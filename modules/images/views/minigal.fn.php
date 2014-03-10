@@ -11,7 +11,7 @@
 function images_minigal($args) {
 		global $kapenta;
 		global $user;
-		global $db;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ function images_minigal($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no owner object)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no owner object)'; }
 
 	//TODO: permissions check here
 

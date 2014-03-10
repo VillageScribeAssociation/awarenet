@@ -41,11 +41,11 @@ class Lessons_Stub {
 	//opt: UID - UID of a Alias object [string]
 
 	function Lessons_Stub($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();					// initialise table schema
 		if ('' != $UID) { $this->load($UID); }					// try load an object, if given
 		if (false == $this->loaded) { 
-			$this->loadArray($db->makeBlank($this->dbSchema));
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));
 			$this->loaded = false;
 		}
 	}
@@ -58,8 +58,8 @@ class Lessons_Stub {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$ary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$ary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($ary != false) { $this->loadArray($ary); return true; }
 		return false;
 	}
@@ -116,15 +116,15 @@ class Lessons_Stub {
 
 	function save() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 
 		if (true == $check) { return ''; }
-		else { return "Database error: " . $db->lasterr . "\n"; }
+		else { return "Database error: " . $kapenta->db->lasterr . "\n"; }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -265,9 +265,9 @@ class Lessons_Stub {
 
 	function delete() {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 
 		if (true == $kapenta->mcEnabled) {
 			//TODO: fix up cache

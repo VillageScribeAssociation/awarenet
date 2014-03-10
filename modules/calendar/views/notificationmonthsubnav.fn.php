@@ -10,7 +10,7 @@
 //opt: refModule - name of a kapenta module to filter notifications to [string]
 
 function calendar_notificationmonthsubnav($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$month = 0;			//%	calendar month [int]
@@ -39,14 +39,14 @@ function calendar_notificationmonthsubnav($args) {
 	//	get notifications for this month from the database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = 'YEAR(createdOn)=' . $db->addMarkup($year);
-	$conditions[] = 'MONTH(createdOn)=' . $db->addMarkup($month);
-	if ('' != $refModule) { $conditions[] = "refModule='" . $db->addMarkup($refModule) . "'"; }
+	$conditions[] = 'YEAR(createdOn)=' . $kapenta->db->addMarkup($year);
+	$conditions[] = 'MONTH(createdOn)=' . $kapenta->db->addMarkup($month);
+	if ('' != $refModule) { $conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'"; }
 
 	// SELECT *, DAYOFMONTH(createdOn) as coday FROM notifications_notification 
 	// where YEAR(createdOn)=YEAR(2011) AND MONTH(createdOn) = MONTH(06);
 	
-	$range = $db->loadRange('notifications_notification', '*, DAYOFMONTH(createdOn) as coday', $conditions);
+	$range = $kapenta->db->loadRange('notifications_notification', '*, DAYOFMONTH(createdOn) as coday', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

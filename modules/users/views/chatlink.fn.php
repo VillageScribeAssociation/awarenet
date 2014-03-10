@@ -6,7 +6,7 @@
 //arg: userUID - UID of the user whose login status we're cheking [string]
 
 function users_chatlink($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';									//%	return value [string]
@@ -22,10 +22,10 @@ function users_chatlink($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "status='active'";
-	$conditions[] = "createdBy='" . $db->addMarkup($args['userUID']) . "'";
-	$range = $db->loadRange('users_session', '*', $conditions);
+	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
+	$range = $kapenta->db->loadRange('users_session', '*', $conditions);
 
-	//$sql = "select * from users_login where userUID='" . $db->addMarkup($args['userUID']) . "'";
+	//$sql = "select * from users_login where userUID='" . $kapenta->db->addMarkup($args['userUID']) . "'";
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

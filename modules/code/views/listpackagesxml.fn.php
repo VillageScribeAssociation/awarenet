@@ -6,7 +6,7 @@
 
 function code_listpackagesxml($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$xml = '';			//%	return value [string]
 
@@ -21,7 +21,7 @@ function code_listpackagesxml($args) {
 	$conditions = array();
 	//	^add any restrictions here
 
-	$range = $db->loadRange('code_package', '*', '', 'name ASC');
+	$range = $kapenta->db->loadRange('code_package', '*', '', 'name ASC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -29,7 +29,7 @@ function code_listpackagesxml($args) {
 
 	$xml .= "<source>\n";
 	$xml .= "\t<url>" . $kapenta->serverPath . "code/</url>\n";
-	$xml .= "\t<checked>" . $db->datetime() . "</checked>\n";
+	$xml .= "\t<checked>" . $kapenta->db->datetime() . "</checked>\n";
 	$xml .= "\t<packages>\n";
 
 	foreach($range as $item) {

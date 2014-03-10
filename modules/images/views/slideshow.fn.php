@@ -11,7 +11,7 @@
 
 function images_slideshow($args) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 		global $user;
 
 
@@ -27,7 +27,7 @@ function images_slideshow($args) {
 	$refUID = $args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
-	if (false == $db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 	//TODO: permissions check here
 
 	//----------------------------------------------------------------------------------------------

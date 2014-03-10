@@ -11,7 +11,7 @@
 
 function polls_showpoll($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;	
 

@@ -73,7 +73,7 @@
 		echo "<h3>object:</h3>";
 		echo "<textarea rows='10' cols='80' style='width: 100%;'>$kobjXml</textarea>";
 
-		$check = $db->storeObjectXml($kobjXml);
+		$check = $kapenta->db->storeObjectXml($kobjXml);
 		if (true == $check) { 
 			echo "<b>OBJECT STORED</b><br/>"; 
 

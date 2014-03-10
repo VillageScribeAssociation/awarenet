@@ -8,7 +8,7 @@ function live_WebShell_touch($args) {
 	global $kapenta;
 	global $user;
 	global $shell;
-	global $db;
+	global $kapenta;
 
 	$mode = 'touch';		//%	operation [string]
 	$html = '';				//%	return value [string]
@@ -36,21 +36,21 @@ function live_WebShell_touch($args) {
 
 			if (true ==  $ok) { $model = $args[0]; $UID = $args[1]; }
 
-			if ((true == $ok) && (false == $db->objectExists($model, $UID))) {
+			if ((true == $ok) && (false == $kapenta->db->objectExists($model, $UID))) {
 				$html .= "<i>Object not found.</i><br/>";
 				$ok = false;
 			}
 
 			if (true == $ok) {
-					$dbSchema = $db->getSchema($model);
+					$dbSchema = $kapenta->db->getSchema($model);
 
-					$objAry = $db->getObject($model, $UID);
+					$objAry = $kapenta->db->getObject($model, $UID);
 					$html.= "Model: $model UID: $UID<br/>\n";
 
-					$objAry['editedOn'] = $db->datetime();
+					$objAry['editedOn'] = $kapenta->db->datetime();
 					$objAry['editedBy'] = $user->UID;
 					
-					$db->save($objAry, $dbSchema);
+					$kapenta->db->save($objAry, $dbSchema);
 			}
 	
 			if (false == $ok) {

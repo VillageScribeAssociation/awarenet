@@ -13,10 +13,10 @@
 		//------------------------------------------------------------------------------------------
 		//	authenticate the user
 		//------------------------------------------------------------------------------------------
-		$username = $db->addMarkup($_POST['user']);
-		$password = $db->addMarkup($_POST['pass']);
+		$username = $kapenta->db->addMarkup($_POST['user']);
+		$password = $kapenta->db->addMarkup($_POST['pass']);
 
-		$range = $db->loadRange('users_user', '*', array("username='" . $username . "'"));
+		$range = $kapenta->db->loadRange('users_user', '*', array("username='" . $username . "'"));
 		// ^ "select * from Users_User where username='" . $username . "'";
 
 		if (count($range) > 0) {

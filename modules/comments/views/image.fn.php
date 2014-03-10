@@ -11,7 +11,7 @@
 //opt: commentUID - overrides raUID [string]
 
 function comments_image($args) {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 
 	$size = 'width300';
@@ -29,12 +29,12 @@ function comments_image($args) {
 		if ($args['size'] == 'width570') { $size = 'width570'; }
 	}
 	
-	$model = new comment($db->addMarkup($args['raUID']));	
+	$model = new comment($kapenta->db->addMarkup($args['raUID']));	
 	$sql = "select * from images_image where refModule='comments' and refUID='" . $model->UID 
 	     . "' order by weight";
 	     
-	$result = $db->query($sql);
-	while ($row = $db->fetchAssoc($result)) {
+	$result = $kapenta->db->query($sql);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		if ($link == 'yes') {
 			return "<a href='/images/show/" . $row['alias'] . "'>" 
 				. "<img src='/images/" . $size . "/" . $row['alias'] 

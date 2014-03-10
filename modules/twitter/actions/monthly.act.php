@@ -23,9 +23,9 @@
 	 . "select * from twitter_tweet"
 	 . " where content like '%$year-" . substr('00' . (string)$month, -2) . "%'";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	header('Content-type: text/plain');
-	while ($row = $db->fetchAssoc($result)) { echo $db->removeMarkup($row['content']) . "\n"; }
+	while ($row = $kapenta->db->fetchAssoc($result)) { echo $kapenta->db->removeMarkup($row['content']) . "\n"; }
 
 ?>

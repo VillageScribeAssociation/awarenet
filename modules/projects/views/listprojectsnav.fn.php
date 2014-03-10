@@ -10,7 +10,7 @@
 //opt: num - max number to display (default is 20) [string]
 
 function projects_listprojectsnav($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$num = 20; 
@@ -22,9 +22,9 @@ function projects_listprojectsnav($args) {
 
 	if (array_key_exists('num', $args)) { $num = $args['num'];}	
 
-	//$sql = "select * from Projects_Project order by createdOn DESC limit " . $db->addMarkup($num);
+	//$sql = "select * from Projects_Project order by createdOn DESC limit " . $kapenta->db->addMarkup($num);
 
-	$range = $db->loadRange('projects_project', '*', '', 'createdOn DESC', $db->addMarkup($num));
+	$range = $kapenta->db->loadRange('projects_project', '*', '', 'createdOn DESC', $kapenta->db->addMarkup($num));
 
 	$block = $theme->loadBlock('modules/projects/views/summarynav.block.php');
 

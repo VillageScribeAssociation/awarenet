@@ -29,9 +29,9 @@ class Moblog_Precache {
 	//arg: refUID - UID [string]
 
 	function MoblogPreCache($refTable, $refUID) {
-		global $db;
+		global $kapenta;
 
-		if (false == $db->objectExists($refTable, $refUID)) { return false; }	
+		if (false == $kapenta->db->objectExists($refTable, $refUID)) { return false; }	
 		$this->dbSchema = $this->getDbSchema();
 		$UID = $this->preCacheExists($refTable, $refUID);
 
@@ -41,12 +41,12 @@ class Moblog_Precache {
 			//--------------------------------------------------------------------------------------
 			global $user;
 			$this->preCache = array();
-			$this->data = $db->makeBlank($this->dbSchema);
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);
 			$this->refTable = $refTable;
 			$this->refUID = $refUID;
-			$this->createdOn = $db->datetime();
+			$this->createdOn = $kapenta->db->datetime();
 			$this->createdBy = $user->UID;
-			$this->editedOn = $db->datetime();
+			$this->editedOn = $kapenta->db->datetime();
 			$this->editedBy = $user->UID;
 		
 
@@ -60,8 +60,8 @@ class Moblog_Precache {
 	//arg: UID - UID of a prcache object [string]
 
 	function load($UID) {
-		global $db;
-		$ary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$ary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($ary != false) { $this->loadArray($ary); return true; } 
 		return false;
 	}
@@ -81,13 +81,13 @@ class Moblog_Precache {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-		global $db;
+		global $kapenta;
 
 		$verify = $this->verify();
 		if ($verify != '') { return $verify; }
 
 		$this->collapsePreCache();
-		$db->save($this->data, $this->dbSchema); 
+		$kapenta->db->save($this->data, $this->dbSchema); 
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -98,17 +98,17 @@ class Moblog_Precache {
 	//returns: precache object UID or false if none found [string][bool]
 
 	function preCacheExists($refTable, $refUID) {
-		global $db;
+		global $kapenta;
 
 		$sql = "select UID from moblogprecache "
-			 . "where refTable='" . $db->addMarkup($userUID) . "' "
-			 . "and refUID='" . $db->addMarkup($refUID) . "'";
+			 . "where refTable='" . $kapenta->db->addMarkup($userUID) . "' "
+			 . "and refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
 		//TODO: use dbLoadRange
 
-		$result = $db->query($sql);
-		if ($db->numRows($result) == 0) { return false; }
-		$row = $db->fetchAssoc($result);
+		$result = $kapenta->db->query($sql);
+		if ($kapenta->db->numRows($result) == 0) { return false; }
+		$row = $kapenta->db->fetchAssoc($result);
 		return $row['UID'];
 	}
 
@@ -173,11 +173,11 @@ class Moblog_Precache {
 	//, deprecated, this should be handled by ../inc/install.inc.php
 
 	function install() {
-		global $db;
+		global $kapenta;
 
 		$report = "<h3>Installing Moblog Precache</h3>\n";
 
-		if ($db->tableExists('moblogprecache') == false) {	
+		if ($kapenta->db->tableExists('moblogprecache') == false) {	
 			dbCreateTable($this->dbSchema);	
 			$report .= 'created moblog precache...<br/>';
 

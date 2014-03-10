@@ -14,7 +14,7 @@
 //returns: html list [string]
 
 function gallery_summarylist($args) {
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$pageNo = 1;				//%	page to display, from 1 [int]
@@ -52,13 +52,13 @@ function gallery_summarylist($args) {
 	//	count galleries, set start and end rows and load the recordset
 	//---------------------------------------------------------------------------------------------
 	$conditions = array('imagecount > 0');	// do not show galleries with no images
-	if ('' != $schoolUID) { $conditions[] = "schoolUID='" . $db->addMarkup($schoolUID) . "'"; }
+	if ('' != $schoolUID) { $conditions[] = "schoolUID='" . $kapenta->db->addMarkup($schoolUID) . "'"; }
 
-	$totalItems = $db->countRange('gallery_gallery', $conditions);
+	$totalItems = $kapenta->db->countRange('gallery_gallery', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	$start = $num * ($pageNo - 1);
 
-	$range = $db->loadRange('gallery_gallery', '*', $conditions, $orderBy .' '. $ad, $num, $start);
+	$range = $kapenta->db->loadRange('gallery_gallery', '*', $conditions, $orderBy .' '. $ad, $num, $start);
 
 	//---------------------------------------------------------------------------------------------
 	//	make the block

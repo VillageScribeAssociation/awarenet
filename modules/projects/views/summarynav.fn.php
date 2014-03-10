@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_summarynav($args) {
-	global $db;
+	global $kapenta;
 	global $cache;
 	global $theme;
 
@@ -33,7 +33,7 @@ function projects_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the model
 	//----------------------------------------------------------------------------------------------
-	$model = new Projects_Project($db->addMarkup($args['raUID']));
+	$model = new Projects_Project($kapenta->db->addMarkup($args['raUID']));
 	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

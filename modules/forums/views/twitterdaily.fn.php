@@ -6,7 +6,7 @@
 //opt: date - date to be shown, default is today, YYYY-MM-DD [string]
 
 function forums_twitterdaily($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 
 	$date = substr($kapenta->datetime(), 0, 10);
@@ -21,9 +21,9 @@ function forums_twitterdaily($args) {
 	//----------------------------------------------------------------------------------------------
 	//	count new objects
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("DATE(createdOn) = '" . $db->addMarkup($date) . "'");
-	$newThreads = $db->countRange('forums_thread', $conditions);
-	$newReplies = $db->countRange('forums_reply', $conditions);
+	$conditions = array("DATE(createdOn) = '" . $kapenta->db->addMarkup($date) . "'");
+	$newThreads = $kapenta->db->countRange('forums_thread', $conditions);
+	$newReplies = $kapenta->db->countRange('forums_reply', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the snippet

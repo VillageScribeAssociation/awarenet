@@ -23,7 +23,7 @@
 	$refUID = $kapenta->request->args['refUID'];
 
 	if (false == $kapenta->moduleExists($refModule)) { $page->do404('unknown module', true); }
-	if (false == $db->objectExists($refModel, $refUID)) { $page->do404('unknown owner', true); }
+	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $page->do404('unknown owner', true); }
 
 	if (false == $user->authHas($refModule, $refModel, 'polls-add', $refUID)) { 
 		$page->do403('You are not authorized to add polls to this item.', true);
@@ -33,11 +33,11 @@
 	//	discover if this object already has a poll question or not
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
-	$range = $db->loadRange('polls_question', '*', $conditions);
+	$range = $kapenta->db->loadRange('polls_question', '*', $conditions);
 	if (0 == count($range)) { $pageFile = 'modules/polls/actions/newquestion.if.page.php'; }
 
 	foreach($range as $item) { $questionUID = $item['UID']; }

@@ -41,11 +41,11 @@
 	 . "\t<installfn>" . $model->installFn . "</installfn>\n"
 	 . "\t<files>\n";
 
-	$sql = "select UID, hash, type, size, path from code_file where package='" . $db->addMarkup($model->UID) . "'";
-	$result = $db->query($sql);
+	$sql = "select UID, hash, type, size, path from code_file where package='" . $kapenta->db->addMarkup($model->UID) . "'";
+	$result = $kapenta->db->query($sql);
 
-	while($row = $db->fetchAssoc($result)) { 
-		$item = $db->rmArray($row);
+	while($row = $kapenta->db->fetchAssoc($result)) { 
+		$item = $kapenta->db->rmArray($row);
 		echo ''
 		 . "\t\t<file>\n"
 		 . "\t\t\t<uid>" . $item['UID'] . "</uid>\n"

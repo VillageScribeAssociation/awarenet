@@ -10,7 +10,7 @@
 //TODO: move this to the images module
 
 function gallery_randomimage($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $aliases;
 
@@ -30,12 +30,12 @@ function gallery_randomimage($args) {
 	//	load a random image from the databse
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from images_image "
-		 . "where refUID='" . $db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
+		 . "where refUID='" . $kapenta->db->addMarkup($args['galleryUID']) . "' and refModule='gallery' "
 		 . "order by RAND() limit 0,1";
 
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->rmArray($db->fetchAssoc($result))) {
+	while ($row = $kapenta->db->rmArray($kapenta->db->fetchAssoc($result))) {
 		$imgUrl = '%%serverPath%%images/' . $size . '/' . $row['alias'];
 		$galleryUrl = '%%serverPath%%gallery/' . $model->alias;
 		$html .= "<a href='" . $galleryUrl . "'><img src='" . $imgUrl . "' border='0'></a>";

@@ -13,7 +13,7 @@
 
 function images__cb_comments_added($args) {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 	global $notifications;
@@ -29,7 +29,7 @@ function images__cb_comments_added($args) {
 	$refUID = $args['refUID'];
 
 	if ('images' != $refModule) { return false; }
-	if (false == $db->objectExists('images_image', $refUID)) { return false; }
+	if (false == $kapenta->db->objectExists('images_image', $refUID)) { return false; }
 	
 	$model = new Images_Image($refUID);
 	if (false == $model->loaded) { return false; }

@@ -18,10 +18,10 @@
 	//	check all images
 	//----------------------------------------------------------------------------------------------
 	$sql = "select * from images_image";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);
 		if (true == $kapenta->fs->exists($item['fileName'])) {
 			$fileSize = $kapenta->fs->size($item['fileName']);
 

@@ -9,7 +9,7 @@
 //opt: userUID - UID of a user who likes this object [string]
 
 function like_otherusers($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -34,13 +34,13 @@ function like_otherusers($args) {
 	//	query database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-	$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-	$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-	$conditions[] = "createdBy != '" . $db->addMarkup($userUID) . "'";
+	$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+	$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+	$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+	$conditions[] = "createdBy != '" . $kapenta->db->addMarkup($userUID) . "'";
 	$conditions[] = "cancelled='no'";
 
-	$range = $db->loadRange('like_something', '*', $conditions);
+	$range = $kapenta->db->loadRange('like_something', '*', $conditions);
 	$num = count($range);
 
 	//----------------------------------------------------------------------------------------------

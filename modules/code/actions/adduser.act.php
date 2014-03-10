@@ -14,7 +14,7 @@
 	//TODO: permissions check here
 
 	if (false == array_key_exists('packageUID', $_POST)) { $page->do404('Package not specified.'); }
-	if (false == $db->objectExists('code_package', $_POST['packageUID'])) { $page->do404(); }
+	if (false == $kapenta->db->objectExists('code_package', $_POST['packageUID'])) { $page->do404(); }
 
 	if (false == array_key_exists('user', $_POST)) { $page->do404('User not specified.'); }
 

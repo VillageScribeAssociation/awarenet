@@ -13,7 +13,7 @@
 
 function users_cron_tenmins() {
 	global $kapenta;
-	global $db;
+	global $kapenta;
 
 	$report = "<h2>users_cron_tenmins</h2>\n";							//%	return value [string]
 
@@ -25,15 +25,15 @@ function users_cron_tenmins() {
 	$report .= "<h2>Removing old login records (DEPRECATED)</h2>";
 
 	$expTime = time() - 600;	// TODO: make this a configurable setting
-	$sql = "select * from users_login where lastseen < '" . $db->datetime($expTime) . "'";
-	$result = $db->query($sql);
+	$sql = "select * from users_login where lastseen < '" . $kapenta->db->datetime($expTime) . "'";
+	$result = $kapenta->db->query($sql);
 	$count = 0;
 
-	if (0 == $db->numRows($result)) { $report .= "(no inactive sessions)"; }
+	if (0 == $kapenta->db->numRows($result)) { $report .= "(no inactive sessions)"; }
 	else {
 		$count = 0;
-		while ($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+		while ($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			$model = new Users_Login();
 			$model->loadArray($row);
 			$model->delete();
@@ -49,11 +49,11 @@ function users_cron_tenmins() {
 
 	$report .= "<h2>Checking user session status.</h2>";
 	$sql = "select * from users_session where status='active'";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$count = 0;
 
-	while($row = $db->fetchAssoc($result)) {
-		$item = $db->rmArray($row);						//%	remove SQL markup [array]
+	while($row = $kapenta->db->fetchAssoc($result)) {
+		$item = $kapenta->db->rmArray($row);						//%	remove SQL markup [array]
 		$ts = $kapenta->strtotime($item['editedOn']);	//%	session last updated [int]
 		$limit = time() - 600;							//% ten nimutes ago [int]
 

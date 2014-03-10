@@ -40,7 +40,7 @@ class Users_Login {
 
 	function Users_Login($UID = '', $isUser = false) {
 		global $kapenta;
-		global $db;
+		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 
@@ -50,11 +50,11 @@ class Users_Login {
 		}
 
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->serverUID = $kapenta->serverPath;		// ...user was here
-			$this->logintime = $db->datetime();				// ...at this time
-			$this->lastseen = $db->datetime();				// ...
+			$this->logintime = $kapenta->db->datetime();				// ...at this time
+			$this->lastseen = $kapenta->db->datetime();				// ...
 			$this->loaded = false;
 		}
 	}
@@ -66,8 +66,8 @@ class Users_Login {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID) {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -78,12 +78,12 @@ class Users_Login {
 	//arg: userUID - UID of a user [string]
 
 	function loadUser($userUID) {
-		global $db;
+		global $kapenta;
 
-		$conditions = array("userUID='" . $db->addMarkup($userUID) . "'");
-		$range = $db->loadRange('users_login', '*', $conditions);
+		$conditions = array("userUID='" . $kapenta->db->addMarkup($userUID) . "'");
+		$range = $kapenta->db->loadRange('users_login', '*', $conditions);
 
-		//$sql = "select * from users_login where userUID='" . $db->addMarkup($userUID) . "'";
+		//$sql = "select * from users_login where userUID='" . $kapenta->db->addMarkup($userUID) . "'";
 
 		if (false === $range) { return false; }
 		if (0 == count($range)) { return false; }
@@ -103,8 +103,8 @@ class Users_Login {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->userUID = $ary['userUID'];
 		$this->serverUID = $ary['serverUID'];
@@ -125,16 +125,16 @@ class Users_Login {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 		global $session;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -276,8 +276,8 @@ class Users_Login {
 	//----------------------------------------------------------------------------------------------
 
 	function delete() {
-		global $db;
-		$db->delete($this->UID, $this->dbSchema);
+		global $kapenta;
+		$kapenta->db->delete($this->UID, $this->dbSchema);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -285,8 +285,8 @@ class Users_Login {
 	//----------------------------------------------------------------------------------------------
 
 	function updateLastSeen($userUID) {
-		global $db;
-		$db->updateQuiet('users_login', $this->UID, 'lastseen', $db->datetime());
+		global $kapenta;
+		$kapenta->db->updateQuiet('users_login', $this->UID, 'lastseen', $kapenta->db->datetime());
 	}
 	
 }

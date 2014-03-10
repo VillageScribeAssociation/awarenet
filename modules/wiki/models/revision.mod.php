@@ -35,12 +35,12 @@ class Wiki_Revision {
 	//opt: UID - UID of a Revision object [string]
 
 	function Wiki_Revision($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->allRevisions = array();
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->namespace = 'article';					// set default namespace
 			$this->loaded = false;
@@ -54,8 +54,8 @@ class Wiki_Revision {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		global $db;
-		$objary = $db->load($UID, $this->dbSchema);
+		global $kapenta;
+		$objary = $kapenta->db->load($UID, $this->dbSchema);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -67,8 +67,8 @@ class Wiki_Revision {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->articleUID = $ary['articleUID'];
 		$this->title = $ary['title'];
@@ -89,15 +89,15 @@ class Wiki_Revision {
 	//. save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		global $aliases;
 
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 		return '';
 	}
@@ -226,13 +226,13 @@ class Wiki_Revision {
 	//----------------------------------------------------------------------------------------------
 	//. delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 
@@ -273,16 +273,16 @@ class Wiki_Revision {
 	//TODO: this can be more standard and kapenta-ish
 
 	function getAllRevisions() {
-		global $db;
+		global $kapenta;
 		$this->allRevisions = array();
 		if ('' == $this->articleUID) { return false; }
 
 		$conditions = array();
-		$conditions[] = "articleUID='" . $db->addMarkup($this->articleUID) . "'";
+		$conditions[] = "articleUID='" . $kapenta->db->addMarkup($this->articleUID) . "'";
 
 		$fields = 'UID, reason, editedBy, editedOn';
 
-		$range = $db->loadRange('wiki_revision', $fields, $conditions, 'editedOn ASC');
+		$range = $kapenta->db->loadRange('wiki_revision', $fields, $conditions, 'editedOn ASC');
 		foreach($range as $row) { $this->allRevisions[] = $row; }
 		$this->allRevisionsLoaded = true;
 		return true;

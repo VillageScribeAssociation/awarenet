@@ -54,7 +54,7 @@ class P2P_Client {
 	//;	$this->peerUID should be set before this is called.
 
 	function push() {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $kapenta;			
 		global $user;
@@ -99,7 +99,7 @@ class P2P_Client {
 					 . "Peer would like us to send: "
 					 . $item['refModel'] . '::' . $item['refUID'] . "<br/>";
 
-					$tempXml = $db->getObjectXml($item['refModel'], $item['refUID']);
+					$tempXml = $kapenta->db->getObjectXml($item['refModel'], $item['refUID']);
 
 					if ('' != $tempXml) {
 						// item loaded and serialized
@@ -108,7 +108,7 @@ class P2P_Client {
 					} else {
 						// item could not ne loaded, delete the gift object
 						$report .= "Could not load object of gift: " . $item['UID'] . "<br/>\n";
-						if (false == $db->objectExists($item['refModel'], $item['refUID'])) {
+						if (false == $kapenta->db->objectExists($item['refModel'], $item['refUID'])) {
 							$rmGift = new P2p_Gift($item['UID']);
 							$check = $rmGift->delete();
 							if (true == $check) { $report .= "Gift removed.<br/>"; }
@@ -201,7 +201,7 @@ class P2P_Client {
 	//;	$this->peerUID should be set before this is called.
 
 	function pull() {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $kapenta;			
 		global $user;
@@ -269,10 +269,10 @@ class P2P_Client {
 			$report .= "<h3>object:</h3>";
 			$report .= "<textarea rows='10' cols='80' style='width: 100%;'>$kobjXml</textarea>";
 	
-			$check = $db->storeObjectXml($kobjXml, false, false, false);
+			$check = $kapenta->db->storeObjectXml($kobjXml, false, false, false);
 			if (true == $check) { 
 				$report .= "<b>OBJECT STORED</b><br/>"; 
-				$kObjAry = $db->objectXmlToArray($kobjXml);
+				$kObjAry = $kapenta->db->objectXmlToArray($kobjXml);
 				$kUID = $kObjAry['fields']['UID'];
 				foreach ($set->members as $idx => $offer) {
 					if (($offer['UID'] == $kUID) && ($offer['type'] == 'object')) {
@@ -299,7 +299,7 @@ class P2P_Client {
 			} else {	
 				$report .= ''
 				 . "<b>object not stored, database error</b><br/>\n"
-				 . $db->lasterr;
+				 . $kapenta->db->lasterr;
 			}
 		}
 

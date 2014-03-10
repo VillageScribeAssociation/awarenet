@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function videos_menu($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 		global $theme;
 

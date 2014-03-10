@@ -12,7 +12,7 @@
 
 function wiki_historynav($args) {
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$pageNo = 1;			//%	default results page to start from (first) [int]
@@ -40,10 +40,10 @@ function wiki_historynav($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array();
-	$conditions[] = "articleUID='" . $db->addMarkup($model->UID) . "'";
+	$conditions[] = "articleUID='" . $kapenta->db->addMarkup($model->UID) . "'";
 	//TODO: add any other conditions here (namespace, etc)
 
-	$totalItems = $db->countRange('wiki_revision', $conditions);
+	$totalItems = $kapenta->db->countRange('wiki_revision', $conditions);
 	$totalPages = ceil($totalItems / $num);
 	if ($pageNo > $totalPages) { $pageNo = $totalPages; }
 	$start = (($pageNo - 1) * $num);
@@ -52,7 +52,7 @@ function wiki_historynav($args) {
 	//	load a page of results from the database and make the block
 	//----------------------------------------------------------------------------------------------
 
-	$range = $db->loadRange('wiki_revision', '*', $conditions, 'editedOn DESC', $num, $start);
+	$range = $kapenta->db->loadRange('wiki_revision', '*', $conditions, 'editedOn DESC', $num, $start);
 	$block = $theme->loadBlock('modules/wiki/views/revisionsummarynav.block.php');
 
 	foreach ($range as $row) {

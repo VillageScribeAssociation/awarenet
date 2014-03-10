@@ -34,13 +34,13 @@ class Users_Friendships {
 	//returns: true on sucess, false on failure [bool]
 
 	function load() {
-		global $db;
+		global $kapenta;
 		if ('' == $this->userUID) { return false; }
-		$UID = $db->addMarkup($this->userUID);
+		$UID = $kapenta->db->addMarkup($this->userUID);
 		$conditions = array();
 		$conditions[] = "(userUID='" . $UID . "' or friendUID='" . $UID . "')";
 		
-		$this->members = $db->loadRange('users_friendship', '*', $conditions);		
+		$this->members = $kapenta->db->loadRange('users_friendship', '*', $conditions);		
 		$this->loaded = true;
 		return true;
 	}

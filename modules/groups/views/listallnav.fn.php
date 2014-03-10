@@ -10,7 +10,7 @@
 //opt: sameschool - UID of a group, constrains results to those of the same school [string]
 
 function groups_listallnav($args) {
-		global $db;
+		global $kapenta;
 		global $user;
 
 	$html = '';					//%	return value [string]
@@ -21,12 +21,12 @@ function groups_listallnav($args) {
 	//----------------------------------------------------------------------------------------------
 	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }	
 	if (true == array_key_exists('school', $args)) 
-		{ $conditions[] = "school='" . $db->addMarkup($args['school']) . "'"; }
+		{ $conditions[] = "school='" . $kapenta->db->addMarkup($args['school']) . "'"; }
 
 	if (true == array_key_exists('sameschool', $args)) {
 		$model = new Groups_Group($args['sameschool']);
 		if (false == $model->loaded) { return ''; }
-		$conditions[] = "school='" . $db->addMarkup($model->school) . "'";
+		$conditions[] = "school='" . $kapenta->db->addMarkup($model->school) . "'";
 	}
 
 	//TODO: permissions check here
@@ -34,7 +34,7 @@ function groups_listallnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$range = $db->loadRange('groups_group', '*', $conditions, 'name');
+	$range = $kapenta->db->loadRange('groups_group', '*', $conditions, 'name');
 	foreach ($range as $row) { $html .= "[[:groups::summarynav::groupUID=". $row['UID'] .":]]\n"; }
 	return $html;
 }

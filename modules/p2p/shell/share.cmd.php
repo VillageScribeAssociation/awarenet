@@ -13,7 +13,7 @@ function p2p_WebShell_share($args) {
 	global $kapenta;
 	global $user;
 	global $shell;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$mode = 'show';			//%	operation [string]
@@ -51,29 +51,29 @@ function p2p_WebShell_share($args) {
 			$tableName = $args[1];
 			$UID = $args[2];
 			
-			if (false == $db->tableExists($tableName)) { return 'Unknown table.<br/>'; }
-			if (false == $db->objectExists($tableName, $UID)) { return 'Object not found.<br/>'; }
+			if (false == $kapenta->db->tableExists($tableName)) { return 'Unknown table.<br/>'; }
+			if (false == $kapenta->db->objectExists($tableName, $UID)) { return 'Object not found.<br/>'; }
 
-			$dbSchema = $db->getSchema($tableName);
-			$isShared = $db->isShared($tableName, $UID);
+			$dbSchema = $kapenta->db->getSchema($tableName);
+			$isShared = $kapenta->db->isShared($tableName, $UID);
 			if (true == $isShared) { $html .= "Database reports that object is shared.<br/>"; }
 			else { $html .= "Database reports that object is NOT SHARED.<br/>"; }
 
 			if (true == array_key_exists('fileName', $dbSchema['fields'])) {
-				$objAry = $db->load($UID, $dbSchema);
+				$objAry = $kapenta->db->load($UID, $dbSchema);
 				$html .= "Has fileName: " . $objAry['fileName'] . "<br/>";
 			}
 
-			$peers = $db->loadRange('p2p_peer', '*');
+			$peers = $kapenta->db->loadRange('p2p_peer', '*');
 
 			$table = array();
 			$table[] = array('Peer', 'Gift', 'Type', 'Status', 'File');
 			foreach($peers as $peer) {
 				$conditions = array();
-				$conditions[] = "refModel='" . $db->addMarkup($tableName) . "'";
-				$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
-				$conditions[] = "peer='" . $db->addMarkup($peer['UID']) . "'";
-				$range = $db->loadRange('p2p_gift', '*', $conditions);
+				$conditions[] = "refModel='" . $kapenta->db->addMarkup($tableName) . "'";
+				$conditions[] = "refUID='" . $kapenta->db->addMarkup($UID) . "'";
+				$conditions[] = "peer='" . $kapenta->db->addMarkup($peer['UID']) . "'";
+				$range = $kapenta->db->loadRange('p2p_gift', '*', $conditions);
 
 				foreach ($range as $item) {
 					$table[] = array(
@@ -107,14 +107,14 @@ function p2p_WebShell_share($args) {
 			$tableName = $args[1];						//%	table to reset from [string]
 			$UID = $args[2];							//% single object to reset [string]
 
-			if (false == $db->tableExists($tableName)) { return 'Unknown table.<br/>'; }
+			if (false == $kapenta->db->tableExists($tableName)) { return 'Unknown table.<br/>'; }
 
-			if (('' != $UID) && (false == $db->objectExists($tableName, $UID))) { 
+			if (('' != $UID) && (false == $kapenta->db->objectExists($tableName, $UID))) { 
 				return "Object not found.";
 			}
 
-			$peers = $db->loadRange('p2p_peer', '*');		//%	array serialized peers [array]
-			$dbSchema = $db->getSchema($tableName);			//%	table schema [array]
+			$peers = $kapenta->db->loadRange('p2p_peer', '*');		//%	array serialized peers [array]
+			$dbSchema = $kapenta->db->getSchema($tableName);			//%	table schema [array]
 
 			if ('' == $UID) {
 				$html .= "Resetting share status of objects in table: $tableName <br/>";
@@ -126,15 +126,15 @@ function p2p_WebShell_share($args) {
 			//	load object or table from database
 			//--------------------------------------------------------------------------------------
 			$sql = "SELECT * FROM " . $tableName;
-			if ('' != $UID) { $sql .= " WHERE UID='" . $db->addMarkup($UID) . "'"; }
-			$result = $db->query($sql);
+			if ('' != $UID) { $sql .= " WHERE UID='" . $kapenta->db->addMarkup($UID) . "'"; }
+			$result = $kapenta->db->query($sql);
 
 			$objects = '';
 			$objectCount = 0;
 
-			while ($row = $db->fetchAssoc($result)) {
-				$item = $db->rmArray($row);
-				$isShared = $db->isShared($tableName, $item['UID']);			//%	share status [bool]
+			while ($row = $kapenta->db->fetchAssoc($result)) {
+				$item = $kapenta->db->rmArray($row);
+				$isShared = $kapenta->db->isShared($tableName, $item['UID']);			//%	share status [bool]
 				$hasFile = array_key_exists('fileName', $dbSchema['fields']);	//% [bool]
 
 				if (true == $isShared) { $html .= "Database reports that object is shared.<br/>"; }

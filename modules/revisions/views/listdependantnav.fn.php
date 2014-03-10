@@ -6,7 +6,7 @@
 //arg: ownerUID - UID of a deleted object which may own other deleted objects [string]
 
 function revisions_listdependantnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $revisions;
 
@@ -21,8 +21,8 @@ function revisions_listdependantnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("owner='" . $db->addMarkup($args['ownerUID']) . "'");
-	$range = $db->loadRange('revisions_deleted', '*', $conditions);
+	$conditions = array("owner='" . $kapenta->db->addMarkup($args['ownerUID']) . "'");
+	$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

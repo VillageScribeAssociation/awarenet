@@ -23,7 +23,7 @@
 
 	if (true == array_key_exists('replyTo', $_POST)) {
 		$replyTo = $_POST['replyTo'];
-		if (false == $db->objectExists('comments_comment', $replyTo)) {
+		if (false == $kapenta->db->objectExists('comments_comment', $replyTo)) {
 			$page->do404('(cannot reply to missing comment');
 		}
 	}

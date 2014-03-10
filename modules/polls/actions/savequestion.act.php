@@ -26,7 +26,7 @@
 		{ $page->do404('reference object UID not specified', true); }
 	if (false == moduleExists($_POST['module']))
 		{ $page->do404('specified module does not exist', true); }
-	if (false == $db->objectExists($_POST['model'], $_POST['UID']))
+	if (false == $kapenta->db->objectExists($_POST['model'], $_POST['UID']))
 		{ $page->do404('specified owner does not exist in database', true); }
 
 

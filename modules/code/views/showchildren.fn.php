@@ -10,7 +10,7 @@
 //opt: UID - overrides raUID if present [string]
 
 function code_showchildren($args) {
-	global $db;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -30,8 +30,8 @@ function code_showchildren($args) {
 	//	load children from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = "parent='" . $db->addMarkup($model->UID) . "'";
-	$range = $db->loadRange('code_file', '*', $conditions, "type='folder', title");
+	$conditions[] = "parent='" . $kapenta->db->addMarkup($model->UID) . "'";
+	$range = $kapenta->db->loadRange('code_file', '*', $conditions, "type='folder', title");
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

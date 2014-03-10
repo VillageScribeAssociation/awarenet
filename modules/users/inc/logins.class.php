@@ -36,13 +36,13 @@ class Users_Logins {
 	//----------------------------------------------------------------------------------------------
 
 	function clearOldEntries() {
-		global $db;
+		global $kapenta;
 		global $kapenta;
 
-		$range = $db->loadRange('users_login', '*', '', '', '', '');
+		$range = $kapenta->db->loadRange('users_login', '*', '', '', '', '');
 		foreach($range as $row) {
 			if (($row['serverUID'] == $kapenta->serverPath) && ($kapenta->time() > ($row['lastseen'] + $this->maxAge))) { 
-				$db->delete('users', 'users_login', $row['UID']); 
+				$kapenta->db->delete('users', 'users_login', $row['UID']); 
 			}
 		}
 	}
@@ -54,11 +54,11 @@ class Users_Logins {
 	//returns: true if there is a record of a current session, otherwise false [bool]
 
 	function inList($userUID) {
-		global $db;
+		global $kapenta;
 
-		$sql = "select * from users_login where userUID='" . $db->addMarkup($userUID) . "'";
-		$result = $db->query($sql);
-		if ($db->numRows($result) > 0) { return true; }
+		$sql = "select * from users_login where userUID='" . $kapenta->db->addMarkup($userUID) . "'";
+		$result = $kapenta->db->query($sql);
+		if ($kapenta->db->numRows($result) > 0) { return true; }
 		return false;
 	}
 

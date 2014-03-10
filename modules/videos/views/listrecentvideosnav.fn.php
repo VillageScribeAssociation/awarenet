@@ -8,7 +8,7 @@
 //opt: num - max number of posts to show (default is 10) [string]
 
 function videos_listrecentvideosnav($args) {
-	global $db;
+	global $kapenta;
 	global $user;
 	global $theme;
 
@@ -25,7 +25,7 @@ function videos_listrecentvideosnav($args) {
 	//	load items from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$range = $db->loadRange('videos_video', '*', $conditions, 'createdOn DESC', $num);
+	$range = $kapenta->db->loadRange('videos_video', '*', $conditions, 'createdOn DESC', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -34,7 +34,7 @@ function videos_listrecentvideosnav($args) {
 
 	foreach ($range as $row) {
 		$model = new Videos_Video();
-		$model->loadArray($db->rmArray($row));
+		$model->loadArray($kapenta->db->rmArray($row));
 		$html .= $theme->replaceLabels($model->extArray(), $block);
 	}
 

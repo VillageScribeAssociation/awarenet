@@ -266,7 +266,7 @@
 		
 			$msg = "Creating new database user for use by awareNet... ";
 		
-			$check = $db->query($sql);
+			$check = $kapenta->db->query($sql);
 			if (true == $check) {
 				$msg .= "<b>OK</b>.";
 				$kapenta->registry->set('firstrun.dbr.granted', 'yes');
@@ -338,7 +338,7 @@
 	if (true == $dba->createTable($dbSchema)) {
 		echo "<div class='chatmessagegreen'>Table created successfully... </div>";
 
-		$check = $db->query("drop table canary_canary");
+		$check = $kapenta->db->query("drop table canary_canary");
 		if (false == $check) {
 			echo ''
 			 . "<div class='chatmessagered'>Could not remove test table (canary_canary)</div><br/>";

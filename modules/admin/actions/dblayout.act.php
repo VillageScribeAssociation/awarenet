@@ -19,9 +19,9 @@
 
 	$dba = new KDBAdminDriver();
 
-	$tables = $db->loadTables();
+	$tables = $kapenta->db->loadTables();
 	foreach($tables as $tableName) {
-		$dbSchema = $db->getSchema($tableName);
+		$dbSchema = $kapenta->db->getSchema($tableName);
 		$html .= $dba->schemaToHtml($dbSchema) . "<hr/>\n";
 	}
 

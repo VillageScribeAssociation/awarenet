@@ -12,7 +12,7 @@
 
 function tags_searchinsert($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$display = 'images_image,videos_video,files_file,gallery_gallery';
@@ -37,9 +37,9 @@ function tags_searchinsert($args) {
 	$q = strtolower($q);
 
 	$conditions = array();
-	$conditions[] = "INSTR(namelc, '" . $db->addMarkup($q) . "') > 0";
+	$conditions[] = "INSTR(namelc, '" . $kapenta->db->addMarkup($q) . "') > 0";
 	$conditions[] = "objectCount <> '0'";
-	$range = $db->loadRange('tags_tag', '*', $conditions, 'namelc', 500);
+	$range = $kapenta->db->loadRange('tags_tag', '*', $conditions, 'namelc', 500);
 
 	if (0 == count($range)) {
 		$html .= "no matches.";

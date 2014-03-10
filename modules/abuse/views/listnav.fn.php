@@ -9,7 +9,7 @@
 
 function abuse_listnav($args) {
 	global $user;
-	global $db;
+	global $kapenta;
 	global $theme;
 
 	$html = "";						//% return value [string]
@@ -27,7 +27,7 @@ function abuse_listnav($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "status='open'";
-	$range = $db->loadRange('abuse_report', '*', $conditions, 'createdOn', $num);
+	$range = $kapenta->db->loadRange('abuse_report', '*', $conditions, 'createdOn', $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

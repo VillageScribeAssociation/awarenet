@@ -34,7 +34,7 @@ class P2P_HashTree {
 	//opt: isNodeID - reference is a nodeID + table combination rather than a UID
 
 	function P2P_HashTree($UID = '', $table = '', $isNodeID = false) {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();		// initialise table schema
 		$this->children = array();
 		if ('' != $UID) {
@@ -42,7 +42,7 @@ class P2P_HashTree {
 			if (true == $isNodeId) { $this->loadNodeID($table, $UID); }	// load by nodeID
 		}
 		if (false == $this->loaded) {			// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize
 			$this->children = array();
 			$this->type = 'leaf';
 			$this->nodeID = '';
@@ -57,8 +57,8 @@ class P2P_HashTree {
 	//returns: true on success, false on failure [bool]
 
 	function load($UID = '') {
-		global $db;
-		$objary = $db->load('P2P_HashTree', $UID);
+		global $kapenta;
+		$objary = $kapenta->db->load('P2P_HashTree', $UID);
 		if ($objary != false) { $this->loadArray($objary); return true; }
 		return false;
 	}
@@ -68,8 +68,8 @@ class P2P_HashTree {
 	//----------------------------------------------------------------------------------------------
 
 	function loadNodeID($table, $nodeID) {
-		global $db;
-		$this->loadArray($db->makeBlank($this->dbSchema);
+		global $kapenta;
+		$this->loadArray($kapenta->db->makeBlank($this->dbSchema);
 		$this->table = $table;
 		$this->nodeID = $nodeID;
 		// TODO
@@ -101,13 +101,13 @@ class P2P_HashTree {
 	//.	save the current object to database
 	//----------------------------------------------------------------------------------------------
 	//returns: null string on success, html report of errors on failure [string]
-	//: $db->save(...) will raise an object_updated event if successful
+	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db;
+		global $kapenta;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
-		$check = $db->save($this->toArray(), $this->dbSchema);
+		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { return "Database error.<br/>\n"; }
 	}
 
@@ -226,13 +226,13 @@ class P2P_HashTree {
 	//----------------------------------------------------------------------------------------------
 	//.	delete current object from the database
 	//----------------------------------------------------------------------------------------------
-	//: $db->delete(...) will raise an object_deleted event on success [bool]
+	//: $kapenta->db->delete(...) will raise an object_deleted event on success [bool]
 	//returns: true on success, false on failure [bool]
 
 	function delete() {
-		global $db;
+		global $kapenta;
 		if (false == $this->loaded) { return false; }		// nothing to do
-		if (false == $db->delete($this->UID, $this->dbSchema)) { return false; }
+		if (false == $kapenta->db->delete($this->UID, $this->dbSchema)) { return false; }
 		return true;
 	}
 

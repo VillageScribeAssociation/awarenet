@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function revisions_maintenance() {
-		global $db;
+		global $kapenta;
 		global $theme;
 
 
@@ -23,15 +23,15 @@ function revisions_maintenance() {
 	//----------------------------------------------------------------------------------------------
 	$report = "<h2>Checking deleted items table...</h2>";
 	$sql = "select * from revisions_deleted";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		//------------------------------------------------------------------------------------------
 		//	if an item is marked as deleted, make sure it is in fact deleted
 		//------------------------------------------------------------------------------------------
-		if (true == $db->objectExists($row['refModel'], $row['refUID'])) {
+		if (true == $kapenta->db->objectExists($row['refModel'], $row['refUID'])) {
 
 			$errors[] = array(
 				$row['UID'], $row['refModule'], $row['refModel'], $row['refUID'], $row['status'],
@@ -39,7 +39,7 @@ function revisions_maintenance() {
 			);
 
 			$sql = "delete from " . $row['refModel'] . " where UID='" . $row['refUID'] . "'";
-			$db->query($sql);
+			$kapenta->db->query($sql);
 
 			$errorCount++;
 			$fixCount++;
@@ -55,12 +55,12 @@ function revisions_maintenance() {
 	//----------------------------------------------------------------------------------------------
 	$report .= "<h2>Checking revisions table...</h2>";
 	$sql = "select * from revisions_revision";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
 	$badValues = array('varchar(30)', 'varchar(33)');
 
-	while ($row = $db->fetchAssoc($result)) {
-		$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) {
+		$row = $kapenta->db->rmArray($row);
 
 		//------------------------------------------------------------------------------------------
 		//	check the refModel
@@ -73,7 +73,7 @@ function revisions_maintenance() {
 			);
 
 			$sql = "delete from revisions_revision where UID='" . $row['UID'] . "'";
-			$db->query($sql);
+			$kapenta->db->query($sql);
 
 			$errorCount++;
 			$fixCount++;
@@ -90,7 +90,7 @@ function revisions_maintenance() {
 			);
 
 			$sql = "delete from revisions_revision where UID='" . $row['UID'] . "'";
-			$db->query($sql);
+			$kapenta->db->query($sql);
 
 			$errorCount++;
 			$fixCount++;

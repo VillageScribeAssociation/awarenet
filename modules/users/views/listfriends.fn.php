@@ -11,7 +11,7 @@
 
 function users_listfriends($args) {
 	global $user;
-	global $db; 
+	global $kapenta; 
 
 	$html = '';				//%	return value [string]
 

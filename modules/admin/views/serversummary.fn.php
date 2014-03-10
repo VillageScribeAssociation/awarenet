@@ -6,9 +6,9 @@
 
 function admin_serversummary($args) {
 		global $kapenta;
-		global $registry;
+		global $kapenta;
 		global $user;
-		global $db;
+		global $kapenta;
 		global $theme;
 
 	$html = '';					//%	return value [string:html]	
@@ -57,7 +57,7 @@ function admin_serversummary($args) {
 		array('Key', 'Setting'),
 		array('<b>iPath:</b>', $kapenta->registry->get('kapenta.installpath')),
 		array('<b>sPath:</b>', $kapenta->registry->get('kapenta.serverpath')),
-		array('<b>date:</b>', $db->datetime()),
+		array('<b>date:</b>', $kapenta->db->datetime()),
 		array('<b>db use:</b>', "[[:admin::dbusage:]]"),
 		array('<b>extensions:</b>', $exts)
 	);

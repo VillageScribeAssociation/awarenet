@@ -52,14 +52,14 @@ function codeGetFolderUID($path, $projectUID) {
 //--------------------------------------------------------------------------------------------------
 
 function codeListSubFolders($folderUID) {
-	global $db;
+	global $kapenta;
 
 	$subs = array();
 	$sql = "select * from code where type='folder' and parent='" . $folderUID . "'";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 
-	while ($row = $db->fetchAssoc($result)) { 
-			$row = $db->rmArray($row);
+	while ($row = $kapenta->db->fetchAssoc($result)) { 
+			$row = $kapenta->db->rmArray($row);
 			$subs[$row['UID']] = $row['title']; 
 	}
 

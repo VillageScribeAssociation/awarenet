@@ -13,8 +13,8 @@
 //opt: pagination - set to 'no' to disable paginated nav [string]
 
 function forums_showthreads($args) {
-	global $db;
-	global $page;
+	global $kapenta;
+	global $kapenta;
 	global $theme;
 
 	$pageno = 1; 			//%	current page number [int]
@@ -37,14 +37,14 @@ function forums_showthreads($args) {
 	//	count all threads on this forum
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("board='" . $model->UID . "'");
-	$totalItems = $db->countRange('forums_thread', $conditions);
+	$totalItems = $kapenta->db->countRange('forums_thread', $conditions);
 	$totalPages = ceil($totalItems / $num);
 
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results from the database
 	//----------------------------------------------------------------------------------------------
 	$start = (($pageno - 1) * $num);
-	$range = $db->loadRange('forums_thread', '*', $conditions, 'updated DESC', $num, $start);
+	$range = $kapenta->db->loadRange('forums_thread', '*', $conditions, 'updated DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -60,7 +60,7 @@ function forums_showthreads($args) {
 	$html .= "</table>";
 
 	$link = '%%serverPath%%forums/show/' . $model->alias . '/';
-	$pagination = "[[:theme::pagination::page=" . $db->addMarkup($pageno) 
+	$pagination = "[[:theme::pagination::page=" . $kapenta->db->addMarkup($pageno) 
 				. "::total=" . $totalPages . "::link=" . $link . ":]]\n";
 
 	if (0 == $totalItems) { 

@@ -23,7 +23,7 @@
 		$page->doXmlError('No friendUID given.');
 	}
 
-	if (false == $db->objectExists('users_user', $_POST['friendUID'])) {
+	if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) {
 		$page->doXmlError("User not found.");
 	}
 
@@ -117,7 +117,7 @@
 	$model->friendUID = $friendUID;
 	$model->relationship = $relationship;
 	$model->status = $fStatus;
-	$model->createdOn = $db->datetime();
+	$model->createdOn = $kapenta->db->datetime();
 	$model->save();
 
 	//------------------------------------------------------------------------------------------

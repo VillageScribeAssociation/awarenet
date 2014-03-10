@@ -10,12 +10,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_listall($args) {
-	global $db;
+	global $kapenta;
 
 	$sql = "select * from code order by refno DESC";
-	$result = $db->query($sql);
+	$result = $kapenta->db->query($sql);
 	$html = '';
-	while ($row = $db->fetchAssoc($result)) {
+	while ($row = $kapenta->db->fetchAssoc($result)) {
 		$html .= "[[:code::summary::raUID=" . $row['UID'] . ":]]";
 	}
 	return $html;

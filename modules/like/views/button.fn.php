@@ -10,7 +10,7 @@
 function like_button($args) {
 	global $theme;
 	global $kapenta;
-	global $db;
+	global $kapenta;
 	global $user;
 
 	$html = '';						//%	return value [string]
@@ -25,7 +25,7 @@ function like_button($args) {
 	if (false == array_key_exists('refUID', $args)) { return '(refUID not given)'; }
 
 	if (false == $kapenta->moduleExists($args['refModule'])) { return 'Unknown module.'; }
-	if (false == $db->objectExists($args['refModel'], $args['refUID'])) { return '(unk UID)'; }
+	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) { return '(unk UID)'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

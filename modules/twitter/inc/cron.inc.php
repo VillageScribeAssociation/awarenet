@@ -17,8 +17,8 @@
 //returns: HTML report of any actions taken [string]
 
 function twitter_cron_tenmins() {
-		global $db;
-		global $registry;
+		global $kapenta;
+		global $kapenta;
 		global $kapenta;
 
 
@@ -38,7 +38,7 @@ function twitter_cron_tenmins() {
 	//----------------------------------------------------------------------------------------------
 
 	$conditions = array("status='new'");
-	$range = $db->loadRange('twitter_tweet', '*', $conditions, 'createdOn ASC');
+	$range = $kapenta->db->loadRange('twitter_tweet', '*', $conditions, 'createdOn ASC');
 
 	foreach($range as $item) {
 		$model = new Twitter_Tweet($item['UID']);
@@ -56,7 +56,7 @@ function twitter_cron_tenmins() {
 	}
 
 	//$sql = "update twitter_tweet set status='sent' where status='new'";
-	//$db->query($sql);
+	//$kapenta->db->query($sql);
 
 	//----------------------------------------------------------------------------------------------
 	//	done

@@ -12,9 +12,9 @@
 
 	while (true == $continue) {
 		$conditions = array("content=''");
-		$total = $db->countRange('wiki_mwimport');
-		$num = $db->countRange('wiki_mwimport', $conditions);
-		$range = $db->loadRange('wiki_mwimport', '*', $conditions, 'RAND()', 30000);
+		$total = $kapenta->db->countRange('wiki_mwimport');
+		$num = $kapenta->db->countRange('wiki_mwimport', $conditions);
+		$range = $kapenta->db->loadRange('wiki_mwimport', '*', $conditions, 'RAND()', 30000);
 		
 		foreach($range as $item) {
 			$pc = floor((($total - $num) / $total) * 100);

@@ -6,7 +6,7 @@
 //opt: num - maximum number of tags to display, default is 20 (int)[string]
 
 function tags_searchcloud($args) {
-		global $db;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 
@@ -24,7 +24,7 @@ function tags_searchcloud($args) {
 	//	load from database
 	//----------------------------------------------------------------------------------------------
 	$conditions = array("embedCount > 0");
-	$range = $db->loadRange('tags_tag', '*', $conditions, 'embedCount DESC', $num);
+	$range = $kapenta->db->loadRange('tags_tag', '*', $conditions, 'embedCount DESC', $num);
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block

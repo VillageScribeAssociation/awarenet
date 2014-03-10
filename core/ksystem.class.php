@@ -1365,7 +1365,9 @@ class KSystem {
 	//returns: array of file locations [array:string]
 
 	function fileSearch($dir = '', $ext = '', $folders = false) {
-		$this->session->msgAdmin('DEPRECATED: KSystem::fileSearch');
+        $msg = "DEPRECATED: KSystem::fileSearch ($dir, $ext, $folders)";
+        echo $msg;
+		$this->session->msgAdmin($msg);
 		return $this->fs->search($dir, $ext, $folders);
 	}
 

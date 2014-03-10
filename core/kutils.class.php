@@ -434,9 +434,9 @@ class KUtils {
 		//------------------------------------------------------------------------------------------
 		//	return result
 		//------------------------------------------------------------------------------------------
-		echo "Making curl request: $url<br/>";
+		//echo "Making curl request: $url<br/>";
 		$result = curl_exec($ch);
-		echo "Result: " . strlen($result) . "bytes<br/>";
+		//echo "Result: " . strlen($result) . "bytes<br/>";
 		return $result;
 	}
 
@@ -450,11 +450,11 @@ class KUtils {
 		$this->maxDeprecatedNotices--;
 		if (0 <= $this->maxDeprecatedNotices) { return; }
 
-		//$session->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
-		echo 'Deprecated: ' . $component . '::' . $method . "<br/>\n";
-		echo "<small>";
-		debug_print_backtrace();
-		echo "</small><br/>\n";
+		$session->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
+		//echo 'Deprecated: ' . $component . '::' . $method . "<br/>\n";
+		//echo "<small>";
+		//debug_print_backtrace();
+		//echo "</small><br/>\n";
 	}
 
 }

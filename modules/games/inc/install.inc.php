@@ -15,7 +15,7 @@ function games_install_module() {
 	global $utils;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing Games Module</h3>\n";
 
@@ -23,7 +23,7 @@ function games_install_module() {
 	//	list and run game install scripts
 	//------------------------------------------------------------------------------------------
 
-	$installScripts = $kapenta->fileSearch('modules/games/inc/', '.install.php');
+	$installScripts = $kapenta->fs->search('modules/games/inc/', '.install.php');
 
 	foreach($installScripts as $scriptFile) {
 		$report .= "Found: " . $scriptFile . "<br/>\n";
@@ -74,7 +74,7 @@ function games_install_status_report() {
 	//	list and run game install scripts
 	//------------------------------------------------------------------------------------------
 
-	$installScripts = $kapenta->fileSearch('modules/games/inc/', '.install.php');
+	$installScripts = $kapenta->fs->search('modules/games/inc/', '.install.php');
 
 	foreach($installScripts as $scriptFile) {
         if (-1 === strpos($scriptFile, '.svn')) {

@@ -42,9 +42,6 @@
 	$size = '0';				//%	file size in bytes [string]
 	$hash = '';					//%	sha1 hash of file [string]
 
-	echo "<fail>aborted by server</fail>\n";
-	die();
-
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars		TODO: input sanitization here
 	//----------------------------------------------------------------------------------------------

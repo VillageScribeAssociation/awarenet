@@ -281,7 +281,7 @@ class KUpdateManager {
 		global $kapenta;
 		
 		if (false == $this->allFilesLoaded) {
-			$this->allFiles = $kapenta->fileSearch('', '', true);
+			$this->allFiles = $kapenta->fs->search('', '', true);
 			$this->allFilesLoaded = true;
 		}
 		

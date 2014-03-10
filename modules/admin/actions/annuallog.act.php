@@ -16,7 +16,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	make list of logs from this year
 	//----------------------------------------------------------------------------------------------
-	$logFiles = $kapenta->fileSearch('data/log/', 'pageview.log.php');
+	$logFiles = $kapenta->fs->search('data/log/', 'pageview.log.php');
 	$log = new Admin_Logfile();
 
 	$ofYear = array();

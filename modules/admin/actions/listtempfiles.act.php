@@ -52,7 +52,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	find gedit temp files
 	//----------------------------------------------------------------------------------------------
-	$list = $kapenta->fileSearch('modules/', '~');
+	$list = $kapenta->fs->search('modules/', '~');
 	
 	if (count($list) > 0) {
 		$foundAny = true;
@@ -76,7 +76,7 @@
 	//	find svn files
 	//----------------------------------------------------------------------------------------------
 
-	$allFiles = $kapenta->fileSearch('', '');
+	$allFiles = $kapenta->fs->search('', '');
 	$list = array();
 	foreach($allFiles as $item) {
 		if (false != strpos($item, '/.svn/')) { $list[] = $item; }

@@ -455,7 +455,7 @@ class KPackage {
 		if (true == isset($updateManager)) {
 			$list = $updateManager->getAllFiles();
 		} else {
-			$list = $kapenta->fileSearch('', '', true);
+			$list = $kapenta->fs->search('', '', true);
 		}
 
 		foreach($list as $item) {

@@ -235,7 +235,7 @@ class Code_Package {
 		}
 
 		if (true == $user->authHas('code', 'code_package', 'delete', $ext['UID'])) {
-			$ext['delUrl'] = '%%serverPath%%code/delpackage/' . $ext['alias'];
+			$ext['delUrl'] = '%%serverPath%%code/delete/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
 

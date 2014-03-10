@@ -26,6 +26,7 @@
 		case 'kapenta/action':		$pageName = 'showphp.page.php';			break;
 		case 'kapenta/include':		$pageName = 'showphp.page.php';			break;
 		case 'kapenta/template':	$pageName = 'showphp.page.php';			break;
+		case 'kapenta/class':	    $pageName = 'showphp.page.php';			break;
 		case 'page':				$pageName = 'showpage.page.php';		break;
 		case 'block':				$pageName = 'showblock.page.php';		break;
 		case 'txt':					$pageName = 'showtxt.page.php';			break;

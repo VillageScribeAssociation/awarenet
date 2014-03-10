@@ -9,10 +9,7 @@
 //opt: priority - importance of syncing this object (int) [string]
 
 function p2p__cb_p2p_announcement_received($args) {
-	global $db;
 	global $kapenta;
-	global $kapenta;
-	global $revisions;
 
 	//----------------------------------------------------------------------------------------------
 	//	check the update
@@ -27,7 +24,7 @@ function p2p__cb_p2p_announcement_received($args) {
 	$model = $args['model'];
 	$list = $args['list'];
 
-	if (false == $db->tableExists($model)) { return false; }
+	if (false == $kapenta->db->tableExists($model)) { return false; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	check all items in the list
@@ -40,14 +37,14 @@ function p2p__cb_p2p_announcement_received($args) {
 			$UID = trim($parts[0]);
 			$editedOn = trim($parts[1]);
 
-			if (true == $db->objectExists($model, $UID)) {
-				$objAry = $db->getObject($model, $UID);
+			if (true == $kapenta->db->objectExists($model, $UID)) {
+				$objAry = $kapenta->db->getObject($model, $UID);
 				$ourDate = $kapenta->strtotime($objAry['editedOn']);
 				$newDate = $kapenta->strtotime($editedOn);
 				if ($ourDate >= $newDate) { $want = false; }	//	we have this or a newer version
 			}
 
-			if (true == $revisions->isDeleted($model, $UID)) { $want = false; }	//	object is deleted
+			if (true == $kapenta->revisions->isDeleted($model, $UID)) { $want = false; }	//	object is deleted
 
 			if (true == $want) {
 				$msg = ''

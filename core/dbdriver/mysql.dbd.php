@@ -49,24 +49,24 @@ class KDBDriver_MySQL {
 	//opt: dbName - database name, default is 'kapenta' [string]
 
 	function KDBDriver_MySQL() {
-		global $registry;			// perhaps get these from $kapenta
+		global $kapenta;			// perhaps get these from $kapenta
 
-		$this->host = $registry->get('db.mysql.host');
-		$this->user = $registry->get('db.mysql.user');
-		$this->pass = $registry->get('db.mysql.password');
-		$this->name = $registry->get('db.mysql.name');
+		$this->host = $kapenta->registry->get('db.mysql.host');
+		$this->user = $kapenta->registry->get('db.mysql.user');
+		$this->pass = $kapenta->registry->get('db.mysql.password');
+		$this->name = $kapenta->registry->get('db.mysql.name');
 
 		//	recovery / backup store of this information
 		if ('' == $this->name) {
-			$this->host = $registry->get('kapenta.db.host');
-			$this->user = $registry->get('kapenta.db.user');
-			$this->pass = $registry->get('kapenta.db.password');
-			$this->name = $registry->get('kapenta.db.name');
+			$this->host = $kapenta->registry->get('kapenta.db.host');
+			$this->user = $kapenta->registry->get('kapenta.db.user');
+			$this->pass = $kapenta->registry->get('kapenta.db.password');
+			$this->name = $kapenta->registry->get('kapenta.db.name');
 
-			if ('' != $this->host) { $registry->set('db.mysql.host', $this->host); }
-			if ('' != $this->user) { $registry->set('db.mysql.user', $this->user); }
-			if ('' != $this->pass) { $registry->set('db.mysql.password', $this->pass); }
-			if ('' != $this->name) { $registry->set('db.mysql.name', $this->name); }
+			if ('' != $this->host) { $kapenta->registry->set('db.mysql.host', $this->host); }
+			if ('' != $this->user) { $kapenta->registry->set('db.mysql.user', $this->user); }
+			if ('' != $this->pass) { $kapenta->registry->set('db.mysql.password', $this->pass); }
+			if ('' != $this->name) { $kapenta->registry->set('db.mysql.name', $this->name); }
 		}
 
 		$this->tables = array();
@@ -83,7 +83,7 @@ class KDBDriver_MySQL {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $kapenta, $session, $page, $registry;
+		global $kapenta, $session, $page;
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
 		$result = false;							//%	recordset handle [int]
@@ -101,7 +101,7 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		// connect to database server and select database
 		//------------------------------------------------------------------------------------------
-		if ('yes' == $registry->get('kapenta.db.persistent')) {
+		if ('yes' == $kapenta->registry->get('kapenta.db.persistent')) {
 			$connect = @mysql_pconnect($this->host, $this->user, $this->pass);
 		} else {
 			$connect = @mysql_connect($this->host, $this->user, $this->pass);

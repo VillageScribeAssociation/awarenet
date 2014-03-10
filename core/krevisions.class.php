@@ -46,8 +46,8 @@ class KRevisions {
 	//returns: true on success, false on failure [bool]
 
 	function storeRevision($changes, $dbSchema, $UID) {
-		global $db;
-		if (false == $db->checkSchema($dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->checkSchema($dbSchema)) { return false; }
 
 		if ((true == array_key_exists('archive', $dbSchema)) && ('no' == $dbSchema['archive'])) 
 			{ return false; }
@@ -72,13 +72,13 @@ class KRevisions {
 	//returns: true on success, false on failure [bool]
 
 	function recordDeletion($fields, $dbSchema, $isShared = true) {
-		global $db, $session;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	check table schema
 		//------------------------------------------------------------------------------------------
-		if (false == $db->checkSchema($dbSchema)) { 
-			$session->msgAdmin('<b>Error:</b> Bad schema - ' . $dbSchema['model'], 'bad');
+		if (false == $kapenta->db->checkSchema($dbSchema)) { 
+			$kapenta->session->msgAdmin('<b>Error:</b> Bad schema - ' . $dbSchema['model'], 'bad');
 			return false;
 		}
 
@@ -86,7 +86,7 @@ class KRevisions {
 		//	check whether objects of this type are not archived
 		//------------------------------------------------------------------------------------------
 		if ((true == array_key_exists('archive', $dbSchema)) && ('no' == $dbSchema['archive'])) {
-			$session->msgAdmin('Objects of this type are not archived or revisioned.');
+			$kapenta->session->msgAdmin('Objects of this type are not archived or revisioned.');
 			return false;
 		}
 
@@ -94,7 +94,7 @@ class KRevisions {
 		//	check whether object has already been deleted
 		//------------------------------------------------------------------------------------------
 		if (true == $this->isDeleted($dbSchema['model'], $dbSchema['fields']['UID'])) {
-			$session->msgAdmin('Object is already deleted.', 'bad');
+			$kapenta->session->msgAdmin('Object is already deleted.', 'bad');
 			return false;
 		}
 
@@ -115,27 +115,27 @@ class KRevisions {
 
 		if ('' != $report) { 
 			$msg = 'Could not move '. $model->refModel .'::'. $model->refUID .' to recycle bin: ';
-			$session->msgAdmin($msg . $report, 'bad');
+			$kapenta->session->msgAdmin($msg . $report, 'bad');
 			return false;
 		} else {
 			$msg = 'Moved ' . $model->refModel . '::' . $model->refUID . ' to the recycle bin.';
-			$session->msgAdmin($msg, 'ok');
+			$kapenta->session->msgAdmin($msg, 'ok');
 		}
 
 		//------------------------------------------------------------------------------------------
 		//	undo any previous restore of this item
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "refModel='" . $db->addMarkup($model->refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($model->refUID) . "'";
-		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($model->refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($model->refUID) . "'";
+		$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions);
 
 		foreach($range as $item) {
 			if ('restore' == $item['status']) {
 				$deletion = new Revisions_Deleted($item['UID']);
 				$deletion->status = 'delete';
 				$report = $deletion->save();
-				if ('' != $report) { $session->msg('Could not re-delete: ' . $report, 'bad'); }
+				if ('' != $report) { $kapenta->session->msg('Could not re-delete: ' . $report, 'bad'); }
 			}
 		}
 
@@ -150,14 +150,14 @@ class KRevisions {
 	//returns: true if item is in recycle bin, false if not [bool]	
 
 	function isDeleted($model, $UID) {
-		global $db;
+		global $kapenta;
 		$retored = false;
 
 		$conditions = array();
-		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($model) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($UID) . "'";
 
-		$range = $db->loadRange('revisions_deleted', '*', $conditions);
+		$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions);
 		if (0 == count($range)) { return false; } // no record of being deleted
 
 		foreach($range as $item) {
@@ -176,14 +176,14 @@ class KRevisions {
 	//TODO: consider adding option to restore this item only (and not dependants)
 
 	function undoLastDeletion($model, $UID) {
-		global $db;
+		global $kapenta;
 		if (false == $this->isDeleted($model, $UID)) { return false; }
 
 		$conditions = array();
-		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($UID) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($model) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($UID) . "'";
 
-		$range = $db->loadRange('revisions_deleted', '*', $conditions, 'createdOn DESC');
+		$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions, 'createdOn DESC');
 		foreach($range as $item) {
 			$model = new Revisions_Deleted($item['UID']);
 			$check = $model->restore();
@@ -200,28 +200,27 @@ class KRevisions {
 	//returns: true on success, false on failure [bool]
 
 	function restoreDependant($model, $UID) {
-		global $db;
-		global $session;
+		global $kapenta;
 		$allOk = true;				//%	return value [bool]
 
-		$conditions = array("owner='" . $db->addMarkup($UID) . "'");
-		$range = $db->loadRange('revisions_deleted', '*', $conditions);
-		$session->msgAdmin("Restoring " . count($range) . " deleted items for $model $UID");
+		$conditions = array("owner='" . $kapenta->db->addMarkup($UID) . "'");
+		$range = $kapenta->db->loadRange('revisions_deleted', '*', $conditions);
+		$kapenta->session->msgAdmin("Restoring " . count($range) . " deleted items for $model $UID");
 
 		foreach($range as $item) {
 			$model = new Revisions_Deleted($item['UID']);
-			$session->msg('Loaded ' . $item['UID'] . ' refModel: ' . $model->fields['refModel']);
+			$kapenta->session->msg('Loaded ' . $item['UID'] . ' refModel: ' . $model->fields['refModel']);
 			if (true == $model->loaded) {
 				$check = $model->restore();
 				if (false == $check) {
 					$msg = "Could not restore deleted item: " . $item['UID'];
-					$session->msg($msg, 'bad');
+					$kapenta->session->msg($msg, 'bad');
 					$allOk = false;
 				} else {
-					$session->msg('Restored ' . $model->refModel . '::' . $model->refUID, 'ok');
+					$kapenta->session->msg('Restored ' . $model->refModel . '::' . $model->refUID, 'ok');
 				}
 			} else {
-				$session->msg('Could not load: revisions_deleted::' . $item['UID']);
+				$kapenta->session->msg('Could not load: revisions_deleted::' . $item['UID']);
 			}
 		}
 

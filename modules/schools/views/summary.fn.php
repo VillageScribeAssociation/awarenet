@@ -8,7 +8,9 @@
 //arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_summary($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 
 	$html = '';					//% return value [string]
 

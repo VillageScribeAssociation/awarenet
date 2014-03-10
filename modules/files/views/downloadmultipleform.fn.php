@@ -9,7 +9,11 @@
 //arg: refUID - number of files per page [string]
 
 function files_downloadmultipleform($args) {
-	global $theme, $kapenta, $db, $user;
+		global $theme;
+		global $kapenta;
+		global $db;
+		global $user;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation

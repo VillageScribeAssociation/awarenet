@@ -10,7 +10,10 @@
 //arg: raUID - recordAlias or UID or wiki entry [string]
 
 function wiki_statsnav($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

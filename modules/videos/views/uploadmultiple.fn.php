@@ -13,7 +13,10 @@
 //TODO: make max upload size a registry setting
 
 function videos_uploadmultiple($args) {
-	global $kapenta, $db, $user; 
+		global $kapenta;
+		global $db;
+		global $user;
+
 	$html = '';				//%	return value [string]
 	$categories = '';		//%	not yet implemented [string]
 	$tags = 'no';			//%	diplay block tags instead of draggable buttons (yes|no) [string]

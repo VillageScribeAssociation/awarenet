@@ -8,7 +8,11 @@
 //arg: raUID - recordAlias or UID of an image record [string]
 
 function images_showfullnav($args) {
-	global $kapenta, $db, $theme, $user;
+		global $kapenta;
+		global $db;
+		global $theme;
+		global $user;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form

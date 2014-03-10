@@ -10,7 +10,10 @@
 //returns: UID of last notification on success, empty string on failure [string]
 
 function notifications_notifiedtoday($args) {
-	global $db, $user, $session;
+		global $db;
+		global $user;
+		global $session;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments ans permissions

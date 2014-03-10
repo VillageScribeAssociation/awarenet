@@ -12,7 +12,10 @@
 //opt: projectUID - overrides raUID if present [string]
 
 function projects_show($args) {
-	global $theme, $page, $user;
+		global $theme;
+		global $page;
+		global $user;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

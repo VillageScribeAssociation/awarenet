@@ -5,7 +5,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function lessons_settings($args) {
-	global $theme, $user, $registry, $kapenta;
+		global $theme;
+		global $user;
+		global $registry;
+		global $kapenta;
+
 
 	$html = '';							//%	return value [string]
 

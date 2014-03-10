@@ -6,7 +6,10 @@
 //TODO: paginate
 
 function users_banned($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

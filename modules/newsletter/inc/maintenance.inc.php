@@ -16,7 +16,11 @@
 //returns: html report or false if not authorized [string][bool]
 
 function newsletter_maintenance() {
-	global $db, $aliases, $user, $theme;
+		global $db;
+		global $aliases;
+		global $user;
+		global $theme;
+
 	if ('admin' != $user->role) { return false; }
 	$recordCount = 0;
 	$errorCount = 0;

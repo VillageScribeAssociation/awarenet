@@ -7,7 +7,9 @@
 //arg: module - name of a kapenta module [string]
 
 function admin_listmoduleblocks($args) {
-	global $kapenta, $user;
+		global $kapenta;
+		global $user;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

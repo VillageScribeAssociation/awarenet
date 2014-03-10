@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------------------------
 //arg: UID - UID of a Notifications_Notification object [string]//opt: notificationUID - UID of a Notifications_Notification object, overrides UID [string]
 function notifications_editnotification($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';					//% return value [string]
 
 	//----------------------------------------------------------------------------------------------

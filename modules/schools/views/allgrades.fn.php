@@ -9,7 +9,9 @@
 //opt: schoolUID - overrides raUID [string]
 
 function schools_allgrades($args) {
-	global $db,	$user;
+		global $db;
+		global $user;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

@@ -11,7 +11,10 @@ require_once($kapenta->installPath . 'modules/twitter/models/tweet.mod.php');
 //arg: message - UID of the new comment
 
 function twitter__cb_microblog_event($args) {
-	global $kapenta, $db, $user;
+		global $kapenta;
+		global $db;
+		global $user;
+
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refModel', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }

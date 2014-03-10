@@ -8,7 +8,10 @@
 //arg: userUID - user whose galleries we wish to show [string]
 
 function videos_navlist($args) {
-	global $db, $theme, $user;
+		global $db;
+		global $theme;
+		global $user;
+
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

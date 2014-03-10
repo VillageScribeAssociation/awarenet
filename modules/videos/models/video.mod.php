@@ -115,7 +115,9 @@ class Videos_Video {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('videos', 'videos_video', $this->UID, $this->title);
@@ -296,7 +298,10 @@ class Videos_Video {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $utils, $theme;
+		global $user;
+		global $utils;
+		global $theme;
+
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

@@ -89,7 +89,9 @@ class Comments_Comment {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -178,7 +180,9 @@ class Comments_Comment {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
+		global $user;
+		global $theme;
+
 		$ary = $this->toArray();
 		$ary['editUrl'] = '';
 		$ary['editLink'] = '';

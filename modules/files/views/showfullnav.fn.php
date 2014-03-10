@@ -8,7 +8,9 @@
 //arg: raUID - alias or UID of an object [string]
 
 function files_showfullnav($args) {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 	$html = '';		
 
 	//----------------------------------------------------------------------------------------------

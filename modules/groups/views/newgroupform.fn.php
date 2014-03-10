@@ -9,7 +9,9 @@
 //arg: schoolUID - UID of the school this group belongs to [string]
 
 function groups_newgroupform($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

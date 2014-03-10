@@ -11,7 +11,10 @@
 //opt: num - number of threads per page (default is 20) [string]
 
 function forums_showthreadsjs($args) {
-	global $db, $page, $theme;
+		global $db;
+		global $page;
+		global $theme;
+
 	$pageno = 1; 		//%	current page number [int]
 	$num = 20; 			//%	number of threads per page [int]
 	$html = '';			//%	return value [string]

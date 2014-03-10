@@ -11,7 +11,9 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindexnav($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';				//%	return value [string]
 	
 	//----------------------------------------------------------------------------------------------

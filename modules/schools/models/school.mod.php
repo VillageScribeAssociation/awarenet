@@ -96,7 +96,9 @@ class Schools_School {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('schools', 'schools_school', $this->UID, $this->name);
@@ -194,7 +196,9 @@ class Schools_School {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
+		global $user;
+		global $theme;
+
 		$ary = $this->toArray();
 
 		$ary['editUrl'] = '';		$ary['editLink'] = '';

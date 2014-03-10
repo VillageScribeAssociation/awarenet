@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_listallpages($args) {
-	global $kapenta, $theme, $user;
+		global $kapenta;
+		global $theme;
+		global $user;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

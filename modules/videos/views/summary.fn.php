@@ -9,7 +9,9 @@
 //opt: pageUID - overrides raUID [string]
 
 function videos_summary($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';		//% return value [string]
 
 	//----------------------------------------------------------------------------------------------

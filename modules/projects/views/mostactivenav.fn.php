@@ -6,7 +6,12 @@
 //opt: num - number of projects to display, default is 10 (int) [string]
 
 function projects_mostactivenav($args) {
-	global $db, $theme, $user, $session, $kapenta;
+		global $db;
+		global $theme;
+		global $user;
+		global $session;
+		global $kapenta;
+
 	$html = '';		//%	return value [string]
 	$num = 10;
 

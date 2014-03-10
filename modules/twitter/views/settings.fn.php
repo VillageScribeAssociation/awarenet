@@ -5,7 +5,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function twitter_settings($args) {
-	global $theme, $user, $registry;
+		global $theme;
+		global $user;
+		global $registry;
+
 	$html = '';			//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------

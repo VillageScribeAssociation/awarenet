@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function calendar_listtemplatesnav($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';			//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------

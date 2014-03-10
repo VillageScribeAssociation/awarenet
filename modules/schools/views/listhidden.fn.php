@@ -5,7 +5,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_listhidden($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';		//%	return value [string]
 
 	//TODO: permission check here

@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_cd($args) {
-	global $kapenta, $user, $shell;
+		global $kapenta;
+		global $user;
+		global $shell;
+
 	$mode = 'change';		//%	operation [string]
 	$html = '';				//%	return value [string]
 

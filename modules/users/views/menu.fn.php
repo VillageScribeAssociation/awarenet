@@ -10,7 +10,9 @@
 //opt: userUID - UID of a user [string]
 
 function users_menu($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 
 	$labels = array('login' => '', 'signup' => '', 'profile' => '', 'grade' => '', 'blog' => '', 
 					'list' => '', 'account' => '', 'pictures' => '', 'files' => '', 

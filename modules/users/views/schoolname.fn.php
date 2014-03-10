@@ -10,7 +10,10 @@
 //opt: link - create link to school, default is yes (yes|no) [string]
 
 function users_schoolname($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';			//% return value [string]
 	$link = 'yes';
 

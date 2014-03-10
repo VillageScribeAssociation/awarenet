@@ -37,7 +37,9 @@ class Wiki_MWImport {
 	//opt: raUID - UID or alias of a MWImport object [string]
 
 	function Wiki_MWImport($raUID = '') {
-		global $db, $kapenta;
+		global $db;
+		global $kapenta;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
@@ -100,7 +102,9 @@ class Wiki_MWImport {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = '';
@@ -239,7 +243,10 @@ class Wiki_MWImport {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $utils, $theme;
+		global $user;
+		global $utils;
+		global $theme;
+
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

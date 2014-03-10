@@ -8,7 +8,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function packages_WebShell_sources($args) {
-	global $kapenta, $user, $shell, $utils;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $utils;
+
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

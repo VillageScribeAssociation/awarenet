@@ -5,7 +5,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_serversummary($args) {
-	global $kapenta, $registry, $user, $db, $theme;
+		global $kapenta;
+		global $registry;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';					//%	return value [string:html]	
 
 	//----------------------------------------------------------------------------------------------

@@ -583,7 +583,9 @@ class KPackage {
 
 	function storeFile($path, $type, $hash) {
 		//TODO: reimplement
-		global $kapenta, $db;
+		global $kapenta;
+		global $db;
+
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
 
 		//------------------------------------------------------------------------------------------

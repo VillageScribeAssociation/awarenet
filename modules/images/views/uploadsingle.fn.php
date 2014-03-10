@@ -12,7 +12,11 @@
 //opt: width - width of image (?) [string]
 
 function images_uploadsingle($args) {
-	global $kapenta, $db, $theme, $user;	
+		global $kapenta;
+		global $db;
+		global $theme;
+		global $user;
+
 	$html = '';					//%	return value [string]
 	$refModule = '';			//%	a kapenta module name [string]
 	$refModel = '';				//%	a model type name [string]

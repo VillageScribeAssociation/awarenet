@@ -9,7 +9,10 @@
 //arg: month - month (mm) 01 to 12 [string]
 
 function calendar_listmonth($args) {
-	global $theme, $user, $db;
+		global $theme;
+		global $user;
+		global $db;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions

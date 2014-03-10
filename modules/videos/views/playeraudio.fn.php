@@ -9,7 +9,10 @@
 //opt: videoUID - overrides raUID if present [string]
 
 function videos_playeraudio($args) {
-	global $theme, $user, $kapenta;
+		global $theme;
+		global $user;
+		global $kapenta;
+
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

@@ -108,7 +108,9 @@ class Calendar_Entry {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('calendar', 'calendar_entry', $this->UID, $this->title);
@@ -218,7 +220,9 @@ class Calendar_Entry {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme;
+		global $user;
+		global $theme;
+
 		$ary = $this->toArray();
 		$ary['editUrl'] = '';
 		$ary['editLink'] = '';

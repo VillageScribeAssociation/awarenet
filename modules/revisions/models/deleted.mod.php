@@ -217,7 +217,9 @@ class Revisions_Deleted {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $utils;
+		global $user;
+		global $utils;
+
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

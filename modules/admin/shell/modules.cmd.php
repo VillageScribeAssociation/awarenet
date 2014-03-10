@@ -9,7 +9,11 @@
 //TODO:	get module status report
 
 function admin_WebShell_modules($args) {
-	global $kapenta, $user, $shell, $theme;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $theme;
+
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

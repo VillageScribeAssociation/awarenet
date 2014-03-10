@@ -12,7 +12,9 @@
 //opt: num - TODO, number of items per page [string]
 
 function moblog_tagged($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

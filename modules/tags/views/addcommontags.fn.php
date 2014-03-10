@@ -9,7 +9,11 @@
 //opt: num - max number of tags to show (int) [string]
 
 function tags_addcommontags($args) {
-	global $kapenta, $theme, $db, $user;
+		global $kapenta;
+		global $theme;
+		global $db;
+		global $user;
+
 	$html = '';					//%	return value [string]
 	$num = 100;					//%	max number of tags to show [int]
 

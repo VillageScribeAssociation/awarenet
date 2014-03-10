@@ -9,7 +9,10 @@
 //opt: num - number of records per page (default 30) [string]
 
 function comments_summarylist($args) {
-	global $db, $page, $theme;
+		global $db;
+		global $page;
+		global $theme;
+
 	$num = 30;							//%	number of items per page [int]
 	$pageNo = 1;						//%	page number, starts from 1 [int]
 	$start = 0;							//%	starting position within SQL results [int]

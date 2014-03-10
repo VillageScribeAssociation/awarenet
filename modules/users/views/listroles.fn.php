@@ -10,7 +10,11 @@
 //opt: orderBy - field to order the list by (defualt is createdOn) [string]
 
 function users_listroles($args) {
-	global $req, $db, $user, $theme;
+		global $req;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

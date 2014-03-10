@@ -10,7 +10,9 @@
 //arg: projectUID - UID pf project to count members for [string]
 
 function projects_membercount($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$num = '0';				//% return value [string]
 
 	//----------------------------------------------------------------------------------------------

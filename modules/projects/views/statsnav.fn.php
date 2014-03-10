@@ -9,7 +9,10 @@
 //arg: raUID - alias or UID of a Projects_Project object [string]
 
 function projects_statsnav($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

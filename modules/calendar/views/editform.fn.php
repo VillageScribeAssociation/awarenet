@@ -8,7 +8,10 @@
 //arg: raUID - recordAlias or UID or calendar entry [string]
 
 function calendar_editform($args) {
-	global $theme, $user, $utils;
+		global $theme;
+		global $user;
+		global $utils;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

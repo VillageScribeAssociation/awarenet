@@ -11,7 +11,9 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_addmemberform($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';		//%	return value [string]
 	
 	//----------------------------------------------------------------------------------------------

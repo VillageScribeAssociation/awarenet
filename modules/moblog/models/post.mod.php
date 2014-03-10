@@ -40,7 +40,9 @@ class Moblog_Post {
 	//opt: raUID - alias or UID of a moblog post [string]
 
 	function Moblog_Post($raUID = '') {
-		global $db, $user;
+		global $db;
+		global $user;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
@@ -100,7 +102,9 @@ class Moblog_Post {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('moblog', 'moblog_post', $this->UID, $this->title);

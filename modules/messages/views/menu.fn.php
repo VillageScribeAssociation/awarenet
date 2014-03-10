@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function messages_menu($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$labels = array();
 	$html = '';				//%	return value [string]
 

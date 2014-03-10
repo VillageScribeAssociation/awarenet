@@ -10,7 +10,10 @@
 //opt: orderBy - field to order the list by (defualt is createdOn) [string]
 
 function newsletter_listadunits($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

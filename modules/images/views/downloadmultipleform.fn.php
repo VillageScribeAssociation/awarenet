@@ -11,7 +11,9 @@
 //opt: tags - display block tags on return instead of draggable buttons (yes|no) [string]
 
 function images_downloadmultipleform($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';					//%	return value [string]
 	$tags = 'no';				
 

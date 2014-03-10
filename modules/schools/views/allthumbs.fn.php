@@ -8,7 +8,10 @@
 //TODO: this should be on the images module
 
 function schools_allthumbs($args) {
-	global $db, $aliases, $user;
+		global $db;
+		global $aliases;
+		global $user;
+
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

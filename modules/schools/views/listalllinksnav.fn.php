@@ -8,7 +8,9 @@
 //arg: hidden - show hidden schools (yes|no) [string]
 
 function schools_listalllinksnav($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';				//%	return value [string]
 	$showHidden = false;	//%	display hidden schools if true [bool]
 

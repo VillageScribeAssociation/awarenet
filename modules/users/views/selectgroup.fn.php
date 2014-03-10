@@ -9,7 +9,9 @@
 //TODO: change name to 'selectrole.fn.php'
 
 function users_selectgroup($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$varname = 'role';			//%	form element name [string]
 	$default = 'student';		//%	default option [string]
 	$html = '';					//%	return value [string]

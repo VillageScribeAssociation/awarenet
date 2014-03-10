@@ -10,7 +10,9 @@
 //TODO: consider adding a 'contacts' object/index table to avoid the need to the query below.
 
 function messages_contactlist($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 
 	$owner = $user->UID;		//%	user to show contact list for [string]
 	$num = 10;					//%	default number of contacts to show [int]

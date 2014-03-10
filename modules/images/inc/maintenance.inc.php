@@ -7,7 +7,11 @@
 //-------------------------------------------------------------------------------------------------
 
 function images_maintenance() {
-	global $db, $kapenta, $theme, $aliases;
+		global $db;
+		global $kapenta;
+		global $theme;
+		global $aliases;
+
 	$recordCount = 0;
 	$errorCount = 0;
 	$fixCount = 0;

@@ -8,7 +8,10 @@
 //arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_editform($args) {
-	global $theme, $user, $utils;
+		global $theme;
+		global $user;
+		global $utils;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

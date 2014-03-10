@@ -12,7 +12,13 @@
 //arg: admin - determines whether this use can administer this group (yes|no) [string]
 
 function groups__cb_member_removed($args) {
-	global $kapenta, $db, $theme, $user, $page, $notifications;
+		global $kapenta;
+		global $db;
+		global $theme;
+		global $user;
+		global $page;
+		global $notifications;
+
 
 	//---------------------------------------------------------------------------------------------
 	//	check arguments

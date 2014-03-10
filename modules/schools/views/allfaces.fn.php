@@ -9,7 +9,9 @@
 //opt: schoolUID - overrides raUID [string]
 
 function schools_allfaces($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';
 
 	if (true == array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }

@@ -12,7 +12,11 @@
 //opt: num - number of records per page (default is 4) [string]
 
 function comments_listnavjs($args) {
-	global $db, $theme, $user, $utils;
+		global $db;
+		global $theme;
+		global $user;
+		global $utils;
+
 
 	$pageNo = 1;	//%	page to show [int]
 	$num = 4;		//%	default number of comments per page [int]

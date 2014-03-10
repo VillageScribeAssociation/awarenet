@@ -9,7 +9,10 @@
 //opt: format - format of list to return (xml|csv|html), default xml [string]
 
 function videos_listfiles($args) {
-	global $db, $user, $kapenta;
+		global $db;
+		global $user;
+		global $kapenta;
+
 
 	$status = 'all';
 	$format = 'xml';

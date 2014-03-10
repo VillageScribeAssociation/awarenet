@@ -12,7 +12,10 @@
 //opt: altUser - UID of user, display avatar if no images [string]
 
 function images_randomimages($args) {
-	global $db, $theme, $user;		
+		global $db;
+		global $theme;
+		global $user;
+
 	$size = 'thumbsm'; 
 	$limit = 1;
 	$link = 'yes';

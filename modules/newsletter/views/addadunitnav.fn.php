@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function newsletter_addadunitnav($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 
 	$html = '';					//% return value [string]
 

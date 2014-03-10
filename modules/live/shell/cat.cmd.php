@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_cat($args) {
-	global $kapenta, $user, $shell;
+		global $kapenta;
+		global $user;
+		global $shell;
+
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

@@ -9,7 +9,10 @@
 //arg: schoolUID - UID of a Schools_School object [string]
 
 function users_teachercontacts($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

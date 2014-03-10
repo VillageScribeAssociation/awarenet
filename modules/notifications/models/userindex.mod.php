@@ -82,7 +82,9 @@ class Notifications_UserIndex {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -198,7 +200,9 @@ class Notifications_UserIndex {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $utils, $user;
+		global $utils;
+		global $user;
+
 
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

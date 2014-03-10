@@ -16,7 +16,10 @@
 function images_allthumbs($args) {
 	global $req;
 
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

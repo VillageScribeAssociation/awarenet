@@ -11,7 +11,9 @@
 //opt: height - height of flash player (int) [string]
 
 function videos_flashcontainer($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';			//%	return value [string]
 	$swfWidth = 968;	//%	flash object width [int]	
 	$swfHeight = 672;	//%	flash object height [int]

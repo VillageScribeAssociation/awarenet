@@ -10,7 +10,9 @@
 //opt: type - may be 'content' (default) or 'talk', requires raUID [string]
 
 function wiki_menu($args) {
-	global $theme, $user;	
+		global $theme;
+		global $user;
+
 
 	$type = 'content'; $raUID = 'no';
 	if (true == array_key_exists('raUID', $args)) { $raUID = $args['raUID']; }

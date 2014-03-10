@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_WebShell_bash($args) {
-	global $kapenta, $user, $shell;
+		global $kapenta;
+		global $user;
+		global $shell;
+
 	$mode = 'exec';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

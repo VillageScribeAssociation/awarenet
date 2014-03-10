@@ -10,7 +10,10 @@
 //TODO: move this to the images module
 
 function gallery_randomimage($args) {
-	global $db, $user, $aliases;
+		global $db;
+		global $user;
+		global $aliases;
+
 	$size = 'thumbsm';		//%	default size of thumbnail [string]
 	$html = '';				//%	return value [string]
 

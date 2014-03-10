@@ -8,7 +8,9 @@
 //arg: UID - UID of a Revisions_Deleted object [string]
 
 function revisions_showdeleted($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

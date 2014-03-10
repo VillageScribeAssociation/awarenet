@@ -11,7 +11,11 @@
 //opt: tags - display block tags on return instead of draggable buttons (yes|no) [string]
 
 function videos_uploadmultipleform($args) {
-	global $kapenta, $theme, $user, $db;
+		global $kapenta;
+		global $theme;
+		global $user;
+		global $db;
+
 	$html = '';							//%	return value [string]
 	$tags = 'no';
 

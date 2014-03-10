@@ -39,7 +39,9 @@ class Users_Login {
 	//opt: isUser - set to UID is of a Users_User object, not a Users_Login object [bool]
 
 	function Users_Login($UID = '', $isUser = false) {
-		global $kapenta, $db;
+		global $kapenta;
+		global $db;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 
 		if ('' != $UID) { 
@@ -126,7 +128,10 @@ class Users_Login {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases, $session;
+		global $db;
+		global $aliases;
+		global $session;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);

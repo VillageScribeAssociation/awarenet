@@ -9,7 +9,9 @@
 //arg: modulename - name of a kapenta module [string]
 
 function admin_module($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';			//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

@@ -10,7 +10,9 @@
 //arg: day - day (dd) 01 to 31 [string]
 
 function calendar_listday($args) {
-	global $theme, $db;
+		global $theme;
+		global $db;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

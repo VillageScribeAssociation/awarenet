@@ -14,7 +14,12 @@
 //returns: html report or false if not authorized [string][bool]
 
 function tags_maintenance() {
-	global $db, $aliases, $user, $theme, $utils;
+		global $db;
+		global $aliases;
+		global $user;
+		global $theme;
+		global $utils;
+
 	if ('admin' != $user->role) { return false; }
 	$report = '';
 

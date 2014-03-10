@@ -8,7 +8,10 @@
 //arg: UID - UID of a Projects_Revision object [string]
 
 function projects_revisionsummarynav($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

@@ -5,7 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_help($args) {
-	global $kapenta, $theme;
+		global $kapenta;
+		global $theme;
+
 	$mode = 'list';		//%	operation mode [string]
 	$html = '';			//%	return value [string]
 

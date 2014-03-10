@@ -12,7 +12,10 @@
 //opt: label - label of navtitlebox [string]
 
 function projects_historynav($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$pageNo = 1;			//%	default results page to start from (first) [int]
 	$num = 30;				//%	default number of items to show per page [int]
 	$totalItems = 0;		//%	total number of revisions to this item [int]

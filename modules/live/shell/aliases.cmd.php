@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_aliases($args) {
-	global $kapenta, $user;
+		global $kapenta;
+		global $user;
+
 	$mode = 'list';			//%	operation [string]
 	$html ='';				//%	return value [string]
 

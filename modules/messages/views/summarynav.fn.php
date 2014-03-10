@@ -9,7 +9,9 @@
 //opt: owner - UID of message owner (default is current user) [string]
 
 function messages_summarynav($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$owner = $user->UID;
 	$folder = 'inbox';
 	$html = '';

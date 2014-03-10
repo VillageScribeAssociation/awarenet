@@ -11,7 +11,9 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 //arg: imageTitle - text/html of comment
 
 function gallery__cb_images_deleted($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments

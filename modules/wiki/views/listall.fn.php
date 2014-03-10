@@ -13,7 +13,10 @@
 //TODO: this could stand some TLC
 
 function wiki_listall($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	$pageno = 1;
 	$num = 30;

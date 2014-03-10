@@ -206,7 +206,9 @@ class CodeRepository {
 	//arg: hash - sha1 file hash [string]
 
 	function storeFile($path, $type, $hash) {
-		global $kapenta, $db;
+		global $kapenta;
+		global $db;
+
 		echo "[i] storing file - path: $path type: $type <br/>\n";flush();
 
 		//------------------------------------------------------------------------------------------

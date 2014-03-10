@@ -154,7 +154,9 @@ class LFS_Directory {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -292,7 +294,9 @@ class LFS_Directory {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -439,7 +443,9 @@ class LFS_Directory {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -664,7 +670,9 @@ class LFS_Directory {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -889,7 +897,9 @@ class LFS_Directory {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);

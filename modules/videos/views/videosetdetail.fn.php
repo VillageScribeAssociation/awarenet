@@ -11,7 +11,11 @@
 //opt: tags - display block tags instead of draggable buttons (yes|no) [string]
 
 function videos_videosetdetail($args) {
-	global $kapenta, $user, $db, $theme;
+		global $kapenta;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';					//%	return value [string]
 	$tags = false;
 

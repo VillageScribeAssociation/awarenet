@@ -7,7 +7,12 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_WebShell_db($args) {
-	global $kapenta, $user, $shell, $theme, $db;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $theme;
+		global $db;
+
 	$mode = 'query';		//%	operation [string]
 	$html = '';				//%	return value [string]
 

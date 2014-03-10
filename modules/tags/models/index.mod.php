@@ -226,7 +226,10 @@ class Tags_Index {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $utils, $theme;
+		global $user;
+		global $utils;
+		global $theme;
+
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

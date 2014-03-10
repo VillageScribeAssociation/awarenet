@@ -8,7 +8,11 @@
 //opt: num - number of objects per page, default is 50 (int) [string]
 
 function revisions_listdeleted($args) {
-	global $db, $user, $theme, $revisions;
+		global $db;
+		global $user;
+		global $theme;
+		global $revisions;
+
 
 	$html = '';					//%	return value [string]
 	$pageNo = 1;				//%	page number (starts at 1) [int]

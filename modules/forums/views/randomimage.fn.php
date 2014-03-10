@@ -11,7 +11,9 @@
 //opt: size - size of image (default is 'thumbsm') [string]
 
 function forums_randomimage($args) {
-	global $db, $aliases;
+		global $db;
+		global $aliases;
+
 
 	$size = 'thumbsm';
 	if (false == array_key_exists('forumsUID', $args)) { return ''; }

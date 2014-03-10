@@ -11,7 +11,9 @@
 //opt: projectUID - UID of a Projects_Project object [string]
 
 function projects_menu($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 
 	$labels = array();
 	$labels['newEntry'] = '';			// defaults for public/unauthorized user

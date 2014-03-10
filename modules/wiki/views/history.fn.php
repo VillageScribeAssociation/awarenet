@@ -11,7 +11,10 @@
 //opt: pageNo - results page to show, from 1, default is 1 (int)  [string]
 
 function wiki_history($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$pageNo = 1;			//%	default results page to start from (first) [int]
 	$num = 30;				//%	default number of items to show per page [int]
 	$totalItems = 0;		//%	total number of revisions to this item [int]

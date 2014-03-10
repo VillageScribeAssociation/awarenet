@@ -12,7 +12,10 @@
 //opt: num - maximum number of thumbs to show (most recent first) (default is 20) [string]
 
 function forums_recentthumbsall($args) {
-	global $db, $page, $user;
+		global $db;
+		global $page;
+		global $user;
+
 	$pageNo = 1;							//%	page number, starts at 1 [int]
 	$num = 20;							//%	number number of items per page [int]
 	$size = 'thumb';					//%	image size [string]

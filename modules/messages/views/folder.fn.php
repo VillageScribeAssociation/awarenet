@@ -11,7 +11,11 @@
 //opt: num - number of messages to show (default is 50) [string]
 
 function messages_folder($args) {
-	global $db, $page, $theme, $user;
+		global $db;
+		global $page;
+		global $theme;
+		global $user;
+
 
 	$pageNo = 1;
 	$num = 50;

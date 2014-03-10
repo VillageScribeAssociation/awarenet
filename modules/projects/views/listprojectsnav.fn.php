@@ -10,7 +10,9 @@
 //opt: num - max number to display (default is 20) [string]
 
 function projects_listprojectsnav($args) {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 	$num = 20; 
 	$html = '';
 

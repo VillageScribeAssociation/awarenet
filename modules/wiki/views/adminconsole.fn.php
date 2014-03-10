@@ -5,7 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function wiki_adminconsole($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	if ('admin' != $user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/wiki/views/adminconsole.block.php');

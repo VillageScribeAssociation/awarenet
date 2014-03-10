@@ -9,7 +9,9 @@
 //arg: refUID - number of files per page [string]
 
 function files_fileset($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

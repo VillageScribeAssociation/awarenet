@@ -12,7 +12,12 @@
 //TODO: discover if this is still used by anything and delete if not
 
 function comments_listjs($args) {
-	global $theme, $kapenta, $db, $user, $utils;
+		global $theme;
+		global $kapenta;
+		global $db;
+		global $user;
+		global $utils;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions

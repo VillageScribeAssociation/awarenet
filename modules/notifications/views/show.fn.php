@@ -9,7 +9,9 @@
 //opt: notificationUID - overrides UID [string]
 
 function notifications_show($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';							//%	return value [string]
 	
 	//----------------------------------------------------------------------------------------------

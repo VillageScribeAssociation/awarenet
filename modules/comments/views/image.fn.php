@@ -11,7 +11,9 @@
 //opt: commentUID - overrides raUID [string]
 
 function comments_image($args) {
-	global $db, $kapenta;
+		global $db;
+		global $kapenta;
+
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('commentUID', $args)) { $args['raUID'] = $args['commentUID']; }

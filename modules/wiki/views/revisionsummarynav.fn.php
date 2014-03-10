@@ -8,7 +8,10 @@
 //arg: UID - UID of a Wiki_Revision object [string]
 
 function wiki_revisionsummarynav($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

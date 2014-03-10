@@ -10,7 +10,10 @@
 //arg: raUID - recordAlias or UID or forums entry [string]
 
 function forums_editform($args) {
-	global $theme, $user, $utils;
+		global $theme;
+		global $user;
+		global $utils;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions

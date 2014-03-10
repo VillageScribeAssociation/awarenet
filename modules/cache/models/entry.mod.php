@@ -106,7 +106,9 @@ class Cache_Entry {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 
 		$this->shared = 'no';						//	these are never shared with other peers
 

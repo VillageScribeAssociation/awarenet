@@ -86,7 +86,9 @@ class Newsletter_Edition {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('newsletter', 'newsletter_edition', $this->UID, $this->subject);

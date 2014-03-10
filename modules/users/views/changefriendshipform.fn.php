@@ -9,7 +9,10 @@
 //arg: friendshipUID - UID of relationship record [string]
 
 function users_changefriendshipform($args) {
-	global $db, $theme, $user;
+		global $db;
+		global $theme;
+		global $user;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

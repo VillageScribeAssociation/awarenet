@@ -6,7 +6,9 @@
 //role: admin - only administrators may use this
 
 function admin_maintenancelist($args) {
-	global $kapenta, $user;
+		global $kapenta;
+		global $user;
+
 
 	$maint = array();
 	$count = 0;

@@ -7,7 +7,9 @@
 require_once($kapenta->installPath . 'modules/folders/models/folder.mod.php');
 
 function install_folders_module() {
-	global $kapenta, $user;
+		global $kapenta;
+		global $user;
+
 
 	if ('admin' != $user->role) { return false; }
 	$model = new Folder();

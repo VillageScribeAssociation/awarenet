@@ -8,7 +8,9 @@
 //TODO: move this to the core, probably on the $kapenta object
 
 function admin_runmaintenance($args) {
-	global $user, $kapenta;
+		global $user;
+		global $kapenta;
+
 	$report = '';		//% return value [string]
 	$maint = array();
 	$count = 0;

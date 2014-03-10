@@ -8,7 +8,9 @@
 //arg: modulename - name of a module [string]
 
 function admin_moduleinstallbutton($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

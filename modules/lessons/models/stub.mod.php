@@ -115,7 +115,9 @@ class Lessons_Stub {
 	//returns: null string on success, html report of errors on failure [string]
 
 	function save() {
-		global $kapenta, $db;
+		global $kapenta;
+		global $db;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 

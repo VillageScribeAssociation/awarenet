@@ -6,7 +6,9 @@
 //returns: console panel [string:html]
 
 function aliases_adminconsole($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	if ('admin' != $user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/aliases/views/adminconsole.block.php');

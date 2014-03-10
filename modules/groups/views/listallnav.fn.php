@@ -10,7 +10,9 @@
 //opt: sameschool - UID of a group, constrains results to those of the same school [string]
 
 function groups_listallnav($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';					//%	return value [string]
 	$conditions = array();		//%	array of conditions to filter groups table by [array]
 

@@ -87,7 +87,9 @@ class Live_Chat {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);
@@ -209,7 +211,10 @@ class Live_Chat {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $utils, $theme;
+		global $user;
+		global $utils;
+		global $theme;
+
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';

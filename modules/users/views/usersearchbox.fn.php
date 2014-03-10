@@ -11,7 +11,9 @@
 //opt: cbicon - TODO [string]
 
 function users_usersearchbox($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';							//%	return value [string]
 	$cbjs = '';							//%	js function to call when a result is clicked [string]
 	$cblabel = '';						//%	alt text for search result button [string]

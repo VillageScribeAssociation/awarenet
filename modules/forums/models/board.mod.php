@@ -101,7 +101,9 @@ class Forums_Board {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('forums', 'forums_board', $this->UID, $this->UID);

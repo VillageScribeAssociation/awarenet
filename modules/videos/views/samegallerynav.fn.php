@@ -9,7 +9,10 @@
 //opt: videoUID - replaces raUID if present [string]
 
 function videos_samegallerynav($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';		//%	return value [html]
 
 	//----------------------------------------------------------------------------------------------

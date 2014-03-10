@@ -12,7 +12,10 @@
 //opt: tags - display block tags instead of draggable buttons, default is no (yes|no) [string]
 
 function images_uploadmultiple($args) {
-	global $kapenta, $db, $user; 
+		global $kapenta;
+		global $db;
+		global $user;
+
 	$html = '';				//%	return value [string]
 	$categories = '';		//%	not yet implemented [string]
 	$tags = 'no';			//%	diplay block tags instead of draggable buttons (yes|no) [string]

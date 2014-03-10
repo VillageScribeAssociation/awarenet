@@ -7,7 +7,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_WebShell_testcurl($args) {
-	global $kapenta, $user, $shell, $utils;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $utils;
+
 	$mode = 'exec';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

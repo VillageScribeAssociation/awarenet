@@ -12,7 +12,9 @@
 //returns: html report or false if not authorized [string][bool]
 
 function sketchpad_install_module() {
-	global $db, $user;
+		global $db;
+		global $user;
+
 
 	$report = "No dynamic components to install for this version.";
 

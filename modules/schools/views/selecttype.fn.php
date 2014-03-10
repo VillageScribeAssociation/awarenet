@@ -7,7 +7,9 @@
 //opt: varname - name of HTML for field [string]
 
 function schools_selecttype($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';				//%	return type [string]	
 	$default = '';			//%	default option [string]
 	$varname = 'type';		//%	form field name [string]

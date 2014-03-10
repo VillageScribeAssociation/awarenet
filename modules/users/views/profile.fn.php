@@ -9,7 +9,9 @@
 //arg: userRA - recordAlias of record to summarise [string]
 
 function users_profile($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

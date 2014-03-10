@@ -8,7 +8,11 @@
 //arg: year - year (yyyy) [string]
 
 function calendar_yearsubnav($args) {
-	global $kapenta, $user, $db, $theme;
+		global $kapenta;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';
 	$year = '1970';
 	$day = '01';

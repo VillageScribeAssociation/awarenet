@@ -9,7 +9,12 @@
 //arg: imageTitle - text/html of comment
 
 function users__cb_images_added($args) {
-	global $kapenta, $db, $user, $notifications, $theme;
+		global $kapenta;
+		global $db;
+		global $user;
+		global $notifications;
+		global $theme;
+
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 	if (false == array_key_exists('imageUID', $args)) { return false; }

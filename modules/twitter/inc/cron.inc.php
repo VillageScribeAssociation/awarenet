@@ -17,7 +17,10 @@
 //returns: HTML report of any actions taken [string]
 
 function twitter_cron_tenmins() {
-	global $db, $registry, $kapenta;
+		global $db;
+		global $registry;
+		global $kapenta;
+
 
 	if ('yes' !== $kapenta->registry->get('twitter.enabled')) { return "Twitter not enabled.<br/>\n"; }
 

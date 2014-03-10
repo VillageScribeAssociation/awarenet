@@ -11,7 +11,10 @@
 //opt: num - max number of posts to show (default 10) [string]
 
 function moblog_listrecentsamenav($args) {
-	global $db, $theme, $user;
+		global $db;
+		global $theme;
+		global $user;
+
 	$html = '';						//%	return value [string]
 	$num = 10;						//% default max number of items to show [int]
 

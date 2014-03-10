@@ -10,7 +10,10 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_askjoinnav($args) {
-	global $db, $theme, $user;
+		global $db;
+		global $theme;
+		global $user;
+
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

@@ -10,7 +10,9 @@
 //opt: type - may be 'content' (default) or 'talk', requires raUID [string]
 
 function wiki_revmenu($args) {
-	global $theme, $user;	
+		global $theme;
+		global $user;
+
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
 	$labels = array();

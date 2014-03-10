@@ -6,7 +6,10 @@
 //arg: UID - UID of an Abuse_Report object [string]
 
 function abuse_annotationform($args) {
-	global $user, $db, $theme;
+		global $user;
+		global $db;
+		global $theme;
+
 	$html = '';													//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

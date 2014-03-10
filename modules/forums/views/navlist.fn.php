@@ -10,7 +10,10 @@
 //arg: school - UID of school to show forums for [string]
 
 function forums_navlist($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	if (false == array_key_exists('school', $args)) { return ''; }
 	$html = '';

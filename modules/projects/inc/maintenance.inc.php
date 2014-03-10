@@ -7,7 +7,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function projects_maintenance() {
-	global $db, $user, $theme, $aliases;
+		global $db;
+		global $user;
+		global $theme;
+		global $aliases;
+
 	$report = '';		//%	return value [string]
 
 	$recordCount = 0;

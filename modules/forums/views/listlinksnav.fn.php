@@ -6,7 +6,10 @@
 //TODO: opt to show with or without schools
 
 function forums_listlinksnav($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

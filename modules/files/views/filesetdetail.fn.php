@@ -9,7 +9,11 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_filesetdetail($args) {
-	global $db, $theme, $kapenta, $user;
+		global $db;
+		global $theme;
+		global $kapenta;
+		global $user;
+
 	$html = '';						//%	return value [string:html]
 	
 	//----------------------------------------------------------------------------------------------

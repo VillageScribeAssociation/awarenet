@@ -9,7 +9,12 @@
 //opt: num - number of records per page (default 300) [string]
 
 function aliases_list($args) {
-	global $kapenta, $db, $page, $theme, $user;
+		global $kapenta;
+		global $db;
+		global $page;
+		global $theme;
+		global $user;
+
 
 	$num = 100;					//%	number of items per page [int]
 	$pageNo = 1;				//%	page number starts at 1 [int]

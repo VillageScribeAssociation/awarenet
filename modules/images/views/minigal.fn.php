@@ -9,7 +9,10 @@
 //arg: refUID - UID of item this owns images [string]
 
 function images_minigal($args) {
-	global $kapenta, $user, $db;
+		global $kapenta;
+		global $user;
+		global $db;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation

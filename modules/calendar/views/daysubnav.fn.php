@@ -10,7 +10,9 @@
 //arg: day - day (dd) 01 to 31 [string]
 
 function calendar_daysubnav($args) {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 	if (array_key_exists('day', $args) == false) { return false; }
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }

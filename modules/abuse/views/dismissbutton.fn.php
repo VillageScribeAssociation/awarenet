@@ -6,7 +6,9 @@
 //arg: UID - UID fo an abuse report [string]
 
 function abuse_dismissbutton($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';
 
 	if ('admin' != $user->role) { return ''; }

@@ -11,7 +11,9 @@
 //arg: extra - any extra line or information to add to this summary [string]
 
 function groups_summarynav($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	
 	$extra = '';				//%	any other information to be added [string]
 	$html = '';					//% return value [string]

@@ -9,7 +9,11 @@
 //opt: num - number of images per page (default is 30) [string]
 
 function images_listall($args) {
-	global $user, $db, $theme, $page;
+		global $user;
+		global $db;
+		global $theme;
+		global $page;
+
 	$num = 30;							//%	number of items per page [int]
 	$pageNo = 1;						//%	page number, starts from 1 [int]
 	$start = 0;							//%	position in SQL results [int]

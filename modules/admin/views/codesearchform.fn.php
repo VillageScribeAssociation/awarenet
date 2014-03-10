@@ -7,7 +7,9 @@
 //opt: excludeqB64 - search term base 64 encoded [string]
 
 function admin_codesearchform($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';			//%	return value [string]
 	$searchq = '';		//%	query to search for [string]
 	$excludeq = '';		//%	exclude lines conatining this string [string]	

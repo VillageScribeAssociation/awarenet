@@ -9,7 +9,9 @@
 //arg: friendshipUID - UID of relationship record [string]
 
 function users_removefriend($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

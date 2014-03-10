@@ -33,7 +33,9 @@ class Users_Friendship {
 	//opt: UID - UID fo a friendship object [string]
 
 	function Users_Friendship($UID = '') {
-		global $user, $db;
+		global $user;
+		global $db;
+
 		$this->dbSchema = $this->getDbSchema();
 		if ($UID != '') { $this->load($UID); }
 		if (false == $this->loaded) {
@@ -111,7 +113,9 @@ class Users_Friendship {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $db->save($this->toArray(), $this->dbSchema);

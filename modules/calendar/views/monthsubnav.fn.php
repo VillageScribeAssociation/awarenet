@@ -9,7 +9,9 @@
 //arg: month - month (mm) 01 to 12 [string]
 
 function calendar_monthsubnav($args) {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 	if (array_key_exists('month', $args) == false) { return false; }
 	if (array_key_exists('year', $args) == false) { return false; }
 	$year = $db->addMarkup($args['year']);

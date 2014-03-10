@@ -10,7 +10,10 @@
 //opt: num - number of posts to show (default is 10) [string]
 
 function moblog_schoolrecentnav($args) {
-	global $db, $page, $user;
+		global $db;
+		global $page;
+		global $user;
+
 	$num = 10; 						//%	number of recent items to show [int]
 	$html = '';						//%	return value [string]
 

@@ -36,7 +36,9 @@ class Users_Logins {
 	//----------------------------------------------------------------------------------------------
 
 	function clearOldEntries() {
-		global $db, $kapenta;
+		global $db;
+		global $kapenta;
+
 		$range = $db->loadRange('users_login', '*', '', '', '', '');
 		foreach($range as $row) {
 			if (($row['serverUID'] == $kapenta->serverPath) && ($kapenta->time() > ($row['lastseen'] + $this->maxAge))) { 

@@ -8,7 +8,9 @@
 //arg: raUID - alias or UID of static page to edit [string]
 
 function home_editform($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 
 	if (array_key_exists('raUID', $args) == false) { return false; }
 

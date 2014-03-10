@@ -34,7 +34,10 @@ class Gallery_Gallery {
 	//opt: raUID - UID or alias of a Gallery object [string]
 
 	function Gallery_Gallery($raUID = '') {
-		global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
@@ -95,7 +98,9 @@ class Gallery_Gallery {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('gallery', 'gallery_gallery', $this->UID, $this->title);
@@ -190,7 +195,9 @@ class Gallery_Gallery {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user, $theme;
+		global $user;
+		global $theme;
+
 		$ary = $this->toArray();
 
 		$ary['editUrl'] = '';

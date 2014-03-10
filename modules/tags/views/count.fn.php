@@ -11,7 +11,10 @@
 //opt: link - link to list of items sharing this tag, default is no (yes|no) [string]
 
 function tags_count($args) {
-	global  $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$html = '';			//%	return value [string]
 	$link = 'no';
 

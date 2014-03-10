@@ -5,7 +5,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_bumpgradeform($args) {
-	global $user, $db, $theme, $registry;
+		global $user;
+		global $db;
+		global $theme;
+		global $registry;
+
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------

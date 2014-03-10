@@ -9,7 +9,10 @@
 //arg: endDate - datetime [string]
 
 function users_loginstats($args) {
-	global $user, $theme, $db;
+		global $user;
+		global $theme;
+		global $db;
+
 	$html = '';		//%	return value
 	$startDate = $db->datetime();
 	$endDate = $db->datetime();

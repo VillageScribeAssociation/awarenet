@@ -303,7 +303,10 @@ class Users_User {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user, $theme, $utils;		// note that current user and $this may not be the same
+		global $user;
+		global $theme;
+		global $utils;		// note that current user and $this may not be the same;
+
 		$ary = $this->toArray();
 
 		$ary['fullName'] = trim($ary['firstname'] . ' ' . $ary['surname']);

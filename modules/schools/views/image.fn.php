@@ -12,7 +12,9 @@
 //: deprecated, TODO: remove this and replace blocks with call to images module
 
 function schools_image($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$size = 'width300';
 	$link = 'yes';
 	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }

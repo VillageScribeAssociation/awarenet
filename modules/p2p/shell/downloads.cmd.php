@@ -8,7 +8,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function p2p_WebShell_downloads($args) {
-	global $kapenta, $user, $shell, $db;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $db;
+
 	$mode = 'list';			//%	operation [string]
 	$html = '';				//%	return value [string]
 

@@ -8,7 +8,10 @@
 //role: admin - only administrators may do this
 
 function admin_listmodules($args) {
-	global $kapenta, $theme, $user;
+		global $kapenta;
+		global $theme;
+		global $user;
+
 	$html = '';
 
 	//---------------------------------------------------------------------------------------------

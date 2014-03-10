@@ -5,7 +5,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_coresetup($args) {
-	global $kapenta, $user, $theme;
+		global $kapenta;
+		global $user;
+		global $theme;
+
 	$html = '';					//%	return value [string:html]
 
 	//----------------------------------------------------------------------------------------------

@@ -10,7 +10,10 @@
 //opt: userUID - overrides raUID if present [string]
 
 function users_schooluid($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$uid = '';												//% return value [string]
 
 	//----------------------------------------------------------------------------------------------

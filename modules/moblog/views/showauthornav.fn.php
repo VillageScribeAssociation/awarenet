@@ -10,7 +10,9 @@
 //opt: postUID - overrides raUID [string]
 
 function moblog_showauthornav($args) {
-	global $user, $aliases;
+		global $user;
+		global $aliases;
+
 	$html = '';				//% return value [string]
 
 	//----------------------------------------------------------------------------------------------

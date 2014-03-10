@@ -10,7 +10,12 @@
 //opt: num - number of records per page (default is 300) [string]
 
 function users_summarylist($args) {
-	global $db, $req, $theme, $user, $kapenta;
+		global $db;
+		global $req;
+		global $theme;
+		global $user;
+		global $kapenta;
+
 
     global $kapenta;
 

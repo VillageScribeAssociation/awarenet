@@ -9,7 +9,11 @@
 //opt: num - number of records per page (default 300) [string]
 
 function home_list($args) {
-	global $db, $page, $theme, $user;
+		global $db;
+		global $page;
+		global $theme;
+		global $user;
+
 	$num = 300;							//%	number of items per page [int]
 	$pageNo = 1;							//%	page number starts at 1 [int]
 	$start = 0;							//%	starting position within SQL results [int]

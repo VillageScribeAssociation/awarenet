@@ -11,7 +11,11 @@
 //opt: hidden - show hidden schools (yes|no) [string]
 
 function schools_listall($args) {
-	global $req, $db, $user, $theme;
+		global $req;
+		global $db;
+		global $user;
+		global $theme;
+
 
 	$pageNo = 1;			//%	first page if not specified [int]
 	$pageSize = 10;			//%	default number of items per page [int]

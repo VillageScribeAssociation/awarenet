@@ -6,7 +6,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_menu($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	if ('admin' != $user->role) { return ''; }
 	$block = $theme->loadBlock('modules/admin/views/menu.block.php');
 	return $block;

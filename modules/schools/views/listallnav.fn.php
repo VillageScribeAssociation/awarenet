@@ -8,7 +8,9 @@
 //arg: hidden - show hidden schools (yes|no) [string]
 
 function schools_listallnav($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';
 
 	//$sql = "select * from Schools_School order by name";

@@ -10,7 +10,10 @@
 //opt: num - number of files per page [string]
 
 function files_listall($args) {
-	global $db, $page, $theme;
+		global $db;
+		global $page;
+		global $theme;
+
 	$num = 30;							//%	number of items per page [int]
 	$pageNo = 1;						//%	page number, starts at 1 [int]
 	$start = 0;							//%	position in SQL results [int]

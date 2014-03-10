@@ -10,7 +10,9 @@
 //opt: default - set default value (should be a group UID) [string]
 
 function groups_select($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$varname = 'group';
 	$default = '';
 	$html = '';

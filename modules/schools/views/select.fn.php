@@ -9,7 +9,9 @@
 //opt: default - default value (should be the UID of a school record) [string]
 
 function schools_select($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$varname = 'school';
 	$default = '';
 	$html = '';

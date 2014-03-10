@@ -8,7 +8,9 @@
 //arg: UID - UID of a Wiki_Article object (the talk article) [string]
 
 function wiki_edittalkform($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$html = '';
 	
 	//----------------------------------------------------------------------------------------------

@@ -7,7 +7,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_block($args) {
-	global $kapenta, $user, $shell, $theme;
+		global $kapenta;
+		global $user;
+		global $shell;
+		global $theme;
+
 
 	$mode = 'show';			//%	operation [string]
 	$html = '';				//%	return value [string]

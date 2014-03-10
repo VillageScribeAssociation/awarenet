@@ -9,7 +9,11 @@
 //arg: refUID - UID of item which owns these files [string]
 
 function files_uploadmultipleform($args) {
-	global $kapenta, $db, $theme, $user;
+		global $kapenta;
+		global $db;
+		global $theme;
+		global $user;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation

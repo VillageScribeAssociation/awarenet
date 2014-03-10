@@ -11,7 +11,9 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindex($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

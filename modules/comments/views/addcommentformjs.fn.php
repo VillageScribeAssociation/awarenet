@@ -12,7 +12,9 @@
 //opt: invitation - text encouraging someone to leave a comment, optional [string]
 
 function comments_addcommentformjs($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 	$invitation = 'Add a comment';		//%	default call to action [string]
 	$html = '';							//%	return value [string]
 

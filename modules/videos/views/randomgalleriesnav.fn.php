@@ -8,7 +8,9 @@
 // opt: num = max number to show, default is 10 (int) [string]
 
 function videos_randomgalleriesnav($args) {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 	$num = 10; 
 	$html = '';
 

@@ -10,7 +10,9 @@
 //arg: varname - field name, default is 'user' [string]
 
 function users_select($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$varname = 'user';
 	$default = $user->UID;
 

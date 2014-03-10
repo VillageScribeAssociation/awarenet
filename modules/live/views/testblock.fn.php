@@ -5,7 +5,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_testblock($args) {
-	global $user, $theme, $db;
+		global $user;
+		global $theme;
+		global $db;
+
 	$html = '';
 
 	$block = $theme->loadBlock('modules/live/views/testblock.block.php');

@@ -9,7 +9,11 @@
 //opt: num - number of records per page (default 300) [string]
 
 function static_list($args) {
-	global $db, $page, $theme, $user;
+		global $db;
+		global $page;
+		global $theme;
+		global $user;
+
 	$start = 0;
 	$num = 300;
 	$pageNo = 1;

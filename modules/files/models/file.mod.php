@@ -106,7 +106,9 @@ class Files_File {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('files', 'files_file', $this->UID, $this->title);
@@ -343,7 +345,9 @@ class Files_File {
 	//------------------------------------------------------------------------------------------------------
 
 	function delete() {
-		global $kapenta, $db;
+		global $kapenta;
+		global $db;
+
 		if ($this->fileName == '') { return false; }
 		
 		//-----------------------------------------------------------------------------------------

@@ -11,7 +11,9 @@
 //opt: categories - comma delimited list of categories these files can belong to [string]
 
 function files_uploadmultiple($args) {
-	global $user, $kapenta; 
+		global $user;
+		global $kapenta;
+
 	
 	//----------------------------------------------------------------------------------------------
 	//	input validation

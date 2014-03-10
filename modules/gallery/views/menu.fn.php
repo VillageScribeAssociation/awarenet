@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function gallery_menu($args) {
-	global $db, $user, $theme;
+		global $db;
+		global $user;
+		global $theme;
+
 	$labels = array();
 
 	$labels['newEntry'] = '[[:theme::submenu::label=Create New Gallery::link=/gallery/new/:]]';

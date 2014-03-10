@@ -9,7 +9,9 @@
 //arg: refUID - UID of item which owns the images [string]
 
 function images_imageset($args) {
-	global $db, $user;
+		global $db;
+		global $user;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

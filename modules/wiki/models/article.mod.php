@@ -120,7 +120,9 @@ class Wiki_Article {
 	//: $db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db;
+		global $aliases;
+
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$this->alias = $aliases->create('wiki', 'wiki_article', $this->UID, $this->title);
@@ -340,7 +342,9 @@ class Wiki_Article {
 	//returns: true on success, false on failure [bool]
 
 	function mkDefault() {
-		global $kapenta, $user;
+		global $kapenta;
+		global $user;
+
 
 		$this->title = 'Index';
 		$raw = $kapenta->fs->get($this->defaultIndexPage, false, true);

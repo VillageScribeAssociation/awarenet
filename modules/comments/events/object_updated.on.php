@@ -10,7 +10,11 @@
 //arg: UID - UID of deleted object [string]
 
 function comments__cb_object_updated($args) {
-	global $kapenta, $db, $user, $page;
+		global $kapenta;
+		global $db;
+		global $user;
+		global $page;
+
 
 	$kapenta->logLive('in comments callback: ' . $args['module']);
 

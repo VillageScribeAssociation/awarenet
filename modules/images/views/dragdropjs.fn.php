@@ -6,7 +6,11 @@
 
 
 function images_dragdropjs($args) {
-	global $kapenta, $user, $db, $theme;
+		global $kapenta;
+		global $user;
+		global $db;
+		global $theme;
+
 
 	$html = '';							//%	return value [string]
 	$refModule = '';					//%	name of a kapenta module [string]

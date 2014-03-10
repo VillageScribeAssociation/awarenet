@@ -11,7 +11,9 @@
 //opt: size - of images returned [string]
 
 function users_commonfriendsnav($args) {
-	global $user, $alises;
+		global $user;
+		global $alises;
+
 	if (array_key_exists('userUID', $args) == true) { $args['UID'] = $args['userUID']; }
 	if (array_key_exists('UID', $args) == false) { return false; }
 	$html = '';

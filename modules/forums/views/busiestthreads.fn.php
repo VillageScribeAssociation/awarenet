@@ -10,7 +10,10 @@
 //opt: num - number of threads to show (default is 10) [string]
 
 function forums_busiestthreads($args) {
-	global $db, $theme, $user;
+		global $db;
+		global $theme;
+		global $user;
+
 	$num = 6;
 	$html = '';		//%	return value [string]
 

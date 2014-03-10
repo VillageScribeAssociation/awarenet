@@ -5,7 +5,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function forums_adminconsole($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 
 	if ('admin' != $user->role) { return ''; }
 

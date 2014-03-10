@@ -9,7 +9,10 @@ require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 //arg: UID - UID of deleted record
 
 function images__cb_object_deleted($args) {
-	global $db, $user, $session;
+		global $db;
+		global $user;
+		global $session;
+
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }
 

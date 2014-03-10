@@ -16,7 +16,10 @@
 function notifications_maintenance() {
 	global $theme;
 
-	global $db, $aliases, $user;
+		global $db;
+		global $aliases;
+		global $user;
+
 	if ('admin' != $user->role) { return false; }
 	$recordCount = 0;
 	$errorCount = 0;

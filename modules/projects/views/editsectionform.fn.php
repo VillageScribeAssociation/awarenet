@@ -11,7 +11,10 @@
 //opt: sectionUID - overrides raUID if present [string]
 
 function projects_editsectionform($args) {
-	global $theme, $user, $utils;
+		global $theme;
+		global $user;
+		global $utils;
+
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

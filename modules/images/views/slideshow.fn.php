@@ -10,7 +10,10 @@
 //arg: refUID - UID of object which owns images [string]
 
 function images_slideshow($args) {
-	global $kapenta, $db, $user;
+		global $kapenta;
+		global $db;
+		global $user;
+
 
 	//----------------------------------------------------------------------------------------------
 	//	check args and authorisation

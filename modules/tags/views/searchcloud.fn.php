@@ -6,7 +6,10 @@
 //opt: num - maximum number of tags to display, default is 20 (int)[string]
 
 function tags_searchcloud($args) {
-	global $db, $theme, $kapenta;
+		global $db;
+		global $theme;
+		global $kapenta;
+
 	$html = '';
 	$num = 20;
 

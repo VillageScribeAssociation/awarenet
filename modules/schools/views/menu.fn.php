@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_menu($args) {
-	global $theme, $user;
+		global $theme;
+		global $user;
+
 
 	$labels = array('newEntry' => '', 'allContactDetails' => '');
 

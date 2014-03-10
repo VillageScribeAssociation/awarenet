@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_WebShell_sha1($args) {
-	global $kapenta, $user, $shell;
+		global $kapenta;
+		global $user;
+		global $shell;
+
 	$html = '';							//%	return value [string]
 	$mode = 'sha1';						//%	operation [string]
 

@@ -9,7 +9,10 @@
 //TODO: this should be moved to the images module
 
 function groups_allthumbs($args) {
-	global $db, $user, $aliases;
+		global $db;
+		global $user;
+		global $aliases;
+
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

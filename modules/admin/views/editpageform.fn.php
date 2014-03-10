@@ -7,7 +7,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_editpageform($args) {
-	global $theme, $kapenta, $utils, $user;
+		global $theme;
+		global $kapenta;
+		global $utils;
+		global $user;
+
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

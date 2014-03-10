@@ -12,7 +12,10 @@
 //TODO: fix this up
 
 function users_searchjs($args) {
-	global $db, $theme, $utils;
+		global $db;
+		global $theme;
+		global $utils;
+
 	$js = '';
 
 	if (false == array_key_exists('squery', $args)) { return ''; }

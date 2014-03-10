@@ -8,7 +8,9 @@
 //arg: UID - UID of an Abuse_Report object [string]
 
 function abuse_show($args) {
-	global $user, $theme;
+		global $user;
+		global $theme;
+
 	$html = '';														//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

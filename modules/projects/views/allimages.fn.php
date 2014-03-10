@@ -12,7 +12,11 @@
 //opt: size - size to display images (default is width300) [string]
 
 function projects_allimages($args) {
-	global $db, $kapenta, $user, $theme;
+		global $db;
+		global $kapenta;
+		global $user;
+		global $theme;
+
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$size = 'width300';

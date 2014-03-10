@@ -137,7 +137,9 @@ class Live_ShellSession {
 	}
 
 	function ls($pattern = '') {
-		global $kapenta, $theme;
+		global $kapenta;
+		global $theme;
+
 		$abs = substr($this->get('cwd'), 2);
 		$files = $kapenta->listFiles($abs, $pattern);
 		$table = array(array('Name', 'Size', 'Type'));

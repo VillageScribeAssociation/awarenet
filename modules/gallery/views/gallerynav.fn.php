@@ -10,7 +10,10 @@
 //opt: size - image size (thumb90, thumbsm, width300, etc) [string]
 
 function gallery_gallerynav($args) {
-	global $db, $user, $utils;
+		global $db;
+		global $user;
+		global $utils;
+
 	$html = '';					//%	return value [string]
 	$size = 'thumbsm';
 

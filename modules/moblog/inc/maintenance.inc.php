@@ -7,7 +7,9 @@
 //-------------------------------------------------------------------------------------------------
 
 function moblog_maintenance() {
-	global $db, $theme;
+		global $db;
+		global $theme;
+
 
 	$recordCount = 0;
 	$errorCount = 0;

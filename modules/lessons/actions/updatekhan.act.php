@@ -16,19 +16,23 @@
 	//----------------------------------------------------------------------------------------------
 	//	check if user is already logged in into KA Lite, otherwise automatically create user (1st time) and log in
 	//----------------------------------------------------------------------------------------------
-	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
+	$url = 'http://localhost/api/status';
+	$reply = $kapenta->utils->curlGet($url, '', false);
+	if (0 < strpos($reply, '"is_logged_in": true')) {
+//	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
 		//signed in already, continue below
-//		echo "We are logged in with KhanLite already!<br/>\n";
+		//echo "We are logged in with KhanLite already!<br/>\n";
 	} else {
 //		echo "We are not logged in with KhanLite!<br/>\n";
+		logoutKhanLite();
 		createAndLoginKhanLite();
 	} 
 
 	//----------------------------------------------------------------------------------------------
-	//	call GET /coachreports from KA Lite Server
+	//	call update videos from KA Lite Server
 	//----------------------------------------------------------------------------------------------
 	$sessionid = $kapenta->session->get('c_sessionid');
-	$raw = $kapenta->utils->curlGet($kalite.'/update/', '', false, 'sessionid='.$sessionid);
+	$raw = $kapenta->utils->curlGet($kalite.'/update/videos/', '', false, 'sessionid='.$sessionid);
 
 	//----------------------------------------------------------------------------------------------
 	//	remove internal KA Lite links so that we can control what functionality of KA Lite is called from Awarenet

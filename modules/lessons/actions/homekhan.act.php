@@ -20,9 +20,9 @@
 	//----------------------------------------------------------------------------------------------
 	if (true == $kapenta->session->has('c_sessionid') and '' !== $kapenta->session->get('c_sessionid')) {
 		//signed in already, continue below
-//		echo "We are logged in with KhanLite already!<br/>\n";
+		//echo "We are logged in with KhanLite already!<br/>\n";
 	} else {
-//		echo "We are not logged in with KhanLite!<br/>\n";
+		echo "We are not logged in with KhanLite!<br/>\n";
 		createAndLoginKhanLite();
 	} 
 
@@ -35,7 +35,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	remove internal KA Lite links so that we can control what functionality of KA Lite is called from Awarenet
 	//----------------------------------------------------------------------------------------------
-	$replaced = removeLinksFromKhanLitePage($raw);
+
+    $replaced = trimKAPage($raw);
+	$replaced = removeLinksFromKhanLitePage($replaced);
 
 	//----------------------------------------------------------------------------------------------
 	//	Render KA Lite sub page

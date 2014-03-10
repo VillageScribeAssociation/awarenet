@@ -20,12 +20,16 @@ function createAndLoginKhanLite() {
     $dbh = connectToKhanLiteDB();
 	
 	if (NULL !== $dbh) {
+        $kapenta->session->msgAdmin('Logging into KA Lite as ' . $kapenta->user->username, 'info');
 		$username = $kapenta->user->username;
 		$query = "SELECT * FROM securesync_facilityuser WHERE username=\"".$username."\"";
 		$sth = prepareSQLStatement($dbh, $query);
 		executeSQLStatement($sth);
 		if (FALSE === $sth->fetch()) {
-			echo "no result\n";
+			echo "no user for: " . $kapenta->user->username . "\n";
+
+            $kapenta->session->msgAdmin('Creating KA Lite account for ' . $kapenta->user->username, 'info');
+
 			//----------------------------------------------------------------------------------------------
 			//	Check if awarenet user exists in khanlite database
 			//----------------------------------------------------------------------------------------------	
@@ -62,7 +66,7 @@ function createAndLoginKhanLite() {
  		loginToKhanLite('', '');
 
 
-   	} else {
+   	} else {        
    		echo "no connection to database<br/>";
    	}	
 }
@@ -80,6 +84,26 @@ function changeLocalLinksFromKhanLitePage($pageStr) {
 	$replaced = str_replace("/discovery-lab", "/lessons/discoverylabkhan", $replaced);
 	$replaced = str_replace("/exercisedashboard", "/lessons/exercisekhan", $replaced);
 	return $replaced;
+}
+
+//--------------------------------------------------------------------------------------------------
+//	Remove KA page frame to allow this document to be added to our frame
+//--------------------------------------------------------------------------------------------------
+//arg: pageStr - html page returned from a request to KA Lite [string]
+//returns: the content of the passed page [string]
+
+
+function trimKAPage($html) {
+
+    $html = str_replace('<!DOCTYPE HTML>', '', $html);
+    $html = str_replace('<html>', '', $html);
+    $html = str_replace('<head>', '', $html);
+    $html = str_replace('</head>', '', $html);
+    $html = str_replace('<body class="light ">', '', $html);
+    $html = str_replace('</body>', '', $html);
+    $html = str_replace('</html>', '', $html);
+
+    return $html;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -146,8 +170,14 @@ function createKhanLiteAccount($type) {
 	//	add awarenet user to khanlite
 	//--------------------------------------------------------------------------------------------------
 	$id = $kapenta->session->get('c_sessionid');
-	$reply = $kapenta->utils->curlGet($kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', '', 
-			false, 'sessionid='.$id);
+
+	$reply = $kapenta->utils->curlGet(
+        $kapenta->registry->get('kalite.installation').'/securesync/add'.$type.'/', 
+        '', 
+	    false, 
+        'sessionid=' . $id
+    );
+
 	$start = strpos($reply, "name='csrfmiddlewaretoken' value='") + 34;
 	$end = strpos($reply, "'", $start);
 	$csrftoken = substr($reply, $start, $end - $start);
@@ -191,22 +221,43 @@ function loginToKhanLite($username, $password) {
 	//--------------------------------------------------------------------------------------------------
 	$kalite = $kapenta->registry->get('kalite.installation');
 	$reply = $kapenta->utils->curlGet($kalite.'/securesync/login/', '', true, '');
+
+    //echo "<textarea rows='10' style='width: 100%;'>$reply</textarea><br/>\n";
+
 	$start = strpos($reply, 'Set-Cookie:  csrftoken=') + 23;
 	$end = strpos($reply, '; expires=', $start);
 	$csrftoken = substr($reply, $start, $end - $start);
+
+    //echo "CSRF token: $csrftoken<br/>";
+
 	$kapenta->session->set('c_csrftoken', $csrftoken);
 	//--------------------------------------------------------------------------------------------------
 	//	extract facility id from page
 	//--------------------------------------------------------------------------------------------------
-	$index = strpos($reply, '<select name="facility" id="id_facility">');
-	if (FALSE !== $index) {
-		//--------------------------------------------------------------------------------------------------
-		//	set up arguments for POST/login
-		//--------------------------------------------------------------------------------------------------
+    $facility = '';
+    $marker = '<select name="facility" id="id_facility">';
+
+    if (FALSE !== strpos($reply, $marker)) {
+    	$index = strpos($reply, $marker);
 		$index = strpos($reply, '<option value="">---------</option', $index) + 7;
 		$start = strpos($reply, 'option value="', $index) + 14;
 		$end = strpos($reply, '" selected="selected">', $start);
 		$facility = substr($reply, $start, $end - $start);
+
+    }
+
+    $marker = '<input type="hidden" name="facility" value="';
+    if (FALSE !== strpos($reply, $marker)) {
+        $start = strpos($reply, $marker) + strlen($marker);
+        $end = strpos($reply, '"', $start + 1);
+        $facility = substr($reply, $start, $end - $start);
+        $kapenta->session->mshAdmin( "Found facility ID: $facility<br/>\n", 'ok' );
+    }
+
+	if ('' !== $facility) {
+		//--------------------------------------------------------------------------------------------------
+		//	set up arguments for POST/login
+		//--------------------------------------------------------------------------------------------------
 		$user = $username;
 		if ('' === $user) {
 			$user = $kapenta->user->username;
@@ -228,11 +279,16 @@ function loginToKhanLite($username, $password) {
 		//--------------------------------------------------------------------------------------------------
 		$reply = $kapenta->utils->curlPost($kalite.'/securesync/login/', $args, true, 'csrftoken='.$csrftoken, 
 			array('X-CSRFToken: '.$csrftoken));			
+
+        //echo "Login response:<br/>\n<textarea rows='10' style='width:100%;'>$reply</textarea><br/>\n";
+
 		$start = strpos($reply, 'Set-Cookie:  sessionid=') + 23;
 		$end = strpos($reply, '; expires=', $start);
 		$sessionid = substr($reply, $start, $end - $start);
 		$kapenta->session->set('c_sessionid', $sessionid);
-	}
+	} else {
+        $kapenta->session->msgAdmin('KALite facility not set or not readable.', 'bad');
+    }
 }
 
 //--------------------------------------------------------------------------------------------------

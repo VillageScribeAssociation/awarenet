@@ -831,8 +831,6 @@ class KPackage {
 		);
 
 		$result = $kapenta->utils->curlPost($this->source . 'updatepackage/', $postvars);
-		echo 'Posting to: ' . $this->source . 'updatepackage/<br/>';
-		echo 'Registry returns: ' . $utils->cleanTitle($result) . "<br/>\n";
 		
 		if ('<ok/>' == $result) { 
 			echo "Package setting  updated successfully.<br/>"; flush();

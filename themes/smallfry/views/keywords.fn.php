@@ -18,7 +18,7 @@ function theme_keywords($args) {
 		//-----------------------------------------------------------------------------------------
 
 		$tags = array();
-		$files = $kapenta->fileSearch('themes/smallfry/keywords/', 'html');
+		$files = $kapenta->fs->search('themes/smallfry/keywords/', 'html');
 
 		foreach($files as $file) {
 			$parts = explode(".", basename($file));

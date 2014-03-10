@@ -61,7 +61,7 @@ class KPage {
 	//returns: true on success, false on failure [bool]
 
 	function load($fileName) {
-		global $db, $utils, $kapenta, $session;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	check for a page matching alternative device profiles
@@ -89,8 +89,8 @@ class KPage {
 		$this->data = $xmlDoc->getChildren2d();
 
 		foreach($this->data as $key => $val) {
-			$val = $db->removeMarkup($val); 
-			$val = $utils->removeHtmlEntities($val);
+			$val = $kapenta->db->removeMarkup($val); 
+			$val = $kapenta->utils->removeHtmlEntities($val);
 
 			switch($key) {
 				case 'template':	$this->template = $val;		break;
@@ -172,7 +172,7 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function render() {
-		global $kapenta, $session, $theme, $request, $user;
+		global $kapenta, $request;
 
 		//------------------------------------------------------------------------------------------
 		//	page / environment variables to be replaced in template
@@ -183,10 +183,10 @@ class KPage {
 			'%%moduleName%%' => $request['module'],
 			'%%defaultTheme%%' => $kapenta->defaultTheme,
 			'%%pageInstanceUID%%' => $this->UID,
-			'%%jsUserUID%%' => $user->UID,
-			'%%jsUserName%%' => $user->getName(),
+			'%%jsUserUID%%' => $kapenta->user->UID,
+			'%%jsUserName%%' => $kapenta->user->getName(),
 			'%%jsTheme%%' => $kapenta->defaultTheme,
-			'%%jsMobile%%' => $session->get('mobile') ? 'true' : 'false',
+			'%%jsMobile%%' => $kapenta->session->get('mobile') ? 'true' : 'false',
 			'%%title%%' => $this->title
 		);
 
@@ -198,7 +198,7 @@ class KPage {
 		//	load the template
 		//------------------------------------------------------------------------------------------
 
-		if ('desktop' !== $session->get('deviceprofile')) {
+		if ('desktop' !== $kapenta->session->get('deviceprofile')) {
 			$this->template = str_replace('twocol-rightnav', 'mobile', $this->template);
 			$this->template = str_replace('twocol-leftnav', 'mobile', $this->template);
 			$this->template = str_replace('onecol', 'mobile', $this->template);
@@ -206,12 +206,12 @@ class KPage {
 			//echo "<textarea rows='2' cols='80'>not mobile</textarea><br/>\n";
 		}
 
-		$templateFile = 'themes/' . $theme->name . '/templates/' . $this->template;
+		$templateFile = 'themes/' . $kapenta->theme->name . '/templates/' . $this->template;
 
 		//echo "<h2>" . $this->template . "</h2>\n";
 
-		if (false == $kapenta->fileExists($templateFile)) {
-			$templateFile = 'themes/' . $theme->name . '/' . $this->template;
+		if (false == $kapenta->fs->exists($templateFile)) {
+			$templateFile = 'themes/' . $kapenta->theme->name . '/' . $this->template;
 		}
 
 		$template = $kapenta->fs->get($templateFile, false, true);
@@ -227,7 +227,7 @@ class KPage {
 		//	execute blocks in template and page sections
 		//------------------------------------------------------------------------------------------
 
-		if ('desktop' == $session->get('deviceprofile')) {
+		if ('desktop' == $kapenta->session->get('deviceprofile')) {
 
 			$template = str_replace(
 				array(
@@ -241,13 +241,13 @@ class KPage {
 					'%%debug%%',
 				),
 				array(
-					$theme->expandBlocks($this->content, 'content'),
-					$theme->expandBlocks($this->nav1, 'nav1'),
-					$theme->expandBlocks($this->nav2, 'nav2'),
-					$theme->expandBlocks($this->menu1, 'menu1'),
-					$theme->expandBlocks($this->menu2, 'menu2'),
-					$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
-					$session->messagesToHtml(),
+					$kapenta->theme->expandBlocks($this->content, 'content'),
+					$kapenta->theme->expandBlocks($this->nav1, 'nav1'),
+					$kapenta->theme->expandBlocks($this->nav2, 'nav2'),
+					$kapenta->theme->expandBlocks($this->menu1, 'menu1'),
+					$kapenta->theme->expandBlocks($this->menu2, 'menu2'),
+					$kapenta->theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
+					$kapenta->session->messagesToHtml(),
 					$this->debugToHtml()
 				),
 				$template
@@ -267,13 +267,13 @@ class KPage {
 					'%%debug%%',
 				),
 				array(
-					$theme->expandBlocks($this->content, 'mobile'),
-					$theme->expandBlocks($this->nav1, 'nav1'),
-					$theme->expandBlocks($this->nav2, 'nav2'),
-					$theme->expandBlocks($this->menu1, 'menu1'),
-					$theme->expandBlocks($this->menu2, 'menu2'),
-					$theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
-					$session->messagesToHtml(),
+					$kapenta->theme->expandBlocks($this->content, 'mobile'),
+					$kapenta->theme->expandBlocks($this->nav1, 'nav1'),
+					$kapenta->theme->expandBlocks($this->nav2, 'nav2'),
+					$kapenta->theme->expandBlocks($this->menu1, 'menu1'),
+					$kapenta->theme->expandBlocks($this->menu2, 'menu2'),
+					$kapenta->theme->expandBlocks($this->breadcrumb, 'breadcrumb'),
+					$kapenta->session->messagesToHtml(),
 					$this->debugToHtml()
 				),
 				$template
@@ -281,10 +281,10 @@ class KPage {
 
 		}
 
-		$session->clearMessages();
+		$kapenta->session->clearMessages();
 
 		$template = str_replace(array_keys($env), array_values($env), $template);
-		$template = $theme->expandBlocks($template, '');
+		$template = $kapenta->theme->expandBlocks($template, '');
 
 		//------------------------------------------------------------------------------------------
 		//	update jsinit, script and head (may have been modified by expanding blocks)
@@ -395,7 +395,7 @@ class KPage {
 	//arg: URI - relative to serverPath [string]	
 
 	function do301($URI) {
-		global $kapenta, $session;
+		global $kapenta;
 		$URI = $kapenta->serverPath . $URI;	
 		$URI = str_replace($kapenta->serverPath . '/', $kapenta->serverPath, $URI);
  		header( "HTTP/1.1 301 Moved Permanently" );
@@ -409,14 +409,14 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function do403($message = '', $iframe = false) {
-		global $user;
+		global $kapenta;
 		header( "HTTP/1.1 403 Forbidden" );
 
 		$fileName = 'modules/home/actions/403.page.php';
 		if (true == $iframe) { 	$fileName = 'modules/home/actions/403if.page.php'; }
 		if ('' != $message) { $message = "<span class='ajaxerror'>$message</span>"; }
 
-		if ('public' == $user->role) {
+		if ('public' == $kapenta->user->role) {
 			$message = ''
 			 . "<h1>Your session has expired.  Please log in again.</h1>\n"
 			 . $message . "\n"
@@ -451,7 +451,7 @@ class KPage {
 	//arg: URI - location relative to serverPath;
 
 	function do302($URI) {
-		global $kapenta, $session;
+		global $kapenta;
 		$URI = $kapenta->serverPath . $URI;
 		$URI = str_replace($kapenta->serverPath . '/', $kapenta->serverPath, $URI);
  		header( "HTTP/1.1 302 Moved Temporarily" );
@@ -467,7 +467,7 @@ class KPage {
 	//opt: iframe - set to true to use iframe version [bool]
 
 	function do404($message = '', $iframe = false) {
-		global $user;
+		global $kapenta;
  		header( "HTTP/1.1 404 Not Found" );
 
 		// choose which page template to use
@@ -482,7 +482,7 @@ class KPage {
 			$message = "<span class='ajaxerror'>$message</span>";
 		}
 
-		if ('public' == $user->role) {
+		if ('public' == $kapenta->user->role) {
 			$message = ''
 			 . "<h1>Oops, something went wrong</h1>"
 			 . "<p>Please reload the page and try again.  If you keep experiencing this problem "
@@ -511,7 +511,6 @@ class KPage {
 	//opt: msg - an error message or response code [string]
 
 	function doXmlError($msg = '') {
-		global $session;
 	 	header( "HTTP/1.1 404 Not Found" );
 		echo "<?xml version=\"1.0\"?>\n";
 		echo "<error>$msg</error>\n";
@@ -554,10 +553,10 @@ class KPage {
 		global $db;
 
 		$conditions = array();
-		$conditions[] = "module='" . $db->addMarkup($module) . "'";
-		$conditions[] = "channel='" . $db->addMarkup($channel) . "'";
+		$conditions[] = "module='" . $kapenta->db->addMarkup($module) . "'";
+		$conditions[] = "channel='" . $kapenta->db->addMarkup($channel) . "'";
 
-		$range = $db->loadRange('live_trigger', '*', $conditions);
+		$range = $kapennta->db->loadRange('live_trigger', '*', $conditions);
 		foreach($range as $row) {
 			$model = new Live_Trigger();
 			$model->loadArray($row);
@@ -595,12 +594,12 @@ class KPage {
 	//----------------------------------------------------------------------------------------------
 
 	function debugToHtml() {
-		global $kapenta, $user, $role, $theme, $page;
+		global $kapenta, $role, $page;
 
 		if (false == $this->logDebug) { return ''; }
 
 		$report = '';
-		$block = $theme->loadBlock('themes/' . $kapenta->defaultTheme . '/views/debug.block.php');
+		$block = $kapenta->theme->loadBlock('themes/' . $kapenta->defaultTheme . '/views/debug.block.php');
 
 		//------------------------------------------------------------------------------------------		
 		//	add basic environment stuff
@@ -674,7 +673,7 @@ class KPage {
 		//	substitute into block
 		//------------------------------------------------------------------------------------------
 		$report = str_replace('%%report%%', $report, $block);
-		$report = $theme->expandBlocks($report, '');
+		$report = $kapenta->theme->expandBlocks($report, '');
 		return $report;
 	}
 

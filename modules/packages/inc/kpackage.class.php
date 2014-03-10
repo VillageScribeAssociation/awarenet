@@ -833,7 +833,7 @@ class KPackage {
 		$result = $kapenta->utils->curlPost($this->source . 'updatepackage/', $postvars);
 		
 		if ('<ok/>' == $result) { 
-			echo "Package setting  updated successfully.<br/>"; flush();
+			//echo "Package setting  updated successfully.<br/>"; flush();
 			return true; 
 		} else { 
 			$msg = "<textarea rows='10' cols='40' style='width: 100%;'>$result</textarea>";

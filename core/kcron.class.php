@@ -55,10 +55,10 @@ class KCron {
 	//----------------------------------------------------------------------------------------------
 
 	function save() {
-		global $kapenta, $registry, $db;
-		$registry->set('cron.tenmins', $this->tenmins);
-		$registry->set('cron.hourly', $this->hourly);
-		$registry->set('cron.daily', $this->daily);
+		global $kapenta;
+		$kapenta->registry->set('cron.tenmins', $this->tenmins);
+		$kapenta->registry->set('cron.hourly', $this->hourly);
+		$kapenta->registry->set('cron.daily', $this->daily);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -68,18 +68,16 @@ class KCron {
 
 	function run() {
 		global $kapenta;
-		global $db;
-		global $session;
 
-		$report = "<h1>" . $db->datetime() . "</h1>\n";		//%	return value [string]
+		$report = "<h1>" . $kapenta->db->datetime() . "</h1>\n";		//%	return value [string]
 		$now = $kapenta->time();							//%	timestamp when script started [int]
 
-		$msg = "running cron: $now #" . $db->datetime($now) . "<br/>\n"
-			 . "tenmins: " . $this->tenmins . " #" . $db->datetime($this->tenmins) . "<br/>\n"
-			 . "hourly: " . $this->hourly . " #" . $db->datetime($this->hourly) . "<br/>\n"
-			 . "daily: " . $this->daily . " #" . $db->datetime($this->daily) . "<br/>\n";
+		$msg = "running cron: $now #" . $kapenta->db->datetime($now) . "<br/>\n"
+			 . "tenmins: " . $this->tenmins . " #" . $kapenta->db->datetime($this->tenmins) . "<br/>\n"
+			 . "hourly: " . $this->hourly . " #" . $kapenta->db->datetime($this->hourly) . "<br/>\n"
+			 . "daily: " . $this->daily . " #" . $kapenta->db->datetime($this->daily) . "<br/>\n";
 
-		$session->msgAdmin($msg);
+		$kapenta->session->msgAdmin($msg);
 
 		if (($now - $this->tenmins) > 600) { 
 			$report .= $this->runTasks('tenmins'); 
@@ -111,12 +109,12 @@ class KCron {
 	//arg: interval - name of interval (tenmins|hourly|weekly) [string]
 
 	function runTasks($interval) {
-		global $kapenta, $db, $user, $theme, $page, $session, $cron;
+		global $kapenta, $db, $user, $theme, $page, $cron;
 		$report = '';
 
 		echo "Running task set.. $interval<br/>\n"; flush();
 
-		$session->msgAdmin('running task set: ' . $interval);
+		$kapenta->session->msgAdmin('running task set: ' . $interval);
 
 		$mods = $kapenta->listModules();
 		foreach($mods as $modName) {
@@ -129,7 +127,7 @@ class KCron {
 				require_once($kapenta->installPath . $incFile);
 				$fnName = $modName . '_cron_' . $interval;
 				if (true == function_exists($fnName)) { 
-					$session->msgAdmin('running task set: ' . $incFile . ' (' . $interval . ')');
+					$kapenta->session->msgAdmin('running task set: ' . $incFile . ' (' . $interval . ')');
 					$report .= $fnName();
 					if ('admin' == $user->role) {
 						$cron->log($report, 'black');

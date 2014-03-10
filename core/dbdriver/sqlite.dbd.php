@@ -80,7 +80,9 @@ class KDBDriver_SQLite {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $kapenta, $session, $page, $registry;
+		global $kapenta;
+
+        $inSession = property_exists($kapenta, 'session');
 
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
@@ -92,8 +94,8 @@ class KDBDriver_SQLite {
 		$this->count++;								//	increment query count for this page view
 		$startTime = microtime(true);				//	record start time
 
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('query', $query);
+		if ((true == property_exists($kapenta, 'page')) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('query', $query);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -110,7 +112,7 @@ class KDBDriver_SQLite {
 			} catch(PDOException  $e) {
 
 				$msg = "SQLite PDO Connection failed: " . $e->getMessage();
-				if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+				if (true == $inSession) { $kapenta->session->msgAdmin($msg, 'bad'); }
 				else { echo $msg . "<br/>\n"; }
 				return false;
 
@@ -125,7 +127,7 @@ class KDBDriver_SQLite {
 		try { $sth = $this->dbh->prepare($query); }
 		catch(PDOException $e) {
 			$msg = "Failed to prepare SQL Statement: $query<br/>\n" . $e->getMessage();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == $inSession) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			else { echo $msg . "<br/>\n"; }
 			$this->lasterr = $msg;
 			return false;
@@ -137,7 +139,7 @@ class KDBDriver_SQLite {
 		try { $check = $sth->execute(); }
 		catch(PDOException $e) {
 			$msg = "Failed to execute SQL Statement: $query<br/>\n" . $e->getMessage();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == $inSession) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			else { echo $msg . "<br/>\n"; }
 			$this->lasterr = $msg;
 			return false;
@@ -145,7 +147,7 @@ class KDBDriver_SQLite {
 
 		if (false === $check) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == $inSession) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			$this->lasterr = $msg;
 			return false;
 		}
@@ -211,16 +213,20 @@ class KDBDriver_SQLite {
 	//returns: number of rows or false on failure [int] [bool]
 
 	function numRows($handle) {
-		global $session;
+		global $kapenta;
 
-		$session->msgAdmin("DEPRECATED: \$db->numRows() does not work on SQLite");
+        $inSession = property_exists($kapenta, 'session');
+
+        if (true == $inSession) {
+    		$kapenta->session->msgAdmin("DEPRECATED: \$db->numRows() does not work on SQLite");
+        }
 
 		if (false === $handle) { return false; }
 		$num = 0;
 		try { $num = $handle->rowCount(); }
 		catch (PDOException $e) {
 			$msg = "Failed to count rows in query:<br/>\n" . $e->getMessage();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == $inSession) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			else { echo $msg . "<br/>\n"; }
 		}
 		return $num;
@@ -253,7 +259,6 @@ class KDBDriver_SQLite {
 
 	function load($UID, $dbSchema) {
 		global $kapenta;
-		global $page;
 
 		$model = strtolower($dbSchema['model']);
 		if (false == $this->tableExists($model)) { return false; }
@@ -262,14 +267,16 @@ class KDBDriver_SQLite {
 		//	check the cache for this object
 		//------------------------------------------------------------------------------------------
 		$cacheKey = $model . '::' . $UID;
-		if (true == $kapenta->cacheHas($cacheKey)) {
-			if ((true == isset($page)) && (true == $page->logDebug)) {
-				$page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
+        $inPage = property_exists($kapenta, 'page');		
+
+        if (true == $kapenta->cacheHas($cacheKey)) {
+			if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+				$kapenta->page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
 			}
 			return unserialize($kapenta->cacheGet($cacheKey));
 		} else {
-			if ((true == isset($page)) && (true == $page->logDebug)) {
-				$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
+			if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+				$kapenta->page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
 			}
 		}
 
@@ -295,8 +302,8 @@ class KDBDriver_SQLite {
 			return $objAry;
 		}
 
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', "no such object: $model::$UID");
+		if ((true == property_exists($kapenta, 'page')) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', "no such object: $model::$UID");
 		}
 		return false;
 	}
@@ -310,10 +317,10 @@ class KDBDriver_SQLite {
 
 	function loadAlias($raUID, $dbSchema) {
 		global $kapenta;
-		global $page;
-		global $session;
 
 		$model = strtolower($dbSchema['model']);
+
+        $inPage = property_exists($kapenta, 'page');
 
 		if (false == $this->tableExists($model)) { return false; }
 
@@ -323,8 +330,8 @@ class KDBDriver_SQLite {
 			//--------------------------------------------------------------------------------------
 			$cacheKey = $model . '::' . $raUID;
 			if (true == $kapenta->cacheHas($cacheKey)) { 
-				if ((true == isset($page)) && (true == $page->logDebug)) {
-					$page->logDebugItem('dbLoad', "cache hit: $cacheKey (loadAlias)");
+				if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+					$kapenta->page->logDebugItem('dbLoad', "cache hit: $cacheKey (loadAlias)");
 				}
 				$objStr = $kapenta->cacheGet($cacheKey);
 				$objAry = unserialize($objStr);
@@ -337,8 +344,8 @@ class KDBDriver_SQLite {
 			$aliasKey = 'alias::' . $model . '::' . strtolower($raUID);
 			if (true == $kapenta->cacheHas($aliasKey)) {
 				$UID = $kapenta->cacheGet($aliasKey);
-				if ((true == isset($page)) && (true == $page->logDebug)) {
-					$page->logDebugItem('dbLoad', "alias hit: $model::$raUID => $UID");
+				if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+					$kapenta->page->logDebugItem('dbLoad', "alias hit: $model::$raUID => $UID");
 				}
 				return $this->load($UID, $dbSchema);
 			}
@@ -360,8 +367,8 @@ class KDBDriver_SQLite {
 		//------------------------------------------------------------------------------------------
 		//	not found in cache, try load directly
 		//------------------------------------------------------------------------------------------
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $raUID . ' (loadAlias)');
+		if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $raUID . ' (loadAlias)');
 		}
 
 		if (true == $this->objectExists($model, $raUID)) { return $this->load($raUID, $dbSchema); }
@@ -442,8 +449,8 @@ class KDBDriver_SQLite {
 		//------------------------------------------------------------------------------------------
 		//	out of options
 		//------------------------------------------------------------------------------------------
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', 'no such object: ' . $model . '::' . $raUID);
+		if ((true == $inPage) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', 'no such object: ' . $model . '::' . $raUID);
 		}
 
 		return false;
@@ -460,9 +467,7 @@ class KDBDriver_SQLite {
 	//returns: true on success, false on failure [bool]
 
 	function save($data, $dbSchema, $setdefaults = true, $broadcast = true, $revision = true) {
-		global $user;
 		global $revisions;	
-		global $session;
 		global $kapenta;
 
 		$changes = array();								//%	fields which have changed [dict]
@@ -502,9 +507,9 @@ class KDBDriver_SQLite {
 		//------------------------------------------------------------------------------------------
 		//	set editedBy, editedOn if present in schema
 		//------------------------------------------------------------------------------------------
-		if ((true == $setdefaults) && (true == isset($user))) {
+		if ((true == $setdefaults) && (true == property_exists($kapenta, 'user'))) {
 			if (true == array_key_exists('editedBy', $dbSchema['fields'])) {
-				$data['editedBy'] = $user->UID;
+				$data['editedBy'] = $kapenta->user->UID;
 			}
 			if (true == array_key_exists('editedOn', $dbSchema['fields'])) {
 				$data['editedOn'] = $this->datetime();
@@ -599,7 +604,7 @@ class KDBDriver_SQLite {
 
 			if (false === $result) {
 				$msg = 'could not update record: ' . $dbSchema['model'] . " " . $data['UID'];
-				$session->msgAdmin($msg, 'bad');
+				$kapenta->session->msgAdmin($msg, 'bad');
 				$this->lasterr = "Update operation failed:<br/>\n" . $this->lasterr;
 				return false;
 			}
@@ -631,7 +636,7 @@ class KDBDriver_SQLite {
 	//returns: true on success, false on failure [bool]
 
 	function delete($UID, $dbSchema) {
-		global $kapenta, $revisions, $session;
+		global $kapenta, $revisions;
 
 		$this->lasterr = '';								//	clear any previous error message
 
@@ -713,8 +718,8 @@ class KDBDriver_SQLite {
 	//: this is used where an object should change only locally and changes not sent to peer servers
 
 	function updateQuiet($model, $UID, $field, $value) {	
-		global $session;
-		$session->msg("DEPRECATED: db::updateQuiet($model, $UID, $field, $value)", 'warn');
+		global $kapenta;
+		$kapenta->session->msg("DEPRECATED: db::updateQuiet($model, $UID, $field, $value)", 'warn');
 		$model = strtolower($model);									// temporary
 		if (false == $this->tableExists($model)) { return false; }
 
@@ -917,7 +922,7 @@ class KDBDriver_SQLite {
 	//returns: copy of schema with magic fields filled in [array]
 
 	function makeBlank($dbSchema) {
-		global $kapenta, $user, $session;
+		global $kapenta;
 
 		$blank = array();
 		foreach($dbSchema['fields'] as $fieldName => $fieldType) {
@@ -944,9 +949,9 @@ class KDBDriver_SQLite {
 			if ('DATETIME' == $fieldType) {	$blank[$fieldName] = $this->datetime(); }
 			if ('TINYINT' == $fieldType) { $blank[$fieldName] = '0'; }
 
-			if (true == isset($user)) {
-				if ('createdBy' == $fieldName) { $blank[$fieldName] = $user->UID; }
-				if ('editedBy' == $fieldName) { $blank[$fieldName] = $user->UID; }
+			if (true == property_exists($kapenta, 'user')) {
+				if ('createdBy' == $fieldName) { $blank[$fieldName] = $kapenta->user->UID; }
+				if ('editedBy' == $fieldName) { $blank[$fieldName] = $kkapenta->user->UID; }
 			}		
 
 			if ('editedOn' == $fieldName) { $blank[$fieldName] = $this->datetime(); }

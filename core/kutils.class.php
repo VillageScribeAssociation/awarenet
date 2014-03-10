@@ -10,7 +10,7 @@ class KUtils {
 	//	properties
 	//----------------------------------------------------------------------------------------------
 
-	var $maxDeprecatedNotices = 1024;			//%	prevent excessive memory use [int]
+	var $maxDeprecatedNotices = 128;			//%	prevent excessive memory use [int]
 
 	//----------------------------------------------------------------------------------------------
 	//.	make a random number, compatability with older PHP versions
@@ -445,12 +445,14 @@ class KUtils {
 	//----------------------------------------------------------------------------------------------
 
 	function noteDeprecated($component, $method) {
-		global $session;
+		global $kapenta;
 
 		$this->maxDeprecatedNotices--;
 		if (0 <= $this->maxDeprecatedNotices) { return; }
 
-		$session->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
+        if ('admin' !== $kapenta->user->role) { return; }
+
+		$kapenta->session  ->msgAdmin('Deprecated: ' . $component . '::' . $method, 'bad');
 		//echo 'Deprecated: ' . $component . '::' . $method . "<br/>\n";
 		//echo "<small>";
 		//debug_print_backtrace();

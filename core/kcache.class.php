@@ -56,14 +56,12 @@ class KCache {
 
 	function get($area, $tag, $returnUID = false) {
 		global $kapenta;
-		global $user;
-		global $db;
 
 		//------------------------------------------------------------------------------------------
 		//	try memcached
 		//------------------------------------------------------------------------------------------
 
-		$cacheKey = 'dbcache::' . $area . '::' . $user->role . '::' . $tag;
+		$cacheKey = 'dbcache::' . $area . '::' . $kapenta->user->role . '::' . $tag;
 		if ((true == $kapenta->mcEnabled) && (true == $kapenta->cacheHas($cacheKey))) {
 			return $kapenta->cacheGet($cacheKey);
 		}
@@ -73,12 +71,12 @@ class KCache {
 		//------------------------------------------------------------------------------------------
 
 		$conditions = array(
-			"tag='" . $db->addMarkup($tag) . "'",
-			"area='" . $db->addMarkup($area) . "'",
-			"role='" . $db->addMarkup($user->role) . "'"
+			"tag='" . $kapenta->db->addMarkup($tag) . "'",
+			"area='" . $kapenta->db->addMarkup($area) . "'",
+			"role='" . $kapenta->db->addMarkup($kapenta->user->role) . "'"
 		);
 
-		$range = $db->loadRange('cache_entry', '*', $conditions);
+		$range = $kapenta->db->loadRange('cache_entry', '*', $conditions);
 
 		if (0 == count($range)) { return ''; }
 
@@ -101,8 +99,6 @@ class KCache {
 
 	function set($channel, $area, $tag, $content) {
 		global $kapenta;
-		global $user;
-		global $session;
 
 		//------------------------------------------------------------------------------------------
 		//	check for existing block
@@ -116,7 +112,7 @@ class KCache {
 
 		$model = new Cache_Entry($extantUID);
 		$model->tag = $tag;
-		$model->role = $user->role;
+		$model->role = $kapenta->user->role;
 		$model->area = $area;
 		$model->content = $content;
 		$model->channel = $channel;
@@ -127,7 +123,7 @@ class KCache {
 			//------------------------------------------------------------------------------------------
 			//	reset memcached
 			//------------------------------------------------------------------------------------------
-			$cacheKey = 'dbcache::' . $area . '::' . $user->role . '::' . $tag;
+			$cacheKey = 'dbcache::' . $area . '::' . $kapenta->user->role . '::' . $tag;
 
 			if (true == $kapenta->mcEnabled) {
 				$kapenta->cacheSet($cacheKey, $content, $this->mcAge);
@@ -136,7 +132,7 @@ class KCache {
 			return true;
 		}
 
-		$session->msgAdmin("Could not cache block tag: $tag<br/>\n$report", 'bad');
+		$kapenta->session->msgAdmin("Could not cache block tag: $tag<br/>\n$report", 'bad');
 		return false;
 	}
 
@@ -147,12 +143,12 @@ class KCache {
 	//returns: true on success, false on failure [bool]
 
 	function clear($channel) {
-		global $db;
+		global $kapenta;
 
 		$allOk = true;
 
-		$conditions = array("channel='" . $db->addMarkup($channel) . "'");
-		$range = $db->loadRange('cache_entry', '*', $conditions);
+		$conditions = array("channel='" . $kapenta->db->addMarkup($channel) . "'");
+		$range = $kapenta->db->loadRange('cache_entry', '*', $conditions);
 
 		foreach($range as $item) {
 			$model = new Cache_Entry($item['UID']);
@@ -168,11 +164,10 @@ class KCache {
 
 	function clearAll() {
 		global $kapenta;
-		global $db;
 
 		$kapenta->cacheFlush();
 		$sql = "delete from cache_entry";
-		$db->query($sql);
+		$kapenta->db->query($sql);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -184,7 +179,6 @@ class KCache {
 
 	function renew($UID, $editedOn) {
 		global $kapenta;
-		global $db;
 
 		$editTime = $kapenta->strtotime($editedOn);
 		$now = $kapenta->time();
@@ -195,10 +189,10 @@ class KCache {
 
 			$sql = ''
 			 . "update cache_entry"
-			 . " set editedOn='" . $db->datetime() . "'"
-			 . " where UID='" . $db->addMarkup($UID) . "'";
+			 . " set editedOn='" . $kapenta->db->datetime() . "'"
+			 . " where UID='" . $kapenta->db->addMarkup($UID) . "'";
 
-			$check = $db->query($sql);
+			$check = $kapenta->db->query($sql);
 			return true;
 		}
 

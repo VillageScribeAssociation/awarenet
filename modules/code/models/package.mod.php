@@ -439,7 +439,8 @@ class Code_Package {
 
 		$range = $db->loadRange('code_file', '*', $conditions);
 		if (0 == count($range)) { 
-			$session->msg("Package root folder does not exist, creating...");
+            
+			$session->msg("package.mod: Package root folder does not exist, creating... " . $this->name);
 			return $this->createRootFolder(); 
 		}
 		

@@ -66,12 +66,12 @@ class KNotifications {
 	//returns: number of notifications about this object [string]
 
 	function count($refModule, $refModel, $refUID) {
-		global $db;
+		global $kapenta;
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$count = $db->countRange('notifications_notification', $conditions);
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$count = $kapenta->db->countRange('notifications_notification', $conditions);
 		return $count;
 	}
 
@@ -88,27 +88,25 @@ class KNotifications {
 
 	function existsRecent($refModule, $refModel, $refUID, $userUID, $refEvent, $maxAge) {
 		global $kapenta;
-		global $db;
-		global $session;
 
 		//------------------------------------------------------------------------------------------
 		//	load most recent notification abot this object, event (optional) and user (optional)
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
 
 		if (('*' != $refEvent) && ('' != $refEvent)) {
-			$conditions[] = "refEvent='" . $db->addMarkup($refEvent) . "'";
+			$conditions[] = "refEvent='" . $kapenta->db->addMarkup($refEvent) . "'";
 		}
 
 		if (('*' != $userUID) && ('' != $userUID)) {
-			$conditions[] = "createdBy='" . $db->addMarkup($userUID) . "'";
+			$conditions[] = "createdBy='" . $kapenta->db->addMarkup($userUID) . "'";
 		} 
 
 		$by = "createdOn DESC";
-		$range = $db->loadRange('notifications_notification', '*', $conditions, $by, '10');
+		$range = $kapenta->db->loadRange('notifications_notification', '*', $conditions, $by, '10');
 
 		//------------------------------------------------------------------------------------------
 		//	if such a notification exists, see if it is younger than maxAge
@@ -130,7 +128,7 @@ class KNotifications {
 	//returns: true on success, false on failure [bool]
 
 	function annotate($notificationUID, $annotation) {
-		global $db;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	update the notification
@@ -145,8 +143,8 @@ class KNotifications {
 		//	bump to the top of users feeds
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
-		$conditions[] = "notificationUID='" . $db->addMarkup($model->UID) . "'";
-		$range = $db->loadRange('notifications_userindex', '*', $conditions);
+		$conditions[] = "notificationUID='" . $kapenta->db->addMarkup($model->UID) . "'";
+		$range = $kapenta->db->loadRange('notifications_userindex', '*', $conditions);
 
 		foreach($range as $item) {
 			$ui = new Notifications_UserIndex($item['UID']);
@@ -178,16 +176,16 @@ class KNotifications {
 	//returns: true on success, false on failure [bool]
 
 	function addEveryone($notificationUID) {
-		global $db;
+		global $kapenta;
 		$allOk = true;
 
 		$sql = "select UID, role from users_user";
-		$result = $db->query($sql);
+		$result = $kapenta->db->query($sql);
 
-		while($row = $db->fetchAssoc($result)) {
-			$row = $db->rmArray($row);
+		while($row = $kapenta->db->fetchAssoc($result)) {
+			$row = $kapenta->db->rmArray($row);
 			if (('public' != $row['role']) && ('banned' != $row['role'])) {
-				$check = $this->addUser($notificationUID, $db->removeMarkup($row['UID']));
+				$check = $this->addUser($notificationUID, $kapenta->db->removeMarkup($row['UID']));
 				if (false == $check) { $allOk = false; }
 			}
 		}
@@ -202,10 +200,10 @@ class KNotifications {
 	//returns: true on success, false on failure [bool]
 
 	function addAdmins($notificationUID) {
-		global $db;
+		global $kapenta;
 		$allOk = true;		//%	return value [bool]
 
-		$range = $db->loadRange('users_user', '*', array("role='admin' OR role ='teacher'"));
+		$range = $kapenta->db->loadRange('users_user', '*', array("role='admin' OR role ='teacher'"));
 		foreach($range as $row) {
 			if (false == $this->addUser($notificationUID, $row['UID'])) { $allOk = false; }
 		}
@@ -220,9 +218,9 @@ class KNotifications {
 	//arg: schoolUID - UID of a Schools_School object [string]
 	
 	function addSchool($notificationUID, $schoolUID) {
-		global $db;		
-		$conditions = array("school='" . $db->addMarkup($schoolUID) . "'");
-		$range = $db->loadRange('users_user', '*', $conditions);
+		global $kapenta;		
+		$conditions = array("school='" . $kapenta->db->addMarkup($schoolUID) . "'");
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 		foreach ($range as $item) { $this->addUser($notificationUID, $item['UID']); }
 	}
 
@@ -234,13 +232,13 @@ class KNotifications {
 	//arg: grade - a school grade [string]
 
 	function addSchoolGrade($notificationUID, $schoolUID, $grade) {
-		global $db;
+		global $kapenta;
 
 		$conditions = array();
-		$conditions[] = "school='" . $db->addMarkup($schoolUID) . "'";
-		$conditions[] = "grade='" . $db->addMarkup($grade) . "'";
+		$conditions[] = "school='" . $kapenta->db->addMarkup($schoolUID) . "'";
+		$conditions[] = "grade='" . $kapenta->db->addMarkup($grade) . "'";
 
-		$range = $db->loadRange('users_user', '*', $conditions);
+		$range = $kapenta->db->loadRange('users_user', '*', $conditions);
 		foreach ($range as $item) { $this->addUser($notificationUID, $item['UID']); }
 	}
 
@@ -251,12 +249,12 @@ class KNotifications {
 	//arg: schoolUID - UID of a Groups_Group object [string]
 	
 	function addGroup($notificationUID, $groupUID) {
-		global $db;		
+		global $kapenta;		
 
 		$conditions = array();
-		$conditions[] = "groupUID='" . $db->addMarkup($groupUID) . "'";
+		$conditions[] = "groupUID='" . $kapenta->db->addMarkup($groupUID) . "'";
 
-		$range = $db->loadRange('groups_membership', '*', $conditions);
+		$range = $kapenta->db->loadRange('groups_membership', '*', $conditions);
 		foreach ($range as $item) { $this->addUser($notificationUID, $item['userUID']); }
 	}
 
@@ -267,13 +265,13 @@ class KNotifications {
 	//arg: userUID - UID of a Users_User object [string]
 
 	function addFriends($notificationUID, $userUID) {
-		global $db;		
+		global $kapenta;		
 
 		$conditions = array();
-		$conditions[] = "userUID='" . $db->addMarkup($userUID) . "'";
+		$conditions[] = "userUID='" . $kapenta->db->addMarkup($userUID) . "'";
 		$conditions[] = "status='confirmed'";
 
-		$range = $db->loadRange('users_friendship', '*', $conditions);
+		$range = $kapenta->db->loadRange('users_friendship', '*', $conditions);
 
 		foreach ($range as $item) { $this->addUser($notificationUID, $item['friendUID']); }
 	}
@@ -285,17 +283,17 @@ class KNotifications {
 	//arg: projectUID - UID of a Projects_Project object [string]
 
 	function addProject($notificationUID, $projectUID) {
-		global $db;		
+		global $kapenta;		
 
 		//$sql = "select * from Projects_Membership"
-		//	 . " where projectUID='" . $db->addMarkup($projectUID) . "'"
+		//	 . " where projectUID='" . $kapenta->db->addMarkup($projectUID) . "'"
 		//	 . " and (role='admin' OR role='member')";
 
 		$conditions = array();
-		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
+		$conditions[] = "projectUID='" . $kapenta->db->addMarkup($projectUID) . "'";
 		$conditions[] = "(role='admin' OR role='member')";
 
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }		
 	}
 
@@ -306,17 +304,17 @@ class KNotifications {
 	//arg: projectUID - UID of a Projects_Project object [string]
 
 	function addProjectAdmins($notificationUID, $projectUID) {
-		global $db;		
+		global $kapenta;		
 
 		// $sql = "select * from Projects_Membership"
-		//	 . " where UID='" . $db->addMarkup($projectUID) . "'"
+		//	 . " where UID='" . $kapenta->db->addMarkup($projectUID) . "'"
 		//	 . " and role='admin'";
 
 		$conditions = array();
-		$conditions[] = "projectUID='" . $db->addMarkup($projectUID) . "'";
+		$conditions[] = "projectUID='" . $kapenta->db->addMarkup($projectUID) . "'";
 		$conditions[] = "role='admin'";
 
-		$range = $db->loadRange('projects_membership', '*', $conditions);
+		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 		foreach ($range as $row) { $this->addUser($notificationUID, $row['userUID']); }
 	}
 
@@ -327,7 +325,7 @@ class KNotifications {
 	//arg: threadUID - UID of a Forums_Thread object [string]
 
 	function addForumThread($notificationUID, $projectUID) {
-		global $db;		
+		global $kapenta;		
 		//TODO
 	}
 

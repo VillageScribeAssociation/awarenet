@@ -126,11 +126,9 @@ class KAliases {
 		global $kapenta;
 		global $req;
 		global $page;
-		global $db;
-		global $session;
 
 		$model = strtolower($model);
-		$safeAlias = strtolower($db->addMarkup($req->ref));
+		$safeAlias = strtolower($kapenta->db->addMarkup($req->ref));
 
 		//------------------------------------------------------------------------------------------
 		//	look for this object in memcache
@@ -163,8 +161,8 @@ class KAliases {
 		//------------------------------------------------------------------------------------------
 		$conditions = array();
 		$conditions[] = "aliaslc='" . $safeAlias . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($model) . "'";
-		$range = $db->loadRange('aliases_alias', '*', $conditions, 'createdOn', 1);
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($model) . "'";
+		$range = $kapenta->db->loadRange('aliases_alias', '*', $conditions, 'createdOn', 1);
 
 		foreach($range as $item) {
 			//--------------------------------------------------------------------------------------
@@ -208,14 +206,14 @@ class KAliases {
 		//------------------------------------------------------------------------------------------
 		//	no matches found, perhaps this is a valid UID
 		//------------------------------------------------------------------------------------------
-		if (true == $db->objectExists($model, $req->ref)) { return $req->ref;}
+		if (true == $kapenta->db->objectExists($model, $req->ref)) { return $req->ref;}
 
 		//------------------------------------------------------------------------------------------
 		//	not a UID, search directly
 		//------------------------------------------------------------------------------------------
 		if ('' != trim($req->ref)) {
-			$conditions = array("alias='" . $db->addMarkup(trim($req->ref)) . "'");
-			$range = $db->loadRange($model, '*', $conditions);
+			$conditions = array("alias='" . $kapenta->db->addMarkup(trim($req->ref)) . "'");
+			$range = $kapenta->db->loadRange($model, '*', $conditions);
 			if (count($range) > 0) {
 				$item = array_pop($range);
 				return $item['UID'];
@@ -237,7 +235,6 @@ class KAliases {
 
 	function saveAlias($refModule, $refModel, $refUID, $alias) {
 		global $kapenta;
-		global $session;
 
 		$model = new Aliases_Alias();
 		$model->refModule = $refModule;
@@ -248,7 +245,7 @@ class KAliases {
 		$report = $model->save();
 
 		if ('' != $report) {
-			$session->msgAdmin('Error: could not create alias:<br/>' . $report, 'bad');
+			$kapenta->session->msgAdmin('Error: could not create alias:<br/>' . $report, 'bad');
 			return '';
 		}
 
@@ -333,14 +330,14 @@ class KAliases {
 	//returns: number of aliases deleted [int]
 
 	function deleteAll($refModule, $refModel, $refUID) {
-		global $db;
+		global $kapenta;
 		$delCount = 0;
 
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$range = $db->loadRange('aliases_alias', '*', $conditions);
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$range = $kapenta->db->loadRange('aliases_alias', '*', $conditions);
 
 		foreach($range as $row) {	
 			$model = new Aliases_Alias();
@@ -360,21 +357,20 @@ class KAliases {
 	//returns: default alias of object, empty string error [string]
 
 	function getDefault($model, $UID) {
-		global $db;
-		global $session;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	check that model is a valid table
 		//------------------------------------------------------------------------------------------
-		if (false == $db->tableExists($model)) { 
-			$session->msgAdmin('No such table:' . $model, 'bad');
+		if (false == $kapenta->db->tableExists($model)) { 
+			$kapenta->session->msgAdmin('No such table:' . $model, 'bad');
 			return false;
 		}
 
 		//------------------------------------------------------------------------------------------
 		//	try load the object from the database
 		//------------------------------------------------------------------------------------------
-		$objAry = $db->getObject($model, $UID);
+		$objAry = $kapenta->db->getObject($model, $UID);
 		if (0 == count($objAry)) { return ''; }
 
 		//------------------------------------------------------------------------------------------
@@ -394,15 +390,15 @@ class KAliases {
 	//arg: alias - the alias whose owner we'd like to know [string]
 
 	function getOwner($refModule, $refModel, $alias) {
-		global $kapenta, $db;
+		global $kapenta;
 
 		$alias = strtolower(trim($alias));
 
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "aliaslc='" . $db->addMarkup($alias) . "'";
-		$range = $db->loadRange('aliases_alias', '*', $conditions);
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "aliaslc='" . $kapenta->db->addMarkup($alias) . "'";
+		$range = $kapenta->db->loadRange('aliases_alias', '*', $conditions);
 
 		if (count($range) > 0) { 
 			//--------------------------------------------------------------------------------------
@@ -433,14 +429,14 @@ class KAliases {
 	//returns: array of aliases owned by this object, key is UID, value is alias [array]
 
 	function getAll($refModule, $refModel, $refUID) {
-		global $db;
+		global $kapenta;
 		$als = array();
 
 		$conditions = array();
-		$conditions[] = "refModule='" . $db->addMarkup($refModule) . "'";
-		$conditions[] = "refModel='" . $db->addMarkup($refModel) . "'";
-		$conditions[] = "refUID='" . $db->addMarkup($refUID) . "'";
-		$range = $db->loadRange('aliases_alias', '*', $conditions);
+		$conditions[] = "refModule='" . $kapenta->db->addMarkup($refModule) . "'";
+		$conditions[] = "refModel='" . $kapenta->db->addMarkup($refModel) . "'";
+		$conditions[] = "refUID='" . $kapenta->db->addMarkup($refUID) . "'";
+		$range = $kapenta->db->loadRange('aliases_alias', '*', $conditions);
 
 		foreach($range as $record) { $als[$record['UID']] = $record['alias']; }
 		return $als;

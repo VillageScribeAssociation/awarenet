@@ -34,12 +34,12 @@ class Abuse_Report {
 	//opt: UID - UID of a Report object [string]
 
 	function Abuse_Report($UID = '') {
-		global $db;
-		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $UID) { $this->load($UID); }				// try load an object from the database
-		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
-			$this->loadArray($this->data);					// initialize
+		global $kapenta;
+		$this->dbSchema = $this->getDbSchema();				        // initialise table schema
+		if ('' != $UID) { $this->load($UID); }				        // try load an object from the database
+		if (false == $this->loaded) {						        // check if we did
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
+			$this->loadArray($this->data);					        // initialize
 			$this->loaded = false;
 		}
 	}

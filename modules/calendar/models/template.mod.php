@@ -35,11 +35,11 @@ class Calendar_Template {
 	//opt: raUID - UID or alias of a Template object [string]
 
 	function Calendar_Template($raUID = '') {
-		global $db;
-		$this->dbSchema = $this->getDbSchema();		// initialise table schema
-		if ('' != $raUID) { $this->load($raUID); }	// try load an object from the database
-		if (false == $this->loaded) {			// check if we did
-			$this->loadArray($db->makeBlank($this->dbSchema));	// initialize
+		global $kapenta;
+		$this->dbSchema = $this->getDbSchema();		    // initialise table schema
+		if ('' != $raUID) { $this->load($raUID); }	    // try load an object from the database
+		if (false == $this->loaded) {			                        // check if we did
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize
 		}
 	}
 

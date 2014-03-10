@@ -7,8 +7,6 @@
 //opt: packageUID - overrides UID if present [string]
 
 function packages_commitbutton($args) {
-	global $user;
-	global $theme;
 	global $kapenta;
 
 	$html = '';					//%	return value [string]
@@ -16,7 +14,7 @@ function packages_commitbutton($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('packageUID', $args)) { $args['UID'] = $args['packageUID']; }
 	if (false == array_key_exists('UID', $args)) { return ''; }
 
@@ -38,8 +36,8 @@ function packages_commitbutton($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/packages/views/commitbutton.block.php');
-	$html = $theme->replaceLabels($ext, $block);
+	$block = $kapenta->theme->loadBlock('modules/packages/views/commitbutton.block.php');
+	$html = $kapenta->theme->replaceLabels($ext, $block);
 
 	return $html;
 }

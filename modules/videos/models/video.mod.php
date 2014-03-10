@@ -47,11 +47,11 @@ class Videos_Video {
 	//opt: raUID - UID or alias of a Video object [string]
 
 	function Videos_Video($raUID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
 		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Video ' . $this->UID;		// set default title
 			$this->loaded = false;
@@ -79,8 +79,8 @@ class Videos_Video {
 	//returns: true on success, false on failure [bool]
 
 	function loadArray($ary) {
-		global $db;
-		if (false == $db->validate($ary, $this->dbSchema)) { return false; }
+		global $kapenta;
+		if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 		$this->UID = $ary['UID'];
 		$this->refModule = $ary['refModule'];
 		$this->refModel = $ary['refModel'];

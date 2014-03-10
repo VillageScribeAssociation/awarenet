@@ -8,7 +8,7 @@
 //opt: title - title of block [string]
 
 function admin_contactinfo($args) {
-	global $theme;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$tb = 'nav';
@@ -20,10 +20,10 @@ function admin_contactinfo($args) {
 	if (true == array_key_exists('tb', $args)) { $tb = $args['tb']; }
 	if (true == array_key_exists('title', $args)) { $title = $args['title']; }
 
-	$html = $theme->loadBlock('modules/admin/views/contactinfo.block.php');
+	$html = $kapenta->theme->loadBlock('modules/admin/views/contactinfo.block.php');
 
-	if ('yes' == $tb) { $html = $theme->tb($html, $title, 'divContactDetail', 'show'); }
-	if ('nav' == $tb) { $html = $theme->ntb($html, $title, 'divContactDetail', 'show'); }
+	if ('yes' == $tb) { $html = $kapenta->theme->tb($html, $title, 'divContactDetail', 'show'); }
+	if ('nav' == $tb) { $html = $kapenta->theme->ntb($html, $title, 'divContactDetail', 'show'); }
 
 	return $html;
 }

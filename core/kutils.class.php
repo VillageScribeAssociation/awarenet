@@ -459,8 +459,12 @@ class KUtils {
         if ('object' !== gettype($kapenta->session)) { return; }
 
         $e = new Exception();
+
+        $eStr = $e->getTraceAsString();
+        $eStr = str_replace(array('[[', '<', '>'), array('[ [', '&lt;', '&gt;'), $eStr);
+
         $msg = '<b>Deprecated: ' . $component . '::' . $method . "</b><br/>\n"
-             . '<small>' . str_replace("\n", "<br/>\n", $e->getTraceAsString()) . "</small>";
+             . '<small>' . str_replace("\n", "<br/>\n", $eStr) . "</small>";
 
         $kapenta->session->msgAdmin($msg, 'bad');
 

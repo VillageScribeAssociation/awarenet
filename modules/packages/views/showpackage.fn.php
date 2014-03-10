@@ -9,8 +9,6 @@
 //opt: packageUID - overrrides UID if present [string]
 
 function packages_showpackage($args) {
-	global $user;
-	global $theme;
 	global $kapenta;
 
 	$html = '';			//%	return value [string]
@@ -18,7 +16,7 @@ function packages_showpackage($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	if (true == array_key_exists('packageUID', $args)) { $args['UID'] = $args['packageUID']; }
 	if (false == array_key_exists('UID', $args)) { return '(package UID not given)'; }
@@ -29,10 +27,10 @@ function packages_showpackage($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/packages/views/showpackage.block.php');
+	$block = $kapenta->theme->loadBlock('modules/packages/views/showpackage.block.php');
 	$labels = $package->extArray();
 
-	$html = $theme->replaceLabels($labels, $block);
+	$html = $kapenta->theme->replaceLabels($labels, $block);
 
 	return $html;
 }

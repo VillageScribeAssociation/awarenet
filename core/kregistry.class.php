@@ -285,7 +285,7 @@ class KRegistry {
 	//returns: true on success, false on failure [bool]
 
 	function set($key, $value) {
-		global $session;
+		global $kapenta;
 		$prefix = $this->getPrefix($key);
 		if (false == in_array($prefix, $this->files)) { $this->load($prefix); }
 		$key = trim(strtolower($key));
@@ -294,9 +294,9 @@ class KRegistry {
 		
 		$this->log($prefix, 'set', $key, $value);
 
-		if (true == isset($session)) {
+		if ('object' == gettype($kapenta->session)) {
 			$msg = 'Set registry key: ' . $key . '<br/>' . 'Value: ' . $value;
-			$session->msgAdmin($msg, 'ok');
+			$kapenta->session->msgAdmin($msg, 'ok');
 		}
 
 		return $check;
@@ -466,7 +466,9 @@ class KRegistry {
 	//returns: true on success, false on failure [bool]
 
 	function filePutContents($fileName, $contents, $inData = false, $phpWrap = false, $m = 'wb+') {
-		// add php wrapper to file
+        global $kapenta;		
+
+        // add php wrapper to file
 		if (true == $phpWrap) { $contents = $this->wrapper . $contents . "\n*/ ?>"; }
 
 		// note that file_put_contents() was added in PHP 5, we do it this way to support PHP 4.x
@@ -481,7 +483,7 @@ class KRegistry {
 			if (false == $lock) { sleep(1); }
 			$counter--;
 			if (0 == $counter) {
-				$session->msgAdmin('Could not lock file: ' . $regFile, 'bad');
+				$kapenta->session->msgAdmin('Could not lock file: ' . $regFile, 'bad');
 				return false;
 			}
 		}

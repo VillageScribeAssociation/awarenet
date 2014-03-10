@@ -31,11 +31,11 @@ class Aliases_Alias {
 	//opt: UID - UID of a Alias object [string]
 
 	function Aliases_Alias($UID = '') {
-		global $db;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();					// initialise table schema
 		if ('' != $UID) { $this->load($UID); }					// try load an object, if given
 		if (false == $this->loaded) { 
-			$this->loadArray($db->makeBlank($this->dbSchema));
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));
 			$this->loaded = false;
 		}
 	}

@@ -17,13 +17,13 @@
 	if (true == array_key_exists('s', $kapenta->request->args)) { $size = $kapenta->request->args['s']; }
 	if (true == array_key_exists('p', $kapenta->request->args)) { $size = $kapenta->request->args['p']; }
 
-	if ('' == $kapenta->request->ref) { $page->do404('Image not specified.'); }
+	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Image not specified.'); }
 
 	$model = new Images_Image($kapenta->request->ref);			//%	[object]
 
-	if (false == $model->loaded) { $page->do404('Image not found'); }
-	if ('' == $model->fileName) { $page->do404('File missing.'); }
-	if (false == $model->transforms->presetExists($size)) { $page->do404('Invalid size.'); }	
+	if (false == $model->loaded) { $kapenta->page->do404('Image not found'); }
+	if ('' == $model->fileName) { $kapenta->page->do404('File missing.'); }
+	if (false == $model->transforms->presetExists($size)) { $kapenta->page->do404('Invalid size.'); }	
 
 	$lmDate = date(DATE_RFC1123, $kapenta->strtotime($model->createdOn));
 	$eTag = md5($lmDate . $size . $model->hash);
@@ -53,8 +53,8 @@
 	//	scale down fixed width if mobile browser (try match screen size)
 	//----------------------------------------------------------------------------------------------
 
-	if ('true' == $session->get('mobile')) {
-		$maxWidth = (int)$session->get('contentWidth');
+	if ('true' == $kapenta->session->get('mobile')) {
+		$maxWidth = (int)$kapenta->session->get('contentWidth');
 		if (0 == $maxWidth) { $maxWidth = 320; }			//TODO: registry setting
 
 		if (true == array_key_exists($size, $model->transforms->presets)) {
@@ -82,10 +82,10 @@
 		$file = new Videos_Video($refUID);
 		if (false !== strpos($file->fileName, 'mp3')) {
 			$fileName = 'modules/videos/assets/audio-icon_' . $size . '.png';
-			$page->do302($fileName);
+			$kapenta->page->do302($fileName);
 		} else {
 			$fileName = 'data/images/unavailable/unavailable_' . $size . '.jpg';
-			$page->do302($fileName);
+			$kapenta->page->do302($fileName);
 		}
 	}
 

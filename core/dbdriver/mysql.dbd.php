@@ -83,7 +83,8 @@ class KDBDriver_MySQL {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $kapenta, $session, $page;
+		global $kapenta;
+
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
 		$result = false;							//%	recordset handle [int]
@@ -94,8 +95,8 @@ class KDBDriver_MySQL {
 		$this->count++;								//	increment query count for this page view
 		$startTime = microtime(true);				//	record start time
 
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('query', $query);
+		if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('query', $query);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -109,14 +110,14 @@ class KDBDriver_MySQL {
 
 		if (false === $connect) { 
 			$msg = 'Could not connect to database server.';
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if ('object' == gettype($kapenta->session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			return false; 
 		}
 
 		$selected = @mysql_select_db($this->name, $connect);
 		if (false == $selected) {
 			$msg = "Connected to database server but could not select database: " . $this->name;
-			if (true == isset($session)) { $session->msgAdmin($msg , 'bad'); }
+			if ('object' == gettype($kapenta->session)) { $kapenta->session->msgAdmin($msg , 'bad'); }
 			return false;
 		}
 
@@ -126,7 +127,7 @@ class KDBDriver_MySQL {
 		$result = @mysql_query($query, $connect);
 		if (false === $result) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if ('object' == gettype($kapenta->session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			$this->lasterr = 'mysql_query returned FALSE.';
 			return false;
 		}
@@ -212,7 +213,6 @@ class KDBDriver_MySQL {
 	//returns: return associative array of field names and values or false on failure [array][bool]
 
 	function load($UID, $dbSchema) {
-		global $page;
 		global $kapenta;
 
 		$model = strtolower($dbSchema['model']);
@@ -224,9 +224,9 @@ class KDBDriver_MySQL {
 		$cacheKey = $model . '::' . $UID;
 		if (true == $kapenta->cacheHas($cacheKey)) {
 			return unserialize($kapenta->cacheGet($cacheKey)); 
-			$page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
+			$kapenta->page->logDebugItem('dbLoad', 'cache hit: ' . $model . '::' . $UID);
 		} else {
-			$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
+			$kapenta->page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $UID);
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -252,8 +252,8 @@ class KDBDriver_MySQL {
 			return $objAry;
 		}
 
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', "no such object: $model::$UID");
+		if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', "no such object: $model::$UID");
 		}
 
 		return false;
@@ -268,8 +268,6 @@ class KDBDriver_MySQL {
 
 	function loadAlias($raUID, $dbSchema) {
 		global $kapenta;
-		global $page;
-		global $session;
 
 		$model = strtolower($dbSchema['model']);
 		if (false == $this->tableExists($model)) { return false; }
@@ -280,8 +278,8 @@ class KDBDriver_MySQL {
 			//--------------------------------------------------------------------------------------
 			$cacheKey = $model . '::' . $raUID;
 			if (true == $kapenta->cacheHas($cacheKey)) { 
-				if ((true == isset($page)) && (true == $page->logDebug)) {
-					$page->logDebugItem('dbLoad', "cache hit: $cacheKey (loadAlias)");
+				if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+					$kapenta->page->logDebugItem('dbLoad', "cache hit: $cacheKey (loadAlias)");
 				}
 				$objStr = $kapenta->cacheGet($cacheKey);
 				$objAry = unserialize($objStr);
@@ -294,8 +292,8 @@ class KDBDriver_MySQL {
 			$aliasKey = 'alias::' . $model . '::' . strtolower($raUID);
 			if (true == $kapenta->cacheHas($aliasKey)) {
 				$UID = $kapenta->cacheGet($aliasKey);
-				if ((true == isset($page)) && (true == $page->logDebug)) {
-					$page->logDebugItem('dbLoad', "alias hit: $model::$raUID => $UID");
+				if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+					$kapenta->page->logDebugItem('dbLoad', "alias hit: $model::$raUID => $UID");
 				}
 				return $this->load($UID, $dbSchema);
 			}
@@ -318,8 +316,8 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	not found in cache, try load directly
 		//------------------------------------------------------------------------------------------
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $raUID . ' (loadAlias)');
+		if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', 'cache miss: ' . $model . '::' . $raUID . ' (loadAlias)');
 		}
 
 		if (true == $this->objectExists($model, $raUID)) { return $this->load($raUID, $dbSchema); }
@@ -400,8 +398,8 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	out of options
 		//------------------------------------------------------------------------------------------
-		if ((true == isset($page)) && (true == $page->logDebug)) {
-			$page->logDebugItem('dbLoad', 'no such object: ' . $model . '::' . $raUID);
+		if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
+			$kapenta->page->logDebugItem('dbLoad', 'no such object: ' . $model . '::' . $raUID);
 		}
 
 		return false;
@@ -418,9 +416,8 @@ class KDBDriver_MySQL {
 	//returns: true on success, false on failure [bool]
 
 	function save($data, $dbSchema, $setdefaults = true, $broadcast = true, $revision = true) {
-		global $user;
+
 		global $revisions;
-		global $session;
 		global $kapenta;
 
 		$changes = array();								//%	fields which have changed [dict]
@@ -448,7 +445,7 @@ class KDBDriver_MySQL {
 		if (false == array_key_exists('prikey', $dbSchema)) { $dbSchema['prikey'] = ''; }
 
 		// do not save objects which have been deleted
-		if (true == $revisions->isDeleted($dbSchema['model'], $data['UID'])) {
+		if (true == $kapenta->revisions->isDeleted($dbSchema['model'], $data['UID'])) {
 			$this->lasterr = 'This object is deleted, must be undeleted before saving.';
 			return false;
 		}
@@ -456,9 +453,9 @@ class KDBDriver_MySQL {
 		//------------------------------------------------------------------------------------------
 		//	set editedBy, editedOn if present in schema
 		//------------------------------------------------------------------------------------------
-		if ((true == $setdefaults) && (true == isset($user))) {
+		if ((true == $setdefaults) && ('object' == gettype($kapenta->user))) {
 			if (true == array_key_exists('editedBy', $dbSchema['fields'])) {
-				$data['editedBy'] = $user->UID;
+				$data['editedBy'] = $kapenta->user->UID;
 			}
 			if (true == array_key_exists('editedOn', $dbSchema['fields'])) {
 				$data['editedOn'] = $this->datetime();
@@ -555,7 +552,7 @@ class KDBDriver_MySQL {
 
 			if (false === $result) {
 				$msg = 'could not update record: ' . $dbSchema['model'] . " " . $data['UID'];
-				$session->msgAdmin($msg, 'bad');
+				$kapenta->session->msgAdmin($msg, 'bad');
 				$this->lasterr = "Update operation failed:<br/>\n" . $this->lasterr;
 				return false;
 			}
@@ -587,9 +584,6 @@ class KDBDriver_MySQL {
 
 	function delete($UID, $dbSchema) {
 		global $kapenta;
-		global $aliases;
-		global $revisions;
-		global $session;
 
 		$this->lasterr = '';								//	clear any previous error message
 
@@ -672,9 +666,9 @@ class KDBDriver_MySQL {
 	//: this is used where an object should change only locally and changes not sent to peer servers
 
 	function updateQuiet($model, $UID, $field, $value) {	
-		global $session;
+		global $kapenta;
 
-		$session->msg("DEPRECATED: db::updateQuiet($model, $UID, $field, $value)", 'warn');
+		$kapenta->session->msg("DEPRECATED: db::updateQuiet($model, $UID, $field, $value)", 'warn');
 		$model = strtolower($model);									// temporary
 		if (false == $this->tableExists($model)) { return false; }
 
@@ -865,7 +859,7 @@ class KDBDriver_MySQL {
 	//returns: copy of schema with magic fields filled in [array]
 
 	function makeBlank($dbSchema) {
-		global $kapenta, $user, $session;
+		global $kapenta;
 
 		$blank = array();
 		foreach($dbSchema['fields'] as $fieldName => $fieldType) {
@@ -891,9 +885,9 @@ class KDBDriver_MySQL {
 			if ('DATETIME' == $fieldType) {	$blank[$fieldName] = $this->datetime(); }
 			if ('TINYINT' == $fieldType) { $blank[$fieldName] = '0'; }
 
-			if (true == isset($user)) {
-				if ('createdBy' == $fieldName) { $blank[$fieldName] = $user->UID; }
-				if ('editedBy' == $fieldName) { $blank[$fieldName] = $user->UID; }
+			if ('object' == gettype($kapenta->user)) {
+				if ('createdBy' == $fieldName) { $blank[$fieldName] = $kapenta->user->UID; }
+				if ('editedBy' == $fieldName) { $blank[$fieldName] = $kapenta->user->UID; }
 			}		
 
 			if ('editedOn' == $fieldName) { $blank[$fieldName] = $this->datetime(); }

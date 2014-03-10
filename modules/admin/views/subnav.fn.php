@@ -6,21 +6,20 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_subnav($args) {
-	global $theme;
-	global $user;
-
+	global $kapenta;
+	
 	$html = '';						//	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	$block = $theme->loadBlock('modules/admin/views/subnav.block.php');
-	$html = $theme->replaceLabels(array(), $block);
+	$block = $kapenta->theme->loadBlock('modules/admin/views/subnav.block.php');
+	$html = $kapenta->theme->replaceLabels(array(), $block);
 
 	return $html;
 }

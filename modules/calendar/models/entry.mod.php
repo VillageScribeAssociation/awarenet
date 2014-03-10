@@ -38,12 +38,12 @@ class Calendar_Entry {
 	//opt: raUID - UID or alias of a calendar entry [string]
 
 	function Calendar_Entry($raUID = '') {
-		global $db;
-		$this->dbSchema = $this->getDbSchema();				// initialise table schema
-		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
-		if (false == $this->loaded) {						// check if we did
-			$this->data = $db->makeBlank($this->dbSchema);	// make new object
-			$this->loadArray($this->data);					// initialize
+		global $kapenta;
+		$this->dbSchema = $this->getDbSchema();			        	// initialise table schema
+		if ('' != $raUID) { $this->load($raUID); }		        	// try load an object from the database
+		if (false == $this->loaded) {						        // check if we did
+			$this->data = $kapenta->db->makeBlank($this->dbSchema);	// make new object
+			$this->loadArray($this->data);				        	// initialize
 			$this->title = 'New Calendar Item ' . $this->UID;
 			$this->venue = '';
 			$this->year = date('Y');

@@ -80,6 +80,7 @@ function changeLocalLinksFromKhanLitePage($pageStr) {
 //	$replaced = str_replace("/math", "/lessons/mathkhan", $pageStr);
 	$replaced = str_replace("/science", "/lessons/sciencekhan", $pageStr);
 	$replaced = str_replace("/humanities", "/lessons/humanitieskhan", $replaced);
+	$replaced = str_replace("/economics-finance-domain", "/lessons/economics-finance-domainkhan", $replaced);
 	$replaced = str_replace("/test-prep", "/lessons/testprepkhan", $replaced);
 	$replaced = str_replace("/discovery-lab", "/lessons/discoverylabkhan", $replaced);
 	$replaced = str_replace("/exercisedashboard", "/lessons/exercisekhan", $replaced);

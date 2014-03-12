@@ -11,14 +11,14 @@
 //TODO: discover if this is used by anything and delete if not
 
 function comments_newlink($args) {
-	global $user;	
+	global $kapenta;	
 
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('comments', 'comment_comment', 'edit')) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'edit')) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refModel', $args)) { return false; }

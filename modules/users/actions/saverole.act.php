@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('users', 'users_role', 'edit', $UID))
+	if (false == $kapenta->user->authHas('users', 'users_role', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Role.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -37,9 +37,9 @@
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('New Role<br/>');
+		$kapenta->session->msg('New Role<br/>');
 	} else {
-		$session->msg('Could not save Role:<br/>' . $report);
+		$kapenta->session->msg('Could not save Role:<br/>' . $report);
 	}
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }

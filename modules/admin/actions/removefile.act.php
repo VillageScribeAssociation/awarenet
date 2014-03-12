@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
 	if ('removeFile' != $_POST['action']) { $kapenta->page->do404('action not recognized'); }
@@ -23,8 +23,8 @@
 	//	delete the file
 	//----------------------------------------------------------------------------------------------
 	$check = @unlink($kapenta->installPath . $fileName);
-	if (true == $check) { $session->msg('Deleted file: ' . $_POST['fileName'], 'ok'); }
-	else { $session->msg('Could not delete file: ' . $_POST['fileName'], 'bad'); }
+	if (true == $check) { $kapenta->session->msg('Deleted file: ' . $_POST['fileName'], 'ok'); }
+	else { $kapenta->session->msg('Could not delete file: ' . $_POST['fileName'], 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to package listing

@@ -432,7 +432,7 @@ class P2P_Offers {
 				$report = $gift->save();
 				if ('' == $report) { $check = true; }
 
-			} else { /* $session->msg('No changes to gift for: ' . $this->peerUID); */ }
+			} else { /* $kapenta->session->msg('No changes to gift for: ' . $this->peerUID); */ }
 
 		} else {
 			//--------------------------------------------------------------------------------------
@@ -452,7 +452,7 @@ class P2P_Offers {
 
 			$report = $gift->save();
 			if ('' == $report) { $check = true; }
-			else { $session->msg('Could not create gift for: ' . $this->peerUID); }
+			else { $kapenta->session->msg('Could not create gift for: ' . $this->peerUID); }
 
 		}
 
@@ -472,7 +472,7 @@ class P2P_Offers {
 		global $kapenta;
 		global $session;
 
-		//$session->msg("p2p::offers::updateFile(model: $model, UID: $UID, file: $fileName)");
+		//$kapenta->session->msg("p2p::offers::updateFile(model: $model, UID: $UID, file: $fileName)");
 
 		$check = false;											//%	return value [bool]
 		$giftUID = $this->getGiftUID('file', $model, $UID);		//%	ref:P2P_Gift [string]	
@@ -491,7 +491,7 @@ class P2P_Offers {
 			}
 		}
 
-		if ('' == $hash) { $session->msg("File cannot be hashed."); }
+		if ('' == $hash) { $kapenta->session->msg("File cannot be hashed."); }
 		if ('' == $hash) { return false; }						//	file could not be read
 
 		//------------------------------------------------------------------------------------------
@@ -518,7 +518,7 @@ class P2P_Offers {
 			//--------------------------------------------------------------------------------------
 			//	update gift, assume all peers now want the changes
 			//--------------------------------------------------------------------------------------
-			//$session->msg("p2p::offers::updateFile - Updating existing gift (UID: $giftUID).");
+			//$kapenta->session->msg("p2p::offers::updateFile - Updating existing gift (UID: $giftUID).");
 			$changed = false;
 			$gift = new P2P_Gift($giftUID);
 			if ($hash != $gift->hash) {	$changed = true; }
@@ -530,17 +530,17 @@ class P2P_Offers {
 				$gift->shared = 'no';
 				$report = $gift->save();
 				if ('' == $report) { $check = true; }
-				//$session->msg('Updated gift for: ' . $this->peerUID . ' (' . $fileName . ')');
+				//$kapenta->session->msg('Updated gift for: ' . $this->peerUID . ' (' . $fileName . ')');
 
 			} else {
-				//$session->msg('No changes to gift for: ' . $this->peerUID);
+				//$kapenta->session->msg('No changes to gift for: ' . $this->peerUID);
 			}
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	new object, create new gift for this peer
 			//--------------------------------------------------------------------------------------
-			//$session->msgAdmin("p2p::offers::updateFile - Creating new gift.");
+			//$kapenta->session->msgAdmin("p2p::offers::updateFile - Creating new gift.");
 			$gift = new P2P_Gift();
 
 			$gift->peer = $this->peerUID;
@@ -555,10 +555,10 @@ class P2P_Offers {
 
 			$report = $gift->save();
 			if ('' == $report) { 
-				//$session->msg('Created new gift for: ' . $this->peerUID . ' (' . $fileName . ')');
+				//$kapenta->session->msg('Created new gift for: ' . $this->peerUID . ' (' . $fileName . ')');
 				$check = true;
 
-			} else { $session->msg('Could not create gift for: ' . $this->peerUID); }
+			} else { $kapenta->session->msg('Could not create gift for: ' . $this->peerUID); }
 
 		}
 

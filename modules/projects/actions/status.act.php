@@ -27,7 +27,7 @@
 	$model = new Projects_Project($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
 		$kapenta->page->do403("You are not permitted to change this project's status."); 
 	}
 
@@ -36,8 +36,8 @@
 	//----------------------------------------------------------------------------------------------
 	$model->status = $_POST['status'];	
 	$report = $model->save();
-	if ('' == $report) { $session->msg("Project status set to: " . $model->status, 'ok'); }
-	else { $session->msg("Could not set project status:<br/>" . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg("Project status set to: " . $model->status, 'ok'); }
+	else { $kapenta->session->msg("Could not set project status:<br/>" . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to the project otions page

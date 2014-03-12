@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$testVideo = $kapenta->serverPath . 'modules/videos/temp/RSA-Animate-The-Empathic-Civilisation.flv';
 

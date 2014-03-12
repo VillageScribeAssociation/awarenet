@@ -13,7 +13,7 @@
 
 function comments_addcommentformnavjs($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$invitation = 'Add a comment';
 	$html = '';							//%	return value [string]
@@ -21,7 +21,7 @@ function comments_addcommentformnavjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
@@ -32,7 +32,7 @@ function comments_addcommentformnavjs($args) {
 	$refUID = $args['refUID'];
 
 	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) 
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'comments-add', $refUID)) 
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

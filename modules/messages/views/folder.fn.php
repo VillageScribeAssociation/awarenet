@@ -14,21 +14,21 @@ function messages_folder($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	$pageNo = 1;
 	$num = 50;
 	$size = 'thumb';
 	$html = '';
-	$owner = $user->UID;
+	$owner = $kapenta->user->UID;
 	$folder = 'inbox';
 	$orderBy = 'createdOn DESC';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('page', $args)) { $pageNo = $args['page']; }
 	if (true == array_key_exists('num', $args)) { $num = $args['num']; }
 	if (true == array_key_exists('owner', $args)) { $owner = $args['owner']; }

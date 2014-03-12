@@ -15,14 +15,14 @@
 		{ $kapenta->page->do404('Peer not specified (UID).'); }
     
 	$model = new P2P_Peer($_POST['UID']);
-	if (false == $user->authHas('p2p', 'p2p_peer', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('p2p', 'p2p_peer', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this peer.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the announcement and redirect
 	//----------------------------------------------------------------------------------------------
 	$model->delete();
-	$session->msg("Deleted peer: " . $model->name);
+	$kapenta->session->msg("Deleted peer: " . $model->name);
 	$kapenta->page->do302('p2p/peers/');
 
 ?>

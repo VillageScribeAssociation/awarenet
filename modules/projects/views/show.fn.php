@@ -14,7 +14,7 @@
 function projects_show($args) {
 		global $theme;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 
@@ -26,7 +26,7 @@ function projects_show($args) {
 	if (false == array_key_exists('raUID', $args)) { return '(UID not given)'; }
 
 	$model = new Projects_Project($args['raUID']);
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

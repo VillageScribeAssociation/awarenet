@@ -166,7 +166,7 @@ class KSource {
 
 		$url = $this->url . 'listxml/';		//%	location of package list document [string]
 		$xml = $utils->curlGet($url);		//%	raw XML [string]
-		$session->msg("$url <br/>" . strlen($xml) . " bytes");
+		$kapenta->session->msg("$url <br/>" . strlen($xml) . " bytes");
 		$result = false;					//% return value [bool]
 
 		$report = ''

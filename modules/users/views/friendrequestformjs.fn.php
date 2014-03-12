@@ -8,7 +8,7 @@
 //arg: friendUID - UID of a Users_User object to make friend request with [string]
 
 function users_friendrequestformjs($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -19,18 +19,18 @@ function users_friendrequestformjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments, user role and existing request / relationship
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('friendUID', $args)) { return '(friendUID not specified)'; }
 
 	$friendUID = $args['friendUID'];
 
 	if (false == $kapenta->db->objectExists('users_user', $friendUID)) { return '(friend is unknown user)'; }
 
-	$set = new Users_Friendships($user->UID);
+	$set = new Users_Friendships($kapenta->user->UID);
 	
 	if (true == $set->hasConfirmed($friendUID)) { return $ajw . "You are already friends.</span>"; }
 	if (true == $set->hasUnconfirmed($friendUID)) { return $ajw . "Already requested.</span>"; }
-	if ($friendUID == $user->UID) { return $ajw . "You cannot friend yourself.</span>"; }
+	if ($friendUID == $kapenta->user->UID) { return $ajw . "You cannot friend yourself.</span>"; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

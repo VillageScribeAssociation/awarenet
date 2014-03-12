@@ -16,7 +16,7 @@
 
 	$forum = new Forums_Board($_POST['forum']);
 	if (false == $forum->loaded) { $kapenta->page->do404('Forum not found.'); }
-	if (false == $user->authHas('forums', 'forums_board', 'makethread', $forum->UID)) {
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'makethread', $forum->UID)) {
 		$kapenta->page->do403('You cannot create new threads in this forum.'); 
 	}
 
@@ -43,7 +43,7 @@
 		//------------------------------------------------------------------------------------------
 		// redirect back to forum if thread was not created
 		//------------------------------------------------------------------------------------------
-		$session->msg("Cound not create thread:<br/>$report", 'bad');
+		$kapenta->session->msg("Cound not create thread:<br/>$report", 'bad');
 		$kapenta->page->do302('forums/' . $forum->alias);
 
 	} else {
@@ -60,8 +60,8 @@
 			$title, $content, $ext['viewUrl']
 		);
 
-		$notifications->addFriends($nUID, $user->UID);
-		$notifications->addAdmins($nUID, $user->UID);
+		$notifications->addFriends($nUID, $kapenta->user->UID);
+		$notifications->addAdmins($nUID, $kapenta->user->UID);
 
 		//------------------------------------------------------------------------------------------
 		//	raise a microbog event for this

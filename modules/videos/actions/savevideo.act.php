@@ -26,7 +26,7 @@
 	$model = new Videos_Video($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('No such video', true); }
 
-	if (false == $user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID))
 		{ $kapenta->page->do403('You are not authorized to edit this video.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@
 	}
 
 	$report = $model->save();
-	if ('' != $report) { $session->msg($report, 'bad'); }
+	if ('' != $report) { $kapenta->session->msg($report, 'bad'); }
 
 	//------------------------------------------------------------------------------------------
 	//	redirect back

@@ -8,14 +8,14 @@
 
 function admin_listmoduleblocks($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('module', $args)) { return '(module not given)'; }
 	if (false == $kapenta->moduleExists($args['module'])) { return '(no such module)'; }
 

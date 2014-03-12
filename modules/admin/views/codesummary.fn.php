@@ -6,7 +6,7 @@
 //arg: path - file location relative to installPath [string]
 
 function admin_codesummary($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$firstFn = '';		//%	first function description found [string]
@@ -16,7 +16,7 @@ function admin_codesummary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('path', $args)) { return '(path not given)'; }	
 	if (false == $kapenta->fs->exists($args['path'])) { return '(file not found)'; }
 

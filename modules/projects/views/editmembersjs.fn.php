@@ -10,7 +10,7 @@
 
 function projects_editmembersjs($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -27,7 +27,7 @@ function projects_editmembersjs($args) {
 
 	if ('open' != $model->status) { return $listOnly; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
 		return $listOnly;
 	}
 

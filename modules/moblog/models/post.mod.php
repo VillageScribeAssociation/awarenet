@@ -41,7 +41,7 @@ class Moblog_Post {
 
 	function Moblog_Post($raUID = '') {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
 		if ('' != $raUID) { $this->load($raUID); }			// try load an object from the database
@@ -50,8 +50,8 @@ class Moblog_Post {
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Post ' . $this->UID;		// set default title
 			$this->published = 'no';
-			$this->school = $user->school;
-			$this->grade = $user->grade;
+			$this->school = $kapenta->user->school;
+			$this->grade = $kapenta->user->grade;
 			$this->commentCount = 0;
 			$this->loaded = false;
 		}
@@ -196,7 +196,7 @@ class Moblog_Post {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();				//%	return value [dict]
@@ -216,8 +216,8 @@ class Moblog_Post {
 		//------------------------------------------------------------------------------------------
 
 		$editAuth = false;
-		if ('admin' == $user->role) { $editAuth = true; }
-		if ($user->UID == $ary['createdBy']) { $editAuth = true; }
+		if ('admin' == $kapenta->user->role) { $editAuth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $editAuth = true; }
 		//TODO: full permission set checks
 
 		//------------------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ class Moblog_Post {
 		 . "::refUID=" . $ary['UID']
 		 . ":]]";
 
-		if (true == $user->authHas('moblog', 'moblog_post', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('moblog', 'moblog_post', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%moblog/' . $this->alias;
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 

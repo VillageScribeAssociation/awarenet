@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 //ref: UID of an installed lesson packages
 
-	if ('admin'  != $user->role) { $kapenta->page->do403(); }
+	if ('admin'  != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == $kapenta->fs->exists('data/lessons/' . $kapenta->request->ref . '/manifest.xml')) { $kapenta->page->do404(); }
 

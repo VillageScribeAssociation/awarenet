@@ -13,7 +13,7 @@ function aliases_list($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	$num = 100;					//%	number of items per page [int]
@@ -28,7 +28,7 @@ function aliases_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('aliases', 'aliases_alias', 'show', '')) { return ''; }
+	if (false == $kapenta->user->authHas('aliases', 'aliases_alias', 'show', '')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) { 
 		$pageNo = (int)$args['page']; 

@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { $kapenta->page->doXmlError('403'); }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { $kapenta->page->doXmlError('403'); }
 
 	if (false == array_key_exists('refModule', $_POST)) { $kapenta->page->doXmlError('no refModule given'); }
 	if (false == array_key_exists('refModel', $_POST)) { $kapenta->page->doXmlError('no refModel given'); }
@@ -29,7 +29,7 @@
 	//	check that the user already likes this item
 	//----------------------------------------------------------------------------------------------
 	$block = '[[:like::byuser'
-	 . '::userUID=' . $user->UID
+	 . '::userUID=' . $kapenta->user->UID
 	 . '::refModule=' . $refModule
 	 . '::refModel=' . $refModel
 	 . '::refUID=' . $refUID

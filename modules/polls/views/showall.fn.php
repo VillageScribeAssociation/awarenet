@@ -12,7 +12,7 @@
 function polls_showall($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$html = '';				//%	return value [string:html]
@@ -51,7 +51,7 @@ function polls_showall($args) {
 			// question loaded
 			//--------------------------------------------------------------------------------------
 			
-			if (true == $model->hasVoted($user->UID)) { 
+			if (true == $model->hasVoted($kapenta->user->UID)) { 
 				//----------------------------------------------------------------------------------
 				//	show reult set
 				//----------------------------------------------------------------------------------

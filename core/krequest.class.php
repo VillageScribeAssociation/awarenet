@@ -40,6 +40,8 @@ class KRequest {
 		//	first detect if we are running from a subdirectory
 		//------------------------------------------------------------------------------------------
 
+        $this->args = array();
+
 		$this->raw = $raw;											// store for future reference
 		$this->module = $registry->get('kapenta.modules.default');	// see setup.inc.php
 		$this->action = 'default';									// they should all have one

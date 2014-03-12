@@ -8,7 +8,7 @@
 //opt: num - number of members to show, default is 12 (int) [string]
 
 function projects_summarybyline($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 

@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Edition UID not given'); }
 
 	$model = new Newsletter_Edition($_POST['UID']);
@@ -55,9 +55,9 @@
 	$report = $model->save();	
 
 	if ('' == $report) {
-		$session->msg("Edition published: " . $model->subject);
+		$kapenta->session->msg("Edition published: " . $model->subject);
 	} else {
-		$session->msg("Error while publishiung: " . $model->subject . "<br/>" . $report);
+		$kapenta->session->msg("Error while publishiung: " . $model->subject . "<br/>" . $report);
 	}
 
 	//----------------------------------------------------------------------------------------------

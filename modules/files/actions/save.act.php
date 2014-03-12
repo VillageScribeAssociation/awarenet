@@ -17,7 +17,7 @@
 	$model = new Files_File($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('File not found.', true); }
 		
-	if (false == $user->authHas($model->refModule, $model->refModel, 'files-edit', $model->refUID)) 
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'files-edit', $model->refUID)) 
 			{ $kapenta->page->do403('Not authorized', true); }
 
 	//TODO: more permission options here
@@ -36,7 +36,7 @@
 	}
 
 	$report = $model->save();
-	if ('' != $report) { $session->msg('Changes could not be saved:<br/>' . $report, 'bad'); }
+	if ('' != $report) { $kapenta->session->msg('Changes could not be saved:<br/>' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back

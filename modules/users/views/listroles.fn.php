@@ -12,7 +12,7 @@
 function users_listroles($args) {
 		global $req;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -24,7 +24,7 @@ function users_listroles($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_role', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_role', 'list')) { return ''; }
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }
 

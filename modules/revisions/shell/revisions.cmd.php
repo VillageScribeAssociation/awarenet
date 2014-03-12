@@ -8,7 +8,7 @@
 
 function revisions_WebShell_revisions($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $shell;
 	global $theme;
@@ -34,7 +34,7 @@ function revisions_WebShell_revisions($args) {
 		}
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

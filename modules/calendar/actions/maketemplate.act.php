@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('calendar', 'calendar_template', 'new')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_template', 'new')) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No calendar entry specified.'); }
 
 
@@ -37,10 +37,10 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ('' == $report) {
-		$session->msg("Created calendar entry from template.<br/>\n", 'ok');
+		$kapenta->session->msg("Created calendar entry from template.<br/>\n", 'ok');
 		$kapenta->page->do302('calendar/edittemplate/' . $template->UID);
 	} else {
-		$session->msg("Could not create calendar entry from template:<br/>\n" . $report, 'bad');
+		$kapenta->session->msg("Could not create calendar entry from template:<br/>\n" . $report, 'bad');
 		$kapenta->page->do302('calendar/');
 	}
 

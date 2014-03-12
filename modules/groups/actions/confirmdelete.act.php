@@ -13,7 +13,7 @@
 
 	$model = new Groups_Group($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Group not found.'); }
-	if (false == $user->authHas('groups', 'groups_group', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this group.'); }	
 	
 	//----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/groups/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('groups/' . $model->alias);
 
 ?>

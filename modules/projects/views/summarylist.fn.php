@@ -14,7 +14,7 @@
 function projects_summarylist($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	global $session;
@@ -30,7 +30,7 @@ function projects_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('projects', 'projects_project', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }

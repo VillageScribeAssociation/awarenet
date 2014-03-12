@@ -10,7 +10,7 @@
 //opt: templateUID - UID of a Calendar_Template object, overrides raUID [string]
 
 function calendar_edittemplateform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $utils;
 
@@ -28,7 +28,7 @@ function calendar_edittemplateform($args) {
 	$model = new Calendar_Template($raUID);	//% the object we're editing [object:Calendar_Template]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('calendar', 'calendar_template', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_template', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

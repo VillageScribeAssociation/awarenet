@@ -6,7 +6,7 @@
 //*	Scraper for khan academy videos / deveopment script
 //--------------------------------------------------------------------------------------------------
 	echo "here";
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$courses = lessons_listKhan();
 

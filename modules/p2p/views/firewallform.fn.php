@@ -7,7 +7,7 @@
 //arg: firewalled - firewall status of this peer [string]
 
 function p2p_firewallform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';
@@ -15,7 +15,7 @@ function p2p_firewallform($args) {
 	//---------------------------------------------------------------------------------------------
 	//	check arguments and use role
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	
 	if (false == array_key_exists('peerUID', $args)) { return '(peerUID not given)'; }
 

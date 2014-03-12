@@ -14,7 +14,7 @@
 function images_randomimages($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$size = 'thumbsm'; 
 	$limit = 1;

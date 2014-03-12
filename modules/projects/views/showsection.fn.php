@@ -11,7 +11,7 @@
 
 function projects_showsection($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 

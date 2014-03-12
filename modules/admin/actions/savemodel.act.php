@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';				//%	name of a kapenta module [string]
 	$modelname = '';				//%	name of object type [string]
@@ -41,7 +41,7 @@
 	$module->models[$modelname] = $model->toArray();
 	$module->save();
 
-	$session->msg('Updated module definiton.', 'ok');
+	$kapenta->session->msg('Updated module definiton.', 'ok');
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to /editmodule/

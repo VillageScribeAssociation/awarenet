@@ -10,14 +10,14 @@
 
 function users_onlineschoolnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('school', $args)) { return '(school not specified)'; }
 
 	//----------------------------------------------------------------------------------------------

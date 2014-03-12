@@ -102,8 +102,8 @@ class Users_Settings {
 	//returns: true on success, false on failure [bool]
 
 	function set($key, $value) {
-		global $user;
-		if ('public' == $user->role) { return false; }
+		global $kapenta;
+		if ('public' == $kapenta->user->role) { return false; }
 		$this->members[$key] = base64_encode($value);
 		return true;
 	}

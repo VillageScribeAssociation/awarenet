@@ -18,7 +18,7 @@ function comments_summarynav($args) {
 	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 	$model = new Comments_Comment($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }
-	if (false == $user->authHas('comments', 'comment_comment', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 	if ('' == $kapenta->registry->get('p2p.server.uid')) { $kapenta->page->do403('This peer is not configured.'); }
 
@@ -37,7 +37,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to peers list
 	//----------------------------------------------------------------------------------------------
-	$session->msgAdmin('Requested peer resyncronize all content.', 'ok');
+	$kapenta->session->msgAdmin('Requested peer resyncronize all content.', 'ok');
 	$kapenta->page->do302('p2p/peers/');
 
 ?>

@@ -9,17 +9,17 @@
 
 function users_themeprefs($args) {
 	global $theme;
-	global $user;	
+	global $kapenta;	
 
-	$userUID = $user->UID;				//%	user to show settings for [string]
+	$userUID = $kapenta->user->UID;				//%	user to show settings for [string]
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 	if (true == array_key_exists('userUID', $args)) { $userUID = $args['userUID']; }
-	if (('admin' != $user->role) && ($userUID != $user->UID)) { return '(not authorized)'; }
+	if (('admin' != $kapenta->user->role) && ($userUID != $kapenta->user->UID)) { return '(not authorized)'; }
 
 	$model = new Users_Preset();
 	$model->loadUserTheme($userUID);

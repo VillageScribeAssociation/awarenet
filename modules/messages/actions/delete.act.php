@@ -15,13 +15,13 @@
 
 	$model = new Messages_Message($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Message not found.'); }
-	if ($model->owner != $user->UID)
+	if ($model->owner != $kapenta->user->UID)
 		{ $kapenta->page->do403('Not authorized to delete this message.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the message
 	//----------------------------------------------------------------------------------------------
-	$session->msg("Deleted message.", 'ok');
+	$kapenta->session->msg("Deleted message.", 'ok');
 	$model->delete();
 	$kapenta->page->do302('messages/inbox/');
 

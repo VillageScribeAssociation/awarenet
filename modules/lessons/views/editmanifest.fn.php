@@ -9,7 +9,7 @@
 
 function lessons_editmanifest($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';								//%	return value [string]
@@ -17,7 +17,7 @@ function lessons_editmanifest($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('manifestUID', $args)) { return false; }
 
 	$model = new Lessons_Course($args['manifestUID']);

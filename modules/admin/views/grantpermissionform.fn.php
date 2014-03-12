@@ -8,7 +8,7 @@
 //arg: module - module in question [string]
 
 function admin_grantpermissionform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//%	return value [string]
@@ -16,7 +16,7 @@ function admin_grantpermissionform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$module = new KModule($args['module']);
 	if (false == $module->loaded) { return '(could not load module)'; }

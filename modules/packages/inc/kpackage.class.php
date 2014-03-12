@@ -424,13 +424,13 @@ class KPackage {
 
 		$raw = base64_decode($raw64);
 		$rawHash = sha1($raw);
-		//$session->msg("raw64:<br/><textarea rows='10' cols='60' style='width:100%'>$raw64</textarea>");
-		//$session->msg("raw:<br/><textarea rows='10' cols='60' style='width:100%'>$raw</textarea>");
-		$session->msg("hash: " . $file['hash'] . "<br/>check: " . $rawHash);
+		//$kapenta->session->msg("raw64:<br/><textarea rows='10' cols='60' style='width:100%'>$raw64</textarea>");
+		//$kapenta->session->msg("raw:<br/><textarea rows='10' cols='60' style='width:100%'>$raw</textarea>");
+		$kapenta->session->msg("hash: " . $file['hash'] . "<br/>check: " . $rawHash);
 
 		if ($file['hash'] != $rawHash) { return false; }
 
-		$session->msg("hashes match.", 'ok');
+		$kapenta->session->msg("hashes match.", 'ok');
 
 		$check = $kapenta->fs->put($file['path'], $raw);
 		return $check;
@@ -865,8 +865,8 @@ class KPackage {
 		);
 
 		$result = $utils->curlPost($this->source . 'addchange/', $postvars);
-		//echo 'Posting to: ' . $this->source . 'addchange/<br/>';
-		//echo 'Repository returns: ' . $utils->cleanTitle($result). "<br/>";
+		echo 'Posting to: ' . $this->source . 'addchange/<br/>';
+		echo 'Repository returns: ' . $utils->cleanTitle($result). "<br/>";
 		if ('<ok/>' == $result) { return true; }
 		return false;
 	}

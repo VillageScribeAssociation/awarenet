@@ -6,7 +6,7 @@
 
 function schools_geographic($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';			//%	return value [string]
 

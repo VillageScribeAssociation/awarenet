@@ -6,7 +6,7 @@
 
 function live_WebShell_touch($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $kapenta;
 
@@ -48,7 +48,7 @@ function live_WebShell_touch($args) {
 					$html.= "Model: $model UID: $UID<br/>\n";
 
 					$objAry['editedOn'] = $kapenta->db->datetime();
-					$objAry['editedBy'] = $user->UID;
+					$objAry['editedBy'] = $kapenta->user->UID;
 					
 					$kapenta->db->save($objAry, $dbSchema);
 			}

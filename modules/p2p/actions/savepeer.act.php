@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); } // only admins can use this module
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); } // only admins can use this module
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	if ('savePeer' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Server not specified (UID).'); }
@@ -36,8 +36,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to peer server: ' . $model->name, 'ok'); }
-	else { $session->msg('Could not save Server:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to peer server: ' . $model->name, 'ok'); }
+	else { $kapenta->session->msg('Could not save Server:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('/p2p/peers/' . $model->UID); }

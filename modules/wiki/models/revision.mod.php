@@ -197,7 +197,7 @@ class Wiki_Revision {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();			//%	return value [dict]
@@ -207,7 +207,7 @@ class Wiki_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if ($user->authHas('wiki', 'wiki_revision', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('wiki', 'wiki_revision', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%wiki/showrevision/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[show revision &gt;&gt;]</a>"; 
 		}

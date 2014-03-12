@@ -12,7 +12,7 @@
 
 function projects_editindexnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 	
@@ -24,7 +24,7 @@ function projects_editindexnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	//if ($user->authHas('projects', 'projects_project', 'show', 'TODO:UIDHERE') == false) { return false; }
+	//if ($kapenta->user->authHas('projects', 'projects_project', 'show', 'TODO:UIDHERE') == false) { return false; }
 
 	$html .= "<iframe name='editProjectIndex' id='editpi'"
 		  . " src='%%serverPath%%projects/editindex/" . $model->alias . "'"

@@ -9,7 +9,7 @@
 
 function gallery_show($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $cache;
 
 	$html = '';				//% return value;
@@ -24,7 +24,7 @@ function gallery_show($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check block cache
 	//----------------------------------------------------------------------------------------------
-	if ($user->UID != $model->createdBy) {
+	if ($kapenta->user->UID != $model->createdBy) {
 		$html = $cache->get($args['area'], $args['rawblock']);
 		if ('' != $html) { return $html; }
 	}
@@ -35,7 +35,7 @@ function gallery_show($args) {
 	$block = $theme->loadBlock('modules/gallery/views/show.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);
 
-	if ($user->UID != $model->createdBy) {
+	if ($kapenta->user->UID != $model->createdBy) {
 		$html = $theme->expandBlocks($html, $args['area']);
 		$cache->set('gallery-show-' . $model->UID, $args['area'], $args['rawblock'], $html);
 	}

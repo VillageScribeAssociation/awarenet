@@ -19,7 +19,7 @@ function videos__cb_file_uploaded($args) {
 	 . "type: " . $args['type'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>"
 	 . "path: " . $args['path'] . "<br/>";
-	$session->msgAdmin($msg);
+	$kapenta->session->msgAdmin($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -63,7 +63,7 @@ function videos__cb_file_uploaded($args) {
 
 	if ('' == $report) {
 		$check = $kapenta->fileCopy($args['path'], $model->fileName);
-		$session->msg('Attached video.');
+		$kapenta->session->msg('Attached video.');
 
 		//------------------------------------------------------------------------------------------
 		//	video was uploaded correctly raise file_added event
@@ -80,7 +80,7 @@ function videos__cb_file_uploaded($args) {
 		$kapenta->raiseEvent('*', 'file_added', $detail);
 
 	} else {
-		$session->msg('Could not create video object.');
+		$kapenta->session->msg('Could not create video object.');
 	}
 
 }

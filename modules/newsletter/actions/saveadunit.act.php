@@ -16,7 +16,7 @@
 	$model = new Newsletter_Adunit($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404("could not load Adunit $UID");}
 
-	if (false == $user->authHas('newsletter', 'Newsletter_Adunit', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('newsletter', 'Newsletter_Adunit', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Adunit.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -38,8 +38,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to Adunit', 'ok'); }
-	else { $session->msg('Could not save Adunit:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to Adunit', 'ok'); }
+	else { $kapenta->session->msg('Could not save Adunit:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('newsletter/showadunit/' . $model->UID); }

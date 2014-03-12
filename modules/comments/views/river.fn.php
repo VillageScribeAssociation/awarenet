@@ -8,7 +8,7 @@
 //arg: refUID - UID of object to which comments may be attached [string]
 
 function comments_river($args) {
-	global $user;
+	global $kapenta;
 
 	$num = '10';						//%	default number of threads per page [string]
 	$html = '';							//%	return value [string]

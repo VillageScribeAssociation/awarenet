@@ -11,7 +11,7 @@
 
 function moblog_show($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';				//% return value [string]
@@ -23,7 +23,7 @@ function moblog_show($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

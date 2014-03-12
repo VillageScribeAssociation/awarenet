@@ -10,11 +10,11 @@
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Notification not specified'); }
-	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can use this interface.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Only admins can use this interface.'); }
 
 	$UID = $kapenta->request->ref;
 	if (false == $kapenta->db->objectExists('notifications_notification', $UID)) { $kapenta->page->do404(); }
-	if (false == $user->authHas('notifications', 'notifications_notification', 'edit', $UID))
+	if (false == $kapenta->user->authHas('notifications', 'notifications_notification', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Notifications.'); }
 
 

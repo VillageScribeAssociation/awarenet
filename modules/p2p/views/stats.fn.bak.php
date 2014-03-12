@@ -6,7 +6,7 @@
 //opt: peerUID - UID of a P2P_Peer object [string]
 
 function p2p_stats($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -15,7 +15,7 @@ function p2p_stats($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	if (true == array_key_exists('peerUID', $args)) {
 		$filter = "where peer='" . $kapenta->db->addMarkup($args['peerUID']) . "'";

@@ -76,7 +76,7 @@ class Code_Change {
 	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $kapenta;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
@@ -162,7 +162,7 @@ class Code_Change {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -173,17 +173,17 @@ class Code_Change {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('code', 'code_change', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_change', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%code/showchange/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_change', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_change', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%code/editchange/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_change', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_change', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%code/delchange/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

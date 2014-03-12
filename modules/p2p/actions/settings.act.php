@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check defaults
@@ -43,7 +43,7 @@
 			$kapenta->registry->set('p2p.server.pubkey', $pubkey);
 			$kapenta->registry->set('p2p.server.prvkey', $prvkey);
 		} else {
-			$session->msg('OpenSSL support missing or incomplete, please eneter key manually.');
+			$kapenta->session->msg('OpenSSL support missing or incomplete, please eneter key manually.');
 		}
 	}
 
@@ -78,7 +78,7 @@
 				. "<b>p2p.server.name:</b> " . $kapenta->registry->get('p2p.server.name') . "<br/>"
 				. "<b>p2p.server.url:</b> " . $kapenta->registry->get('p2p.server.url') . "<br/>";
 
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 		}
 
 		//------------------------------------------------------------------------------------------

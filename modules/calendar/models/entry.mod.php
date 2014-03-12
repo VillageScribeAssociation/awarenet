@@ -220,7 +220,7 @@ class Calendar_Entry {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -238,23 +238,23 @@ class Calendar_Entry {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('calendar', 'calendar_entry', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_entry', 'show', $this->UID)) {
 			$ary['viewUrl'] = '%%serverPath%%calendar/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
 		}
 
-		if (true == $user->authHas('calendar', 'calendar_entry', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_entry', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%calendar/edit/' . $ary['alias'];
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('calendar', 'calendar_entry', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_entry', 'delete', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%calendar/confirmdelete/UID_'. $this->UID .'/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('calendar', 'calendar_entry', 'new', $this->UID)) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_entry', 'new', $this->UID)) {
 			$ary['newUrl'] = "%%serverPath%%calendar/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new coin]</a>"; 
 		}

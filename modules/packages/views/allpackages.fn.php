@@ -10,7 +10,7 @@
 //opt: status - limit to packages with this status [string]
 
 function packages_allpackages($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';						//%	return value [string]
@@ -19,7 +19,7 @@ function packages_allpackages($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments, load list of packages
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('status', $args)) { $status = $args['status']; }
 
 	$updateManager = new KUpdateManager();

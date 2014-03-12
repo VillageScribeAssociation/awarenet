@@ -10,7 +10,7 @@
 
 function like_otherusers($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$userUID = '';						//%	UID of a Users_User object liking this item [string]
@@ -19,7 +19,7 @@ function like_otherusers($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return 'refModule not given'; }
 	if (false == array_key_exists('refModule', $args)) { return 'refModule not given'; }

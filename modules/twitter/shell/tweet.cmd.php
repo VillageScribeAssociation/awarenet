@@ -11,7 +11,7 @@
 function twitter_WebShell_tweet($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 
 	$html = '';								//%	return value [string]

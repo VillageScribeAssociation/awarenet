@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	if ('savePackage' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
@@ -79,13 +79,13 @@
 	$check = $package->postToRepository();
 	if (true == $check) {
 		$manifestLink = "<a href='" . $package->manifestUrl . "'>" . $package->manifestUrl . "</a>";
-		$session->msg('Package updated on repository:<br/>' . $manifestLink, 'ok');
+		$kapenta->session->msg('Package updated on repository:<br/>' . $manifestLink, 'ok');
 
 	} else {
 		$msg = 'Could not update package metadata on repository, '
 			 . 'please check credentials and network connection.';
 
-		$session->msg($msg, 'warn');
+		$kapenta->session->msg($msg, 'warn');
 	}
 
 	//----------------------------------------------------------------------------------------------

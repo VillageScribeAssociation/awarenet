@@ -11,7 +11,7 @@
 
 function groups_listallnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 	$conditions = array();		//%	array of conditions to filter groups table by [array]
@@ -19,7 +19,7 @@ function groups_listallnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }	
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }	
 	if (true == array_key_exists('school', $args)) 
 		{ $conditions[] = "school='" . $kapenta->db->addMarkup($args['school']) . "'"; }
 

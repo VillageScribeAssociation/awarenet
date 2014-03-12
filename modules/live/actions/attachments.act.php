@@ -12,7 +12,7 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $kapenta->page->do403('', true); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403('', true); }
 
 	if (
 		(false == array_key_exists('refModule', $kapenta->request->args)) ||

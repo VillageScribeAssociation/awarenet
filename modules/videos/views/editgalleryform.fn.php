@@ -9,7 +9,7 @@
 
 function videos_editgalleryform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';						//%	return value [string]
@@ -20,7 +20,7 @@ function videos_editgalleryform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Videos_Gallery($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('videos', 'videos_gallery', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

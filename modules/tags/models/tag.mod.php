@@ -229,7 +229,7 @@ class Tags_Tag {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -243,17 +243,17 @@ class Tags_Tag {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('tags', 'tags_tag', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('tags', 'tags_tag', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Tags/showtag/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('tags', 'tags_tag', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('tags', 'tags_tag', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Tags/edittag/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('tags', 'tags_tag', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('tags', 'tags_tag', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Tags/deltag/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

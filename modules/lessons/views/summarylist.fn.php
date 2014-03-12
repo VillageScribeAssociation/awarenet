@@ -8,7 +8,7 @@
 //arg: courseGroup - a 'group' of lessons [string]
 
 function lessons_summarylist($args) {
-	global $user;
+	global $kapenta;
 
 	$html = '';								//%	return value [string]
 
@@ -16,7 +16,7 @@ function lessons_summarylist($args) {
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('courseGroup', $args)) { return ''; }
 
 	$set = new Lessons_Courses($args['courseGroup']);

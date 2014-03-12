@@ -14,7 +14,7 @@
 	$model = new Forums_Board($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('No such forum.'); }
 
-	if (false == $user->authHas('forums', 'forums_board', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'delete', $model->UID))
 		{ $kapenta->page->do403('You cannot delete this forum (insufficient privilege).'); }
 	
 	//----------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/forums/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 
 	//----------------------------------------------------------------------------------------------
 	//	show confirmation for above item to be deleted

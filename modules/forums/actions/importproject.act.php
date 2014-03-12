@@ -16,7 +16,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check that the project and board both exist
@@ -35,7 +35,7 @@
 	//----------------------------------------------------------------------------------------------
 	$content = $theme->expandBlocks('[[:projects::show::raUID='. $project->UID .':]]', '')
 		. "<br/><div class='inlinequote'>Moved from projects module by "
-		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>";
+		. "[[:users::namelink::userUID=" . $kapenta->user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>";
 
 	$content = str_replace("\n", '', $content);
 	$content = str_replace("\r", '', $content);
@@ -54,10 +54,10 @@
 	$report = $thread->save();
 
 	if ('' == $report) { 
-		$session->msg('Imported project: ' . $project->title, 'ok');
+		$kapenta->session->msg('Imported project: ' . $project->title, 'ok');
 
 	} else {
-		$session->msg('Could not import project: ' . $project->title, 'bad');
+		$kapenta->session->msg('Could not import project: ' . $project->title, 'bad');
 		$kapenta->page->do302('admin/');
 	}
 
@@ -72,7 +72,7 @@
 	foreach($range as $item) {
 		$comment = $item['comment']
 		. "<br/><div class='inlinequote'>Moved from comments module by "
-		. "[[:users::namelink::userUID=" . $user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>\n";
+		. "[[:users::namelink::userUID=" . $kapenta->user->UID . ":]] on " . $kapenta->db->datetime() . ".</div>\n";
 
 		$reply = new Forums_Reply();
 		$reply->forum = $board->UID;
@@ -85,11 +85,11 @@
 		if ('' == $report) {
 			$msg = 'Imported comment by '
 				 . '[[:users::namelink::userUID=' . $item['createdBy'] . ':]].';
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 		} else {
 			$msg = 'Could not import comment by '
 				 . '[[:users::namelink::userUID='. $item['createdBy'] .':]].';
-			$session->msg($msg, 'bad');
+			$kapenta->session->msg($msg, 'bad');
 		}
 	}
 

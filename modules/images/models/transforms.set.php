@@ -203,7 +203,7 @@ class Images_Transforms {
 	function make($label) {
 		global $session;
 		if (false == $this->presetExists($label)) { return false; }
-		//$session->msgAdmin("Making image: $label<br/>");
+		//$kapenta->session->msgAdmin("Making image: $label<br/>");
 
 		if ('full' == $label) { return true; }	//	magic, original image
 
@@ -287,7 +287,7 @@ class Images_Transforms {
 			$kapenta->fs->makePath($fileName);
 			$check = imagejpeg($newImg, $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
-			else { $session->msg('Could not save rescaled image.', 'bad'); }
+			else { $kapenta->session->msg('Could not save rescaled image.', 'bad'); }
 		}
 
 		return $check;
@@ -358,10 +358,10 @@ class Images_Transforms {
 			$kapenta->fs->put($fileName, '', true); 
 			$check = imagejpeg($newImg, $kapenta->installPath . $fileName, 85);
 			if (true == $check) { $this->members[$label] = $fileName; }
-			else { $session->msg('Could not save rescaled image.', 'bad'); }
+			else { $kapenta->session->msg('Could not save rescaled image.', 'bad'); }
 		}
 
-		//$session->msgAdmin($log);
+		//$kapenta->session->msgAdmin($log);
 		//echo $log;
 		return $check;
 	}
@@ -402,7 +402,7 @@ class Images_Transforms {
 
 		if ('' == $kapenta->registry->get('images.size.widthmax')) {
 			$kapenta->registry->set('images.size.widthmax', '1024x*');
-			$session->msg("Set default 'widthmax' preset: 1024x*.");
+			$kapenta->session->msg("Set default 'widthmax' preset: 1024x*.");
 		}
 
 		//	scale down
@@ -433,7 +433,7 @@ class Images_Transforms {
 		 . "Reduced image '" . $this->imageUID . "' to maximum width.  "
 		 . "<a href='" . $kapenta->serverPath . $this->sourceFile . "'>[see]</a>";
 
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 		return true;
 	}
 

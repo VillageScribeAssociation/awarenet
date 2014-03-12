@@ -11,7 +11,7 @@
 
 function tags_modelcloud($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $cache;
 

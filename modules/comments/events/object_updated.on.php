@@ -12,7 +12,7 @@
 function comments__cb_object_updated($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 

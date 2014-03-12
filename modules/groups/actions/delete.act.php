@@ -14,13 +14,13 @@
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Group not specified (UID).'); }
     
 	$model = new Groups_Group($_POST['UID']);
-	if (false == $user->authHas('groups', 'groups_group', 'delete', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'delete', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the group and redirect
 	//----------------------------------------------------------------------------------------------
 	$model->delete();
-	$session->msg("Deleted group: " . $model->name);
+	$kapenta->session->msg("Deleted group: " . $model->name);
 	$kapenta->page->do302('groups/');
 
 ?>

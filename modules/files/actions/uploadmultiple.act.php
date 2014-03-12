@@ -20,7 +20,7 @@
 	//----------------------------------------------------------------------------------------------
 		
 	//TODO: further permissions here
-	if (false == $user->authHas($refModule, $refModel, 'files-edit', $refUID)) {
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'files-edit', $refUID)) {
 		//------------------------------------------------------------------------------------------
 		//	not authorised to edit files, just display
 		//------------------------------------------------------------------------------------------

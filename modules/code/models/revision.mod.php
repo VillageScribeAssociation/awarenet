@@ -226,7 +226,7 @@ class Code_Revision {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -237,17 +237,17 @@ class Code_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('code', 'code_revision', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_revision', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%code/showrevision/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_revision', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_revision', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%code/editrevision/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_revision', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_revision', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%code/delrevision/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

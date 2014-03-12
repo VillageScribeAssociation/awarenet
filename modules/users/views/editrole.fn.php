@@ -10,7 +10,7 @@
 //opt: roleUID - UID of a Users_Role object, overrides raUID [string]
 
 function users_editrole($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $utils;
 	$html = '';					//% return value [string]
@@ -26,7 +26,7 @@ function users_editrole($args) {
 	$model = new Users_Role($raUID);	//% the object we're editing [object:Users_Role]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('users', 'users_role', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_role', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

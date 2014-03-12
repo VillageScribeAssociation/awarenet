@@ -14,7 +14,7 @@
 
 	$model = new Gallery_Gallery($UID);
 	if (false == $model->loaded)  { $kapenta->page->do404('Gallery not found'); }
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) 
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) 
 		{ $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
@@ -22,8 +22,8 @@
 	//----------------------------------------------------------------------------------------------
 
 	$auth = false;
-	if ('admin' == $user->role) { $auth = true; }
-	if ($user->UID == $model->createdBy) { $auth = true; }
+	if ('admin' == $kapenta->user->role) { $auth = true; }
+	if ($kapenta->user->UID == $model->createdBy) { $auth = true; }
 	// possibly more to come here...
 	if (false == $auth) { $kapenta->page->do403(); }
 

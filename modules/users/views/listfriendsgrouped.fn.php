@@ -10,7 +10,7 @@
 //arg: userUID - UID of user whose profile this box is on [string]
 
 function users_listfriendsgrouped($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta; 
 
 	$html = '';				//%	return value [string]
@@ -50,7 +50,7 @@ function users_listfriendsgrouped($args) {
 		foreach($items as $item) {
 			$rmLink = '';
 
-			if ($args['userUID'] == $user->UID) {
+			if ($args['userUID'] == $kapenta->user->UID) {
 				$rmUrl = "users/editfriend/" . $item['friendUID'];
 				$rmLink = "<a href='%%serverPath%%" . $rmUrl . "'>[modify relationship]</a>";
 			}

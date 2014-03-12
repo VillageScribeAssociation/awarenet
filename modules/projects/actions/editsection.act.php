@@ -15,7 +15,7 @@
 	$model = new Projects_Section($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('section not found', true); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
 		$kapenta->page->do403('You are not permitted to edit this project.', true);
 	}
 
@@ -25,12 +25,12 @@
 
 	$lockedBy = $model->checkLock();
 
-	if (('' == $lockedBy) || ($user->UID == $lockedBy)) {
-		$check = $model->setLock($user->UID);
-		if (false == $check) { $session->msg('Database Error - Could not set lock.'); }
+	if (('' == $lockedBy) || ($kapenta->user->UID == $lockedBy)) {
+		$check = $model->setLock($kapenta->user->UID);
+		if (false == $check) { $kapenta->session->msg('Database Error - Could not set lock.'); }
 
 	} else {
-		$session->msg('Someone else is editing this section, please wait and try again.');
+		$kapenta->session->msg('Someone else is editing this section, please wait and try again.');
 	}
 
 	//----------------------------------------------------------------------------------------------

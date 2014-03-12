@@ -19,7 +19,7 @@
 	$model = new Projects_Section($_POST['UID']);
 	if (false == $model->loaded) { echo "<fail>Uknown section.</fail>"; die(); }
 
-	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
 		echo "<fail>Not authorized.</fail>"; die();
 	}
 
@@ -29,7 +29,7 @@
 	//	lock the section
 	//----------------------------------------------------------------------------------------------
 
-	$model->lockedBy = $user->UID;
+	$model->lockedBy = $kapenta->user->UID;
 	$model->lockedOn = $kapenta->db->datetime();
 	$report = $model->save();
 

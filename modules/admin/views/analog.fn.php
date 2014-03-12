@@ -9,14 +9,14 @@
 
 function admin_analog($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	$html = '';					//%	return value [string]
 	$logFile = '';				//%	pageview log to read [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return '(not authorized)'; }
+	if ('admin' != $kapenta->user->role) { return '(not authorized)'; }
 	if (false == array_key_exists('logFile', $args)) { return '(log file not given)'; }
 
 	//----------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@
 	//----------------------------------------------------------------------------------------------
 	$kapenta->page->load('modules/notifications/actions/by.page.php');
 	$kapenta->page->blockArgs['feed'] = $kapenta->request->ref;
-	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->blockArgs['userUID'] = $kapenta->user->UID;
 	$kapenta->page->render();
 
 ?>

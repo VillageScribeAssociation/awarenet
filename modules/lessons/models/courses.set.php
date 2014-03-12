@@ -42,7 +42,7 @@ class Lessons_Courses {
 
 		$this->fileName = 'data/lessons/' . $this->group . '.dat.php';
 
-		if (false == $kapenta->fs->exists($this->fileName)) { $session->msg($this->rebuild()); }
+		if (false == $kapenta->fs->exists($this->fileName)) { $kapenta->session->msg($this->rebuild()); }
 		if (false == $kapenta->fs->exists($this->fileName)) { return false; }
 
 		$serialized = $kapenta->fs->get($this->fileName);

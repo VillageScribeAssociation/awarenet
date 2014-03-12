@@ -13,7 +13,7 @@
 function gallery_recentthumbsall($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$pageNo = 1; 					//%	page number as shown to users, starts at 1 [int]
 	$num = 20; 						//%	number of items per page [int]

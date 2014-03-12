@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions 
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	//TODO: permission
 
 	$school = '';			//%	UID fo a schools_school object [string]
@@ -25,12 +25,12 @@
 		if (true == array_key_exists('students', $_POST)) { $students = $_POST['students']; }
 
 		if (('' == $school) || ('' == $grade) || ('' == $students)) {
-			$session->msg('Please complete all fields.', 'bad');
+			$kapenta->session->msg('Please complete all fields.', 'bad');
 			$ok = false;
 		}
 
 		if (('' != $school) && (false == $kapenta->db->objectExists('schools_school', $school))) {
-			$session->msg('Unknown school.', 'bad');
+			$kapenta->session->msg('Unknown school.', 'bad');
 			$ok = false;
 		}
 
@@ -67,7 +67,7 @@
 					$model->lang = 'en';
 					$model->lastOnline = $kapenta->db->datetime();
 					$model->createdOn = $kapenta->db->datetime();
-					$model->createdBy = $user->UID;
+					$model->createdBy = $kapenta->user->UID;
 
 					$tableRow = array($parts[0], $parts[1], $parts[2], $parts[3]);
 
@@ -75,13 +75,13 @@
 					$report = $model->save();
 					if ('' == $report) {
 						//$namelink = "[[:users::namelink::userUID=" . $model->UID . ":]]";
-						//$session->msg('Created user account: ' . $namelink, 'ok');
+						//$kapenta->session->msg('Created user account: ' . $namelink, 'ok');
 						$goodTable[] = $tableRow;
 
 					} else {
 						$name = $parts[0] . ' ' . $parts[1] . ' (' . $parts[2] . ')';
 						$msg = 'Could not create user account for ' . $name . '<br/>';
-						$session->msg($msg . $report, 'bad');
+						$kapenta->session->msg($msg . $report, 'bad');
 						$badTable = $tableRow;
 					}
 				}
@@ -93,7 +93,7 @@
 			$msg = '';
 			if (count($goodTable) > 1) { $msg .= "<h3>Registered:</h3>$goodTableHtml<br/>"; }
 			if (count($badTable) > 1) { $msg .= "<h3>Failed:</h3>$badTableHtml<br/>"; }
-			$session->msg($msg, 'info');
+			$kapenta->session->msg($msg, 'info');
 
 		}
 

@@ -11,7 +11,7 @@
 
 function notifications__cb_object_deleted($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('model', $args)) { return false; }

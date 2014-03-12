@@ -175,7 +175,7 @@ class Newsletter_Category {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -186,12 +186,12 @@ class Newsletter_Category {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('newsletter', 'newsletter_category', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_category', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%newsletter/showcategory/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('newsletter', 'newsletter_category', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_category', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%newsletter/editcategory/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$popupUrl = $ext['editUrl'];
@@ -199,7 +199,7 @@ class Newsletter_Category {
 			$ext['editLinkJS'] = "<a href='#' onClick=\"" . $popup . "\">[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('newsletter', 'newsletter_category', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_category', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%newsletter/delcategory/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

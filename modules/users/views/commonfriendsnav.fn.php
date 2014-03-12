@@ -11,7 +11,7 @@
 //opt: size - of images returned [string]
 
 function users_commonfriendsnav($args) {
-		global $user;
+		global $kapenta;
 		global $alises;
 
 	if (array_key_exists('userUID', $args) == true) { $args['UID'] = $args['userUID']; }
@@ -19,7 +19,7 @@ function users_commonfriendsnav($args) {
 	$html = '';
 
 	$model = new Users_Friendship();
-	$common = $model->findCommonFriends($user->UID, $args['UID']);
+	$common = $model->findCommonFriends($kapenta->user->UID, $args['UID']);
 
 	if (count($common) > 0) {
 		$html .= "[[:theme::navtitlebox::label=Friends In Common:]]";

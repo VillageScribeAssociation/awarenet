@@ -35,7 +35,7 @@
 	$model = new Projects_Project($_POST['projectUID']);
 	if (false == $model->loaded) { echo "<span class='ajaxerror'>Unknown project.</span>"; die(); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
 		echo "<span class='ajaxerror'>Not authorized.</span>"; die(); 
 	}
 

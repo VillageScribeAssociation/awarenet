@@ -211,7 +211,7 @@ class Live_Chat {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -225,17 +225,17 @@ class Live_Chat {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'live_chat', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_chat', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showchat/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_chat', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_chat', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/editchat/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_chat', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_chat', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/delchat/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

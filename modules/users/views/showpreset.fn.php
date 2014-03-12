@@ -10,7 +10,7 @@
 
 function users_showpreset($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 

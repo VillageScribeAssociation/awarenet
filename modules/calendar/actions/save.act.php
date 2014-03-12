@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('calendar', 'calendar_entry', 'edit', $UID))
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Entry.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -45,8 +45,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Calendar entry updated.'); }
-	else { $session->msg('Could not save Entry:<br/>' . $report); }
+	if ('' == $report) { $kapenta->session->msg('Calendar entry updated.'); }
+	else { $kapenta->session->msg('Could not save Entry:<br/>' . $report); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('/calendar/show/' . $model->alias); }

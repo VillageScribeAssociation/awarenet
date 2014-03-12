@@ -224,7 +224,7 @@ class Images_Image {
 				$check = $this->transforms->reduce();
 				if (true == $check) {
 					$newSize = $kapenta->fs->size($this->fileName);
-					$session->msg("Image '". $this->title ."' reduced from $fileSize to $newSize.");
+					$kapenta->session->msg("Image '". $this->title ."' reduced from $fileSize to $newSize.");
 				} else {
 					$report .= "Could not reduce image " . $this->UID . ".";
 				}
@@ -375,7 +375,7 @@ class Images_Image {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -386,17 +386,17 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('images', 'images_image', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('images', 'images_image', 'show', $this->UID)) {
 			$ext['viewUrl'] = "%%serverPath%%images/show/" . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('images', 'images_image', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('images', 'images_image', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%images/edit/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('images', 'images_image', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('images', 'images_image', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%images/delimage/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -513,7 +513,7 @@ class Images_Image {
 		//------------------------------------------------------------------------------------------
 		//	remove it from the database
 		//------------------------------------------------------------------------------------------
-		$session->msg("Deleting image: " . $this->title . " (" . $this->UID . ")<br/>");
+		$kapenta->session->msg("Deleting image: " . $this->title . " (" . $this->UID . ")<br/>");
 		$check = $kapenta->db->delete($this->UID, $this->dbSchema);
 
 		//------------------------------------------------------------------------------------------

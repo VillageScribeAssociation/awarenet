@@ -11,7 +11,7 @@
 function live_listattachmentsnav($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	
 	$html = '';				//%	return value

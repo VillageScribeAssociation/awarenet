@@ -26,7 +26,7 @@
 	if (false == $kapenta->db->objectExists($refModel, $refUID))
 		{ $kapenta->page->do404('Owner object does not exist.', false); }
 
-	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID))
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'videos-add', $refUID))
 		{ $kapenta->page->do403('You are not authorized to add videos to this object.', true); }
 
 	$tags = 'no';

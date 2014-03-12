@@ -4,7 +4,7 @@
 //*	popup window to edit course details
 //--------------------------------------------------------------------------------------------------
 
-	if (('admin' !== $user->role) && ('teacher' !== $user->role)) {
+	if (('admin' !== $kapenta->user->role) && ('teacher' !== $kapenta->user->role)) {
 		$kapenta->page->do403('You are not permitted to edit this course', true);
 	}
 

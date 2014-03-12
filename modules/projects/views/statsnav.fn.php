@@ -10,7 +10,7 @@
 
 function projects_statsnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';
@@ -22,7 +22,7 @@ function projects_statsnav($args) {
 	
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return '';}
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { return '';}
 	$extArray = $model->extArray();
 
 	//----------------------------------------------------------------------------------------------

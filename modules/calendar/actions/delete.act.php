@@ -14,14 +14,14 @@
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Entry not specified (UID)'); }
 	  
 	$model = new Calendar_Entry($_POST['UID']);
-	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
 		{ $kapenta->page->do403(); }	  
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the entry and redirect back to the calendar front page
 	//----------------------------------------------------------------------------------------------	
 	$model->delete();
-	$session->msg('Deleted calendar entry: ' . $model->title, 'ok');
+	$kapenta->session->msg('Deleted calendar entry: ' . $model->title, 'ok');
 	$kapenta->page->do302('calendar/');
 
 ?>

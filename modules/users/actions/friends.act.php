@@ -7,13 +7,13 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if ($user->role == 'public') { $kapenta->page->do403(); }	
+	if ($kapenta->user->role == 'public') { $kapenta->page->do403(); }	
 
 	//TODO: finer controls and permissions for profile view (only friends classmates, etc)
 
 	$model = new Users_user();
 	if ('' != $kapenta->request->ref) { $model->load($kapenta->request->ref); }	// if a user was specified, try load it
-	else { $model->loadArray($user->toArray()); }		// if not, default to current user
+	else { $model->loadArray($kapenta->user->toArray()); }		// if not, default to current user
 
 	if (false == $model->loaded) { $kapenta->page->do404(); }
 

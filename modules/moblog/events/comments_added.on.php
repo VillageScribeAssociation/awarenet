@@ -14,7 +14,7 @@
 function moblog__cb_comments_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $notifications;
 
@@ -47,11 +47,11 @@ function moblog__cb_comments_added($args) {
 	//	create notification
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$title = $user->getName() . " commented on " . $u->getName() . "'s blog post: " . $model->title;
+	$title = $kapenta->user->getName() . " commented on " . $u->getName() . "'s blog post: " . $model->title;
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 
-	if ($user->UID == $u->UID) { 
-		$title = $user->getName() . " commented on their own blog post: " . $model->title; 
+	if ($kapenta->user->UID == $u->UID) { 
+		$title = $kapenta->user->getName() . " commented on their own blog post: " . $model->title; 
 	}
 
 	$nUID = $notifications->create(
@@ -61,9 +61,9 @@ function moblog__cb_comments_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to blogger and their friends
 	//----------------------------------------------------------------------------------------------
-	$notifications->addUser($nUID, $user->UID);
+	$notifications->addUser($nUID, $kapenta->user->UID);
 	$notifications->addUser($nUID, $u->UID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 	$notifications->addFriends($nUID, $u->UID);
 	$notifications->addAdmins($nUID);
 

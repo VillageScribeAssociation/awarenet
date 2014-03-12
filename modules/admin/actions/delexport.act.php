@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == trim($kapenta->request->ref)) { $kapenta->page->do404('no filename given'); }
 
 	$fileName = $kapenta->request->ref;
@@ -22,8 +22,8 @@
 
 	$check = $kapenta->fileDelete($fileName, true);
 
-	if (true == $check) { $session->msgAdmin("Deleted: $fileName", 'ok'); }
-	else { $session->msgAdmin("Coud not delete: $fileName", 'bad');	}
+	if (true == $check) { $kapenta->session->msgAdmin("Deleted: $fileName", 'ok'); }
+	else { $kapenta->session->msgAdmin("Coud not delete: $fileName", 'bad');	}
 
 	$kapenta->page->do302('admin/exportdb/');
 

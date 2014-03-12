@@ -11,7 +11,7 @@
 
 function home_listpartners($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$pageNo = 1;							//%	first page if not specified [int]
@@ -22,7 +22,7 @@ function home_listpartners($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'home_partner', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('home', 'home_partner', 'list')) { return ''; }
 
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }

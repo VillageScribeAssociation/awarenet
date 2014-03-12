@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_role', 'new'))
+	if (false == $kapenta->user->authHas('users', 'users_role', 'new'))
 		{ $kapenta->page->do403('You are not authorized to create new Roles.'); }
 
 
@@ -30,10 +30,10 @@
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('New Role<br/>');
+		$kapenta->session->msg('New Role<br/>');
 		$kapenta->page->do302('/users/editrole/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Role:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Role:<br/>' . $report);
 	}
 
 ?>

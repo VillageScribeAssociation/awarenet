@@ -12,7 +12,7 @@
 function forums_busiestthreads($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$num = 6;
 	$html = '';		//%	return value [string]

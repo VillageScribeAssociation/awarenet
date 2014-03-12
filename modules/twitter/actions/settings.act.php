@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	handle any POST vars
@@ -58,7 +58,7 @@
 		$consumerSecret = $kapenta->registry->get('twitter.consumersecret');
 		
 		if (('' == $consumerKey) || ('' == $consumerSecret)) {
-			$session->msg('Please complete the consumer key and secret first.', 'bad');
+			$kapenta->session->msg('Please complete the consumer key and secret first.', 'bad');
 
 		} else {
 			$oauth = new TwitterOAuth($consumerKey, $consumerSecret);
@@ -76,7 +76,7 @@
 			$msg = "<b>Important:</b> follow this link to get your PIN:<br/>"
 				. "<a href='" . $registerURL . "' target='twn'>Register with Twitter</a><br/>"
 				. "(You should be logged in to your twitter account before clicking it).";
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 		}
 	}
 
@@ -97,17 +97,17 @@
 		if (true == array_key_exists('twitter_pin', $_POST)) { $PIN = $_POST['twitter_pin']; }
 
 		if (('' == trim($consumerKey)) || ('' == trim($consumerSecret))) {
-			$session->msg('Please complete consumer key and secret');
+			$kapenta->session->msg('Please complete consumer key and secret');
 			$ok = false;
 		}
 
 		if (('' == trim($requestToken)) || ('' == trim($requestTokenSecret))) {
-			$session->msg('Please complete request token and secret');
+			$kapenta->session->msg('Please complete request token and secret');
 			$ok = false;
 		}
 
 		if ('' == trim($PIN)) {
-			$session->msg('Please complete request token and secret');
+			$kapenta->session->msg('Please complete request token and secret');
 			$ok = false;
 		}
 
@@ -132,7 +132,7 @@
 				. "Access Token: $accessToken <br/>"
 				. "Access Token Secret: $accessTokenSecret <br/>";
 
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 		}
 	}
 
@@ -148,7 +148,7 @@
 		$report = twitter_send($tweet);
 		$icon = 'ok';
 		if (false != strpos($report, '<fail/>')) { $icon = 'bad'; }
-		$session->msg($report, $icon);
+		$kapenta->session->msg($report, $icon);
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -19,7 +19,7 @@ function images__cb_file_attach($args) {
 	global $session;
 	global $utils;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$msg = ''
 	 . "File Uploaded<br>"
@@ -29,7 +29,7 @@ function images__cb_file_attach($args) {
 	 . "path: " . $args['path'] . "<br/>"
 	 . "srcName: " . $args['srcName'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>";
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -56,7 +56,7 @@ function images__cb_file_attach($args) {
 			$im = new Imagick($args['path']);
 			$improp = $im->identifyImage();
 		} catch (Exception $e) {
-			$session->msg('Uploaded file was not a valid image.', 'bad');
+			$kapenta->session->msg('Uploaded file was not a valid image.', 'bad');
 			return false;
 		}
 
@@ -68,7 +68,7 @@ function images__cb_file_attach($args) {
 		$gdh = imagecreatefromstring($raw);					//%	GD image handle [int]
 
 		if (false == $gdh) {
-			$session->msg('Uploaded file was not a valid image.', 'bad');
+			$kapenta->session->msg('Uploaded file was not a valid image.', 'bad');
 			return false;
 		}
 	}
@@ -122,7 +122,7 @@ function images__cb_file_attach($args) {
 			if (false == $check) {
 				$report .= "Could not convert image to jpg format.";
 			} else {
-				$session->msg('Attached image.');
+				$kapenta->session->msg('Attached image.');
 			}
 		}
 	}
@@ -151,7 +151,7 @@ function images__cb_file_attach($args) {
 				 . "Last error: " . $model->transforms->lasterr . "<br/>\n";
 
 			} else {
-				$session->msg('Attached image.');
+				$kapenta->session->msg('Attached image.');
 			}
 
 		} else {
@@ -186,7 +186,7 @@ function images__cb_file_attach($args) {
 		);
 
 		$kapenta->raiseEvent('*', 'images_added', $detail);
-		$session->msgAdmin('Attached image file.');
+		$kapenta->session->msgAdmin('Attached image file.');
 
 		//------------------------------------------------------------------------------------------
 		//	tag the new image with the username and file name it was added by
@@ -198,14 +198,14 @@ function images__cb_file_attach($args) {
 			'refUID' => $model->UID
 		);
 
-		$detail['tagName'] = $user->getName();
+		$detail['tagName'] = $kapenta->user->getName();
 		$kapenta->raiseEvent('tags', 'tags_add', $detail);
 
-		//$detail['tagName'] = $user->username;
+		//$detail['tagName'] = $kapenta->user->username;
 		//$kapenta->raiseEvent('tags', 'tags_add', $detail);
 		
 	} else {
-		$session->msg('Could not create image object: ' . $report);
+		$kapenta->session->msg('Could not create image object: ' . $report);
 	}
 
 }

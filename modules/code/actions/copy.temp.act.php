@@ -6,7 +6,7 @@
 //*	temporary administrative action to copy code and files from backup table
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$sql = "select UID, path from code_backup";
 	$result = $kapenta->db->query($sql);

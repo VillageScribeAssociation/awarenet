@@ -4,7 +4,7 @@
 //*	execute a web shell command
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->doXmlError('not authenticated.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->doXmlError('not authenticated.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments

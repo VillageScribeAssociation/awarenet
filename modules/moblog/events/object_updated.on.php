@@ -12,7 +12,7 @@
 function moblog__cb_object_updated($args) {
 	global $kapenta;
 	global $kapenta; 
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $notifications;
 	global $session;
@@ -58,7 +58,7 @@ function moblog__cb_object_updated($args) {
 	//	create or append notification
 	//----------------------------------------------------------------------------------------------
 
-	if (('yes' == $model->published) && ($user->UID == $model->createdBy)) {
+	if (('yes' == $model->published) && ($kapenta->user->UID == $model->createdBy)) {
 		//------------------------------------------------------------------------------------------
 		//	check if this event was raised recently (within the hour)
 		//------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ function moblog__cb_object_updated($args) {
 			//--------------------------------------------------------------------------------------
 			$content = "<br/>\n$content<br/>\n<small>" . $model->editedOn . "</small>";
 			$notifications->annotate($recentUID, $content);	
-			$session->msg('annotating existing notification');
+			$kapenta->session->msg('annotating existing notification');
 
 		} else {
 			//--------------------------------------------------------------------------------------
@@ -90,15 +90,15 @@ function moblog__cb_object_updated($args) {
 				$title, $content, $ext['viewUrl']
 			);
 	
-			$notifications->addFriends($nUID, $user->UID);
-			$notifications->addAdmins($nUID, $user->UID);
+			$notifications->addFriends($nUID, $kapenta->user->UID);
+			$notifications->addAdmins($nUID, $kapenta->user->UID);
 		}
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	raise a microbog event for this
 	//----------------------------------------------------------------------------------------------
-	if (('yes' == $model->published) && ($user->UID == $model->createdBy)) {
+	if (('yes' == $model->published) && ($kapenta->user->UID == $model->createdBy)) {
 		$message = '#' . $kapenta->websiteName . ' blog - '. $model->title;
 		$mbargs = array(
 			'refModule' => 'moblog',

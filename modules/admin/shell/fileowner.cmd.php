@@ -8,7 +8,7 @@
 
 function admin_WebShell_fileowner($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $theme;
 	global $kapenta;
@@ -26,7 +26,7 @@ function admin_WebShell_fileowner($args) {
 		}
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

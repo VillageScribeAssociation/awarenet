@@ -7,10 +7,10 @@
 	//----------------------------------------------------------------------------------------------
 	// check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	//if (false == $user->authHas('files', 'files_folder', 'show', 'TODO:UIDHERE'))
+	//if (false == $kapenta->user->authHas('files', 'files_folder', 'show', 'TODO:UIDHERE'))
 	//	{ $kapenta->page->do403(); }
 
-	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->alias; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $kapenta->user->alias; }
 	$UID = $aliases->findRedirect('users_user');			//TODO: will this work on this module?
 	
 	//----------------------------------------------------------------------------------------------

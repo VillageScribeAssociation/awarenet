@@ -14,7 +14,7 @@
 //returns: true if the given relationship exists, otherwise false [bool]
 
 function notifications_relationships($refModel, $UID, $relationship, $userUID) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 

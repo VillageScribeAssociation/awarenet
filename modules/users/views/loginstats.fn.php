@@ -9,7 +9,7 @@
 //arg: endDate - datetime [string]
 
 function users_loginstats($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 
@@ -20,7 +20,7 @@ function users_loginstats($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('startDate', $args)) { $startDate = $args['startDate']; }
 	if (true == array_key_exists('endDate', $args)) { $endDate = $args['endDate']; }
 

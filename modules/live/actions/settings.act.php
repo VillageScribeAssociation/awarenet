@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('Admins only', true); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Admins only', true); }
 
 	//----------------------------------------------------------------------------------------------
 	//	change association if submitted
@@ -25,7 +25,7 @@
 
 			if ('' == trim($ext)) {
 				$allOk = false;
-				$session->msg('Invalid file extension', 'bad');
+				$kapenta->session->msg('Invalid file extension', 'bad');
 			}
 			if (false == $kapenta->moduleExists($module)) {
 				$allOk = false;
@@ -40,14 +40,14 @@
 					 . "Module '" . $module . "' does not handle 'file_attach' events, "
 					 . "it cannot accept file uploads.";
 
-					$session->msg($msg, 'bad');
+					$kapenta->session->msg($msg, 'bad');
 					$allOk = false;
 				}
 			}
 
 			if (true == $allOk) {
 				$kapenta->registry->set('live.file.' . $ext, $module);
-				$session->msg("Added file association: $ext => $module.", 'ok');
+				$kapenta->session->msg("Added file association: $ext => $module.", 'ok');
 			}
 		}
 
@@ -56,7 +56,7 @@
 
 			if ('' !== $kapenta->registry->get('live.file.' . $ext)) {
 				$kapenta->registry->delete('live.file.' . $ext);
-				$session->msg("Removed association for '$ext' files.");
+				$kapenta->session->msg("Removed association for '$ext' files.");
 			}
 		}
 

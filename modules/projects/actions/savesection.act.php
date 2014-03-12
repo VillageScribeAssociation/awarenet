@@ -25,14 +25,14 @@
 	$project = new Projects_Project($model->projectUID);
 	if (false == $project->loaded) { $kapenta->page->do404('Project not found.'); }
 
-	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_section', 'edit', $model->UID)) {
 		$kapenta->page->do403('You are not authorized to edit this section.'); 
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	check lock
 	//----------------------------------------------------------------------------------------------
-	//if ($user->UID != $model->checkLock()) {
+	//if ($kapenta->user->UID != $model->checkLock()) {
 	//	$kapenta->page->do403('Could not save, you do not own the lock on this section.');
 	//}
 
@@ -53,9 +53,9 @@
 	$report = $model->save();
 
 	if ('' == $report) {
-		$session->msg('Updated project section: ' . $model->title, 'ok');
+		$kapenta->session->msg('Updated project section: ' . $model->title, 'ok');
 	} else {
-		$session->msg('Could not save section:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not save section:<br/>' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -66,15 +66,15 @@
 	if ($model->title != $compare['title']) {
 		$msg = 'Changed section title to:';
 		$report = $changes->add('s.title', $msg, $model->title);
-		if ('' == $report) { $session->msg('Added revision.', 'ok'); }
-		else { $session->msg('Could not save revision:<br/>' . $report, 'bad'); }
+		if ('' == $report) { $kapenta->session->msg('Added revision.', 'ok'); }
+		else { $kapenta->session->msg('Could not save revision:<br/>' . $report, 'bad'); }
 	}
 
 	if ($model->content != $compare['content']) {
 		$msg = 'Changed section content to:';
 		$report = $changes->add('s.content', $msg, $model->content);
-		if ('' == $report) { $session->msg('Added revision.', 'ok'); }
-		else { $session->msg('Could not save revision:<br/>' . $report, 'bad'); }
+		if ('' == $report) { $kapenta->session->msg('Added revision.', 'ok'); }
+		else { $kapenta->session->msg('Could not save revision:<br/>' . $report, 'bad'); }
 	}
 
 	//----------------------------------------------------------------------------------------------

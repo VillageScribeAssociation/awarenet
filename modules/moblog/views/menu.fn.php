@@ -9,7 +9,7 @@
 
 function moblog_menu($args) { 
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$atMySchool = '';					//% posts from user's school if not public [string]
@@ -19,16 +19,16 @@ function moblog_menu($args) {
 	//	logged in users have a blog and a school
 	//----------------------------------------------------------------------------------------------
 	
-	if ('public' != $user->role) {
+	if ('public' != $kapenta->user->role) {
 		$myBlog = ''
 		 . "[[:theme::submenu::label=My Blog"
-		 . "::link=/moblog/blog/" . $user->alias
+		 . "::link=/moblog/blog/" . $kapenta->user->alias
 		 . "::alt=My Blog:]]";
 
-		if ('' != $user->school) {
+		if ('' != $kapenta->user->school) {
 			$atMySchool = ''
 			 . "[[:theme::submenu"
-			 . "::label=At MySchool::link=/moblog/school/" . $user->school
+			 . "::label=At MySchool::link=/moblog/school/" . $kapenta->user->school
 			 . "::alt=Blog posts from my school:]]";
 		}
 	}

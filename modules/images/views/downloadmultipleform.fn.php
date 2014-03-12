@@ -12,7 +12,7 @@
 
 function images_downloadmultipleform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 	$tags = 'no';				
@@ -25,7 +25,7 @@ function images_downloadmultipleform($args) {
 	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
 
-	if (false == $user->authHas($args['refModule'], $args['refModel'], 'images-add', $args['refUID']))
+	if (false == $kapenta->user->authHas($args['refModule'], $args['refModel'], 'images-add', $args['refUID']))
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

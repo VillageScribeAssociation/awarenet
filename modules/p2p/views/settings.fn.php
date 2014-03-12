@@ -7,14 +7,14 @@
 function p2p_settings($args) {
 	global $theme;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

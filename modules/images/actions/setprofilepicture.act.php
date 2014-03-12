@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Image not specified.'); }
 
 	$model = new Images_image($kapenta->request->ref);
@@ -19,8 +19,8 @@
 
 	if (false == $kapenta->fs->exists($model->fileName)) {
 		$msg = 'Image not available on this node, you can not set it as a profile picture.';
-		$session->msg($msg, 'bad');
-		$kapenta->page->do302('users/editprofile/' . $user->alias);
+		$kapenta->session->msg($msg, 'bad');
+		$kapenta->page->do302('users/editprofile/' . $kapenta->user->alias);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@
 	$model->UID = $UID;
 	$model->refModule = 'users';
 	$model->refModel = 'users_user';
-	$model->refUID = $user->UID;
+	$model->refUID = $kapenta->user->UID;
 	
 	$newFile = ''
 	 . 'data/images/'
@@ -43,32 +43,32 @@
 
 	if (false == $check) {
 		$msg = 'Unable to copy image to your profile.';
-		$session->msg($msg, 'bad');
-		$kapenta->page->do302('users/editprofile/' . $user->alias);
+		$kapenta->session->msg($msg, 'bad');
+		$kapenta->page->do302('users/editprofile/' . $kapenta->user->alias);
 	}
 
 	$model->fileName = $newFile;
 	$report = $model->save();
 
 	if ('' == $report) {
-		$session->msg('Added new image to your profile pictures: ' . $model->title, 'ok');
+		$kapenta->session->msg('Added new image to your profile pictures: ' . $model->title, 'ok');
 	} else {
-		$session->msg('Error while copying: ' . $report, 'bad');
+		$kapenta->session->msg('Error while copying: ' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	set image weights such that the image is the default
 	//----------------------------------------------------------------------------------------------
 
-	$imgset = new Images_Images('users', 'users_user', $user->UID);
+	$imgset = new Images_Images('users', 'users_user', $kapenta->user->UID);
 	$check = $imgset->setDefault($model->UID);
 
-	if (true == $check) { $session->msg('Set as current profile picture.', 'ok'); }
-	else { $session->msg('Could not set as current profile picture.', 'bad'); }
+	if (true == $check) { $kapenta->session->msg('Set as current profile picture.', 'ok'); }
+	else { $kapenta->session->msg('Could not set as current profile picture.', 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect to edit profile form
 	//----------------------------------------------------------------------------------------------
-	$kapenta->page->do302('users/editprofile/' . $user->alias);
+	$kapenta->page->do302('users/editprofile/' . $kapenta->user->alias);
 
 ?>

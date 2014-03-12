@@ -89,7 +89,7 @@ class Twitter_Tweet {
 		if ('' != $report) { return $report; }
 		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);
 		if (false == $check) { 
-			$session->msg('tweet could not be saved.');
+			$kapenta->session->msg('tweet could not be saved.');
 			return "Database error.<br/>\n"; 
 		}
 	}
@@ -193,12 +193,12 @@ class Twitter_Tweet {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('twitter', 'twitter_tweet', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('twitter', 'twitter_tweet', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = "%%serverPath%%twitter/showtweet/" . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('twitter', 'twitter_tweet', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('twitter', 'twitter_tweet', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%~%serverPath%~%Twitter/edittweet/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['delUrl'] = '%~%serverPath%~%Twitter/deltweet/' . $ext['UID'];

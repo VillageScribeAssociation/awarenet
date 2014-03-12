@@ -7,11 +7,11 @@
 //--------------------------------------------------------------------------------------------------
 
 function code_newpackageform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	$html = '';									//%	return value [string:html]
 
-	if (false == $user->authHas('code', 'code_package', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('code', 'code_package', 'new')) { return ''; }
 
 	$html = $theme->loadBlock('modules/code/views/newpackageform.block.php');
 

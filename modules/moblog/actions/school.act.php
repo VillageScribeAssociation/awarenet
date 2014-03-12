@@ -11,13 +11,13 @@
 	//----------------------------------------------------------------------------------------------
 
 	$model = new Schools_School();
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
 
 	if ('' != $kapenta->request->ref) {
 		$model->load($kapenta->request->ref);
 		if (false  == $model->loaded) { $kapenta->page->do404(); }
 
-	} else { $model->load($user->school); }
+	} else { $model->load($kapenta->user->school); }
 
 	//TODO: permissions check here
 

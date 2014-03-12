@@ -12,7 +12,7 @@
 
 function projects_listsamembersanav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $cache;
 
@@ -29,10 +29,10 @@ function projects_listsamembersanav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and auth
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('projectUID', $args)) { $args['UID'] = $args['projectUID'];}	
 	if (false == array_key_exists('UID', $args)) { return '';}	
-	//if (false == $user->authHas('projects', 'projects_project', 'show', $args['UID'])){return '';}
+	//if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $args['UID'])){return '';}
 	if (true == array_key_exists('limit', $args)) { $limit = (int)$args['limit']; }
 	if (false == $kapenta->db->objectExists('projects_project', $args['UID'])) { return ''; }
 

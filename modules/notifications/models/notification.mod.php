@@ -224,7 +224,7 @@ class Notifications_Notification {
 		global $kapenta;
 		global $theme;
 		global $utils;
-		global $user;
+		global $kapenta;
 
 		$ext = $this->toArray();						//% return value [dict]
 
@@ -236,17 +236,17 @@ class Notifications_Notification {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('notifications', 'notifications_notification', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', 'notifications_notification', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Notifications/shownotification/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'notifications_notification', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', 'notifications_notification', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Notifications/editnotification/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', 'notifications_notification', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', 'notifications_notification', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Notifications/delnotification/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

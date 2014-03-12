@@ -8,7 +8,7 @@
 //arg: raUID - recordAlias or UID or schools entry [string]
 
 function schools_summary($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -26,7 +26,7 @@ function schools_summary($args) {
 	$model = new Schools_School($raUID);	//% the object we're editing [object:Schools_School]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('schools', 'schools_school', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

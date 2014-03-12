@@ -14,7 +14,7 @@
 function projects_allimages($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	if (array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }

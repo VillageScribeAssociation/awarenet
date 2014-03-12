@@ -8,7 +8,7 @@
 //arg: refUID - UID of object which may have attached files [string]
 
 function live_uploadbasic($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	global $kapenta;
@@ -17,7 +17,7 @@ function live_uploadbasic($args) {
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 	//TODO: hardcoded for now, remove when permissions are more solid on attachments
-	if (('banned' == $user->role) || ('public' == $user->role)) { return ''; }
+	if (('banned' == $kapenta->user->role) || ('public' == $kapenta->user->role)) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return '(no refModule given)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(no refModel given)'; }

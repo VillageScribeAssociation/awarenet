@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST variables
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can use this interface.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Only admins can use this interface.'); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not specified'); }
 	if ('saveNotification' != $_POST['action']) { $kapenta->page->do404('action not supported'); } 
@@ -17,7 +17,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('notifications', 'notifications_notification', 'edit', $UID))
+	if (false == $kapenta->user->authHas('notifications', 'notifications_notification', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Notification.'); }
 	if (false == array_key_exists('refModule', $_POST))
 		{ $kapenta->page->do404('reference module not specified', true); }
@@ -52,8 +52,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to Notification', 'ok'); }
-	else { $session->msg('Could not save Notification:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to Notification', 'ok'); }
+	else { $kapenta->session->msg('Could not save Notification:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('notifications/shownotification/' . $model->UID); }

@@ -14,7 +14,7 @@
 
 function live__cb_p2p_webshell_received($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ function live__cb_p2p_webshell_received($args) {
 	//----------------------------------------------------------------------------------------------
 	//	initialize shell and run the command
 	//----------------------------------------------------------------------------------------------
-	$backupRole = $user->role;			//	event may be handled in 'public' or any user scope
-	$user->role = 'admin';				//	grant admin permissions for this only
+	$backupRole = $kapenta->user->role;			//	event may be handled in 'public' or any user scope
+	$kapenta->user->role = 'admin';				//	grant admin permissions for this only
 
 	$raw = base64_decode($args['cmd64']);
 
@@ -43,7 +43,7 @@ function live__cb_p2p_webshell_received($args) {
 	$result = str_replace('%%serverPath%%', $kapenta->serverPath, $result);
 	$result = str_replace('%%defaultTheme%%', $kapenta->defaultTheme, $result);
 
-	$user->role = $backupRole;			//	restore previous role
+	$kapenta->user->role = $backupRole;			//	restore previous role
 
 	//----------------------------------------------------------------------------------------------
 	//	return the result to the requesting peer

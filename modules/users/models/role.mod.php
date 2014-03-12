@@ -252,7 +252,7 @@ class Users_Role {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 
 		$ext = $this->toArray();		//% extended array of properties [array:string]
@@ -266,19 +266,19 @@ class Users_Role {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('users', 'users_role', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('users', 'users_role', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Users/showrole/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('users', 'users_role', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('users', 'users_role', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Users/editrole/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['goLink'] = "<a href='" . $ext['editUrl'] . "'>" . $ext['name'] . "</a>";
 		}
 
-		if (true == $user->authHas('users', 'users_role', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('users', 'users_role', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Users/delrole/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -327,7 +327,7 @@ class Users_Role {
 
 	function expandPermissions($data) {
 		global $session;
-		$session->msgAdmin('DEPRECATED: Users_Role');
+		$kapenta->session->msgAdmin('DEPRECATED: Users_Role');
 		return $this->permissions->expand($data);
 	}
 

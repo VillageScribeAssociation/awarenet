@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404(); }
 	if ('annotateReport' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
@@ -19,7 +19,7 @@
 	if (false == $model->loaded) { $kapenta->page->do404('Abuse report not found.'); }
 
 	if (false == array_key_exists('comment', $_POST)) { 
-		$session->msg('No comment added.', 'bad');
+		$kapenta->session->msg('No comment added.', 'bad');
 		$kapenta->page->do302('abuse/show/' . $model->UID);
 	}
 
@@ -28,12 +28,12 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: sanitize
 	$comment = $_POST['comment'];
-	$model->annotate($user->UID, $comment);
+	$model->annotate($kapenta->user->UID, $comment);
 
 	//----------------------------------------------------------------------------------------------
 	//	notify other admins and redirect back to abuse report
 	//----------------------------------------------------------------------------------------------
-	$title = "Abuse report annotated by " . $user->getName();
+	$title = "Abuse report annotated by " . $kapenta->user->getName();
 	$url = '/abuse/show/' . $model->UID;
 	$nUID = $notifications->create(
 		'abuse', 'abuse_report', $model->UID, 'abuse_annotated', $title, $comment, $url

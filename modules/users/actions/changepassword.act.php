@@ -15,7 +15,7 @@
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given.'); }
 
 	// users may only change their own password
-	if (('admin' != $user->role) AND ($user->UID != $_POST['UID'])) { $kapenta->page->do403(); }
+	if (('admin' != $kapenta->user->role) AND ($kapenta->user->UID != $_POST['UID'])) { $kapenta->page->do403(); }
 
 	// load user record (it's already in $user, load it anyway)
 	$model = new Users_User($_POST['UID']);
@@ -39,8 +39,8 @@
 	}
 
 	// admins do not need the current password to change it
-	if (('admin' == $user->role) && ('admin' != $model->role)) {
-	//if ('admin' == $user->role) {  
+	if (('admin' == $kapenta->user->role) && ('admin' != $model->role)) {
+	//if ('admin' == $kapenta->user->role) {  
 		$msg = '';
 		$allOk = true;
 	}
@@ -80,12 +80,12 @@
 	if (true == $allOk) {
 		$model->password = sha1($pwdNew . $model->UID);
 		$model->save();
-		$session->msg('Your password has been changed.', 'ok');
+		$kapenta->session->msg('Your password has been changed.', 'ok');
 		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 		$kapenta->page->do302('users/profile/' . $model->alias);
 
 	} else {
-		$session->msg('Your password was not changed:<br/>' . $msg, 'bad');
+		$kapenta->session->msg('Your password was not changed:<br/>' . $msg, 'bad');
 		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 		$kapenta->page->do302('users/profile/' . $model->alias);
 	}

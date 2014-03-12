@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function comments_tip_policy($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';				//%	return value [string]
@@ -13,7 +13,7 @@ function comments_tip_policy($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check if current user has dismissed this policy
 	//----------------------------------------------------------------------------------------------
-	if ('hide' == $user->get('info.comments.policy')) { return ''; }
+	if ('hide' == $kapenta->user->get('info.comments.policy')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

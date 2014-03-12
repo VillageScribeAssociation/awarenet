@@ -9,7 +9,7 @@
 //arg: hta - name of a HyperTextArea on the client page [string]
 
 function live_listattachmentshta($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $theme;	

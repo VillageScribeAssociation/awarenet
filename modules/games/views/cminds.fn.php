@@ -6,7 +6,7 @@
 
 function games_cminds($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 
 	$html = '';								//%	return value [string]
@@ -14,15 +14,15 @@ function games_cminds($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::loginform:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::loginform:]]'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 
 	$labels = array(
-		'userUID' => $user->UID,
-		'sessionUID' => $session->UID,
+		'userUID' => $kapenta->user->UID,
+		'sessionUID' => $kapenta->session->UID,
 		'apiUrl' => '%%serverPath%%games/reporting/'
 	);
 

@@ -13,8 +13,8 @@
 
 	$model = new Notifications_UserIndex($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Notification index not found'); }
-	if ('admin' != $user->role) {
-		if ($model->userUID != $user->UID) { $page->do043('Not your notification to hide.'); }
+	if ('admin' != $kapenta->user->role) {
+		if ($model->userUID != $kapenta->user->UID) { $page->do043('Not your notification to hide.'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model->status = 'hide';
 	$report = $model->save();
-	if ('' == $report) { $session->msg('Notification hidden.'); }
+	if ('' == $report) { $kapenta->session->msg('Notification hidden.'); }
 	$kapenta->page->do302('notifications/');
 
 ?>

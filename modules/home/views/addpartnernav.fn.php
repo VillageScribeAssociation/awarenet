@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function home_addpartnernav($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -16,7 +16,7 @@ function home_addpartnernav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'Home_Partner', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('home', 'Home_Partner', 'new')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

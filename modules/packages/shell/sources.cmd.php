@@ -9,7 +9,7 @@
 
 function packages_WebShell_sources($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 		global $utils;
 
@@ -19,7 +19,7 @@ function packages_WebShell_sources($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	if (true == array_key_exists(0, $args)) {
 		switch($args[0]) {

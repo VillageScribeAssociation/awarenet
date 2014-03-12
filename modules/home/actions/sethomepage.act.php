@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('Only admins can perform this action.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Only admins can perform this action.'); }
 
 	if (false == array_key_exists('homepage', $_POST)) { $kapenta->page->do404('No homepage set.'); }
 
@@ -19,10 +19,10 @@
 
 	$model = new Home_Static($_POST['homepage']);
 	if (false == $model->loaded) { 
-		$session->msg('Could not load / set new home page.', 'bad'); 
+		$kapenta->session->msg('Could not load / set new home page.', 'bad'); 
 	} else { 
 		$kapenta->registry->set('home.frontpage', $model->UID);
-		$session->msg('Homepage changed to: ' . $model->title);
+		$kapenta->session->msg('Homepage changed to: ' . $model->title);
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot check mail
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 
 	//----------------------------------------------------------------------------------------------
@@ -32,13 +32,13 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	$kapenta->page->load('modules/messages/actions/outbox.page.php');
-	$kapenta->page->blockArgs['raUID'] = $user->alias;
-	$kapenta->page->blockArgs['UID'] = $user->UID;
+	$kapenta->page->blockArgs['raUID'] = $kapenta->user->alias;
+	$kapenta->page->blockArgs['UID'] = $kapenta->user->UID;
 	$kapenta->page->blockArgs['pageno'] = $pageNo;
-	$kapenta->page->blockArgs['userName'] = $user->getName();
-	$kapenta->page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->blockArgs['userName'] = $kapenta->user->getName();
+	$kapenta->page->blockArgs['userRa'] = $kapenta->user->alias;
 	$kapenta->page->blockArgs['orderBy'] = $orderBy;
-	$kapenta->page->blockArgs['owner'] = $user->UID;
+	$kapenta->page->blockArgs['owner'] = $kapenta->user->UID;
 	$kapenta->page->render();
 
 ?>

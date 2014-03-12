@@ -6,7 +6,7 @@
 //opt: refresh - force recalculation [string]
 
 function admin_dbusage($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $kapenta;
@@ -18,7 +18,7 @@ function admin_dbusage($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if ('no' == $kapenta->registry->get('kapenta.db.measure')) { return $sizeStr; }
 	if (true == array_key_exists('refresh', $args)) { $refresh = $args['refresh']; }
 

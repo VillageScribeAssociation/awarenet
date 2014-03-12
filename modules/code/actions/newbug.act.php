@@ -38,10 +38,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Bug<br/>', 'ok');
+		$kapenta->session->msg('Created new Bug<br/>', 'ok');
 		$kapenta->page->do302('/Code/editbug/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Bug:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Bug:<br/>' . $report);
 	}
 
 ?>

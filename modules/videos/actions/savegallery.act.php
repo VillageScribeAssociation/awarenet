@@ -16,7 +16,7 @@
 	$UID = $_POST['UID'];
 	$model = new Videos_Gallery($UID);
 	if (false == $model->loaded) { $kapenta->page->do404("Could not load gallery.");}
-	if (false == $user->authHas('videos', 'videos_gallery', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to edit this gallery.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -40,8 +40,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to Gallery', 'ok'); }
-	else { $session->msg('Could not save Gallery:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to Gallery', 'ok'); }
+	else { $kapenta->session->msg('Could not save Gallery:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('videos/showgallery/' . $model->alias); }

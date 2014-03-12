@@ -9,7 +9,7 @@
 //opt: noticeUID - UID of a Newsletter_Notice object, overrides UID [string]
 
 function newsletter_editnoticeform($args) {
-	global $user;
+	global $kapenta;
 	global $utils;
 	global $theme;
 
@@ -27,7 +27,7 @@ function newsletter_editnoticeform($args) {
 	$model = new Newsletter_Notice($raUID);	//% the object we're editing [object:Newsletter_Notice]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('newsletter', 'newsletter_notice', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_notice', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

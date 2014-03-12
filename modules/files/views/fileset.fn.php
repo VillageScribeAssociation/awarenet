@@ -10,7 +10,7 @@
 
 function files_fileset($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 

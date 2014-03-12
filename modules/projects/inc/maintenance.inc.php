@@ -8,7 +8,7 @@
 
 function projects_maintenance() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $aliases;
 

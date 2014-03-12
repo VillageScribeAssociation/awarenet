@@ -13,7 +13,7 @@
 
 function tags_name($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 

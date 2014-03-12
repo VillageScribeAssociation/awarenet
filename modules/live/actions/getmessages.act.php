@@ -15,8 +15,8 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { echo "ERROR: no UID given\n"; die(); }
 	
-	if ('public' != $user->role) {
-		$pingArgs = array('user' => $user->UID, 'role' => $user->role);
+	if ('public' != $kapenta->user->role) {
+		$pingArgs = array('user' => $kapenta->user->UID, 'role' => $kapenta->user->role);
 		$kapenta->raiseEvent('*', 'live_ping', $pingArgs);
 	}
 
@@ -26,7 +26,7 @@
 		//	no such mailbox, create it
 		//------------------------------------------------------------------------------------------
 		$model->pageUID = $kapenta->request->ref;
-		$model->userUID = $user->UID;
+		$model->userUID = $kapenta->user->UID;
 		echo "NEW: creating mailbox ID " . $model->UID . " for page " . $kapenta->request->ref . "\n";
 		$model->save();
 	}
@@ -54,10 +54,10 @@
 		//------------------------------------------------------------------------------------------
 		//	check argument and user role
 		//------------------------------------------------------------------------------------------
-		if ('public' == $user->role) { $kapenta->page->doXmlError('please log in.'); }	// no public users
-		if ('banned' == $user->role) { $kapenta->page->doXmlError('banned.'); }			// banhammered
+		if ('public' == $kapenta->user->role) { $kapenta->page->doXmlError('please log in.'); }	// no public users
+		if ('banned' == $kapenta->user->role) { $kapenta->page->doXmlError('banned.'); }			// banhammered
 
-		$uUID = $kapenta->db->addMarkup($user->UID);
+		$uUID = $kapenta->db->addMarkup($kapenta->user->UID);
 		$datetime = $_POST['chatsince'];
 		if (('' == $datetime) || ('0' == $datetime) || ('undefined' == $datetime))
 			{ $datetime = $kapenta->db->datetime(time() - 1000000); }

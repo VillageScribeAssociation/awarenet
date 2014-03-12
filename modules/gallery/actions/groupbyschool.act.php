@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
@@ -26,9 +26,9 @@
 			$model->schoolUID = $creator['school'];
 			$check = $model->save();
 			if (false == $check) {
-				$session->msg("Reset school for gallery: " . $item['title'], 'ok');
+				$kapenta->session->msg("Reset school for gallery: " . $item['title'], 'ok');
 			} else {
-				$session->msg("Could not set school for gallery: " . $item['title'], 'bad');
+				$kapenta->session->msg("Could not set school for gallery: " . $item['title'], 'bad');
 			}
 		}
 	}

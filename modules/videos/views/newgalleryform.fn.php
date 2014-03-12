@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function videos_newgalleryform($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';				//%	return value [string]
@@ -15,7 +15,7 @@ function videos_newgalleryform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('videos', 'videos_gallery', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'new')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

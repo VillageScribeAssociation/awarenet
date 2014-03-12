@@ -210,7 +210,7 @@ class Live_Trigger {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -224,17 +224,17 @@ class Live_Trigger {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'live_trigger', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_trigger', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showtrigger/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_trigger', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_trigger', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/edittrigger/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_trigger', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_trigger', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/deltrigger/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

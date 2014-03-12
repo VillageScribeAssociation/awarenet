@@ -16,7 +16,7 @@
 	$model = new Newsletter_Notice($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404("could not load Notice $UID");}
 
-	if (false == $user->authHas('newsletter', 'Newsletter_Notice', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('newsletter', 'Newsletter_Notice', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Notice.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -37,8 +37,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to Notice', 'ok'); }
-	else { $session->msg('Could not save Notice:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to Notice', 'ok'); }
+	else { $kapenta->session->msg('Could not save Notice:<br/>' . $report, 'bad'); }
 
 	//if (true == array_key_exists('return', $_POST)) {
 

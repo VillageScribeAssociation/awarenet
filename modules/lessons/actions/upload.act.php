@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('manifestUID', $_POST)) { $kapenta->page->do404('no manifest uid'); }
 	if (false == array_key_exists('title', $_POST)) { 
@@ -55,7 +55,7 @@
 			//TODO: covert word and powerpoint documents here
 
 			default:
-				$session->msg("Files of type $ext are not current supported by this server.", 'bad');
+				$kapenta->session->msg("Files of type $ext are not current supported by this server.", 'bad');
 				$kapenta->page->do302('lessons/editmanifest/' . $model->UID);
 				break;
 		}
@@ -71,15 +71,15 @@
 				$hash = $realHash;	//	no way to tell if broken, so assume all is OK
 			}
 
-			$session->msg("Temp file: $tempFile");
-			$session->msg("Dest file: $destName");
+			$kapenta->session->msg("Temp file: $tempFile");
+			$kapenta->session->msg("Dest file: $destName");
 
 			$kapenta->fileMakeSubdirs($destName);
 
 			copy($tempFile, $kapenta->installPath . $destName);
 
 			if (false == $kapenta->fs->exists($destName)) {
-				$session->msg("Error during file upload, please try again.", 'bad');
+				$kapenta->session->msg("Error during file upload, please try again.", 'bad');
 				$kapenta->page->do302('lessons/editmanifest/' . $model->UID);				
 			}
 

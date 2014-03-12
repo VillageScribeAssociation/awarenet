@@ -243,7 +243,7 @@ class Wiki_MWImport {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -257,17 +257,17 @@ class Wiki_MWImport {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('wiki', 'Wiki_MWImport', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'Wiki_MWImport', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Wiki/showmwimport/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'Wiki_MWImport', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'Wiki_MWImport', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Wiki/editmwimport/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'Wiki_MWImport', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'Wiki_MWImport', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Wiki/delmwimport/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

@@ -11,7 +11,7 @@
 function p2p_WebShell_share($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $kapenta;
 	global $theme;
@@ -34,7 +34,7 @@ function p2p_WebShell_share($args) {
 		}
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

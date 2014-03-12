@@ -8,7 +8,7 @@
 
 function live_WebShell_cat($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 
 	$mode = 'list';			//%	operation [string]

@@ -214,7 +214,7 @@ class Projects_Membership {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -225,17 +225,17 @@ class Projects_Membership {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_membership', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('projects', 'projects_membership', 'show', $this->UID)) {
 			$ext['viewUrl'] = "TODO";
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_membership', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('projects', 'projects_membership', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Projects/editmembership/' . $this->UID;
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_membership', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('projects', 'projects_membership', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Projects/delmembership/' . $this->UID;
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

@@ -223,7 +223,7 @@ class Forums_Board {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();			//%	return value [dict]
@@ -244,14 +244,14 @@ class Forums_Board {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('forums', 'forums_board', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('forums', 'forums_board', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%forums/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[see all threads &gt;&gt;]</a>"; 
 		}

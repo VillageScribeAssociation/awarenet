@@ -365,7 +365,7 @@ class Users_Session {
 
 	function logout() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 		if ('public' == $this->role) { return false; }
 		
@@ -440,9 +440,9 @@ class Users_Session {
 	//returns: true on success, false on failure [bool]
 
 	function msgAdmin($message, $icon = 'info') {
-		global $user;
+		global $kapenta;
 		if (false == isset($user)) { return false; }
-		if ('admin' != $user->role) { return false; }
+		if ('admin' != $kapenta->user->role) { return false; }
 		$this->msg($message, $icon);
 		return true;
 	}

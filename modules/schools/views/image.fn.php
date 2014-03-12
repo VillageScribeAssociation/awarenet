@@ -13,7 +13,7 @@
 
 function schools_image($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$size = 'width300';
 	$link = 'yes';

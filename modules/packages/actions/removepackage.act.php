@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$UID = '';				//%	UID of package [string]
 
@@ -34,12 +34,12 @@
 	if (true == $kapenta->fs->exists($package->fileName)) {
 		$check = @unlink($kapenta->installPath . $package->fileName);
 		if (true == $check) {
-			$session->msg("Deleted package manifest: " . $package->fileName, 'ok');
+			$kapenta->session->msg("Deleted package manifest: " . $package->fileName, 'ok');
 		} else {
-			$session->msg("Could not delete package manifest: " . $package->fileName, 'bad');
+			$kapenta->session->msg("Could not delete package manifest: " . $package->fileName, 'bad');
 		}
 	} else {
-		$session->msg("No manifest do remove: " . $package->fileName);
+		$kapenta->session->msg("No manifest do remove: " . $package->fileName);
 	}
 	*/
 

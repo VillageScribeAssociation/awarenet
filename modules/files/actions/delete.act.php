@@ -17,10 +17,10 @@
 
 		$authorized = false;
 
-		if (true == $user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
+		if (true == $kapenta->user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
 			{ $authorized = true; }
 
-		if (true == $user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
+		if (true == $kapenta->user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
 
 		if (false == $authorized) { $kapenta->page->do403(); }
 
@@ -47,10 +47,10 @@
 
 		$authorized = false;
 
-		if (true == $user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
+		if (true == $kapenta->user->authHas($model->refModule, $model->refModel, 'files-delete', $model->refUID)) 
 			{ $authorized = true; }
 
-		if (true == $user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
+		if (true == $kapenta->user->authHas('files', 'files_file', 'deleteall')) { $authorized = true; }
 
 		if (false == $authorized) { $kapenta->page->do403(); }
 

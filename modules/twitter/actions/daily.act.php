@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$date = substr($kapenta->datetime(), 0, 10);		//	 default report for today
 	if (true == array_key_exists('date', $kapenta->request->args)) { $date = $kapenta->request->args['date']; }

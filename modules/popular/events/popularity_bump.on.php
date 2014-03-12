@@ -29,7 +29,7 @@ function popular__cb_popularity_bump($args) {
 		$model->UID = $kapenta->createUID();
 		$model->name = $ladder;
 		$report = $model->save();
-		if ('' != $report) { $session->msgAdmin("Could not create ladder:<br/>$report", 'bad'); }
+		if ('' != $report) { $kapenta->session->msgAdmin("Could not create ladder:<br/>$report", 'bad'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ function popular__cb_popularity_bump($args) {
 	
 	//temp for debugging  TODO: remove
 	//$rank = $model->getRank($item);
-	//$session->msg("Bumped item: $item on ladder: $ladder Old rank: $oldRank New rank: $rank", 'ok');
+	//$kapenta->session->msg("Bumped item: $item on ladder: $ladder Old rank: $oldRank New rank: $rank", 'ok');
 
 }
 

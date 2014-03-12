@@ -6,7 +6,7 @@
 //*	API to automatically configure a peer
 //-------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('url', $_POST)) { $kapenta->page->do404('URL not given'); }
 	if (false == array_key_exists('recover', $_POST)) { $kapenta->page->do404('password not given'); }
 
@@ -19,7 +19,7 @@
 	$args = array();
 
 	if (false == strpos($raw, '</peer>')) {
-		$session->msg("Could not load peer autoconfiguration file.");
+		$kapenta->session->msg("Could not load peer autoconfiguration file.");
 		$kapenta->page->do302('p2p/peers/');
 	}
 
@@ -35,8 +35,8 @@
 	//	add or update this peer
 	//---------------------------------------------------------------------------------------------
 	$model = new P2P_Peer($args['uid']);
-	if (false == $model->loaded) { $session->msg('Creating new peer: ' . $args['uid']); }
-	else { $session->msg('Updating existing peer: ' . $args['uid']); }
+	if (false == $model->loaded) { $kapenta->session->msg('Creating new peer: ' . $args['uid']); }
+	else { $kapenta->session->msg('Updating existing peer: ' . $args['uid']); }
 
 	$model->UID = $args['uid'];
 	$model->url = $args['url'];
@@ -46,8 +46,8 @@
 
 	$report = $model->save();
 
-	if ('' == $report) { $session->msg("Re/Added peer: " . $model->name, 'ok'); }
-	else { $session->msg("Could not save new peer:<br/>\n" . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg("Re/Added peer: " . $model->name, 'ok'); }
+	else { $kapenta->session->msg("Could not save new peer:<br/>\n" . $report, 'bad'); }
 
 	//---------------------------------------------------------------------------------------------
 	//	if password was given, attempt to register self with remote peer
@@ -67,7 +67,7 @@
 		$result = $utils->curlPost($_POST['url'] . '/p2p/submitpeer/', $postArgs);
 
 		if ('<ok/>' == $result) {
-			$session->msg("Registered self with " . $_POST['url'], 'ok');
+			$kapenta->session->msg("Registered self with " . $_POST['url'], 'ok');
 
 			//-------------------------------------------------------------------------------------
 			//	broadcast resync request to new peer
@@ -87,7 +87,7 @@
 			$kapenta->raiseEvent('*', 'p2p_narrowcast', $detail);
 
 		} else {
-			$session->msg("Remote registration error:<br/>\n" . $result);
+			$kapenta->session->msg("Remote registration error:<br/>\n" . $result);
 		}
 
 	}

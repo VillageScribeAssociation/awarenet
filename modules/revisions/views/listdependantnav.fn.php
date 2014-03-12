@@ -7,7 +7,7 @@
 
 function revisions_listdependantnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $revisions;
 
 	$html = '';
@@ -15,7 +15,7 @@ function revisions_listdependantnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('ownerUID', $args)) { return '(no owner UID)'; }
 
 	//----------------------------------------------------------------------------------------------

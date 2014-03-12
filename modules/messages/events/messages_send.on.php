@@ -13,7 +13,7 @@
 
 function messages__cb_messages_send($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $utils;
 	global $kapenta;
@@ -25,7 +25,7 @@ function messages__cb_messages_send($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return false; }
+	if ('public' == $kapenta->user->role) { return false; }
 
 	if (false == array_key_exists('fromUID', $args)) { return false; }
 	if (false == array_key_exists('toUID', $args)) { return false; }
@@ -56,8 +56,8 @@ function messages__cb_messages_send($args) {
 	$model = new Messages_Message();
 	$model->owner = $toUID;
 	$model->folder = 'inbox';
-	$model->fromUID = $user->UID;
-	$model->fromName = $user->getName();
+	$model->fromUID = $kapenta->user->UID;
+	$model->fromName = $kapenta->user->getName();
 	$model->toUID = $toUID;
 	$model->toName = $toName;
 	$model->cc = '';
@@ -73,7 +73,7 @@ function messages__cb_messages_send($args) {
 	/*
 	$report = $model->save();
 	if ('' != $report) {
-		$session->msg("Could not send message to $toName:<br/>$report", 'bad');
+		$kapenta->session->msg("Could not send message to $toName:<br/>$report", 'bad');
 		return false;
 	}
 	*/
@@ -83,7 +83,7 @@ function messages__cb_messages_send($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$model->UID = $kapenta->createUID();
-	$model->owner = $user->UID;
+	$model->owner = $kapenta->user->UID;
 	$model->folder = "outbox";
 
 	//	Asynchronous version, send database update via message queue, better for slow dbs
@@ -94,10 +94,10 @@ function messages__cb_messages_send($args) {
 	/*
 	$report = $model->save();
 	if ('' != $report) {
-		$session->msg("Could not save owner's copy of message:<br/>$report", 'bad');
+		$kapenta->session->msg("Could not save owner's copy of message:<br/>$report", 'bad');
 		return false;
 	}
-	$session->msg('PM sent to: ' . $toName . " (" . $model->UID . ")", 'bad');
+	$kapenta->session->msg('PM sent to: ' . $toName . " (" . $model->UID . ")", 'bad');
 	*/
 
 	//----------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ function messages__cb_messages_send($args) {
 	//	done
 	//----------------------------------------------------------------------------------------------
 
-	$session->msg('PM sent to: ' . $toName . ", it may take a minute or two to arrive.", 'ok');
+	$kapenta->session->msg('PM sent to: ' . $toName . ", it may take a minute or two to arrive.", 'ok');
 
 	return true;
 }

@@ -8,7 +8,7 @@
 
 function live_WebShell_aliases($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$mode = 'list';			//%	operation [string]
 	$html ='';				//%	return value [string]
@@ -28,15 +28,15 @@ function live_WebShell_aliases($args) {
 	}
 
 	if (true == in_array('--clear', $args)) {
-		if ('admin' == $user->role) { $mode = 'clear'; } else { $mode = 'noauth'; }
+		if ('admin' == $kapenta->user->role) { $mode = 'clear'; } else { $mode = 'noauth'; }
 	}
 
 	if (true == in_array('--new', $args)) {
-		if ('admin' == $user->role) { $mode = 'new'; } else { $mode = 'noauth'; }
+		if ('admin' == $kapenta->user->role) { $mode = 'new'; } else { $mode = 'noauth'; }
 	}
 
 	if (true == in_array('--reset', $args)) {
-		if ('admin' == $user->role) { $mode = 'reset'; } else { $mode = 'noauth'; }
+		if ('admin' == $kapenta->user->role) { $mode = 'reset'; } else { $mode = 'noauth'; }
 	}
 
 	if (true == in_array('--help', $args)) { $mode = 'help'; }

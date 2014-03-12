@@ -12,7 +12,7 @@
 
 function images_listattachmentsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 

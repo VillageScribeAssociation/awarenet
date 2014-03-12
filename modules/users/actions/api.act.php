@@ -10,11 +10,11 @@
 //--------------------------------------------------------------------------------------------------
 
 if ($kapenta->request->ref == 'current') {
-	$ary = array(	'uid' => $user->UID,
-					'username' => $user->username,
-					'ofgroup' => $user->role,  
-					'firstname' => $user->firstname,  
-					'surname' => $user->surname );
+	$ary = array(	'uid' => $kapenta->user->UID,
+					'username' => $kapenta->user->username,
+					'ofgroup' => $kapenta->user->role,  
+					'firstname' => $kapenta->user->firstname,  
+					'surname' => $kapenta->user->surname );
 
 	echo "<?xml version=\"1.0\"?>\n";
 	echo arrayToXml2d($ary, 'user');

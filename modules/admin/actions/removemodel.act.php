@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not apecified.'); }
 	if ('deleteModel' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
@@ -33,9 +33,9 @@
 
 	if (true == $check) {
 		$module->save();
-		$session->msg('Removed model: ' . $modelname, 'ok');
+		$kapenta->session->msg('Removed model: ' . $modelname, 'ok');
 	} else {
-		$session->msg('Could not remove model.', 'bad');
+		$kapenta->session->msg('Could not remove model.', 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

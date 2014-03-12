@@ -12,7 +12,7 @@ function files_filesetdetail($args) {
 		global $kapenta;
 		global $theme;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';						//%	return value [string:html]
 	
@@ -30,7 +30,7 @@ function files_filesetdetail($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
 
-	if (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the list of files
@@ -54,7 +54,7 @@ function files_filesetdetail($args) {
 		$labels = $model->extArray();
 		
 		$labels['editUrl'] = '%%serverPath%%files/viewset/return_uploadmultiple/' . $model->alias;
-		if (true == $user->authHas($refModule, $refModel, 'files-add', $refUID)) {
+		if (true == $kapenta->user->authHas($refModule, $refModel, 'files-add', $refUID)) {
 			$labels['editUrl'] = '%%serverPath%%files/edit/return_uploadmultiple/' . $model->alias;
 		}
 

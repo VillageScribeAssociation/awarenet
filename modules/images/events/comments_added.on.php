@@ -14,7 +14,7 @@
 function images__cb_comments_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $notifications;
 
@@ -39,15 +39,15 @@ function images__cb_comments_added($args) {
 	//	create notification
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$title = $user->getName() . " commented on " . $u->getName() . "'s picture: " . $model->title;
+	$title = $kapenta->user->getName() . " commented on " . $u->getName() . "'s picture: " . $model->title;
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 
 	if ('gallery_gallery' == $model->refModel) {
 		$url = '%%serverPath%%gallery/image/' . $model->alias . '#comment' . $args['commentUID'];
 	}
 
-	if ($user->UID == $u->UID) { 
-		$title = $user->getName() . " commented on their own image: " . $model->title; 
+	if ($kapenta->user->UID == $u->UID) { 
+		$title = $kapenta->user->getName() . " commented on their own image: " . $model->title; 
 	}
 
 	$nUID = $notifications->create(
@@ -57,9 +57,9 @@ function images__cb_comments_added($args) {
 	//----------------------------------------------------------------------------------------------
 	//	send notifications to blogger and their friends
 	//----------------------------------------------------------------------------------------------
-	$notifications->addUser($nUID, $user->UID);
+	$notifications->addUser($nUID, $kapenta->user->UID);
 	$notifications->addUser($nUID, $u->UID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 	$notifications->addFriends($nUID, $u->UID);
 	$notifications->addAdmins($nUID);
 

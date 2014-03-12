@@ -13,7 +13,7 @@ function users_summarylist($args) {
 		global $kapenta;
 		global $req;
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 
@@ -27,7 +27,7 @@ function users_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_user', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_user', 'list')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 

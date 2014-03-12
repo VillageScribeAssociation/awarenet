@@ -13,7 +13,7 @@
 
 function tags__cb_tags_add($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $session;
 	global $utils;
@@ -23,20 +23,20 @@ function tags__cb_tags_add($args) {
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('refModule', $args)) {
-		$session->msgAdmin('tasg_add: refModule not given.', 'bug');
+		$kapenta->session->msgAdmin('tasg_add: refModule not given.', 'bug');
 		return false;
 	}
 	if (false == array_key_exists('refModel', $args)) {
-		$session->msgAdmin('tags_add: refModel not given.', 'bug');
+		$kapenta->session->msgAdmin('tags_add: refModel not given.', 'bug');
 		return false;
 	}
 
 	if (false == array_key_exists('refUID', $args)) {
-		$session->msgAdmin('tags_add: refUID not given.', 'bug');
+		$kapenta->session->msgAdmin('tags_add: refUID not given.', 'bug');
 		return false;
 	}
 	if (false == array_key_exists('tagName', $args)) {
-		$session->msgAdmin('tags_add: tagName not given.', 'bug');
+		$kapenta->session->msgAdmin('tags_add: tagName not given.', 'bug');
 		return false;
 	}
 
@@ -49,16 +49,16 @@ function tags__cb_tags_add($args) {
 	$tagName = $utils->makeAlphaNumeric($tagName, '-');
 
 	if (false == $kapenta->moduleExists($refModule)) {
-		$session->msgAdmin('tags_add: unknown module.');
+		$kapenta->session->msgAdmin('tags_add: unknown module.');
 		return false;
 	}
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) {
-		$session->msgAdmin('tags_add: unknown owner object.');
+		$kapenta->session->msgAdmin('tags_add: unknown owner object.');
 		return false;
 	}
 
 	if (strlen(trim($tagName)) <= 2) {
-		$session->msgAdmin('tags_add: tag too short.');
+		$kapenta->session->msgAdmin('tags_add: tag too short.');
 		return false;
 	}
 
@@ -75,9 +75,9 @@ function tags__cb_tags_add($args) {
 	if (false == $tag->loaded) {
 		$tag->name = $tagName;
 		$report = $tag->save();
-		if ('' == $report) { $session->msg('Started new tag: ' . $tagName); }
+		if ('' == $report) { $kapenta->session->msg('Started new tag: ' . $tagName); }
 		else {
-			$session->msg("Could not create tag: " . $report, 'bad');
+			$kapenta->session->msg("Could not create tag: " . $report, 'bad');
 			return false;
 		}
 	}
@@ -88,7 +88,7 @@ function tags__cb_tags_add($args) {
 	$model = new Tags_Index();
 	$tagUID = $model->getTagIndexUID($refModule, $refModel, $refUID, $tag->UID);
 	if (false != $tagUID) {
-		$session->msg("Tag already added: " . $tagName, 'info');
+		$kapenta->session->msg("Tag already added: " . $tagName, 'info');
 		return false;
 	}
 	
@@ -101,8 +101,8 @@ function tags__cb_tags_add($args) {
 	$model->tagUID = $tag->UID;
 	$report = $model->save();
 
-	if ('' == $report) { $session->msg("Added tag: " . $tagName, 'ok'); }
-	else { $session->msg("Could not add tag:<br/>\n" . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg("Added tag: " . $tagName, 'ok'); }
+	else { $kapenta->session->msg("Could not add tag:<br/>\n" . $report, 'bad'); }
 
 	$tag->updateObjectCount();
 	$report = $tag->save();

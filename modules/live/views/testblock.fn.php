@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_testblock($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 
@@ -14,7 +14,7 @@ function live_testblock($args) {
 	$block = $theme->loadBlock('modules/live/views/testblock.block.php');
 
 	$labels = array(
-		'userLink' => $user->getNameLink(),
+		'userLink' => $kapenta->user->getNameLink(),
 		'datetime' => $kapenta->db->datetime()
 	);
 

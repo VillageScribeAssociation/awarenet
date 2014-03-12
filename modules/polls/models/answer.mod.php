@@ -164,7 +164,7 @@ class Polls_Answer {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -175,17 +175,17 @@ class Polls_Answer {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('polls', 'polls_answer', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('polls', 'polls_answer', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%polls/showanswer/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('polls', 'polls_answer', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('polls', 'polls_answer', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%polls/editanswer/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('polls', 'polls_answer', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('polls', 'polls_answer', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%polls/delanswer/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

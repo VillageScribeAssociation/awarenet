@@ -12,7 +12,7 @@
 //returns: true if the given relationship exists, otherwise false [bool]
 
 function messages_relationships($refModel, $UID, $relationship, $userUID) {
-	global $user;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	get the user we want to know about
@@ -41,7 +41,7 @@ function messages_relationships($refModel, $UID, $relationship, $userUID) {
 				break;
 		}
 
-	} else { $session->msgAdmin('Unknown model: ' . $refModel, 'bug'); }
+	} else { $kapenta->session->msgAdmin('Unknown model: ' . $refModel, 'bug'); }
 	return false;	
 }
 

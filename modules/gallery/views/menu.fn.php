@@ -8,13 +8,13 @@
 
 function gallery_menu($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$labels = array();
 
 	$labels['newEntry'] = '[[:theme::submenu::label=Create New Gallery::link=/gallery/new/:]]';
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit')) { $labels['newEntry'] = ''; }
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'edit')) { $labels['newEntry'] = ''; }
 	
 	$block = $theme->loadBlock('modules/gallery/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

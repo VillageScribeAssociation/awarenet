@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //:	This script compares the aliases table with all objects which should have aliases
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$tables = $kapenta->db->listTables();
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');

@@ -6,7 +6,7 @@
 //role: admin
 
 function users_newpresetform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';								//%	return value [string]
@@ -14,7 +14,7 @@ function users_newpresetform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

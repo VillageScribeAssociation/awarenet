@@ -9,7 +9,7 @@
 //opt: default - preselected item [string]
 
 function images_selecttransform($args) {
-	global $user;
+	global $kapenta;
 
 	$varname = 'transform';		//%	default html form field [string]
 	$default = 'full';			//%	default to original image [string]

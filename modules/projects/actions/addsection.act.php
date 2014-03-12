@@ -37,14 +37,14 @@
 	}
 
 	$sections = new Projects_Sections($project->UID);
-	if (false == $sections->loaded) { $session->msg("Could not load project sections."); }
+	if (false == $sections->loaded) { $kapenta->session->msg("Could not load project sections."); }
 
 	$model->projectUID = $project->UID;
 	$model->weight = $sections->getMaxWeight() + 1;
 	$report = $model->save();
 
 	if ('' == $report) {
-		$session->msg('Added new section: ' . $model->title, 'ok');
+		$kapenta->session->msg('Added new section: ' . $model->title, 'ok');
 
 		//------------------------------------------------------------------------------------------
 		//	add a revisions to title, content and weights
@@ -63,11 +63,11 @@
 			$check .= $changes->add('s.content', $msg, $model->content);
 		}
 
-		if ('' == $check) { $session->msg('Added revisions.', 'ok'); }
-		else { $session->msg('Problem while addingrevisions:<br/>' . $check, 'bad'); }
+		if ('' == $check) { $kapenta->session->msg('Added revisions.', 'ok'); }
+		else { $kapenta->session->msg('Problem while addingrevisions:<br/>' . $check, 'bad'); }
 
 	} else {
-		$session->msg('Could not create new section:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not create new section:<br/>' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 //opt: pageNo - results page to show, from 1, default is 1 (int)  [string]
 
 function projects_history($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -29,7 +29,7 @@ function projects_history($args) {
 
 	$model = new Projects_Project($args['UID']);
 	if (false == $model->loaded) { return '(no such article)'; }
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 	//TODO: more permission options
 
 	if ($num < 1) { $num = 1; }

@@ -8,16 +8,16 @@
 	//	turn on mobile features
 	//----------------------------------------------------------------------------------------------
 
-	$session->set('mobile', 'true');
-	$session->set('contentWidth', '320');
+	$kapenta->session->set('mobile', 'true');
+	$kapenta->session->set('contentWidth', '320');
 
-	$session->msg("Session now in mobile compatability mode.", 'ok');
+	$kapenta->session->msg("Session now in mobile compatability mode.", 'ok');
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect to front page or user notifications
 	//----------------------------------------------------------------------------------------------
 
-	if (('public' == $user->role) || ('banned' == $user->role)) { $kapenta->page->do302('users/login/'); }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { $kapenta->page->do302('users/login/'); }
 	$kapenta->page->do302('notifications/');
 
 ?>

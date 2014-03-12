@@ -14,7 +14,7 @@
 
 	$model = new Projects_Project($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404(); }
-	if (false == $user->authHas('projects', 'projects_revision', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('projects', 'projects_revision', 'show')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

@@ -11,7 +11,7 @@
 
 function users_permissions($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$module = '*';			//%	name of a kapenta module, or wildcard [string]
@@ -22,7 +22,7 @@ function users_permissions($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	
 	if (true == array_key_exists('module', $args)) { $module = $args['module']; }
 	if (true == array_key_exists('model', $args)) { $model = strtolower($args['model']); }

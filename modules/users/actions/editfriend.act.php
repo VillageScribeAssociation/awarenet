@@ -14,17 +14,17 @@
 
 	$friendUID = $kapenta->request->ref;
 	$model = new Users_Friendship();
-	$model->loadFriend($user->UID, $friendUID);
+	$model->loadFriend($kapenta->user->UID, $friendUID);
 	if (false == $model->loaded) { $kapenta->page->do404(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	render page
 	//---------------------------------------------------------------------------------------------
 	$kapenta->page->load('modules/users/actions/editfriend.page.php');
-	$kapenta->page->blockArgs['userUID'] = $user->UID;
+	$kapenta->page->blockArgs['userUID'] = $kapenta->user->UID;
 	$kapenta->page->blockArgs['friendUID'] = $friendUID;
-	$kapenta->page->blockArgs['userRa'] = $user->alias;
-	$kapenta->page->blockArgs['userName'] = $user->getName();
+	$kapenta->page->blockArgs['userRa'] = $kapenta->user->alias;
+	$kapenta->page->blockArgs['userName'] = $kapenta->user->getName();
 	$kapenta->page->blockArgs['friendshipUID'] = $model->UID;
 	$kapenta->page->render();
 	

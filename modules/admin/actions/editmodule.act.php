@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }		// admins only
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }		// admins only
 
 	$moduleName = $kapenta->request->ref;
 	if (false == $kapenta->moduleExists($moduleName)) { $kapenta->page->do404(); }
@@ -26,7 +26,7 @@
 		$module->description = 'Describe your module here';
 		$module->save();
 
-		$session->msg("Creating module definition: $moduleName", 'ok');
+		$kapenta->session->msg("Creating module definition: $moduleName", 'ok');
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -11,8 +11,8 @@
 
 function moblog_schoolrecentnav($args) {
 		global $kapenta;
-		global $page;
-		global $user;
+		global $kapenta;
+		global $kapenta;
 
 	$num = 10; 						//%	number of recent items to show [int]
 	$html = '';						//%	return value [string]
@@ -20,7 +20,7 @@ function moblog_schoolrecentnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('schoolUID', $args)) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	//if (false == $kapenta->db->objectExists('schools_school', $args['schoolUID'])) { return ''; }

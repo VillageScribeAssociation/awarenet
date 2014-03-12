@@ -9,8 +9,8 @@
 //--------------------------------------------------------------------------------------------------
 
 function forums_atmyschoolnav($args) {
-	global $user;
-	return "[[:forums::summarylistnav::school=" . $user->school . ":]]";
+	global $kapenta;
+	return "[[:forums::summarylistnav::school=" . $kapenta->user->school . ":]]";
 }
 
 //--------------------------------------------------------------------------------------------------

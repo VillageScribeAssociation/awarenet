@@ -12,7 +12,7 @@
 function polls_showpoll($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$width = 500;			//%	max width of bars in chart [int]
@@ -28,7 +28,7 @@ function polls_showpoll($args) {
 	$model = new Polls_Question($args['UID']);
 	if (false == $model->loaded) { return '(could not load question)'; }
 
-	if (true == $model->hasVoted($user->UID)) { 
+	if (true == $model->hasVoted($kapenta->user->UID)) { 
 		return "[[:polls::showpollresults::questionUID=" . $model->UID . "::width=$width:]]";
 	}
 

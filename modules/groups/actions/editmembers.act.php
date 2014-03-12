@@ -19,10 +19,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	determine if current user is authorised to administer this group
 	//----------------------------------------------------------------------------------------------
-	$admin = $model->hasEditAuth($user->UID);		//TODO: use a permission for this
+	$admin = $model->hasEditAuth($kapenta->user->UID);		//TODO: use a permission for this
 	$members = $model->getMembers();
 	foreach($members as $member) { 
-		if (($member['userUID'] == $user->UID) AND ('yes' == $member['admin'])) { $admin = true; } 
+		if (($member['userUID'] == $kapenta->user->UID) AND ('yes' == $member['admin'])) { $admin = true; } 
 	}
 
 	if ($admin == false) { $kapenta->page->do403(); }
@@ -34,7 +34,7 @@
 		AND ($_POST['action'] == 'addMember') ) {
 
 		$model->addMember($_POST['user'], $_POST['position'], $_POST['admin']);
-		$session->msg("Added new member to " . $model->name . ".", 'ok');
+		$kapenta->session->msg("Added new member to " . $model->name . ".", 'ok');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ( (true == array_key_exists('action', $_POST)) AND ('removemember' == $_POST['action']) ) {
 		$model->removeMember($_POST['user']);
-		$session->msg("Removed member from " . $model->name . ".", 'ok');
+		$kapenta->session->msg("Removed member from " . $model->name . ".", 'ok');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@
 		AND (true == $kapenta->db->objectExists('users_user', $kapenta->request->args['removemember'])) ) {
 
 		$model->removeMember($kapenta->request->args['removemember']);
-		$session->msg("Removed member from " . $model->name . ".", 'ok');
+		$kapenta->session->msg("Removed member from " . $model->name . ".", 'ok');
 	}
 	
 	//----------------------------------------------------------------------------------------------

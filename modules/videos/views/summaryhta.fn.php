@@ -14,7 +14,7 @@
 function videos_summaryhta($args) {
 	global $kapenta;
 	global $utils;
-	global $user;
+	global $kapenta;
 	global $theme;
 	
 	$html = '';
@@ -22,7 +22,7 @@ function videos_summaryhta($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (true == array_key_exists('fileUID', $args)) { $args['raUID'] = $args['fileUID']; }

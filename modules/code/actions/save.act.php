@@ -27,7 +27,7 @@
 			$c->data['revision'] = 0;
 			$c->data['description'] = $_POST['description'];
 			$c->data['content'] = $_POST['content'];
-			$c->data['author'] = $user->UID;
+			$c->data['author'] = $kapenta->user->UID;
 			$c->save();
 			$kapenta->page->do302('code/' . $c->data['recordAlias']);
 
@@ -52,7 +52,7 @@
 			$revision->data['revision'] = $c->data['revision'];
 			$revision->data['description'] = $c->data['description'];
 			$revision->data['content'] = $c->data['content'];
-			$revision->data['editedBy'] = $user->UID;
+			$revision->data['editedBy'] = $kapenta->user->UID;
 			$revision->data['editedOn'] = mysql_datetime();
 			$revision->data['reason'] = $_POST['reason'];
 			$revision->save();
@@ -66,7 +66,7 @@
 			$c->data['type'] = $_POST['type'];
 			$c->data['revision'] = ($c->data['revision'] + 1);
 			$c->save();
-			$session->msg("Updated code record.<br/>\n");
+			$kapenta->session->msg("Updated code record.<br/>\n");
 			$kapenta->page->do302('code/' . $c->data['recordAlias']);
 			
 		}
@@ -87,7 +87,7 @@
 			$c->data['revision'] = 0;
 			$c->data['description'] = '';
 			$c->data['content'] = '';
-			$c->data['author'] = $user->UID;
+			$c->data['author'] = $kapenta->user->UID;
 			$c->save();
 			$kapenta->page->do302('code/' . $c->data['UID']);
 

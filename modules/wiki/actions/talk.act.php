@@ -17,7 +17,7 @@
 
 	$model = new Wiki_Article($UID);
 	if (false == $model->loaded) { $kapenta->page->do404('Could not load parent article.'); }
-	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { $kapenta->page->do403(); }
 
 	$kapenta->page->load('modules/wiki/actions/talk.page.php');
 	$kapenta->page->blockArgs['UID'] = $model->UID;

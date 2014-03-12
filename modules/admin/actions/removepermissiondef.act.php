@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';		//%	name of a kapenta module [string]
 	$modelname = '';		//%	name of object type [string]
@@ -39,12 +39,12 @@
 
 	$check = $model->removePermission($permission);
 	if (true == $check) {
-		$session->msg('Removed permision: ' . $permission, 'ok');
+		$kapenta->session->msg('Removed permision: ' . $permission, 'ok');
 		$module->models[$modelname] = $model->toArray();
 		$module->save();
 
 	} else {
-		$session->msg('Could not remove permission.', 'bad');
+		$kapenta->session->msg('Could not remove permission.', 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

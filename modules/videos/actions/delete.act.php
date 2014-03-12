@@ -18,9 +18,9 @@
 	//TODO: add other permissions here?
 	$auth = false;
 
-	if ($user->UID == $model->createdBy) { $auth = true; }
+	if ($kapenta->user->UID == $model->createdBy) { $auth = true; }
 
-	if (true == $user->authHas($model->refModule, $model->refModel, 'videos-remove', $model->refUID)) {
+	if (true == $kapenta->user->authHas($model->refModule, $model->refModel, 'videos-remove', $model->refUID)) {
 		$auth = true;
 	}
 

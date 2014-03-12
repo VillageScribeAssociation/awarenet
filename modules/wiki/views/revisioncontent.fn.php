@@ -9,7 +9,7 @@
 //arg: raUID - UID of a wiki_article object [string]
 
 function wiki_revisioncontent($args) {
-	global $user;
+	global $kapenta;
 	global $theme;	
 	
 	$html = '';						//%	return value [string]

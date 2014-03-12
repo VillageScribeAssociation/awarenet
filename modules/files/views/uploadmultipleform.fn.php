@@ -12,7 +12,7 @@ function files_uploadmultipleform($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ function files_uploadmultipleform($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
 
-	if (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'files-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form

@@ -195,7 +195,7 @@ class Projects_Section {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -210,13 +210,13 @@ class Projects_Section {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_section', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_section', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%projects/show/'. $ext['projectUID'] .'#s'. $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 			$ext['titleLink'] = "<a href='" . $ext['viewUrl'] . "'>" . $ext['title'] . "</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_section', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_section', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%projects/editsection/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 
@@ -225,7 +225,7 @@ class Projects_Section {
 			$ext['editInlineLink'] = "<a href='#s". $this->UID ."' onClick=\"$onClick\">[edit]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_section', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_section', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%projects/delsection/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 

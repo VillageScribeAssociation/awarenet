@@ -10,7 +10,7 @@
 
 function users_removefriend($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 

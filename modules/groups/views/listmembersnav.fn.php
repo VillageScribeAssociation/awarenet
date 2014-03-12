@@ -12,7 +12,7 @@
 //TODO: tidy this
 
 function groups_listmembersnav($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$editmode = 'no';
@@ -27,13 +27,13 @@ function groups_listmembersnav($args) {
 
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
 	$members = $model->getMembers();
-	$isAdmin = $model->hasEditAuth($user->UID);		//TODO: use permission for this
+	$isAdmin = $model->hasEditAuth($kapenta->user->UID);		//TODO: use permission for this
 
 	$channel = 'members-' . $model->UID;
 	// $kapenta->page->setTrigger('groups', $channel, $args['rawblock']);

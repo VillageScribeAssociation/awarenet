@@ -11,7 +11,7 @@
 
 function newsletter_listsubscriptions($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -23,7 +23,7 @@ function newsletter_listsubscriptions($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'newsletter_subscription', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_subscription', 'list')) { return ''; }
 
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }

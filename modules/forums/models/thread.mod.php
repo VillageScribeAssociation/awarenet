@@ -186,7 +186,7 @@ class Forums_Thread {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();			//%	return value [dict]
@@ -208,14 +208,14 @@ class Forums_Thread {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		//if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		//if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('forums', 'forums_thread', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('forums', 'forums_thread', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%forums/showthread/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  

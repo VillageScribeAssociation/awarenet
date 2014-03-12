@@ -15,7 +15,7 @@
 function moblog_summarylist($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -28,7 +28,7 @@ function moblog_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }
@@ -40,7 +40,7 @@ function moblog_summarylist($args) {
 	//	count visible posts
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
-	$conditions[] = " (published='yes' or createdBy='" . $user->UID . "') ";
+	$conditions[] = " (published='yes' or createdBy='" . $kapenta->user->UID . "') ";
 	if (true == array_key_exists('userUID', $args)) 
 		{ $conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'"; }
 

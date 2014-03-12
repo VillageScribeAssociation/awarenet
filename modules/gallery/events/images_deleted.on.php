@@ -12,7 +12,7 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 
 function gallery__cb_images_deleted($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------

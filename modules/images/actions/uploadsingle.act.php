@@ -43,7 +43,7 @@
 	if (false == $kapenta->db->objectExists($refModel, $refUID))
 		{ $kapenta->page->do404('owner object does not exist', true); }
 
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'images-add', $refUID)) { $kapenta->page->do403(); }
 	//TODO: check this image permission
 
 	//----------------------------------------------------------------------------------------------

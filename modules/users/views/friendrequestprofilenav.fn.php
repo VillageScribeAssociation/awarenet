@@ -12,7 +12,7 @@
 
 function users_friendrequestprofilenav($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';
 
@@ -20,14 +20,14 @@ function users_friendrequestprofilenav($args) {
 	//	check arguments and permissions 
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('userUID', $args)) { return '(userUID not given)'; }
-    if (false == property_exists($user, 'friendships')) { return '(friendships disabled)'; }
-	if ($args['userUID'] == $user->UID) { return ''; }		// cannot be friend with self
+    if (false == property_exists($kapenta->user, 'friendships')) { return '(friendships disabled)'; }
+	if ($args['userUID'] == $kapenta->user->UID) { return ''; }		// cannot be friend with self
 
 	//----------------------------------------------------------------------------------------------
 	//	look for an existing friend request
 	//----------------------------------------------------------------------------------------------
 
-	if (true == $user->friendships->hasConfirmed($args['userUID'])) { return ''; } 
+	if (true == $kapenta->user->friendships->hasConfirmed($args['userUID'])) { return ''; } 
 	//TODO:	perhaps add 'remove from friends' option in this case?
 	
 	$return = '';
@@ -39,10 +39,10 @@ function users_friendrequestprofilenav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	look for unconfirmed friend request
 	//----------------------------------------------------------------------------------------------
-	if ($user->friendships->hasUnconfirmed($args['userUID'])) {
+	if ($kapenta->user->friendships->hasUnconfirmed($args['userUID'])) {
 
 		$model = new Users_Friendship();
-		$model->loadFriend($user->UID, $args['userUID']);
+		$model->loadFriend($kapenta->user->UID, $args['userUID']);
 
 		$withdrawBlock = '';	//TODO
 

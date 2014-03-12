@@ -16,7 +16,7 @@
 
 function users_search($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -32,7 +32,7 @@ function users_search($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return "[[:users:plaselogin:]]"; }
+	if ('public' == $kapenta->user->role) { return "[[:users:plaselogin:]]"; }
 	if (false == array_key_exists('q', $args)) { return ''; }
 	if (true == array_key_exists('cbjs', $args)) { $cbjs = $args['cbjs']; }
 	if (true == array_key_exists('cblabel', $args)) { $cblabel = $args['cblabel']; }

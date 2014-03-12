@@ -9,8 +9,8 @@
 	//	check if user user is authorized to create new accounts
 	//----------------------------------------------------------------------------------------------
 
-	if (('no' == $kapenta->registry->get('users.allowpublicsignup')) && ('admin' != $user->role)) {
-		$session->msg('Public signup has been disabled.', 'bad');
+	if (('no' == $kapenta->registry->get('users.allowpublicsignup')) && ('admin' != $kapenta->user->role)) {
+		$kapenta->session->msg('Public signup has been disabled.', 'bad');
 		$kapenta->page->do403('Not authorized.');
 	}
 
@@ -64,7 +64,7 @@
 		if (strlen(trim($formvars['firstname'])) < 1) 
 			{ $report .= "[*] Please add your first name.<br/>\n"; }	
 
-		if ('' != $user->getUserUID($formvars['username'])) 
+		if ('' != $kapenta->user->getUserUID($formvars['username'])) 
 			{ $report .= "[*] Username is already taken.<br/>\n"; }	
 
 		// check if user is already registered
@@ -86,7 +86,7 @@
 			//--------------------------------------------------------------------------------------
 			//	create the account
 			//--------------------------------------------------------------------------------------
-			$session->msg('Creating your account...', 'ok');
+			$kapenta->session->msg('Creating your account...', 'ok');
 
 			$model = new Users_User();
 			$model->UID = $kapenta->createUID();
@@ -108,15 +108,15 @@
 				//----------------------------------------------------------------------------------
 				//	user account created, sign user in and redirect to profile
 				//----------------------------------------------------------------------------------
-				$session->user = $model->UID;
-				$session->set('user', $model->UID);					//	set current user UID
-				$session->set('role', $model->role);				//	set current user role
-				$session->msg('You are now logged in.', 'ok');
-				$user->load($model->UID);
+				$kapenta->session->user = $model->UID;
+				$kapenta->session->set('user', $model->UID);					//	set current user UID
+				$kapenta->session->set('role', $model->role);				//	set current user role
+				$kapenta->session->msg('You are now logged in.', 'ok');
+				$kapenta->user->load($model->UID);
 				$kapenta->page->do302('users/profile/');			// show user his profile
 
 			} else {
-				$session->msg('Could not create account:<br/>' . $report, 'bad');
+				$kapenta->session->msg('Could not create account:<br/>' . $report, 'bad');
 				$kapenta->page->do302('users/signup/');			// back to signup form
 			}
 
@@ -125,7 +125,7 @@
 			//	not enough info yet
 			//--------------------------------------------------------------------------------------
 			$report = "<b>Before you continue:</b><br/>\n" . $report . "<br/><br/>\n";
-			$session->msg("<font color='red'>" . $report . "</font>", 'bad');
+			$kapenta->session->msg("<font color='red'>" . $report . "</font>", 'bad');
 		}
 
 	}

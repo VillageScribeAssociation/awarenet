@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	//if (false == $user->authHas('newsletter', 'Newsletter_Edition', 'list'))
+	//if (false == $kapenta->user->authHas('newsletter', 'Newsletter_Edition', 'list'))
 	//	{ $kapenta->page->do403('You are not authorized to list Editions.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]

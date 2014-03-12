@@ -10,7 +10,7 @@
 //opt: UID - overrides raUID if present
 
 function calendar_maketemplatelink($args) {
-	global $user;
+	global $kapenta;
 	$html = '';
 	
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ function calendar_maketemplatelink($args) {
 
 	$model = new Calendar_Entry($args['raUID']);
 	if (false == $model->loaded) { return '(no such calendar entry)'; }
-	if (false == $user->authHas('calendar', 'calendar_template', 'new', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_template', 'new', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the link

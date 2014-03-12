@@ -15,7 +15,7 @@
 
 	$UID = $_POST['UID'];
 
-	if (false == $user->authHas('groups', 'groups_group', 'edit', $UID))
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Group.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -40,8 +40,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Group updated.'); }
-	else { $session->msg('Could not save Group:<br/>' . $report); }
+	if ('' == $report) { $kapenta->session->msg('Group updated.'); }
+	else { $kapenta->session->msg('Could not save Group:<br/>' . $report); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('/groups/show/' . $model->alias); }

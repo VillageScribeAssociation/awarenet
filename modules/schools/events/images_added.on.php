@@ -13,7 +13,7 @@
 
 function schools__cb_images_added($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------

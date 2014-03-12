@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('refModule', $_POST))
 		{ $kapenta->page->do404('reference module not specified'); }
@@ -50,10 +50,10 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
 		$msg = "Report Submitted.<br/>Thank you for letting us know. fromurl:" . $model->fromurl . "\n";
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 		$kapenta->page->do302($model->fromurl);
 	} else {
-		$session->msg('Could not create new Report:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not create new Report:<br/>' . $report, 'bad');
 		$kapenta->page->do302($model->fromurl);
 	}
 

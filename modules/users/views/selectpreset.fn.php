@@ -7,7 +7,7 @@
 //opt: default - preselected item, UID of a Users_Preset object [string]
 
 function users_selectpreset($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -18,7 +18,7 @@ function users_selectpreset($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (true == array_key_exists('varname', $args)) { $varname = $args['varname']; }
 	if (true == array_key_exists('default', $args)) { $default = $args['default']; }

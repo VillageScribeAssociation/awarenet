@@ -6,7 +6,7 @@
 
 function lessons_menukalite($args) { 
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 

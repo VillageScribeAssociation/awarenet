@@ -11,7 +11,7 @@
 
 function packages_WebShell_kpkg($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $kapenta;
 	global $theme;
@@ -39,7 +39,7 @@ function packages_WebShell_kpkg($args) {
 	if (true == in_array('--update', $args)) { $mode = 'update'; }
 	if (true == in_array('-u', $args)) { $mode = 'update'; }
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check if a package name was given

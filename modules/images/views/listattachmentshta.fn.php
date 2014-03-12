@@ -13,7 +13,7 @@
 
 function images_listattachmentshta($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 

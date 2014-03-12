@@ -8,7 +8,7 @@
 //arg: pageNo - page number to show (int) [string]
 
 function abuse_listreports($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -17,7 +17,7 @@ function abuse_listreports($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check argumentss and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	//TODO: permissions check here to allow moderator role
 
 	//----------------------------------------------------------------------------------------------

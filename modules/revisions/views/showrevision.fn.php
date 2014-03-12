@@ -10,7 +10,7 @@
 
 function revisions_showrevision($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$html = '';						//%	return value [string]
@@ -18,7 +18,7 @@ function revisions_showrevision($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$model = new Revisions_Revision($args['UID']);
 	if (false == $model->loaded) { return '(revision not found)'; }

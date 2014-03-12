@@ -16,7 +16,7 @@
 
 	$model = new Gallery_Gallery($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Unknown gallery.'); }
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) { 
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'edit', $model->UID)) { 
 		$kapenta->page->do403('You are not authorized to edit this gallery.'); 
 	}
 
@@ -38,9 +38,9 @@
 	//----------------------------------------------------------------------------------------------
 
 	if ('' == $report) {
-		$session->msg('Saved changes to gallery: ' . $model->title, 'ok');
+		$kapenta->session->msg('Saved changes to gallery: ' . $model->title, 'ok');
 	} else {
-		$session->msg('Could not save changes to gallery:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not save changes to gallery:<br/>' . $report, 'bad');
 	}
 
 	$kapenta->page->do302('gallery/' . $model->alias);			

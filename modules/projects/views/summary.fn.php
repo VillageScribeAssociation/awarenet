@@ -13,7 +13,7 @@
 function projects_summary($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 	global $cache;
 
@@ -34,7 +34,7 @@ function projects_summary($args) {
 	$model = new Projects_Project($kapenta->db->addMarkup($args['raUID']));	
 	if (false == $model->loaded) { return ''; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make and cache the block

@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	administrators only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');
 	echo "<h1>Setting ownership of deleted objects.</h1>";

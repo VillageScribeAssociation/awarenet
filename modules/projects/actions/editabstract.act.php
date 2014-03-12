@@ -16,7 +16,7 @@
 	$model = new Projects_Project($UID);
 	if (false == $model->loaded) { $kapenta->page->do404('Project not found.'); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
 		$kapenta->page->do403('You are not permitted to edit this project abstract.');
 	}
 

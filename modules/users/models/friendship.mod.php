@@ -33,7 +33,7 @@ class Users_Friendship {
 	//opt: UID - UID fo a friendship object [string]
 
 	function Users_Friendship($UID = '') {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		$this->dbSchema = $this->getDbSchema();
@@ -41,7 +41,7 @@ class Users_Friendship {
 		if (false == $this->loaded) {
 			$this->data = $kapenta->db->makeBlank($this->dbSchema);
 			$this->loadArray($this->data);
-			$this->userUID = $user->UID;
+			$this->userUID = $kapenta->user->UID;
 			$this->status = 'unconfirmed';
 			$this->loaded = false;
 		}
@@ -199,7 +199,7 @@ class Users_Friendship {
 	//returns: associative array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ary = $this->toArray();
 		// TODO	
 		return $ary;

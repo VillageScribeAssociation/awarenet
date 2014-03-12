@@ -8,7 +8,7 @@
 
 function p2p_listpeers($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';						//% return value [string]
@@ -16,7 +16,7 @@ function p2p_listpeers($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database

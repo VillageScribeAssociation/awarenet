@@ -14,7 +14,7 @@
 
 	$model = new Calendar_Entry($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Calendar entry not found.'); }
-	if (false == $user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this calendar entry.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@
 	$block = $theme->loadBlock('modules/calendar/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('calendar/' . $model->alias);
 
 ?>

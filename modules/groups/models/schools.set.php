@@ -139,7 +139,7 @@ class Groups_Schools {
 			return true;
 		}
 		
-		$session->msg("Could not add member:<br/>" . $report, 'bad');
+		$kapenta->session->msg("Could not add member:<br/>" . $report, 'bad');
 		return false;
 	}
 
@@ -278,7 +278,7 @@ class Groups_Schools {
 			}
 		}
 
-		$session->msgAdmin($msg);
+		$kapenta->session->msgAdmin($msg);
 
 		$this->load();									//	update list of schools
 		return $updated;

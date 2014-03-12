@@ -47,7 +47,7 @@ function images__cb_extract_video_thumb($args) {
 
 			shell_exec($shellCmd);
 
-			$session->msgAdmin($shellCmd);
+			$kapenta->session->msgAdmin($shellCmd);
 
 			if (true == $kapenta->fs->exists($tempFile)) {
 				//----------------------------------------------------------------------------------

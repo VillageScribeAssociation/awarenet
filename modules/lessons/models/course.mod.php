@@ -96,7 +96,7 @@ class Lessons_Course {
 		$xd = new KXmlDocument($this->fileName, true);
 
 		if (false == $xd->loaded) {
-			$session->msg("could not load: " . $this->fileName);
+			$kapenta->session->msg("could not load: " . $this->fileName);
 			return false; 
 		}
 
@@ -211,7 +211,7 @@ class Lessons_Course {
 				$model->UID = $document['uid'];
 				$report = $model->save();
 				if ('' !== $report) {
-					$session->msg('Could not save Lessons_Stub::' . $model->UID);
+					$kapenta->session->msg('Could not save Lessons_Stub::' . $model->UID);
 				}
 
 			}

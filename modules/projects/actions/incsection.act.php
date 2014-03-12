@@ -24,7 +24,7 @@
 	$project = new Projects_Project($model->projectUID);
 	if (false == $project->loaded) { $kapenta->page->do404('Project not found'); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $project->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $project->UID)) {
 		$kapenta->page->do403();
 	}
 

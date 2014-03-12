@@ -11,7 +11,7 @@
 function users_signupform($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -20,7 +20,7 @@ function users_signupform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and any permissions
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) && ('yes' != $kapenta->registry->get('users.allowpublicsignup'))) { 
+	if (('public' == $kapenta->user->role) && ('yes' != $kapenta->registry->get('users.allowpublicsignup'))) { 
 		return '(this site is not currently accepting public registrations)'; 
 	}
 

@@ -27,9 +27,9 @@
 	$check = newsletter_send($html, $address);
 
 	if (true == $check) {
-		$session->msg("Email sent to: " . $address, 'ok');
+		$kapenta->session->msg("Email sent to: " . $address, 'ok');
 	} else {
-		$session->msg("Email not sent to: " . $address, 'bad');
+		$kapenta->session->msg("Email not sent to: " . $address, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

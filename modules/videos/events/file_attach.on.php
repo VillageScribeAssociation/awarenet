@@ -27,7 +27,7 @@ function videos__cb_file_attach($args) {
 	 . "path: " . $args['path'] . "<br/>"
 	 . "srcName: " . $args['srcName'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>";
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -70,7 +70,7 @@ function videos__cb_file_attach($args) {
 
 	if ('' == $report) {
 		$check = $kapenta->fileCopy($args['path'], $model->fileName);
-		$session->msg('Attached video.');
+		$kapenta->session->msg('Attached video.');
 
 		//------------------------------------------------------------------------------------------
 		//	video was uploaded correctly raise file_added event for this video (p2p uses it)
@@ -98,10 +98,10 @@ function videos__cb_file_attach($args) {
 		);
 
 		$kapenta->raiseEvent('*', 'videos_added', $detail);
-		$session->msgAdmin('Attached video file.');
+		$kapenta->session->msgAdmin('Attached video file.');
 
 	} else {
-		$session->msg('Could not create video object.');
+		$kapenta->session->msg('Could not create video object.');
 	}
 
 	//----------------------------------------------------------------------------------------------

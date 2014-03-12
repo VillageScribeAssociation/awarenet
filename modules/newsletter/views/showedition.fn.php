@@ -10,7 +10,7 @@
 //opt: editionUID - UID of a Newsletter_Edition object, overrides raUID [string]
 
 function newsletter_showedition($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//% return value [string]
@@ -27,7 +27,7 @@ function newsletter_showedition($args) {
 	$model = new Newsletter_Edition($raUID);	//% the object we're editing [object:Newsletter_Edition]
 
 	if (false == $model->loaded) { return ''; }
-	//if (false == $user->authHas('newsletter', 'newsletter_edition', 'show', $model->UID)) { return ''; }
+	//if (false == $kapenta->user->authHas('newsletter', 'newsletter_edition', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

@@ -13,7 +13,7 @@
 
 function projects_revisions($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';					//%	return value [string]
@@ -27,7 +27,7 @@ function projects_revisions($args) {
 	$model = new Projects_Project($args['UID']);
 	if (false == $model->loaded) { return 'Project not found.'; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
 		return ''; 
 	}
 

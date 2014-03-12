@@ -11,7 +11,7 @@
 
 function newsletter_listeditions($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -23,7 +23,7 @@ function newsletter_listeditions($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	//if (false == $user->authHas('newsletter', 'newsletter_edition', 'list')) { return ''; }
+	//if (false == $kapenta->user->authHas('newsletter', 'newsletter_edition', 'list')) { return ''; }
 
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
@@ -40,7 +40,7 @@ function newsletter_listeditions($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();									//% to filter list by [array:string]
 
-	if ('admin' != $user->role) { $conditions[] = "published='yes'"; }
+	if ('admin' != $kapenta->user->role) { $conditions[] = "published='yes'"; }
 
 	//add any conditions here, eg: $conditions[] = "published='yes'";
 

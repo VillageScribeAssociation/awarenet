@@ -8,7 +8,7 @@
 //arg: UID - UID of a Projects_Revision object [string]
 
 function projects_revisionsummarynav($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -22,7 +22,7 @@ function projects_revisionsummarynav($args) {
 	$model = new Projects_Revision($args['UID']);
 	if (false == $model->loaded) { return ''; }
 	//TODO: verify and enable this permission check
-	//if (false == $user->authHas('projects', 'projects_revision', 'show', $model->UID)) { return ''; }
+	//if (false == $kapenta->user->authHas('projects', 'projects_revision', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

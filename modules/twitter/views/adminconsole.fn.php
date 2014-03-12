@@ -7,9 +7,9 @@
 function twitter_adminconsole($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$block = $theme->loadBlock('modules/twitter/views/adminconsole.block.php');
 

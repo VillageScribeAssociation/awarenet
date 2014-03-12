@@ -7,7 +7,7 @@
 
 function forums_movelinkjs($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	$html = '';
 
 	//TODO: make this better
@@ -16,7 +16,7 @@ function forums_movelinkjs($args) {
 	//	check arguments and auth
 	//--------------------------------------------------------------------------------------------
 	if (false == array_key_exists('UID', $args)) { return ''; }
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	//TODO: permissions check here
 
 	//--------------------------------------------------------------------------------------------

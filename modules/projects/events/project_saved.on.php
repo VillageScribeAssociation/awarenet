@@ -12,7 +12,7 @@
 function projects__cb_project_saved($args) {
 	global $session;
 	global $notifications;	
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
@@ -37,13 +37,13 @@ function projects__cb_project_saved($args) {
 	//	content of notification / annotation
 	//----------------------------------------------------------------------------------------------
 	$content = "" 
-		. "[[:users::namelink::userUID=" . $user->UID . ":]] "
+		. "[[:users::namelink::userUID=" . $kapenta->user->UID . ":]] "
 		. "edited the '" . $args['section'] . "' section of this project.<br/>"
 		. "<small>" . $kapenta->db->datetime() . "</small><br/>";
 
 	if ('title' == $args['section']) { 
 		$content = ''
-			. "[[:users::namelink::userUID=" . $user->UID . ":]] "
+			. "[[:users::namelink::userUID=" . $kapenta->user->UID . ":]] "
 			. "changed the title of this project to '" . $model->title . "'.<br/>"
 			. "<small>" . $kapenta->db->datetime() . "</small><br/>";
 	}
@@ -54,7 +54,7 @@ function projects__cb_project_saved($args) {
 		//	project was saved by the same user recently, update the notification
 		//------------------------------------------------------------------------------------------
 		$notifications->annotate($recentUID, $content);	
-		$session->msg('annotating existing notification');
+		$kapenta->session->msg('annotating existing notification');
 
 	} else {
 		//------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ function projects__cb_project_saved($args) {
 		);
 
 		$notifications->addProject($nUID, $model->UID);
-		$notifications->addFriends($nUID, $user->UID);
+		$notifications->addFriends($nUID, $kapenta->user->UID);
 		$notifications->addAdmins($nUID);
 
 		//------------------------------------------------------------------------------------------

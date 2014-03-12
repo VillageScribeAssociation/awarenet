@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'home_partner', 'new')) {
+	if (false == $kapenta->user->authHas('home', 'home_partner', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Partners.');
 	}
 
@@ -35,10 +35,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Partner<br/>', 'ok');
+		$kapenta->session->msg('Created new Partner<br/>', 'ok');
 		$kapenta->page->do302('/home/editpartner/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Partner:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Partner:<br/>' . $report);
 		$kapenta->page->do302('/home/');
 	}
 

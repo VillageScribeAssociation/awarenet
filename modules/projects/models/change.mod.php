@@ -182,7 +182,7 @@ class Projects_Change {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -193,17 +193,17 @@ class Projects_Change {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_change', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_change', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%projects/showchange/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_change', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_change', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%projects/editchange/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('projects', 'projects_change', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('projects', 'projects_change', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%projects/delchange/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

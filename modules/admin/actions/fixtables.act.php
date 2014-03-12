@@ -20,7 +20,7 @@
 //	temporary script to reinstall tables
 //-------------------------------------------------------------------------------------------------
 
-	//if ('admin' != $user->role) { $kapenta->page->do403(); }
+	//if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	specify which tables not to add fields to

@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function revisions_listdeletedtypes($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -14,7 +14,7 @@ function revisions_listdeletedtypes($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database

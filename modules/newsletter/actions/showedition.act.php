@@ -15,7 +15,7 @@
 	if (false == $model->loaded) { $kapenta->page->do404("Unkown Edition");}
 
 	if (
-		(false == $user->authHas('newsletter', 'Newsletter_Edition', 'view', $model->UID)) && 
+		(false == $kapenta->user->authHas('newsletter', 'Newsletter_Edition', 'view', $model->UID)) && 
 		(false == array_key_exists('allow', $kapenta->request->args))
 	) {
 		if ('published' != $model->status) {

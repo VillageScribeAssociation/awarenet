@@ -17,7 +17,7 @@
 	$packageUID = '';
 	$message = '';
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (true == array_key_exists('message', $_POST)) { $message = $_POST['message']; }
 	if (true == array_key_exists('UID', $kapenta->request->args)) { $packageUID = $kapenta->request->args['UID']; }
@@ -34,7 +34,7 @@
 	if ('' == $message) {
 
 		if (array_key_exists('action', $_POST)) {
-			$session->msg('No changelog message given, not updating repository.', 'bad');
+			$kapenta->session->msg('No changelog message given, not updating repository.', 'bad');
 		}
 
 		$kapenta->page->load('modules/packages/actions/commit.page.php');

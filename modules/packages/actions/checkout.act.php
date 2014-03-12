@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
 	if ('checkout' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
 	if (false == array_key_exists('packageUID', $_POST)) { $kapenta->page->do404('Package UID not given'); }
@@ -37,10 +37,10 @@
 		if (true == $download) { 
 			$check = $package->updateFile($pf['uid']);
 			if (true == $check) {
-				$session->msg('Updated: ' . $pf['path'], 'ok');
+				$kapenta->session->msg('Updated: ' . $pf['path'], 'ok');
 				$changeCount++;
 			} else {
-				$session->msg('Could not update: ' . $pf['path'], 'bad');
+				$kapenta->session->msg('Could not update: ' . $pf['path'], 'bad');
 				$toRetry[] = $pf;
 			}
 		} else {
@@ -49,7 +49,7 @@
 	}
 
 	$msg = "Updated $changeCount files, $ignoreCount unchanged, " . count($toRetry) . " failed.";
-	$session->msg($msg, 'ok');	
+	$kapenta->session->msg($msg, 'ok');	
 
 	$package->getLocalDifferent();		//	reset dirty flag in registry for this package
 

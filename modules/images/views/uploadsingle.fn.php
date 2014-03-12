@@ -15,7 +15,7 @@ function images_uploadsingle($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 	$refModule = '';			//%	a kapenta module name [string]
@@ -40,7 +40,7 @@ function images_uploadsingle($args) {
 	if (false == $kapenta->db->tableExists($refModel)) { return ''; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return ''; }
 
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 	//TODO: check permission for uploading images
 
 	if (true == array_key_exists('category', $args)) { $category = $args['category']; }

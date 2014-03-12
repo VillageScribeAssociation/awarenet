@@ -7,7 +7,7 @@
 //*	development action to test request of large file metadata
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$fileName = 'data/videos/1/1/0/110908755616157252';

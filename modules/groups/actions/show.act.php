@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
+	if (($kapenta->user->role == 'public') || ($kapenta->user->role == 'banned')) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('groups_group');
 
@@ -20,7 +20,7 @@
 
 	//$model->schools->updateSchoolsIndex($model->members->get());
 
-	if (true == $user->authHas('groups', 'groups_group', 'edit', $model->UID)) 
+	if (true == $kapenta->user->authHas('groups', 'groups_group', 'edit', $model->UID)) 
 		{ $editUrl = '%%serverPath%%groups/edit/' . $model->alias; }
 
 	//----------------------------------------------------------------------------------------------	

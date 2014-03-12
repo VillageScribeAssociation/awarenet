@@ -20,10 +20,10 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Projects_Section($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Section not found.'); }
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID))
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->projectUID))
 		{ $kapenta->page->do403('You are not authozed to edit this project'); }
 
-	//if (false == $model->hasEditAuth($user->UID)) { $kapenta->page->do403(); }
+	//if (false == $model->hasEditAuth($kapenta->user->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	hide the section and redirect back to edit page
@@ -36,8 +36,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	delete the section and redirect back to abstract
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg("Removed section: '" . $model->title . "'", 'ok'); } 
-	else { $session->msg('Section not removed:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg("Removed section: '" . $model->title . "'", 'ok'); } 
+	else { $kapenta->session->msg('Section not removed:<br/>' . $report, 'bad'); }
 		
 	$kapenta->page->do302('projects/editsection/' . $model->UID);
 

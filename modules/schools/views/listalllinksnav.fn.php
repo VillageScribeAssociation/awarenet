@@ -9,7 +9,7 @@
 
 function schools_listalllinksnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 	$showHidden = false;	//%	display hidden schools if true [bool]

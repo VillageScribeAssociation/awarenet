@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403('Please log in to use the chat.', true); }	
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403('Please log in to use the chat.', true); }	
 
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('User not specified.', true); }
 	$model = new Users_User($kapenta->request->ref);
@@ -64,8 +64,8 @@ a h2 {
 <script language='javascript'>
 
 	jsServerPath = '" . $kapenta->serverPath . "';
-	jsUserUID = '" . $user->UID . "';
-	jsUserName = \"" . $user->getName() . "\";
+	jsUserUID = '" . $kapenta->user->UID . "';
+	jsUserName = \"" . $kapenta->user->getName() . "\";
 	jsPartnerUID = '" . $model->UID . "';
 	jsPartnerName = \"" . $model->getName() . "\";
 	

@@ -9,7 +9,7 @@
 
 function admin_listmodulesnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';
@@ -17,7 +17,7 @@ function admin_listmodulesnav($args) {
 	//---------------------------------------------------------------------------------------------
 	//	cjeck user role
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	load each module and generate report

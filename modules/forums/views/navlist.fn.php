@@ -11,7 +11,7 @@
 
 function forums_navlist($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 

@@ -11,15 +11,15 @@
 
 function users_select($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$varname = 'user';
-	$default = $user->UID;
+	$default = $kapenta->user->UID;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('varname', $args)) { $varname = $args['varname']; }
 	if (true == array_key_exists('default', $args)) { $default = $args['default']; }
 

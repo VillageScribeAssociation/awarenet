@@ -6,7 +6,7 @@
 //opt: default - UID of a Newsletter_Category object [string] 
 
 function newsletter_selectcategory($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$default = '';

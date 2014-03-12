@@ -10,7 +10,7 @@
 //opt: categoryUID - UID of a Newsletter_Category object, overrides raUID [string]
 
 function newsletter_editcategoryform($args) {
-	global $user;
+	global $kapenta;
 	global $utils;
 	global $theme;
 
@@ -28,7 +28,7 @@ function newsletter_editcategoryform($args) {
 	$model = new Newsletter_Category($raUID);	//% the object we're editing [object:Newsletter_Category]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('newsletter', 'newsletter_category', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_category', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

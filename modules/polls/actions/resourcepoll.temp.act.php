@@ -7,7 +7,7 @@
 //*	temporary script to add a set of polls to a forum post
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$refModule = 'forums';
 	$refModel = 'forums_thread';

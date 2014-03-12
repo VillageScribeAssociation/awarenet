@@ -7,7 +7,7 @@
 //*	current user is requesting to join a project
 //--------------------------------------------------------------------------------------------------
 	
-	if ('public' == $user->role) { $kapenta->page->do403(); }	// public and banned users can't do this	
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }	// public and banned users can't do this	
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
 	if ('askToJoin' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
@@ -19,29 +19,29 @@
 	//----------------------------------------------------------------------------------------------
 	//	check for an existing request
 	//----------------------------------------------------------------------------------------------
-	if (true == $project->memberships->hasAsked($user->UID)) {
-		$session->msg('You have already asked to join this project.', 'bad');
+	if (true == $project->memberships->hasAsked($kapenta->user->UID)) {
+		$kapenta->session->msg('You have already asked to join this project.', 'bad');
 		$kapenta->page->do302('projects/' . $project->alias); 
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	no existing request, make one 
 	//----------------------------------------------------------------------------------------------
-	$check = $project->memberships->add($user->UID, 'asked');
+	$check = $project->memberships->add($kapenta->user->UID, 'asked');
 	if (true == $check) {
 		$msg = "You have requested to join this project. "
 			 . "Please be patient in waiting for a response from the people "
 			 . "in charge of this project.\n";
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 
-	} else { $session->msg('Error: request could not be processed.', 'warn'); }
+	} else { $kapenta->session->msg('Error: request could not be processed.', 'warn'); }
 					
 	//----------------------------------------------------------------------------------------------
 	//	notify admins of request, cc to user making it  //TODO: handle with an event
 	//----------------------------------------------------------------------------------------------
 	$ext = $project->extArray();
 
-	$title = $user->getName() . ' would like to join project: ' . $project->title;	
+	$title = $kapenta->user->getName() . ' would like to join project: ' . $project->title;	
 	$content = 'Request via form on the project page, no message attached.';
 	$url = '%%serverPath%%projects/' . $project->alias;
 
@@ -59,7 +59,7 @@
 		if ('admin' == $role) { $notifications->addUser($nUID, $userUID); }
 	}
 
-	$notifications->addUser($nUID, $user->UID);
+	$notifications->addUser($nUID, $kapenta->user->UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	return to project page

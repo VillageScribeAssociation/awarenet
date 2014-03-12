@@ -11,7 +11,7 @@
 
 function forums_summarylistall($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $aliases;
 	global $theme;
 

@@ -9,7 +9,7 @@
 
 function p2p_WebShell_downloads($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 		global $kapenta;
 
@@ -28,7 +28,7 @@ function p2p_WebShell_downloads($args) {
 		case '--wget':	$mode = 'wget';		break;
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

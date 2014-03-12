@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-//*	initialize the kapenta framework in CMS mode
+//	initialize the kapenta framework in CMS mode
 //--------------------------------------------------------------------------------------------------
 
 	set_time_limit(900);
@@ -53,8 +53,8 @@
 //--------------------------------------------------------------------------------------------------
 
 /*
-	if ('yes' == $kapenta->registry->get('xhprof.enabled')) {
-		if (mt_rand(1, (int)$kapenta->registry->get('xhprof.samplesize')) == 1) {
+	if ('yes' == $registry->get('xhprof.enabled')) {
+		if (mt_rand(1, (int)$registry->get('xhprof.samplesize')) == 1) {
 			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_lib.php';
 			include_once __DIR__ . '/gui/xhprof/xhprof_lib/utils/xhprof_runs.php';
 			//xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
@@ -68,66 +68,17 @@
 //--------------------------------------------------------------------------------------------------
 
 
-	$request = $kapenta->request->toArray();						//	(DEPRECATED)
+	$request = $req->toArray();						//	(DEPRECATED)
 	$ref = $req->ref;								//	(DEPRECATED)
-
-	if (false !== strpos($kapenta->request->raw,'static/css') 
-		or false !== strpos($kapenta->request->raw,'static/images')
-		or false !== strpos($kapenta->request->raw,'static/data')
-		or false !== strpos($kapenta->request->raw,'static/js')
-		or false !== strpos($kapenta->request->raw,'static/video-js')
-		or false !== strpos($kapenta->request->raw,'content/')
-		or false !== strpos($kapenta->request->raw,'jsi18n/')
-		or false !== strpos($kapenta->request->raw,'api/info')
-		or false !== strpos($kapenta->request->raw,'api/status')
-		or false !== strpos($kapenta->request->raw,'api/get')
-		or false !== strpos($kapenta->request->raw,'api/start')
-		or false !== strpos($kapenta->request->raw,'api/delete')
-		or false !== strpos($kapenta->request->raw,'api/check_video')
-		or false !== strpos($kapenta->request->raw,'api/check_subtitle')
-		or false !== strpos($kapenta->request->raw,'api/save')
-		or false !== strpos($kapenta->request->raw,'api/cancel')
-		or false !== strpos($kapenta->request->raw,'math')
-		or false !== strpos($kapenta->request->raw,'science')
-		or false !== strpos($kapenta->request->raw,'humanities')
-		or false !== strpos($kapenta->request->raw,'test-prep')
-		or false !== strpos($kapenta->request->raw,'discovery-lab')
-		or false !== strpos($kapenta->request->raw,'exercisedashboard')
-		or false !== strpos($kapenta->request->raw,'coachreports/table')
-		or false !== strpos($kapenta->request->raw,'securesync/api/status')
-		or false !== strpos($kapenta->request->raw,'coachreports/scatter')
-		or false !== strpos($kapenta->request->raw,'coachreports/api')
-		or false !== strpos($kapenta->request->raw,'coachreports/timeline')
-		or false !== strpos($kapenta->request->raw,'coachreports/student')
-	) {
-		$rawdata = file_get_contents('php://input'); //for POSTS
-		
-		$requestURI = $_SERVER['REQUEST_URI'];
-		$requestQuery = $_SERVER['QUERY_STRING'];
-		$remoteAddr = $_SERVER['REMOTE_ADDR'];
-		$remotePort = $_SERVER['REMOTE_PORT'];
-		$requestMethod = $_SERVER['REQUEST_METHOD'];
-		$postArgs	= $rawdata;
-		$args = array(
-			'method' => $requestMethod,
-			'uri' => $requestURI,
-			'query' => $requestQuery,
-			'remoteAddr' => $remoteAddr,
-			'remotePort' => $remotePort,
-			'postArgs' => $postArgs
-		);
-
-		$kapenta->raiseEvent('lessons', 'khanlite_request', $args);
-	}
 
 //--------------------------------------------------------------------------------------------------
 //	check if user originates in our subnet, may redirect others to a central instance
 //--------------------------------------------------------------------------------------------------
 
 	if ((false == $req->local) && ('p2p' != $req->module)) {
-		$altInstance = $kapenta->registry->get('kapenta.alternate');
+		$altInstance = $registry->get('kapenta.alternate');
 		if (true == array_key_exists('alternate', $req->args)) {
-			$kapenta->session->set('usealternate', $req->args['alternate']);
+			$session->set('usealternate', $req->args['alternate']);
 		}
 
 		if (('' != $altInstance) && ('no' != $session->get('usealternate'))) {
@@ -144,11 +95,11 @@
 //	set up the debugger
 //--------------------------------------------------------------------------------------------------
 
-	if (true == array_key_exists('debug', $req->args)) {
+	if (true == array_key_exists('debug', $kapenta->request->args)) {
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
 		if (
-			(array_key_exists('password', $req->args)) && 
+			(array_key_exists('password', $kapenta->request->args)) && 
 			(sha1($kapenta->request->args['password']) == $kapenta->registry->get('kapenta.recoverypassword'))
 		) { $auth = true; }
 
@@ -168,7 +119,7 @@
 	 . 'modules/' . $kapenta->request->module
 	 . '/actions/' . $kapenta->request->action . '.act.php';
 
-	if (false == $kapenta->fs->exists($actionFile)) { $kapenta->page->do404('Unknown action'); }
+	if (false == $kapenta->fs->exists($actionFile)) { $page->do404('Unknown action'); }
 
 	require_once($actionFile);
 
@@ -177,7 +128,7 @@
 //--------------------------------------------------------------------------------------------------
 
 /*
-	if ('yes' == $kapenta->registry->get('xhprof.enabled')) {
+	if ('yes' == $registry->get('xhprof.enabled')) {
 		$skip = false;
 		//TODO: registry key
 

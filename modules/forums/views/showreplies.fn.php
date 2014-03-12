@@ -16,7 +16,7 @@ function forums_showreplies($args) {
 	global $kapenta;
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$pageNo = 1; 					//% results page to display [int]
 	$num = 5; 						//%	default number of items per page [int]
@@ -65,7 +65,7 @@ function forums_showreplies($args) {
 		//$ext['contentHtml'] = str_replace('widthcontent', 'width300', $ext['contentHtml']);
 		//$ext['contentHtml'] = str_replace('width570', 'width300', $ext['contentHtml']);
 
-		if (($ext['createdBy'] == $user->UID) || ('admin' == $user->role)) {
+		if (($ext['createdBy'] == $kapenta->user->UID) || ('admin' == $kapenta->user->role)) {
 			$UID = $ext['UID'];
 			$editBlock = '[[:forums::editreplyif::replyUID=' . $UID . ':]]';
 			$editBlock64 = base64_encode($editBlock);

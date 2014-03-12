@@ -11,7 +11,7 @@
 
 function projects_listuserprojectsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';				//% return value [string]
@@ -19,7 +19,7 @@ function projects_listuserprojectsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and auth
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('userUID', $args) == false) { return false; }
 
 	//----------------------------------------------------------------------------------------------

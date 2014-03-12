@@ -9,14 +9,14 @@
 
 function newsletter_publishform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 
 	$model = new Newsletter_Edition($args['UID']);

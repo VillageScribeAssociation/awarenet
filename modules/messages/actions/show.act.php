@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	check the user is authorised to view the message
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403('Please log in to view messages.'); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403('Please log in to view messages.'); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Message not specified (UID).'); }
 
 	$model = new Messages_Message($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Message not found.'); }
-	if ($model->owner != $user->UID) { $kapenta->page->do403('You cannot view this message.'); }
+	if ($model->owner != $kapenta->user->UID) { $kapenta->page->do403('You cannot view this message.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	mark as read

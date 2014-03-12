@@ -11,7 +11,7 @@ require_once($kapenta->installPath . 'modules/files/models/file.mod.php');
 
 function files__cb_object_deleted($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $session;
 
 	if (false == array_key_exists('module', $args)) { return false; }
@@ -33,9 +33,9 @@ function files__cb_object_deleted($args) {
 		$model->loadArray($item);
 		$report = $model->delete();
 		if ('' == $report) {
-			$session->msg('Deleted file: ' . $item['title'] . ' (' . $item['UID'] . ')');
+			$kapenta->session->msg('Deleted file: ' . $item['title'] . ' (' . $item['UID'] . ')');
 		} else {
-			$session->msgAdmin('Could not delete file: '. $item['title'] .' ('. $item['UID'] .')');
+			$kapenta->session->msgAdmin('Could not delete file: '. $item['title'] .' ('. $item['UID'] .')');
 		}
 	}
 

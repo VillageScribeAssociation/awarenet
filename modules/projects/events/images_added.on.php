@@ -14,7 +14,7 @@
 function projects__cb_images_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $notifications;
 	global $cache;
 
@@ -56,7 +56,7 @@ function projects__cb_images_added($args) {
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$link = "<a href='" . $ext['viewUrl'] . "/'>" . $ext['title'].  '</a>';
-	$title = $user->getName() . ' added a new image to project: ' . $ext['title'];
+	$title = $kapenta->user->getName() . ' added a new image to project: ' . $ext['title'];
 	$url = $ext['viewUrl'];
 	$imgUID = '';
 
@@ -80,7 +80,7 @@ function projects__cb_images_added($args) {
 	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $userUID); }
 
 	$notifications->addAdmins($nUID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 
 	return true;
 }

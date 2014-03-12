@@ -13,8 +13,8 @@
 	//	check that the friendship does not already exist
 	//----------------------------------------------------------------------------------------------
 	$friend = new Users_User($UID);
-	if ($user->isFriend($friend->UID)) {
-		$session->msg("You are already friends.", 'bad');
+	if ($kapenta->user->isFriend($friend->UID)) {
+		$kapenta->session->msg("You are already friends.", 'bad');
 		$kapenta->page->do302('users/profile/' . $kapenta->request->ref);
 	}
 
@@ -22,7 +22,7 @@
 	//	create friend request
 	//----------------------------------------------------------------------------------------------
 	$model = new Users_Friendship();
-	$model->userUID = $user->UID;
+	$model->userUID = $kapenta->user->UID;
 	$model->friendUID = $friend->UID;
 	$model->relationship = 'friend';
 	$model->status = 'unconfirmed';
@@ -31,7 +31,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to user's profile
 	//----------------------------------------------------------------------------------------------
-	$session->msg("You have made a friend request.<br/>", 'ok');
+	$kapenta->session->msg("You have made a friend request.<br/>", 'ok');
 	$kapenta->page->do302('users/profile/' . $kapenta->request->ref);
 
 ?>

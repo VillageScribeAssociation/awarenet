@@ -43,7 +43,7 @@
 	if (('' == $refUID) OR ('' == $refModel) OR ('' == $refModule)) 
 			{ $msg = "(missing arguments to file download)"; }
 
-	if (('' == $msg) AND (false == $user->authHas($refModule, $refModel, 'files-add', $refUID))) 
+	if (('' == $msg) AND (false == $kapenta->user->authHas($refModule, $refModel, 'files-add', $refUID))) 
 			{ $msg = "(not authorised)";  }
 
 	//----------------------------------------------------------------------------------------------
@@ -80,14 +80,14 @@
 		$model->weight = '0';
 		$report = $model->save();
 		if ('' == $report) { $msg = "Downloaded file: $URL <br/>\n"; }
-		else { $session->msg('Could not store file object.'); }
+		else { $kapenta->session->msg('Could not store file object.'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back 
 	//----------------------------------------------------------------------------------------------
 	
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 	if ('uploadmultiple' == $return) { 
 		$retURL = 'files/uploadmultiple'
 			 . '/refModule_' . $refModule 

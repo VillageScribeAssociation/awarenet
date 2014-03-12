@@ -11,7 +11,7 @@
 function users_changefriendshipform($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 

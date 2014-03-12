@@ -9,14 +9,14 @@
 
 function like_show($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(no refModel)'; }

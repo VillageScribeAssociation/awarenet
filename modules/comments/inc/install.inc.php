@@ -15,10 +15,10 @@
 
 function comments_install_module() {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';
 
@@ -52,10 +52,10 @@ function comments_install_module() {
 //returns: HTML installation status report [string]
 
 function comments_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';

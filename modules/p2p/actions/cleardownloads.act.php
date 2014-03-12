@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 //:	mostly used in deveopment / testing
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	delete manifests
@@ -24,7 +24,7 @@
 		$kapenta->fileDelete($partFile);
 	}
 
-	$session->msg('Cleared download queue.', 'ok');
+	$kapenta->session->msg('Cleared download queue.', 'ok');
 	$kapenta->page->do302('p2p/peers/');
 
 ?>

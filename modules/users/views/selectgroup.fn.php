@@ -10,7 +10,7 @@
 
 function users_selectgroup($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$varname = 'role';			//%	form element name [string]
 	$default = 'student';		//%	default option [string]
@@ -19,7 +19,7 @@ function users_selectgroup($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 	if (true == array_key_exists('default', $args)) { $default = $args['default']; }
 
 	//----------------------------------------------------------------------------------------------

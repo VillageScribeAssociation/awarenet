@@ -8,7 +8,7 @@
 	//	decide which profile to show and check permissions
 	//----------------------------------------------------------------------------------------------
 	// if no user specified then show own profile
-	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->alias; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $kapenta->user->alias; }
 	$UID = $aliases->findRedirect('users_user');
 	$model = new Users_User($UID);
 	if (false == $model->loaded) { $kapenta->page->do404('no such user'); }
@@ -17,7 +17,7 @@
 	$userUID = $model->UID;
 	$userName = $model->getName();
 
-	if (false == $user->authHas('users', 'users_user', 'viewprofile', $UID))
+	if (false == $kapenta->user->authHas('users', 'users_user', 'viewprofile', $UID))
 		{ $kapenta->page->do403('you cannot view this profile'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@
 	$profilePic = $theme->loadBlock('modules/users/views/profilepic.block.php');
 	$kapenta->page->blockArgs['chatButton'] = "";
 
-	if ($userUID == $user->UID) {
+	if ($userUID == $kapenta->user->UID) {
 		$editUrl = "%%serverPath%%/users/editprofile/" . $model->alias;
 		$editLink = "<a href='" . $editUrl . "'>[change picture]</a><br/>";
 		$profilePic = str_replace('%%editLink%%', $editLink, $profilePic);

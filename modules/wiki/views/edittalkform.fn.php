@@ -9,7 +9,7 @@
 
 function wiki_edittalkform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 	
@@ -19,7 +19,7 @@ function wiki_edittalkform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Wiki_Article($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { return false; }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { return false; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -11,7 +11,7 @@
 
 function comments_show($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 	global $kapenta;
 	
@@ -41,7 +41,7 @@ function comments_show($args) {
 	$labels = $model->extArray();
 	$html = $theme->replaceLabels($labels, $block);
 
-	if (false == $session->get('mobile')) { $html = $theme->expandBlocks($html, 'indent'); }
+	if (false == $kapenta->session->get('mobile')) { $html = $theme->expandBlocks($html, 'indent'); }
 
 	return $html;
 }

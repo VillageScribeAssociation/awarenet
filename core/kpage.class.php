@@ -468,6 +468,15 @@ class KPage {
 
 	function do404($message = '', $iframe = false) {
 		global $kapenta;
+
+        $eventArgs = array();
+
+        $kapenta->raiseEvent('*', '404', $eventArgs);
+
+        //------------------------------------------------------------------------------------------
+        //  the following will only be run if the event does not kill the thread first
+        //------------------------------------------------------------------------------------------
+
  		header( "HTTP/1.1 404 Not Found" );
 
 		// choose which page template to use

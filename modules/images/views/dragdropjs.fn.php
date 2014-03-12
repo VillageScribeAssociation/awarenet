@@ -7,7 +7,7 @@
 
 function images_dragdropjs($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -33,7 +33,7 @@ function images_dragdropjs($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such ref module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such ref object)'; }
 
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'images-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the form

@@ -8,7 +8,7 @@
 //opt: num - number of abuse reports to show (int) [string]
 
 function abuse_listnav($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -18,7 +18,7 @@ function abuse_listnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user roles and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	//TODO: further permissions check here, perhaps a moderator role	
 

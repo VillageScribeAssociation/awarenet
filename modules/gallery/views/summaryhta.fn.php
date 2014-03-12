@@ -12,7 +12,7 @@
 //opt: fileUID - overrides raUID if present [string]
 
 function gallery_summaryhta($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	
 	$html = '';					//%	return value [string]
@@ -20,7 +20,7 @@ function gallery_summaryhta($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (true == array_key_exists('fileUID', $args)) { $args['raUID'] = $args['fileUID']; }

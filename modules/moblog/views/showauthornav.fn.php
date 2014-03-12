@@ -10,7 +10,7 @@
 //opt: postUID - overrides raUID [string]
 
 function moblog_showauthornav($args) {
-		global $user;
+		global $kapenta;
 		global $aliases;
 
 	$html = '';				//% return value [string]
@@ -23,7 +23,7 @@ function moblog_showauthornav($args) {
 
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

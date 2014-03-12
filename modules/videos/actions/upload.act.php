@@ -80,21 +80,21 @@
 	// check module
 	if (false == $kapenta->moduleExists($refModule)) { 
 		if ('xml' == $return) { $kapenta->page->doXmlError('No such module.'); }
-		$session->msg('No such module.', 'bad');
+		$kapenta->session->msg('No such module.', 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
 	// check owner object
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { 
 		if ('xml' == $return) { $kapenta->page->doXmlError('No such owner obejct.'); }
-		$session->msg('No such owner obejct.', 'bad');
+		$kapenta->session->msg('No such owner obejct.', 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
 	// check permissions
-	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID)) {
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'videos-add', $refUID)) {
 		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
-		$session->msg('You are not authorised to add videos to this item.', 'bad');
+		$kapenta->session->msg('You are not authorised to add videos to this item.', 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
@@ -115,7 +115,7 @@
 			if (substr($revName, 0, 4) == '3pm.') { $format = 'mp3'; }
 			if ('' == $format) {
 				if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
-				$session->msg('Format not supported (must be flv, swf, mp3 or mp4).', 'bad'); 
+				$kapenta->session->msg('Format not supported (must be flv, swf, mp3 or mp4).', 'bad'); 
 				$kapenta->page->do302($returnUrl);
 			}
 
@@ -128,7 +128,7 @@
 
 			$check = copy($tempFile, $kapenta->installPath . $fileName);
 			if (false == $check) {
-				$session->msg('Could not move image (disk full?).', 'bad'); 
+				$kapenta->session->msg('Could not move image (disk full?).', 'bad'); 
 				$kapenta->page->do302($returnUrl);
 			}
 			@unlink($tempFile);
@@ -139,12 +139,12 @@
 			
 		} else {
 			if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
-			$session->msg('No file uploaded.', 'bad'); 
+			$kapenta->session->msg('No file uploaded.', 'bad'); 
 			$kapenta->page->do302($returnUrl);			
 		}
 	
 	} else { 
-		$session->msg('No file uploaded.', 'bad'); 
+		$kapenta->session->msg('No file uploaded.', 'bad'); 
 		$kapenta->page->do302($returnUrl);
 	}
 	
@@ -233,11 +233,11 @@
 			die();
 		}
 
-		$session->msg("Uploaded video: $srcName", 'ok');
+		$kapenta->session->msg("Uploaded video: $srcName", 'ok');
 		$kapenta->page->do302($returnUrl);
 
 	} else {
-		$session->msg("Could not save video object.", 'bad');
+		$kapenta->session->msg("Could not save video object.", 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 

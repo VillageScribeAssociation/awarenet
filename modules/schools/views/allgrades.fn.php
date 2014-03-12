@@ -10,14 +10,14 @@
 
 function schools_allgrades($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permisisons
 	//----------------------------------------------------------------------------------------------
-	if ($user->role == 'public') { return '[[:users::pleaselogin:]]'; }
+	if ($kapenta->user->role == 'public') { return '[[:users::pleaselogin:]]'; }
 	if (array_key_exists('schoolUID', $args)) { $args['raUID'] = $args['schoolUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 

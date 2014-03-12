@@ -8,7 +8,7 @@
 //TODO: move this to the core, probably on the $kapenta object
 
 function admin_runmaintenance($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 	$report = '';		//% return value [string]
@@ -19,7 +19,7 @@ function admin_runmaintenance($args) {
 	//---------------------------------------------------------------------------------------------
 	//	check user role and argument
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (array_key_exists('modName', $args) == false) { return ''; }
 	if (in_array($args['modName'], $mods) == false) { return "(no such module)"; }
 

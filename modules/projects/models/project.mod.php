@@ -103,18 +103,18 @@ class Projects_Project {
 		//if (false == $kapenta->db->validate($ary, $this->dbSchema)) { return false; }
 
 		if (false == array_key_exists('abstract', $ary)) { 
-			//$session->msg('Missing abstract on project load.', 'bad');
+			//$kapenta->session->msg('Missing abstract on project load.', 'bad');
 			$ary['abstract'] = '';
 		}
 
 		if (false == array_key_exists('membership', $ary)) { 
-			//$session->msg('Missing membership on project load.', 'bad');
+			//$kapenta->session->msg('Missing membership on project load.', 'bad');
 			$ary['membership'] = '';
 		}
 
 
 		if (false == array_key_exists('content', $ary)) { 
-			//$session->msg('Missing membership on project load.', 'bad');
+			//$kapenta->session->msg('Missing membership on project load.', 'bad');
 			$ary['content'] = '';
 		}
 
@@ -265,7 +265,7 @@ class Projects_Project {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -282,12 +282,12 @@ class Projects_Project {
 		//------------------------------------------------------------------------------------------
 
 		$editAuth = false;
-		if (true == $user->authHas('projects', 'projects_project', 'editmembers', $this->UID))  {
+		if (true == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $this->UID))  {
 			$editAuth = true;
 		}
 
 		$delAuth = false;
-		if ('admin' == $user->role) { $delAuth = true; }
+		if ('admin' == $kapenta->user->role) { $delAuth = true; }
 		// TODO: decide whether project admins can delete a project
 		// TODO: check full range of permissions
 
@@ -295,7 +295,7 @@ class Projects_Project {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('projects', 'projects_project', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('projects', 'projects_project', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%projects/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>";
 			$ary['nameLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>";  
@@ -317,7 +317,7 @@ class Projects_Project {
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if ($user->authHas('projects', 'projects_project', 'new', $this->UID)) { 
+		if ($kapenta->user->authHas('projects', 'projects_project', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%projects/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new project]</a>"; 
 		}
@@ -447,7 +447,7 @@ class Projects_Project {
 			$this->loadSections();
 			return $model->UID; 
 		}
-		$session->msg('Could not create project section:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not create project section:<br/>' . $report, 'bad');
 		return '';
 	}
 
@@ -570,8 +570,8 @@ class Projects_Project {
 	//returns: true if the specified user has edit permissions on this project, else false [bool]
 
 	function hasEditAuth($userUID) {
-		global $user;
-		return $user->authHas('projects', 'projects_project', 'edit', $this->UID);
+		global $kapenta;
+		return $kapenta->user->authHas('projects', 'projects_project', 'edit', $this->UID);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -595,7 +595,7 @@ class Projects_Project {
 
 	function getMembers() {
 		global $session;
-		$session->msgAdmin('DEPRECATED: Projects_Project::getMembers()', 'warn');
+		$kapenta->session->msgAdmin('DEPRECATED: Projects_Project::getMembers()', 'warn');
 		return $this->memberships->getMembers();
 	}
 

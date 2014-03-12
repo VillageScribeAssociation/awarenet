@@ -10,8 +10,8 @@
 function images_listallfiles($args) {
 	global $kapenta;
  
-	global $user;
-	if ('admin' != $user->role) { return ''; }
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return ''; }
 	
 	$list = '';
 

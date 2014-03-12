@@ -21,7 +21,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	if admin editing any record
 	//----------------------------------------------------------------------------------------------
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$report = '';
 
 		foreach($_POST as $field => $value) {
@@ -50,8 +50,8 @@
 
 		if ('' == $report) { $report = $model->save(); }
 
-		if ('' == $report) { $session->msg('User account updated.', 'ok'); }
-		else { $session->msg($report, 'bad'); }
+		if ('' == $report) { $kapenta->session->msg('User account updated.', 'ok'); }
+		else { $kapenta->session->msg($report, 'bad'); }
 
 		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 		$kapenta->page->do302('users/profile/' . $model->alias);
@@ -60,7 +60,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	if non-admin editing own record
 	//----------------------------------------------------------------------------------------------
-	if (($user->UID == $_POST['UID']) AND ('admin' != $user->role)) {
+	if (($kapenta->user->UID == $_POST['UID']) AND ('admin' != $kapenta->user->role)) {
 		$model = new Users_User($_POST['UID']);
 		if (false == $model->loaded) { $kapenta->page->do404("Could not load User " . $model->UID);}
 		foreach($_POST as $field => $value) {
@@ -72,8 +72,8 @@
 		}
 
 		$report = $model->save();
-		if ('' == $report) { $session->msg('Your account has been updated.', 'ok'); }
-		else { $session->msg($report, 'bad'); }
+		if ('' == $report) { $kapenta->session->msg('Your account has been updated.', 'ok'); }
+		else { $kapenta->session->msg($report, 'bad'); }
 		
 		if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 		$kapenta->page->do302('users/profile/' . $model->alias);		

@@ -180,7 +180,7 @@ class Comments_Comment {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -199,29 +199,29 @@ class Comments_Comment {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('comments', 'comments_comment', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('comments', 'comments_comment', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%comments/' . $this->UID;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%comments/edit/' . $this->UID;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('comments', 'comments_comment', 'edit', $this->UID)) {
 			$ary['delUrl'] = '%%serverPath%%comments/confirmdelete/UID_'. $this->UID .'/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('comments', 'comments_comment', 'new', $this->UID)) { 
+		if (true == $kapenta->user->authHas('comments', 'comments_comment', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%comments/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new comment]</a>"; 
 		}
 
 		if (
 			('' == $ary['parent']) && 
-			($user->authHas($this->refModule, $this->refModel, 'comments-add', $this->refUID))
+			($kapenta->user->authHas($this->refModule, $this->refModel, 'comments-add', $this->refUID))
 		) {
 			$ary['replyJsLink'] = ''
 			 . "<a href=\"javascript:comments_showReplyInline('" . $this->UID . "');\">[reply]</a>"; 			
@@ -239,8 +239,8 @@ class Comments_Comment {
 		$ary['retractUrl'] = '';
 		$ary['retractLink'] = '';
 
-		if ( ($user->UID == $ary['createdBy']) 
-			OR (true == $user->authHas('comments', 'Comment_Comment', 'retractall')) ) {
+		if ( ($kapenta->user->UID == $ary['createdBy']) 
+			OR (true == $kapenta->user->authHas('comments', 'Comment_Comment', 'retractall')) ) {
 			$ary['retractUrl'] = '/comments/retract/' . $this->UID;
 			$ary['retractLink'] = "<a href='" . $ary['retractUrl'] . "'>[retract]</a>";
 		}

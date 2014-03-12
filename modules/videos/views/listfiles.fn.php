@@ -10,7 +10,7 @@
 
 function videos_listfiles($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 
@@ -24,7 +24,7 @@ function videos_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 	if (true == array_key_exists('status', $args)) { $status = $args['status']; }
 	if (true == array_key_exists('format', $args)) { $format = $args['format']; }
-	//if ('admin' != $user->role) { return ''; } // TODO: sync auth
+	//if ('admin' != $kapenta->user->role) { return ''; } // TODO: sync auth
 	
 	//---------------------------------------------------------------------------------------------
 	//	consider files of all image records

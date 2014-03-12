@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404(); }
 
 	$model = new Abuse_Report($_POST['UID']);

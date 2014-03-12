@@ -14,7 +14,7 @@
 	$model = new Code_Package($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404("Unkown Package");}
 
-	if (false == $user->authHas('code', 'Code_Package', 'view', $model->UID)) {
+	if (false == $kapenta->user->authHas('code', 'Code_Package', 'view', $model->UID)) {
 		$kapenta->page->do403('You are not authorized to view this Package.'); 
 	}
 

@@ -6,10 +6,10 @@
 //arg: channel - id of channel [string]
 
 function comments_channelauth($args) {
-	global $user;
+	global $kapenta;
 	if (array_key_exists('channel', $args) == false) { return ''; }
 	// TODO: check with module which owns comments
-	if ($user->role != 'public') { return 'yes'; }
+	if ($kapenta->user->role != 'public') { return 'yes'; }
 }
 
 ?>

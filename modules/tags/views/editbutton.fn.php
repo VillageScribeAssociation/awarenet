@@ -8,7 +8,7 @@
 //arg: refUID - UID of object which may have tags [string]
 
 function tags_editbutton($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';							//%	return value [string]

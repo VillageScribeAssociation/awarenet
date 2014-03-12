@@ -4,7 +4,7 @@
 //*	temporary action to replace %%siteName%% in page templates
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$shellCmd = "find " . $kapenta->installPath . " -name \"*.page.php\"";
 	$result = shell_exec($shellCmd);

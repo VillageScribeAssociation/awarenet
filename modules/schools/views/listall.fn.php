@@ -13,7 +13,7 @@
 function schools_listall($args) {
 		global $req;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -26,7 +26,7 @@ function schools_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'schools_school', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'show')) { return ''; }
 
 	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }

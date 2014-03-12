@@ -10,7 +10,7 @@
 //opt: sectionUID - overrides UID if present [string]
 
 function projects_weightbuttons($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//%	return value [string]
@@ -24,7 +24,7 @@ function projects_weightbuttons($args) {
 	$model = new Projects_Section($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }		// no such project
 
-	if (false == $user->authHas('projects', 'projects_section', 'edit', $args['UID'])) { 
+	if (false == $kapenta->user->authHas('projects', 'projects_section', 'edit', $args['UID'])) { 
 		return '';												// no edit permission
 	}
 

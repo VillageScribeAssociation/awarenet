@@ -6,7 +6,7 @@
 //*	import khan academy videos as lesson packages
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do404(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do404(); }
 
 	$fromDir = 'data/khanacademy/';
 	$dirs = $kapenta->fs->listDir($fromDir, '', true);

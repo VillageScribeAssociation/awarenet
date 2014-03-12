@@ -31,7 +31,7 @@
 
 	$changes = new Projects_Changes($model->projectUID, $model->sectionUID);
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
 		$kapenta->page->do403('You are not permitted to edit this project.', true);
 	}
 
@@ -47,7 +47,7 @@
 				$section->title = $model->value;
 				$section->save();
 				$changes->add('s.title', 'Changed section title:', $model->value);
-				$session->msg('Reverted section title to: ' . $model->value, 'ok');
+				$kapenta->session->msg('Reverted section title to: ' . $model->value, 'ok');
 			}
 			break;	//..............................................................................
 
@@ -56,7 +56,7 @@
 				$section->content = $model->value;
 				$section->save();
 				$changes->add('s.content', 'Changed section content:', $model->value);
-				$session->msg('Reverted section content.', 'ok');
+				$kapenta->session->msg('Reverted section content.', 'ok');
 			}
 			break;	//..............................................................................
 
@@ -65,7 +65,7 @@
 				$project->title = $model->value;
 				$project->save();
 				$changes->add('p.title', 'Changed project title:', $model->value);
-				$session->msg('Reverted project title to: ' . $model->value, 'ok');
+				$kapenta->session->msg('Reverted project title to: ' . $model->value, 'ok');
 			}
 			break;	//..............................................................................
 
@@ -74,12 +74,12 @@
 				$project->abstract = $model->value;
 				$project->save();
 				$changes->add('p.abstract', 'Changed project abstract:', $model->value);
-				$session->msg('Reverted project abstract.', 'ok');
+				$kapenta->session->msg('Reverted project abstract.', 'ok');
 			}
 			break;	//..............................................................................
 
 		default:
-			$session->msg('Cannot revert to: ' . $model->changed, 'bad');
+			$kapenta->session->msg('Cannot revert to: ' . $model->changed, 'bad');
 			break;	//..............................................................................
 
 	}	

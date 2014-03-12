@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'Home_Partner', 'list'))
+	if (false == $kapenta->user->authHas('home', 'Home_Partner', 'list'))
 		{ $kapenta->page->do403('You are not authorized to list Partners.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]

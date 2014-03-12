@@ -13,7 +13,7 @@
 
 function sketchpad_install_module() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
 	$report = "No dynamic components to install for this version.";
@@ -28,8 +28,8 @@ function sketchpad_install_module() {
 //returns: HTML installation status report [string]
 
 function sketchpad_install_status_report() {
-	global $user;
-	if ('admin' != $user->role) { return false; }
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = ' <!-- module installed correctly --> ';
 

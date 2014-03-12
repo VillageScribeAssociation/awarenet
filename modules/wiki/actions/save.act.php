@@ -15,7 +15,7 @@
 
 	$model = new Wiki_Article($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('no such article'); }
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
 
 	//------------------------------------------------------------------------------------------
 	//	save any changes
@@ -40,15 +40,15 @@
 		//	everything went better and expetion /dolan
 		//------------------------------------------------------------------------------------------
 		switch($model->namespace) {
-			case 'article': 	$session->msg("Saved edit to wiki article.", 'ok');			break;
-			case 'talk': 		$session->msg("Saved edit to wiki talk page.", 'ok');		break;
+			case 'article': 	$kapenta->session->msg("Saved edit to wiki article.", 'ok');			break;
+			case 'talk': 		$kapenta->session->msg("Saved edit to wiki talk page.", 'ok');		break;
 		}
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	couldn't save it, bail here and don't save a revision
 		//------------------------------------------------------------------------------------------
-		$session->msg("Could not save changes to wiki article:<br/> $report", 'bad');
+		$kapenta->session->msg("Could not save changes to wiki article:<br/> $report", 'bad');
 		$kapenta->page->do302($retUrl);
 	}
 
@@ -69,8 +69,8 @@
 	$revision->reason = $reason;
 	$report = $revision->save();
 
-	if ('' == $report) { $session->msg("Saved revision.", 'ok'); }
-	else { $session->msg("Could not save revision:<br/>$report", 'bad');  }
+	if ('' == $report) { $kapenta->session->msg("Saved revision.", 'ok'); }
+	else { $kapenta->session->msg("Could not save revision:<br/>$report", 'bad');  }
 	
 	//--------------------------------------------------------------------------------------
 	//	done, 302 back to the article

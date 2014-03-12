@@ -200,7 +200,7 @@ class Messages_Message {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 		$ary = $this->toArray();		//%	return value [dict]
 
@@ -214,14 +214,14 @@ class Messages_Message {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('messages', 'messages_message', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('messages', 'messages_message', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%messages/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[see all threads &gt;&gt;]</a>"; 
 		}

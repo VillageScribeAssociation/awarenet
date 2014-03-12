@@ -6,10 +6,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_menu($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	$block = $theme->loadBlock('modules/admin/views/menu.block.php');
 	return $block;
 }

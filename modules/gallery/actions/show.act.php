@@ -6,7 +6,7 @@
 //*	display a gallery page
 //--------------------------------------------------------------------------------------------------
 	
-	//if ($user->authHas('gallery', 'gallery_gallery', 'show', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }		// check basic permissions
+	//if ($kapenta->user->authHas('gallery', 'gallery_gallery', 'show', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }		// check basic permissions
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }							// check ref
 	$UID = $aliases->findRedirect('gallery_gallery'); 					// check correct ref
 	

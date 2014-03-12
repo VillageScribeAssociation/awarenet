@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'newsletter_adunit', 'new')) {
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Adunits.');
 	}
 
@@ -37,10 +37,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Adunit<br/>', 'ok');
+		$kapenta->session->msg('Created new Adunit<br/>', 'ok');
 		$kapenta->page->do302('/newsletter/editadunit/' . $model->UID);
 	} else {
-		$session->msg('Could not create new Adunit:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Adunit:<br/>' . $report);
 		$kapenta->page->do302('/newsletter/');
 	}
 

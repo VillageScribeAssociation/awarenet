@@ -25,7 +25,7 @@
 	$model = new Images_Image($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('No such image', true); }
 
-	if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
 		{ $kapenta->page->do403('You are not authorized to edit this Image.'); }
 
 	if (true == array_key_exists('return', $_POST)) { $return = $_POST['return']; }
@@ -45,9 +45,9 @@
 	}
 
 	$report = $model->save();
-	if ('' != $report) { $session->msg($report, 'bad'); }
+	if ('' != $report) { $kapenta->session->msg($report, 'bad'); }
 
-	$session->msg("Saved image: " . $model->title, 'ok');
+	$kapenta->session->msg("Saved image: " . $model->title, 'ok');
 
 	//------------------------------------------------------------------------------------------
 	//	redirect back
@@ -56,7 +56,7 @@
 	switch(strtolower($return)) {
 		case 'show':
 			$returnUrl = 'images/show/' . $model->alias;
-			if ('' == $report) { $session->msg('Image updated.', 'ok'); }
+			if ('' == $report) { $kapenta->session->msg('Image updated.', 'ok'); }
 			break;
 
 		case 'uploadmultiple':

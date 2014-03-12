@@ -186,7 +186,7 @@ class Projects_Revision {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ary = $this->toArray();
 
 		$ary['viewUrl'] = '';	$ary['viewLink'] = '';	// view
@@ -207,7 +207,7 @@ class Projects_Revision {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('projects', 'projects_revision', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('projects', 'projects_revision', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%projects/showrevision/' . $ary['UID'];
 			$ary['viewLink'] = "<a href='%%serverPath%%projects/showrevision/" . $ary['UID'] . "'>"
 					 . "[read on &gt;&gt;]</a>"; 

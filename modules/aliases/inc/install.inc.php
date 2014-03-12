@@ -14,10 +14,10 @@
 //returns: html report or false if not authorized [string][bool]
 
 function aliases_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 	$dba = $kapenta->getDBAdminDriver();
 	$report = '';
 
@@ -48,10 +48,10 @@ function aliases_install_module() {
 //returns: HTML installation status report [string]
 
 function aliases_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$dba = $kapenta->getDBAdminDriver();
 

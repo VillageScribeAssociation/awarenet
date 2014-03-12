@@ -9,12 +9,12 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (public users no longer banned)
 	//----------------------------------------------------------------------------------------------
-	//if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
+	//if (($kapenta->user->role == 'public') || ($kapenta->user->role == 'banned')) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	check reference
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->school; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $kapenta->user->school; }
 	$aliases->findRedirect('schools_school');
 
 	//----------------------------------------------------------------------------------------------

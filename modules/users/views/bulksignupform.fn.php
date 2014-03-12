@@ -7,7 +7,7 @@
 //opt: grade - greade to which users belong [string]
 
 function users_bulksignupform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//%	return value [string]
@@ -17,7 +17,7 @@ function users_bulksignupform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions / role and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('school', $args)) { $school = $args['school']; }
 	if (true == array_key_exists('grade', $args)) { $grade = $args['grade']; }
 

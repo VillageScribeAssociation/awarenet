@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	if ('addSource' != $_POST['action']) { $kapenta->page->do404('Action not recognized.'); }
@@ -25,13 +25,13 @@
 		$check = $updateManager->addSource($source);
 
 		if (true == $check) {
-			$session->msg('Added source: ' . $source);
+			$kapenta->session->msg('Added source: ' . $source);
 		} else {
-			$session->msg('Could not add source: ' . $source . ' (unkown error)');
+			$kapenta->session->msg('Could not add source: ' . $source . ' (unkown error)');
 		}
 
 	} else {
-		$session->msg('No source given.');
+		$kapenta->session->msg('No source given.');
 	}	
 
 	//----------------------------------------------------------------------------------------------

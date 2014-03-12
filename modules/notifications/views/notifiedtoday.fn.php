@@ -11,14 +11,14 @@
 
 function notifications_notifiedtoday($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $session;
 
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments ans permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return "[[:users::plaselogin:]]"; }
+	if ('public' == $kapenta->user->role) { return "[[:users::plaselogin:]]"; }
 	if (false == array_key_exists('refModule', $args)) { return 'err'; }
 	if (false == array_key_exists('refModel', $args)) { return 'err'; }
 	if (false == array_key_exists('refUID', $args)) { return 'err'; }
@@ -42,7 +42,7 @@ function notifications_notifiedtoday($args) {
 		$now = $kapenta->db->datetime();
 		$today = substr($now, 0, 10);
 		$nday = substr($row['createdOn'], 0, 10);
-		$session->msgAdmin("today: $today nday: $nday");
+		$kapenta->session->msgAdmin("today: $today nday: $nday");
 		if ($today == $nday) { return $row['UID']; }
 	}
 

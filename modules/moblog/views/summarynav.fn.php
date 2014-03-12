@@ -11,7 +11,7 @@
 
 function moblog_summarynav($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $cache;
 
 	$html = '';			//% return value [html]
@@ -29,7 +29,7 @@ function moblog_summarynav($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { return ''; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block

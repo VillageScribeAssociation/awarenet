@@ -9,7 +9,7 @@
 
 function videos_listrecentvideosnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';				//%	return value [string]
@@ -19,7 +19,7 @@ function videos_listrecentvideosnav($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
-	if (false == $user->authHas('videos', 'videos_video', 'show', '')) { return ''; }
+	if (false == $kapenta->user->authHas('videos', 'videos_video', 'show', '')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load items from database

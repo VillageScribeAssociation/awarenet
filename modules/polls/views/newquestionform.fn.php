@@ -10,7 +10,7 @@
 function polls_newquestionform($args)  {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$html = '';				//%	return value [string:html]

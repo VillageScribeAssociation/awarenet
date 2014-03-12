@@ -39,15 +39,15 @@ class Moblog_Precache {
 			//--------------------------------------------------------------------------------------
 			//	precache doesn't exist, create it
 			//--------------------------------------------------------------------------------------
-			global $user;
+			global $kapenta;
 			$this->preCache = array();
 			$this->data = $kapenta->db->makeBlank($this->dbSchema);
 			$this->refTable = $refTable;
 			$this->refUID = $refUID;
 			$this->createdOn = $kapenta->db->datetime();
-			$this->createdBy = $user->UID;
+			$this->createdBy = $kapenta->user->UID;
 			$this->editedOn = $kapenta->db->datetime();
-			$this->editedBy = $user->UID;
+			$this->editedBy = $kapenta->user->UID;
 		
 
 		} else { $this->load($UID); }

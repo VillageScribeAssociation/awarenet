@@ -12,7 +12,7 @@
 
 function users_summarynav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $cache;
 
@@ -33,7 +33,7 @@ function users_summarynav($args) {
 
 	$model = new Users_User($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }
-	if (false == $user->authHas('users', 'users_user', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_user', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block
@@ -54,7 +54,7 @@ function users_summarynav($args) {
 	//	save in cache
 	//----------------------------------------------------------------------------------------------
 
-	if ($model->UID != $user->UID) {
+	if ($model->UID != $kapenta->user->UID) {
 		$html = $theme->expandBlocks($html, $args['area']);
 		$cache->set('users-summarynav-' . $model->UID, $args['area'], $args['rawblock'], $html);
 	}

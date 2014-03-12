@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	$fileList = '';										//%	page content [string:html]
 	$postUrl = '%%serverPath%%admin/listtempfiles/';	//%	post back to self [string]
 	$foundAny = false;									//%	have any junk files been found [bool]
@@ -36,12 +36,12 @@
 					if (true == $check) {
 						$result = unlink($kapenta->installPath . $item);
 						if (true == $result) {
-							$session->msg('<b>deleted:</b> ' . $item, 'ok');
+							$kapenta->session->msg('<b>deleted:</b> ' . $item, 'ok');
 						} else {
-							$session->msg('<b>could not delete:</b> ' . $item, 'bad');
+							$kapenta->session->msg('<b>could not delete:</b> ' . $item, 'bad');
 						}
 					} else {
-						$session->msg('<b>refusing to delete:</b> ' . $item, 'bad');
+						$kapenta->session->msg('<b>refusing to delete:</b> ' . $item, 'bad');
 					}
 				}
 			}

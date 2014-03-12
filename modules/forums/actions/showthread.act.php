@@ -21,8 +21,8 @@
 	$thread = new Forums_Thread($threadUID);
 	$forum = new Forums_Board($thread->board);
 
-	if (false == $user->authHas('forums', 'forums_thread', 'show', $thread->UID)) { $kapenta->page->do403();}
-	if (false == $user->authHas('forums', 'forums_board', 'show', $forum->UID)) { $kapenta->page->do403(); }	
+	if (false == $kapenta->user->authHas('forums', 'forums_thread', 'show', $thread->UID)) { $kapenta->page->do403();}
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'show', $forum->UID)) { $kapenta->page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	redner the page

@@ -10,7 +10,7 @@
 
 function comments_editform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 
@@ -20,7 +20,7 @@ function comments_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return 'raUID not given'; }
 	$model = new Comments_Comment($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('comments', 'comment_comment', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

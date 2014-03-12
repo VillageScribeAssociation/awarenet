@@ -13,7 +13,7 @@
 
 function comments_addcommentformnav($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$invitation = 'Add a comment';
@@ -31,7 +31,7 @@ function comments_addcommentformnav($args) {
 	$refUID = $args['refUID'];
 
 	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID))
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'comments-add', $refUID))
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

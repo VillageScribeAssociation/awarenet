@@ -10,7 +10,7 @@
 //arg: modelname - name of an object type [string]
 
 function admin_editpermissiondefs($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$modulename = '';		//%	name of a kapenta module [string]
@@ -20,7 +20,7 @@ function admin_editpermissiondefs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('modulename', $args)) { $modulename = $args['modulename']; }
 	if (true == array_key_exists('modelname', $args)) { $modelname = $args['modelname']; }
 

@@ -14,7 +14,7 @@
 function users_avatar($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$size = 'width300';				//%	image width [string]
 	$link = 'yes';					//%	link to full size image [string]
@@ -24,7 +24,7 @@ function users_avatar($args) {
 	//	check arguments
 	//----------------------------------------------------------------------------------------------
 	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
-	if (false == array_key_exists('raUID', $args)) { $args['raUID'] = $user->UID; }
+	if (false == array_key_exists('raUID', $args)) { $args['raUID'] = $kapenta->user->UID; }
 	if (true == array_key_exists('link', $args)) { $link = $args['link']; }
 	if (true == array_key_exists('size', $args)) {	$size = $args['size']; }
 

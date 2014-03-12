@@ -84,6 +84,14 @@
         '$page->save(' => '$kapenta->page->save(',
         '$page->content' => '$kapenta->page->content',
         
+        'global $user;' => 'global $kapenta;',
+        '$user->get' => '$kapenta->user->get',
+        '$user->set' => '$kapenta->user->set',
+        '$user->' => '$kapenta->user->',
+
+        '$req->' => '$kapenta->request->',
+        '$session->' => '$kapenta->session->'
+
 	);
 
 	//----------------------------------------------------------------------------------------------
@@ -97,7 +105,7 @@
 
 	foreach($files as $file) {
 		if (false == strpos($file, 'migratev3')) {
-			echo "<div class='chatmmessageblack'><b>file:</b> $file</div>\n";
+			echo "<div class='chatmessageblack'><b>file:</b> $file</div>\n";
 	
 			$raw = $kapenta->fs->get($file);
 			$new = $raw . '';

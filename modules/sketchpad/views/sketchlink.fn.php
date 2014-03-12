@@ -8,7 +8,7 @@
 //opt: imageUID - overrrides raUID if present [string]
 
 function sketchpad_sketchlink($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';							//%	return value [string]
@@ -16,7 +16,7 @@ function sketchpad_sketchlink($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (true == array_key_exists('imageUID', $args)) { $args['raUID'] = $args['imageUID']; }

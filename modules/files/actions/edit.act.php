@@ -15,7 +15,7 @@
 	$model = new Files_File($kapenta->request->ref);
 
 	if (false == $model->loaded) { $kapenta->page->do404('File not found.'); }
-	if (false == $user->authHas($model->refModule, $model->refModel, 'files-add', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'files-add', $model->refUID))
 		{ $kapenta->page->do403(); }
 	
 	$return = '';

@@ -5,10 +5,10 @@
 //-------------------------------------------------------------------------------------------------
 
 function p2p_cleardownloadsform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/p2p/views/cleardownloadsform.block.php');
 

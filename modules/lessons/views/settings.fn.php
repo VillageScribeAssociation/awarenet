@@ -6,7 +6,7 @@
 
 function lessons_settings($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $kapenta;
 
@@ -27,8 +27,13 @@ function lessons_settings($args) {
 		'kalite.installation' => $kapenta->registry->get('kalite.installation'),
 		'kalite.admin.user' => $kapenta->registry->get('kalite.admin.user'),
 		'kalite.admin.pwd' => $kapenta->registry->get('kalite.admin.pwd'),
-		'kalite.db.file' => $kapenta->registry->get('kalite.db.file')
+		'kalite.db.file' => $kapenta->registry->get('kalite.db.file'),
+		'dbexists' => "<div class='chatmessagegreen'>Database file exists</div>"
 	);
+
+	if (false === file_exists($kapenta->registry->get('kalite.db.file'))) {
+		$labels['dbexists'] = '<div class="chatmessagered">Database file does not exist or cannot be read.</div>';
+	}
 
 	$html = $kapenta->theme->replaceLabels($labels, $block); 
 

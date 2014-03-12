@@ -9,7 +9,7 @@
 
 function comments_replyform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';								//%	return value [string]
 

@@ -10,7 +10,7 @@
 function gallery_navlist($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$num = 10;						//%	maximum number of galleries to show in nav [int]
 	$html = '';						//%	return value [string]

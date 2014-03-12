@@ -10,7 +10,7 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('action not given'); }
 	if ('newModule' != $_POST['action']) { $kapenta->page->do404('action not recognized'); }
 

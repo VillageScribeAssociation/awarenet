@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('No image specified.'); }
 
@@ -35,7 +35,7 @@
 	$labels = array(
 		'defaultTheme' => $kapenta->defaultTheme,
 		'serverPath' => $kapenta->serverPath,
-		'userUID' => $user->UID,
+		'userUID' => $kapenta->user->UID,
 		'imageUrl' => 'images/full/' . $model->UID,
 		'width' => $model->transforms->width,
 		'height' => $model->transforms->height,

@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';		//%	name of a kapenta module [string]
 	$modelname = '';		//%	name of object type [string]
@@ -39,12 +39,12 @@
 
 	$check = $model->removeRelationship($relationship);
 	if (true == $check) {
-		$session->msg('Removed relationship: ' . $relationship, 'ok');
+		$kapenta->session->msg('Removed relationship: ' . $relationship, 'ok');
 		$module->models[$modelname] = $model->toArray();
 		$module->save();
 
 	} else { 
-		$session->msg('Could not remove relationship.', 'bad'); 
+		$kapenta->session->msg('Could not remove relationship.', 'bad'); 
 	}
 
 	//----------------------------------------------------------------------------------------------

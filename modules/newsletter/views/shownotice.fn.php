@@ -10,7 +10,7 @@
 
 function newsletter_shownotice($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	//----------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ function newsletter_shownotice($args) {
 		 . " onClick=\"newsletter_editnotice('" . $model->UID . "');\""
 	 . ">[edit]</a>";
 
-	if ('admin' != $user->role) { $labels['editLinkJs'] = ''; } 
+	if ('admin' != $kapenta->user->role) { $labels['editLinkJs'] = ''; } 
 
 	$html = $theme->replaceLabels($labels, $block);
 

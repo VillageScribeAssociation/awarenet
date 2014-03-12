@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given'); }
 
@@ -26,17 +26,17 @@
 	$check = $model->restore();
 	if (true == $check) {
 		$msg = 'Restored object: ' . $model->refModel . '::' . $model->refUID;
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 
 		//------------------------------------------------------------------------------------------
 		//	restore dependant objects
 		//------------------------------------------------------------------------------------------
-		$session->msgAdmin("Restoring dependants of " . $model->refModel . '::' . $model->refUID);
+		$kapenta->session->msgAdmin("Restoring dependants of " . $model->refModel . '::' . $model->refUID);
 		$revisions->restoreDependant($model->refModel, $model->refUID);
 
 	} else {
 		$msg = 'Couble not restore object: ' . $model->refModel . '::' . $model->refUID;
-		$session->msg($msg, 'bad');
+		$kapenta->session->msg($msg, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

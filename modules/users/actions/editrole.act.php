@@ -10,7 +10,7 @@
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('users_role');
-	if (false == $user->authHas('users', 'users_role', 'edit', $UID))
+	if (false == $kapenta->user->authHas('users', 'users_role', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Roles.'); }
 
 	//----------------------------------------------------------------------------------------------

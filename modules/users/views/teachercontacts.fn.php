@@ -9,7 +9,7 @@
 //arg: schoolUID - UID of a Schools_School object [string]
 
 function users_teachercontacts($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -19,7 +19,7 @@ function users_teachercontacts($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	//TODO: contactdetails permission
-	if (('admin' != $user->role) && ('teacher' != $user->role)) { return "[[:users::pleaslogin:]]";}
+	if (('admin' != $kapenta->user->role) && ('teacher' != $kapenta->user->role)) { return "[[:users::pleaslogin:]]";}
 	if (false == array_key_exists('schoolUID', $args)) { return '(err: no schoolUID)'; }
 
 	$sUID = $args['schoolUID'];			//%	shortcut [string]

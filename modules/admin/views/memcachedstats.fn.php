@@ -7,14 +7,14 @@
 function admin_memcachedstats($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check user role and extension status
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == $kapenta->mcEnabled) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

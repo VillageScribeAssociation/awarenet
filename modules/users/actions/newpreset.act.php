@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST fields and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('userRa', $_POST)) { $kapenta->page->do404('User not specified'); }
 
@@ -38,10 +38,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new preset.<br/>', 'ok');
+		$kapenta->session->msg('Created new preset.<br/>', 'ok');
 		$kapenta->page->do302('/users/themepresets/' . $model->alias);
 	} else {
-		$session->msg('Could not create new preset:<br/>' . $report);
+		$kapenta->session->msg('Could not create new preset:<br/>' . $report);
 		$kapenta->page->do302('/users/themepresets/');
 	}
 

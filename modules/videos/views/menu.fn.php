@@ -8,13 +8,13 @@
 
 function videos_menu($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$labels = array();
 
 	$labels['newEntry'] = '[[:theme::submenu::label=Create New Gallery::link=/gallery/new/:]]';
-	if (false == $user->authHas('videos', 'videos_gallery', 'new')) { $labels['newEntry'] = ''; }
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'new')) { $labels['newEntry'] = ''; }
 	
 	$block = $theme->loadBlock('modules/videos/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

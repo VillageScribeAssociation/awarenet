@@ -8,7 +8,7 @@
 //arg: modulename - name of a module [string]
 
 function admin_moduleinstallbutton($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';				//%	return value [string]
@@ -16,7 +16,7 @@ function admin_moduleinstallbutton($args) {
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('modulename', $args)) { return ''; }
 
 	$model = new KModule($args['modulename']);

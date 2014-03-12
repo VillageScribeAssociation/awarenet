@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role and registry
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('This is an administratice action.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('This is an administratice action.'); }
 	if (false == $kapenta->registry->has('images.maxsize')) { $kapenta->registry->set('images.maxsize', '524288'); }
 
 	$maxSize = $kapenta->registry->get('images.maxsize');
@@ -33,10 +33,10 @@
 						$msg = ''
 						 . "Could not rescale large image "
 						 . "'" . $item['title'] . "' (" . $item['UID'] . ")";
-						$session->msg($msg, 'bad');
+						$kapenta->session->msg($msg, 'bad');
 					}
 				} else {
-					$session->msg('Model not loaded.');
+					$kapenta->session->msg('Model not loaded.');
 				}
 			}
 		}

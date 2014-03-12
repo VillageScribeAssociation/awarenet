@@ -11,7 +11,7 @@ function images_showfullnav($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------

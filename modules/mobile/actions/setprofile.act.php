@@ -8,7 +8,7 @@
 
 	if (true == in_array($kapenta->request->ref, $profiles)) {
 
-		$session->set('deviceprofile', $kapenta->request->ref);
+		$kapenta->session->set('deviceprofile', $kapenta->request->ref);
 		$kapenta->page->do302('/');
 
 	} else {

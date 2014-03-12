@@ -12,7 +12,7 @@
 function images_slideshow($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
 	//----------------------------------------------------------------------------------------------

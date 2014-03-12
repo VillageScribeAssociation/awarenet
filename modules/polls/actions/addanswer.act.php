@@ -30,9 +30,9 @@
 	$report = $answer->save();
 
 	if ('' == $report) {
-		$session->msg('Added option/answer.', 'ok');
+		$kapenta->session->msg('Added option/answer.', 'ok');
 	} else {
-		$session->msg('Could not add option/answer:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not add option/answer:<br/>' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 
 function schools_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';					//%	return value [string]
@@ -19,7 +19,7 @@ function schools_editform($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Schools_School($args['raUID']);
-	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

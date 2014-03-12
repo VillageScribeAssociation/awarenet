@@ -11,7 +11,7 @@
 function users__cb_images_added($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $notifications;
 		global $theme;
 
@@ -27,7 +27,7 @@ function users__cb_images_added($args) {
 	//----------------------------------------------------------------------------------------------
 	$url = '%%serverPath%%users/profile/' . $args['refUID'];
 	$link = "<a href='" . $url . "'>" . $args['imageTitle'] . "</a>";
-	$title = $user->getName() . ' added a new profile picture.';
+	$title = $kapenta->user->getName() . ' added a new profile picture.';
 
 	$content = ''
 	 . "<a href='%%serverPath%%users/profile/" . $args['refUID'] . "'>"
@@ -38,10 +38,10 @@ function users__cb_images_added($args) {
 		'users', 'users_user', $args['refUID'], 'images_added', $title, $content, $url
 	);
 
-	$notifications->addUser($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
-	$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+	$notifications->addUser($nUID, $kapenta->user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
+	$notifications->addSchoolGrade($nUID, $kapenta->user->school, $kapenta->user->grade);
 
 	//----------------------------------------------------------------------------------------------
 	//	raise event to set this as the default image for this object

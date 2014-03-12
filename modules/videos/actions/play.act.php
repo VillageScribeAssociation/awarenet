@@ -14,17 +14,17 @@
 	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Video not found.'); }
 
-	if (('public' == $user->role) && ('public' != $model->category)) { $kapenta->page->do403(); }
+	if (('public' == $kapenta->user->role) && ('public' != $model->category)) { $kapenta->page->do403(); }
 
 	// temporarily disabled while permissions are in flux  TODO: add this back in when stable
-	if (false == $user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
+	if (false == $kapenta->user->authHas('videos', 'videos_video', 'show', $model->UID)) { 
 		$kapenta->page->do403(); 
 	}
 
 	//----------------------------------------------------------------------------------------------
 	//	bump popularity of this item if viewed by someone other than the creator
 	//----------------------------------------------------------------------------------------------
-	if (('videos_gallery' == $model->refModel) && ($model->createdBy != $user->UID)) {
+	if (('videos_gallery' == $model->refModel) && ($model->createdBy != $kapenta->user->UID)) {
 		// popularity overall
 		$args = array('ladder' => 'videos.all', 'item' => $model->UID);
 		$kapenta->raiseEvent('popular', 'popularity_bump', $args);
@@ -37,10 +37,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	block for inline editing if permitted
 	//----------------------------------------------------------------------------------------------
-	$editAuth = $user->authHas('videos', 'videos_video', 'edit', $model->UID);
+	$editAuth = $kapenta->user->authHas('videos', 'videos_video', 'edit', $model->UID);
 	$editBlock = '';
 
-	if (($model->createdBy == $user->UID) || (true == $editAuth)) {
+	if (($model->createdBy == $kapenta->user->UID) || (true == $editAuth)) {
 
 		$thumbIfUrl = ''
 		 . '%%serverPath%%/images/uploadsingle'

@@ -4,7 +4,7 @@
 //*	temporary administrative script to create a windows batch file to schedule worker threads
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	echo "<pre>\n";
 

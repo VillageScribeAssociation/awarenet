@@ -6,7 +6,7 @@
 //;	Games are recorded in the registry as a comma separated list, and displayed in that order
 
 function games_list($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;	
 	global $kapenta;
@@ -18,7 +18,7 @@ function games_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

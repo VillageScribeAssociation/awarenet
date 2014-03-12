@@ -36,7 +36,7 @@ function p2p_bzcompress($str, $chatty = false) {
 			$kapenta->fileDelete($fileName);
 			return $compressed;
 		} else {
-			$session->msgAdmin("Command line bzip2 compression error.");
+			$kapenta->session->msgAdmin("Command line bzip2 compression error.");
 			return '';
 		}
 
@@ -76,7 +76,7 @@ function p2p_bzdecompress($str, $chatty = false) {
 			$kapenta->fileDelete($fileName);
 			return $decompressed;
 		} else {
-			$session->msgAdmin("Command line bzip2 decompression error.");
+			$kapenta->session->msgAdmin("Command line bzip2 decompression error.");
 			return '';
 		}
 

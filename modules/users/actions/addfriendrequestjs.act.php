@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and permission
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }			// public users can't add friends
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }			// public users can't add friends
 	
 	if (false == array_key_exists('action', $_POST)) {
 		$kapenta->page->doXmlError('Action not specified.');
@@ -43,15 +43,15 @@
 	//----------------------------------------------------------------------------------------------
 	//	ignore duplicates (if we're already a friend or have already requested to be)
 	//----------------------------------------------------------------------------------------------
-	if (true == $model->linkExists($user->UID, $friendUID)) {$kapenta->page->do302($retLink);}
+	if (true == $model->linkExists($kapenta->user->UID, $friendUID)) {$kapenta->page->do302($retLink);}
 
 	//----------------------------------------------------------------------------------------------
 	//	confirm friendship if other party has already asked to be our friend
 	//----------------------------------------------------------------------------------------------
-	if (true == $model->linkExists($friendUID, $user->UID)) { 
+	if (true == $model->linkExists($friendUID, $kapenta->user->UID)) { 
 
 		$recip = new Users_Friendship();
-		$recip->loadFriend($friendUID, $user->UID);
+		$recip->loadFriend($friendUID, $kapenta->user->UID);
 		$recip->status = 'confirmed';
 		$recip->save();
 
@@ -75,17 +75,17 @@
 	//	send notification to other party
 	//----------------------------------------------------------------------------------------------
 	/*	TODO: re-add notifications
-	$title = $user->getName() . " confirmed your friend request.";
+	$title = $kapenta->user->getName() . " confirmed your friend request.";
 	
 	$content = "Your relationship on their profile is: " . $relationship . ".";
 
 	$url = '/users/friends/';
-	$fromUrl = '/users/profile/' . $user->UID;
-	$imgRow = imgGetDefault('users', $user->UID);
+	$fromUrl = '/users/profile/' . $kapenta->user->UID;
+	$imgRow = imgGetDefault('users', $kapenta->user->UID);
 	$imgUID = '';
 	if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 
-	notifyUser(	$friendUID, $kapenta->createUID(), $user->getName(), 
+	notifyUser(	$friendUID, $kapenta->createUID(), $kapenta->user->getName(), 
 				$fromUrl, $title, $content, $url, $imgUID );
 	*/
 	//----------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@
 	$imgUID = '';
 	if (false != $imgRow) { $imgUID = $imgRow['UID']; }
 
-	notifyUser(	$user->UID, $kapenta->createUID(), $user->getName(), 
+	notifyUser(	$kapenta->user->UID, $kapenta->createUID(), $kapenta->user->getName(), 
 				$fromUrl, $title, $content, $url, $imgUID );
 
 	}
@@ -113,7 +113,7 @@
 	//	save record
 	//----------------------------------------------------------------------------------------------
 	$model->UID = $kapenta->createUID();
-	$model->userUID = $user->UID;
+	$model->userUID = $kapenta->user->UID;
 	$model->friendUID = $friendUID;
 	$model->relationship = $relationship;
 	$model->status = $fStatus;
@@ -130,8 +130,8 @@
 	//	redirect back
 	//------------------------------------------------------------------------------------------
 
-	//if ('unconfirmed' == $fStatus) { $session->msg('You have made a friend request.', 'ok'); }
-	//else { $session->msg('You have confirmed a friend request from ' . $friendName, 'ok'); }
+	//if ('unconfirmed' == $fStatus) { $kapenta->session->msg('You have made a friend request.', 'ok'); }
+	//else { $kapenta->session->msg('You have confirmed a friend request from ' . $friendName, 'ok'); }
 
 	echo "<ok/>";
 

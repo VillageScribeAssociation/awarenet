@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send messages
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	check submitted form
@@ -43,7 +43,7 @@
 		//	Asyncronous implementation via message_send => p2p_selfcast
 
 		$detail = array(
-			'fromUID' => $user->UID,
+			'fromUID' => $kapenta->user->UID,
 			'toUID' => $toUID,
 			'title' => $subject,
 			'content' => $utils->cleanHtml($_POST['content']),
@@ -61,8 +61,8 @@
 		$model = new Messages_Message();
 		$model->owner = $toUID;
 		$model->folder = 'inbox';
-		$model->fromUID = $user->UID;
-		$model->fromName = $user->getName();
+		$model->fromUID = $kapenta->user->UID;
+		$model->fromName = $kapenta->user->getName();
 		$model->toUID = $toUID;
 		$model->toName = $toName;
 		$model->cc = implode('|', $cc);
@@ -76,7 +76,7 @@
 		//------------------------------------------------------------------------------------------
 
 		$model->UID = $kapenta->createUID();
-		$model->owner = $user->UID;
+		$model->owner = $kapenta->user->UID;
 		$model->folder = "outbox";
 		$model->save();
 		*/

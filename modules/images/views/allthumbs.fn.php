@@ -17,7 +17,7 @@ function images_allthumbs($args) {
 	global $req;
 
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -29,7 +29,7 @@ function images_allthumbs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('images', 'images_image', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('images', 'images_image', 'list')) { return ''; }
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $pageSize = (int)$args['pageSize']; }

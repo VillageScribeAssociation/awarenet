@@ -14,7 +14,7 @@
 function forums_recentthumbsall($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$pageNo = 1;							//%	page number, starts at 1 [int]
 	$num = 20;							//%	number number of items per page [int]

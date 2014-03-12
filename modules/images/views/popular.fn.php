@@ -12,7 +12,7 @@
 
 function images_popular($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 
 	$size = 'thumbsm';			//%	image size [string]
@@ -23,7 +23,7 @@ function images_popular($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('images', 'images_image', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('images', 'images_image', 'show')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('ladder', $args)) { $ladder = $args['ladder']; }
 	if (true == array_key_exists('size', $args)) { $size = $args['size']; }

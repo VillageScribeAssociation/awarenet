@@ -10,14 +10,14 @@
 
 function videos_summary($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';		//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('pageUID', $args)) { $args['raUID'] = $args['pageUID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 

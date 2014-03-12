@@ -8,7 +8,7 @@
 
 function admin__cb_admin_error($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ function admin__cb_admin_error($args) {
 		//opt: re - UID of a messages_message object this is in reply to [string]
 
 		$detail = array(
-			'fromUID' => $user->UID,
+			'fromUID' => $kapenta->user->UID,
 			'toUID' => $item['UID'],
 			'title' => 'Kapenta Error Message',
 			'content' => $content

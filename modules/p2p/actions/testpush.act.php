@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	$model = new P2P_Peer($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('No such model.'); }
 

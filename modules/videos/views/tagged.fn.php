@@ -10,7 +10,7 @@
 
 function videos_tagged($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';									//%	return value [string]

@@ -12,12 +12,12 @@
 //returns: html report [string]
 
 function games_install_cminds() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $utils;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing cMinds Module</h3>\n";
 
@@ -74,11 +74,11 @@ function games_install_cminds() {
 // if installed correctly report will contain HTML comment <!-- installed correctly -->
 
 function games_install_cminds_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 	$installed = true;
 	$report = '';
 

@@ -11,7 +11,7 @@
 //arg: display - comma separated list of modules to display from [string]
 
 function tags_searchinsert($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -21,7 +21,7 @@ function tags_searchinsert($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('q64', $args)) { return '(query not given)'; }
 	if (false == array_key_exists('hta', $args)) { return '(hta not given)'; }
 	if (true == array_key_exists('display', $args)) { $display = $args['display']; }

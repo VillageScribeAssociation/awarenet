@@ -9,7 +9,7 @@
 //opt: adunitUID - UID of a Newsletter_Adunit object, overrides UID [string]
 
 function newsletter_editadunitform($args) {
-	global $user;
+	global $kapenta;
 	global $utils;
 	global $theme;
 
@@ -27,7 +27,7 @@ function newsletter_editadunitform($args) {
 	$model = new Newsletter_Adunit($raUID);	//% the object we're editing [object:Newsletter_Adunit]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('newsletter', 'newsletter_adunit', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

@@ -21,7 +21,7 @@
 		if (true == $model->loaded) { $userUID = $model->UID; }
 	}
 
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database

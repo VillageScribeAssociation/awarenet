@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_listhidden($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 

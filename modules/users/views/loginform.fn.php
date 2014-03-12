@@ -12,7 +12,7 @@
 //TODO: sanitize return URLs
 
 function users_loginform($args) { 
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$redirectSelf = 'no';		//%	return to the current page after login (yes|no) [string]
@@ -22,7 +22,7 @@ function users_loginform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' != $user->role) { return ''; }
+	if ('public' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('redirectSelf', $args)) { $redirectSelf = $args['redirectSelf']; }
 	if (true == array_key_exists('tb', $args)) { $tb = $args['tb']; }
 

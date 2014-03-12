@@ -10,7 +10,7 @@
 
 function p2p_WebShell_manifest($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $kapenta;
 
@@ -27,7 +27,7 @@ function p2p_WebShell_manifest($args) {
 		case '--pull':	$mode = 'pull';		break;
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

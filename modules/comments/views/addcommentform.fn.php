@@ -13,7 +13,7 @@
 
 function comments_addcommentform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$invitation = 'Add a comment';
 	$html = '';						//%	return value [string]
@@ -32,7 +32,7 @@ function comments_addcommentform($args) {
 
 	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
 
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { return ""; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'comments-add', $refUID)) { return ""; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -13,16 +13,16 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST values and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->doXmlError('You must log in to customize this.'); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->doXmlError('You must log in to customize this.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	dev / admin option to reset the user registry
 	//----------------------------------------------------------------------------------------------
 
 	if ('reset' == $kapenta->request->ref) {
-		$user->set('info.comments.policy', 'show');
-		$user->set('info.sketchpad.intro', 'show');
-		$session->msg('Reset user registry.');
+		$kapenta->user->set('info.comments.policy', 'show');
+		$kapenta->user->set('info.sketchpad.intro', 'show');
+		$kapenta->session->msg('Reset user registry.');
 		$kapenta->page->do302('users/profile/');
 	}
 
@@ -45,7 +45,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	change the registry setting
 	//----------------------------------------------------------------------------------------------
-	$check = $user->set($key, $value);
+	$check = $kapenta->user->set($key, $value);
 	if (false == $check) { $kapenta->page->doXmlError('Could not set key.'); }
 	echo "<ok/>";
 

@@ -8,7 +8,7 @@
 	//	load the model
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }			// check basic permissions
+	if ($kapenta->user->authHas('files', 'files_folder', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }			// check basic permissions
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }								// check for ref
 	
 	require_once($kapenta->installPath . 'modules/folder/folder.mod.php');
@@ -21,8 +21,8 @@
 	//----------------------------------------------------------------------------------------------
 
 	$auth = false;
-	if ('admin' == $user->role) { $auth = true; }
-	if ($user->UID == $model->createdBy) { $auth = true; }
+	if ('admin' == $kapenta->user->role) { $auth = true; }
+	if ($kapenta->user->UID == $model->createdBy) { $auth = true; }
 	// possibly more to come here...
 	if ($auth == false) { $kapenta->page->do404(); }
 

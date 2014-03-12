@@ -16,7 +16,7 @@
 	$model = new Home_Static($_POST['UID']);
 
 	if (false == $model->loaded) { $kapenta->page->do404(); }
-	if (false == $user->authHas('home', 'home_static', 'edit', $_POST['UID'])) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('home', 'home_static', 'edit', $_POST['UID'])) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	save changes to static page
@@ -40,8 +40,8 @@
 	}
 
 	$report = $model->save();
-	if ('' == $report) { $session->msg('Saved changes to ' . $model->alias . '<br/>', 'ok'); }
-	else { $session->msg('Could not save Static:<br/>' . $report); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to ' . $model->alias . '<br/>', 'ok'); }
+	else { $kapenta->session->msg('Could not save Static:<br/>' . $report); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to edited page

@@ -7,7 +7,7 @@
 //opt: varname - name of HTML for field [string]
 
 function schools_selecttype($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';				//%	return type [string]	

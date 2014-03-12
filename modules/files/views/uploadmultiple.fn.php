@@ -11,7 +11,7 @@
 //opt: categories - comma delimited list of categories these files can belong to [string]
 
 function files_uploadmultiple($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 	
@@ -23,7 +23,7 @@ function files_uploadmultiple($args) {
 	if (false == array_key_exists('refUID', $args)) { return '(no UID)'; }
 	$categories = '';
 	
-	if (false == $user->authHas($args['refModule'], $args['refModel'], 'files-add', $args['refUID']))
+	if (false == $kapenta->user->authHas($args['refModule'], $args['refModel'], 'files-add', $args['refUID']))
 		{ return ''; }
 	
 	//----------------------------------------------------------------------------------------------

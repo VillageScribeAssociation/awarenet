@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and reference
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) {
-		$session->msg("Abuse report not speicified (UID).", 'bad'); 
+		$kapenta->session->msg("Abuse report not speicified (UID).", 'bad'); 
 		$kapenta->page->do302('abuse/'); 
 	}
 

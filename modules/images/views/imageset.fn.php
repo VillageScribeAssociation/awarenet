@@ -10,7 +10,7 @@
 
 function images_imageset($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -19,7 +19,7 @@ function images_imageset($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('refModule', $args)) { return '(no refModule)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no refUID)'; }
-	if (false == $user->authHas($args['refModule'], $args['refModel'], 'images-show', $args['refUID']))
+	if (false == $kapenta->user->authHas($args['refModule'], $args['refModel'], 'images-show', $args['refUID']))
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ function images_imageset($args) {
 	foreach ($range as $row) {
 		$imgUrl = '%%serverPath%%images/thumb/' . $row['alias'];
 		$editURL = '%%serverPath%%images/edit/return_uploadmultiple/' . $row['alias'];
-		if (false == $user->authHas($row['refModule'], $row['refModel'], 'images-edit', $row['refUID'])) 
+		if (false == $kapenta->user->authHas($row['refModule'], $row['refModel'], 'images-edit', $row['refUID'])) 
 			{ $editURL = '%%serverPath%%images/viewset/return_uploadmultiple/' . $recordAlias; }
 		
 		$html .= "<a href='" . $editURL . "'>" 

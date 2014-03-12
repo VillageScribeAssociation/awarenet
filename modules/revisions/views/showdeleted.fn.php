@@ -8,7 +8,7 @@
 //arg: UID - UID of a Revisions_Deleted object [string]
 
 function revisions_showdeleted($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';		//%	return value [string]
@@ -16,7 +16,7 @@ function revisions_showdeleted($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check users role and args
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('UID', $args)) { return ''; }
 	$model = new Revisions_Deleted($args['UID']);
 

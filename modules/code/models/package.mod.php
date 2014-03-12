@@ -100,7 +100,7 @@ class Code_Package {
 	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $db, $aliases, $kapenta;
 
 		//echo "<fail>saving package</fail>\n";
 		//die();
@@ -213,7 +213,7 @@ class Code_Package {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -224,17 +224,17 @@ class Code_Package {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('code', 'code_package', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_package', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%code/showpackage/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_package', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_package', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%code/editpackage/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_package', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_package', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%code/delete/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -442,7 +442,7 @@ class Code_Package {
 		$range = $kapenta->db->loadRange('code_file', '*', $conditions);
 		if (0 == count($range)) { 
             
-			$session->msg("package.mod: Package root folder does not exist, creating... " . $this->name);
+			$kapenta->session->msg("package.mod: Package root folder does not exist, creating... " . $this->name);
 			return $this->createRootFolder(); 
 		}
 		

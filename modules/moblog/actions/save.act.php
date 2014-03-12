@@ -17,7 +17,7 @@
 
 	$model = new Moblog_Post($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404(); }
-	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'edit', $model->UID))
 		{ $kapenta->page->do403('You cannot edit this blog post.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -33,8 +33,8 @@
 	}
 
 	$report = $model->save();
-	if ('' != $report) { $session->msg('Could not have blog post: ' . $report, 'bad'); }
-	$session->msg('Blog post updated: ' . $model->title, 'ok');
+	if ('' != $report) { $kapenta->session->msg('Could not have blog post: ' . $report, 'bad'); }
+	$kapenta->session->msg('Blog post updated: ' . $model->title, 'ok');
 
 	//----------------------------------------------------------------------------------------------
 	//	notify friends, classmates and admins
@@ -45,7 +45,7 @@
 
 		$recent = $notifications->existsRecent(
 			'moblog', 'moblog_post', $model->UID,
-			$user->UID, 'moblog_save', (60*60)
+			$kapenta->user->UID, 'moblog_save', (60*60)
 		);
 
 		if ('' != $recent) {
@@ -54,15 +54,15 @@
 			//--------------------------------------------------------------------------------------
 			$annotation = '<small>Revised ' . $kapenta->datetime() . '<br/></small>';
 			$notifications->annotate($recent, $annotation);
-			$session->msgAdmin('Revisin existing notification: ' . $recent, 'ok');
+			$kapenta->session->msgAdmin('Revisin existing notification: ' . $recent, 'ok');
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	no recent notice about this being saved, create a new notificaion and add people
 			//--------------------------------------------------------------------------------------
 			$ext = $model->extArray();
-			$title = $user->getName() . ' has updated their blog post: ' . $model->title;
-			if ($user->UID != $model->createdBy) { $title = 'Blog post updted: ' . $model->title; }
+			$title = $kapenta->user->getName() . ' has updated their blog post: ' . $model->title;
+			if ($kapenta->user->UID != $model->createdBy) { $title = 'Blog post updted: ' . $model->title; }
 
 			$content = ''
 			 . $theme->makeSummary($model->content, 1000) . ' '
@@ -74,12 +74,12 @@
 				false
 			);
 
-			$notifications->addUser($nUID, $user->UID);
+			$notifications->addUser($nUID, $kapenta->user->UID);
 			$notifications->addUser($nUID, $model->createdBy);
 			$notifications->addFriends($nUID, $model->createdBy);
 			$notifications->addAdmins($nUID);
-			$notifications->addSchool($nUID, $user->school);
-			//$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+			$notifications->addSchool($nUID, $kapenta->user->school);
+			//$notifications->addSchoolGrade($nUID, $kapenta->user->school, $kapenta->user->grade);
 		}
 	}
 	*/	

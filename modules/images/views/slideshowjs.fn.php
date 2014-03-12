@@ -10,7 +10,7 @@
 //arg: refUID - UID of object which may own images [string]
 
 function images_slideshowjs($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';							//%	return value [string]

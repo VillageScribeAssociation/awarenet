@@ -11,7 +11,7 @@
 
 function wiki_menu($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	$type = 'content'; $raUID = 'no';
@@ -31,13 +31,13 @@ function wiki_menu($args) {
 			  . "[[:theme::submenu::label=All::link=/wiki/list/:]]\n"
 			  . "[[:theme::submenu::label=Markup::link=/wiki/wikicode/:]]\n";
 
-		if (true == $user->authHas('wiki', 'wiki_article', 'new', $model->UID)) {	
+		if (true == $kapenta->user->authHas('wiki', 'wiki_article', 'new', $model->UID)) {	
 			$menu .= "[[:theme::submenu::label=New Article::link=/wiki/new/:]]\n";
 		}
 		return $menu;
 	}
 
-	if (true == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) {
+	if (true == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) {
 		$labels['newarticle'] = '[[:theme::submenu::label=New Article::link=/wiki/new/:]]';
 
 		if ($raUID != 'no') {

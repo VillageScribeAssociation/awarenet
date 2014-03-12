@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('calendar', 'calendar_entry', 'new')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'new')) { $kapenta->page->do403(); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Template not given.'); }
 	$template = new Calendar_Template($_POST['UID']);
 	if (false == $template->loaded) { $kapenta->page->do404('Template not found.'); }
@@ -42,10 +42,10 @@
 	if ('' == $report) {
 		$ext = $model->extArray();
 		$msg = 'Created calendar entry from template: ' . $ext['nameLink'];
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 		$kapenta->page->do302('calendar/edittemplate/' . $template->UID);
 	} else {
-		$session->msg('Could not create calendar entry from template:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Could not create calendar entry from template:<br/>' . $report, 'bad');
 		$kapenta->page->do302('calendar/edittemplate/' . $template->UID);
 	}
 

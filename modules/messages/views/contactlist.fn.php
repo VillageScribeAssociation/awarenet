@@ -11,17 +11,17 @@
 
 function messages_contactlist($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
-	$owner = $user->UID;		//%	user to show contact list for [string]
+	$owner = $kapenta->user->UID;		//%	user to show contact list for [string]
 	$num = 10;					//%	default number of contacts to show [int]
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return false; }
+	if ('public' == $kapenta->user->role) { return false; }
 	if (true == array_key_exists('owner', $args)) { $owner = $args['owner']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 

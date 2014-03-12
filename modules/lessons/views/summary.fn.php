@@ -8,7 +8,7 @@
 //arg: courseUID - UID of a Course package
 
 function lessons_summary($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -18,7 +18,7 @@ function lessons_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('courseUID', $args)) { return '(courseUID not given)'; }
 
 	$model = new Lessons_Course($args['courseUID']);
@@ -61,7 +61,7 @@ function lessons_summary($args) {
 
 	if ('videolesson' == $labels['description']) { $labels['description'] = ''; }
 
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$labels['editLink'] = ''
 		 . "<br/>\n"
 		 . "<a href='%%serverPath%%lessons/editmanifest/" . $model->UID . "'>[edit]</a>\n";

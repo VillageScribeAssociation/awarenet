@@ -35,6 +35,7 @@
 	//	check for If-Modified-Since header
 	//----------------------------------------------------------------------------------------------
 
+    /*
 	if (
 		(true == array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER)) ||
 		(true == array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)) 
@@ -48,6 +49,7 @@
 			echo ""; flush(); die();
 		}
 	}
+    */
 
 	//----------------------------------------------------------------------------------------------
 	//	scale down fixed width if mobile browser (try match screen size)
@@ -77,6 +79,10 @@
 		$fileName = $model->transforms->fileName($size);
 	}
 
+    if (false == array_key_exists('refUID', $kapenta->request->args)) {
+        $kapenta->request->args['refUID'] = $kapenta->request->ref;
+    }
+
 	if ('' == $fileName) {
 		$refUID = $kapenta->request->args['refUID'];
 		$file = new Videos_Video($refUID);
@@ -97,6 +103,7 @@
 	header("ETag: \"" . md5($lmDate . $size) . "\"");
 	header('Cache-Control: max-age=3600');
 	header('Content-Length: ' . $kapenta->fs->size($fileName));
+
 	readfile($kapenta->installPath . $fileName);	
 
 ?>

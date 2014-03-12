@@ -9,7 +9,7 @@
 //:	NOTE - this is a quick and dirty script to meet a present need, will probably be refined
 //:	NOTE - this is a security risk, hence restricted to admin users
 
-	if ('admin' !== $user->role) { $kapenta->page->do403(); }
+	if ('admin' !== $kapenta->user->role) { $kapenta->page->do403(); }
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 

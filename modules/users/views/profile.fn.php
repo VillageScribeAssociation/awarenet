@@ -10,7 +10,7 @@
 
 function users_profile($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 
@@ -19,7 +19,7 @@ function users_profile($args) {
 	//----------------------------------------------------------------------------------------------
 	if (array_key_exists('userRa', $args) == false) { return ''; }
 	$model = new Users_User($args['userRa']);
-	if (false == $user->authHas('users', 'users_user', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_user', 'show', $model->UID)) { return ''; }
 	if (false == $model->loaded) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

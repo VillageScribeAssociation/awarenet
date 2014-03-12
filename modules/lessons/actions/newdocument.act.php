@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('manifestUID', $_POST)) { $kapenta->page->do404('no manifest uid'); }
 	if (false == array_key_exists('title', $_POST)) { 

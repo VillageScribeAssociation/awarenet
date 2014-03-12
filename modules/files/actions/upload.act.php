@@ -38,7 +38,7 @@
 	//	security and validation
 	//----------------------------------------------------------------------------------------------
 	if (('' == $refUID) OR ('' == $refModule)) { $msg = "(missing arguments to file download)"; }
-	if (('' == $msg) AND (false == $user->authHas($refModule, $refModel, 'files-add', $refUID)))
+	if (('' == $msg) AND (false == $kapenta->user->authHas($refModule, $refModel, 'files-add', $refUID)))
 		{ $msg = "(not authorised)";  }
 
 	//----------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: more security checks here
 	
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 	if ($return = 'uploadmultiple') {
 
 		$retUrl = 'files/uploadmultiple'

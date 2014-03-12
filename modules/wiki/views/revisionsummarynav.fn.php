@@ -8,7 +8,7 @@
 //arg: UID - UID of a Wiki_Revision object [string]
 
 function wiki_revisionsummarynav($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -21,7 +21,7 @@ function wiki_revisionsummarynav($args) {
 
 	$model = new Wiki_Revision($args['UID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_revision', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

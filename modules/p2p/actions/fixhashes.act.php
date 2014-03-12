@@ -4,7 +4,7 @@
 //*	go through database and look for missing file hashes
 //-------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$tables = $kapenta->db->listTables();
 

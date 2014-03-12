@@ -100,7 +100,7 @@ class Projects_Memberships {
 		if (false == $this->loaded) { $this->load(); }
 		if (false == $this->loaded) { return false; }
 		if (false == $this->hasMember($userUID)) {
-			$session->msg('User ' . $userUID . ' is not a member of this project.', 'bad');
+			$kapenta->session->msg('User ' . $userUID . ' is not a member of this project.', 'bad');
 			return false;
 		}
 		foreach($this->members as $membership) {

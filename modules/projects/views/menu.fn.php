@@ -11,7 +11,7 @@
 //opt: projectUID - UID of a Projects_Project object [string]
 
 function projects_menu($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -46,7 +46,7 @@ function projects_menu($args) {
 			$histUrl = '%%serverPath%%projects/history/' . $model->alias;
 			$labels['viewHistory'] = "[[:theme::submenu::label=History::link=$histUrl:]]";
 
-			if ($user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
+			if ($kapenta->user->authHas('projects', 'projects_project', 'edit', $model->UID)) {
 				//----------------------------------------------------------------------------------
 				//	user can edit this project
 				//----------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ function projects_menu($args) {
 				$labels['editProject'] = "[[:$ts::label=Options::link=" . $editUrl . ":]]";
 
 				// only admins may delete projects
-				if ('admin' == $user->role) {
+				if ('admin' == $kapenta->user->role) {
 					$delUrl = '%%serverPath%%projects/confirmdelete/UID_' . $model->UID;
 					$labels['delProject'] = "[[:$ts::label=Delete::link=$delUrl:]]";;	
 				}

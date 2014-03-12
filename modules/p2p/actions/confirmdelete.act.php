@@ -13,7 +13,7 @@
 
 	$model = new P2P_Peer($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Peer not found.'); }
-	if (false == $user->authHas('p2p', 'p2p_peer', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('p2p', 'p2p_peer', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this peer.'); }	
 	
 	//----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 	$labels = array('UID' => $model->UID, 'raUID' => $model->UID);
 	$block = $theme->loadBlock('modules/p2p/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('p2p/editpeer/' . $model->UID);
 
 ?>

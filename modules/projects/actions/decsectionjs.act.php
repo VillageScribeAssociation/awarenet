@@ -20,7 +20,7 @@
 	$model = new Projects_Section($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->doXmlError("Section not found."); }
 
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->projectUID)) {
 		$kapenta->page->do403();
 	}
 

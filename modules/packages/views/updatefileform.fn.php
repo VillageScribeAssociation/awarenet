@@ -8,14 +8,14 @@
 
 function packages_updatefileform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('packageUID', $args)) { return '(packageUID not given)'; }
 	if (false == array_key_exists('fileUID', $args)) { return '(fileUID not given)'; }
 

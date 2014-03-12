@@ -10,7 +10,7 @@
 function videos_navlist($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';		//%	return value [string]
 

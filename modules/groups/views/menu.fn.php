@@ -9,7 +9,7 @@
 
 function groups_menu($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$labels = array(
 		'newEntry' => '',
@@ -29,13 +29,13 @@ function groups_menu($args) {
 	if (true == array_key_exists('UID', $args)) {
 		$UID = $args['UID'];
 
-		if (true == $user->authHas('groups', 'groups_group', 'new', $UID)) {
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'new', $UID)) {
 			$labels['newEntry'] = '[[:theme::submenu::label=Add Group::link=/groups/new/:]]';
 		}
 	
 		switch($action) {
 			case 'show':
-				if (true == $user->authHas('groups', 'groups_group', 'edit', $UID)) {
+				if (true == $kapenta->user->authHas('groups', 'groups_group', 'edit', $UID)) {
 					$labels['editCurrentGroup'] = ''
 					 . "[[:theme::submenu::label=Edit This Group::link=/groups/edit/" . $UID . ":]]";
 				}
@@ -48,7 +48,7 @@ function groups_menu($args) {
 		}
 
 			
-		if (true == $user->authHas('groups', 'groups_group', 'announcements-add', $UID)) {
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'announcements-add', $UID)) {
 			$labels['makeAnnouncement'] = ''
 			 . '[[:theme::submenu'
 			 . '::label=Make Announcement'

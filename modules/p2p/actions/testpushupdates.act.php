@@ -7,7 +7,7 @@
 //*	development / admin script to manually push the next set of messages in the queue
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	header('Content-type: text/plain');
 

@@ -13,7 +13,7 @@
 
 function comments_listnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	
 	$pageNo = 1;		//%	result page to display [int]
@@ -32,7 +32,7 @@ function comments_listnav($args) {
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'comments-show', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'comments-show', $refUID)) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pageNo', $args)) { 

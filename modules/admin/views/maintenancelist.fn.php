@@ -7,7 +7,7 @@
 
 function admin_maintenancelist($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
 	$maint = array();
@@ -18,7 +18,7 @@ function admin_maintenancelist($args) {
 	//---------------------------------------------------------------------------------------------
 	//	check user role
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	go through all modules and look for maintenance script file (assume it contains function)

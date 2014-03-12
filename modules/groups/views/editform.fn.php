@@ -10,7 +10,7 @@
 
 function groups_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';			//%	return value [string]
@@ -21,7 +21,7 @@ function groups_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('groups', 'groups_group', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -11,14 +11,14 @@ function like_link($args) {
 	global $theme;
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return '(refModule not given)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(refModel not given)'; }
@@ -36,7 +36,7 @@ function like_link($args) {
 	//----------------------------------------------------------------------------------------------
 	$byuser = ''
 	 . "[[:like::byuser"
-	 . "::userUID=" . $user->UID
+	 . "::userUID=" . $kapenta->user->UID
 	 . "::refModule=$refModule::refModel=$refModel::refUID=$refUID:]]";
 
 	$exUID = $theme->expandBlocks($byuser, '');

@@ -13,7 +13,7 @@
 //returns: true if the given relationship exists, otherwise false [bool]
 
 function moblog_relationships($refModel, $UID, $relationship, $userUID) {
-	global $user;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	get the user we want to know about
@@ -58,7 +58,7 @@ function moblog_relationships($refModel, $UID, $relationship, $userUID) {
 				// relationship exists if user is a comitter of this project
 				$package = new Code_Package($model->package);
 				if (false == $package->loaded) { return false; }
-				if (true == $package->hasPrivilege($user->UID, 'commit')) { return true; }
+				if (true == $package->hasPrivilege($kapenta->user->UID, 'commit')) { return true; }
 				break;	//..........................................................................
 
 		}

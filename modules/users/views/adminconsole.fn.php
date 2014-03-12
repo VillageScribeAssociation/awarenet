@@ -7,8 +7,8 @@
 function users_adminconsole($args) {
 	global $theme;
 
-	global $user;
-	if ('admin' != $user->role) { return ''; }
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/users/views/adminconsole.block.php');
 

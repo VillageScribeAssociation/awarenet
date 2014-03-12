@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that the current user is an admin
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	ensure default roles exists and clear existing permissions
@@ -23,8 +23,8 @@
 		if (false == $ok) {
 			$model->name = $name;
 			$report = $model->save();
-			if ('' == $report) { $session->msg("Created role $name... <br/>\n", 'ok'); }
-			else { $session->msg("Could not create role $name: <br/>\n$report <br/>\n", 'bad'); }
+			if ('' == $report) { $kapenta->session->msg("Created role $name... <br/>\n", 'ok'); }
+			else { $kapenta->session->msg("Could not create role $name: <br/>\n$report <br/>\n", 'bad'); }
 
 		} else {
 			//echo "role exists: $name<br/>\n";	
@@ -39,7 +39,7 @@
 	foreach($modList as $modName) {
 		$mod = new KModule($modName);
 		if (false == $mod->loaded) {
-			$session->msg("Could not load module: $modName<br/>\n", 'bad');
+			$kapenta->session->msg("Could not load module: $modName<br/>\n", 'bad');
 		} else {
 			//--------------------------------------------------------------------------------------		
 			//	
@@ -48,7 +48,7 @@
 				. "description: " . $mod->description . "<br/>\n"
 				. "Default permissions: " . count($mod->defaultpermissions) . "<br/>\n";
 
-			$session->msg($msg);
+			$kapenta->session->msg($msg);
 
 			foreach($mod->defaultpermissions as $defperm) { 
 				$parts = explode(':', trim($defperm), 2);
@@ -59,15 +59,15 @@
 						$args[1], $args[2], $args[3], $args[5]
 					);
 					if (true == $added) {
-						$session->msg("added permission: {$parts[1]} ({$parts[0]}) <br/>\n", 'ok'); 
+						$kapenta->session->msg("added permission: {$parts[1]} ({$parts[0]}) <br/>\n", 'ok'); 
 					} else { 
-						$session->msg("could not add default permission: $defperm<br/>\n", 'bad');
+						$kapenta->session->msg("could not add default permission: $defperm<br/>\n", 'bad');
 					}
 
 					$report = $role->save();
-					if ('' != $report) { $session->msg('Could not save role.', 'bad'); }
+					if ('' != $report) { $kapenta->session->msg('Could not save role.', 'bad'); }
 
-				} else { $session->msg("Could not load role: " . $parts[0] . "<br/>\n", 'bad'); }
+				} else { $kapenta->session->msg("Could not load role: " . $parts[0] . "<br/>\n", 'bad'); }
 
 			}
 

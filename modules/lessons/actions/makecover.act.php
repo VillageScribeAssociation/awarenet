@@ -12,7 +12,7 @@
 	//	check post args and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('manifest', $kapenta->request->args)) { $kapenta->page->do404('No manifest'); }
 	if (false == array_key_exists('document', $kapenta->request->args)) { $kapenta->page->do404('No document'); }

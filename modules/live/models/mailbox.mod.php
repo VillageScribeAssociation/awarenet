@@ -229,7 +229,7 @@ class Live_Mailbox {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -243,17 +243,17 @@ class Live_Mailbox {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('live', 'live_mailbox', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_mailbox', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Live/showmailbox/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_mailbox', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_mailbox', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Live/editmailbox/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('live', 'live_mailbox', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('live', 'live_mailbox', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Live/delmailbox/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

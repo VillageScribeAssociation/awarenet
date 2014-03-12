@@ -9,7 +9,7 @@
 //opt: notificationUID - overrides UID [string]
 
 function notifications_show($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';							//%	return value [string]
@@ -24,7 +24,7 @@ function notifications_show($args) {
 
 	$model = new Notifications_Notification($args['UID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('notifications', 'notifications_notification', 'show', $model->UID)) 
+	if (false == $kapenta->user->authHas('notifications', 'notifications_notification', 'show', $model->UID)) 
 		{ return ''; }
 
 	//----------------------------------------------------------------------------------------------

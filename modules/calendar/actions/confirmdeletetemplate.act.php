@@ -14,7 +14,7 @@
 
 	$model = new Calendar_Template($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Calendar template not found.'); }
-	if (false == $user->authHas('calendar', 'calendar_template', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('calendar', 'calendar_template', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this calendar template.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@
 	$block = $theme->loadBlock('modules/calendar/views/confirmdeletetemplate.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('calendar/edittemplate/' . $model->alias);
 
 ?>

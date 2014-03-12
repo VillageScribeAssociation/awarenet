@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function gallery_schoolsnav($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 

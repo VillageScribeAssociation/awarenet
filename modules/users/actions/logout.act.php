@@ -6,24 +6,24 @@
 
 	$kapenta->session->set('recover', 'no');
 
-	if ('public' == $session->user) {
+	if ('public' == $kapenta->session->user) {
 		//------------------------------------------------------------------------------------------
 		//	user was not logged in
 		//------------------------------------------------------------------------------------------
-		$session->msg("You are already logged out.<br/>\n");
+		$kapenta->session->msg("You are already logged out.<br/>\n");
 		$kapenta->page->do302(''); // homepage		
 
 	} else {
 		//------------------------------------------------------------------------------------------
 		//	log them out
 		//------------------------------------------------------------------------------------------
-		$args = array('userUID' => $session->user);
+		$args = array('userUID' => $kapenta->session->user);
 
-		if ('yes' == $session->get('recover')) { $session->set('recover', 'no'); }
-		$check = $session->logout();
+		if ('yes' == $kapenta->session->get('recover')) { $kapenta->session->set('recover', 'no'); }
+		$check = $kapenta->session->logout();
 
-		if (true == $check) { $session->msg("You are now logged out.<br/>\n", 'ok'); }
-		else { $session->msg('Logout incomplete.', 'bad'); }
+		if (true == $check) { $kapenta->session->msg("You are now logged out.<br/>\n", 'ok'); }
+		else { $kapenta->session->msg('Logout incomplete.', 'bad'); }
 
 		$kapenta->raiseEvent('*', 'users_logout', $args);
 		$kapenta->page->do302('');

@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function admin_listmodulepages($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 	$html = '';													//%	return value [string]
@@ -13,7 +13,7 @@ function admin_listmodulepages($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('module', $args)) { return '(module not speicified)'; }
 	if (false == $kapenta->moduleExists($args['module'])) { return '(no such module)'; }
 

@@ -15,7 +15,7 @@ function groups__cb_member_added($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $notifications;
 

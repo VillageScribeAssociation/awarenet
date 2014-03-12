@@ -8,7 +8,7 @@
 
 function live_WebShell_set($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 
 	$mode = 'list';			//%	operation [string]
@@ -27,11 +27,11 @@ function live_WebShell_set($args) {
 	}
 
 	if (true == in_array('--clear', $args)) {
-		if ('admin' == $user->role) { $mode = 'clear'; } else { $mode = 'noauth'; }
+		if ('admin' == $kapenta->user->role) { $mode = 'clear'; } else { $mode = 'noauth'; }
 	}
 
 	if (true == in_array('--force', $args)) {
-		if ('admin' == $user->role) { $mode = 'force'; } else { $mode = 'noauth'; }
+		if ('admin' == $kapenta->user->role) { $mode = 'force'; } else { $mode = 'noauth'; }
 	}
 
 	if (true == in_array('--help', $args)) { $mode = 'help'; }

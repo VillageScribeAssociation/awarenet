@@ -26,7 +26,7 @@
 	//----------------------------------------------------------------------------------------------
 	$project = new Projects_Project($projectUID);
 	if (false ==  $project->loaded) { $kapenta->page->do404('No such project.'); }	// no project
-	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $project->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $project->UID)) {
 		$kapenta->page->do403();
 	}
 
@@ -51,7 +51,7 @@
 	$refUID = $project->UID;
 	$newName = $theme->expandBlocks('[[:users::name::userUID=' . $model->userUID . ':]]', '');
 	$title = $newName . " is now a member of project '" . $project->title . "'";
-	$content = "Request to join was accepted by " . $user->getNameLink();
+	$content = "Request to join was accepted by " . $kapenta->user->getNameLink();
 	$url = '%%serverPath%%projects/' . $project->alias;
 
 	$nUID = $notifications->create(
@@ -61,20 +61,20 @@
 	//----------------------------------------------------------------------------------------------
 	//	add user and their friends to notification
 	//----------------------------------------------------------------------------------------------
-	$notifications->addUser($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addUser($nUID, $kapenta->user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	add project members to notification
 	//----------------------------------------------------------------------------------------------
 	$members = $project->memberships->getMembers();
-	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $user->UID); }
+	foreach($members as $userUID => $role) { $notifications->addUser($nUID, $kapenta->user->UID); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	return to project page
 	//----------------------------------------------------------------------------------------------
 	$nameBlock = '[[:users::namelink::userUID=' . $model->userUID . ':]]';
-	$session->msg("You have added $nameBlock as a new member of this project.", 'ok');
+	$kapenta->session->msg("You have added $nameBlock as a new member of this project.", 'ok');
 	$kapenta->page->do302('projects/' . $project->alias);
 
 ?>

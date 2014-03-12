@@ -41,10 +41,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	try authenticate the user
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->loadByName($username)) { echo '<fail>Unknown User.</fail>'; die(); }
-	if (false == $user->checkPassword($password)) { echo '<fail>Wrong password.</fail>'; die(); }
+	if (false == $kapenta->user->loadByName($username)) { echo '<fail>Unknown User.</fail>'; die(); }
+	if (false == $kapenta->user->checkPassword($password)) { echo '<fail>Wrong password.</fail>'; die(); }
 
-	if (false == $model->hasPrivilege($user->UID, $privilege)) { 
+	if (false == $model->hasPrivilege($kapenta->user->UID, $privilege)) { 
 		echo "<fail>No commit permission on this object.</fail>"; die(); 
 	}
 

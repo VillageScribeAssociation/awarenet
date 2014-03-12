@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editindex($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';				//%	return value [string]
@@ -23,7 +23,7 @@ function projects_editindex($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
 	$model = new Projects_Project($args['raUID']);
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 	$rows = array();
 
 	//----------------------------------------------------------------------------------------------

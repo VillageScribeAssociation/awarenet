@@ -6,7 +6,7 @@
 
 function admin_listdbexport($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';						//%	return value [string]
@@ -14,7 +14,7 @@ function admin_listdbexport($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

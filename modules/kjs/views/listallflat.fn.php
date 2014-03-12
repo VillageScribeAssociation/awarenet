@@ -6,14 +6,14 @@
 
 function kjs_listallflat($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

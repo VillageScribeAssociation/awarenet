@@ -166,7 +166,7 @@ class Users_Permissions {
 		if ('' != $condition) { $type = 'c'; }
 
 		if (false == $kapenta->moduleExists($module)) { 
-			$session->msgAdmin("Users_Permissions::add(), no such module: $module <br/>\n", 'warn');
+			$kapenta->session->msgAdmin("Users_Permissions::add(), no such module: $module <br/>\n", 'warn');
 			return false; 
 		}
 
@@ -252,7 +252,7 @@ class Users_Permissions {
 
 	function toHtml() {
 		global $theme;
-		global $user;
+		global $kapenta;
 		$html = '';				//%	return value [string]
 
 		$table = array();
@@ -271,9 +271,9 @@ class Users_Permissions {
 				$table[] = $row;
 			}
 		}
-		$html .= "<h2>Role: " . $user->getName() . " (" . $user->role . ")</h2>\n";
+		$html .= "<h2>Role: " . $kapenta->user->getName() . " (" . $kapenta->user->role . ")</h2>\n";
 		$html .= $theme->arrayToHtmlTable($table, true, true);
-		if ('admin' == $user->role) { 	$html .= "(admin user passes all auth checks)<br/>"; }
+		if ('admin' == $kapenta->user->role) { 	$html .= "(admin user passes all auth checks)<br/>"; }
 		return $html;
 	}
 

@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	//if ('admin' != $user->role) { $kapenta->page->do403(); }
+	//if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer not specified.'); }
 
 	$peer = new P2P_Peer($kapenta->request->ref);

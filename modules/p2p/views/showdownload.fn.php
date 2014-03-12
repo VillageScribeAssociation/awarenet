@@ -9,7 +9,7 @@
 
 function p2p_showdownload($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$html = '';
@@ -17,7 +17,7 @@ function p2p_showdownload($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('metafile', $args)) { return 'Metafile not given.'; }
 
 	$klf = new KLargeFile();

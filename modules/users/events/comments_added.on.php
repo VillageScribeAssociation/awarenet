@@ -13,7 +13,7 @@
 
 function users__cb_comments_added($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $notifications;
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
@@ -37,7 +37,7 @@ function users__cb_comments_added($args) {
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
 	$link = "<a href='" . $ext['viewUrl'] . "#comment" . $args['commentUID'] ."'>wall</a>";
-	$title = $user->getName() . " commented on " . $model->getName() . "'s wall.";
+	$title = $kapenta->user->getName() . " commented on " . $model->getName() . "'s wall.";
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 
 	$nUID = $notifications->create(
@@ -50,8 +50,8 @@ function users__cb_comments_added($args) {
 		$url
 	);
 
-	$notifications->addUser($nUID, $user->UID );
-	$notifications->addFriends($nUID, $user->UID );
+	$notifications->addUser($nUID, $kapenta->user->UID );
+	$notifications->addFriends($nUID, $kapenta->user->UID );
 
 	return true;
 

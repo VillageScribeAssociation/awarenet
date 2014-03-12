@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not supplied.'); }
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not given.'); }
@@ -32,7 +32,7 @@
 			}
 
 			$module->save();
-			$session->msg('Updated module definition.');
+			$kapenta->session->msg('Updated module definition.');
 			break;	//..............................................................................
 
 		case 'saveDefaultPermissions':
@@ -43,13 +43,13 @@
 			if (false == array_key_exists('defaultpermissions', $_POST)) { $kapenta->page->do404(); }
 			$lines = explode("\n", $_POST['defaultpermissions']);
 			foreach($lines as $line) {
-				$session->msg('line: ' . $line);
+				$kapenta->session->msg('line: ' . $line);
 				if (strlen(trim($line)) > 3) { $defperms[] = $line; }
 			}
 
 			$module->defaultpermissions = $defperms;
 			$module->save();
-			$session->msg('Updated module default permission set.');
+			$kapenta->session->msg('Updated module default permission set.');
 			break;	//..............................................................................
 
 		default:

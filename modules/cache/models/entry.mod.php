@@ -47,7 +47,7 @@ class Cache_Entry {
 			$sql = "delete from cache_entry;";
 			$kapenta->db->query($sql);
 			$kapenta->registry->set('cache.serverpath', $sp);
-			$session->msgAdmin("Server connected to new network - clearing cache.", 'ok');
+			$kapenta->session->msgAdmin("Server connected to new network - clearing cache.", 'ok');
 		}
 
 		//------------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ class Cache_Entry {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -219,17 +219,17 @@ class Cache_Entry {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('cache', 'cache_entry', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('cache', 'cache_entry', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%cache/showentry/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('cache', 'cache_entry', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('cache', 'cache_entry', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%cache/editentry/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('cache', 'cache_entry', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('cache', 'cache_entry', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%cache/delentry/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

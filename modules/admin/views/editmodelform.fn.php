@@ -10,7 +10,7 @@
 //arg: modelname - name of a model defined on this module [string]
 
 function admin_editmodelform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$modelName = '';	//%	name of a kapenta module [string]
@@ -20,7 +20,7 @@ function admin_editmodelform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('modulename', $args)) { $moduleName = $args['modulename']; }
 	if (true == array_key_exists('modelname', $args)) { $modelName = $args['modelname']; }
 		

@@ -11,7 +11,7 @@
 //opt: behavior - Behavior when links are clicked (link|editmodal) [string]
 
 function files_summarynav($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 

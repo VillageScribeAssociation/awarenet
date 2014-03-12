@@ -10,7 +10,7 @@
 
 function gallery_summary($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $cache;
 
 	$html = '';		//% return value [string]
@@ -18,7 +18,7 @@ function gallery_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('pageUID', $args)) { $args['raUID'] = $args['pageUID']; }
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
@@ -29,7 +29,7 @@ function gallery_summary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check the cache
 	//----------------------------------------------------------------------------------------------
-	if ($model->createdBy != $user->UID) {
+	if ($model->createdBy != $kapenta->user->UID) {
 		$html = $cache->get($args['area'], $args['rawblock']);
 		if ('' != $html) { return $html; }
 	}
@@ -43,7 +43,7 @@ function gallery_summary($args) {
 	$block = $theme->loadBlock('modules/gallery/views/summary.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 
-	if ($model->createdBy != $user->UID) {
+	if ($model->createdBy != $kapenta->user->UID) {
 		$html = $theme->expandBlocks($html, $args['area']);
 		$cache->set('gallery-show-' . $model->UID, $args['area'], $args['rawblock'], $html);
 	}

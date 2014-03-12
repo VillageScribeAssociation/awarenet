@@ -8,7 +8,7 @@
 	// check basic permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('videos', 'videos_gallery', 'show')) { $kapenta->page->do403(); }	
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'show')) { $kapenta->page->do403(); }	
 
 	//----------------------------------------------------------------------------------------------
 	//	get order and page
@@ -40,8 +40,8 @@
 	$kapenta->page->blockArgs['pageNo'] = $pageNo;								
 	$kapenta->page->blockArgs['orderBy'] = $orderBy;
 	$kapenta->page->blockArgs['orderLabel'] = $orderLabel;
-	$kapenta->page->blockArgs['userUID'] = $user->UID;
-	$kapenta->page->blockArgs['userRa'] = $user->alias;
+	$kapenta->page->blockArgs['userUID'] = $kapenta->user->UID;
+	$kapenta->page->blockArgs['userRa'] = $kapenta->user->alias;
 	$kapenta->page->blockArgs['origin'] = $origin;
 	$kapenta->page->blockArgs['originlabel'] = $originLabel;
 	$kapenta->page->title = 'awareNet - all video galleries ' . $orderLabel . ' (page ' . $pageNo . ')';

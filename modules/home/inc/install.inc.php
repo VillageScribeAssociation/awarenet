@@ -13,12 +13,12 @@
 //returns: html report, or false if not authorized [string][bool]
 
 function home_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing home_static Module</h3>\n";
 	$dba = $kapenta->getDBAdminDriver();
@@ -90,10 +90,10 @@ function home_install_module() {
 //returns: HTML installation status report [string]
 
 function home_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';

@@ -8,10 +8,10 @@
 //arg: modulename - name of a module [string]
 
 function admin_installstatusreport($args) {
-	global $user;
+	global $kapenta;
 	$html = '';
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	if (false == array_key_exists('modulename', $args)) { return false; }
 

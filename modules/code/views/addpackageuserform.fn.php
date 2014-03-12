@@ -9,7 +9,7 @@
 //opt: UID - overrides raUID if present [string]
 
 function code_addpackageuserform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	$html = '';				//%	return value [string]
 
@@ -24,7 +24,7 @@ function code_addpackageuserform($args) {
 	if (false == $model->loaded) { return '(unkown package)'; }
 
 	//TODO: permissions check here
-	if ($user->role != 'admin') { return ''; }
+	if ($kapenta->user->role != 'admin') { return ''; }
 	//----------------------------------------------------------------------------------------------
 	//	make the block
 	//----------------------------------------------------------------------------------------------

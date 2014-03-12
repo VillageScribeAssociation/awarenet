@@ -9,7 +9,7 @@
 
 function live_WebShell_ls($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 
 	$mode = 'list';			//%	operation [string]

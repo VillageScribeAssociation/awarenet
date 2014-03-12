@@ -65,9 +65,9 @@
 	}
 
 	//TODO: chck this permission name
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) {
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'images-add', $refUID)) {
 		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
-		$session->msg('You are not authorised to add images to this item.', 'bad');
+		$kapenta->session->msg('You are not authorised to add images to this item.', 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
@@ -82,12 +82,12 @@
 		} else { 
 			$raw = ''; 
 			if ('xml' == $return) { $kapenta->page->doXmlError('No file uploaded.'); }
-			$session->msg('No file uploaded.', 'bad'); 
+			$kapenta->session->msg('No file uploaded.', 'bad'); 
 			$kapenta->page->do302($returnUrl);			
 		}
 	
 	} else { 
-		$session->msg('No file uploaded.', 'bad'); 
+		$kapenta->session->msg('No file uploaded.', 'bad'); 
 		$kapenta->page->do302($returnUrl);
 	}
 	
@@ -99,7 +99,7 @@
 	if ('' != $raw) { $img = @imagecreatefromstring($raw); }
 	if (false == $img) {
 		if ('xml' == $return) { $kapenta->page->doXmlError('Could not validate image.'); }
-		$session->msg('Could not validate image.', 'bad'); 
+		$kapenta->session->msg('Could not validate image.', 'bad'); 
 		$kapenta->page->do302($returnUrl);
 	}
 	
@@ -194,7 +194,7 @@
 	//echo "returnURL: $returnUrl <br/>\n";
 
 	if ('' == $report) { $report = "Uploaded image: $srcName <br/>\n"; }
-	$session->msg($report, 'ok');
+	$kapenta->session->msg($report, 'ok');
 	$kapenta->page->do302($returnUrl);
 
 ?>

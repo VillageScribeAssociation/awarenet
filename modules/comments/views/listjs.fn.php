@@ -15,15 +15,15 @@ function comments_listjs($args) {
 		global $theme;
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
-	if (false == $user->authHas('comments', 'Comment_Comment', 'show')) { return false; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
+	if (false == $kapenta->user->authHas('comments', 'Comment_Comment', 'show')) { return false; }
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refUID', $args)) { return false; }
 

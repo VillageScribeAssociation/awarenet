@@ -14,7 +14,7 @@
 function comments_listnavjs($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 
@@ -27,7 +27,7 @@ function comments_listnavjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 
 	//TODO: permissions check here
 

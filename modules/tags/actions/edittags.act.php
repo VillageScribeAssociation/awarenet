@@ -19,8 +19,8 @@
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('No such object.', true); }
 
 	if (
-		(false == $user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
-		(false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
+		(false == $kapenta->user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
+		(false == $kapenta->user->authHas($refModule, $refModel, 'tags-manage', $refUID))
 	) {
 		echo "$refModule::$refModel::$refUID<br/>";
 		$kapenta->page->do403("You dont have permissions to edit tags on this item.", true);

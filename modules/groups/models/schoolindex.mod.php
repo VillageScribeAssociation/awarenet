@@ -180,7 +180,7 @@ class Groups_SchoolIndex {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -191,17 +191,17 @@ class Groups_SchoolIndex {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('groups', 'groups_schoolindex', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('groups', 'groups_schoolindex', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%groups/showschoolindex/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('groups', 'groups_schoolindex', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('groups', 'groups_schoolindex', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%groups/editschoolindex/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('groups', 'groups_schoolindex', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('groups', 'groups_schoolindex', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%groups/delschoolindex/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

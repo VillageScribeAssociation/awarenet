@@ -31,9 +31,9 @@
 
 	if ('' == $report) {
 		$msg = "Moved image '" . $model->title . "' to gallery '" . $gallery->title . "'";
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 	} else {
-		$session->msg("Could not move image '" . $model->title . "':<br/>" . $report, 'bad');
+		$kapenta->session->msg("Could not move image '" . $model->title . "':<br/>" . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

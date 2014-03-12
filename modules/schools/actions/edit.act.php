@@ -11,7 +11,7 @@
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('schools_school');
-	if (false == $user->authHas('schools', 'schools_school', 'edit', $UID))
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Schools.'); }
 
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }

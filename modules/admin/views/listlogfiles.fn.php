@@ -7,7 +7,7 @@
 
 function admin_listlogfiles($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 	$type = 'pageview.log.php';		//%	type of log [string]
@@ -15,7 +15,7 @@ function admin_listlogfiles($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('type', $args)) { $type = $args['type']; }
 
 	//----------------------------------------------------------------------------------------------

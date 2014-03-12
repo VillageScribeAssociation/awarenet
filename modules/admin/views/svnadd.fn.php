@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function admin_svnadd($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 
@@ -13,7 +13,7 @@ function admin_svnadd($args) {
 	$svnfiles = '';
 	$skipfiles = '';
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if ('linux' != $kapenta->registry->get('kapenta.os')) { 
 		return 'This action is only available on Linux web hosts.<br/>';
 	}

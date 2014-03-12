@@ -182,7 +182,7 @@ class Aliases_Alias {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -193,17 +193,17 @@ class Aliases_Alias {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('aliases', 'aliases_alias', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('aliases', 'aliases_alias', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%alias/showalias/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more >gt; ]</a>";
 		}
 
-		if (true == $user->authHas('aliases', 'aliases_alias', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('aliases', 'aliases_alias', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%alias/editalias/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('aliases', 'aliases_alias', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('aliases', 'aliases_alias', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%alias/delalias/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

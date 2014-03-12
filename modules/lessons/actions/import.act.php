@@ -8,7 +8,7 @@
 //*	import all course objects into the database
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	echo $theme->expandBlocks('[[:theme::ifscrollheader:]]');
 

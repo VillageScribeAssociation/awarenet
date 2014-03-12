@@ -19,7 +19,7 @@ function comments_summary($args) {
 
 	$model = new Comments_Comment($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }
-	if (false == $user->authHas('comments', 'comment_comment', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -18,10 +18,10 @@
 //returns: html report or empty string if not authorized [string][bool]
 
 function newsletter_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$dba = $kapenta->getDBAdminDriver();
 	$report = '';				//% return value [string:html]
@@ -74,10 +74,10 @@ function newsletter_install_module() {
 //returns: HTML installation status report or empty string if not authorized [string]
 
 function newsletter_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';				//%	return value [string:html]
 	$dba = $kapenta->getDBAdminDriver();

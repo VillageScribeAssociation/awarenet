@@ -198,7 +198,7 @@ class Wiki_Category {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();		//% extended array of properties [array:string]
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -209,17 +209,17 @@ class Wiki_Category {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('wiki', 'wiki_category', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'wiki_category', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Wiki/showcategory/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'wiki_category', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'wiki_category', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Wiki/editcategory/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('wiki', 'wiki_category', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('wiki', 'wiki_category', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Wiki/delcategory/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

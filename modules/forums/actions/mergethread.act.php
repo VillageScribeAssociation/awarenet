@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('fromThread', $_POST)) { $kapenta->page->do404('fromThread not POSTed'); }
 	if (false == array_key_exists('toThread', $_POST)) { $kapenta->page->do404('toThread not POSTed'); }
@@ -24,7 +24,7 @@
 
 	if ($fromThread->UID == $toThread->UID) { $kapenta->page->do404('Cannot merge thread with itself.'); }
 
-	$msg = "<br/><div class='inlinequote'>Moved by " . $user->getNameLink()
+	$msg = "<br/><div class='inlinequote'>Moved by " . $kapenta->user->getNameLink()
 		 . " on " . $kapenta->db->datetime() . "</div>";
 
 	//----------------------------------------------------------------------------------------------
@@ -43,12 +43,12 @@
 		$success = "Converted thread " . $fromThread->UID
 				 . " (" . $fromThread->title . ") into a reply on "
 				 . $toThread->UID . " (" . $toThread->title . ")"; 
-		$session->msg($success, 'ok');
+		$kapenta->session->msg($success, 'ok');
 	} else {
 		$failure = "Could not convert thread ". $fromThread->UID
 				 . " (" . $fromThread->title . ") into a reply on " 
 				 . $toThread->UID . " (" . $toThread->title . ")"; 
-		$session->msg($failure, 'bad');
+		$kapenta->session->msg($failure, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 	
 	$range = $kapenta->db->loadRange('forums_reply', '*', $conditions);
 
-	if (0 == count($range)) { $session->msg('Thread has no replies, none to move.', 'info'); }
+	if (0 == count($range)) { $kapenta->session->msg('Thread has no replies, none to move.', 'info'); }
 
 	foreach($range as $row) {
 		$model = new Forums_Reply($row['UID']);
@@ -73,12 +73,12 @@
 			$success = "Moved thread reply " . $model->UID
 					 . " by [[:users::name::userUID=" . $model->createdBy . ":]] to thread "
 					 . $toThread->UID . "(" . $toThread->title . ")"; 
-			$session->msg($success, 'ok');
+			$kapenta->session->msg($success, 'ok');
 
 		} else {
 			$failure = "Could not move reply " . $model->UID
 					 . " by [[:users::name::userUID=" . $model->createdBy . ":]]"; 
-			$session->msg($failure, 'bad');
+			$kapenta->session->msg($failure, 'bad');
 		}
 	}
 

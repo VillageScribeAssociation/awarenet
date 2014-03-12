@@ -7,7 +7,7 @@
 //opt: excludeqB64 - search term base 64 encoded [string]
 
 function admin_codesearchform($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';			//%	return value [string]
@@ -17,7 +17,7 @@ function admin_codesearchform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check args and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	if (true == array_key_exists('searchqB64', $args)) 
 		{ $searchq = base64_decode($args['searchqB64']; }

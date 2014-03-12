@@ -14,7 +14,7 @@
 	$model = new Images_Image($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Image not found.'); }
 	//if ('' == $model->fileName) { $kapenta->page->do404(); }
-	if (false == $user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'images-edit', $model->refUID))
 		{ $kapenta->page->do403('You are not authorized to edit this image.'); }
 	
 	//TODO: add more auth options here

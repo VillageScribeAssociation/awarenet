@@ -18,7 +18,7 @@
 
 	$project = new Projects_Project($kapenta->request->args['UID']);
 	if (false == $project->loaded) { $kapenta->page->do404('Project not found.'); }
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $project->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $project->UID)) {
 		$kapenta->page->do403("You are not authorized to edit this project.");
 	}
 
@@ -40,7 +40,7 @@
 	$block = $theme->loadBlock('modules/projects/views/confirmdeletesection.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('projects/editsection/' . $model->UID);
 	//TODO: descurity checks on $kapenta->request->args['section']
 

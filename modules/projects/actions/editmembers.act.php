@@ -21,10 +21,10 @@
 	//	determine if current user is authorised to administer this project
 	//----------------------------------------------------------------------------------------------	
 	$admin = false;
-	if ('admin' == $user->role) { $admin = true; }
+	if ('admin' == $kapenta->user->role) { $admin = true; }
 
 	foreach($members as $userUID => $urole) 
-		{ if (($userUID == $user->UID) AND ($urole == 'admin')) { $admin = true; } }
+		{ if (($userUID == $kapenta->user->UID) AND ($urole == 'admin')) { $admin = true; } }
 
 	//if ($admin == false) 
 	//	{ $kapenta->page->do403("You cannot administer memberships of this project.<br/>\n", true); }
@@ -34,7 +34,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ((true == array_key_exists('action', $_POST)) AND ('addMember' == $_POST['action'])) {
 		$model->addMember($_POST['user'], $_POST['role']);
-		$session->msg("Added new member to project: " . $model->title . ".", 'ok');
+		$kapenta->session->msg("Added new member to project: " . $model->title . ".", 'ok');
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@
 	if (true == array_key_exists('removemember', $kapenta->request->args)) {
 		//AND (true == $kapenta->db->objectExists('users_user', $kapenta->request->args['removemember'])) ) {
 		$model->removeMember($kapenta->request->args['removemember']);
-		$session->msg("Removed member from " . $model->title . ".", 'ok');
+		$kapenta->session->msg("Removed member from " . $model->title . ".", 'ok');
 	}
 	
 	//----------------------------------------------------------------------------------------------

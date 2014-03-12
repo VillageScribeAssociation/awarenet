@@ -87,7 +87,7 @@
 			if (strtolower($ext) == strtolower($compare)) {
 				$module = $value;
 				$extension = $ext;
-				$session->msgAdmin("/uploadcomplete/ module: $module ext: $extension upload: " . $srcName);
+				$kapenta->session->msgAdmin("/uploadcomplete/ module: $module ext: $extension upload: " . $srcName);
 			}
 		}
 
@@ -95,7 +95,7 @@
 			$errmsg .= "Files of this type are not supported by %%websiteName%%.<br/>$srcName";
 		}
 
-		if (false == $user->authHas($refModule, $refModel, $module . '-add', $refUID)) {
+		if (false == $kapenta->user->authHas($refModule, $refModel, $module . '-add', $refUID)) {
 			$errmsg = 'You are not authorised to add ' . $module . 's to this item.';
 		}
 	}
@@ -174,8 +174,8 @@
 		die();
 	}
 
-	if ('' == $errmsg) { $session->msg("Uploaded image: $srcName <br/>\n", 'ok'); }
-	else { $session->msg($errmsg, 'bad'); }
+	if ('' == $errmsg) { $kapenta->session->msg("Uploaded image: $srcName <br/>\n", 'ok'); }
+	else { $kapenta->session->msg($errmsg, 'bad'); }
 
 	$kapenta->page->do302($return);
 

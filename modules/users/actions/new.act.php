@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_user', 'new'))
+	if (false == $kapenta->user->authHas('users', 'users_user', 'new'))
 		{ $kapenta->page->do403('You are not authorized to create new Users.'); }
 
 	if (false == array_key_exists('username', $_POST)) { $kapenta->page->do404(); }
@@ -17,8 +17,8 @@
 	//----------------------------------------------------------------------------------------------
 	//*	check that username is not already registered
 	//----------------------------------------------------------------------------------------------
-	if ('' != $user->getUserUID(strtolower($_POST['username']))) {
-		$session->msg('Could not create new User: Username already taken.<br/>');
+	if ('' != $kapenta->user->getUserUID(strtolower($_POST['username']))) {
+		$kapenta->session->msg('Could not create new User: Username already taken.<br/>');
 		$kapenta->page->do302('users/' . $model->alias);
 	}
 
@@ -60,17 +60,17 @@
 	if ('' == $report) { $report = $model->save(); }
 
     // reload session, fixed bug to do with new user obejct overriding current user session keys
-    $session->load($user->UID);
-    $session->save();
+    $kapenta->session->load($kapenta->user->UID);
+    $kapenta->session->save();
 
 	//----------------------------------------------------------------------------------------------
 	//*	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new user: ' . $model->getNameLink() . '<br/>', 'ok');
+		$kapenta->session->msg('Created new user: ' . $model->getNameLink() . '<br/>', 'ok');
 		$kapenta->page->do302('users/profile/' . $model->alias);
 	} else {
-		$session->msg('Could not create new User:<br/>' . $report);
+		$kapenta->session->msg('Could not create new User:<br/>' . $report);
 		$kapenta->page->do302('users/' . $model->alias);
 	}
 

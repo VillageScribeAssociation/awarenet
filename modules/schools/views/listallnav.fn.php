@@ -9,7 +9,7 @@
 
 function schools_listallnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 

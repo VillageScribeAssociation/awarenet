@@ -9,7 +9,7 @@
 //arg: setting - user setting to control visibility [string]
 
 function wiki_tour($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $session;
 
@@ -20,7 +20,7 @@ function wiki_tour($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check if user has seen the tour
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('article', $args)) { return '(no user setting given)'; }
 	if (false == array_key_exists('setting', $args)) { return '(no user setting given)'; }
 
@@ -28,13 +28,13 @@ function wiki_tour($args) {
 	$article = $args['article'];
 
 	if ('wiki.tour.' != substr($setting, 0, 10)) { return '(invalid wiki.tour setting)'; }
-	if ('hide' == $user->getSetting($setting)) { return ''; }
+	if ('hide' == $kapenta->user->getSetting($setting)) { return ''; }
 
 	$model = new Wiki_Article($article);
 	$model->expandWikiCode();
 
 	if (false == $model->loaded) { 
-		if ('admin' == $user->role) { 
+		if ('admin' == $kapenta->user->role) { 
 			$link = "<a href='%%serverPath%%wiki/" . $article . "'>" . $article . "</a>";
 			return "(tour article not found: $link)";
 		}

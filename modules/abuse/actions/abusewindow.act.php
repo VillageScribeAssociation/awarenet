@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403('Please log in to use this feature.', true); }	
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403('Please log in to use this feature.', true); }	
 
 	if (false == array_key_exists('refModule', $kapenta->request->args)) { $kapenta->page->do404('no refModule', true); }
 	if (false == array_key_exists('refModel', $kapenta->request->args)) { $kapenta->page->do404('no refModel', true); }

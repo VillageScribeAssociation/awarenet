@@ -10,7 +10,7 @@
 
 function videos_editvideoform($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 

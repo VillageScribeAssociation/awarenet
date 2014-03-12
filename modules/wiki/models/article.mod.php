@@ -225,7 +225,7 @@ class Wiki_Article {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();				//%	return value [dict]
@@ -240,25 +240,25 @@ class Wiki_Article {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('wiki', 'wiki_article', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('wiki', 'wiki_article', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%wiki/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='%%serverPath%%wiki/" . $ary['alias'] . "'>"
 					 . "[read on &gt;&gt;]</a>"; 
 		}
 
-		if ($user->authHas('wiki', 'wiki_article', 'edit', $this->UID)) {
+		if ($kapenta->user->authHas('wiki', 'wiki_article', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%wiki/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['nomUrl'] =  '%%serverPath%%wiki/nominatedelete/' . $this->alias;
 			$ary['nomLink'] = "<a href='" . $ary['nomUrl'] . "'>[nominate for deletion]</a>"; 
 		}
 
-		if ($user->authHas('wiki', 'wiki_article', 'delete', $this->UID)) {
+		if ($kapenta->user->authHas('wiki', 'wiki_article', 'delete', $this->UID)) {
 			$ary['delUrl'] = '%%serverPath%%wiki/confirmdelete/uid_' . $this->UID;
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>";
 		}
 
-		if ($user->authHas('wiki', 'wiki_article', 'new', $this->UID)) { 
+		if ($kapenta->user->authHas('wiki', 'wiki_article', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%wiki/new/";
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[create new article]</a>";  
 		}
@@ -343,7 +343,7 @@ class Wiki_Article {
 
 	function mkDefault() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 
 		$this->title = 'Index';

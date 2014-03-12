@@ -12,8 +12,8 @@
 	$auth = false; 
 	$allOk = true;
 
-	if ('admin' == $user->role) { $auth = true; }
-	if ('teacher' == $user->role) { $auth = true; }
+	if ('admin' == $kapenta->user->role) { $auth = true; }
+	if ('teacher' == $kapenta->user->role) { $auth = true; }
 	//TODO: standard permissions check
 
 	if (false == array_key_exists('action', $_POST)) {
@@ -59,14 +59,14 @@
 		$model->board = $_POST['forum'];
 		$model->save();
 
-		$session->msg("Thread moved: " . $model->title, 'ok');
+		$kapenta->session->msg("Thread moved: " . $model->title, 'ok');
 		$kapenta->page->do302('forums/showthread/' . $model->alias); 
 
 	} else {
 		//-----------------------------------------------------------------------------------------
 		//	something went wrong
 		//-----------------------------------------------------------------------------------------
-		$session->msg("Could not move forum thread: $msg", 'bad');
+		$kapenta->session->msg("Could not move forum thread: $msg", 'bad');
 		$kapenta->page->do302('forums/');
 
 	}

@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('projects', 'projects_project', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show')) { $kapenta->page->do403(); }
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = $kapenta->request->args['page']; }
 
 	//----------------------------------------------------------------------------------------------

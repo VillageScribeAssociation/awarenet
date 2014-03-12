@@ -16,7 +16,7 @@
 //arg: allow - comma separated list of handler modules [string]
 
 function live_attach($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	

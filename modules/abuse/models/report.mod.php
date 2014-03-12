@@ -235,7 +235,7 @@ class Abuse_Report {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 
 		$ext = $this->toArray();		//% extended array of properties [array:string]
@@ -246,7 +246,7 @@ class Abuse_Report {
 		$ext['newUrl'] = '';	$ext['newLink'] = '';
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
@@ -256,7 +256,7 @@ class Abuse_Report {
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if ('admin' == $user->role) {
+		if ('admin' == $kapenta->user->role) {
 			$ext['editUrl'] = '%%serverPath%%abuse/editreport/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['delUrl'] = '%%serverPath%%abuse/delreport/' . $ext['UID'];
@@ -302,18 +302,18 @@ class Abuse_Report {
 	//arg:
 
 	function annotate($userUID, $note) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		if ('' == trim($note)) { return false; }
 		$this->notes .= "<!-- annotation -->\n"
-			. "<b>" . $user->getNameLink() . "</b>"
+			. "<b>" . $kapenta->user->getNameLink() . "</b>"
 			. " (added: " . $kapenta->db->datetime() . ")<br/>"
 			. str_replace("\n", "<br/>\n", $note) . "<br/>"
 			. ""
 			. "<hr/>";
 
-		//$session->msg('Added annotation to Abuse Report.', 'ok');
+		//$kapenta->session->msg('Added annotation to Abuse Report.', 'ok');
 		$_SESSION['sMessage'] .= "Added annotation to Abuse Report " . $this->UID . "<br/>\n";
 		$this->save();
 	}

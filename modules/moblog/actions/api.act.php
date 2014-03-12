@@ -4,7 +4,7 @@
 //*	API of moblog module. No public actions. DEPRECATED
 //--------------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $kapenta->page->doXmlError('not logged in'); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->doXmlError('not logged in'); }
 
 	//--------------------------------------------------------------------------------------------------
 	//	list records owned by the current user
@@ -13,7 +13,7 @@
 	if ('myrecords' == $kapenta->request->ref) {
 		$sql = ''
 		 . "select * from moblog_post where"
-		 . " createdBy='" . $kapenta->db->addMarkup($user->UID) . "' order by title";
+		 . " createdBy='" . $kapenta->db->addMarkup($kapenta->user->UID) . "' order by title";
 
 		$result = $kapenta->db->query($sql);
 	

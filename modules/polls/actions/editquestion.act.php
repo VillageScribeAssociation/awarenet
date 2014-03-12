@@ -25,7 +25,7 @@
 	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('unknown module', true); }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('unknown owner', true); }
 
-	if (false == $user->authHas($refModule, $refModel, 'polls-add', $refUID)) { 
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'polls-add', $refUID)) { 
 		$kapenta->page->do403('You are not authorized to add polls to this item.', true);
 	}
 

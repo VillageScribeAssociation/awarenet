@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not spciefid.'); }
 	if ('addModel' != $_POST['action']) { $kapenta->page->do404('Unkown action.'); }

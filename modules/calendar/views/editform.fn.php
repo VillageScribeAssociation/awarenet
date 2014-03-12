@@ -9,7 +9,7 @@
 
 function calendar_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';				//%	return value [string]
@@ -20,7 +20,7 @@ function calendar_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Calendar_Entry($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('calendar', 'calendar_entry', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

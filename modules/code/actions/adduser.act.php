@@ -10,7 +10,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//---------------------------------------------------------------------------------------------
-	if ($user->role != 'admin') { $kapenta->page->do403(); } // only admins can do this
+	if ($kapenta->user->role != 'admin') { $kapenta->page->do403(); } // only admins can do this
 	//TODO: permissions check here
 
 	if (false == array_key_exists('packageUID', $_POST)) { $kapenta->page->do404('Package not specified.'); }
@@ -36,7 +36,7 @@
 	if ('' == $report) { 
 		$nameLink = '[[:users::namelink::userUID=' . $codeuser->UID . ':]]';
 		$msg = "Granted $nameLink permissions on this package.";
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 	} else {
 		$sessio->msg('Could nor grant permissions on this package.', 'bad');
 	}

@@ -21,7 +21,7 @@
 
 	$model = new Code_File($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Code file not found.'); }
-	if (false == $user->authHas('code', 'code_file', 'delete', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('code', 'code_file', 'delete', $model->UID)) { $kapenta->page->do403(); }
 
 	$package = new Code_Package($model->package);
 	if (false == $package->loaded) { $kapenta->page->do404('Unknown package.'); }
@@ -31,13 +31,13 @@
 	//----------------------------------------------------------------------------------------------
 	$check = $model->delete();
 	if (true == $check) {
-		$session->msg("Deleted item: " . $model->title, 'ok');
+		$kapenta->session->msg("Deleted item: " . $model->title, 'ok');
 
 		$package->revision = ((int)$package->revision + 1);
 		$package->save();
 
 	} else {
-		$session->msg("Could not delete item: " . $model->title, 'bad');
+		$kapenta->session->msg("Could not delete item: " . $model->title, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------	

@@ -11,7 +11,7 @@
 
 function projects_addmemberformjs($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
@@ -25,7 +25,7 @@ function projects_addmemberformjs($args) {
 	$model = new Projects_Project($args['projectUID']);
 	if (false == $model->loaded) { return "<span class='ajaxerror'>Unkown project.</span>"; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
 		return '';
 	}
 

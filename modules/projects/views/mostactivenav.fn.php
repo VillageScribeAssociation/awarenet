@@ -8,7 +8,7 @@
 function projects_mostactivenav($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $session;
 		global $kapenta;
 
@@ -26,7 +26,7 @@ function projects_mostactivenav($args) {
 	//----------------------------------------------------------------------------------------------
 
 	$monthAgo = $kapenta->datetime($kapenta->time() - 5184000);
-	//$session->msgAdmin('monthago: ' . $monthAgo);
+	//$kapenta->session->msgAdmin('monthago: ' . $monthAgo);
 
 	$sql = "SELECT projectUID, count(UID) as numRevisions "
 		 . "FROM projects_change "

@@ -14,7 +14,7 @@
 	
 	$model = new Videos_Gallery($kapenta->request->ref);	
 	if (false == $model->loaded) { $kapenta->page->do404('Video gallery not found.'); }
-	if (false == $user->authHas('videos', 'videos_gallery', 'show', $model->UID)) {$kapenta->page->do403();}
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'show', $model->UID)) {$kapenta->page->do403();}
 
 	//----------------------------------------------------------------------------------------------
 	//	make the page

@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //ref: UID - UID of the ad unit to be removed
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('ad unit not specified'); }
 
@@ -17,9 +17,9 @@
 	$check = $model->delete();
 
 	if (true == $check) {
-		$session->msg("Ad unit deleted");
+		$kapenta->session->msg("Ad unit deleted");
 	} else {
-		$session->msg("Could not delete ad unit.");
+		$kapenta->session->msg("Could not delete ad unit.");
 	}
 
 	$kapenta->page->do302('newsletter/');

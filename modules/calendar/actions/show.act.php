@@ -10,7 +10,7 @@
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) {  
-		$session->msg('No entry specified.');
+		$kapenta->session->msg('No entry specified.');
 		$kapenta->page->do302('calendar/');
 	}
 

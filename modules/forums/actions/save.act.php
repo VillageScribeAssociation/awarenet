@@ -14,7 +14,7 @@
 
 	$model = new Forums_Board($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Board not found.'); }
-	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorised to edit this board.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -36,9 +36,9 @@
 	$report = $model->save();
 
 	if ('' == $report) { 
-		$session->msg('Saved changes to forum: ' . $model->title, 'ok'); 
+		$kapenta->session->msg('Saved changes to forum: ' . $model->title, 'ok'); 
 	} else { 
-		$session->msg('Could not save changes:<br/>' . $report, 'bad'); 
+		$kapenta->session->msg('Could not save changes:<br/>' . $report, 'bad'); 
 	}
 	$kapenta->page->do302('forums/' . $model->alias);			
 

@@ -10,7 +10,7 @@
 
 function users_summary($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 
@@ -18,7 +18,7 @@ function users_summary($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('UID', $args)) { return ''; }
-	if (false == $user->authHas('users', 'users_user', 'summary', '')) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_user', 'summary', '')) { return ''; }
 
 	$model = new Users_User($args['UID']);
 	if (false == $model->loaded) { return ''; }

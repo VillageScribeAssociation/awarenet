@@ -7,14 +7,14 @@
 //arg: return - location relative to serverPath [string]
 
 function admin_removefileform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	$html = '';
 	
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('fileName', $args)) { return '(fileName not given)'; }
 	if (false == array_key_exists('return', $args)) { return '(return value not given)'; }
 

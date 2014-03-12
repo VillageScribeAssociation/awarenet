@@ -15,7 +15,7 @@ function lessons_thumb($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('UID', $args)) { return '(resource not specified)'; }	
 
 	$model = new Lessons_Stub($args['UID']);

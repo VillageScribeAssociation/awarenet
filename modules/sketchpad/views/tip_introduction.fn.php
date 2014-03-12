@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function sketchpad_tip_introduction($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';				//%	return value [string]
@@ -13,7 +13,7 @@ function sketchpad_tip_introduction($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check if current user has dismissed this policy
 	//----------------------------------------------------------------------------------------------
-	if ('hide' == $user->get('info.sketchpad.intro')) { return ''; }
+	if ('hide' == $kapenta->user->get('info.sketchpad.intro')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

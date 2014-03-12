@@ -10,11 +10,11 @@
 //arg: forumUID - UID of a forum [string]
 
 function forums_newthreadform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	// TODO: auth
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 	if (array_key_exists('forumUID', $args) == false) { return false; }
 	
 	$model = new Forums_Board($args['forumUID']);

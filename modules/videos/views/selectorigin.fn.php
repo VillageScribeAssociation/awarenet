@@ -6,7 +6,7 @@
 //opt: default - default value of select element (user|3rdparty) [string]
 
 function videos_selectorigin($args) {
-	global $user;
+	global $kapenta;
 	global $session;
 
 	$default = 'user';					//%	default origin [string]
@@ -17,7 +17,7 @@ function videos_selectorigin($args) {
 		'3rdparty' => '3rd party content used with permission'
 	);
 
-	if (true == $session->get('mobile')) {
+	if (true == $kapenta->session->get('mobile')) {
 		$values = array(
 			'user' => 'made by awareNet user',
 			'3rdparty' => '3rd party (with permission)'

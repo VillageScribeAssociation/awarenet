@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (no public users)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
+	if (($kapenta->user->role == 'public') || ($kapenta->user->role == 'banned')) { $kapenta->page->do403(); }
 	//TODO: use a permission
 
 	//----------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	bump popularity of this item if viewed by someone other than the creator
 	//----------------------------------------------------------------------------------------------
-	if ($model->createdBy != $user->UID) {
+	if ($model->createdBy != $kapenta->user->UID) {
 		$args = array(
 			'ladder' => 'images.all',
 			'item' => $model->UID

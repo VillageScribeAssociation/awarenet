@@ -7,7 +7,7 @@
 
 function users_chatlink($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';									//%	return value [string]
 
@@ -15,7 +15,7 @@ function users_chatlink($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('userUID', $args)) { return ''; }
-	if ('public' == $user->role) { return ''; }		// do not disclose online status to public
+	if ('public' == $kapenta->user->role) { return ''; }		// do not disclose online status to public
 
 	//----------------------------------------------------------------------------------------------
 	//	query database

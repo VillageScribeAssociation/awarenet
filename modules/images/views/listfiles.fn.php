@@ -12,7 +12,7 @@
 
 function images_listfiles($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 
@@ -26,7 +26,7 @@ function images_listfiles($args) {
 	//---------------------------------------------------------------------------------------------
 	if (true == array_key_exists('status', $args)) { $status = $args['status']; }
 	if (true == array_key_exists('format', $args)) { $format = $args['format']; }
-	//if (('admin' != $user->role) && ('maintenance' != $user->role)) { return ''; }
+	//if (('admin' != $kapenta->user->role) && ('maintenance' != $kapenta->user->role)) { return ''; }
 	
 	//----------------------------------------------------------------------------------------------
 	//	consider files of all image records

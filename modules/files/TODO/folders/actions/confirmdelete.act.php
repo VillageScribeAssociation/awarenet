@@ -11,7 +11,7 @@
 
 	$model = new Files_Folder($kapenta->request->args['uid']);
 	if (false == $model->loaded) { $kapenta->page->do404('Folder not found.'); }
-	if (false == $user->authHas('files', 'files_folder', 'delete', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('files', 'files_folder', 'delete', $model->UID)) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	make the block and show the item to be deleted
@@ -21,7 +21,7 @@
 	$block = $theme->loadBlock('modules/folder/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('folder/' . $model->alias);
 
 ?>

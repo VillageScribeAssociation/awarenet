@@ -14,7 +14,7 @@
 	$userUID = $_POST['userUID'];
 	$partnerUID = $_POST['partnerUID'];
 
-	if ($user->UID != $userUID) { $kapenta->page->doXmlError('Not your chat.'); }
+	if ($kapenta->user->UID != $userUID) { $kapenta->page->doXmlError('Not your chat.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	change state of all messages to dismissed

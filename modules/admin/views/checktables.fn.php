@@ -6,13 +6,13 @@
 
 function admin_checktables($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	get table state

@@ -11,7 +11,7 @@
 
 function groups_listusergroupsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$ntb = 'yes';							//%	wrap in titlebox div by default [string]
@@ -20,7 +20,7 @@ function groups_listusergroupsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	//if (false == $user->authHas('groups', 'groups_group', 'list')) { return ''; }
+	//if (false == $kapenta->user->authHas('groups', 'groups_group', 'list')) { return ''; }
 	if (false == array_key_exists('userUID', $args)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

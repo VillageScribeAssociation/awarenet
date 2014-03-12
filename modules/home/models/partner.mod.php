@@ -182,7 +182,7 @@ class Home_Partner {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -193,17 +193,17 @@ class Home_Partner {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('home', 'home_partner', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('home', 'home_partner', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%home/showpartner/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('home', 'home_partner', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('home', 'home_partner', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%home/editpartner/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('home', 'home_partner', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('home', 'home_partner', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%home/delpartner/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

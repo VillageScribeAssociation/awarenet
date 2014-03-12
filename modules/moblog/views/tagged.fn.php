@@ -13,7 +13,7 @@
 
 function moblog_tagged($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';			//%	return value [string]
 

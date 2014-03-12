@@ -8,7 +8,7 @@
 
 function admin_WebShell_testcurl($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 		global $utils;
 
@@ -18,7 +18,7 @@ function admin_WebShell_testcurl($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 	if (true == in_array('--help', $args)) { $mode = 'help'; }
 	if (true == in_array('-h', $args)) { $mode = 'help'; }
 

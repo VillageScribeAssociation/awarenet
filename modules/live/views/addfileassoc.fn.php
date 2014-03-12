@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function live_addfileassoc($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;	
 

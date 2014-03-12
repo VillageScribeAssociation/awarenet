@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function newsletter_addeditionnav($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -16,7 +16,7 @@ function newsletter_addeditionnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'Newsletter_Edition', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'Newsletter_Edition', 'new')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

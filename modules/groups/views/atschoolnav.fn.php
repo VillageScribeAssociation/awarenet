@@ -8,15 +8,15 @@
 
 function groups_atschoolnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
-	$schoolUID = $user->school;		//%	school to display groups for [string]
+	$schoolUID = $kapenta->user->school;		//%	school to display groups for [string]
 	$html = '';						//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('schoolUID', $args)) { $schoolUID = $args['schoolUID']; }	
 	if (true == array_key_exists('school', $args)) { $schoolUID = $args['school']; }	
 

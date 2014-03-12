@@ -10,14 +10,14 @@
 function admin_listmodules($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 
 	//---------------------------------------------------------------------------------------------
 	//	check user role
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	load each module and generate report

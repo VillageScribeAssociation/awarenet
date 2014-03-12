@@ -7,8 +7,8 @@
 function images_adminconsole($args) {
 	global $theme;
 
-	global $user;
-	if ('admin' != $user->role) { return ''; }
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/images/views/adminconsole.block.php');
 

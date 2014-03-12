@@ -18,8 +18,8 @@ function p2p__cb_file_added($args) {
 	global $kapenta;
 	global $kapenta;
 	global $kapenta; 
-	global $user;
-	global $page;
+	global $kapenta;
+	global $kapenta;
 	global $session;
 	global $revisions;
 
@@ -32,7 +32,7 @@ function p2p__cb_file_added($args) {
 	if (false == array_key_exists('fileName', $args)) { return false; }
 
 	if (false == $kapenta->fs->exists($args['fileName'])) {
-		$session->msg("File added, but filename not passed to event.");
+		$kapenta->session->msg("File added, but filename not passed to event.");
 		return false;
 	}
 
@@ -45,21 +45,21 @@ function p2p__cb_file_added($args) {
 	}
 
 	if (false == $kapenta->db->objectExists($args['refModel'], $args['refUID'])) {
-		$session->msg("File added, but owner object does not exist.");
+		$kapenta->session->msg("File added, but owner object does not exist.");
 		return false;
 	}
 
 	if (false == $kapenta->db->isShared($args['refModel'], $args['refUID'])) {
-		$session->msgAdmin("File added, but owner object is not shared.");
+		$kapenta->session->msgAdmin("File added, but owner object is not shared.");
 		return false;
 	}
 
 	if (true == $revisions->isDeleted($args['refModel'], $args['refUID'])) {
-		$session->msg("File added, but owner object is deleted.");
+		$kapenta->session->msg("File added, but owner object is deleted.");
 		return false;
 	}
 
-	//$session->msgAdmin("File added, sharing with peers (all tests passed).");
+	//$kapenta->session->msgAdmin("File added, sharing with peers (all tests passed).");
 
 	//----------------------------------------------------------------------------------------------
 	//	assume all peers want to know about it (if owned by a valid, shared object)
@@ -70,7 +70,7 @@ function p2p__cb_file_added($args) {
 
 	foreach($range as $item) {
 		$msg = 'Sharing new file: ' . $args['fileName'] . ' with ' . $item['name'];
-		$session->msgAdmin($msg);
+		$kapenta->session->msgAdmin($msg);
 
 		//$set->peerUID = $item['UID'];
 		//$set->updateFile($args['refModel'], $args['refUID'], $args['fileName']);

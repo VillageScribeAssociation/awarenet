@@ -14,7 +14,7 @@
 	$model = new Schools_School($kapenta->request->args['uid']);
 	if (false == $model->loaded) { $kapenta->page->do404('School not found.'); }
 
-	if (false == $user->authHas('schools', 'schools_school', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this school.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@
 	$block = $theme->loadBlock('modules/schools/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('schools/' . $model->alias);
 
 ?>

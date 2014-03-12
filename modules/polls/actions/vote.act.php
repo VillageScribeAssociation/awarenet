@@ -38,8 +38,8 @@
 
 	$returnUrl .= "#question" . $question->UID;
 
-	if (true == $question->hasVoted($user->UID)) {
-		$session->msg("You have already voted in this poll.", 'bad');
+	if (true == $question->hasVoted($kapenta->user->UID)) {
+		$kapenta->session->msg("You have already voted in this poll.", 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
@@ -52,9 +52,9 @@
 	$report = $vote->save();
 
 	if ('' == $report) {
-		$session->msg('Thank you for voting.', 'ok');
+		$kapenta->session->msg('Thank you for voting.', 'ok');
 	} else {
-		$session->msg('Your vote could not be saved:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Your vote could not be saved:<br/>' . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

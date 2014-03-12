@@ -10,7 +10,7 @@
 //arg: userUID - UID of user whose profile this box is on [string]
 
 function users_showrequestedfriends($args) {
-	global $user; 
+	global $kapenta; 
 	global $theme;
 
 	$html = '';					//%	return value [string]
@@ -21,7 +21,7 @@ function users_showrequestedfriends($args) {
 	if (false == array_key_exists('userUID', $args)) { return '(User UID not given)'; }
 
 	// admins can see everyones friend requests	TODO: use a permission for this
-	if (($args['userUID'] != $user->UID) && ( 'admin' != $user->role) ) { return ''; }
+	if (($args['userUID'] != $kapenta->user->UID) && ( 'admin' != $kapenta->user->role) ) { return ''; }
 
 	$set = new Users_Friendships($args['userUID']);
 

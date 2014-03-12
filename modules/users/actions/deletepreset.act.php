@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Preset not given.'); }
 
@@ -22,10 +22,10 @@
 	//----------------------------------------------------------------------------------------------
 	$check = $model->delete();
 	if (true == $check) { 
-		$session->msg("Deleted preset: " . $model->title . " (" . $model->UID . ")", 'ok');
+		$kapenta->session->msg("Deleted preset: " . $model->title . " (" . $model->UID . ")", 'ok');
 	} else {
 		$msg = "Could not delete preset: " . $model->title ." (" . $model->UID . ")";
-		$session->msg($msg, 'bad');
+		$kapenta->session->msg($msg, 'bad');
 	}
 
 	$kapenta->page->do302('users/themepresets/');

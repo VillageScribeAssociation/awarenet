@@ -8,7 +8,7 @@
 //arg: raUID - UID of a wiki_article object [string]
 
 function wiki_articleinfobox($args) {
-	global $user;
+	global $kapenta;
 	global $theme;	
 	
 	$html = '';						//%	return value [string]

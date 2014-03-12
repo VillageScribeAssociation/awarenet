@@ -15,7 +15,7 @@
 
 	$thread = new Forums_Thread($_POST['thread']);
 	if (false == $thread->loaded) { $kapenta->page->do404('Thread not found.'); }
-	if (false == $user->authHas('forums', 'forums_reply', 'new', $thread->UID)) { 
+	if (false == $kapenta->user->authHas('forums', 'forums_reply', 'new', $thread->UID)) { 
 		$kapenta->page->do403('You are not permitted to post in this thread.'); 
 	}
 
@@ -26,7 +26,7 @@
 	$reply->thread = $thread->UID;
 	$reply->content = $utils->cleanHtml($_POST['content']);
 	$report = $reply->save();
-	if ('' != $report) { $session->msg('Could not add reply: <br/>' . $report, 'bad'); }
+	if ('' != $report) { $kapenta->session->msg('Could not add reply: <br/>' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	increment reply count on thread
@@ -61,8 +61,8 @@
 			$title, $content, $ext['viewUrl']
 		);
 
-		$notifications->addFriends($nUID, $user->UID);
-		$notifications->addAdmins($nUID, $user->UID);
+		$notifications->addFriends($nUID, $kapenta->user->UID);
+		$notifications->addAdmins($nUID, $kapenta->user->UID);
 
 		//------------------------------------------------------------------------------------------
 		//	raise a microbog event for this

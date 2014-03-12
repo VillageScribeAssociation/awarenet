@@ -10,7 +10,7 @@
 //arg: refUID - UID of object being liked [string]
 
 function images__cb_like_something($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $notifications;
 
@@ -37,15 +37,15 @@ function images__cb_like_something($args) {
 		if (true == $model->loaded) {
 
 			$creatorName = '[[:users::name::userUID=' . $model->createdBy . ":]]'s";
-			if ($model->createdBy == $user->UID) { $creatorName = 'their own'; }
+			if ($model->createdBy == $kapenta->user->UID) { $creatorName = 'their own'; }
 	
-			$title = $user->getName() . " likes $creatorName image '" . $model->title . "";
+			$title = $kapenta->user->getName() . " likes $creatorName image '" . $model->title . "";
 			$url = '%%serverPath%%images/show/' . $model->alias;
 
 			$content = ''
 			 . "[[:images::show::width=indent::imageUID=" . $model->UID . ":]]\n"
 			 . "[[:like::otherusers"
-			 . "::userUID=" . $user->UID 
+			 . "::userUID=" . $kapenta->user->UID 
 			 . "::refModule=" . $refModule
 			 . "::refModel=" . $refModel
 			 . "::refUID=" . $refUID
@@ -56,9 +56,9 @@ function images__cb_like_something($args) {
 				'like_something', $title, $content, $url
 			);
 
-			$notifications->addUser($nUID, $user->UID);
-			$notifications->addFriends($nUID, $user->UID);
-			$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+			$notifications->addUser($nUID, $kapenta->user->UID);
+			$notifications->addFriends($nUID, $kapenta->user->UID);
+			$notifications->addSchoolGrade($nUID, $kapenta->user->school, $kapenta->user->grade);
 
 		}
 	}

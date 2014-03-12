@@ -10,7 +10,7 @@
 //opt: UID - overrides raUID if present [string]
 
 function code_folderadmin($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';						//%	return value [string:html]
@@ -18,7 +18,7 @@ function code_folderadmin($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ($user->role != 'admin') { return ''; }
+	if ($kapenta->user->role != 'admin') { return ''; }
 	if (true == array_key_exists('folderUID', $args)) { $args['raUID'] = $args['folderUID']; }
 	if (true == array_key_exists('UID', $args)) { $args['raUID'] = $args['UID']; }
 	if (false == array_key_exists('raUID', $args)) { return '(folder UID not given)'; }

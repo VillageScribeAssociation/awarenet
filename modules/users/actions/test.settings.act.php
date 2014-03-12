@@ -5,15 +5,15 @@
 //--------------------------------------------------------------------------------------------------
 //TODO: once this feature is stable	
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
-	//$check = $user->set('test.setting', '1234value');
+	//$check = $kapenta->user->set('test.setting', '1234value');
 	//if (false == $check) { echo "could not store test setting.<br/>\n"; }
 
-	$check = $user->set('test.another', 'x');
+	$check = $kapenta->user->set('test.another', 'x');
 	if (false == $check) { echo "could not store test setting.<br/>\n"; }
 
-	$value = $user->get('test.setting');
+	$value = $kapenta->user->get('test.setting');
 
 	echo "stored and returned: $value <br/>";
 

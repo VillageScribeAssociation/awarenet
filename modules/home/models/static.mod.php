@@ -210,7 +210,7 @@ class Home_Static {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 
 		$ary = $this->toArray();
@@ -230,22 +230,22 @@ class Home_Static {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('home', 'home_static', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('home', 'home_static', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%home/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[permalink]</a>"; 
 		}
 
-		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) {
+		if ($kapenta->user->authHas('home', 'home_static', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%home/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) { 
+		if ($kapenta->user->authHas('home', 'home_static', 'edit', $this->UID)) { 
 				$ary['newUrl'] = "%%serverPath%%home/new/"; 
 				$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[new]</a>";
 		}
 		
-		if ($user->authHas('home', 'home_static', 'edit', $this->UID)) {
+		if ($kapenta->user->authHas('home', 'home_static', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%home/confirmdelete/' . $this->alias;
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}

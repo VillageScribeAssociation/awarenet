@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function images_settings($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';							//%	return value [string]
@@ -15,7 +15,7 @@ function images_settings($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$dimensions = new Images_Transforms();
 

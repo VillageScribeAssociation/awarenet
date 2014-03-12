@@ -11,14 +11,14 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editsectiontable($args) {
-	global $user;
-	if ($user->authHas('projects', 'projects_project', 'edit', 'TODO:UIDHERE') == false) { return false; }
+	global $kapenta;
+	if ($kapenta->user->authHas('projects', 'projects_project', 'edit', 'TODO:UIDHERE') == false) { return false; }
 	if (array_key_exists('projectUID', $args) == true) { $args['raUID'] = $args['projectUID']; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$html = '';
 
 	$model = new Projects_Project(|$args['raUID']);
-	if ($model->hasMember($user->UID) == false) { return false; }
+	if ($model->hasMember($kapenta->user->UID) == false) { return false; }
 
 	$html = "<table noborder>";
 	foreach($model->sections as $sUID => $section) {

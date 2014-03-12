@@ -233,7 +233,7 @@ class Files_File {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 
 		$ary = $this->toArray();	
@@ -251,17 +251,17 @@ class Files_File {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('files', 'files_file', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('files', 'files_file', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%files/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('files', 'files_file', 'edit', $this->UID)) { 
+		if (true == $kapenta->user->authHas('files', 'files_file', 'edit', $this->UID)) { 
 			$ary['editUrl'] =  '%%serverPath%%files/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('files', 'files_file', 'delete', $this->UID)) { 
+		if (true == $kapenta->user->authHas('files', 'files_file', 'delete', $this->UID)) { 
 			$ary['delUrl'] =  '%%serverPath%%files/delete/rmfile_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}

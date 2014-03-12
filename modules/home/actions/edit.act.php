@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $kapenta->page->do302('home/list/'); }
 	$UID = $aliases->findRedirect('home_static');
-	if (false == $user->authHas('home', 'home_static', 'edit', $UID)) 
+	if (false == $kapenta->user->authHas('home', 'home_static', 'edit', $UID)) 
 		{ $kapenta->page->do403('you cannot edit this static page'); }
 
 	//----------------------------------------------------------------------------------------------

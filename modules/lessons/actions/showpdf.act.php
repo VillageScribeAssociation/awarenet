@@ -23,7 +23,7 @@
 	$width = '1000';
 	$height = '600';
 
-	if ('desktop' !== $session->get('deviceprofile')) {
+	if ('desktop' !== $kapenta->session->get('deviceprofile')) {
 		//	temporary for now
 		$width = '320';
 		$height = '200';

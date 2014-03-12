@@ -10,12 +10,12 @@
 //arg: threadUID - UID of a forum thread [string]
 
 function forums_replyform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	// TODO: auth
 
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (array_key_exists('threadUID', $args) == false) { return false; }
 	$model = new Forums_Thread($args['threadUID']);

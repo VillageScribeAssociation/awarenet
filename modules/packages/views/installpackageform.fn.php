@@ -8,7 +8,7 @@
 
 function packages_installpackageform($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';
@@ -16,7 +16,7 @@ function packages_installpackageform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('packageUID', $args)) { $args['UID'] == $args['packageUID']; }
 	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 

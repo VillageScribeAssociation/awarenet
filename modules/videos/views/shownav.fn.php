@@ -10,7 +10,7 @@
 function videos_shownav($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$area = 'nav1';						//%	assume nav formatting [string]

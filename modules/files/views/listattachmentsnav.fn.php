@@ -12,7 +12,7 @@
 
 function files_listattachmentsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$html = '';						//%	return value [string]

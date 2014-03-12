@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 //ref: max number of events to displatch, default is 10 (int) [string]
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	header("Content-type: text/plain");
 
 	$maxEvents = 10;

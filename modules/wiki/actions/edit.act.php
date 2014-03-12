@@ -13,7 +13,7 @@
 	//$UID = $aliases->findRedirect('wiki_article');			// check correct ref
 	$model = new Wiki_Article($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Article not found.'); }
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	render the page

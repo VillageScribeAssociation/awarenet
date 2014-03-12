@@ -6,7 +6,7 @@
 //;	TODO: include contexual information from the user registry
 
 function games_summary_cminds($args) {
-	global $user;
+	global $kapenta;
 	global $theme;	
 
 	$html = '';							//%	return value [string]

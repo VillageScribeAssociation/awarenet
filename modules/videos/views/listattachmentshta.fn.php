@@ -13,7 +13,7 @@
 
 function videos_listattachmentshta($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	global $kapenta;

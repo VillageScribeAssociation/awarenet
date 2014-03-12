@@ -6,7 +6,7 @@
 //*	create a new static page
 //--------------------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('home', 'home_static', 'new')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('home', 'home_static', 'new')) { $kapenta->page->do403(); }
 	
 	$model = new Home_Static();
 	$model->menu1 = '[[:home::menu:]]';

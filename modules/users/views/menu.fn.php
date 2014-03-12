@@ -10,7 +10,7 @@
 //opt: userUID - UID of a user [string]
 
 function users_menu($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -18,14 +18,14 @@ function users_menu($args) {
 					'list' => '', 'account' => '', 'pictures' => '', 'files' => '', 
 					'friends' => ''	);
 
-	if (array_key_exists('userUID', $args) == false) { $args['userUID'] = $user->UID; }
-	if (array_key_exists('userRa', $args) == false) { $args['userRa'] = $user->alias;}
+	if (array_key_exists('userUID', $args) == false) { $args['userUID'] = $kapenta->user->UID; }
+	if (array_key_exists('userRa', $args) == false) { $args['userRa'] = $kapenta->user->alias;}
 
 	//----------------------------------------------------------------------------------------------
 	//	public vs user options
 	//----------------------------------------------------------------------------------------------
 
-	if ($user->role == 'public') {
+	if ($kapenta->user->role == 'public') {
 		$labels['login'] = "[[:theme::submenu::label=Log In::link=/users/login/::alt=:]]\n";
 		$labels['signup'] = "[[:theme::submenu::label=Sign Up::link=/users/signup/::alt=:]]\n";
 
@@ -41,7 +41,7 @@ function users_menu($args) {
 		//	user is viewing own record
 		//--------------------------------------------------------------------------------------
 
-		if ($args['userUID'] == $user->UID) { 
+		if ($args['userUID'] == $kapenta->user->UID) { 
 			$labels['account'] = "[[:theme::submenu::label=My Account::link=/users/myaccount/::alt=:]]\n";
 		}
 
@@ -51,7 +51,7 @@ function users_menu($args) {
 	//	admin options
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$labels['list'] = "[[:theme::submenu::label=Profile::link=/users/list/::alt=:]]\n";
 	}
 

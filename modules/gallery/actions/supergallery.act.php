@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	// permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'show')) { $kapenta->page->do403(); }
 	
 	$kapenta->page->load('modules/gallery/actions/supergallery.page.php');
 	$kapenta->page->allowBlockArgs('page');

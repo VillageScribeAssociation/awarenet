@@ -11,7 +11,7 @@
 //opt: cbicon - TODO [string]
 
 function users_usersearchbox($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';							//%	return value [string]
@@ -22,7 +22,7 @@ function users_usersearchbox($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_user', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_user', 'show')) { return ''; }
 	if (true == array_key_exists('cbjs', $args)) { $cbjs = $args['cbjs']; }
 	if (true == array_key_exists('cblabel', $args)) { $cblabel = $args['cblabel']; }
 	if (true == array_key_exists('cbicon', $args)) { $cbicon = $args['cbicon']; }

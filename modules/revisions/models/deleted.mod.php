@@ -217,7 +217,7 @@ class Revisions_Deleted {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 
 		$ext = $this->toArray();		//% extended array of properties [array:string]
@@ -230,17 +230,17 @@ class Revisions_Deleted {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('revisions', 'revisions_deleted', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('revisions', 'revisions_deleted', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Revisions/showdeleted/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'revisions_deleted', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('revisions', 'revisions_deleted', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Revisions/editdeleted/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('revisions', 'revisions_deleted', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('revisions', 'revisions_deleted', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Revisions/deldeleted/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -278,7 +278,7 @@ class Revisions_Deleted {
 		if (false == $this->fieldsLoaded) { return false; }
 		if (false == $kapenta->db->tableExists($this->refModel)) { return false; }
 
-		$session->msg("restoring deleted object " . $this->refModel . '::' . $this->refUID);
+		$kapenta->session->msg("restoring deleted object " . $this->refModel . '::' . $this->refUID);
 
 		//------------------------------------------------------------------------------------------
 		//	mark for restoration

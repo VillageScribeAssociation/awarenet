@@ -16,7 +16,7 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Moblog_Post($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404(); }
-	if (false == $user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $kapenta->page->do403(''); }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show', $model->UID)) { $kapenta->page->do403(''); }
 
 	$thisUser = new Users_User($model->createdBy);
 
@@ -25,12 +25,12 @@
 	//----------------------------------------------------------------------------------------------
 
 	$newPostForm = "[[:moblog::newpostformnav:]]\n";
-	if ($model->createdBy != $user->UID) { $newPostForm = ''; }
+	if ($model->createdBy != $kapenta->user->UID) { $newPostForm = ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	bump popularity of this item if viewed by someone other than the creator
 	//----------------------------------------------------------------------------------------------
-	if ($model->createdBy != $user->UID) {
+	if ($model->createdBy != $kapenta->user->UID) {
 		$args = array(
 			'ladder' => 'moblog.all',
 			'item' => $model->UID

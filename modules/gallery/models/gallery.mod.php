@@ -35,7 +35,7 @@ class Gallery_Gallery {
 
 	function Gallery_Gallery($raUID = '') {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$this->dbSchema = $this->getDbSchema();				// initialise table schema
@@ -45,9 +45,9 @@ class Gallery_Gallery {
 			$this->loadArray($this->data);					// initialize
 			$this->title = 'New Gallery ' . $this->UID;
 			$this->imagecount = 0;
-			$this->ownerName = $user->getName();			// for listing by creator
-			$this->schoolUID = $user->school;
-			$this->schoolName = $user->getSchoolName();		// for listing by school
+			$this->ownerName = $kapenta->user->getName();			// for listing by creator
+			$this->schoolUID = $kapenta->user->school;
+			$this->schoolName = $kapenta->user->getSchoolName();		// for listing by school
 			$this->loaded = false;
 		}
 	}
@@ -195,7 +195,7 @@ class Gallery_Gallery {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -216,14 +216,14 @@ class Gallery_Gallery {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('gallery', 'gallery_gallery', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('gallery', 'gallery_gallery', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%gallery/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 			$ary['titleLink'] = "<a href='" . $ary['viewUrl'] . "'>" . $ary['title'] . "</a>"; 

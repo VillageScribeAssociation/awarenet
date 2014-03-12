@@ -10,7 +10,7 @@
 //returns: html report or false if not authorized [string][bool]
 
 function kjs_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	$report = "<p>This module does not use the database.</p>";

@@ -10,7 +10,7 @@
 
 function calendar_listmonth($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 

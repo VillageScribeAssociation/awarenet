@@ -9,7 +9,7 @@ function projects_showalllocks($args) {
 	global $kapenta;
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$lockTimeout = 600;		//%	ten minutes, TODO: make this a registry setting [int]
 	$html = '';				//%	return value [string]
@@ -17,7 +17,7 @@ function projects_showalllocks($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	query database

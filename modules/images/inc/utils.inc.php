@@ -24,7 +24,7 @@ function images_rotate($img, $angle) {
 
 	$angle = $angle % 360;
 	if (0 !== ($angle % 90)) { 
-		$session->msg('image_rotate: Angle must be a multiple of 90 degrees.', 'bad');
+		$kapenta->session->msg('image_rotate: Angle must be a multiple of 90 degrees.', 'bad');
 		return $img;
 	}
 
@@ -38,7 +38,7 @@ function images_rotate($img, $angle) {
 	$height = @imagesy($img);			//%	height of image, pixels [int]
 
 	if ((0 == (int)$width) || (0 == (int)$height)) {
-		$session->msg('Invalid image dimensions.', 'bad');
+		$kapenta->session->msg('Invalid image dimensions.', 'bad');
 		return $img;
 	}
 
@@ -50,12 +50,12 @@ function images_rotate($img, $angle) {
 		case 360:	return $img;										break;
 
 		default:
-			$session->msg("Images can only be rotated in steps of 90 degrees using this function.");
+			$kapenta->session->msg("Images can only be rotated in steps of 90 degrees using this function.");
 			return $img;
 	}
 
 	if(-1 == $newimg) {
-		$session->msg('New image canvas could not be created.', 'bad');
+		$kapenta->session->msg('New image canvas could not be created.', 'bad');
 		return $img;
 	}
 
@@ -66,7 +66,7 @@ function images_rotate($img, $angle) {
 				case 90:
 					$check = imagesetpixel($newimg, ($height - 1) - $j, $i, $reference);
 					if (false == $check) {
-						$session->msg("Could not set pixel, aborting rotate.");
+						$kapenta->session->msg("Could not set pixel, aborting rotate.");
 						return $img;
 					}
 					break;		//..................................................................
@@ -74,7 +74,7 @@ function images_rotate($img, $angle) {
 				case 180:
 					$check = imagesetpixel($newimg, $width - $i, ($height - 1) - $j, $reference);
 					if (false == $check) {
-						$session->msg("Could not set pixel, aborting rotate.");
+						$kapenta->session->msg("Could not set pixel, aborting rotate.");
 						return $img;
 					}
 					break;		//..................................................................
@@ -82,7 +82,7 @@ function images_rotate($img, $angle) {
 				case 270:
 					$check = imagesetpixel($newimg, $j, $width - $i, $reference);
 					if (false == $check) {
-						$session->msg("Could not set pixel, aborting rotate.");
+						$kapenta->session->msg("Could not set pixel, aborting rotate.");
 						return $img;
 					}
 					break;		//..................................................................

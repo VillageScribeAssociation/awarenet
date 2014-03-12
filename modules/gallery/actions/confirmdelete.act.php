@@ -13,7 +13,7 @@
 
 	$model = new Gallery_Gallery($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Gallery not found.'); }
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this gallery.'); }	
 	
 	//----------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@
 	$labels = array('UID' => $model->UID, 'raUID' => $model->alias);
 	$block = $theme->loadBlock('modules/gallery/views/confirmdelete.block.php');
 	$html = $theme->replaceLabels($labels, $block);
-	$session->msg($html, 'warn');
+	$kapenta->session->msg($html, 'warn');
 	$kapenta->page->do302('gallery/' . $model->alias);
 
 ?>

@@ -14,7 +14,7 @@
 
 	$model = new Code_File($kapenta->request->args['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404(); }
-	if (false == $user->authHas('code', 'code_file', 'commit', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('code', 'code_file', 'commit', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	add confirmation form as a session message and redirect back to item
@@ -23,7 +23,7 @@
 	$labels = array('UID' => $model->UID, 'raUID' => $model->UID);
 	$html = $theme->replaceLabels($labels, $block);
 	
-	$session->msg($html);
+	$kapenta->session->msg($html);
 	$kapenta->page->do302('code/show/' . $model->UID);
 
 ?>

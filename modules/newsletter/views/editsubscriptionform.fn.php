@@ -9,7 +9,7 @@
 //opt: subscriptionUID - UID of a Newsletter_Subscription object, overrides UID [string]
 
 function newsletter_editsubscriptionform($args) {
-	global $user;
+	global $kapenta;
 	global $utils;
 	global $theme;
 
@@ -27,7 +27,7 @@ function newsletter_editsubscriptionform($args) {
 	$model = new Newsletter_Subscription($raUID);	//% the object we're editing [object:Newsletter_Subscription]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('newsletter', 'newsletter_subscription', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_subscription', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

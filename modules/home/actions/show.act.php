@@ -17,7 +17,7 @@
 		else { $kapenta->page->do404('page not found'); }
 	}
 
-	if (false == $user->authHas('home', 'home_static', 'show', $UID)) { $kapenta->page->do403();}
+	if (false == $kapenta->user->authHas('home', 'home_static', 'show', $UID)) { $kapenta->page->do403();}
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page
@@ -32,7 +32,7 @@
 	$kapenta->page->script = $model->script;
 	$kapenta->page->breadcrumb = $model->breadcrumb;
 
-	if ('admin' == $user->role) { 
+	if ('admin' == $kapenta->user->role) { 
 		$kapenta->page->content .= "<br/><a href='/home/edit/" . $model->alias
 					. "'>[edit static page]</a><br/>\n";
 	}

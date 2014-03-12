@@ -9,7 +9,7 @@
 function calendar_menu($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$labels = array();
 	$now = $kapenta->time();
@@ -23,7 +23,7 @@ function calendar_menu($args) {
 
 	//TODO: fix up permissions check for editing calendar items, add submenu item for it
 	$labels['newEntry'] = '[[:theme::submenu::label=Add Calendar Entry::link=/calendar/new/:]]';
-	if (false == $user->authHas('calendar', 'calendar_entry', 'new')) { $labels['newEntry'] = ''; }
+	if (false == $kapenta->user->authHas('calendar', 'calendar_entry', 'new')) { $labels['newEntry'] = ''; }
 	
 	$block = $theme->loadBlock('modules/calendar/views/menu.block.php');
 	$html = $theme->replaceLabels($labels, $block);

@@ -15,14 +15,14 @@
 		{ $kapenta->page->do404('Projects not specified (UID).'); }
     
 	$model = new Projects_Project($_POST['UID']);
-	if (false == $user->authHas('projects', 'projects_project', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorzed to delete this project.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the project and redirect
 	//----------------------------------------------------------------------------------------------
 	$model->delete();
-	$session->msg("Deleted project: " . $model->title);
+	$kapenta->session->msg("Deleted project: " . $model->title);
 	$kapenta->page->do302('projects/');
 
 ?>

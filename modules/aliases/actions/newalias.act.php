@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('aliases', 'aliases_alias', 'new'))
+	if (false == $kapenta->user->authHas('aliases', 'aliases_alias', 'new'))
 		{ $kapenta->page->do403('You are not authorized to create new aliases.'); }
 
 	if (false == array_key_exists('module', $_POST))
@@ -38,10 +38,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		//$session->msg('New Alias.');
+		//$kapenta->session->msg('New Alias.');
 		$kapenta->page->do302('/alias/editalias/' . $model->UID);
 	} else {
-		$session->msg('Could not create new Alias:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Alias:<br/>' . $report);
 	}
 
 

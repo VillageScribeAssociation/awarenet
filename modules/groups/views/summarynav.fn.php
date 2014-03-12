@@ -11,7 +11,7 @@
 //arg: extra - any extra line or information to add to this summary [string]
 
 function groups_summarynav($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	
@@ -21,7 +21,7 @@ function groups_summarynav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('groupUID', $args)) { $args['raUID'] = $args['groupUID']; }
 	if (false == array_key_exists('raUID', $args)) { return '(raUID not given)'; }
 	
@@ -29,7 +29,7 @@ function groups_summarynav($args) {
 
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -15,7 +15,7 @@
 	$model = new Tags_Index($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Not Tagged.', true); }
 
-	if (false == $user->authHas($model->refModule, $model->refModel, 'tags-manage', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'tags-manage', $model->refUID))
 		{ $kapenta->page->do403('Not authorized to edit tags.', true); }
 
 	$return = 'tags/edittags'
@@ -31,14 +31,14 @@
 
 		// delete the index object
 		$check = $model->delete();
-		if (true == $check) { $session->msg('Removed tag: ' . $tag->name, 'ok'); }
-		else { $session->msg('Could not remove tag: ' . $tag->name, 'bad'); }
+		if (true == $check) { $kapenta->session->msg('Removed tag: ' . $tag->name, 'ok'); }
+		else { $kapenta->session->msg('Could not remove tag: ' . $tag->name, 'bad'); }
 
 		// update the tag object with new count
 		$tag->updateObjectCount();
 		$tag->save();
 
-	} else { $session->msgAdmin('Could not update tag object: ' . $model->tagUID, 'bad'); }
+	} else { $kapenta->session->msgAdmin('Could not update tag object: ' . $model->tagUID, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	raise tags_removed event for owner objects to repond to

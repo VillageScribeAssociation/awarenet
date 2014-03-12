@@ -180,7 +180,7 @@ class Like_Something {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -191,17 +191,17 @@ class Like_Something {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('like', 'like_something', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('like', 'like_something', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%like/showsomething/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('like', 'like_something', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('like', 'like_something', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%like/editsomething/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('like', 'like_something', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('like', 'like_something', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%like/delsomething/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

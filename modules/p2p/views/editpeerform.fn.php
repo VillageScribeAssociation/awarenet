@@ -9,14 +9,14 @@
 
 function p2p_editpeerform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('UID', $args)) { return ''; }
 
 	$model = new P2P_Peer($args['UID']);

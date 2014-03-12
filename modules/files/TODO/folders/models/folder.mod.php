@@ -31,7 +31,7 @@ class Folder {
 	function Folder($raUID = '') {
 		global $kapenta;
 
-		global $user;
+		global $kapenta;
 		$this->dbSchema = $this->getDbSchema();
 		$this->data = $kapenta->db->makeBlank($this->dbSchema);
 		$this->parent = 'root';
@@ -145,7 +145,7 @@ class Folder {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $kapenta;
 
@@ -167,14 +167,14 @@ class Folder {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('files', 'files_folder', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('files', 'files_folder', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%folders/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}

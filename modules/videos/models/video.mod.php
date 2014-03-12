@@ -298,7 +298,7 @@ class Videos_Video {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $utils;
 		global $theme;
 
@@ -312,17 +312,17 @@ class Videos_Video {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('videos', 'videos_video', 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('videos', 'videos_video', 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%videos/play/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[more &gt;gt;]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'videos_video', 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('videos', 'videos_video', 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%videos/editvideo/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[edit]</a>";
 		}
 
-		if (true == $user->authHas('videos', 'videos_video', 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('videos', 'videos_video', 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%videos/delvideo/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[delete]</a>";
 		}

@@ -128,7 +128,7 @@ class Groups_Memberships {
 			return true;
 		}
 		
-		$session->msg("Could not add member:<br/>" . $report, 'bad');
+		$kapenta->session->msg("Could not add member:<br/>" . $report, 'bad');
 		return false;
 	}
 	

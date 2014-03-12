@@ -16,11 +16,11 @@
 		AND (true == $kapenta->db->objectExists('projects_project', $_POST['UID'])) ) {
 
 		$model->load($_POST['UID']);
-		if (true == $model->hasMember($user->UID)) { $authorised = true; }
+		if (true == $model->hasMember($kapenta->user->UID)) { $authorised = true; }
 	
 	} else { $kapenta->page->do404(); } // no such project, or UID not specified
 
-	if ('admin' == $user->role) { $authorised = true; }
+	if ('admin' == $kapenta->user->role) { $authorised = true; }
 	if (false == $authorised) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
@@ -59,8 +59,8 @@
 		//------------------------------------------------------------------------------------------
 		if ($model->abstract != $_POST['abstract']) { 
 			$report = $model->saveRevision();
-			if ('' == $report) { $session->msg('Saved revision.', 'ok'); }
-			else { $session->msg('Revision not saved.', 'bad'); }
+			if ('' == $report) { $kapenta->session->msg('Saved revision.', 'ok'); }
+			else { $kapenta->session->msg('Revision not saved.', 'bad'); }
 		}
 
 		//------------------------------------------------------------------------------------------	
@@ -75,7 +75,7 @@
 			$ext = $model->extArray();
 			$title = "Project update: " . $ext['nameLink'];
 			$content = "" 
-				. "[[:users::namelink::userUID=" . $user->UID . ":]] "
+				. "[[:users::namelink::userUID=" . $kapenta->user->UID . ":]] "
 				. "has made changes to the project abstract.";
 
 			$nUID = $notifications->create(
@@ -84,7 +84,7 @@
 			);
 
 			$notifications->addProject($nUID, $model->UID);
-			$notifications->addFriends($nUID, $user->UID);
+			$notifications->addFriends($nUID, $kapenta->user->UID);
 			$notifications->addAdmins($nUID);
 
 			//--------------------------------------------------------------------------------------
@@ -99,9 +99,9 @@
 
 			$kapenta->raiseEvent('*', 'microblog_event', $args);
 
-			$session->msg('Saved changes to abstract.', 'ok'); 
+			$kapenta->session->msg('Saved changes to abstract.', 'ok'); 
 		} else {
-			$session->msg('Could not save changes to abstract.', 'bad');
+			$kapenta->session->msg('Could not save changes to abstract.', 'bad');
 		}		
 		
 		$kapenta->page->do302('projects/edit/' . $model->alias);

@@ -11,7 +11,7 @@
 
 function projects_membercount($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$num = '0';				//% return value [string]
 
@@ -24,7 +24,7 @@ function projects_membercount($args) {
 
 	if (false == $model->loaded) { return ''; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID))
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID))
 		{ return ''; }
 
 	$conditions = array();

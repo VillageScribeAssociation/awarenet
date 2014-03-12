@@ -9,7 +9,7 @@
 //opt: replyUID - overrides UID if present [string]
 
 function forums_editReplyForm($args) {
-	global $user;	
+	global $kapenta;	
 	global $theme;
 	global $utils;
 

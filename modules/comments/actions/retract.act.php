@@ -16,13 +16,13 @@
 
 	$authorised = false;
 
-	if (true == $user->authHas('comments', 'comments_comment', 'retractall'))
+	if (true == $kapenta->user->authHas('comments', 'comments_comment', 'retractall'))
 		{ $authorised = true; }
 
-	if (true == $user->authHas('comments', 'comments_comment', 'retract', $model->UID))
+	if (true == $kapenta->user->authHas('comments', 'comments_comment', 'retract', $model->UID))
 		{ $authorised = true; }
 
-	if (true == $user->authHas($model->refModule, $model->refModel, 'comments-retract', $model->refUID)) 
+	if (true == $kapenta->user->authHas($model->refModule, $model->refModel, 'comments-retract', $model->refUID)) 
 		{ $authorised = true; }
 
 	if (false == $authorised) { $kapenta->page->do403(); }
@@ -35,7 +35,7 @@
 							. $kapenta->db->datetime() . '</small>';
 	$model->save();
 
-	$session->msg("Your comment has been retracted.");
+	$kapenta->session->msg("Your comment has been retracted.");
 
 	//----------------------------------------------------------------------------------------------
 	//	return to page comment was retected from, or user profile if none supplied

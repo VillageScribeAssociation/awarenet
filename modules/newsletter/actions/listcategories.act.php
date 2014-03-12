@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'Newsletter_Category', 'list'))
+	if (false == $kapenta->user->authHas('newsletter', 'Newsletter_Category', 'list'))
 		{ $kapenta->page->do403('You are not authorized to list Categorys.'); }
 
 	$pageNo = 1;			//%	first page if not specified [int]

@@ -11,7 +11,7 @@
 	//	check permissions
 	//----------------------------------------------------------------------------------------------
 	$UID = $aliases->findRedirect('home_partner');
-	if (false == $user->authHas('home', 'home_partner', 'edit', $UID))
+	if (false == $kapenta->user->authHas('home', 'home_partner', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Partners.'); }
 
 

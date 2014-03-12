@@ -14,14 +14,14 @@
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Gallery not specified (UID).'); }
     
 	$model = new Gallery_Gallery($_POST['UID']);
-	if (false == $user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
+	if (false == $kapenta->user->authHas('gallery', 'gallery_gallery', 'delete', $model->UID))
 		{ $kapenta->page->do403('You are not authorzed to delete this gallery.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the gallery and redirect
 	//----------------------------------------------------------------------------------------------
 	$model->delete();
-	$session->msg("Deleted gallery: " . $model->title);
+	$kapenta->session->msg("Deleted gallery: " . $model->title);
 	$kapenta->page->do302('gallery/');
 
 ?>

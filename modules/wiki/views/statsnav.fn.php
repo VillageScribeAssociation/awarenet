@@ -11,7 +11,7 @@
 
 function wiki_statsnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';
@@ -23,7 +23,7 @@ function wiki_statsnav($args) {
 	
 	$model = new Wiki_Article($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
 	$extArray = $model->extArray();
 
 	//----------------------------------------------------------------------------------------------

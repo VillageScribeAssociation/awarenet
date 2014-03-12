@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function home_usermenu($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $session;
 
@@ -14,10 +14,10 @@ function home_usermenu($args) {
 	//----------------------------------------------------------------------------------------------
 	$block = 'publicmenu.block.php';
 
-	if (('public' != $user->role) && ('banned' != $user->role)) { $block = 'usermenu.block.php'; }
+	if (('public' != $kapenta->user->role) && ('banned' != $kapenta->user->role)) { $block = 'usermenu.block.php'; }
 
 	$adminCl = '';
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$adminCl = "<a href='%%serverPath%%admin/' class='menu'>Admin</a>";
 	}
 

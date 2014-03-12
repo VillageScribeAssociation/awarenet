@@ -244,7 +244,7 @@ class LFS_Directory {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -255,17 +255,17 @@ class LFS_Directory {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%lfs/showdirectory/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%lfs/editdirectory/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%lfs/deldirectory/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -533,7 +533,7 @@ class LFS_Directory {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -544,17 +544,17 @@ class LFS_Directory {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%lfs/showdirectory/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%lfs/editdirectory/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%lfs/deldirectory/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -760,7 +760,7 @@ class LFS_Directory {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -771,17 +771,17 @@ class LFS_Directory {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%lfs/showdirectory/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%lfs/editdirectory/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%lfs/deldirectory/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -814,7 +814,7 @@ class LFS_Directory {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 <?
 
@@ -987,7 +987,7 @@ class LFS_Directory {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -998,17 +998,17 @@ class LFS_Directory {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%lfs/showdirectory/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%lfs/editdirectory/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%lfs/deldirectory/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -1040,17 +1040,17 @@ class LFS_Directory {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%lfs/showdirectory/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%lfs/editdirectory/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('lfs', 'lfs_directory', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%lfs/deldirectory/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

@@ -11,7 +11,7 @@
 
 function newsletter_listadunits($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -23,7 +23,7 @@ function newsletter_listadunits($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'newsletter_adunit', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'list')) { return ''; }
 
 
 	if (true == array_key_exists('page', $args)) { $pageNo = (int)$args['pageNo']; }

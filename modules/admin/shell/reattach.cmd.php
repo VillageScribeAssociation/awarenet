@@ -9,7 +9,7 @@
 
 function admin_WebShell_reattach($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 	global $theme;
 	global $utils;
@@ -22,7 +22,7 @@ function admin_WebShell_reattach($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	$mode = 'reattach';
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

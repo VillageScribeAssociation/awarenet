@@ -57,7 +57,7 @@ class P2P_Client {
 		global $kapenta;
 		global $theme;
 		global $kapenta;			
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		$report = '';						//% return value [string]
@@ -204,7 +204,7 @@ class P2P_Client {
 		global $kapenta;
 		global $theme;
 		global $kapenta;			
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		$report = '';								//%	return value [string]

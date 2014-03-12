@@ -8,7 +8,7 @@
 //arg: refUID - UID of object to report [string]
 
 function abuse_buttonwnd($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';			//%	return value [string]

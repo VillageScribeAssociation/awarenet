@@ -12,7 +12,7 @@
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Adunit not specified'); }
 	$UID = $kapenta->request->ref;
 	if (false == $kapenta->db->objectExists('newsletter_adunit', $UID)) { $kapenta->page->do404(); }
-	if (false == $user->authHas('newsletter', 'newsletter_adunit', 'edit', $UID))
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'edit', $UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Adunits.'); }
 
 	//----------------------------------------------------------------------------------------------

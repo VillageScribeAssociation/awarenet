@@ -11,7 +11,7 @@
 //arg: refUID - UID of object which may own images [string]
 
 function images_pikachoose($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $session;
 

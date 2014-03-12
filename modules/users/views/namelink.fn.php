@@ -11,14 +11,14 @@
 //opt: target - link larget (for iFrames) [string]
 
 function users_namelink($args) {
-	global $user;
+	global $kapenta;
 
 	$target = '';
 	if (true == array_key_exists('userUID', $args)) { $args['raUID'] = $args['userUID']; }
 	if (false == array_key_exists('raUID', $args)) { return false; }
 	$html = '';
 
-	if ('public' == $user->role) { 
+	if ('public' == $kapenta->user->role) { 
 		// public user canot see profiles, so don't link them
 		return '[[:users::name::userUID=' . $args['raUID'] . ':]]'; 
 	}

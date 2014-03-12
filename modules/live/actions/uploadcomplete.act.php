@@ -14,7 +14,7 @@
 	
 	$errmsg = '';
 
-	//$session->msgAdmin('Calling uploadcomplete for: ' . $_POST['filehash']);
+	//$kapenta->session->msgAdmin('Calling uploadcomplete for: ' . $_POST['filehash']);
 
 	//----------------------------------------------------------------------------------------------
 	//	load upload manifest and stitch file parts together
@@ -37,7 +37,7 @@
 		//	special case for lessons module
 		if ('lessons' == $upload->refModule) {
 			$module = 'lessons';
-			$session->msgAdmin('Assigning file to lessons module (ext: ' . $extension . ').');
+			$kapenta->session->msgAdmin('Assigning file to lessons module (ext: ' . $extension . ').');
 			break;
 		}
 
@@ -45,7 +45,7 @@
 		if (strtolower($ext) == strtolower($compare)) {
 			$module = $value;
 			$extension = $ext;
-			$session->msgAdmin("/uploadcomplete/ module: $module ext: $extension upload: " . $upload->name);
+			$kapenta->session->msgAdmin("/uploadcomplete/ module: $module ext: $extension upload: " . $upload->name);
 			break;
 		}
 	}
@@ -80,7 +80,7 @@
 	 . "type => " . $upload->fileType . ",<br/>\n"
 	 . "extension => $ext<br/>\n";
 
-	$session->msgAdmin($msg);
+	$kapenta->session->msgAdmin($msg);
 
 	$kapenta->raiseEvent($module, 'file_attach', $args);
 	

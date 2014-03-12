@@ -6,12 +6,12 @@
 //arg: UID - UID fo an abuse report [string]
 
 function abuse_dismissbutton($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	$labels = array('UID' => $args['UID']);
 	$block = $theme->loadBlock('modules/abuse/views/dismissbutton.block.php');
 	$html = $theme->replaceLabels($labels, $block);

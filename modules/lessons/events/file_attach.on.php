@@ -19,7 +19,7 @@ function images__cb_file_attach($args) {
 	global $session;
 	global $utils;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$msg = ''
 	 . "File Uploaded<br>"
@@ -29,7 +29,7 @@ function images__cb_file_attach($args) {
 	 . "path: " . $args['path'] . "<br/>"
 	 . "srcName: " . $args['srcName'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>";
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -54,7 +54,7 @@ function images__cb_file_attach($args) {
 
 	$course = new Lessons_Collection($refUID);
 	if (false == $model->loaded) {
-		$session->msg('Could not load course to attach file: ' . $refUID);
+		$kapenta->session->msg('Could not load course to attach file: ' . $refUID);
 		return false;
 	}
 
@@ -68,9 +68,9 @@ function images__cb_file_attach($args) {
 	$model->file = 'data/lessons/documents/' . $model->UID . '.' . $args['extension'];
 	$model->title = basename($args['srcName']);
 	$model->type = $args['extension'];
-	$model->description = 'Added by ' . $user->getName() . ' on ' . $kapenta->datetime();
-	$model->attribname = $user->getName();
-	$model->attriburl = '%%serverPath%%users/profile/' . $user->alias;
+	$model->description = 'Added by ' . $kapenta->user->getName() . ' on ' . $kapenta->datetime();
+	$model->attribname = $kapenta->user->getName();
+	$model->attriburl = '%%serverPath%%users/profile/' . $kapenta->user->alias;
 	$model->licencename = 'CC BY-NC';
 	$model->lienceurl = 'http://www.creativecommons.org/';  // TODO: full URL of deed
 
@@ -111,7 +111,7 @@ function images__cb_file_attach($args) {
 		);
 
 		$kapenta->raiseEvent('*', 'lessons_resource_added', $detail);
-		$session->msgAdmin('Attached image file.');
+		$kapenta->session->msgAdmin('Attached image file.');
 
 		//------------------------------------------------------------------------------------------
 		//	tag the new image with the username and file name it was added by
@@ -124,15 +124,15 @@ function images__cb_file_attach($args) {
 			'refUID' => $model->UID
 		);
 
-		$detail['tagName'] = $user->getName();
+		$detail['tagName'] = $kapenta->user->getName();
 		$kapenta->raiseEvent('tags', 'tags_add', $detail);
 
-		//$detail['tagName'] = $user->username;
+		//$detail['tagName'] = $kapenta->user->username;
 		//$kapenta->raiseEvent('tags', 'tags_add', $detail);
 		*/
 
 	} else {
-		$session->msg('Could not add file to course: ' . $report);
+		$kapenta->session->msg('Could not add file to course: ' . $report);
 	}
 
 }

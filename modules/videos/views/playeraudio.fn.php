@@ -10,7 +10,7 @@
 
 function videos_playeraudio($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 	$html = '';		//%	return value [string]

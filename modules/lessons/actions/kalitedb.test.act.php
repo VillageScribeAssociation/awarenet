@@ -21,7 +21,7 @@
 	} catch(PDOException  $e) {
 
 		$msg = "SQLite PDO Connection failed: " . $e->getMessage();
-		if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+		if (true == isset($session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 		else { echo $msg . "<br/>\n"; }
 		die();
 	}
@@ -32,7 +32,7 @@
         try { $sth = $dbh->prepare($query); }
 		catch(PDOException $e) {
 			$msg = "Failed to prepare SQL Statement: $query<br/>\n" . $e->getMessage();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == isset($session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			else { echo $msg . "<br/>\n"; }
 			die();
 		}
@@ -46,14 +46,14 @@
 		try { $check = $sth->execute(); }
 		catch(PDOException $e) {
 			$msg = "Failed to execute SQL Statement: $query<br/>\n" . $e->getMessage();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == isset($session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			else { echo $msg . "<br/>\n"; }
 			die();
 		}
 
 		if (false === $check) {
 			$msg = "Could not execute database query:<br/>" . $query . "<hr/><br/>" . mysql_error();
-			if (true == isset($session)) { $session->msgAdmin($msg, 'bad'); }
+			if (true == isset($session)) { $kapenta->session->msgAdmin($msg, 'bad'); }
 			die();
 		}
 

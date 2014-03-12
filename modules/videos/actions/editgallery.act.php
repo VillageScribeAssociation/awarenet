@@ -17,15 +17,15 @@
 	if (false == $model->loaded)  { $kapenta->page->do404('Gallery not found'); }
 	
 	// basic permissions, TODO: extend
-	if (false == $user->authHas('videos', 'videos_gallery', 'edit', $model->UID)) {$kapenta->page->do403();}		
+	if (false == $kapenta->user->authHas('videos', 'videos_gallery', 'edit', $model->UID)) {$kapenta->page->do403();}		
 
 	//----------------------------------------------------------------------------------------------
 	//	check permissions (must be admin or own gallery to edit)
 	//----------------------------------------------------------------------------------------------
 
 	$auth = false;
-	if ('admin' == $user->role) { $auth = true; }
-	if ($user->UID == $model->createdBy) { $auth = true; }
+	if ('admin' == $kapenta->user->role) { $auth = true; }
+	if ($kapenta->user->UID == $model->createdBy) { $auth = true; }
 	// possibly more to come here...
 	if (false == $auth) { $kapenta->page->do403(); }
 

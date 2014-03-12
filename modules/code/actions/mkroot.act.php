@@ -12,7 +12,7 @@ $c->data['version'] = '3';
 $c->data['revision'] = '0';
 $c->data['description'] = '';
 $c->data['content'] = '';
-$c->data['author'] = $user->d['UID'];
+$c->data['author'] = $kapenta->user->d['UID'];
 $c->data['createdOn'] = mysql_datetime();
 $c->data['recordalias'] = 'kapenta3b';
 //$c->save();

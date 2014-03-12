@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_user', 'show'))
+	if (false == $kapenta->user->authHas('users', 'users_user', 'show'))
 		{ $kapenta->page->do403('Please log in.', true); }
 
 	if (true == array_key_exists('q', $_POST)) { $search = $utils->cleanString($_POST['q']); }

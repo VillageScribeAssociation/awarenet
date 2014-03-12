@@ -10,7 +10,7 @@
 	//	check that this is not already complete
 	//---------------------------------------------------------------------------------------------
 	if ('yes' == $kapenta->registry->get('firstrun.complete')) {
-		$session->msg('awareNet initialized.');
+		$kapenta->session->msg('awareNet initialized.');
 		$kapenta->page->do302('');
 	}
 
@@ -40,7 +40,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	run as admin
 	//---------------------------------------------------------------------------------------------
-	$user->role = 'admin';
+	$kapenta->user->role = 'admin';
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]", '');	
 	echo "<h1>Configuring awareNet</h1>";
 	

@@ -9,7 +9,7 @@
 
 function revisions_relateddeletions($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;	
 
@@ -18,7 +18,7 @@ function revisions_relateddeletions($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	if (false == array_key_exists('module', $args)) { return '(module not given)'; }
 	if (false == array_key_exists('model', $args)) { return '(model not given)'; }

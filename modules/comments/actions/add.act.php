@@ -33,13 +33,13 @@
 	//----------------------------------------------------------------------------------------------
 	//TODO: check that model exists
 	if (false == in_array($refModule, $kapenta->listModules())) { $kapenta->page->do404(); }
-	if (false == $user->authHas($refModule, $refModel, 'comments-add', $refUID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'comments-add', $refUID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	dont save blank comments
 	//----------------------------------------------------------------------------------------------
 	if ('' == trim($_POST['comment'])) { 
-		$session->msg('No comment entered', 'bad');
+		$kapenta->session->msg('No comment entered', 'bad');
 		$kapenta->page->do302($return); 
 	}
 

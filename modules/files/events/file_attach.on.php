@@ -27,7 +27,7 @@ function files__cb_file_attach($args) {
 	 . "path: " . $args['path'] . "<br/>"
 	 . "srcName: " . $args['srcName'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>";
-	$session->msg($msg);
+	$kapenta->session->msg($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -69,7 +69,7 @@ function files__cb_file_attach($args) {
 
 	if ('' == $report) {
 		$check = $kapenta->fileCopy($args['path'], $model->fileName);
-		$session->msg('Attached file.');
+		$kapenta->session->msg('Attached file.');
 
 		//------------------------------------------------------------------------------------------
 		//	file was uploaded correctly raise file_added event for this image (p2p uses it)
@@ -97,10 +97,10 @@ function files__cb_file_attach($args) {
 		);
 
 		$kapenta->raiseEvent('*', 'file_added', $detail);
-		$session->msgAdmin('Attached file.');
+		$kapenta->session->msgAdmin('Attached file.');
 
 	} else {
-		$session->msg('Could not create file object.');
+		$kapenta->session->msg('Could not create file object.');
 	}
 
 }

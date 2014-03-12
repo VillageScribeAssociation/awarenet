@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function packages_listsources($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	
 	$html = '';							//%	return value [string]
@@ -15,7 +15,7 @@ function packages_listsources($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and load sources from registry
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$updateManager = new KUpdateManager();
 	$sources = $updateManager->listSources();

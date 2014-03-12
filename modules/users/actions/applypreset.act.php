@@ -19,9 +19,9 @@
 	if (false == $model->loaded) { $kapenta->page->do404('Preset not found.'); }
 
 	if ('self' == $_POST['to']) {
-		$check = $model->applyTo($user->UID);
-		if (true == $check) { $session->msg('Set theme customization: ' . $model->title, 'ok'); }
-		else { $session->msg('Could not set theme customization.', 'bad'); }
+		$check = $model->applyTo($kapenta->user->UID);
+		if (true == $check) { $kapenta->session->msg('Set theme customization: ' . $model->title, 'ok'); }
+		else { $kapenta->session->msg('Could not set theme customization.', 'bad'); }
 		$kapenta->page->do302('users/myaccount/');
 	}
 
@@ -43,10 +43,10 @@
 			$msg = ''
 			 . "Applied preset '" . $model->title
 			 . "' to [[:users::namelink::userUID=" . $toUser->UID . ":]].";
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 		} else {
 			$msg = "Error: could not apply theme preset.";
-			$session->msg($msg, 'bad');
+			$kapenta->session->msg($msg, 'bad');
 		}
 
 		$kapenta->page->do302('users/themepresets/');
@@ -77,10 +77,10 @@
 				$msg = ''
 				 . "Applied preset '" . $model->title
 				 . "' to [[:users::namelink::userUID=" . $item['UID'] . ":]].";
-				$session->msg($msg, 'ok');
+				$kapenta->session->msg($msg, 'ok');
 			} else {
 				$msg = "Error: could not apply theme preset.";
-				$session->msg($msg, 'bad');
+				$kapenta->session->msg($msg, 'bad');
 			}
 		}
 
@@ -110,10 +110,10 @@
 				$msg = ''
 				 . "Applied preset '" . $model->title
 				 . "' to [[:users::namelink::userUID=" . $item['UID'] . ":]].";
-				$session->msg($msg, 'ok');
+				$kapenta->session->msg($msg, 'ok');
 			} else {
 				$msg = "Error: could not apply theme preset.";
-				$session->msg($msg, 'bad');
+				$kapenta->session->msg($msg, 'bad');
 			}
 		}
 
@@ -126,8 +126,8 @@
 
 	if ('everyone' == $_POST['to']) {
 		$check = $model->makeDefault();
-		if (true == $check) { $session->msg('Replaced default theme.', 'ok'); }
-		else { $session->msg('Could not replace default theme.', 'bad'); }
+		if (true == $check) { $kapenta->session->msg('Replaced default theme.', 'ok'); }
+		else { $kapenta->session->msg('Could not replace default theme.', 'bad'); }
 
 		$sql = "select * from users_user";
 		$result = $kapenta->db->query($sql);
@@ -139,10 +139,10 @@
 				$msg = ''
 				 . "Applied preset '" . $model->title
 				 . "' to [[:users::namelink::userUID=" . $item['UID'] . ":]].";
-				$session->msg($msg, 'ok');
+				$kapenta->session->msg($msg, 'ok');
 			} else {
 				$msg = "Error: could not apply theme preset.";
-				$session->msg($msg, 'bad');
+				$kapenta->session->msg($msg, 'bad');
 			}
 		}
 	}
@@ -151,7 +151,7 @@
 	//	on error...
 	//----------------------------------------------------------------------------------------------
 
-	$session->msg("Unrecognized: " . $_POST['to'], 'bad');
+	$kapenta->session->msg("Unrecognized: " . $_POST['to'], 'bad');
 	$kapenta->page->do302('users/themepresets/');
 
 ?>

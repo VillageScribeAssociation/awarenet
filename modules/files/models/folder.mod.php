@@ -179,7 +179,7 @@ class Files_Folder {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 		$ary = $this->toArray();				//%	return value [array]
 
@@ -199,14 +199,14 @@ class Files_Folder {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }	//TODO: full permission set
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }	//TODO: full permission set
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if ($user->authHas('files', 'files_folder', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('files', 'files_folder', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%folders/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}

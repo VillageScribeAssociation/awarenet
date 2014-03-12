@@ -10,8 +10,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and POST vars
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->doXmlError('Not logged in.'); }
-	if ('banned' == $user->role) { $kapenta->page->doXmlError('Banhammered.'); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->doXmlError('Not logged in.'); }
+	if ('banned' == $kapenta->user->role) { $kapenta->page->doXmlError('Banhammered.'); }
 
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->doXmlError('UID not given.'); }
 	if (false == array_key_exists('fromUID', $_POST)) { $kapenta->page->doXmlError('fromUID not given.'); }
@@ -23,7 +23,7 @@
 	$toUID = $_POST['toUID'];
 	$msg = $_POST['msg'];
 	
-	if ($fromUID != $user->UID) { $kapenta->page->doXmlError('Not logged in.'); }
+	if ($fromUID != $kapenta->user->UID) { $kapenta->page->doXmlError('Not logged in.'); }
 
 	if (false == $kapenta->db->objectExists('users_user', $fromUID))
 		{ $kapenta->page->doXmlError('No such user (fromUID)'); }

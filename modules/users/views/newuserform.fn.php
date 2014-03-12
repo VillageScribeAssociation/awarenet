@@ -10,8 +10,8 @@
 function users_newuserform($args) {
 	global $theme;
 
-	global $user;
-	if ('admin' != $user->role) { return false; }
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return false; }
 	return $theme->loadBlock('modules/users/views/newuserform.block.php');
 }
 

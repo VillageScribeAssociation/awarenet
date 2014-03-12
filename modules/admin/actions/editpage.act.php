@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('module', $kapenta->request->args)) { $kapenta->page->do404('Module not specified.'); }
 	if ('' == trim($kapenta->request->ref)) { $kapenta->page->do404('Page not specified (reference).'); }
 

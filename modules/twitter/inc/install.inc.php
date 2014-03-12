@@ -14,10 +14,10 @@
 //returns: html report or false if not authorized [string][bool]
 
 function twitter_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';												//%	return value [string]
 
@@ -43,10 +43,10 @@ function twitter_install_module() {
 //returns: HTML installation status report [string]
 
 function twitter_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';												//%	return value [string]
 	$installNotice = '<!-- table installed correctly -->';		//%	scripts look for this [string]

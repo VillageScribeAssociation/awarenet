@@ -9,9 +9,9 @@
 //opt: pagination - show pagination bar, default is 'yes' (yes|no) [string]
 
 function notifications_list($args) {
-	global $page;
 	global $kapenta;
-	global $user;
+	global $kapenta;
+	global $kapenta;
 	global $theme;
 	global $session;
 
@@ -34,7 +34,7 @@ function notifications_list($args) {
 	} else {
 		// this is a single user's feed
 		if (false == $kapenta->db->objectExists('users_user', $userUID)) { return '(no such user)'; }
-		if (($userUID != $user->UID) && (('admin' != $user->role) and ('teacher' != $user->role))) { 
+		if (($userUID != $kapenta->user->UID) && (('admin' != $kapenta->user->role) and ('teacher' != $kapenta->user->role))) { 
 			return "<div class='inlinequote'>Your session has ezxpired, please log in.</div>"; 
 		}
 	}
@@ -116,7 +116,7 @@ function notifications_list($args) {
 
 	if ('yes' == $pagination) {	$html = $pagination . $html . $pagination; }	
 
-	if (true == $session->get('mobile')) {
+	if (true == $kapenta->session->get('mobile')) {
 		$html = $theme->expandBlocks($html, 'mobileindent');
 	} else {
 		$html = $theme->expandBlocks($html, 'indent');

@@ -8,7 +8,7 @@
 
 function admin_WebShell_time($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $shell;
 
 	$mode = 'show';			//%	operation [string]
@@ -17,7 +17,7 @@ function admin_WebShell_time($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	//if ('admin' != $user->role) { $mode = 'noauth'; }
+	//if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 	if (true == in_array('--help', $args)) { $mode = 'help'; }
 	if (true == in_array('-h', $args)) { $mode = 'help'; }
 

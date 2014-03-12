@@ -15,10 +15,10 @@
 function schools_maintenance() {
 		global $kapenta;
 		global $aliases;
-		global $user;
+		global $kapenta;
 		global $theme;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 	$recordCount = 0;
 	$errorCount = 0;
 	$fixCount = 0;

@@ -14,7 +14,7 @@
 
 	$model = new folder($kapenta->request->ref);	
 	if (false == $model->loaded) { $kapenta->page->do404('no such folder'); }
-	if (false == $user->authHas('files', 'files_folder', 'show', $model->UID)) { $kapenta->page->do403(); }		
+	if (false == $kapenta->user->authHas('files', 'files_folder', 'show', $model->UID)) { $kapenta->page->do403(); }		
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

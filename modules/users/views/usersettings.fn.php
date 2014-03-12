@@ -6,16 +6,16 @@
 //opt: userUID - UID or alias of a Users_User object [string]
 
 function users_usersettings($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
-	$userUID = $user->UID;		//%	show own data if user not specified [string]
+	$userUID = $kapenta->user->UID;		//%	show own data if user not specified [string]
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('userUID', $args)) { $userUID = $args['userUID']
 
 	$model = new Users_User($userUID);

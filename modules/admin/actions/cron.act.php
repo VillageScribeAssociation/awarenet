@@ -11,7 +11,7 @@
 	//	begin output
 	//----------------------------------------------------------------------------------------------	
 
-	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');	}
+	if ('admin' == $kapenta->user->role) { echo $theme->expandBlocks('[[:theme::ifscrollheader:]]', '');	}
 
 	//	flush one output block to prevent wget timeout due to slow output buffering
 	//	assuming max packet size is 4096, output buffer may be smaller, and zlib compression
@@ -41,7 +41,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	display report if user is administrator
 	//----------------------------------------------------------------------------------------------
-	if ('admin' == $user->role) { 
+	if ('admin' == $kapenta->user->role) { 
 		//------------------------------------------------------------------------------------------
 		//	admin report
 		//------------------------------------------------------------------------------------------
@@ -80,6 +80,6 @@
 	//----------------------------------------------------------------------------------------------
 	//	fin.
 	//----------------------------------------------------------------------------------------------
-	if ('admin' == $user->role) { echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', '');	}
+	if ('admin' == $kapenta->user->role) { echo $theme->expandBlocks('[[:theme::ifscrollfooter:]]', '');	}
 
 ?>

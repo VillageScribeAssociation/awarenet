@@ -12,7 +12,7 @@
 
 function videos_videosetdetail($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -34,7 +34,7 @@ function videos_videosetdetail($args) {
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no owner)'; }
 
-	//if (false == $user->authHas($refModule, $refModel, 'videos-show', $refUID)) { return ''; }
+	//if (false == $kapenta->user->authHas($refModule, $refModel, 'videos-show', $refUID)) { return ''; }
 	//TODO: check the permission, work out naming convention for inheritance
 
 	//----------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ function videos_videosetdetail($args) {
 		$labels['editUrl'] = '%%serverPath%%videos/editvideo/return_uploadmultiple/'. $row['alias'];
 
 		//TODO: tidy this
-		if (false == $user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID)) {
+		if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID)) {
 			$labels['editUrl'] = '%%serverPath%%videos/viewset/return_uploadmultiple/'
 							   . $model->alias; 
 		}

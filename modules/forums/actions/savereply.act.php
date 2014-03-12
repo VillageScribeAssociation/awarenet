@@ -15,7 +15,7 @@
 	$model = new Forums_Reply($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Reply not found'); }
 
-	//if ($user->UID != $model->createdBy) { $kapenta->page->do403('Not your post to edit.'); }
+	//if ($kapenta->user->UID != $model->createdBy) { $kapenta->page->do403('Not your post to edit.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	update the reply
@@ -24,9 +24,9 @@
 	$report = $model->save();
 
 	if ('' == $report) { 
-		$session->msg('Saved changes to reply.', 'ok');
+		$kapenta->session->msg('Saved changes to reply.', 'ok');
 	} else {
-		$session->msg('Changes could not be saved:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Changes could not be saved:<br/>' . $report, 'bad');
 	}
 
 	$kapenta->page->do302('forums/showthread/' . $model->thread);

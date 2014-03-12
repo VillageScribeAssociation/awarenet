@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$html = '';
 	$testResult = '';
@@ -24,7 +24,7 @@
 		foreach($tags as $idx => $tag) { $tags[$idx] = trim($tag); }
 		$allowedTags = implode('|', $tags);
 		$kapenta->registry->set('kapenta.htmlparser.allowtags', $allowedTags);
-		$session->msg('<b>Updated tag list:</b><br/>' . $allowedTags, 'ok');
+		$kapenta->session->msg('<b>Updated tag list:</b><br/>' . $allowedTags, 'ok');
 
 	}
 

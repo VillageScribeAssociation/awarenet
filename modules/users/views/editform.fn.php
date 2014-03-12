@@ -10,7 +10,7 @@
 
 function users_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';		//%	return value [string]
 

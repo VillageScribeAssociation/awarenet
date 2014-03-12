@@ -8,7 +8,7 @@
 //arg: UID - UID of an Abuse_Report object [string]
 
 function abuse_show($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';														//%	return value [string]
@@ -16,7 +16,7 @@ function abuse_show($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; } 
+	if ('admin' != $kapenta->user->role) { return ''; } 
 	if (false == array_key_exists('UID', $args)) { return ''; }
 	$model = new Abuse_Report($args['UID']);
 	if (false == $model->loaded) { return ''; }

@@ -9,7 +9,7 @@
 //opt: adunitUID - UID of a Newsletter_Adunit object, overrides UID [string]
 
 function newsletter_showadunit($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -29,7 +29,7 @@ function newsletter_showadunit($args) {
 	if (false == $model->loaded) { return ''; }
 
 	//	LOL
-	//if (false == $user->authHas('newsletter', 'newsletter_adunit', 'show', $model->UID)) { return ''; }
+	//if (false == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	hacky way to get first image or video

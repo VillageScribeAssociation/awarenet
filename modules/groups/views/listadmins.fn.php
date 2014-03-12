@@ -10,7 +10,7 @@
 //opt: target = link target (for frames, etc) [string]
 
 function groups_listadmins($args) {
-	global $user;
+	global $kapenta;
 	$target = '';
 	$html = '';			//%	return value [string]
 
@@ -23,7 +23,7 @@ function groups_listadmins($args) {
 
 	$model = new Groups_Group($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'show', $model->UID)) { return ''; }
 	$members = $model->getMembers();
 
 	//----------------------------------------------------------------------------------------------

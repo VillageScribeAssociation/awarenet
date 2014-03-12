@@ -9,7 +9,7 @@
 
 function admin_managepermissions($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $session;
 
@@ -19,13 +19,13 @@ function admin_managepermissions($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return $html; }
+	if ('admin' != $kapenta->user->role) { return $html; }
 	if (true == array_key_exists('module', $args)) { $moduleName = $args['module']; }
 	if (false == $kapenta->moduleExists($moduleName)) { return '(module not recognized)'; }
 
 	$module = new KModule($moduleName);
 	if (false == $module->loaded) { 
-		$session->msgAdmin('Could not load module: ' . $moduleName, 'bad');
+		$kapenta->session->msgAdmin('Could not load module: ' . $moduleName, 'bad');
 		return ''; 
 	}
 

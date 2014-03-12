@@ -53,7 +53,7 @@
 	//	try to load colors and images from user profile
 	//----------------------------------------------------------------------------------------------
 	foreach($defaults as $key => $value) {
-		$check = $user->get(str_replace('theme.', 'ut.', $key));
+		$check = $kapenta->user->get(str_replace('theme.', 'ut.', $key));
 		if ('' != $check) { $defaults[$key] = $check; }
 	}
 

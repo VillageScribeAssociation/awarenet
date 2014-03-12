@@ -28,6 +28,7 @@
 </table>
 </form>
 <br/>
+%%dbexists%%
 <div class='foot'></div>
 
 */ ?>

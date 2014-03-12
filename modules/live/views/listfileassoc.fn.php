@@ -6,7 +6,7 @@
 //opt: module - name of a kapenta module to filter results for [string]
 
 function live_listfileassoc($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -16,7 +16,7 @@ function live_listfileassoc($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('module', $args)) { $module = $args['module']; }
 
 	//----------------------------------------------------------------------------------------------

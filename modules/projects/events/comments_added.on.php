@@ -14,7 +14,7 @@ require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 function projects__cb_comments_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $notifications;
 
 	//----------------------------------------------------------------------------------------------
@@ -40,15 +40,15 @@ function projects__cb_comments_added($args) {
 	//	send notifications to project members
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$title = $user->getName() . " commented on project " . $model->title;
+	$title = $kapenta->user->getName() . " commented on project " . $model->title;
 	$url = $ext['viewUrl'] . '#comment' . $args['commentUID'];
 
 	$nUID = $notifications->create(
 		$refModule, $refModel, $refUID, 'comments_added', $title, $args['comment'], $url
 	);
 
-	$notifications->addUser($nUID, $user->UID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addUser($nUID, $kapenta->user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 
 	//----------------------------------------------------------------------------------------------
 	//	add all project members

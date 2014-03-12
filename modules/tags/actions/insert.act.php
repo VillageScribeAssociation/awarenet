@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('hta', $kapenta->request->args)) {
 		$kapenta->page->do404('no hypertext area specified', true);

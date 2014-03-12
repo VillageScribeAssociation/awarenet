@@ -10,7 +10,7 @@
 
 function schools_allfaces($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$html = '';
 

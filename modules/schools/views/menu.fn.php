@@ -8,7 +8,7 @@
 
 function schools_menu($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	$labels = array('newEntry' => '', 'allContactDetails' => '');
@@ -17,11 +17,11 @@ function schools_menu($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if (true == $user->authHas('schools', 'schools_school', 'new')) {
+	if (true == $kapenta->user->authHas('schools', 'schools_school', 'new')) {
 		$labels['newEntry'] = '[[:theme::submenu::label=Add School::link=/schools/new/:]]';
 	}
 
-	if (('admin' == $user->role) || ('teacher' == $user->role)) {
+	if (('admin' == $kapenta->user->role) || ('teacher' == $kapenta->user->role)) {
 		$labels['allContactDetails'] = ''
 			 . '[[:theme::submenu::label=All Contact Details'
 			 . '::link=/schools/schoolcontacts/:]]';

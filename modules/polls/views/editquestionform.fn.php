@@ -9,7 +9,7 @@
 //opt: questionUID - UID of a Polls_Question object, overrides UID [string]
 
 function polls_editquestionform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$raUID = '';				//%	UID of a Polls_Question object [string]
@@ -26,7 +26,7 @@ function polls_editquestionform($args) {
 	$model = new Polls_Question($raUID);	//% the object we're editing [object:Polls_Question]
 
 	if (false == $model->loaded) { return 'no such question: ' . $raUID; }
-	if (false == $user->authHas('polls', 'polls_question', 'edit', $model->UID)) { return 'authfail'; }
+	if (false == $kapenta->user->authHas('polls', 'polls_question', 'edit', $model->UID)) { return 'authfail'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

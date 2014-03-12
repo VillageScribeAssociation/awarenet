@@ -9,14 +9,14 @@
 
 function home_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	if (array_key_exists('raUID', $args) == false) { return false; }
 
 	$model = new Home_Static($args['raUID']);
 	if (false == $model->loaded) { return false; }
-	if (false == $user->authHas('home', 'home_static', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('home', 'home_static', 'edit', $model->UID)) { return ''; }
 	
 	$extArray = $model->extArray();
 	$labels = array();

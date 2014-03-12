@@ -11,7 +11,7 @@
 //opt: pageNo - results page to show, from 1, default is 1 (int)  [string]
 
 function wiki_historynav($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -29,7 +29,7 @@ function wiki_historynav($args) {
 
 	$model = new Wiki_Article($args['UID']);
 	if (false == $model->loaded) { return '(no such article)'; }
-	if (false == $user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'show', $model->UID)) { return ''; }
 	//TODO: more permission options
 
 	if ($num < 1) { $num = 1; }

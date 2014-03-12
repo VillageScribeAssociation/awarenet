@@ -15,7 +15,7 @@
 
 	$model = new Forums_Thread($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Thread not found.'); }
-	if (false == $user->authHas('forums', 'forums_thread', 'delete', $model->UID)) 
+	if (false == $kapenta->user->authHas('forums', 'forums_thread', 'delete', $model->UID)) 
 		{ $kapenta->page->do403('You are not permitted to delete this thread.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 	//----------------------------------------------------------------------------------------------  
 	$forumUID = $model->board;
 	$model->delete();
-	$session->msg("Deleted forum thread: " . $model->title, 'ok');
+	$kapenta->session->msg("Deleted forum thread: " . $model->title, 'ok');
 	$kapenta->page->do302('forums/' . $forumUID);
 
 ?>

@@ -10,7 +10,7 @@
 //returns: html report [string]
 
 function games_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $utils;
 	global $kapenta;
@@ -59,12 +59,12 @@ function games_install_module() {
 // if installed correctly report will contain HTML comment <!-- installed correctly -->
 
 function games_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $kapenta;
 	global $session;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 	$installed = true;
 	$report = '';
 
@@ -88,7 +88,7 @@ function games_install_status_report() {
 			    $status = call_user_func($statusFn);
 		    } else {
 			    $msg = "Missing install status function: $statusFn in $scriptFile<br/>\n";
-			    $session->msgAdmin($msg, 'bad');
+			    $kapenta->session->msgAdmin($msg, 'bad');
 			    $installed = false;
 		    }
 

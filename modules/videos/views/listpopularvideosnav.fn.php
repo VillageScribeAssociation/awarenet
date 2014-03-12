@@ -10,7 +10,7 @@
 
 function videos_listpopularvideosnav($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 
 	$num = 10;					//%	number of items to show [int]
@@ -20,7 +20,7 @@ function videos_listpopularvideosnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('videos', 'videos_video', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('videos', 'videos_video', 'show')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('ladder', $args)) { $ladder = $args['ladder']; }
 

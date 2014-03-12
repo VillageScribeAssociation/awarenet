@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';		//%	name of a kapenta module [string]
 	$modelname = '';		//%	name of object type [string]
@@ -37,10 +37,10 @@
 	if (true == $check) { 
 		$module->models[$modelname] = $model->toArray();
 		$module->save();
-		$session->msg('Added permission: ' . $permission, 'ok'); 
+		$kapenta->session->msg('Added permission: ' . $permission, 'ok'); 
 
 	} else {
-		$session->msg('Could not add permission.', 'bad');
+		$kapenta->session->msg('Could not add permission.', 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

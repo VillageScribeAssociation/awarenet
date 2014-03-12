@@ -11,7 +11,7 @@
 
 function code_showpackage($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';			//%	return value [string:html]
 

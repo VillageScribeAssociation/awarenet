@@ -131,9 +131,9 @@
 	//	render the page
 	//----------------------------------------------------------------------------------------------
 	//legacy version
-	$page->load('modules/picturelogin/actions/picturelogin.page.php');
-	$page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
-	$page->render();
+	$kapenta->page->load('modules/picturelogin/actions/picturelogin.page.php');
+	$kapenta->page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
+	$kapenta->page->render();
 	//kapenta version 3
 //	$kapenta->page->load('modules/picturelogin/actions/picturelogin.page.php');
 //	$kapenta->page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;

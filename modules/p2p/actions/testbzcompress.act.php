@@ -6,7 +6,7 @@
 //*	action to test bzip compression
 //-------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$txt = "
        bzip2  compresses  large  files  in  blocks.   The block size affects both the compression ratio achieved, and the amount of memory

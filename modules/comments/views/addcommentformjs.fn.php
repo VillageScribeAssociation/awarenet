@@ -13,7 +13,7 @@
 
 function comments_addcommentformjs($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$invitation = 'Add a comment';		//%	default call to action [string]
 	$html = '';							//%	return value [string]
@@ -21,14 +21,14 @@ function comments_addcommentformjs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (false == array_key_exists('refModule', $args)) { return ''; }
 	if (false == array_key_exists('refModel', $args)) { return ''; }
 	if (false == array_key_exists('refUID', $args)) { return ''; }
 	if (false == array_key_exists('return', $args)) { return ''; }
 
 	if (true == array_key_exists('invitation', $args)) { $invitation = $args['invitiation']; }	
-	if (false == $user->authHas($args['refModule'], $args['refModel'], 'comments-add', $args['refUID']))
+	if (false == $kapenta->user->authHas($args['refModule'], $args['refModel'], 'comments-add', $args['refUID']))
 		{ return ''; }
 
 

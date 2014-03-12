@@ -303,7 +303,7 @@ class Users_User {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $utils;		// note that current user and $this may not be the same;
 
@@ -321,17 +321,17 @@ class Users_User {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		//if (false == $user->authHas('users', 'users_user', 'show', '') == false) 
+		//if (false == $kapenta->user->authHas('users', 'users_user', 'show', '') == false) 
 		//	{ echo "no permission to view users.<br/>"; }
 
-		if ( (true == $user->authHas('users', 'users_user', 'show', $this->UID)) 
-			OR ($user->UID == $this->UID)) { 
+		if ( (true == $kapenta->user->authHas('users', 'users_user', 'show', $this->UID)) 
+			OR ($kapenta->user->UID == $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%users/' . $ary['alias'];
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[profile]</a>"; 
 		}
 
-		if ( (true == $user->authHas('user', 'users_user', 'edit', $this->UID)) 
-			OR ($user->UID == $this->UID) ) {
+		if ( (true == $kapenta->user->authHas('user', 'users_user', 'edit', $this->UID)) 
+			OR ($kapenta->user->UID == $this->UID) ) {
 			$ary['editUrl'] =  '%%serverPath%%users/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 			$ary['editProfileUrl'] =  '%%serverPath%%users/editprofile/' . $this->alias;
@@ -339,12 +339,12 @@ class Users_User {
 		}
 
 		// to ponder - should users be able to delete their profile?
-		if (true == $user->authHas('users', 'users_user', 'delete', $this->UID)) { 
+		if (true == $kapenta->user->authHas('users', 'users_user', 'delete', $this->UID)) { 
 			$ary['delUrl'] =  '%%serverPath%%users/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('users', 'users_user', 'new', $this->UID)) { 
+		if (true == $kapenta->user->authHas('users', 'users_user', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%users/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[new user]</a>"; 
 		}
@@ -622,11 +622,11 @@ class Users_User {
 			$model->userUID = $this->UID;
 			$report = $model->save();
 			if ('' != $report) { 
-				$session->msg("Could not create user registry " . $this->settings . ".");
+				$kapenta->session->msg("Could not create user registry " . $this->settings . ".");
 				//echo "Could not create user registry " . $this->settings . "<br/>\n";
 				return false;
 			} else {
-				$session->msg("Created new user registry " . $this->settings . ".");
+				$kapenta->session->msg("Created new user registry " . $this->settings . ".");
 				//echo "Created new user registry " . $this->settings . "<br/>\n";	
 			}
 		}

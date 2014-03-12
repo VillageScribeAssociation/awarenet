@@ -10,7 +10,7 @@
 
 function schools_select($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	$varname = 'school';
 	$default = '';

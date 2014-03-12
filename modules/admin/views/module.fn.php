@@ -9,7 +9,7 @@
 //arg: modulename - name of a kapenta module [string]
 
 function admin_module($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';			//%	return value [string]
@@ -17,7 +17,7 @@ function admin_module($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('modulename', $args)) { return '(modulename not given)'; }
 	
 	$module = new KModule($args['modulename']);

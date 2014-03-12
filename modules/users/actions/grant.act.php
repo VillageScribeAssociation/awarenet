@@ -14,7 +14,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role (admins only)
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not specified'); }
 	if (false == array_key_exists('model', $_POST)) { $kapenta->page->do404('Model not specified'); }
@@ -43,8 +43,8 @@
 	$role->permissions->add($module, $model, $permission, $relationship);
 	$report = $role->save();
 
-	if ('' == $report) { $session->msg('Updated role with new permission.', 'ok'); }
-	else { $session->msg('Could not update role:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Updated role with new permission.', 'ok'); }
+	else { $kapenta->session->msg('Could not update role:<br/>' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to admin module page

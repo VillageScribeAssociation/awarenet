@@ -18,9 +18,9 @@
 function live_install_module() {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';
 
@@ -60,10 +60,10 @@ function live_install_module() {
 //returns: HTML installation status report [string]
 
 function live_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';
 	$installNotice = '<!-- table installed correctly -->';

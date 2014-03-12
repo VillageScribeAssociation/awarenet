@@ -7,9 +7,9 @@
 
 function aliases_adminconsole($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/aliases/views/adminconsole.block.php');
 

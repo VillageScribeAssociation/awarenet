@@ -9,7 +9,7 @@
 
 function schools_show($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';					//%	return value [string]
 

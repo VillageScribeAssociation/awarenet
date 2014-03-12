@@ -13,7 +13,7 @@
 function moblog_listrecentsamenav($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';						//%	return value [string]
 	$num = 10;						//% default max number of items to show [int]
@@ -21,7 +21,7 @@ function moblog_listrecentsamenav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 
 	if (true == array_key_exists('postUID', $args)) { $args['raUID'] = $args['postUID']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
@@ -35,13 +35,13 @@ function moblog_listrecentsamenav($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($model->createdBy) . "'";
-	$conditions[] = "(published='yes' or createdBy='" . $kapenta->db->addMarkup($user->UID) . "')";
+	$conditions[] = "(published='yes' or createdBy='" . $kapenta->db->addMarkup($kapenta->user->UID) . "')";
 
 	$range = $kapenta->db->loadRange('moblog_post', '*', $conditions, "createdOn DESC", $num); 
 
 	//$sql = "select * from moblog"
 	//	 . " where createdBy='" . $model->createdBy . "'"
-	//	 . " and (published='yes' or createdBy='" . $user->UID . "')"
+	//	 . " and (published='yes' or createdBy='" . $kapenta->user->UID . "')"
 	//	 . " order by createdOn DESC limit $num ";	
 
 	//----------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 //opt: projectUID - overrides raUID if present [string]
 
 function projects_changestatusform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ function projects_changestatusform($args) {
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return '(project not found)'; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'setstatus', $model->UID)) {
 		return "<small>(You are not permitted to change this project's status.)</small>"; 
 	}
 

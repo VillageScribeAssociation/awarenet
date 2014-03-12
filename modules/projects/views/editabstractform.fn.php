@@ -11,7 +11,7 @@
 
 function projects_editabstractform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $utils;
 
 	$html = '';				//%	return value [string]
@@ -21,7 +21,7 @@ function projects_editabstractform($args) {
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Projects_Project($args['raUID']);
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 
 	if ('open' != $model->status) {
 		$UID = $model->UID;

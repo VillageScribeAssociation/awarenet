@@ -12,7 +12,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and authorization
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }	// user must be logged in
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }	// user must be logged in
 	if (true == array_key_exists('page', $kapenta->request->args)) { $pageNo = (int)$kapenta->request->args['page']; }
 
 	$model = $kapenta->user;
@@ -32,7 +32,7 @@
 	$kapenta->page->blockArgs['userName'] = $model->getName();
 	$kapenta->page->blockArgs['pageNo'] = $pageNo;
 
-	if (true == $session->get('mobile')) {
+	if (true == $kapenta->session->get('mobile')) {
 		//------------------------------------------------------------------------------------------
 		//	require javascript and css which may be needed by mobile clients (AJAX)
 		//------------------------------------------------------------------------------------------

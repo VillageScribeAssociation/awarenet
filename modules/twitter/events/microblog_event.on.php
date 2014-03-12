@@ -13,7 +13,7 @@ require_once($kapenta->installPath . 'modules/twitter/models/tweet.mod.php');
 function twitter__cb_microblog_event($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
 	if (false == array_key_exists('refModel', $args)) { return false; }

@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	public user cannot send mail
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	is this to be sent to a specific user, or in response to another message
@@ -36,7 +36,7 @@
 	//----------------------------------------------------------------------------------------------
 
 	$kapenta->page->load('modules/messages/actions/compose.page.php');
-	$kapenta->page->blockArgs['owner'] = $user->UID;
+	$kapenta->page->blockArgs['owner'] = $kapenta->user->UID;
 	$kapenta->page->blockArgs['toUser'] = $toUser;
 	$kapenta->page->blockArgs['reMsg'] = $reMsg;
 	$kapenta->page->blockArgs['subject'] = '';

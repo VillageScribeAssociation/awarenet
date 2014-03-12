@@ -8,7 +8,7 @@
 
 function live_WebShell_newuid($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 
 	$html = '';							//%	return value [string]

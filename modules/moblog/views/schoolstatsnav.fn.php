@@ -9,7 +9,7 @@
 
 function moblog_schoolstatsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $aliases;
 	global $cache;
@@ -30,7 +30,7 @@ function moblog_schoolstatsnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load states from database	//TODO: precache this
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'schools_school', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'show')) { return ''; }
 
 	$sql = "SELECT count(UID) AS postCount, school "
 		 . "FROM moblog_post "
@@ -59,7 +59,7 @@ function moblog_schoolstatsnav($args) {
 			$schoolUrl = "%%serverPath%%moblog/school/" . $schoolRa;
 			$schoolLink = "<a href='" . $schoolUrl . "'>$schoolName</a>";
 
-			if ($schoolUID == $user->school) {
+			if ($schoolUID == $kapenta->user->school) {
 				$schoolLink = "<b>" . $schoolLink . "</b>";
 				$row['postCount'] = "<b>" . $row['postCount'] . "</b>";
 			}

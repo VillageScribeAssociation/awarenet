@@ -8,11 +8,11 @@
 
 function live_WebShell_rm($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 
 
-	if ('admin' != $user->role) { return '(403)'; }
+	if ('admin' != $kapenta->user->role) { return '(403)'; }
 
 	$mode = 'del';			//%	operation [string]
 	$html = '';				//%	return value [string]

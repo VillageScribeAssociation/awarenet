@@ -8,7 +8,7 @@
 	//	check permissions
 	//---------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }		// only admins can do this
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }		// only admins can do this
 
 	//---------------------------------------------------------------------------------------------
 	//	render the page

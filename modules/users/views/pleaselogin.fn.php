@@ -6,10 +6,10 @@
 //arg: school - UID of school [string]
 
 function users_pleaselogin($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('public' == $user->role) {
+	if ('public' == $kapenta->user->role) {
 		$blockUID = $kapenta->createUID();
 
 		$msg = "<div class='inlinequote'>"

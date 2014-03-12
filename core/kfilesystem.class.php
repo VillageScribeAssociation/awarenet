@@ -14,6 +14,8 @@ class KFilesystem {
 	
 	var $wrapper = "<? header('HTTP/1.1 403 Forbidden'); exit('403 - forbidden'); /*\n";
 
+    var $lastErr = '';
+
 	//----------------------------------------------------------------------------------------------
 	//.	constructor
 	//----------------------------------------------------------------------------------------------
@@ -73,6 +75,8 @@ class KFilesystem {
 	function checkName($fileName, $inData = false) {
 		global $kapenta;
 
+        $this->lastErr = '';
+
 		$fileName = str_replace('//', '/', $fileName);
 		$ipLen = strlen($kapenta->installPath);
 		$fileNameLc = strtolower($fileName);		
@@ -88,8 +92,14 @@ class KFilesystem {
 		$fileNameLc = str_replace("%2e", '.', $fileNameLc);
 
 		//	Classic directory traversal
-		if (strpos(' ' . $fileNameLc, '../') != false) { return false; }
-		if (strpos(' ' . $fileNameLc, '..\\') != false) { return false; }
+		if (strpos(' ' . $fileNameLc, '../') != false) { 
+            $this->lastErr = 'Possible directory traversal.';
+            return false; 
+        }
+		if (strpos(' ' . $fileNameLc, '..\\') != false) { 
+            $this->lastErr = 'Possible directory traversal.';
+            return false; 
+        }
 
 		//	Make absolute locations relative to installPath, case insentitive
 		if (strlen($fileName) >= $ipLen) {
@@ -99,7 +109,10 @@ class KFilesystem {
 		}
 
 		//	Check that location is inside of ../data/ if required
-		if ((true == $inData) && ('data/' != substr($fileNameLc, 0, 5))) { return false; }
+		if ((true == $inData) && ('data/' != substr($fileNameLc, 0, 5))) { 
+            $this->lastErr = 'Location must be in data/ - ' . $fileNameLc;
+            return false; 
+        }
 
 		return $fileName;
 	}
@@ -173,16 +186,30 @@ class KFilesystem {
 	//returns: true on success, false on failure [bool]
 
 	function put($fileName, $contents, $inData = false, $phpWrap = false, $m = 'wb+') {
+
+        $this->lastErr = '';
+
 		$fileName = $this->checkName($fileName, $inData);
-		if (false == $fileName) { return false; }
-		if (false == $this->makePath($fileName, $inData)) { return false; }
+
+		if (false == $fileName) { 
+            $this->lastErr = 'File name is invalid - ' . $this->lastErr;
+            return false; 
+        }
+
+		if (false == $this->makePath($fileName, $inData)) { 
+            $this->lastErr = 'Could not make path.';
+            return false; 
+        }
 
 		// add php wrapper to file
 		if (true == $phpWrap) { $contents = $this->wrapper . $contents . "\n*/ ?>"; }
 
 		// note that file_put_contents() was added in PHP 5, we do it this way to support PHP 4.x
 		$fH = @fopen($this->installPath . $fileName, $m);		//	specify binary for Windows
-		if (false === $fH) { return false; }					//	can fH ever be 0?
+		if (false === $fH) { 
+            $this->lastErr = 'Could not open file for writing.';
+            return false; 
+        }					
 
 		//	wait for lock
 		$lock = false;
@@ -235,7 +262,11 @@ class KFilesystem {
 	//returns: array of file paths relative to installPath [array:string]
 
 	function listDir($dir, $ext = '', $onlySubDirs = false) {
-		$list = array();									//%	return value [array:string]
+		$list = array();					
+
+        $maxEntry = 1024;
+
+        //%	return value [array:string]
 
 		if (('' == $dir) || ('/' != substr($dir, strlen($dir) - 1))) { $dir = $dir . '/'; }
 		$fullPath = $this->installPath . $dir;				//%	relative to root [string]
@@ -253,6 +284,13 @@ class KFilesystem {
 				$ok = false;
 				$continue = false;
 			}
+
+            $maxEntry--;
+
+            if (0 == $maxEntry) {
+				$ok = false;
+				$continue = false;
+            }
 
 			if ((true == $ok) && (('.' == $entry) || ('..' == $entry))) { $ok = false; }
 

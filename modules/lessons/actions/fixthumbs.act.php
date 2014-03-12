@@ -12,7 +12,7 @@
 	//	check arguments, user role and server setup
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	$setName = 'videolessons';
 	if ('' != $kapenta->request->ref) { $setName = $kapenta->request->ref; }
 

@@ -201,7 +201,7 @@ class Notifications_UserIndex {
 
 	function extArray() {
 		global $utils;
-		global $user;
+		global $kapenta;
 
 
 		$ext = $this->toArray();		//% extended array of properties [array:string]
@@ -216,17 +216,17 @@ class Notifications_UserIndex {
 
 		$objType = 'notifications_userindex';
 
-		if (true == $user->authHas('notifications', $objType, 'show', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', $objType, 'show', $this->UID)) {
 			$ext['viewUrl'] = '%%serverPath%%Notifications/showuserindex/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', $objType, 'edit', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', $objType, 'edit', 'edit', $this->UID)) {
 			$ext['editUrl'] = '%%serverPath%%Notifications/edituserindex/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('notifications', $objType, 'edit', 'delete', $this->UID)) {
+		if (true == $kapenta->user->authHas('notifications', $objType, 'edit', 'delete', $this->UID)) {
 			$ext['delUrl'] = '%%serverPath%%Notifications/deluserindex/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}
@@ -235,7 +235,7 @@ class Notifications_UserIndex {
 		//	javascript
 		//------------------------------------------------------------------------------------------
 		$ext['hideJsLink'] = '';
-		if (('admin' == $user->role) || ($user->UID == $ext['userUID'])) { 
+		if (('admin' == $kapenta->user->role) || ($kapenta->user->UID == $ext['userUID'])) { 
 			$ext['hideJsLink'] = ''
 		 	. "<a href='javascript:void(0);' "
 				. "onClick=\"notifications_hide('" . $ext['UID'] . "')\""

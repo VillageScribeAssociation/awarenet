@@ -166,7 +166,7 @@ class Forums_Reply {
 
 	function extArray() {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();			//%	return value [dict]
@@ -187,14 +187,14 @@ class Forums_Reply {
 		//------------------------------------------------------------------------------------------
 
 		$auth = false;
-		if ('admin' == $user->role) { $auth = true; }
-		if ($user->UID == $ary['createdBy']) { $auth = true; }
+		if ('admin' == $kapenta->user->role) { $auth = true; }
+		if ($kapenta->user->UID == $ary['createdBy']) { $auth = true; }
 
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
 		//TODO: replay
-		if ($user->authHas('forums', 'forums_reply', 'show', $this->UID)) { 
+		if ($kapenta->user->authHas('forums', 'forums_reply', 'show', $this->UID)) { 
 		//	$ary['viewUrl'] = '%%serverPath%%forums/replies/' . $ary['alias'];
 		//	$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}

@@ -19,7 +19,7 @@
 	$model = new Images_Image($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404("Image not found."); }
 
-	if (false == $user->authHas($model->refModule, $model->refModel, 'images-add', $model->refUID)) {
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'images-add', $model->refUID)) {
 		$kapenta->page->do403('You are not authorized to edit this image.'); 
 	}
 
@@ -43,7 +43,7 @@
 				$msg = ''
 				 . "Could not delete tranform of image: " . $model->title
 				 . " (" . $model->UID . "):<br/>" . $fileName;
-				$session->msg($msg);
+				$kapenta->session->msg($msg);
 			}
 		}
 	}
@@ -62,9 +62,9 @@
 	$report = $model->save();
 	
 	if ('' == $report) {
-		$session->msg("Rotated image.", 'ok');
+		$kapenta->session->msg("Rotated image.", 'ok');
 	} else {
-		$session->msg("Error while rotating image:<br/>" . $report, 'bad');
+		$kapenta->session->msg("Error while rotating image:<br/>" . $report, 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

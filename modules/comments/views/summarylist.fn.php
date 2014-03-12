@@ -10,7 +10,7 @@
 
 function comments_summarylist($args) {
 		global $kapenta;
-		global $page;
+		global $kapenta;
 		global $theme;
 
 	$num = 30;							//%	number of items per page [int]
@@ -21,8 +21,8 @@ function comments_summarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('comments', 'comment_comment', 'list')) { return ''; }
-	if (false == $user->authHas('comments', 'comment_comment', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'list')) { return ''; }
+	if (false == $kapenta->user->authHas('comments', 'comment_comment', 'show')) { return ''; }
 
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) { 

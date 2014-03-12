@@ -11,7 +11,7 @@
 	//-------------------------------------------------------------------------------------------------
 	//	check arguments and user roles
 	//-------------------------------------------------------------------------------------------------
-	//if ('admin' != $user->role) { $kapenta->page->do403(); }
+	//if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	//if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$usage_notes = ''
@@ -60,7 +60,7 @@
 					//	no hash
 					if ('' == $item['hash']) {
 						$want = false;
-						$session->msgAdmin($msg . "Not requesting (no hash).");
+						$kapenta->session->msgAdmin($msg . "Not requesting (no hash).");
 					}
 
 					if (false != strpos($item['fileName'], 'khan/')) { $want = false; }

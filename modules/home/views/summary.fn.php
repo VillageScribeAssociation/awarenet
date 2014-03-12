@@ -18,7 +18,7 @@ function static_summary($args) {
 	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 	$model = new StaticPage($args['UID']);
 	if (false == $model->loaded) { return '(not found)'; }
-	if (false == $user->authHas('home', 'home_static', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('home', 'home_static', 'show', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

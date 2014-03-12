@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST args and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('No UID given'); }
 
 	$model = new Lessons_Course($_POST['UID']);

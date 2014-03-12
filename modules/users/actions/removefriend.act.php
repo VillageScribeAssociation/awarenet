@@ -17,19 +17,19 @@
 		{ $kapenta->page->do404(); }
 
 		$model = new Users_Friendship($_POST['friendshipUID']);
-		if ($user->UID != $model->userUID) { $kapenta->page->do403(); }	// not mine to delete
+		if ($kapenta->user->UID != $model->userUID) { $kapenta->page->do403(); }	// not mine to delete
 
 		//-----------------------------------------------------------------------------------------
 		//	delete this record, then load and delete reciprocal record
 		//-----------------------------------------------------------------------------------------
 		$model->delete();
-		$model->loadFriend($model->friendUID, $user->UID);
+		$model->loadFriend($model->friendUID, $kapenta->user->UID);
 		$model->delete();
 
 		$msg = "[[:users::namelink::userUID=" . $model->userUID . ":]]"
 			 . " removed from friends list.<br/>\n";
 
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -43,17 +43,17 @@
 		if (false == array_key_exists('friendUID', $_POST)) { $kapenta->page->do404(); }
 		if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) { $kapenta->page->do404(); }
 
-		$loaded = $model->loadFriend($_POST['friendUID'], $user->UID);
+		$loaded = $model->loadFriend($_POST['friendUID'], $kapenta->user->UID);
 		if (false == $loaded) { $kapenta->page->doXmlError('friend request not found.'); }
 
-		if ($user->UID != $model->friendUID) { $kapenta->page->do403(); } // not mine to delete
+		if ($kapenta->user->UID != $model->friendUID) { $kapenta->page->do403(); } // not mine to delete
 
 		$model->delete();
 
 		$msg = "Ignored friend request from "
 			 . "[[:users::namelink::userUID=" . $model->userUID . ":]]<br/>\n";
 
-		$session->msg($msg, 'ok');
+		$kapenta->session->msg($msg, 'ok');
 
 	}
 
@@ -66,23 +66,23 @@
 		if (false == array_key_exists('friendUID', $_POST)) { $kapenta->page->do404(); }
 		if (false == $kapenta->db->objectExists('users_user', $_POST['friendUID'])) { $kapenta->page->do404(); }
 
-		$loaded = $model->loadFriend($user->UID, $_POST['friendUID']);
+		$loaded = $model->loadFriend($kapenta->user->UID, $_POST['friendUID']);
 		if (false == $loaded) { $kapenta->page->doXmlError('friend request not found.'); }
 
-		if ($user->UID != $model->userUID) { $kapenta->page->do403(); } // not mine to delete
+		if ($kapenta->user->UID != $model->userUID) { $kapenta->page->do403(); } // not mine to delete
 
 		$model->delete();
 
 		$msg = "Withdrew friend request to "
 			 . "[[:users::namelink::userUID=" . $model->friendUID . ":]]<br/>\n";
 
-		$session->msg($msg);
+		$kapenta->session->msg($msg);
 
 	}
 
 	//---------------------------------------------------------------------------------------------
 	//	done, return to friend list
 	//---------------------------------------------------------------------------------------------
-	$kapenta->page->do302('users/friends/' . $user->alias);
+	$kapenta->page->do302('users/friends/' . $kapenta->user->alias);
 
 ?>

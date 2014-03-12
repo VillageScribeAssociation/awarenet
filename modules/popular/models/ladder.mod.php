@@ -201,7 +201,7 @@ class Popular_Ladder {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -212,17 +212,17 @@ class Popular_Ladder {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('popular', 'popular_ladder', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('popular', 'popular_ladder', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%popular/showladder/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('popular', 'popular_ladder', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('popular', 'popular_ladder', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%popular/editladder/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('popular', 'popular_ladder', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('popular', 'popular_ladder', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%popular/delladder/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

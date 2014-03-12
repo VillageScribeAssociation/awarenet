@@ -11,14 +11,14 @@ function admin_editblockform($args) {
 		global $theme;
 		global $kapenta;
 		global $utils;
-		global $user;
+		global $kapenta;
 
 	$html = '';		//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('module', $args)) { return '(module not given)'; }
 	if (false == array_key_exists('block', $args)) { return '(block not given)'; }
 

@@ -8,7 +8,7 @@
 //opt: refModule - name of a kapenta module which owns the notification [string]
 
 function notifications_daterange($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$startDate = '';		//%	notifications from, inclusive, YYYY-MM-DD [string]
@@ -18,7 +18,7 @@ function notifications_daterange($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 
 	if (true == array_key_exists('startDate', $args)) { $startDate = $args['startDate']; }
 	if (true == array_key_exists('endDate', $args)) { $startDate = $args['endDate']; }

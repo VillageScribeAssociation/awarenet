@@ -43,7 +43,7 @@ class KJS_ViewPort {
 
 	function copyBlocks() {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		foreach($this->blockFiles as $fileName) {
@@ -58,7 +58,7 @@ class KJS_ViewPort {
 			 . "//" . str_repeat('-', 80) . "\n"
 			 . "//*\tported from " . $fileName . "\n"
 			 . "//" . str_repeat('-', 80) . "\n"
-			 . "//:\tCreated: " . $kapenta->datetime() . " By: " . $user->getName() . "\n"
+			 . "//:\tCreated: " . $kapenta->datetime() . " By: " . $kapenta->user->getName() . "\n"
 			 . "\n"
 			 . "kapenta.modules.addBlock(\n"
 			 . "\t'" . $this->module . "',\n"
@@ -87,7 +87,7 @@ class KJS_ViewPort {
 
 	function copyViews() {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 		foreach($this->fnFiles as $fileName) {
@@ -146,7 +146,7 @@ class KJS_ViewPort {
 			$js = ''
 			 . $openComment
 			 . "//:\tported from " . $fileName . "\n"
-			 . "//:\tCreated: " . $kapenta->datetime() . " By: " . $user->getName() . "\n"
+			 . "//:\tCreated: " . $kapenta->datetime() . " By: " . $kapenta->user->getName() . "\n"
 			 . "\n"
 			 . "kapenta.modules.addView(\n"
 			 . "  '" . $this->module . "',\n"

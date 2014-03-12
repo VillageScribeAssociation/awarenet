@@ -8,7 +8,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function packages_installedpackages($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -17,7 +17,7 @@ function packages_installedpackages($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check user role and get list of installed packages
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$updateManager = new KUpdateManager();
 	$packages = $updateManager->listAllPackages();		//%	[array:string]

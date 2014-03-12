@@ -11,7 +11,7 @@
 
 function wiki_revmenu($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
@@ -24,7 +24,7 @@ function wiki_revmenu($args) {
 	$model = new Wiki_Revision($args['raUID']);
 	if (false == $model->loaded) { return ''; }
 
-	if (true == $user->authHas('wiki', 'wiki_article', 'show', $model->articleUID)) {
+	if (true == $kapenta->user->authHas('wiki', 'wiki_article', 'show', $model->articleUID)) {
 
 		$labels['currentarticle'] = "[[:theme::submenu::label=Current Article::"
 								. "link=%%serverPath%%wiki/" . $model->articleUID . ":]]";

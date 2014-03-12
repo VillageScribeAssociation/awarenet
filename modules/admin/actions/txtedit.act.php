@@ -7,7 +7,7 @@
 	//---------------------------------------------------------------------------------------------
 	//	authorization
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//---------------------------------------------------------------------------------------------
 	//	handle submissions
@@ -55,7 +55,7 @@
 					  </tr>
 					</table>\n";
 
-			$session->msg($msg, 'warn');
+			$kapenta->session->msg($msg, 'warn');
 		}	
 	}
 
@@ -70,12 +70,12 @@
 			if (true == $kapenta->fs->exists($fileName)) {
 				unlink($kapenta->installPath . $fileName);
 				if (false == $kapenta->fs->exists($fileName)) {
-					$session->msg("Deleted: " . $fileName, 'ok');				
+					$kapenta->session->msg("Deleted: " . $fileName, 'ok');				
 				} else {
-					$session->msg("Could not delete: " . $fileName, 'bad');				
+					$kapenta->session->msg("Could not delete: " . $fileName, 'bad');				
 				}
 
-			} else { $session->msg("Could not delete: " . $fileName, 'bad');	}
+			} else { $kapenta->session->msg("Could not delete: " . $fileName, 'bad');	}
 		}	
 	}
 
@@ -91,7 +91,7 @@
 		}
 
 		if (false == $kapenta->fs->exists($editFile)) { 
-			$session->msg("file does not exist.<br/>" . $editFile, 'bad');
+			$kapenta->session->msg("file does not exist.<br/>" . $editFile, 'bad');
 			$editFile = ''; 
 		}
 	}

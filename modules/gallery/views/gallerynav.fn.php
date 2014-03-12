@@ -11,7 +11,7 @@
 
 function gallery_gallerynav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';					//%	return value [string]

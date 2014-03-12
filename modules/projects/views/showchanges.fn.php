@@ -14,7 +14,7 @@
 
 function projects_showchanges($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $session;
 
@@ -166,7 +166,7 @@ function projects_showchanges($args) {
 	if (0 == $totalItems) { $html .= "<div class='inlinequote'>No changes recorded.</div>"; }
 	if (($num + $start) >= $totalItems) { $html .= "<!-- end of results -->"; }
 
-	if (true == $session->get('mobile')) { $html = $theme->expandBlocks($html, 'mobile'); }
+	if (true == $kapenta->session->get('mobile')) { $html = $theme->expandBlocks($html, 'mobile'); }
 	else { $html = $theme->expandBlocks($html, 'indent'); }
 
 	return $html;

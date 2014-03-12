@@ -16,9 +16,9 @@
 
 function lessons_install_module() {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing Lessons Module</h3>\n";
 	$dba = $kapenta->getDBAdminDriver();
@@ -71,9 +71,9 @@ function lessons_install_module() {
 
 function lessons_install_status_report() {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 	$installed = true;
 	$dba = $kapenta->getDBAdminDriver();
 	$report = '';

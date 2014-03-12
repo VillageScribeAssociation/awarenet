@@ -19,9 +19,9 @@
 	//TODO: add other permissions here?
 	$auth = false;
 
-	if ($user->UID == $model->createdBy) { $auth = true; }
+	if ($kapenta->user->UID == $model->createdBy) { $auth = true; }
 
-	if (true == $user->authHas($model->refModule, $model->refModel, 'images-remove', $model->refUID)) {
+	if (true == $kapenta->user->authHas($model->refModule, $model->refModel, 'images-remove', $model->refUID)) {
 		$auth = true;
 	}
 
@@ -38,7 +38,7 @@
 	//	reset weight on the the set
 	//----------------------------------------------------------------------------------------------
 	if (true == $check) {
-		$session->msgAdmin('Reloading weight on sibling images.');
+		$kapenta->session->msgAdmin('Reloading weight on sibling images.');
 		$set = new Images_Images($objAry['refModule'], $objAry['refModel'], $objAry['refUID']);
 		$set->checkWeights();
 	}

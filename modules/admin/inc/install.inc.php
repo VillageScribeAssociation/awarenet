@@ -10,9 +10,9 @@
 //returns: html report [string]
 
 function admin_install_module() {
-	global $user;
+	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 
 	$report = "<h3>Installing Admin Module</h3>\n";
 
@@ -34,8 +34,8 @@ function admin_install_module() {
 // if installed correctly report will contain HTML comment <!-- installed correctly -->
 
 function admin_install_status_report() {
-	global $user;
-	if ('admin' != $user->role) { return false; }	// only admins can do this
+	global $kapenta;
+	if ('admin' != $kapenta->user->role) { return false; }	// only admins can do this
 	$installed = true;
 
 	$report = "<p>Admin module requires no further configuration.</p>";

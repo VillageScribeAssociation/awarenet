@@ -10,14 +10,14 @@ function admin_editpageform($args) {
 		global $theme;
 		global $kapenta;
 		global $utils;
-		global $user;
+		global $kapenta;
 
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('xmodule', $args)) { return '(xmodule not specified)'; }
 	if (false == array_key_exists('xpage', $args)) { return '(xpage not specified)'; }
 

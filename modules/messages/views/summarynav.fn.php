@@ -10,15 +10,15 @@
 
 function messages_summarynav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 
-	$owner = $user->UID;
+	$owner = $kapenta->user->UID;
 	$folder = 'inbox';
 	$html = '';
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('owner', $args)) { $owner = $kapenta->db->addMarkup($args['owner']); }
 	if (true == array_key_exists('folder', $args)) { $folder = $kapenta->db->addMarkup($args['folder']); }
 

@@ -17,8 +17,8 @@
 	if (false == $model->loaded) { $kapenta->page->do404('Unkonw user.'); }
 
 	$authorised = false;
-	if ($user->UID == $_POST['UID']) { $authorised = true; }
-	if ('admin' == $user->role) { $authorised = true; }
+	if ($kapenta->user->UID == $_POST['UID']) { $authorised = true; }
+	if ('admin' == $kapenta->user->role) { $authorised = true; }
 	if (false == $authorised) { $kapenta->page->do403('Upi cannot edit this profile'); }
 	//TODO: more rigorous, standard permissions
 
@@ -55,18 +55,18 @@
 	}
 
 	$report = $model->save();
-	if ('' == $report) { $session->msg('Profile updated.', 'ok'); }
-	else { $session->msg('Could not update profile: ' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Profile updated.', 'ok'); }
+	else { $kapenta->session->msg('Could not update profile: ' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	send notification to users and their friends //TODO: handle with event
 	//----------------------------------------------------------------------------------------------
 	if ('' != trim($diff)) {
 		$title = $model->getName() . "'s profile has changed.";
-		if ($model->UID == $user->UID)
-			{ $title = $user->getName() . " has updated their profile.";	}
+		if ($model->UID == $kapenta->user->UID)
+			{ $title = $kapenta->user->getName() . " has updated their profile.";	}
 
-		$url = '/users/profile/'  . $user->UID;
+		$url = '/users/profile/'  . $kapenta->user->UID;
 		$nUID = $notifications->create(
 			'users', 'users_user', $model->UID, 'users_editprofile', $title, $diff, $url
 		);

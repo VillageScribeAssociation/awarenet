@@ -15,13 +15,13 @@
 	//----------------------------------------------------------------------------------------------
 	$model = new Moblog_Post($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Post not found.'); }
-	if (false == $user->authHas('moblog', 'moblog_post', 'delete', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'delete', $model->UID)) { $kapenta->page->do403(); }
 	
 	//----------------------------------------------------------------------------------------------
 	//	delete it
 	//----------------------------------------------------------------------------------------------
 	$model->delete();
-	$session->msg("Deleted moblog post: " . $model->title, 'ok');
-	$kapenta->page->do302('moblog/blog/' . $user->alias); 
+	$kapenta->session->msg("Deleted moblog post: " . $model->title, 'ok');
+	$kapenta->page->do302('moblog/blog/' . $kapenta->user->alias); 
 
 ?>

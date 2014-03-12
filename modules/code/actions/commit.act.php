@@ -75,10 +75,10 @@
 	//----------------------------------------------------------------------------------------------
 	//	try authenticate the user
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->loadByName($username)) { echo '<fail>Unknown User.</fail>'; die(); }
-	if (false == $user->checkPassword($password)) { echo '<fail>Wrong password.</fail>'; die(); }
+	if (false == $kapenta->user->loadByName($username)) { echo '<fail>Unknown User.</fail>'; die(); }
+	if (false == $kapenta->user->checkPassword($password)) { echo '<fail>Wrong password.</fail>'; die(); }
 
-	if (false == $package->hasPrivilege($user->UID, 'commit')) { 
+	if (false == $package->hasPrivilege($kapenta->user->UID, 'commit')) { 
 		echo "<fail>No commit permission on this object.</fail>"; die(); 
 	}
 

@@ -8,7 +8,7 @@
 //opt: contents - show table of contents, default is 'yes' (yes|no) [string]
 
 function projects_index($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -23,7 +23,7 @@ function projects_index($args) {
 	$project = new Projects_Project($args['raUID']);
 	if (false == $project->loaded) { return '(Project not found.)'; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'show', $project->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $project->UID)) {
 		return '[[:users::pleaselogin:]]';
 	}
 

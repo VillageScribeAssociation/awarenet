@@ -11,7 +11,7 @@
 
 function admin_moduleconsole($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$tb = 'yes';							//%	wrap in nav box [string]
@@ -21,7 +21,7 @@ function admin_moduleconsole($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('tb', $args)) { $ntb = $args['tb']; }
 	if (true == array_key_exists('title', $args)) { $title = $args['title']; }
 

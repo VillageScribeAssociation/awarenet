@@ -9,7 +9,7 @@
 //opt: modulename - alias of 'module' [string]
 
 function admin_addmodelform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$modulename = '';		//%	name of a kapenta module [string]
@@ -18,7 +18,7 @@ function admin_addmodelform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }	
+	if ('admin' != $kapenta->user->role) { return ''; }	
 	if (true == array_key_exists('module', $args)) { $modulename = $args['module']; }
 	if (true == array_key_exists('modulename', $args)) { $modulename = $args['modulename']; }
 

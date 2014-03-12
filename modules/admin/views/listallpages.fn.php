@@ -9,14 +9,14 @@
 function admin_listallpages($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';				//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check user is admin and load modules
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	$modList = $kapenta->listModules();
 
 	//----------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ function tags_addtagform($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';		//%	return value [string]
 
@@ -30,8 +30,8 @@ function tags_addtagform($args) {
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner)'; }
 
 	if (
-		(false == $user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
-		(false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
+		(false == $kapenta->user->authHas($refModule, $refModel, 'tags-add', $refUID)) &&
+		(false == $kapenta->user->authHas($refModule, $refModel, 'tags-manage', $refUID))
 	) {
 		return '';
 	}

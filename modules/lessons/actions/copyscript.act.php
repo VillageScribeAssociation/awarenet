@@ -6,7 +6,7 @@
 //	admin action to make a bash script for copying lessons from the lessons directory
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$tarString = "tar -cvvf %%UID%%.tar ./%%UID%%\n";
 	$scpString = "scp -B %%UID%%.tar strix@10.0.0.254:/var/www/awarenet/data/lessons/\n";

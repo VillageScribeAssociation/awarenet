@@ -11,7 +11,7 @@
 
 function moblog_listpopularnav($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 	global $session;
 
 	$num = 10;					//%	number of items to show [int]
@@ -21,7 +21,7 @@ function moblog_listpopularnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('ladder', $args)) { $ladder = $args['ladder']; }
 

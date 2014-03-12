@@ -9,7 +9,7 @@
 	$labels = array(
 		'defaultTheme' => $kapenta->defaultTheme,
 		'serverPath' => $kapenta->serverPath,
-		'userUID' => $user->UID,
+		'userUID' => $kapenta->user->UID,
 		'imageUrl' => 'images/s_width570/1280px-sayornis-saya2.jpg',
 		'title' = 'test image scribble',
 		'title64' = base64_encode('Test image scribble')

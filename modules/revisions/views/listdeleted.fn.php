@@ -9,7 +9,7 @@
 
 function revisions_listdeleted($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $revisions;
 
@@ -23,7 +23,7 @@ function revisions_listdeleted($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('pageNo', $args)) { $pageNo = (int)$args['pageNo']; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('pagination', $args)) { $pagination = $args['pagination']; }

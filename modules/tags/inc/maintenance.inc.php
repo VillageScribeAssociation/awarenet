@@ -16,11 +16,11 @@
 function tags_maintenance() {
 		global $kapenta;
 		global $aliases;
-		global $user;
+		global $kapenta;
 		global $theme;
 		global $utils;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 	$report = '';
 
 	//----------------------------------------------------------------------------------------------

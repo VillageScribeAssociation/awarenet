@@ -13,7 +13,7 @@
 	$UID = $aliases->findRedirect('wiki_article');		// check correct ref
 
 	$model = new Wiki_Article($UID);
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	// create talk page if it does not exist
@@ -30,7 +30,7 @@
 		$talk->talkFor = $model->UID;					// <-- bind to the article
 		$report = $talk->save();
 
-		if ('' == $report) { $session->msg("Created talk page for: " . $model->alias, 'ok'); }
+		if ('' == $report) { $kapenta->session->msg("Created talk page for: " . $model->alias, 'ok'); }
 		else {  
 			$msg = "Could not create talk page for " . $model->alias . ":<br/>" . $report;
 			$kapenta->session->msg($msg, 'ok');

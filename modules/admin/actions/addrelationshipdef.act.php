@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$modulename = '';		//%	name of a kapenta module [string]
 	$modelname = '';		//%	name of object type [string]
@@ -36,10 +36,10 @@
 	if (true == $check) { 
 		$module->models[$modelname] = $model->toArray();
 		$module->save();
-		$session->msg('Added relationship', 'ok'); 
+		$kapenta->session->msg('Added relationship', 'ok'); 
 
 	} else {
-		$session->msg('Could not add relationship.', 'bad');
+		$kapenta->session->msg('Could not add relationship.', 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

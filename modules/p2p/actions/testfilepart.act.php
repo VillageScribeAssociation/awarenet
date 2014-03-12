@@ -8,7 +8,7 @@
 //*	development action to test download of a file part from a trusted peer
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$fileName = 'data/videos/1/1/0/110908755616157252';
 

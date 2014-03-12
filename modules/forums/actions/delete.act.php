@@ -15,12 +15,12 @@
 	  
 	$model = new Forums_Board($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404('Unknown board.'); }
-	if (false == $user->authHas('forums', 'forums_board', 'edit', $model->UID)) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'edit', $model->UID)) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete the board
 	//----------------------------------------------------------------------------------------------
-	$session->msg("Deleted forum: " . $model->title, 'ok');
+	$kapenta->session->msg("Deleted forum: " . $model->title, 'ok');
 	$model->delete();
 	$kapenta->page->do302('forums/');
 

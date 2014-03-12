@@ -9,7 +9,7 @@
 
 function calendar_yearsubnav($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 

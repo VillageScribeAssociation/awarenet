@@ -12,7 +12,7 @@
 //returns: true if the given relationship exists, otherwise false [bool]
 
 function schools_relationships($refModel, $UID, $relationship, $userUID) {
-	global $user;
+	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	get the user we want to know about

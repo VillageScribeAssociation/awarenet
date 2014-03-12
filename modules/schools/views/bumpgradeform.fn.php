@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function schools_bumpgradeform($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 		global $kapenta;
@@ -15,7 +15,7 @@ function schools_bumpgradeform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('admin' != $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load list of schools

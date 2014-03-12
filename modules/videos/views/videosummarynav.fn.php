@@ -10,7 +10,7 @@
 //opt: behavior - Behavior when links are clicked (link|editmodal) [string]
 
 function videos_videosummarynav($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 

@@ -10,19 +10,19 @@
 
 	$model = new Users_User();
 
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { $kapenta->page->do403(); }
 	//TODO: more advanced permisions for blog - tie to profile
 
 	if ('' != $kapenta->request->ref) {
 		$model->load($kapenta->request->ref);
 		if (false == $model->loaded) { $kapenta->page->do404(); }
-	} else { $model->load($user->UID); }
+	} else { $model->load($kapenta->user->UID); }
 
 	//----------------------------------------------------------------------------------------------
 	//	user can create new posts on their own blog
 	//----------------------------------------------------------------------------------------------
 	$newPostForm = "[[:moblog::newpostformnav:]]\n";
-	if ($model->UID != $user->UID) { $newPostForm = ''; }
+	if ($model->UID != $kapenta->user->UID) { $newPostForm = ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	show the page

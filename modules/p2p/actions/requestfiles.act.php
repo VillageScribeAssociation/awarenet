@@ -9,7 +9,7 @@
 	//-------------------------------------------------------------------------------------------------
 	//	check arguments and user roles
 	//-------------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('Peer UID not given'); }
 
 	$model = new P2P_Peer($kapenta->request->ref);
@@ -39,7 +39,7 @@
 					//	no hash
 					if ('' == $item['hash']) {
 						$want = false;
-						$session->msgAdmin($msg . "Not requesting (no hash).");
+						$kapenta->session->msgAdmin($msg . "Not requesting (no hash).");
 					}
 
 					$metaFile = ''
@@ -49,7 +49,7 @@
 					//	already downloading
 					if (true == $kapenta->fs->exists($metaFile)) {
 						$want = false;
-						$session->msgAdmin($msg . "Already downloading.");
+						$kapenta->session->msgAdmin($msg . "Already downloading.");
 					}
 
 					if (true == $want) {
@@ -59,7 +59,7 @@
 						 . "Owner: " . $tableName . "::" . $item['UID'] . "<br/>\n"
 						 . "SHA1 Hash: " . $item['hash'] . "<br/>\n"
 						 . "Canonical: " . $item['fileName'] . "<br/>\n";
-						$session->msgAdmin($msg);
+						$kapenta->session->msgAdmin($msg);
 
 						$xml = ''
 						 . "<filemetarequest>\n"

@@ -8,7 +8,7 @@
 
 function messages_menu($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$labels = array();
 	$html = '';				//%	return value [string]
@@ -17,7 +17,7 @@ function messages_menu($args) {
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 	$labels['newEntry'] = '';
-	if ($user->authHas('messages', 'messages_message', 'send')) 
+	if ($kapenta->user->authHas('messages', 'messages_message', 'send')) 
 		{ $labels['newEntry'] = '[[:theme::submenu::label=Compose::link=/messages/compose/:]]'; } 
 
 	//----------------------------------------------------------------------------------------------

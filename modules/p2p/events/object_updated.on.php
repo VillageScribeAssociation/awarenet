@@ -14,7 +14,7 @@
 function p2p__cb_object_updated($args) {
 	global $kapenta;
 	global $kapenta; 
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $session;
 	global $revisions;
@@ -52,7 +52,7 @@ function p2p__cb_object_updated($args) {
 
 	foreach($range as $item) {
 		//$msg = 'Sharing changes: ' . $args['model'] .'::'. $args['UID'] .' with '. $item['name'];
-		//$session->msgAdmin($msg);
+		//$kapenta->session->msgAdmin($msg);
 
 		//------------------------------------------------------------------------------------------
 		//	DEPRECATED

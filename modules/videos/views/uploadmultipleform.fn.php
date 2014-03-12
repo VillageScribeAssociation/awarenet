@@ -13,7 +13,7 @@
 function videos_uploadmultipleform($args) {
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 	$html = '';							//%	return value [string]
@@ -33,7 +33,7 @@ function videos_uploadmultipleform($args) {
 
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(owner not found)'; }
-	if (false == $user->authHas($refModule, $refModel, 'videos-add', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'videos-add', $refUID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	add the form

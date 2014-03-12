@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function calendar_listtemplatesnav($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -16,13 +16,13 @@ function calendar_listtemplatesnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions / role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	//TODO: user permission set here
 
 	//----------------------------------------------------------------------------------------------
 	//	query database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array("createdBy='" . $user->UID . "'");
+	$conditions = array("createdBy='" . $kapenta->user->UID . "'");
 	$range = $kapenta->db->loadRange('calendar_template', '*', $conditions, 'title');
 
 	//----------------------------------------------------------------------------------------------

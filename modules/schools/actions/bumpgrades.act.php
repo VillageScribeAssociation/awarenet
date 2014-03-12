@@ -12,7 +12,7 @@
 	$doIt = false;
 	$bumpContent = '';
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if ((true == array_key_exists('action', $_POST)) && ('bumpGrades' == $_POST['action'])) { 
 			$doIt = true; 
 	}

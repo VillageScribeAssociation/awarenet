@@ -13,7 +13,7 @@
 	if ('' == $kapenta->request->ref) {$kapenta->page->do302('static/list/'); }
 	$model = new Home_Static($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Static page not found.'); }
-	if (false == $user->authHas('home', 'home_static', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('home', 'home_static', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to delete this page.'); }
 
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 	//----------------------------------------------------------------------------------------------
 	$labels = array('UID' => $model->UID, 'alias' => $model->alias);
 	$block = $theme->loadBlock('modules/home/views/confirmdelete.block.php');
-	$session->msg($theme->replaceLabels($labels, $block), 'warn');
+	$kapenta->session->msg($theme->replaceLabels($labels, $block), 'warn');
 	$kapenta->page->do302('home/show/' . $kapenta->request->ref);
 	
 ?>

@@ -11,7 +11,7 @@
 //opt: imgUID - overrides raUID if present [string]
 
 function images_showfull($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -35,7 +35,7 @@ function images_showfull($args) {
 	$labels = $model->extArray();
 
 	$labels['userEditBlock'] = '';
-	if (($model->createdBy == $user->UID) || ('admin' == $user->role)) {
+	if (($model->createdBy == $kapenta->user->UID) || ('admin' == $kapenta->user->role)) {
 		$labels['rotateBlock'] =  "[[:images::rotatebuttons::imageUID=" . $model->UID . ":]]\n";
 		$labels['userEditBlock'] = ''
 		 . "<div class='block'>\n"

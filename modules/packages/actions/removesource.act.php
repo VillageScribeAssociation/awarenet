@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('source', $kapenta->request->args)) { $kapenta->page->do404('Source not given.'); }
 
 	$source = base64_decode($kapenta->request->args['source']);
@@ -21,13 +21,13 @@
 	if (true == $updateManager->hasSource($source)) {
 		$check = $updateManager->removeSource($source);
 		if (true == $check) { 
-			$session->msg("Removed software source:<br/> $source", 'ok');
+			$kapenta->session->msg("Removed software source:<br/> $source", 'ok');
 		} else {
-			$session->msg("Could not remove software source:<br/> $source", 'warn');
+			$kapenta->session->msg("Could not remove software source:<br/> $source", 'warn');
 		}
 
 	} else {
-		$session->msg("Unkown source: $source", 'bad');
+		$kapenta->session->msg("Unkown source: $source", 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

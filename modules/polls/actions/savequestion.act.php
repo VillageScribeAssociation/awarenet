@@ -16,7 +16,7 @@
 	$model = new Polls_Question($_POST['UID']);
 	if (false == $model->loaded) { $kapenta->page->do404("could not load Question.");}
 
-	if (false == $user->authHas('polls', 'Polls_Question', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('polls', 'Polls_Question', 'edit', $model->UID))
 		{ $kapenta->page->do403('You are not authorized to edit this Question.'); }
 	if (false == array_key_exists('module', $_POST))
 		{ $kapenta->page->do404('reference module not specified', true); }
@@ -46,8 +46,8 @@
 	//----------------------------------------------------------------------------------------------
 	//	check that object was saved and redirect
 	//----------------------------------------------------------------------------------------------
-	if ('' == $report) { $session->msg('Saved changes to Question', 'ok'); }
-	else { $session->msg('Could not save Question:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Saved changes to Question', 'ok'); }
+	else { $kapenta->session->msg('Could not save Question:<br/>' . $report, 'bad'); }
 
 	if (true == array_key_exists('return', $_POST)) { $kapenta->page->do302($_POST['return']); }
 	else { $kapenta->page->do302('polls/showquestion/' . $model->UID); }

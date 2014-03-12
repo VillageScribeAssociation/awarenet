@@ -196,17 +196,17 @@ class Code_Bug {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('code', 'code_bug', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_bug', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%code/showbug/' . $this->UID;
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_bug', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_bug', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%~%serverPath%~%Code/editbug/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('code', 'code_bug', 'del', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('code', 'code_bug', 'del', $ext['UID'])) {
 			$ext['delUrl'] = '%~%serverPath%~%Code/delbug/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

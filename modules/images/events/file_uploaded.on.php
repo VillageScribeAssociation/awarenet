@@ -20,7 +20,7 @@ function images__cb_file_uploaded($args) {
 	 . "path: " . $args['path'] . "<br/>"
 	 . "type: " . $args['type'] . "<br/>"
 	 . "extension: " . $args['extension'] . "<br/>";
-	//$session->msg($msg);
+	//$kapenta->session->msg($msg);
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments
@@ -31,7 +31,7 @@ function images__cb_file_uploaded($args) {
 	if (false == array_key_exists('path', $args)) { return false; }
 
 	if ('image' != $args['type']) {
-		$session->msg('Uploaded file was not an image.');
+		$kapenta->session->msg('Uploaded file was not an image.');
 		return false;
 	}
 
@@ -45,7 +45,7 @@ function images__cb_file_uploaded($args) {
 	$gdh = imagecreatefromstring($raw);					//%	GD image handle [int]
 
 	if (false == $gdh) {
-		$session->msg('Uploaded file was not a valid image.', 'bad');
+		$kapenta->session->msg('Uploaded file was not a valid image.', 'bad');
 		return false;
 	}
 
@@ -73,7 +73,7 @@ function images__cb_file_uploaded($args) {
 
 	if ('' == $report) {
 		$check = $kapenta->fileCopy($args['path'], $model->fileName);
-		$session->msg('Attached image.');
+		$kapenta->session->msg('Attached image.');
 
 		//------------------------------------------------------------------------------------------
 		//	image was uploaded correctly raise file_added event for this image (p2p uses it)
@@ -101,10 +101,10 @@ function images__cb_file_uploaded($args) {
 		);
 
 		$kapenta->raiseEvent('*', 'images_added', $detail);
-		$session->msgAdmin('Attached image file.');
+		$kapenta->session->msgAdmin('Attached image file.');
 
 	} else {
-		$session->msg('Could not create image object.');
+		$kapenta->session->msg('Could not create image object.');
 	}
 
 }

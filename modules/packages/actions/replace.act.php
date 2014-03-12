@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('Admins only.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Admins only.'); }
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	if ('replaceFile' != $_POST['action']) { $kapenta->page->do404('Action not recognized'); }
 
@@ -33,9 +33,9 @@
 	$meta = $package->files[$fileUID];
 	$check = $package->updateFile($fileUID);
 	if (true == $check) {
-		$session->msg('Updated file: ' . $meta['path'] . '.', 'ok');
+		$kapenta->session->msg('Updated file: ' . $meta['path'] . '.', 'ok');
 	} else {
-		$session->msg('Could not update file: ' . $meta['path'] . '.', 'bad');
+		$kapenta->session->msg('Could not update file: ' . $meta['path'] . '.', 'bad');
 	}
 
 	//----------------------------------------------------------------------------------------------

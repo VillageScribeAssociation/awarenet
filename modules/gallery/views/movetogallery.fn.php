@@ -9,7 +9,7 @@
 //opt: imageUID - oveerrides raUID if present [string]
 
 function gallery_movetogallery($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -23,7 +23,7 @@ function gallery_movetogallery($args) {
 
 	$model = new Images_Image($args['raUID']);
 	if (false == $model->loaded) { return '(no such image)'; }
-	if ($model->createdBy != $user->UID) { return ''; }
+	if ($model->createdBy != $kapenta->user->UID) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load list of user galleries from database

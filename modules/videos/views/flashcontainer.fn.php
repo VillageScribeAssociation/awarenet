@@ -12,7 +12,7 @@
 
 function videos_flashcontainer($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$html = '';			//%	return value [string]
 	$swfWidth = 968;	//%	flash object width [int]	

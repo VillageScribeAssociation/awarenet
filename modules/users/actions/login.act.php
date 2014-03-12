@@ -27,7 +27,7 @@
 					//------------------------------------------------------------------------------
 					//	details correct, but user is banhammered
 					//------------------------------------------------------------------------------
-					$session->msg('You have been banned, you are not logged in.', 'no');
+					$kapenta->session->msg('You have been banned, you are not logged in.', 'no');
 					$kapenta->page->do302(''); 									// redirect to homepage
 
 				} else {
@@ -35,12 +35,12 @@
 					//------------------------------------------------------------------------------
 					//	feedback and redirect
 					//------------------------------------------------------------------------------
-					$session->set('user', $row['UID']);					//	set current user UID
-					$session->set('role', $row['role']);				//	set current user role
-					$session->msg('You are now logged in.', 'ok');
+					$kapenta->session->set('user', $row['UID']);					//	set current user UID
+					$kapenta->session->set('role', $row['role']);				//	set current user role
+					$kapenta->session->msg('You are now logged in.', 'ok');
 					$session = new Users_Session();
 
-					$user->loadArray($row);
+					$kapenta->user->loadArray($row);
 
 					if (true == array_key_exists('redirect', $_POST)) { 
 						$kapenta->page->do302($_POST['redirect']); 				// retry action after login
@@ -61,7 +61,7 @@
 		//------------------------------------------------------------------------------------------
 		//	cound not authenticate
 		//------------------------------------------------------------------------------------------
-		$session->msg('Username or password not recognised, you are not logged in.', 'no');
+		$kapenta->session->msg('Username or password not recognised, you are not logged in.', 'no');
 
 	}
 

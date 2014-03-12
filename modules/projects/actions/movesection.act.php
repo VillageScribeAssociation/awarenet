@@ -25,8 +25,8 @@
 	//	check user is authorised to edit this project
 	//----------------------------------------------------------------------------------------------
 	$authorised = false;
-	if ($model->hasMember($user->UID) == true) { $authorised = true; }
-	if ('admin' == $user->role) { $authorised = true; }
+	if ($model->hasMember($kapenta->user->UID) == true) { $authorised = true; }
+	if ('admin' == $kapenta->user->role) { $authorised = true; }
 
 	if ($authorised == false) { $kapenta->page->do403(); }
 

@@ -14,7 +14,7 @@
 
 function wiki_listall($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 

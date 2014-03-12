@@ -10,7 +10,7 @@
 function live_uploadajax($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';
@@ -18,7 +18,7 @@ function live_uploadajax($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	if (false == array_key_exists('refModule', $args)) { return '(refModule not given)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(refModel not given)'; }

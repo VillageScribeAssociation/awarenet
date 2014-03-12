@@ -16,9 +16,9 @@
 
 	$model = new Projects_Project($UID);
 
-	if ((false == $model->hasMember($user->UID)) && ('admin' != $user->role)) {
+	if ((false == $model->hasMember($kapenta->user->UID)) && ('admin' != $kapenta->user->role)) {
 		// TODO: use a permission for this
-		$session->msg("You are not a member of this project, you can't edit it.", 'bad');
+		$kapenta->session->msg("You are not a member of this project, you can't edit it.", 'bad');
 		$kapenta->page->do302('projects/' . $model->alias);
 	}
 
@@ -27,12 +27,12 @@
 	//----------------------------------------------------------------------------------------------
 
 	if (array_key_exists('inc', $kapenta->request->args) == true) {
-		//$session->msg("incrementing section " . $kapenta->request->args['inc'], 'ok');
+		//$kapenta->session->msg("incrementing section " . $kapenta->request->args['inc'], 'ok');
 		$model->incrementSection($kapenta->request->args['inc']);
 	}
 
 	if (array_key_exists('dec', $kapenta->request->args) == true) {
-		//$session->msg("decrementing section " . $kapenta->request->args['inc'], 'ok');
+		//$kapenta->session->msg("decrementing section " . $kapenta->request->args['inc'], 'ok');
 		$model->decrementSection($kapenta->request->args['dec']);
 	}
 

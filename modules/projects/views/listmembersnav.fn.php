@@ -11,7 +11,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_listmembersnav($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $cache;
 	global $theme;
@@ -30,18 +30,18 @@ function projects_listmembersnav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and arguments
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return '[[:users::pleaselogin:]]'; }
+	if ('public' == $kapenta->user->role) { return '[[:users::pleaselogin:]]'; }
 	if (true == array_key_exists('editmode', $args)) { $editmode = $args['editmode']; }
 	if (true == array_key_exists('projectUID', $args)) { $args['raUID'] = $args['projectUID']; }
 	if (false == array_key_exists('raUID', $args)) { return false; }
 
 	$model = new Projects_Project($args['raUID']);
 
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { 
 		return ''; 
 	}
 
-	if (true == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) { 
+	if (true == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) { 
 		$isAdmin = true; 
 	}
 

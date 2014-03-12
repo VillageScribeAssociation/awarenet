@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('polls', 'polls_question', 'new')) {
+	if (false == $kapenta->user->authHas('polls', 'polls_question', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Questions.');
 	}
 
@@ -44,7 +44,7 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Question<br/>', 'ok');
+		$kapenta->session->msg('Created new Question<br/>', 'ok');
 		$url = 'polls/editquestion'
 			. '/refModule_' . $model->refModule
 			. '/refModel_' . $model->refModel
@@ -52,7 +52,7 @@
 
 		$kapenta->page->do302($url);
 	} else {
-		$session->msg('Could not create new Question:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Question:<br/>' . $report);
 		$kapenta->page->do302('/polls/');
 	}
 

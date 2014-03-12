@@ -15,10 +15,10 @@
 //returns: html report or empty string if not authorized [string][bool]
 
 function calendar_install_module() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$report = '';				//% return value [string:html]
 
@@ -51,10 +51,10 @@ function calendar_install_module() {
 //returns: HTML installation status report or empty string if not authorized [string]
 
 function calendar_install_status_report() {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
-	if ('admin' != $user->role) { return false; }
+	if ('admin' != $kapenta->user->role) { return false; }
 
 	$report = '';												//%	return value [string:html]
 	$installNotice = '<!-- table installed correctly -->';

@@ -7,10 +7,10 @@
 //--------------------------------------------------------------------------------------------------
 
 function gallery_newgalleryform($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
-	if ($user->authHas('gallery', 'gallery_gallery', 'new') == false) { return ''; }
+	if ($kapenta->user->authHas('gallery', 'gallery_gallery', 'new') == false) { return ''; }
 	$block = $theme->loadBlock('modules/gallery/views/newgalleryform.block.php');
 	return $block;
 }

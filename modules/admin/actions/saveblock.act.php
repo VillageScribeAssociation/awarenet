@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check POST vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); } // admins only
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); } // admins only
 	if (false == array_key_exists('action', $_POST)) { $kapenta->page->do404('Action not specified.'); }
 	if ('saveBlock' != $_POST['action']) { $kapenta->page->do404('Action not supported.'); }
 	if (false == array_key_exists('module', $_POST)) { $kapenta->page->do404('Module not specified.'); }

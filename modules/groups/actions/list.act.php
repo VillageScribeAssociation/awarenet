@@ -9,9 +9,9 @@
 	//----------------------------------------------------------------------------------------------
 
 	//TODO: add school-based permission?
-	if (false == $user->authHas('groups', 'groups_group', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'show')) { $kapenta->page->do403(); }
 	
-	$schoolUID = $user->school;
+	$schoolUID = $kapenta->user->school;
 	if (true == array_key_exists('sc', $kapenta->request->args)) { $schoolUID = $kapenta->request->args['sc']; }
 
 	//----------------------------------------------------------------------------------------------

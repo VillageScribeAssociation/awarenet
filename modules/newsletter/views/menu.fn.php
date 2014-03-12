@@ -6,7 +6,7 @@
 
 function newsletter_menu($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$labels = array();			//%	block variables [string]
 	$html = '';					//%	return value [string]
@@ -26,7 +26,7 @@ function newsletter_menu($args) {
 	 . '::link=/newsletter/listcategories/'
 	 . ':]]';
 
-	if ('admin' != $user->role) {
+	if ('admin' != $kapenta->user->role) {
 		$labels['subscribers'] = '';
 		$labels['categories'] = '';
 	}

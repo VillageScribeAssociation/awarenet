@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function users_addrolenav($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 
@@ -16,7 +16,7 @@ function users_addrolenav($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and args
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('users', 'users_role', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('users', 'users_role', 'new')) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

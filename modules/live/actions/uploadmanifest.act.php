@@ -38,7 +38,7 @@
 
 	if ('' == $module) { $kapenta->page->doXmlError('Files of this type cannot be attached.'); }
 
-	if (false == $user->authHas($refModule, $refModel, $module . '-add', $refUID)) { 
+	if (false == $kapenta->user->authHas($refModule, $refModel, $module . '-add', $refUID)) { 
 		$kapenta->page->doXmlError('You are not permitted to attach files to this object.');
 	}
 

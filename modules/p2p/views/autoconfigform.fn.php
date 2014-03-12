@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 
 function p2p_autoconfigform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';
@@ -13,7 +13,7 @@ function p2p_autoconfigform($args) {
 	//---------------------------------------------------------------------------------------------
 	//	check user role and make the block
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$html = $theme->loadBlock('modules/p2p/views/autoconfigform.block.php');
 	$html = $theme->ntb($html, 'Autoconfigure', 'divAutoConfig', 'show');

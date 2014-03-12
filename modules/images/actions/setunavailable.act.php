@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('Image not specified'); }
 
 	$image = new Images_Image($_POST['UID']);
@@ -18,7 +18,7 @@
 
 	$image->transforms->loadImage();
 	if (-1 == $image->transforms->image) {
-		$session->msg('Cannot create transforms from this image.', 'bad');
+		$kapenta->session->msg('Cannot create transforms from this image.', 'bad');
 		$kapenta->page->do302('images/settings/');
 	}
 
@@ -29,8 +29,8 @@
 	$oldFiles = $kapenta->listFiles('data/images/unavailable/', '.jpg');
 	foreach($oldFiles as $oldFile) {
 		$check = $kapenta->fs->delete('data/images/unavailable/' . $oldFile);
-		if (true == $check) { $session->msg("Removed: $oldFile", 'ok'); }
-		else { $session->msg("Cannot remove: $oldFile<br/>", 'bad'); }
+		if (true == $check) { $kapenta->session->msg("Removed: $oldFile", 'ok'); }
+		else { $kapenta->session->msg("Cannot remove: $oldFile<br/>", 'bad'); }
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -42,25 +42,25 @@
 		if ((true == $check) && ('full' !== $preset['label'])) {
 			$srcFile = $image->transforms->members[$preset['label']];
 			$destFile = 'data/images/unavailable/unavailable_' . $preset['label'] . '.jpg';
-			$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
+			$kapenta->session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
 			$check = $kapenta->fs->copy($srcFile, $destFile);
-			if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
+			if (false == $check) { $kapenta->session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 		} else {
-			$session->msg("Could not create transform: " . $preset['label'] . "<br/>\n", 'bad');
+			$kapenta->session->msg("Could not create transform: " . $preset['label'] . "<br/>\n", 'bad');
 		}
 	}
 
 	$srcFile = $image->fileName;
 	$destFile = 'data/images/unavailable/unavailable.jpg';
-	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
+	$kapenta->session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
 	$check = $kapenta->fs->copy($srcFile, $destFile);
-	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
+	if (false == $check) { $kapenta->session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 
 	$srcFile = $image->fileName;
 	$destFile = 'data/images/unavailable/unavailable_full.jpg';
-	$session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
+	$kapenta->session->msg("src: $srcFile<br/>\ndest: $destFile<br/>\n");
 	$check = $kapenta->fs->copy($srcFile, $destFile);
-	if (false == $check) { $session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
+	if (false == $check) { $kapenta->session->msg("<b>Error:</b> Could not copy $srcFile", 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to image settings page

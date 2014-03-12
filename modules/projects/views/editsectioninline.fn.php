@@ -9,7 +9,7 @@
 //arg: UID - UID of a Projects_Section object [string]
 
 function projects_editsectioninline($args) {
-	global $user;
+	global $kapenta;
 	
 	$html = '';
 

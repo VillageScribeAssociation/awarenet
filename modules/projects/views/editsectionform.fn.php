@@ -12,7 +12,7 @@
 
 function projects_editsectionform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';				//%	return value [string]
@@ -24,7 +24,7 @@ function projects_editsectionform($args) {
 	if (false == array_key_exists('UID', $args)) { return '(UID not given)'; }
 	$model = new Projects_Section($args['UID']);
 	if (false == $model->loaded) { return '(unkown section)'; }
-	if (false == $user->authHas('projects', 'projects_section', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_section', 'edit', $model->UID)) { return ''; }
 	if ('yes' == $model->hidden) { return "<span class='ajaxwarn'>Removed</span>"; }
 
 	//----------------------------------------------------------------------------------------------

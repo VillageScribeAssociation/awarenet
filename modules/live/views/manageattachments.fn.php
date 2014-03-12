@@ -8,7 +8,7 @@
 //arg: refUID - UID of object which may have attachments [string]
 
 function live_manageattachments($args) {
-	global $user;	
+	global $kapenta;	
 	global $theme;
 	global $kapenta;
 	global $kapenta;
@@ -26,7 +26,7 @@ function live_manageattachments($args) {
 	$refModel = $args['refModel'];
 	$refUID = $args['refUID'];
 
-	if (false == $user->authHas($refModule, $refModel, 'edit', $refUID)) { return ''; }
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'edit', $refUID)) { return ''; }
 	
 	if (false == $kapenta->moduleExists($refModule)) { return '(no such module)'; }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { return '(no such owner object)'; }

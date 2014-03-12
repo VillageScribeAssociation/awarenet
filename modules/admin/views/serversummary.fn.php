@@ -7,7 +7,7 @@
 function admin_serversummary($args) {
 		global $kapenta;
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -16,7 +16,7 @@ function admin_serversummary($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	check PHP extensions

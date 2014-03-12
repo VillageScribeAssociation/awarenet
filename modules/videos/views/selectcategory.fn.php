@@ -7,7 +7,7 @@
 //opt: fieldname - name of HTML form field [string]
 
 function videos_selectcategory($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$default = 'user';						//%	only logged in users can watch video [string]

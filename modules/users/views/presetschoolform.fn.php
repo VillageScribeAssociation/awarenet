@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------------------
 
 function users_presetschoolform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';						//%	return value [string]
@@ -13,7 +13,7 @@ function users_presetschoolform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

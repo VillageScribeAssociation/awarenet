@@ -10,7 +10,7 @@
 function images_metadata($args) {
 	global $kapenta;
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';						//%	return value [string]
 
@@ -64,7 +64,7 @@ function images_metadata($args) {
 		$table[] = array('Size:', $sizeHtml); 
 	}
 
-	if ('admin' == $user->role) {
+	if ('admin' == $kapenta->user->role) {
 		$table[] = array('UID:', $ext['UID']);
 	}
 

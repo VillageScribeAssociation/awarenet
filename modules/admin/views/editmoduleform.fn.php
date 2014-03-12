@@ -10,7 +10,7 @@
 
 function admin_editmoduleform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$moduleName = '';					//%	name of a kapenta module [string]
 	$html = '';							//%	return value [string]
@@ -18,7 +18,7 @@ function admin_editmoduleform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('module', $args)) { $moduleName = $args['module']; }
 	if (true == array_key_exists('xmodule', $args)) { $moduleName = $args['xmodule']; }
 

@@ -9,7 +9,7 @@
 //arg: schoolUID - UID of the school this group belongs to [string]
 
 function groups_newgroupform($args) {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$html = '';					//%	return value [string]
@@ -17,7 +17,7 @@ function groups_newgroupform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('groups', 'groups_group', 'new')) { return ''; }
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'new')) { return ''; }
 	if (false == array_key_exists('schoolUID', $args)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------

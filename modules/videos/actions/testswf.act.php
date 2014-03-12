@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$testVideo = 'modules/videos/temp/aids_02 08873064-E72A-4B20-ABBC-D2534F155585.swf';
 	$testVideo = 'modules/videos/temp/456959901178324631.swf';

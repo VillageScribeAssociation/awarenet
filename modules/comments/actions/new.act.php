@@ -4,7 +4,7 @@
 //*	add a new announcements post
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->authHas('announcements', 'announcements_announcement', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }
+	if ($kapenta->user->authHas('announcements', 'announcements_announcement', 'edit', 'TODO:UIDHERE') == false) { $kapenta->page->do403(); }
 	if (array_key_exists('refmodule', $kapenta->request->args) == false) { $kapenta->page->do403(); }
 	if (array_key_exists('refuid', $kapenta->request->args) == false) { $kapenta->page->do403(); }
 

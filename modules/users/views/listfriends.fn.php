@@ -10,7 +10,7 @@
 //arg: userUID - UID of user whose profile this box is on [string]
 
 function users_listfriends($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta; 
 
 	$html = '';				//%	return value [string]
@@ -33,7 +33,7 @@ function users_listfriends($args) {
 
 	foreach($friends as $item) { 
 		$rmLink = '';
-		if ($args['userUID'] == $user->UID) {
+		if ($args['userUID'] == $kapenta->user->UID) {
 			$rmUrl = "users/editfriend/" . $item['friendUID'];
 			$rmLink = "<a href='%%serverPath%%" . $rmUrl . "'>[modify]</a>";
 		}

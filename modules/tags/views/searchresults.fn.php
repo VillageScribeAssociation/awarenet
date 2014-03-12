@@ -14,7 +14,7 @@
 //note: this is not going to scale well, a more efficient system will have to be developed
 
 function tags_searchresults($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
@@ -29,7 +29,7 @@ function tags_searchresults($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('q64', $args)) { return '(query not given)'; }
 	if (false == array_key_exists('hta', $args)) { return '(hta not given)'; }
 	if (true == array_key_exists('display', $args)) { $display = $args['display']; }

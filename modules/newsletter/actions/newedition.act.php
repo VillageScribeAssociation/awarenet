@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'newsletter_edition', 'new')) {
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_edition', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Editions.');
 	}
 
@@ -37,10 +37,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Edition<br/>', 'ok');
+		$kapenta->session->msg('Created new Edition<br/>', 'ok');
 		$kapenta->page->do302('/newsletter/editedition/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Edition:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Edition:<br/>' . $report);
 		$kapenta->page->do302('/newsletter/');
 	}
 

@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check post vars and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403('Admins only.'); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403('Admins only.'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	handle POSTs
@@ -21,8 +21,8 @@
 		if (('' != $tableName) && (true == $kapenta->db->tableExists($tableName))) {
 			$sql = "drop table $tableName";
 			$check = $kapenta->db->query($sql);
-			if (false == $check) { $session->msg("Could not delete $tableName", 'bad'); }
-			else { $session->msg("Removed: $tableName", 'ok'); }
+			if (false == $check) { $kapenta->session->msg("Could not delete $tableName", 'bad'); }
+			else { $kapenta->session->msg("Removed: $tableName", 'ok'); }
 		}
 	}
 

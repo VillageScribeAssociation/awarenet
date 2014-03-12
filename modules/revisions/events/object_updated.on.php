@@ -26,7 +26,7 @@
 
 function revisions__cb_object_updated($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $session;
 
@@ -135,10 +135,10 @@ function revisions__cb_object_updated($args) {
 	$report = $model->save();
 
 	if ('' != $report) {
-		$session->msgAdmin("Could not save revision:<br/>\n" . $report, 'bad');
+		$kapenta->session->msgAdmin("Could not save revision:<br/>\n" . $report, 'bad');
 		return false;
 	} else {
-		$session->msgAdmin("Revision created.", 'ok');
+		$kapenta->session->msgAdmin("Revision created.", 'ok');
 	}
 
 	return true;

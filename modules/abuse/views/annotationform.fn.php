@@ -6,7 +6,7 @@
 //arg: UID - UID of an Abuse_Report object [string]
 
 function abuse_annotationform($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -15,7 +15,7 @@ function abuse_annotationform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('UID', $args)) { return ''; }
 
 	$model = new Abuse_Report($args['UID']);

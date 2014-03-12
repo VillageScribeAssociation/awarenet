@@ -10,7 +10,7 @@
 
 function images_minigal($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $kapenta;
 
 

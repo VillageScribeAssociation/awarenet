@@ -6,7 +6,7 @@
 //arg: userUID - user context this request was made in - only shown on own page [string]
 
 function users_friendsearchbox($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	
 	$html = '';							//%	rreturn value [string]
@@ -14,12 +14,12 @@ function users_friendsearchbox($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	if (false == array_key_exists('userUID', $args)) { return '(missing user context)'; }
 
 	$userUID = $args['userUID'];
-	if ($userUID != $user->UID) { return ''; }
+	if ($userUID != $kapenta->user->UID) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	make the block

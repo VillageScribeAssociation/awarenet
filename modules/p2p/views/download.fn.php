@@ -8,13 +8,13 @@
 //arg: path - path of file to be downloaded [string]
 
 function p2p_download($args) {
-	global $user;
+	global $kapenta;
 	$html = '';							//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	$klf = new KLargeFile($args['path']);
 	if (false == $klf->loaded) { return '(unknown download)'; }

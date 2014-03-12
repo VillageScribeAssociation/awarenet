@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404(); }
 	$UID = $aliases->findRedirect('projects_project');
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $UID)) 
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $UID)) 
 		{ $kapenta->page->do403('You are not authorized to edit this project.'); }
 
 	//----------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('code', 'code_package', 'new')) {
+	if (false == $kapenta->user->authHas('code', 'code_package', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Packages.');
 	}
 
@@ -32,10 +32,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Package<br/>', 'ok');
+		$kapenta->session->msg('Created new Package<br/>', 'ok');
 		$kapenta->page->do302('/code/editpackage/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Package:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Package:<br/>' . $report);
 		$kapenta->page->do302('/code/');
 	}
 

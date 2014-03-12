@@ -63,9 +63,9 @@
 			break;
 	}
 
-	if (false == $user->authHas($refModule, $refModel, 'images-add', $refUID)) { 
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'images-add', $refUID)) { 
 		if ('xml' == $return) { $kapenta->page->doXmlError('Not authorized.'); }
-		$session->msg('You are not authorised to add images to this item.', 'bad');
+		$kapenta->session->msg('You are not authorised to add images to this item.', 'bad');
 		$kapenta->page->do302($returnUrl);
 	}
 
@@ -82,7 +82,7 @@
 
 	if (false == $raw) { 
 		if ('xml' == $return) { $kapenta->page->doXmlError('Video could not be downloaded.'); }
-		$session->msg('Video could not be downloaded, check the URL?', 'bad'); 
+		$kapenta->session->msg('Video could not be downloaded, check the URL?', 'bad'); 
 		$kapenta->page->do302($returnUrl);
 	}
 
@@ -92,7 +92,7 @@
 	$img = @imagecreatefromstring($raw); 
 	if (false == $img) {
 		if ('xml' == $return) { $kapenta->page->doXmlError('Could not validate image.'); }
-		$session->msg('Could not validate image.', 'bad'); 
+		$kapenta->session->msg('Could not validate image.', 'bad'); 
 		$kapenta->page->do302($returnUrl);
 	}
 	
@@ -120,8 +120,8 @@
 	//NOTE: weight is set by $model->save()
 	$ext = $model->extArray();
 	$report = $model->save();
-	if ('' == $report) { $session->msg('Downloaded image: ' . $URL, 'ok'); }
-	else { $session->msg('Could not save image: ' . $URL, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Downloaded image: ' . $URL, 'ok'); }
+	else { $kapenta->session->msg('Could not save image: ' . $URL, 'bad'); }
 
 	//------------------------------------------------------------------------------------------
 	//	send 'videos_added' event to all modules

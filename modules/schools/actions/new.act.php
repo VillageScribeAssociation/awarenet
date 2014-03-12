@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('schools', 'schools_school', 'new')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'new')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the school and redirect to edit form

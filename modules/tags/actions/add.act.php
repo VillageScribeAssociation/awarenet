@@ -38,13 +38,13 @@
 	if (false == $kapenta->moduleExists($refModule)) { $kapenta->page->do404('No such module.', true); }
 	if (false == $kapenta->db->objectExists($refModel, $refUID)) { $kapenta->page->do404('No such owner.', true); }
 
-	if (false == $user->authHas($refModule, $refModel, 'tags-manage', $refUID))
+	if (false == $kapenta->user->authHas($refModule, $refModel, 'tags-manage', $refUID))
 		{ $kapenta->page->do403('Not authorized to edit tags.', true); }
 	
 	$return = "tags/edittags/refModule_$refModule/refModel_$refModel/refUID_$refUID/";
 
 	if ('' == trim($tagName)) {
-		$session->msg("No tag given.", 'bad');
+		$kapenta->session->msg("No tag given.", 'bad');
 		$kapenta->page->do302($return);
 	}
 
@@ -58,9 +58,9 @@
 	if (false == $tag->loaded) {
 		$tag->name = $tagName;
 		$report = $tag->save();
-		if ('' == $report) { $session->msg('Started new tag: ' . $tagName); }
+		if ('' == $report) { $kapenta->session->msg('Started new tag: ' . $tagName); }
 		else {
-			$session->msg("Could not create tag: " . $report, 'bad');
+			$kapenta->session->msg("Could not create tag: " . $report, 'bad');
 			$kapenta->page->do302($return);
 		}
 	}
@@ -72,7 +72,7 @@
 	$model = new Tags_Index();
 	$tagUID = $model->getTagIndexUID($refModule, $refModel, $refUID, $tag->UID);
 	if (false != $tagUID) {
-		$session->msg("Tag already added: " . $tagName, 'info');
+		$kapenta->session->msg("Tag already added: " . $tagName, 'info');
 		$kapenta->page->do302($return);
 	}
 
@@ -85,8 +85,8 @@
 	$model->tagUID = $tag->UID;
 	$report = $model->save();
 
-	if ('' == $report) { $session->msg("Added tag: " . $tagName, 'ok'); }
-	else { $session->msg("Could not add tag:<br/>\n" . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg("Added tag: " . $tagName, 'ok'); }
+	else { $kapenta->session->msg("Could not add tag:<br/>\n" . $report, 'bad'); }
 
 	$tag->updateObjectCount();
 	$tag->save();

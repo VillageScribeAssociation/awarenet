@@ -12,7 +12,7 @@
 
 function lessons_listattachmentsnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 

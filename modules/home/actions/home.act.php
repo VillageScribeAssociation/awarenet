@@ -10,7 +10,7 @@
 	//if ('' == $kapenta->request->ref) { $kapenta->request->ref = 'frontpage'; }		// fallback - previous default
 	//include $kapenta->installPath . 'modules/home/actions/show.act.php';
 
-	if ('public' == $user->role) {
+	if ('public' == $kapenta->user->role) {
 		$kapenta->page->load('modules/home/actions/home.page.php');
 		$kapenta->page->render();
 	} else {

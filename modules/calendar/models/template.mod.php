@@ -200,7 +200,7 @@ class Calendar_Template {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -212,18 +212,18 @@ class Calendar_Template {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('calendar', 'calendar_template', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_template', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%calendar/showtemplate/' . $ext['alias'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('calendar', 'calendar_template', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_template', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%calendar/edittemplate/' . $ext['alias'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 			$ext['nameLink'] = "<a href='" . $ext['editUrl'] . "'>" . $ext['title'] . "</a>";
 		}
 
-		if (true == $user->authHas('calendar', 'calendar_template', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('calendar', 'calendar_template', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%calendar/deltemplate/' . $ext['alias'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

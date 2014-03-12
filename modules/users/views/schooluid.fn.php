@@ -11,7 +11,7 @@
 
 function users_schooluid($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $theme;
 
 	$uid = '';												//% return value [string]

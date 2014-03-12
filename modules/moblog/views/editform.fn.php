@@ -10,7 +10,7 @@
 
 function moblog_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 		global $utils;
 
 	$html = '';				//%	return value [string]
@@ -21,7 +21,7 @@ function moblog_editform($args) {
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 	$model = new Moblog_Post($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('moblog', 'moblog_post', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'edit', $model->UID)) { return ''; }
 
 	if (('' == $model->content) && ('no' == $model->published)) {
 		$model->published = 'yes';

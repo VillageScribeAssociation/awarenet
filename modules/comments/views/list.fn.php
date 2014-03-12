@@ -14,7 +14,7 @@
 function comments_list($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -42,9 +42,9 @@ function comments_list($args) {
 
 	$auth = false;
 	// blanket permissions on comments
-	if (true == $user->authHas('comments', 'comment_comment', 'show')) { $auth = true; }
+	if (true == $kapenta->user->authHas('comments', 'comment_comment', 'show')) { $auth = true; }
 	// permission granted by reference module
-	if (true == $user->authHas($refModule, $refModel, 'comments-show', $refUID)) { $auth = true; }
+	if (true == $kapenta->user->authHas($refModule, $refModel, 'comments-show', $refUID)) { $auth = true; }
 	
 	if (false == $auth) { return ''; }
 

@@ -4,7 +4,7 @@
 //*	temporary action to test BZIP
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$fileName = 'data/test.bz';
 

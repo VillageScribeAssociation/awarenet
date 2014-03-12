@@ -9,13 +9,13 @@
 
 function users__cb_friendship_created($args) {
 	global $notifications;
-	global $user;
+	global $kapenta;
 	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return false; }
+	if ('public' == $kapenta->user->role) { return false; }
 
 	if (false == array_key_exists('userUID', $args)) { return false; }
 	if (false == array_key_exists('friendUID', $args)) { return false; }

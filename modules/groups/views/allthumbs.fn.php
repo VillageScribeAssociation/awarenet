@@ -10,7 +10,7 @@
 
 function groups_allthumbs($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $aliases;
 
 	$html = '';					//%	return value [string]
@@ -18,7 +18,7 @@ function groups_allthumbs($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { return ''; }
+	if ('public' == $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load images from the database

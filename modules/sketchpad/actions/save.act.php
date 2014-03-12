@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('public' == $user->role) { $kapenta->page->do403(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('img64', $_POST)) { $kapenta->page->doXmlError('Could not save image.'); }
 	if (false == array_key_exists('title64', $_POST)) { $kapenta->page->doXmlError('Could not save image.'); }
@@ -22,25 +22,25 @@
 
 	$model = new Gallery_Gallery();
 
-	if ('' == $user->get('sketchpad.gallery')) {
+	if ('' == $kapenta->user->get('sketchpad.gallery')) {
 
-		$ownerNameBlock = '[[:users::name::userUID=' . $user->UID . ':]]';
-		$schoolNameBlock = '[[:schools::name::schoolUID=' . $user->school . ':]]';
+		$ownerNameBlock = '[[:users::name::userUID=' . $kapenta->user->UID . ':]]';
+		$schoolNameBlock = '[[:schools::name::schoolUID=' . $kapenta->user->school . ':]]';
 
 		$model->title = 'My Sketches';
 		$model->description = "Images I&quot;ve scribbled on.";
 		$model->imagecount = 0;
 		$model->ownerName = $theme->expandBlocks($ownerNameBlock);
-		$model->schoolUID = $user->school;
+		$model->schoolUID = $kapenta->user->school;
 		$model->schoolName = $theme->expandBlocks($schoolNameBlock);
 
 		$report = $model->save();
 		if ('' != $report) { $kapenta->page->doXmlError($report); }
 
-		$user->set('sketchpad.gallery', $model->UID);
+		$kapenta->user->set('sketchpad.gallery', $model->UID);
 	}
 	
-	$model->load($user->get('sketchpad.gallery'));
+	$model->load($kapenta->user->get('sketchpad.gallery'));
 	if (false == $model->loaded) { $kapenta->page->doXmlError('Could not find gallery.'); }
 
 	//----------------------------------------------------------------------------------------------

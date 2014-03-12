@@ -8,9 +8,9 @@
 //args: UID - UID of a Lessons_Course object [string]
 
 function lessons_videosummary($args) {
-	global $session;
+	global $kapenta;
 
-	$profile = $session->get('deviceprofile');	//% [string]
+	$profile = $kapenta->session->get('deviceprofile');	//% [string]
 	$html = '';									//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

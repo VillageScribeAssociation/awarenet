@@ -12,7 +12,7 @@
 //opt: label - label of navtitlebox [string]
 
 function projects_historynav($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 
@@ -32,7 +32,7 @@ function projects_historynav($args) {
 
 	$model = new Projects_Project($args['UID']);
 	if (false == $model->loaded) { return '(no such article)'; }
-	if (false == $user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'show', $model->UID)) { return ''; }
 	//TODO: more permission options
 
 	if ($num < 1) { $num = 1; }

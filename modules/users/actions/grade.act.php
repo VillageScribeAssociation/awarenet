@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and permissions
 	//----------------------------------------------------------------------------------------------
-	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $user->UID; }
+	if ('' == $kapenta->request->ref) { $kapenta->request->ref = $kapenta->user->UID; }
 	
 	$model = new Users_User($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404(); }

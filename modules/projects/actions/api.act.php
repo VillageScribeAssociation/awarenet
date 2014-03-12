@@ -6,7 +6,7 @@
 //*	API of projects module. No public actions.
 //--------------------------------------------------------------------------------------------------
 
-	if ($user->role == 'public') { $kapenta->page->doXmlError('not logged in'); }
+	if ($kapenta->user->role == 'public') { $kapenta->page->doXmlError('not logged in'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	list objects owned by the current user
@@ -16,7 +16,7 @@
 	if ($kapenta->request->ref == 'myrecords') {
 
 		$conditions = array();
-		$conditions = "userUID='" . $kapenta->db->addMarkup($user->UID) . "'";
+		$conditions = "userUID='" . $kapenta->db->addMarkup($kapenta->user->UID) . "'";
 		$conditions = "(role='member' OR role='admin')";
 		$range = $kapenta->db->loadRange('projects_membership', '*', $conditions);
 

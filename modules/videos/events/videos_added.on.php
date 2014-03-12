@@ -13,7 +13,7 @@ require_once($kapenta->installPath . 'modules/videos/models/gallery.mod.php');
 
 function videos__cb_videos_added($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $notifications;	
 
 	if (false == array_key_exists('refModule', $args)) { return false; }
@@ -38,7 +38,7 @@ function videos__cb_videos_added($args) {
 	//	create notification
 	//----------------------------------------------------------------------------------------------
 	$ext = $model->extArray();
-	$title = $user->getName() . ' added a new video to collection: ' . $model->title;
+	$title = $kapenta->user->getName() . ' added a new video to collection: ' . $model->title;
 	$url = $ext['viewUrl'];
 
 	$content = "[[:videos::player::videoUID=" . $args['videoUID'] . ":]]<br/>"
@@ -58,7 +58,7 @@ function videos__cb_videos_added($args) {
 	//	add project members, admins and user's friends
 	//----------------------------------------------------------------------------------------------
 	$notifications->addAdmins($nUID);
-	$notifications->addFriends($nUID, $user->UID);
+	$notifications->addFriends($nUID, $kapenta->user->UID);
 
 	return true;
 }

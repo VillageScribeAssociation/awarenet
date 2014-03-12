@@ -11,7 +11,7 @@
 
 function projects_requestsjoinnav($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 
 	$html = '';					//%	return value [string]
@@ -25,7 +25,7 @@ function projects_requestsjoinnav($args) {
 	$model = new Projects_Project($args['raUID']);	
 	if (false == $model->loaded) { return ''; }
 
-	if (false == $user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'editmembers', $model->UID)) {
 		return ''; 
 	}
 

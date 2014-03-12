@@ -14,14 +14,14 @@
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('School not specified (UID)'); }
  
 	$model = new Schools_School($_POST['UID']);
-	if (false == $user->authHas('schools', 'schools_school', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('schools', 'schools_school', 'edit', $model->UID))
 		{ $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	delete and redirect back to list of schools
 	//----------------------------------------------------------------------------------------------
 	$model->delete();		
-	$session->msg("Deleted school: " . $model->name);
+	$kapenta->session->msg("Deleted school: " . $model->name);
 	$kapenta->page->do302('schools/');
 	  
 ?>

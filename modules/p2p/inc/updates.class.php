@@ -73,7 +73,7 @@ class P2P_Updates {
 		$files = array();					//%	return value [array]
 
 		if (('' == $this->bufferDir) || (false == $kapenta->fs->exists($this->bufferDir))) {
-			$session->msgAdmin('P2P output directory does not exist', 'bad');
+			$kapenta->session->msgAdmin('P2P output directory does not exist', 'bad');
 			return $files;
 		}
 

@@ -9,7 +9,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('groups', 'groups_group', 'new')) {
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Groups.');
 	}
 
@@ -33,10 +33,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Group: ' . $model->name . '<br/>', 'ok');
+		$kapenta->session->msg('Created new Group: ' . $model->name . '<br/>', 'ok');
 		$kapenta->page->do302('groups/edit/' . $model->alias);
 	} else {
-		$session->msg('Could not create new Group:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Group:<br/>' . $report);
 		$kapenta->page->do302('groups/');
 	}
 

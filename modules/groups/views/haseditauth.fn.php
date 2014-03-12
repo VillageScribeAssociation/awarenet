@@ -9,11 +9,11 @@
 //arg: raUID - group UID or recordAlias [string]
 
 function groups_haseditauth($args) {
-	global $user;
-	if ('admin' == $user->role) { return 'yes'; }
+	global $kapenta;
+	if ('admin' == $kapenta->user->role) { return 'yes'; }
 	if (array_key_exists('raUID', $args) == false) { return false; }
 	$model = new Groups_Group($args['raUID']);
-	if ($model->hasEditAuth($user->UID) == true) { return 'yes'; }
+	if ($model->hasEditAuth($kapenta->user->UID) == true) { return 'yes'; }
 	return 'no';
 }
 

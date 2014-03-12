@@ -175,7 +175,7 @@ class P2P_Deleted {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -186,17 +186,17 @@ class P2P_Deleted {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('p2p', 'p2p_deleted', 'show', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('p2p', 'p2p_deleted', 'show', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%p2p/showdeleted/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;gt; ]</a>";
 		}
 
-		if (true == $user->authHas('p2p', 'p2p_deleted', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('p2p', 'p2p_deleted', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%p2p/editdeleted/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[ edit ]</a>";
 		}
 
-		if (true == $user->authHas('p2p', 'p2p_deleted', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('p2p', 'p2p_deleted', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%p2p/deldeleted/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[ delete ]</a>";
 		}

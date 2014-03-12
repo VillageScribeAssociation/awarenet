@@ -8,7 +8,7 @@
 function p2p_stats($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 
@@ -19,7 +19,7 @@ function p2p_stats($args) {
 	//	check user role and any arguments
 	//----------------------------------------------------------------------------------------------
 	if (false == array_key_exists('peerUID', $args)) { return '(peerUID not given)'; }
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//TODO: check and sanitize peer UID
 

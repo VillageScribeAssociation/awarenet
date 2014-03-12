@@ -13,7 +13,7 @@ require_once($kapenta->installPath . 'modules/gallery/models/gallery.mod.php');
 function gallery__cb_images_added($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $notifications;
 	global $theme;
 
@@ -64,7 +64,7 @@ function gallery__cb_images_added($args) {
 		$ext = $model->extArray();
 		$url = $ext['viewUrl'];
 		$link = "<a href='" . $url . "'>" . $model->title . "</a>";
-		$title = $user->getName() . ' added a new image.';
+		$title = $kapenta->user->getName() . ' added a new image.';
 		$refUID = $model->UID;
 		$content = "<a href='%%serverPath%%gallery/image/" . $args['imageUID'] . "'>"
 			 . "[[:images::show"
@@ -79,10 +79,10 @@ function gallery__cb_images_added($args) {
 			'gallery', 'gallery_gallery', $refUID, 'images_added', $title, $content, $url
 		);
 
-		$notifications->addUser($nUID, $user->UID);
-		$notifications->addFriends($nUID, $user->UID);
-		//$notifications->addFriends($nUID, $user->UID);
-		$notifications->addSchoolGrade($nUID, $user->school, $user->grade);
+		$notifications->addUser($nUID, $kapenta->user->UID);
+		$notifications->addFriends($nUID, $kapenta->user->UID);
+		//$notifications->addFriends($nUID, $kapenta->user->UID);
+		$notifications->addSchoolGrade($nUID, $kapenta->user->school, $kapenta->user->grade);
 	}
 
 	//----------------------------------------------------------------------------------------------

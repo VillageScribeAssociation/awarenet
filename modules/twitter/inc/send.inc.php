@@ -59,7 +59,7 @@ function twitter_send($message) {
 
 		// Post our new "hello world" status
 		$response = $oauth->post('statuses/update', array('status' => $message));
-		if (true == is_array($message)) { $session->msgAdmin(implode($response)); }
+		if (true == is_array($message)) { $kapenta->session->msgAdmin(implode($response)); }
 		$report .= "Sending tweet: " . $message . "<br/>\n";
 		$report .= "<ok/>\n";
 

@@ -4,7 +4,7 @@
 //*	list all boards, grouped by school
 //--------------------------------------------------------------------------------------------------
 
-	if (false == $user->authHas('forums', 'forums_board', 'show')) { $kapenta->page->do403(); }
+	if (false == $kapenta->user->authHas('forums', 'forums_board', 'show')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	render the page

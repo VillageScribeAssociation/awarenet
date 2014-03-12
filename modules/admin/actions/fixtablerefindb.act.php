@@ -7,7 +7,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	admins only
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	echo "<html><body><h1>Fixing database table references " . $kapenta->db->datetime() . "</h1><small><pre>\n";
 

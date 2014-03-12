@@ -6,7 +6,7 @@
 //*	list lesson packages installed on this server
 //--------------------------------------------------------------------------------------------------
 
-	if ('public' == $user->role) { $kapenta->page->do404(); }
+	if ('public' == $kapenta->user->role) { $kapenta->page->do404(); }
 
 	$xgroup = 'videolessons';
 

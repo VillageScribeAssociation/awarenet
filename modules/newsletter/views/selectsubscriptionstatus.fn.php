@@ -6,14 +6,14 @@
 //opt: status - current status [string]
 
 function newsletter_selectsubscriptionstatus($args) {
-	global $user;
+	global $kapenta;
 
 	$html = '';
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the form element

@@ -10,7 +10,7 @@
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do404(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do404(); }
 
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given', true); }
 

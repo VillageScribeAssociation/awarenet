@@ -13,7 +13,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if (false == array_key_exists('role', $kapenta->request->args)) { $kapenta->page->do404('Role not given.'); }
 	if (false == array_key_exists('module', $kapenta->request->args)) { $kapenta->page->do404('Module not given.'); }
@@ -32,12 +32,12 @@
 	//----------------------------------------------------------------------------------------------
 
 	$check = $role->permissions->remove($module, $model, $permission);
-	if (true == $check) { $session->msg('Permission revoked.', 'ok'); }
-	else { $session->msg('Cound not revoke permission, not found.', 'bad'); }
+	if (true == $check) { $kapenta->session->msg('Permission revoked.', 'ok'); }
+	else { $kapenta->session->msg('Cound not revoke permission, not found.', 'bad'); }
 
 	$report = $role->save();
-	if ('' == $report) { $session->msg('Updated user role.', 'ok'); }
-	else { $session->msg('Could not update user role:<br/>' . $report, 'bad'); }
+	if ('' == $report) { $kapenta->session->msg('Updated user role.', 'ok'); }
+	else { $kapenta->session->msg('Could not update user role:<br/>' . $report, 'bad'); }
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to admin console for this module

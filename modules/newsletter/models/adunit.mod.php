@@ -184,7 +184,7 @@ class Newsletter_Adunit {
 	//returns: associative array of members, metadata and partial views [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		$ext = $this->toArray();
 
 		$ext['viewUrl'] = '';	$ext['viewLink'] = '';
@@ -195,17 +195,17 @@ class Newsletter_Adunit {
 		//------------------------------------------------------------------------------------------
 		//	links
 		//------------------------------------------------------------------------------------------
-		if (true == $user->authHas('newsletter', 'newsletter_adunit', 'view', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'view', $ext['UID'])) {
 			$ext['viewUrl'] = '%%serverPath%%newsletter/showadunit/' . $ext['UID'];
 			$ext['viewLink'] = "<a href='" . $ext['viewUrl'] . "'>[ more &gt;&gt; ]</a>";
 		}
 
-		if (true == $user->authHas('newsletter', 'newsletter_adunit', 'edit', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'edit', $ext['UID'])) {
 			$ext['editUrl'] = '%%serverPath%%newsletter/editadunit/' . $ext['UID'];
 			$ext['editLink'] = "<a href='" . $ext['editUrl'] . "'>[edit]</a>";
 		}
 
-		if (true == $user->authHas('newsletter', 'newsletter_adunit', 'delete', $ext['UID'])) {
+		if (true == $kapenta->user->authHas('newsletter', 'newsletter_adunit', 'delete', $ext['UID'])) {
 			$ext['delUrl'] = '%%serverPath%%newsletter/removeadunit/' . $ext['UID'];
 			$ext['delLink'] = "<a href='" . $ext['delUrl'] . "'>[remove]</a>";
 		}

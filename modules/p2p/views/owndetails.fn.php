@@ -6,14 +6,14 @@
 //: note - only admins can see this
 
 function p2p_owndetails($args) {
-	global $user;
+	global $kapenta;
 	global $kapenta;
 	global $theme;
 
 	//---------------------------------------------------------------------------------------------
 	//	check user role
 	//---------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//---------------------------------------------------------------------------------------------
 	//	make the block

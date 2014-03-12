@@ -10,7 +10,7 @@
 
 function admin_WebShell_modules($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 		global $theme;
 
@@ -34,7 +34,7 @@ function admin_WebShell_modules($args) {
 		}
 	}
 
-	if ('admin' != $user->role) { $mode = 'noauth'; }
+	if ('admin' != $kapenta->user->role) { $mode = 'noauth'; }
 
 	//----------------------------------------------------------------------------------------------
 	//	execute

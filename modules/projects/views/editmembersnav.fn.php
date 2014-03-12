@@ -10,7 +10,7 @@
 //opt: projectUID - overrides raUID [string]
 
 function projects_editmembersnav($args) {
-	global $user;
+	global $kapenta;
 	$html = '';		//% return value [string]
 
 	//----------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ function projects_editmembersnav($args) {
 
 	$model = new Projects_Project($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('projects', 'projects_project', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

@@ -193,7 +193,7 @@ class Groups_Group {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -210,22 +210,22 @@ class Groups_Group {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('groups', 'groups_group', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%groups/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%groups/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%groups/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('groups', 'groups_group', 'new', $this->UID)) { 
+		if (true == $kapenta->user->authHas('groups', 'groups_group', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%groups/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new group]</a>"; 
 		}
@@ -334,7 +334,7 @@ class Groups_Group {
 	function hasEditAuth($userUID) {
 		global $session;
 		//TODO: user permission set
-		//$session->msgAdmin('deprecated: groups_group::authHas() => users_user::authHas()', 'bug');
+		//$kapenta->session->msgAdmin('deprecated: groups_group::authHas() => users_user::authHas()', 'bug');
 		$model = new Users_User($userUID);
 		if ($model->role == 'admin') { return true; }
 		if ($model->role == 'teacher') { return true; }

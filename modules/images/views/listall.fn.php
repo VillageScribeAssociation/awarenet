@@ -9,7 +9,7 @@
 //opt: num - number of images per page (default is 30) [string]
 
 function images_listall($args) {
-		global $user;
+		global $kapenta;
 		global $kapenta;
 		global $theme;
 		global $kapenta;
@@ -22,7 +22,7 @@ function images_listall($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('images', 'images_image', 'show')) { return false; }
+	if (false == $kapenta->user->authHas('images', 'images_image', 'show')) { return false; }
 
 	if (array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (array_key_exists('page', $args)) { 

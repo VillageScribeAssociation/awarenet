@@ -9,7 +9,7 @@
 
 function p2p_listdownloads($args) {
 	global $kapenta;
-	global $user;
+	global $kapenta;
 
 	$html = '';							//%	return value [string]
 	$count = 0;							//%	number of active downloads [int]
@@ -17,7 +17,7 @@ function p2p_listdownloads($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	list downloads in progress

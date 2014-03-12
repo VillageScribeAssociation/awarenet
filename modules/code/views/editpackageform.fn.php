@@ -10,7 +10,7 @@
 //opt: packageUID - UID of a Code_Package object, overrides raUID [string]
 
 function code_editpackageform($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $utils;
 
@@ -28,7 +28,7 @@ function code_editpackageform($args) {
 	$model = new Code_Package($raUID);	//% the object we're editing [object:Code_Package]
 
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('code', 'code_package', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('code', 'code_package', 'edit', $model->UID)) { return ''; }
 
 	//----------------------------------------------------------------------------------------------
 	//	load the block

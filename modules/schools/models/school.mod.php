@@ -196,7 +196,7 @@ class Schools_School {
 	//returns: extended array of member variables and metadata [array]
 
 	function extArray() {
-		global $user;
+		global $kapenta;
 		global $theme;
 
 		$ary = $this->toArray();
@@ -210,22 +210,22 @@ class Schools_School {
 		//	links
 		//------------------------------------------------------------------------------------------
 
-		if (true == $user->authHas('schools', 'schools_school', 'show', $this->UID)) { 
+		if (true == $kapenta->user->authHas('schools', 'schools_school', 'show', $this->UID)) { 
 			$ary['viewUrl'] = '%%serverPath%%schools/' . $this->alias;
 			$ary['viewLink'] = "<a href='" . $ary['viewUrl'] . "'>[read on &gt;&gt;]</a>"; 
 		}
 
-		if (true == $user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
 			$ary['editUrl'] =  '%%serverPath%%schools/edit/' . $this->alias;
 			$ary['editLink'] = "<a href='" . $ary['editUrl'] . "'>[edit]</a>"; 
 		}
 
-		if (true == $user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
+		if (true == $kapenta->user->authHas('schools', 'schools_school', 'edit', $this->UID)) {
 			$ary['delUrl'] =  '%%serverPath%%schools/confirmdelete/UID_' . $this->UID . '/';
 			$ary['delLink'] = "<a href='" . $ary['delUrl'] . "'>[delete]</a>"; 
 		}
 		
-		if (true == $user->authHas('schools', 'schools_school', 'new', $this->UID)) { 
+		if (true == $kapenta->user->authHas('schools', 'schools_school', 'new', $this->UID)) { 
 			$ary['newUrl'] = "%%serverPath%%schools/new/"; 
 			$ary['newLink'] = "<a href='" . $ary['newUrl'] . "'>[add new school]</a>"; 
 		}

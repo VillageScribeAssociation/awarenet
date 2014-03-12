@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	authentication (disallow public access)
 	//----------------------------------------------------------------------------------------------
-	if (($user->role == 'public') || ($user->role == 'banned')) { $kapenta->page->do403(); }
+	if (($kapenta->user->role == 'public') || ($kapenta->user->role == 'banned')) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	show calendar events for given period

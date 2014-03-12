@@ -12,7 +12,7 @@
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
 
-	if ('admin' != $user->role) { $kapenta->page->do403("Not authorized", true); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403("Not authorized", true); }
 	if (false == array_key_exists('UID', $_POST)) { $kapenta->page->do404('UID not given', true); }
 
 	$model = new Newsletter_Category($_POST['UID']);

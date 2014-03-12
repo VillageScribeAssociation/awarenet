@@ -9,7 +9,7 @@
 //opt: title - title of submission window [string]
 
 function abuse_reportlink($args) {
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	global $kapenta;
@@ -20,7 +20,7 @@ function abuse_reportlink($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (('public' == $user->role) || ('banned' == $user->role)) { return ''; }
+	if (('public' == $kapenta->user->role) || ('banned' == $kapenta->user->role)) { return ''; }
 	if (false == array_key_exists('refModule', $args)) { return '(no module)'; }
 	if (false == array_key_exists('refModel', $args)) { return '(no model)'; }
 	if (false == array_key_exists('refUID', $args)) { return '(no UID)'; }

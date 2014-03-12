@@ -13,7 +13,7 @@
 
 	$model = new Groups_Group($UID);
 	if (false == $model->loaded) { $kapenta->page->do404('Could not load group.'); }
-	if (false == $user->authHas('groups', 'groups_group', 'edit', $model->UID))
+	if (false == $kapenta->user->authHas('groups', 'groups_group', 'edit', $model->UID))
 		{ $kapenta->page->do403('You cannot edit this group.'); }
 
 	//----------------------------------------------------------------------------------------------

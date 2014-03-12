@@ -12,7 +12,7 @@ function home_list($args) {
 		global $kapenta;
 		global $kapenta;
 		global $theme;
-		global $user;
+		global $kapenta;
 
 	$num = 300;							//%	number of items per page [int]
 	$pageNo = 1;							//%	page number starts at 1 [int]
@@ -22,7 +22,7 @@ function home_list($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('home', 'home_static', 'show', '')) { return ''; }
+	if (false == $kapenta->user->authHas('home', 'home_static', 'show', '')) { return ''; }
 	if (true == array_key_exists('num', $args)) { $num = (int)$args['num']; }
 	if (true == array_key_exists('page', $args)) { 
 		$pageNo = (int)$args['page']; 
@@ -36,7 +36,7 @@ function home_list($args) {
 	
 	//TODO: use $theme->arrayToHtmlTable();
 	$html = "<table noborder>\n";
-	if ($user->authHas('home', 'home_static', 'edit')) {
+	if ($kapenta->user->authHas('home', 'home_static', 'edit')) {
 		$html .= "<tr><td class='title'>UID</td><td class='title'>Page</td></tr>";
 	} else {
 		$html .= "<tr><td class='title'>UID</td><td class='title'>Page</td>" 

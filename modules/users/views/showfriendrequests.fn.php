@@ -10,7 +10,7 @@
 
 function users_showfriendrequests($args) {
 	global $theme;
-	global $user; 
+	global $kapenta; 
 
 	$html = '';				//%	return value [string]
 
@@ -20,9 +20,9 @@ function users_showfriendrequests($args) {
 	if (false == array_key_exists('userUID', $args)) { return ''; }
 
 	// admins can see everyones friend requests
-	if (($args['userUID'] != $user->UID) && ('admin' != $user->role)) { return ''; }
+	if (($args['userUID'] != $kapenta->user->UID) && ('admin' != $kapenta->user->role)) { return ''; }
 
-	$set = new Users_Friendships($user->UID);
+	$set = new Users_Friendships($kapenta->user->UID);
 
 	//----------------------------------------------------------------------------------------------
 	// make the list

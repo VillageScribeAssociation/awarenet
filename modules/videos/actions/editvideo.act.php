@@ -14,7 +14,7 @@
 	$model = new Videos_Video($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Video not found.'); }
 	//if ('' == $model->fileName) { $kapenta->page->do404(); }
-	if (false == $user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID))
+	if (false == $kapenta->user->authHas($model->refModule, $model->refModel, 'videos-edit', $model->refUID))
 		{ $kapenta->page->do403('You are not authorized to edit this video.'); }
 	
 	//TODO: add more auth options here

@@ -8,7 +8,7 @@
 
 function live_WebShell_block($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $shell;
 		global $theme;
 

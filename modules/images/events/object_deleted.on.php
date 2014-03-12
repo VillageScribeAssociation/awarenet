@@ -10,13 +10,13 @@ require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
 
 function images__cb_object_deleted($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $session;
 
 	if (false == array_key_exists('module', $args)) { return false; }
 	if (false == array_key_exists('UID', $args)) { return false; }
 
-	//$session->msgAdmin("Deleting images belonging to " . $args['module'] . " " . $args['UID']);
+	//$kapenta->session->msgAdmin("Deleting images belonging to " . $args['module'] . " " . $args['UID']);
 
 	//----------------------------------------------------------------------------------------------
 	//	delete any images owned by this record

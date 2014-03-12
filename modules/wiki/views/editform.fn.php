@@ -10,14 +10,14 @@
 
 function wiki_editform($args) {
 		global $theme;
-		global $user;
+		global $kapenta;
 
 
 	if (false == array_key_exists('raUID', $args)) { return ''; }
 
 	$model = new Wiki_Article($args['raUID']);
 	if (false == $model->loaded) { return ''; }
-	if (false == $user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { return ''; }
+	if (false == $kapenta->user->authHas('wiki', 'wiki_article', 'edit', $model->UID)) { return ''; }
 
 	$block = $theme->loadBlock('modules/wiki/views/editform.block.php');
 	$html = $theme->replaceLabels($model->extArray(), $block);

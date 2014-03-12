@@ -25,7 +25,7 @@ function images_show($args) {
 	$size = 'widthnav'; 
 	$align = '';
 	$style = '';								//%	additional, per image style [string]
-	$profile = $session->get('deviceprofile');	//%	device context
+	$profile = $kapenta->session->get('deviceprofile');	//%	device context
 	$html = ''; 								//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------

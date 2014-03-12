@@ -10,7 +10,7 @@
 function schools_allthumbs($args) {
 		global $kapenta;
 		global $aliases;
-		global $user;
+		global $kapenta;
 
 	$html = '';						//%	return value [string]
 

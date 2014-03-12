@@ -8,7 +8,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }	// only admins may perform these actions
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }	// only admins may perform these actions
 
 	if ('' == $kapenta->request->ref) {
 		//------------------------------------------------------------------------------------------

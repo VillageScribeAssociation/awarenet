@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check reference and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$model = new P2P_Peer($kapenta->request->ref);
 	if (false == $model->loaded) { $kapenta->page->do404('Unkown peer.'); }
@@ -21,12 +21,12 @@
 	$report = $model->sendMessage('testrecieve', 'this is a test message');
 
 	if ('' == $report) {
-		$session->msg('Test mesage sent, peer trusts us.', 'ok');
+		$kapenta->session->msg('Test mesage sent, peer trusts us.', 'ok');
 		$model->status = 'trusted';
 		$model->save();
 
 	} else {
-		$session->msg('Test send failed:<br/>' . $report, 'bad');
+		$kapenta->session->msg('Test send failed:<br/>' . $report, 'bad');
 		$model->status = 'unknown';
 		$model->save();
 	}

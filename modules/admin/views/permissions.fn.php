@@ -8,14 +8,14 @@
 //arg: module - name of a kapent module [string]
 
 function admin_permissions($args) {
-	global $user;
+	global $kapenta;
 
 	$html = '';					//%	return value [string]
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (false == array_key_exists('module', $args)) { return '(module not specified)'; }
 
 	$module = new KModule($args['module']);

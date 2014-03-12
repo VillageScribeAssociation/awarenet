@@ -8,7 +8,7 @@
 //TOSO: more sophisticated version of this to check for updated content
 
 
-	if ('admin' !== $user->role) { $kapenta->page->do403(); }
+	if ('admin' !== $kapenta->user->role) { $kapenta->page->do403(); }
 
 	$startUrl = 'https://xh.khanacademy.org/';
 	$courses = khan_getCourses($startUrl);

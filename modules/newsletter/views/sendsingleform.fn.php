@@ -8,14 +8,14 @@
 
 function newsletter_sendsingleform($args) {
 	global $theme;
-	global $user;
+	global $kapenta;
 
 	$html = '';	
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { return ''; }
+	if ('admin' != $kapenta->user->role) { return ''; }
 	if (true == array_key_exists('editionUID', $args)) { $args['UID']  = $args['editionUID']; }
 	if (false == array_key_exists('UID', $args)) { return '(edition not specified)'; }
 

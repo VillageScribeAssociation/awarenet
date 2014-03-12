@@ -14,7 +14,7 @@
 function moblog_schoolsummarylist($args) {
 	global $kapenta;
 	global $kapenta;
-	global $user;
+	global $kapenta;
 	global $theme;
 	global $kapenta;
 	global $aliases;
@@ -29,7 +29,7 @@ function moblog_schoolsummarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and permissions
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
+	if (false == $kapenta->user->authHas('moblog', 'moblog_post', 'show')) { return ''; }
 
 	if (false == array_key_exists('schoolUID', $args)) { return '(No schoolUID)'; }
 
@@ -49,7 +49,7 @@ function moblog_schoolsummarylist($args) {
 	//----------------------------------------------------------------------------------------------
 	$conditions = array();
 	$conditions[] = "school='" . $kapenta->db->addMarkup($schoolUID) . "'";
-	$conditions[] = " (published='yes' or createdBy='" . $user->UID . "') ";
+	$conditions[] = " (published='yes' or createdBy='" . $kapenta->user->UID . "') ";
 
 	$totalItems = $kapenta->db->countRange('moblog_post', $conditions);
 	$totalPages = ceil($totalItems / $num);

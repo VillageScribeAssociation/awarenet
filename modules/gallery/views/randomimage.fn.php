@@ -11,7 +11,7 @@
 
 function gallery_randomimage($args) {
 		global $kapenta;
-		global $user;
+		global $kapenta;
 		global $aliases;
 
 	$size = 'thumbsm';		//%	default size of thumbnail [string]

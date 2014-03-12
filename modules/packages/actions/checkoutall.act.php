@@ -11,7 +11,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and user role
 	//----------------------------------------------------------------------------------------------
-	if ('admin' != $user->role) { $kapenta->page->do403(); }
+	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	//----------------------------------------------------------------------------------------------
 	//	make a list of all packages
@@ -26,13 +26,13 @@
 			(false == $package->loaded) ||
 			(false == $updateManager->isInstalled($UID))
 		) {
-			$session->msg("Skipping package $UID.", 'bad');
+			$kapenta->session->msg("Skipping package $UID.", 'bad');
 
 		} else {
 			//--------------------------------------------------------------------------------------
 			//	get all the files
 			//--------------------------------------------------------------------------------------
-			$session->msg("Updating package: " . $package->name);
+			$kapenta->session->msg("Updating package: " . $package->name);
 
 			$changeCount = 0;
 			$ignoreCount = 0;
@@ -48,10 +48,10 @@
 				if (true == $download) { 
 					$check = $package->updateFile($pf['uid']);
 					if (true == $check) {
-						$session->msg('Updated: ' . $pf['path'], 'ok');
+						$kapenta->session->msg('Updated: ' . $pf['path'], 'ok');
 						$changeCount++;
 					} else {
-						$session->msg('Could not update: ' . $pf['path'], 'bad');
+						$kapenta->session->msg('Could not update: ' . $pf['path'], 'bad');
 						$toRetry[] = $pf;
 					}
 				} else {
@@ -62,7 +62,7 @@
 			$msg = ''
 			 . "Files: $changeCount updated, $ignoreCount unchanged, "
 			 . count($toRetry) . " failed.";
-			$session->msg($msg, 'ok');
+			$kapenta->session->msg($msg, 'ok');
 
 			//--------------------------------------------------------------------------------------
 			//	retry any which failed

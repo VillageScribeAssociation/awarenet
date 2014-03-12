@@ -10,7 +10,7 @@
 	//----------------------------------------------------------------------------------------------
 	//	check permissions and any POST variables
 	//----------------------------------------------------------------------------------------------
-	if (false == $user->authHas('newsletter', 'newsletter_notice', 'new')) {
+	if (false == $kapenta->user->authHas('newsletter', 'newsletter_notice', 'new')) {
 		$kapenta->page->do403('You are not authorized to create new Notices.');
 	}
 
@@ -36,10 +36,10 @@
 	//	check that object was created and redirect
 	//----------------------------------------------------------------------------------------------
 	if ('' == $report) {
-		$session->msg('Created new Notice<br/>', 'ok');
+		$kapenta->session->msg('Created new Notice<br/>', 'ok');
 		$kapenta->page->do302('/newsletter/showedition/' . $model->edition);
 	} else {
-		$session->msg('Could not create new Notice:<br/>' . $report);
+		$kapenta->session->msg('Could not create new Notice:<br/>' . $report);
 		$kapenta->page->do302('/newsletter/');
 	}
 

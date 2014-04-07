@@ -13,7 +13,7 @@
 
 	$contents = '<div id="logo">
                  	<a id="logo-image-small"  title="KA Lite Home">
-                  		<img src="%%serverPath%%static/images/horizontal-logo-small.png" alt="KA Lite logo">
+                  		<img src="%%serverPath%%/kalite/static/images/horizontal-logo-small.png" alt="KA Lite logo">
                         	</a>
                             	</div>
                             		<div class="clear"></div>
@@ -21,10 +21,14 @@
                  
     $contents = $contents . "<h1><a class='black' href='%%serverPath%%lessons/homekhan'>Watch Videos and Do Exercises</a></h1>
 							Watch Video Lessons and do the Exercises that the teacher has already prepared for you.";
-   	$contents = $contents . "<h1><a class='black' href='%%serverPath%%lessons/coachreportskhan'>Coach Reports</a></h1>
+							
+	if ('admin' == $kapenta->user->role
+		or 'teacher' == $kapenta->user->role) {
+   		$contents = $contents . "<h1><a class='black' href='%%serverPath%%lessons/coachreportskhan'>Coach Reports</a></h1>
 							Teacher, check the progress of your students with Khan Academy (KAlite) ";
-   	$contents = $contents . "<h1><a class='black' href='%%serverPath%%lessons/updatekhan'>Update Videos and Exercises</a></h1>
+   		$contents = $contents . "<h1><a class='black' href='%%serverPath%%lessons/updatekhan'>Update Videos and Exercises</a></h1>
 							Teacher, download new Videos and Exercises from Khan Academy (KAlite) ";
+	}
 
 
 	//----------------------------------------------------------------------------------------------

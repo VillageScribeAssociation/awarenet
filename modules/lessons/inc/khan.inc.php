@@ -11,7 +11,7 @@
 //--------------------------------------------------------------------------------------------------
 function createAndLoginKhanLite() {
 	global $kapenta;
-	
+		
 	//not signed in:
 	//
 	//----------------------------------------------------------------------------------------------
@@ -20,13 +20,14 @@ function createAndLoginKhanLite() {
     $dbh = connectToKhanLiteDB();
 	
 	if (NULL !== $dbh) {
+		$retarg = '';
         $kapenta->session->msgAdmin('Logging into KA Lite as ' . $kapenta->user->username, 'info');
 		$username = $kapenta->user->username;
 		$query = "SELECT * FROM securesync_facilityuser WHERE username=\"".$username."\"";
 		$sth = prepareSQLStatement($dbh, $query);
 		executeSQLStatement($sth);
 		if (FALSE === $sth->fetch()) {
-			echo "no user for: " . $kapenta->user->username . "\n";
+///			echo "no user for: " . $kapenta->user->username . "\n";
 
             $kapenta->session->msgAdmin('Creating KA Lite account for ' . $kapenta->user->username, 'info');
 
@@ -42,7 +43,9 @@ function createAndLoginKhanLite() {
 			//	Check if awarenet user exists in khanlite database
 			//----------------------------------------------------------------------------------------------	
 			// login as khanlite admin (stored in kapenta registry)
-			loginToKhanLite($kaliteAdmin, $kaliteAdminPwd);
+			$retarg = loginToKhanLite($kaliteAdmin, $kaliteAdminPwd);
+			$kapenta->session->set('kalite_sessionid', $retarg['sessionid']);
+			$kapenta->session->set('kalite_csrftoken', $retarg['csrftoken']);
 		
 			
 			//----------------------------------------------------------------------------------------------
@@ -63,12 +66,15 @@ function createAndLoginKhanLite() {
 		//----------------------------------------------------------------------------------------------
 		//	Perform automatic login
 		//----------------------------------------------------------------------------------------------	
- 		loginToKhanLite('', '');
+ 		$retarg = loginToKhanLite('', '');
 
 
    	} else {        
    		echo "no connection to database<br/>";
+		$kapenta->logEvent('kalite', 'login', 'no database', 'no connection to database!');
    	}	
+   	
+   	return $retarg;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -77,13 +83,50 @@ function createAndLoginKhanLite() {
 //arg: pageStr - html page returned from a request to KA Lite [string]
 //returns: the html page with the replaced values [string]
 function changeLocalLinksFromKhanLitePage($pageStr) {
-//	$replaced = str_replace("/math", "/lessons/mathkhan", $pageStr);
-	$replaced = str_replace("/science", "/lessons/sciencekhan", $pageStr);
-	$replaced = str_replace("/humanities", "/lessons/humanitieskhan", $replaced);
-	$replaced = str_replace("/economics-finance-domain", "/lessons/economics-finance-domainkhan", $replaced);
-	$replaced = str_replace("/test-prep", "/lessons/testprepkhan", $replaced);
-	$replaced = str_replace("/discovery-lab", "/lessons/discoverylabkhan", $replaced);
-	$replaced = str_replace("/exercisedashboard", "/lessons/exercisekhan", $replaced);
+	$replaced = str_replace("/math", "/kalite/math", $pageStr);
+	$replaced = str_replace("/science", "/kalite/science", $replaced);
+	$replaced = str_replace("/humanities", "/kalite/humanities", $replaced);
+	$replaced = str_replace("/economics-finance-domain", "/kalite/economics-finance-domain", $replaced);
+	$replaced = str_replace("/test-prep", "/kalite/testprep", $replaced);
+	$replaced = str_replace("/discovery-lab", "/kalite/discovery", $replaced);
+	$replaced = str_replace("/exercisedashboard", "/kalite/exercise", $replaced);
+	$replaced = str_replace("/partner-content", "/kalite/partner-content", $replaced);
+	return $replaced;
+}
+
+//--------------------------------------------------------------------------------------------------
+//	replace links in html page with awarenet links
+//--------------------------------------------------------------------------------------------------
+//arg: pageStr - html page returned from a request to KA Lite [string]
+//returns: the html page with the replaced values [string]
+function replaceLinksFromKhanLitePage($pageStr) {
+	$replaced = str_replace("/static/css", "/kalite/static/css", $pageStr);
+	$replaced = str_replace("/static/images", "/kalite/static/images", $replaced);
+	$replaced = str_replace("/static/data", "/kalite/static/data", $replaced);
+	$replaced = str_replace("/static/js", "/kalite/static/js", $replaced);
+	$replaced = str_replace("/static/video-js", "/kalite/static/video-js", $replaced);
+	$replaced = str_replace("/content/", "/kalite/content/", $replaced);
+	$replaced = str_replace("jsi18n/", "kalite/jsi18n/", $replaced);
+	$replaced = str_replace("api/info", "kalite/api/info", $replaced);
+	$replaced = str_replace("api/get", "kalite/api/get", $replaced);
+	$replaced = str_replace("api/start", "kalite/api/start", $replaced);
+	$replaced = str_replace("api/delete", "kalite/api/delete", $replaced);
+	$replaced = str_replace("api/check_video", "kalite/api/check_video", $replaced);
+	$replaced = str_replace("api/check_subtitle", "kalite/api/check_subtitle", $replaced);
+	$replaced = str_replace("api/save", "kalite/api/save", $replaced);
+	$replaced = str_replace("api/cancel", "kalite/api/cancel", $replaced);
+	$replaced = str_replace("api/videos", "kalite/api/videos", $replaced);
+	$replaced = str_replace("api/updates", "kalite/api/updates", $replaced);
+	$replaced = str_replace("api/retry", "kalite/api/retry", $replaced);
+	$replaced = str_replace("coachreports/api", "kalite/coachreports/api", $replaced);
+	$replaced = str_replace("coachreports/table", "kalite/coachreports/table", $replaced);
+	$replaced = str_replace("coachreports/scatter", "kalite/coachreports/scatter", $replaced);
+	$replaced = str_replace("coachreports/timeline", "kalite/coachreports/timeline", $replaced);
+	$replaced = str_replace("coachreports/student", "kalite/coachreports/student", $replaced);
+	$replaced = str_replace("securesync/api/status", "kalite/securesync/api/status", $replaced);
+	$replaced = str_replace("api/status", "kalite/api/status", $replaced);
+	$replaced = str_replace("update/languages", "kalite/update/languages", $replaced);
+	$replaced = str_replace("api/languagepacks", "kalite/api/languagepacks", $replaced);
 	return $replaced;
 }
 
@@ -162,9 +205,25 @@ function removeLinksFromKhanLitePage($pageStr) {
 function logoutKhanLite() {
 	global $kapenta;
 	
-	$reply = $kapenta->utils->curlGet($kapenta->registry->get('kalite.installation').'/securesync/logout/', '', false, '');
-	$kapenta->session->set('c_sessionid', '');
-	$kapenta->session->set('c_csrftoken', '');
+	$cookies = "";
+
+	if (true == $kapenta->session->has('kalite_sessionid')) {
+		$sessionid = $kapenta->session->get('kalite_sessionid');
+		$cookies = 'sessionid='.$sessionid.';';
+	}
+	if (true == $kapenta->session->has('kalite_csrftoken')) {
+		$csrftoken = 	$kapenta->session->get('kalite_csrftoken');
+		$cookies = $cookies . 'csrftoken='.$csrftoken;
+	}
+	$reply = $kapenta->utils->curlGet($kapenta->registry->get('kalite.installation').'/securesync/logout/', '', false, $cookies);
+	$kapenta->session->set('kalite_sessionid', '');
+	$kapenta->session->set('kalite_csrftoken', '');	
+//	$kapenta->logEvent('kalite', 'login', 'logging out', 'received reply:' . $reply);
+
+	//----------------------------------------------------------------------------------------------
+	//	ok, done
+	//----------------------------------------------------------------------------------------------	
+	return true;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -178,58 +237,78 @@ function createKhanLiteAccount($type) {
 	//--------------------------------------------------------------------------------------------------
 	//	add awarenet user to khanlite
 	//--------------------------------------------------------------------------------------------------
-	$id = $kapenta->session->get('c_sessionid');
+	$cookies = "";
+	$sessionid = "";
+	$csrftoken = "";
+	if (true == $kapenta->session->has('kalite_sessionid')) {
+		$sessionid = $kapenta->session->get('kalite_sessionid');
+		$cookies = 'sessionid='.$sessionid.';';
+	}
+	if (true == $kapenta->session->has('kalite_csrftoken')) {
+		$csrftoken = $kapenta->session->get('kalite_csrftoken');
+		$cookies = $cookies . 'csrftoken='.$csrftoken;
+	}
+	
+	$urlRequest = $kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/';
 
 	$reply = $kapenta->utils->curlGet(
         $kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/', 
         '', 
 	    false, 
-        'sessionid=' . $id
+        $cookies
     );
 
-	$start = strpos($reply, "name='csrfmiddlewaretoken' value='") + 34;
-	$end = strpos($reply, "'", $start);
-	$csrftoken = substr($reply, $start, $end - $start);
-	$kapenta->session->set('c_csrftoken', $csrftoken);
-	//--------------------------------------------------------------------------------------------------
-	//	extract facility id from page
-	//--------------------------------------------------------------------------------------------------
-	$index = strpos($reply, 'name="facility" value=');
-	if (FALSE !== $index) {
+	if (0 < strlen($reply) ) {
+		$start = strpos($reply, "name='csrfmiddlewaretoken' value='") + 34;
+		$end = strpos($reply, "'", $start);
+		$csrftoken = substr($reply, $start, $end - $start);
 		//--------------------------------------------------------------------------------------------------
-		//	set up arguments for POST/add
+		//	extract facility id from page
 		//--------------------------------------------------------------------------------------------------
-		$pw = sha1($kapenta->user->password . '11111');
-		$kapass = 'sha_1$11111$' . $pw;
-		$start = strpos($reply, 'name="facility" value="', $index) + 23;
-		$end = strpos($reply, '" id="id_facility"', $start);
-		$facility = substr($reply, $start, $end - $start);
-		$args = 'csrfmiddlewaretoken='.$csrftoken."&";
-		$args = $args.'username='.$kapenta->user->username."&";
-		$args = $args.'first_name='.$kapenta->user->firstname."&";
-		$args = $args.'last_name='.$kapenta->user->surname."&";
-		$args = $args.'password_first='.$kapass."&";
-		$args = $args.'password_recheck='.$kapass."&";
-		$args = $args.'facility='.$facility."&";
-		if ('student' == $type) {
-			$args = $args.'is_teacher=false';
-		} else {
-			$args = $args.'is_teacher=true';
-		}
+		$index = strpos($reply, 'name="facility" value=');
+		if (FALSE !== $index) {
+			//--------------------------------------------------------------------------------------------------
+			//	set up arguments for POST/add
+			//--------------------------------------------------------------------------------------------------
+			$pw = sha1($kapenta->user->password . '11111');
+			$kapass = 'sha_1$11111$' . $pw;
+			$start = strpos($reply, 'name="facility" value="', $index) + 23;
+			$end = strpos($reply, '" id="id_facility"', $start);
+			$facility = substr($reply, $start, $end - $start);
+			$args = 'csrfmiddlewaretoken='.$csrftoken."&";
+			$args = $args.'username='.$kapenta->user->username."&";
+			$args = $args.'first_name='.$kapenta->user->firstname."&";
+			$args = $args.'last_name='.$kapenta->user->surname."&";
+			$args = $args.'password_first='.$kapass."&";
+			$args = $args.'password_recheck='.$kapass."&";
+			$args = $args.'facility='.$facility."&";
+			if ('student' == $type) {
+				$args = $args.'is_teacher=false';
+			} else {
+				$args = $args.'is_teacher=true';
+			}
 		
-		$cookies = 'sessionid='.$id.';csrftoken='.$csrftoken;
-		$reply = $kapenta->utils->curlPost($kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/', $args, 
-				true, $cookies);
-	}	
+			$cookies = 'sessionid='.$sessionid.';csrftoken='.$csrftoken;
+			$reply = $kapenta->utils->curlPost($kapenta->registry->get('kalite.installation').'/securesync/add/'.$type.'/', $args, 
+					true, $cookies);
+			$kapenta->logEvent('kalite', 'login', 'user created: ' . $kapenta->user->username, 'received reply:' . $reply);
+		}	
+	} else {
+		$kapenta->logEvent('kalite', 'login', 'cookies', $cookies);
+		$kapenta->logEvent('kalite', 'login', 'request', $urlRequest);
+		$kapenta->logEvent('kalite', 'login', 'add User not working', $kapenta->user->username, 'received reply:' . $reply);
+	}
 }
 
-//--------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
 //	automatically logs in user to KA Lite
 //--------------------------------------------------------------------------------------------------
 //arg: username, password - credentials of specified user [string]
 function loginToKhanLite($username, $password) {
 	global $kapenta;
 
+	$sessionid = '';
+	
 	//--------------------------------------------------------------------------------------------------
 	//	get securesync/login page and extract csrftoken from it
 	//--------------------------------------------------------------------------------------------------
@@ -242,9 +321,6 @@ function loginToKhanLite($username, $password) {
 	$end = strpos($reply, '; expires=', $start);
 	$csrftoken = substr($reply, $start, $end - $start);
 
-    //echo "CSRF token: $csrftoken<br/>";
-
-	$kapenta->session->set('c_csrftoken', $csrftoken);
 	//--------------------------------------------------------------------------------------------------
 	//	extract facility id from page
 	//--------------------------------------------------------------------------------------------------
@@ -265,7 +341,7 @@ function loginToKhanLite($username, $password) {
         $start = strpos($reply, $marker) + strlen($marker);
         $end = strpos($reply, '"', $start + 1);
         $facility = substr($reply, $start, $end - $start);
-        $kapenta->session->mshAdmin( "Found facility ID: $facility<br/>\n", 'ok' );
+        $kapenta->session->msgAdmin( "Found facility ID: $facility<br/>\n", 'ok' );
     }
 
 	if ('' !== $facility) {
@@ -294,15 +370,21 @@ function loginToKhanLite($username, $password) {
 		$reply = $kapenta->utils->curlPost($kalite.'/securesync/login/', $args, true, 'csrftoken='.$csrftoken, 
 			array('X-CSRFToken: '.$csrftoken));			
 
-        //echo "Login response:<br/>\n<textarea rows='10' style='width:100%;'>$reply</textarea><br/>\n";
+//        echo "Login response:<br/>\n<textarea rows='10' style='width:100%;'>$reply</textarea><br/>\n";
 
 		$start = strpos($reply, 'Set-Cookie:  sessionid=') + 23;
 		$end = strpos($reply, '; expires=', $start);
 		$sessionid = substr($reply, $start, $end - $start);
-		$kapenta->session->set('c_sessionid', $sessionid);
 	} else {
         $kapenta->session->msgAdmin('KALite facility not set or not readable.', 'bad');
     }
+    
+    $retarg = array();
+    $retarg['sessionid'] =  $sessionid;
+    $retarg['csrftoken'] = $csrftoken;
+//	$kapenta->logEvent('kalite', 'login', 'logged in', 'as: ' . $user . ' received:' . print_r($retarg, true));
+    
+    return $retarg;
 }
 
 //--------------------------------------------------------------------------------------------------

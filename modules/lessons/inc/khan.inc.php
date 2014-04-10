@@ -106,27 +106,28 @@ function replaceLinksFromKhanLitePage($pageStr) {
 	$replaced = str_replace("/static/js", "/kalite/static/js", $replaced);
 	$replaced = str_replace("/static/video-js", "/kalite/static/video-js", $replaced);
 	$replaced = str_replace("/content/", "/kalite/content/", $replaced);
-	$replaced = str_replace("jsi18n/", "kalite/jsi18n/", $replaced);
-	$replaced = str_replace("api/info", "kalite/api/info", $replaced);
-	$replaced = str_replace("api/get", "kalite/api/get", $replaced);
-	$replaced = str_replace("api/start", "kalite/api/start", $replaced);
-	$replaced = str_replace("api/delete", "kalite/api/delete", $replaced);
-	$replaced = str_replace("api/check_video", "kalite/api/check_video", $replaced);
-	$replaced = str_replace("api/check_subtitle", "kalite/api/check_subtitle", $replaced);
-	$replaced = str_replace("api/save", "kalite/api/save", $replaced);
-	$replaced = str_replace("api/cancel", "kalite/api/cancel", $replaced);
-	$replaced = str_replace("api/videos", "kalite/api/videos", $replaced);
-	$replaced = str_replace("api/updates", "kalite/api/updates", $replaced);
-	$replaced = str_replace("api/retry", "kalite/api/retry", $replaced);
-	$replaced = str_replace("coachreports/api", "kalite/coachreports/api", $replaced);
-	$replaced = str_replace("coachreports/table", "kalite/coachreports/table", $replaced);
-	$replaced = str_replace("coachreports/scatter", "kalite/coachreports/scatter", $replaced);
-	$replaced = str_replace("coachreports/timeline", "kalite/coachreports/timeline", $replaced);
-	$replaced = str_replace("coachreports/student", "kalite/coachreports/student", $replaced);
-	$replaced = str_replace("securesync/api/status", "kalite/securesync/api/status", $replaced);
-	$replaced = str_replace("api/status", "kalite/api/status", $replaced);
-	$replaced = str_replace("update/languages", "kalite/update/languages", $replaced);
-	$replaced = str_replace("api/languagepacks", "kalite/api/languagepacks", $replaced);
+	$replaced = str_replace("/jsi18n/", "/kalite/jsi18n/", $replaced);
+	$replaced = str_replace("/api/info", "/kalite/api/info", $replaced);
+	$replaced = str_replace("/api/get", "/kalite/api/get", $replaced);
+	$replaced = str_replace("/api/start", "/kalite/api/start", $replaced);
+	$replaced = str_replace("/api/delete", "/kalite/api/delete", $replaced);
+	$replaced = str_replace("/api/check_video", "/kalite/api/check_video", $replaced);
+	$replaced = str_replace("/api/check_subtitle", "/kalite/api/check_subtitle", $replaced);
+	$replaced = str_replace("/api/save", "/kalite/api/save", $replaced);
+	$replaced = str_replace("/api/cancel", "/kalite/api/cancel", $replaced);
+	$replaced = str_replace("/api/videos", "/kalite/api/videos", $replaced);
+	$replaced = str_replace("/api/updates", "/kalite/api/updates", $replaced);
+	$replaced = str_replace("/api/retry", "/kalite/api/retry", $replaced);
+	$replaced = str_replace("/coachreports/api", "/kalite/coachreports/api", $replaced);
+	$replaced = str_replace("/coachreports/table", "/kalite/coachreports/table", $replaced);
+	$replaced = str_replace("/coachreports/scatter", "/kalite/coachreports/scatter", $replaced);
+	$replaced = str_replace("/coachreports/timeline", "/kalite/coachreports/timeline", $replaced);
+	$replaced = str_replace("/coachreports/student", "/kalite/coachreports/student", $replaced);
+	$replaced = str_replace("/securesync/api/status", "/kalite/securesync/api/status", $replaced);
+	$replaced = str_replace("/api/status", "/kalite/api/status", $replaced);
+	$replaced = str_replace("/update/languages", "/kalite/update/languages", $replaced);
+	$replaced = str_replace("/api/languagepacks", "/kalite/api/languagepacks", $replaced);
+	$replaced = str_replace("/static/srt", "/kalite/static/srt", $replaced);
 	return $replaced;
 }
 
@@ -138,7 +139,6 @@ function replaceLinksFromKhanLitePage($pageStr) {
 
 
 function trimKAPage($html) {
-
     $html = str_replace('<!DOCTYPE HTML>', '', $html);
     $html = str_replace('<html>', '', $html);
     $html = str_replace('<head>', '', $html);

@@ -19,6 +19,7 @@ class KRequest {
 	var $mvc;				//_	module, model, action parts [array]
 	var $local = false;		//_	set to true if client is on same subnet as server [bool]
 	var $agent = '';		//_ requesting user agent [string]
+	var $httpArgs;			//_ set of http arguments [array]
 
 	//----------------------------------------------------------------------------------------------
 	//	constructor (breaks up request)
@@ -53,7 +54,27 @@ class KRequest {
 		$this->getRequestArguments();								// trim out arguments
 		$this->splitRequestURI();									// interpret the rest
 		$this->local = $this->checkIfLocal();						// check subnet of client
-
+		$this->httpArgs = $this->getHTTPArguments();				// collect http request data
+	}
+	
+	//----------------------------------------------------------------------------------------------
+	//.	get http arguments from Server
+	//----------------------------------------------------------------------------------------------
+	function getHTTPArguments() {
+		$requestURI = $_SERVER['REQUEST_URI'];
+		$requestQuery = $_SERVER['QUERY_STRING'];
+		$remoteAddr = $_SERVER['REMOTE_ADDR'];
+		$remotePort = $_SERVER['REMOTE_PORT'];
+		$requestMethod = $_SERVER['REQUEST_METHOD'];
+		$args = array(
+			'method' => $requestMethod,
+			'uri' => $requestURI,
+			'query' => $requestQuery,
+			'remoteAddr' => $remoteAddr,
+			'remotePort' => $remotePort,
+		);
+		
+		return $args;
 	}
 
 	//----------------------------------------------------------------------------------------------

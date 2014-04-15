@@ -150,6 +150,12 @@ function lessons__cb_404() {
 				$interface = $kapenta->hostInterface;
 				if ('' != $interface) { curl_setopt($ch, CURLOPT_INTERFACE, $interface); }
 				curl_setopt($ch, CURLOPT_HEADER, true);
+				$requestArr = getallheaders();
+				$useArr = array();
+				if(array_key_exists ( 'Range' , $requestArr )) {
+					$useArr[0] = 'Range: ' . $requestArr['Range'];
+				}
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $useArr);
 				if ('' != $cookies) { curl_setopt($ch, CURLOPT_COOKIE, $cookie); }
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				if ('yes' == $kapenta->proxyEnabled) {
@@ -172,14 +178,10 @@ function lessons__cb_404() {
 			}	
 		
 			if (false !== strpos($replaced, 'mp4')) {
-				$pos = strpos($header, 'Content-Length:');
-				$pos1 = strpos($header, 'Content-Type:');
-				$pos2 = strpos($header, 'Accept-Ranges:');
-				$len = strlen('Content-Length: ');
-				$length = substr ( $header, ($pos + $len), $pos2 - ($pos + $len)  );
-				header('Content-Type: video/mp4');
-				header('Accept-Ranges: bytes');
-				header('Content-Length: '.$length);
+				$temp = explode("\r\n", $header);
+				foreach ($temp as $pair) {
+					header($pair);
+				}
 			} else if (false !== strpos($replaced, 'png')) {
 				header('Content-Type: image/png');
 			} else {

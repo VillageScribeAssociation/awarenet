@@ -128,6 +128,7 @@ function replaceLinksFromKhanLitePage($pageStr) {
 	$replaced = str_replace("/update/languages", "/kalite/update/languages", $replaced);
 	$replaced = str_replace("/api/languagepacks", "/kalite/api/languagepacks", $replaced);
 	$replaced = str_replace("/static/srt", "/kalite/static/srt", $replaced);
+	$replaced = str_replace('preload="auto"', 'preload="none"', $replaced);
 	return $replaced;
 }
 

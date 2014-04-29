@@ -31,10 +31,13 @@
 							var int = -1;
 							var passChars = new Array();
 							var elemUser = document.getElementById('txtUser');
+							if (elemUser == null) {
+								elemUser = document.getElementsByName('username')[0];
+							}
 							var username = elemUser.value;
 							var check = false;
 
-							for (var i = 1; i < 21; i++) {
+							for (var i = 1; i < 20; i++) {
 								element = document.getElementById('drop' + i);
 								if (0 < element.children.length) {
 									check = true;
@@ -62,14 +65,17 @@
 							}
 
 		$string = $string . "var count = " . $count . ";
-							for (var i = 0; i < 20; i++) {
+							for (var i = 0; i < 19; i++) {
 								element = document.getElementById('drop' + (i+1));
 								if (0 < element.children.length) {
 									int = parseInt(element.children[0].id);
 								
 									int = int + establishUsernameNum(username);
-									if (int > count) {
+									if (int > count-1) {
 										int = int - count;
+									}
+									if (int < 0) {
+										int = 0;
 									}
 									txt = txt + passChars[int];
 								}

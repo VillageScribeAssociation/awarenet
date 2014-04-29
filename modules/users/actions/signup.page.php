@@ -10,7 +10,10 @@
 
 [`|lt]p[`|gt]Hi!  Welcome to awareNet!.  This site is to allow anyone interested to explore the features which the awareNet educational network offers school children.  Enjoy :-)[`|lt]/p[`|gt]
 
-[[:users::signupform:]]</content>
+[[:users::signupform:]]
+[[:picturelogin::pictureloginshort:]]
+
+</content>
 	<nav1>[[:theme::navtitlebox::label=What Next:]]
 [`|lt]p[`|gt]Once you[`|sq]ve signed up you[`|sq]ll be redirected to your new profile page, a good place to start exploring the features for moblogging, image galleries, school projects, etc.[`|lt]/p[`|gt]
 [`|lt]br/[`|gt]

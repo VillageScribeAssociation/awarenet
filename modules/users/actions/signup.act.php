@@ -1,4 +1,5 @@
 <?
+	require_once($kapenta->installPath . 'modules/picturelogin/inc/picturelogin.php');
 
 //--------------------------------------------------------------------------------------------------
 //*	page for signing up users
@@ -130,6 +131,9 @@
 
 	}
 
+	$style = getPictureLoginStyle();
+	$script = getPictureLoginScript();
+
 	//----------------------------------------------------------------------------------------------
 	//	show page
 	//----------------------------------------------------------------------------------------------
@@ -137,6 +141,7 @@
 	if ($showPage == true) {
 		$kapenta->page->load('modules/users/actions/signup.page.php');
 		foreach($formvars as $field => $value) { $kapenta->page->blockArgs[$field] = $value; }
+		$kapenta->page->blockArgs['head'] = '<style>' . $style . '</style>' . $script;
 		$kapenta->page->render();
 	}
 

@@ -234,6 +234,16 @@ function lessons__cb_404() {
 			$replaced = replaceLinksFromKhanLitePage($replaced);
 			$replaced = changeLocalLinksFromKhanLitePage($replaced);
 			$replaced = removeLinksFromKhanLitePage($replaced);
+			if (false !== strpos($request, '/kalite/coachreports')) {
+				$replaced = str_replace(".google-chart {
+            width: 900px;
+            height: 500px;
+        }", ".google-chart {
+            width: 1000px;
+            height: 500px;
+        }", $replaced);
+			}	
+
 
 			header('Content-Type: text/html');
 

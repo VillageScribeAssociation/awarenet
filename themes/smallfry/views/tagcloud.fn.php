@@ -7,14 +7,15 @@
 //TODO: make this compatable with block system
 
 function theme_tagcloud($args) {
-	if (false == array_key_exists('data', $args)) { return '(no tag data)'; }
 	global $kapenta;
-	$html = '';
+
+	if (false == array_key_exists('data', $args)) { return '(no tag data)'; }
 
 	$data = unserialize(base64_decode($args['data']));
-
 	$maxWeight = 1;
 	$minWeight = 0;
+	$html = '';                     //% return value [string]
+
 
 	foreach($data as $UID => $triple) {	// add min for negative values?
 		if ($triple['weight'] > $maxWeight) { $maxWeight = $triple['weight']; }

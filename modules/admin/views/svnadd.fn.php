@@ -28,6 +28,11 @@ function admin_svnadd($args) {
 		'modules/pages/',
 		'.kreg',
 		'modules/recordalias/',    
+		'modules/lfs/',    
+        'modules/videos/shell/temp/',
+        'files/TODO/',
+        'modules/blocks/',
+        '_index.php',
 		'uploader/',
 		'data/images/',
 		'data/files/',
@@ -43,6 +48,9 @@ function admin_svnadd($args) {
 		'~',
 		'.svn',
 		'install/',
+        'modules/store/',
+        'development-bundle/',
+        'modules/newsletter/',
 		'tmp.xml'
 	);
 
@@ -57,10 +65,10 @@ function admin_svnadd($args) {
 		foreach($exemptions as $ex) { if (strpos(' ' . $line, $ex) != false) { $skip = true; } }
 		if (trim($relLine) == '') { $skip = true; }
 		if (false == $skip) { 
-			$svnfiles .= 'svn add ' . $relLine . "\n"; 
+			$svnfiles .= 'svn add "' . $relLine . "\"\n"; 
 		} else {
 			if ((trim($relLine) != '') && (strpos($line, '.svn') == false)) { 
-				$skipfiles .= 'svn delete ' . $relLine . "\n"; 
+				$skipfiles .= 'svn delete "' . $relLine . "\"\n"; 
 			}
 		}
 	}

@@ -939,7 +939,7 @@ class KSystem {
 					. "\tdo404();\n"
 					. "?>\n\n";
 
-		$result = $this->filePutContents($fileName, $defaultLog, true, false, 'w+');
+		$result = $this->fs->put($fileName, $defaultLog, true, false, 'w+');
 		return $result;
 	}
 

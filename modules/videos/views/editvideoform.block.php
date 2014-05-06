@@ -68,7 +68,6 @@
     <td>
 		<input type='submit' value='Save' />
 		<a id='linkShowLicence' href='javascript:Videos_ShowLicenceForm();'>[edit licence]</a>
-		%%editTagsLink%%
 	</td>
   </tr>
 </table>

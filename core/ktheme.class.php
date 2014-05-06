@@ -208,7 +208,7 @@ class KTheme {
 			} else { 
 				$msg = "called function $fnName does not exist in $apiFile";
 				$kapenta->logErr('blocks', 'runBlock', $msg); 
-				$kkapenta->session->msgAdmin($msg);
+				$kapenta->session->msgAdmin($msg);
 
 			}
 		} else {

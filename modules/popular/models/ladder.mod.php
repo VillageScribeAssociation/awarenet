@@ -42,9 +42,9 @@ class Popular_Ladder {
 			if (true == $byName) { $this->loadByName($raUID); }		// or by name
 		}	
 
-		if (false == $this->loaded) {								// check if we did
-			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));		// initialize
-			$this->shared = 'no';									// these are never shared
+		if (false == $this->loaded) {								    // check if we did
+			$this->loadArray($kapenta->db->makeBlank($this->dbSchema));	// initialize
+			$this->shared = 'no';									    // these are never shared
 			$this->loaded = false;
 		}
 	}

@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>canvas { width: 100%; height: 100% }</style>
+	</head>
+	<body>
+		<script src="js/three.min.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+			var renderer = new THREE.CanvasRenderer();
+            var greenhouse = new Greenhouse(5, 3, 2);
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+            greenhouse.add(scene);            
+
+			camera.position.x = 0;
+			camera.position.y = 0;
+            camera.position.z = 10;
+
+            camera.lookAt({ x: 0, y: 0, z: 0 });
+            //camera.projectionMatrix.makeRotationZ(3.141);
+
+			var render = function () {
+                	
+    			requestAnimationFrame(render);
+
+			    //cube.rotation.x += 0.1;
+				//cube.rotation.y += 0.1;
+
+                camera.position.z += 0.01;
+                camera.position.x += 0.01;                
+                camera.lookAt({ x: 0, y: 0, z: 0 });
+
+				renderer.render(scene, camera);
+			};
+
+			render();
+
+            /** 
+             *  Object representing the entire model greenhouse
+             */
+
+            function Greenhouse(l, w, h) {
+
+                this.length = l;
+                this.width = w;
+                this.height = h;
+
+                this.postSize = {
+                    width: 0.1,
+                    length: 0.2                
+                }
+
+                this.frame = new GreenhouseFrame(this);
+
+                this.add = function(s) {
+                    this.frame.add(s);
+                };
+            }
+
+            function GreenhouseFrame(gh) {
+                this.posts = [];
+
+                this.posts.push(new GreenhousePost(gh, 0, 0));
+                this.posts.push(new GreenhousePost(gh, gh.length, 0));
+                this.posts.push(new GreenhousePost(gh, 0, gh.width));
+                this.posts.push(new GreenhousePost(gh, gh.length, gh.width));
+
+                this.posts.push(new GreenhouseBeam(gh, 0, 0, 0));
+                this.posts.push(new GreenhouseBeam(gh, 0, 0, gh.height));
+                this.posts.push(new GreenhouseBeam(gh, 0, gh.width, 0));
+                this.posts.push(new GreenhouseBeam(gh, 0, gh.width, gh.height));
+                
+                this.add = function(s) {
+                    var i;
+                    for (i = 0; i < this.posts.length; i++) {
+                        this.posts[i].add(s);
+                    }    
+                };
+            }
+
+            function GreenhousePost(gh, x, y) {
+
+        		var geometry = new THREE.CubeGeometry(gh.postSize.width, gh.height, gh.postSize.width);
+        		var material = new THREE.MeshBasicMaterial({color: 0xaaaaaa});
+        		var cube = new THREE.Mesh(geometry, material);
+
+                cube.position.x = x;
+                cube.position.y = 0 + (gh.height / 2);
+                cube.position.z = y;
+
+                this.add = function(s) {
+
+         			s.add(cube);
+                    
+                }
+            }
+                        
+            function GreenhouseBeam(gh, x, y, elevation) {
+
+        		var geometry = new THREE.CubeGeometry(gh.length, gh.postSize.width, gh.postSize.width);
+        		var material = new THREE.MeshBasicMaterial({color: 0xaaaaaa});
+        		var cube = new THREE.Mesh(geometry, material);
+
+                cube.position.x = x + (gh.length / 2);
+                cube.position.y = elevation;
+                cube.position.z = y;
+
+                this.add = function(s) {
+
+         			s.add(cube);
+                    
+                }
+            }
+
+		</script>
+	</body>
+</html>

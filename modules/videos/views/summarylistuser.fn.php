@@ -19,8 +19,7 @@ function videos_summarylistuser($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load user's galleries from database
 	//----------------------------------------------------------------------------------------------
-	$conditions = array();
-	$conditions[] = "createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'";
+	$conditions = array("createdBy='" . $kapenta->db->addMarkup($args['userUID']) . "'");
 	$range = $kapenta->db->loadRange('videos_gallery', '*', $conditions, 'title DESC');
 
 	//$sql = "select * from Videos_Gallery "

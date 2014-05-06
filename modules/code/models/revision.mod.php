@@ -106,7 +106,7 @@ class Code_Revision {
 	//: $kapenta->db->save(...) will raise an object_updated event if successful
 
 	function save() {
-		global $db, $aliases;
+		global $kapenta;
 		$report = $this->verify();
 		if ('' != $report) { return $report; }
 		$check = $kapenta->db->save($this->toArray(), $this->dbSchema);

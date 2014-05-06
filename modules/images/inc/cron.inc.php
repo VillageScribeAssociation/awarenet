@@ -13,8 +13,6 @@
 
 function images_cron_daily() {
 	global $kapenta;
-	global $kapenta;
-	global $kapenta;
 
 	$report = "<h2>images_cron_daily</h2>\n";	//%	return value [string]
 

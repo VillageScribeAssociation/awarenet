@@ -2,7 +2,7 @@
 
 	require_once($kapenta->installPath . 'modules/packages/inc/kupdatemanager.class.php');
 	require_once($kapenta->installPath . 'modules/packages/inc/ksource.class.php');
-	echo "Updating all packages<br/>"; flush();
+
 //--------------------------------------------------------------------------------------------------
 //*	refresh package lists
 //--------------------------------------------------------------------------------------------------

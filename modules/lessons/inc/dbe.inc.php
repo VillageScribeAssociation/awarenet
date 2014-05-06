@@ -1,5 +1,7 @@
 <?php
 
+    require_once($kapenta->installPath . 'modules/lessons/models/course.mod.php');
+
 //--------------------------------------------------------------------------------------------------
 //*	temp / development action to scrape and import exam papers from the SA Department of Education
 //--------------------------------------------------------------------------------------------------
@@ -127,9 +129,9 @@ function lessons_dbeExpandLanguageTable($raw) {
 				echo "Document: <a href='$href'>$caption [home language]</a><br/>";
 			}
 
-			if (count($hlLinks) > ) {
+			if (count($hlLinks) > 0) {
 				$course = new Lessons_Course();
-				$course->language = lessons_geLangCode($lang);
+				$course->language = lessons_getLanguageCode($lang);
 				$courses[] = $course;
 			}
 

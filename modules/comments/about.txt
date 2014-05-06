@@ -1,0 +1,5 @@
+<? /*
+
+This module allows comments to be placed on objects owned by other modules according to permissions set on the module which maintains these objects.   It provides services to pages to allow live update of comment sections so that discussion can be carried on in real time, for example on a blog post or project.  It it a central point for moderation of user/public comments.
+
+*/ ?>

@@ -10,6 +10,8 @@ function theme_keywords($args) {
 	global $theme;
 	global $utils;
 
+    return '';
+
 	$html = '';								//	return value;
 
 	if (false == array_key_exists('show', $args)) {

@@ -469,7 +469,14 @@ class KPage {
 	function do404($message = '', $iframe = false) {
 		global $kapenta;
 
-        $eventArgs = array();
+        $eventArgs = array(
+            'method' => $_SERVER['REQUEST_METHOD'],
+            'uri' => $_SERVER['REQUEST_URI'],
+            'query' => $_SERVER['QUERY_STRING'],
+            'remoteAddr' => $_SERVER['REMOTE_ADDR'],
+            'remotePort' => $_SERVER['REMOTE_PORT'],
+            'postArgs' => $_POST
+        );
 
         $kapenta->raiseEvent('*', '404', $eventArgs);
 

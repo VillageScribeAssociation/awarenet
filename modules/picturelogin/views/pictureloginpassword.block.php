@@ -2,25 +2,25 @@
 			<tr>
 				<td width='80px'><b>Picture Password</b></td>
 				<td>
-					<div id="drop1" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop2" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop3" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop4" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop5" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop6" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop7" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop8" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop9" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop10" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop11" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop12" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop13" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop14" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop15" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop16" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop17" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop18" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-					<div id="drop19" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+					<div id="drop1"></div>
+					<div id="drop2"></div>
+					<div id="drop3"></div>
+					<div id="drop4"></div>
+					<div id="drop5"></div>
+					<div id="drop6"></div>
+					<div id="drop7"></div>
+					<div id="drop8"></div>
+					<div id="drop9"></div>
+					<div id="drop10"></div>
+					<div id="drop11"></div>
+					<div id="drop12"></div>
+					<div id="drop13"></div>
+					<div id="drop14"></div>
+					<div id="drop15"></div>
+					<div id="drop16"></div>
+					<div id="drop17"></div>
+					<div id="drop18"></div>
+					<div id="drop19"></div>
 				</td>
 			</tr>
 			<tr>

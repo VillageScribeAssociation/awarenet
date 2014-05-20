@@ -138,12 +138,12 @@
 										link1.setAttribute('data-icon', arr[1][i1]);
 										link1.setAttribute('class', 'icon');
 										link1.setAttribute('draggable', 'true');
-										link1.id = i1;
+										link1.id = 's' + i1;
 										elem1.appendChild(link1);
 										i2++;
 									}
 									
-								if (0 < i2 && 0 == (i2+1)%27) {
+								if (0 < i2 && 0 == (i2+1)%25) {
 									var link2 = document.createElement('br');
 									elem1.appendChild(link2);
 								}

@@ -14,7 +14,7 @@
 		$count = count($charArr);
 		$string = "";
 		for ($i = 0; $i < $count; $i++) {
-			$string = $string . "<a data-icon='" . $charArr[$i] . "' class='icon' draggable='true' id='" . $i . "'></a>";
+			$string = $string . "<a data-icon='" . $charArr[$i] . "' class='icon' id='s" . $i . "'></a>";
 			if (0 < $i and 0 == ($i+1)%17) {
 				$string = $string . "<br>";
 			}

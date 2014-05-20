@@ -7,7 +7,7 @@
 			<tr>
 				<td width='80px'><b>Pictures</b></td>
 				<td>
-					<div id='source' style="background-color:#FFD700;height:185px;width:530px;float:left;" ondragstart="drag(event)" 							ondrop="dropSource(event)" ondragover="allowDropSource(event)">
+					<div id='source' style="background-color:#FFD700;height:185px;width:530px;float:left;">
 						[[:picturelogin::aDataIconDefinitionSmall:]]
 					</div>
 				</td>

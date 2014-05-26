@@ -34,7 +34,7 @@
 								Teacher, download new Videos and Exercises from Khan Academy (KAlite) ";
 		}
 	} else {
-   		$contents = "<h1>Cannot access Kalite Server, please ask your Awarnet Administrator what the problem might be!</h1>";
+   		$contents = "<h1>Cannot access Kalite Server, please ask your awarenet Administrator what the problem might be!</h1>";
 	} 
 	
 

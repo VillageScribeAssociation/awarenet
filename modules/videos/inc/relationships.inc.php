@@ -18,7 +18,7 @@ function videos_relationships($refModel, $UID, $relationship, $userUID) {
 	//----------------------------------------------------------------------------------------------
 	//	get the user we want to know about
 	//----------------------------------------------------------------------------------------------	
-	$refUser = $user;
+	$refUser = $kapenta->user;
 	if ($userUID != $refUser->UID) { 
 		$refUser = new Users_User($userUID);
 		if (false == $refUser->loaded) { return false; }

@@ -101,7 +101,7 @@ class P2P_Offers {
 					$allOk = false;
 				}
 
-				$owner = $kapenta->fileOwner($item['fileName']);
+				$owner = $kapenta->fs->getOwner($item['fileName']);
 				if (0 == count($owner)) {
 					$this->updateFile($item['refModel'], $item['refUID'], $item['fileName']);
 					$allOk = false;
@@ -498,7 +498,7 @@ class P2P_Offers {
 		//	then make sure that we know what owns this
 		//------------------------------------------------------------------------------------------
 
-		$owner = $kapenta->fileOwner($fileName);
+		$owner = $kapenta->fs->getOwner($fileName);
 
 		if (0 == count($owner)) {
 			if ('' != $giftUID) {

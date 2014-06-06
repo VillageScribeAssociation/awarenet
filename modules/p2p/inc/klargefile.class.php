@@ -169,7 +169,7 @@ class KLargeFile {
 		global $kapenta;
 		global $kapenta;
 
-		$owner = $kapenta->fileOwner($this->path);
+		$owner = $kapenta->fs->getOwner($this->path);
 
 		if (0 == count($owner)) {
 			$this->loaded = false;

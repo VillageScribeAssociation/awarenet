@@ -50,7 +50,7 @@ function admin_WebShell_fileowner($args) {
 				$fileName = substr($fileName, 1);
 			}
 
-			$owner = $kapenta->fileOwner($fileName);
+			$owner = $kapenta->fs->getOwner($fileName);
 			if (0 == count($owner)) {
 				$html .= "<span class='ajaxwarn'>Owner could not be identified.</span>";
 			} else {

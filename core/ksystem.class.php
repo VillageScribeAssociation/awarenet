@@ -1250,8 +1250,8 @@ class KSystem {
 	//returns: dict of 'module', 'model' and 'UID', empty array on failure [array]
 
 	function fileOwner($path) {
-		$this->session->msg('DEPRECATED: KSystem::fileOwner');
-		return $this->fs->owner($fileName);
+		$this->session->msg('REMOVED: KSystem::fileOwner');
+		//return $this->fs->getOwner($fileName);
 	}
 
 	//----------------------------------------------------------------------------------------------

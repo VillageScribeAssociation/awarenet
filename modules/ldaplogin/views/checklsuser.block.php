@@ -6,5 +6,5 @@
 		<input type='hidden' value='Log In' />
 		</form>
 		
-	<script language='javascript' src='%%serverPath%%modules/ldaplogin/js/localstorage.js'></script>
+	<script language='javascript' src='%%serverPath%%modules/ldaplogin/js/getlocalstorage.js'></script>
 */ ?>

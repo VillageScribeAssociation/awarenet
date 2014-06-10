@@ -1,4 +1,7 @@
 <?
+	if ($kapenta->moduleExists( 'ldaplogin') ) {
+		require_once($kapenta->installPath . 'modules/ldaplogin/actions/ldap.act.php');
+	}
 
 //--------------------------------------------------------------------------------------------------
 //*	login form
@@ -55,6 +58,15 @@
 
 				}
 
+			}
+		} else {
+			if ($kapenta->moduleExists( 'ldaplogin') ) {
+				if(ldaplogin_check($username, $password)) {
+					//LOAD first login screen
+					$_SESSION['ldaplogin_username'] = $username;
+					$_SESSION['ldaplogin_password'] = $password; 
+					$kapenta->page->do302('ldaplogin/signup'); 				// redirect to account creation page
+				}
 			}
 		}
 

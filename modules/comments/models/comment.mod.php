@@ -105,9 +105,29 @@ class Comments_Comment {
 	//returns: null string if object passes, warning message if not [string]
 
 	function verify() {
+		global $kapenta;
 		$report = '';
 		if ('' == $this->UID) { $report .= "No UID.<br/>\n"; }
 		if (strlen($this->comment) < 2) { $report .= "Nothing said.\n"; }
+
+		$conditions = array();
+		$conditions[] = "refModule='" . $this->refModule . "'";
+		$conditions[] = "refUID='" . $this->refUID . "'";
+		$conditions[] = "parent=''";		
+		
+		//check if latest comment is equal to last comment stored - if it is so, report it rathher than allow it to be saved
+		$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC');
+		$cntRange = count($range);
+		if ($cntRange > 0) {
+			foreach ($range as $item) {
+				//we only have to compare comment to be saved to the 1st entry, which is the last comment saved!
+				if ($this->comment == $item['comment']) {
+					$report .= "Comment already added!\n";
+				}
+				break;
+			}  
+		}
+
 		return $report;
 	}
 

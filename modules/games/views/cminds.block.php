@@ -2,6 +2,8 @@
 
 	<div class='block' style='position: absolute;' id='swfCminds'>
 
+			<p><img src='%%serverPath%%modules/games/assets/cminds/Buttons.jpg' border='0' width='200' align='right' class='rounded'></p>
+
             <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="1000" height="700" id="Main">
                 <param name="movie" value="%%serverPath%%modules/games/assets/cminds/Main.swf" />
                 <param name="quality" value="high" />
@@ -39,7 +41,7 @@
 		cminds_center();
 	</script>
 	
-	<div id='divCMBacking' style='height: 720px;'>
+	<div id='divCMBacking' style='height: 880px;'>
 	</div>
 
 	<div id='divAttrib'>

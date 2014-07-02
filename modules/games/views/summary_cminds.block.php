@@ -2,7 +2,7 @@
 
 <table noborder width='100%'>
   <tr>
-    <td valign='top' width='500px'>
+    <td valign='top' width='300px'>
 		<br/>
 		<a href='%%serverPath%%games/cminds/'>
 		<img src='%%serverPath%%modules/games/assets/cminds/preview300w.jpg' border='0' class='rounded'>
@@ -16,8 +16,8 @@
 		After the game has successfully loaded, click somewhere on the screen to enter the main menu.
 		
 		<p>
+			<img src='%%serverPath%%modules/games/assets/cminds/Buttons.jpg' align='top' border='0' width='170' class='rounded'>
 			Once the game has started, use these buttons in the top right corner to play the game or get further information.
-			<img src='%%serverPath%%modules/games/assets/cminds/Buttons.jpg' align='right' border='0' width='200' class='rounded'>
 
 		<p>
 			<a href='%%serverPath%%games/cminds/'>[play]</a>

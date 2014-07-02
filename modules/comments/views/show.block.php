@@ -9,11 +9,10 @@
     <td width='5'></td>
     <td valign='top'>
       <a name='comment%%UID%%'></a>
-      <b>%%userLink%% said:</b><br/>
+      <b>%%userLink%% said:</b><span style='float: right;'>%%replyJsLink%%</span><br/>
       %%comment%%<br/>
       <small>
 		added: %%createdOn%%
-		%%replyJsLink%%
 
 		<span style='float: right;'>
 		%%retractLink%%

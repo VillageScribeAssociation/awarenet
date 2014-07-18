@@ -30,7 +30,7 @@ function comments_replies($args) {
 
 	if (0 == $totalReplies) { return ''; }
 
-	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn ASC');
+	$range = $kapenta->db->loadRange('comments_comment', '*', $conditions, 'createdOn DESC');
 
 	//----------------------------------------------------------------------------------------------
 	//	make the block

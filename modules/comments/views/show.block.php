@@ -19,8 +19,8 @@
 		[[:abuse::reportlink::refModule=comments::refModel=comments_comment::refUID=%%UID%%:]]
 		</span>
 	  </small>
-      <div id='divReplies%%UID%%'>[[:comments::replies::parentUID=%%UID%%:]]</div>
       <div id='divReply%%UID%%'></div>
+      <div id='divReplies%%UID%%'>[[:comments::replies::parentUID=%%UID%%:]]</div>
       <div id='divCRStatus%%UID%%'></div>
     </td>
   </tr>

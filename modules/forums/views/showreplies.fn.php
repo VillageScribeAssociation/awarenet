@@ -48,7 +48,7 @@ function forums_showreplies($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load a page of results from the database
 	//----------------------------------------------------------------------------------------------
-	$range = $kapenta->db->loadRange('forums_reply', '*', $conditions, 'createdOn ASC', $num, $start);
+	$range = $kapenta->db->loadRange('forums_reply', '*', $conditions, 'createdOn DESC', $num, $start);
 
 	//----------------------------------------------------------------------------------------------
 	//	show the current page

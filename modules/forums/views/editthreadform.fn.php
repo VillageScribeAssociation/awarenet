@@ -31,7 +31,7 @@ function forums_editthreadform($args) {
 	//----------------------------------------------------------------------------------------------
 	//	load the block
 	//----------------------------------------------------------------------------------------------
-	$block = $kkapenta->theme->loadBlock('modules/forums/views/editthreadform.block.php');
+	$block = $kapenta->theme->loadBlock('modules/forums/views/editthreadform.block.php');
 	$labels = $model->extArray();
 	$labels['UIDJsClean'] = $model->UID;
 	$labels['content64'] = $kapenta->utils->b64wrap($labels['content']);

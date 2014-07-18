@@ -13,10 +13,9 @@
 
 		[[:polls::showall::refModule=forums::refModel=forums_thread::refUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 
+		[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 		[[:live::river::mod=forums::view=showreplies::pv=pageNo::allow=num|threadUID::threadUID=%%threadUID%%::num=30:]]
 		[`|lt]br/[`|gt]
-
-		[[:forums::replyform::threadUID=[`|pc][`|pc]threadUID[`|pc][`|pc]:]]
 	</content>
 	<nav1>
 		<div class='block'>

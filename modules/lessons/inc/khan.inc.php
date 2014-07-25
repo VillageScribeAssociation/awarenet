@@ -89,7 +89,6 @@ function changeLocalLinksFromKhanLitePage($pageStr) {
 	$replaced = str_replace("/economics-finance-domain", "/kalite/economics-finance-domain", $replaced);
 	$replaced = str_replace("/test-prep", "/kalite/testprep", $replaced);
 	$replaced = str_replace("/discovery-lab", "/kalite/discovery", $replaced);
-	$replaced = str_replace("/exercisedashboard", "/kalite/exercise", $replaced);
 	$replaced = str_replace("/partner-content", "/kalite/partner-content", $replaced);
 	return $replaced;
 }
@@ -101,9 +100,11 @@ function changeLocalLinksFromKhanLitePage($pageStr) {
 //returns: the html page with the replaced values [string]
 function replaceLinksFromKhanLitePage($pageStr) {
 	$replaced = str_replace("/static/css", "/kalite/static/css", $pageStr);
+	$replaced = str_replace("/exercisedashboard", "/kalite/exercisedashboard", $replaced);
 	$replaced = str_replace("/static/images", "/kalite/static/images", $replaced);
 	$replaced = str_replace("/static/data", "/kalite/static/data", $replaced);
 	$replaced = str_replace("/static/js", "/kalite/static/js", $replaced);
+	$replaced = str_replace('/static" + topic.icon_url', '/kalite/static" + topic.icon_url', $replaced);
 	$replaced = str_replace("/static/video-js", "/kalite/static/video-js", $replaced);
 	$replaced = str_replace("/content/", "/kalite/content/", $replaced);
 	$replaced = str_replace("/jsi18n/", "/kalite/jsi18n/", $replaced);

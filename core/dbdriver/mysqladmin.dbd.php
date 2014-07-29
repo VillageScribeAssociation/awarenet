@@ -288,7 +288,7 @@ class KDBAdminDriver_MySQL {
 		$result = $kapenta->db->query($sql);
 		//TODO: more intelligence here
 		while ($row = $kapenta->db->fetchAssoc($result)) { 
-			$row = $kapennta->db->rmArray($row);
+			$row = $kapenta->db->rmArray($row);
 			foreach($dbSchema['fields'] as $fName => $fType) {
 				switch(strtolower($fType)) {
 					case 'bigint':

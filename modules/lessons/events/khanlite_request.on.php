@@ -2,7 +2,7 @@
 	require_once($kapenta->installPath . 'modules/lessons/inc/khan.inc.php');
 
 //-------------------------------------------------------------------------------------------------
-//|	fired when a KA Lite request is identified by index.php
+//|	This request is not used anymore! Can be deleted in the next round! fired when a KA Lite request is identified by index.php
 //-------------------------------------------------------------------------------------------------
 //arg: method - http POST or GET [string]
 //arg: uri - uri of http call [string]

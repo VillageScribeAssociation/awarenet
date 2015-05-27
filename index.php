@@ -42,7 +42,7 @@
 	$req = new KLegacy_request();
 	$page = new KLegacy_page();
 
-
+    
 	$aliases = new KLegacy_aliases;					//	handles object aliases
 	$notifications = new KLegacy_notifications;		//	user notification of events
 
@@ -119,7 +119,7 @@
 	 . 'modules/' . $kapenta->request->module
 	 . '/actions/' . $kapenta->request->action . '.act.php';
 
-	if (false == $kapenta->fs->exists($actionFile)) { $page->do404('Unknown action'); }
+	if (false == $kapenta->fs->exists($actionFile)) { $page->do404('Unknown action'); }    
 
 	require_once($actionFile);
 

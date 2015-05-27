@@ -951,7 +951,7 @@ class KDBDriver_SQLite {
 
 			if (true == property_exists($kapenta, 'user')) {
 				if ('createdBy' == $fieldName) { $blank[$fieldName] = $kapenta->user->UID; }
-				if ('editedBy' == $fieldName) { $blank[$fieldName] = $kkapenta->user->UID; }
+				if ('editedBy' == $fieldName) { $blank[$fieldName] = $kapenta->user->UID; }
 			}		
 
 			if ('editedOn' == $fieldName) { $blank[$fieldName] = $this->datetime(); }

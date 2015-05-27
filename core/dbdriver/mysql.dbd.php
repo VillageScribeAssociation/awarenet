@@ -70,6 +70,10 @@ class KDBDriver_MySQL {
 		}
 
 		$this->tables = array();
+		
+		if (false === function_exists('mysql_connect')) {
+		    echo "MySQL driver not installed, please add php5-mysql package.<br/>";
+		}
 	}
 
 	//==============================================================================================
@@ -83,7 +87,7 @@ class KDBDriver_MySQL {
 	//returns: handle to query result or false on failure [int][bool]
 
 	function query($query) {
-		global $kapenta;
+		global $kapenta;		
 
 		$connect = false;							//%	database connection handle [int]
 		$selected = false;							//%	database selection [bool]
@@ -97,7 +101,7 @@ class KDBDriver_MySQL {
 
 		if (('object' == gettype($kapenta->page)) && (true == $kapenta->page->logDebug)) {
 			$kapenta->page->logDebugItem('query', $query);
-		}
+		}        
 
 		//------------------------------------------------------------------------------------------
 		// connect to database server and select database

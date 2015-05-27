@@ -212,6 +212,7 @@ class KSystem {
 
 	function initOptions() {
 		foreach($this->options as $opt) {
+
 			switch($opt) {
 
 				case 'cms':			$this->initCms();				break;				
@@ -219,6 +220,7 @@ class KSystem {
 				case 'recovery':	$this->initRecovery();			break;
 
 			}
+
 		}
 	}
 
@@ -349,7 +351,7 @@ class KSystem {
 		$this->session = new Users_Session();					//	user's session
 		$this->user = new Users_User($this->session->user);		//	the user record itself
 		$this->role = new Users_Role($this->user->role, true);	//	object with user's permissions
-	
+
 		if ('public' != $this->user->role) {		//	only for logged in users
 			$this->session->updateLastSeen();		//	record that session is still active
 		}

@@ -274,6 +274,10 @@ class KFilesystem {
 		$ext = strtolower($ext);
 		$extLen = strlen($ext);								//%	length of ext, if any [int]
 
+        if (false === file_exists($fullPath)) {
+            return $list;
+        }
+
 		$d = dir($fullPath);								//%	directory [object:directory]
 		$continue = true;									//%	loop control [bool]
 		while (true == $continue) {

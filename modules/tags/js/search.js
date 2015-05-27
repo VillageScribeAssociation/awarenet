@@ -43,8 +43,19 @@ function Tags_Search() {
 		}
 
 		var q64 = kutils.base64_encode(qTxt);
-		var block = "[[:tags::linkable::q64=" + q64 + ":]]";
+		//var block = "[[:tags::linkable::q64=" + q64 + ":]]";
 		//$('#' + this.divId).html(this.searchNotice);
+		
+		//  tag search currently replaced with user search as of issue 402
+		
+		var block = '[[' + ':users::searchresults'
+			 + '::q=' + q64
+			 + '::b64=yes'
+//			 + '::cbjs=%%cbjs%%'
+//			 + '::cblabel=%%cblabel%%'
+//			 + '::cbicon=%%cbicon%%'
+             + '::bgcolor=#aaaaaa'
+			 + ':]]';
 
 		$('#' + this.divId).css('left', osLeft);
 

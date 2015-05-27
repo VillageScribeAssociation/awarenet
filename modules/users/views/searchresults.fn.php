@@ -117,6 +117,10 @@ function users_searchresults($args) {
 		}
 	}
 
+    if (true === array_key_exists('bgcolor', $args)) {
+    	$html = "<div style='background-color: " . $args['bgcolor'] . ";'>\n" . $html . "</div>\n";
+    }
+
 	return $html;
 }
 

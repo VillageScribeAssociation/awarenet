@@ -1,17 +1,32 @@
-<?
+<?php
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
 
 //-------------------------------------------------------------------------------------------------
-//*	configure awareNet from Windows Installer
+//*	configure awarenet from Windows Installer
 //-------------------------------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------------------------
+	//	move any registry files from core/registry
+	//---------------------------------------------------------------------------------------------
+
+	$regFiles = $kapenta->fs->listDir('core/registry/');
+	foreach ($regFiles as $regFile) {
+		//echo $regFile . "<br/>\n";
+		$kapenta->fs->copy($regFile, str_replace('core/registry/', 'data/registry/', $regFile));
+		$kapenta->fs->delete($regFile);
+	}
+	
+	$kapenta->registry->set('p2p.server.uid', $kapenta->createUID());
+	$kapenta->registry->set('p2p.server.url', $kapenta->serverPath);
+	$kapenta->registry->set('p2p.server.name', $kapenta->serverPath);
 
 	//---------------------------------------------------------------------------------------------
 	//	check that this is not already complete
 	//---------------------------------------------------------------------------------------------
 	if ('yes' == $kapenta->registry->get('firstrun.complete')) {
-		$kapenta->session->msg('awareNet initialized.');
-		$kapenta->page->do302('');
+		$session->msg('awarenet initialized.');
+		$page->do302('');
 	}
 
 	// override default max execution time in case Apache has not been restarted.
@@ -25,10 +40,9 @@
 		'firstrun.dbr.granted' => 'no',
 		'firstrun.dbr.installed' => 'no',
 		'firstrun.dbr.name' => 'awarenet',
-		'firstrun.dbr.host' => 'localhost',
+		'firstrun.dbr.host' => '127.0.0.1:3306',
 		'firstrun.dbr.user' => 'root',
 		'firstrun.dbr.password' => '',
-		'firstrun.db.driver' => 'MySQL',
 		'firstrun.db.user' => 'awarenet',
 		'firstrun.db.password' => $kapenta->createUID(),
 		'firstrun.adminuid' => $kapenta->createUID()
@@ -41,11 +55,11 @@
 	//---------------------------------------------------------------------------------------------
 	//	run as admin
 	//---------------------------------------------------------------------------------------------
-	$kapenta->user->role = 'admin';
+	$user->role = 'admin';
 	echo $theme->expandBlocks("[[:theme::ifscrollheader:]]", '');	
-	echo "<h1>Configuring awareNet</h1>";
+	echo "<h1>Configuring awarenet</h1>";
 	
-	$dba = $kapenta->getDBAdminDriver('MySQL');
+	$dba = $kapenta->getDBAdminDriver();
 	
 	//---------------------------------------------------------------------------------------------
 	//	handle POSTs
@@ -99,7 +113,7 @@
 		$db->host = $kapenta->registry->get('firstrun.dbr.host');
 		$db->user = $kapenta->registry->get('firstrun.dbr.user');;
 		$db->pass = $kapenta->registry->get('firstrun.dbr.password');;
-		$kapenta->db->name = $kapenta->registry->get('firstrun.dbr.name');
+		$db->name = $kapenta->registry->get('firstrun.dbr.name');
 	
 		//-----------------------------------------------------------------------------------------
 		//	create the database itself
@@ -107,15 +121,15 @@
 	
 		if ('yes' !== $kapenta->registry->get('firstrun.dbr.created')) {
 			
-			$check = $dba->create($kapenta->db->name);
+			$check = $dba->create($db->name);
 			
-			$msg = "Creating database `awareNet` using default XAMPP root user... ";
+			$msg = "Creating database `awarenet` using default XAMPP root user... ";
 			if (true == $check) {
 				$msg .= "<b>OK</b>";
 				$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				echo "<div class='chatmessagegreen'>$msg</div>";
 			
-				if (true == $dba->dbExists($kapenta->db->name)) {
+				if (true == $dba->dbExists($db->name)) {
 					$kapenta->registry->set('firstrun.dbr.created', 'yes');
 				}
 			
@@ -139,19 +153,26 @@
 			$newPass = $kapenta->registry->get('firstrun.db.password');
 			
 			$sql = ''
-				. "GRANT ALL ON " . $kapenta->db->name . ".* "
+				. "GRANT ALL ON " . $db->name . ".* "
 				. "TO '$newUser'@'localhost' IDENTIFIED BY '$newPass' ";
 		
-			$msg = "Creating new database user for use by awareNet... ";
+			$msg = "Creating new database user for use by awarenet... ";
 		
-			$check = $kapenta->db->query($sql);
+			$check = $db->query($sql);
 			if (true == $check) {
 				$msg .= "<b>OK</b>.";
 				$kapenta->registry->set('firstrun.dbr.granted', 'yes');
-				$kapenta->registry->set('kapenta.db.user', $newUser);
-				$kapenta->registry->set('kapenta.db.password', $newPass);
-				$kapenta->registry->set('kapenta.db.host', 'localhost');
-				$kapenta->registry->set('kapenta.db.name', $kapenta->db->name);
+
+				$kapenta->registry->set('db.mysql.user', $newUser);
+				$kapenta->registry->set('db.mysql.password', $newPass);
+				$kapenta->registry->set('db.mysql.host', 'localhost');
+				$kapenta->registry->set('db.mysql.name', $db->name);
+				$kapenta->registry->set('db.driver', 'MySQL');
+
+				//$kapenta->registry->set('kapenta.db.user', $newUser);
+				//$kapenta->registry->set('kapenta.db.password', $newPass);
+				//$kapenta->registry->set('kapenta.db.host', 'localhost');
+				//$kapenta->registry->set('kapenta.db.name', $db->name);
 				echo "<div class='chatmessagegreen'>$msg</div>";
 				
 			} else {

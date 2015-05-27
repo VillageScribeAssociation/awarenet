@@ -57,7 +57,7 @@ function Tags_Search() {
              + '::bgcolor=#aaaaaa'
 			 + ':]]';
 
-		$('#' + this.divId).css('left', osLeft);
+		$('#' + this.divId).css('left', osLeft).css('z-index', 1001);
 
 		klive.bindDivToBlock(this.divId, block, false);
 

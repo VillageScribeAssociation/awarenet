@@ -88,6 +88,7 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 	 [ 'b', 'attachImages', 'post_button_imagecolor.gif', 'Attachments','showAttach' ],
 	 [ 'c', 'link',  'Create Link', 'post_button_hyperlink.gif',  'createlink'  ],
 	 [ 'b', 'toggleHTMLSrc',  'post_button_source.gif',  'View Source', 'toggleHTMLSrc' ],
+  	 [ 'b', 'getWordCount', 'post_button_123.gif', 'Word Count','wordCount' ],
 	 [ 's' ],
 	 [ 'p' ]
 	];
@@ -102,7 +103,8 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		 [ 'c', 'unorderedlist', 'Unordered List', 'post_button_ul.gif', 'insertunorderedlist' ],
 		 [ 's' ],
 		 [ 'b', 'attachImages', 'post_button_imagecolor.gif', 'Attachments','showAttach' ],
-		 [ 'c', 'link',  'Create Link', 'post_button_hyperlink.gif',  'createlink'  ]
+		 [ 'c', 'link',  'Create Link', 'post_button_hyperlink.gif',  'createlink'  ],
+       	 [ 'b', 'getWordCount', 'post_button_123.gif', 'Word Count','wordCount' ]
 		];
 	}
 
@@ -892,11 +894,35 @@ function HyperTextArea(name, html, width, height, delayRender, divId) {
 		khta.activeArea = this;
 
 		//------------------------------------------------------------------------------------------
-		//	have the browser insert the image
+		//	have the browser insert the element
 		//------------------------------------------------------------------------------------------
 		oRTE.focus();
 		oRTE.document.execCommand('InsertHorizontalRule', false, 0);
 		oRTE.focus();
+	}
+	
+	//----------------------------------------------------------------------------------------------
+	//.	get word count of current text box
+	//----------------------------------------------------------------------------------------------
+
+	this.wordCount = function() {
+		var oRTE = this.getRTE();							//%	iframe's document window [object]		
+		khta.activeArea = this;
+
+        var text = jQuery(oRTE.document.body).text();
+        
+        if ('' === jQuery.trim(text)) {
+            alert('Word count: 0');
+            return;
+        }
+       
+        text = text.replace(new RegExp('  ', 'g'), ' ');
+        text = text.replace(new RegExp('  ', 'g'), ' ');        
+        text = text.replace(new RegExp('  ', 'g'), ' ');
+        text = text.replace(new RegExp('  ', 'g'), ' ');
+        var parts = text.split(' ');
+
+        alert('Word count: ' + parts.length);
 	}
 
 	//----------------------------------------------------------------------------------------------

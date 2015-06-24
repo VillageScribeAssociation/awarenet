@@ -36,6 +36,11 @@
 					$msg = "Missing: " . $item['fileName'] . "<br/>";
 					$want = true;
 
+                    //  should only occur in obscure cases with outdated modules
+                    if (!array_key_exists('hash', $item)) {
+                        $item['hash'] = '';
+                    }
+
 					//	no hash
 					if ('' == $item['hash']) {
 						$want = false;

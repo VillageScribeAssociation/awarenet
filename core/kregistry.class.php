@@ -294,7 +294,7 @@ class KRegistry {
 		
 		$this->log($prefix, 'set', $key, $value);
 
-		if ('object' == gettype($kapenta->session)) {
+		if (isset($kapenta) && 'object' == gettype($kapenta->session)) {
 			$msg = 'Set registry key: ' . $key . '<br/>' . 'Value: ' . $value;
 			$kapenta->session->msgAdmin($msg, 'ok');
 		}

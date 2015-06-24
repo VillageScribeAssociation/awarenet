@@ -26,7 +26,7 @@ class KRequest {
 	//----------------------------------------------------------------------------------------------
 
 	function KRequest($raw) {
-		global $registry;
+		global $kapenta;
 
 		//------------------------------------------------------------------------------------------
 		//	first detect if we are running from a subdirectory
@@ -44,7 +44,7 @@ class KRequest {
         $this->args = array();
 
 		$this->raw = $raw;											// store for future reference
-		$this->module = $registry->get('kapenta.modules.default');	// see setup.inc.php
+		$this->module = $kapenta->registry->get('kapenta.modules.default');	// see setup.inc.php
 		$this->action = 'default';									// they should all have one
 		$this->ref = '';
 

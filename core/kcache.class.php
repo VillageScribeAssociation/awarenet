@@ -38,11 +38,13 @@ class KCache {
 	//----------------------------------------------------------------------------------------------
 
 	function KCache() {
-		global $registry;
+		global $kapenta;
 
-		if ('' == $registry->get('cache.ttl')) { $registry->set('cache.ttl', '604800'); }
+		if ('' == $kapenta->registry->get('cache.ttl')) { 
+		    $kapenta->registry->set('cache.ttl', '604800'); 
+		}
 
-		$this->maxAge = (int)$registry->get('cache.ttl');
+		$this->maxAge = (int)$kapenta->registry->get('cache.ttl');
 
 	}
 

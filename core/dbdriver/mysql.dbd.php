@@ -51,6 +51,12 @@ class KDBDriver_MySQL {
 	function KDBDriver_MySQL() {
 		global $kapenta;			// perhaps get these from $kapenta
 
+        //  occasionally possible that driver is instantiated without core in some old shell scripts
+        //  database use is no longer possible in this case        
+        if (false === isset($kapenta)) {
+            return;
+        }
+
 		$this->host = $kapenta->registry->get('db.mysql.host');
 		$this->user = $kapenta->registry->get('db.mysql.user');
 		$this->pass = $kapenta->registry->get('db.mysql.password');

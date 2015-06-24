@@ -1,19 +1,27 @@
 <?php
 
-	require_once('core/kregistry.class.php');
+	require_once(dirname(__FILE__) . '/core/ksystem.class.php');
+	require_once(dirname(__FILE__) . '/core/klegacy.class.php');
+
 
 //--------------------------------------------------------------------------------------------------
 //	utility script to set awareNet's server path to currently assigned IP address and display
 //--------------------------------------------------------------------------------------------------
 
+    $kapenta = new KSystem(
+		dirname(__FILE__) . '/',					//	install path
+		'cms,session,recovery'			            //	framework options
+	);
+	
+	$kapenta->init();
+
 	//----------------------------------------------------------------------------------------------
 	//	initialize registry and check password
 	//----------------------------------------------------------------------------------------------
-	session_start();
-	$registry = new KRegistry();
+
 	$auth = false;
 
-	$recoveryPass = $registry->get('kapenta.recoverypassword');
+	$recoveryPass = $kapenta->registry->get('kapenta.recoverypassword');
 	$userPass = '';
 
 	if ((true == array_key_exists('action', $_POST)) && ('logout' == $_POST['action'])) {
@@ -65,14 +73,14 @@
 	//	detect OS if not specified
 	//----------------------------------------------------------------------------------------------
 
-	if ('' == $registry->get('kapenta.os')) {
+	if ('' == $kapenta->registry->get('kapenta.os')) {
 
 		switch (substr(strtolower(PHP_OS), 0, 3)) {
-			case 'win':		$registry->set('kapenta.os', 'windows');			break;
-			case 'lin':		$registry->set('kapenta.os', 'linux');				break;
-			case 'fre':		$registry->set('kapenta.os', 'freebsd');			break;
+			case 'win':		$kapenta->registry->set('kapenta.os', 'windows');			break;
+			case 'lin':		$kapenta->registry->set('kapenta.os', 'linux');				break;
+			case 'fre':		$kapenta->registry->set('kapenta.os', 'freebsd');			break;
 
-			default:		$registry->set('kapenta.os', 'unix');
+			default:		$kapenta->registry->set('kapenta.os', 'unix');
 		}
 	}
 
@@ -89,7 +97,7 @@
  
 	$badip = array('', '127.0.0.1', '127.0.1.1');
 
-	if ('windows' == $registry->get('kapenta.os')) {
+	if ('windows' == $kapenta->registry->get('kapenta.os')) {
 		//------------------------------------------------------------------------------------------
 		//	on windows hosts try to use ipconfig to get ipaddress
 		//------------------------------------------------------------------------------------------
@@ -180,7 +188,7 @@
 	) {
 
 		echo "setting kapenta.serverpath := $serverPath<br/>\n";
-		$registry->set('kapenta.serverpath', $serverPath);
+		$kapenta->registry->set('kapenta.serverpath', $serverPath);
 	}
 
 	//----------------------------------------------------------------------------------------------
@@ -202,14 +210,14 @@
 	//----------------------------------------------------------------------------------------------
 
 	$sql = "DELETE FROM `cache_entry`;";
-	switch(strtolower($registry->get('db.driver'))) {
+	switch(strtolower($kapenta->registry->get('db.driver'))) {
 
 		case '':		//	deliberate fallthrough
 		case 'mysql':
 
-			include('./core/dbdriver/mysql.dbd.php');
-			$db = new KDBDriver_MySQL();
-			$db->query($sql);
+			//include('./core/dbdriver/mysql.dbd.php');
+			//$db = new KDBDriver_MySQL();
+			$kapenta->db->query($sql);
 			echo "<b>Clearing cache...</b>";
 			flush();
 
@@ -217,9 +225,9 @@
 
 		case 'sqlite':
 
-			include('./core/dbdriver/sqlite.dbd.php');
-			$db = new KDBDriver_SQLite();
-			$db->query($sql);
+			//include('./core/dbdriver/sqlite.dbd.php');
+			//$db = new KDBDriver_SQLite();
+			$kapenta->db->query($sql);
 			echo "<b>Clearing cache...</b>";
 			flush();
 

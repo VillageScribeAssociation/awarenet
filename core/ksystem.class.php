@@ -237,7 +237,11 @@ class KSystem {
 			}
 		}
 	
-		if ('yes' == $this->session->get('recover')) { $this->user->role = 'admin'; }
+	    if (isset($this->session) && isset($this->user)) {
+    		if ('yes' == $this->session->get('recover')) { 
+	    	    $this->user->role = 'admin'; 
+	    	}
+	    }
 	}
 
 

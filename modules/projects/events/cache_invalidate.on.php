@@ -20,13 +20,13 @@ function projects__cb_cache_invalidate($args) {
 	//----------------------------------------------------------------------------------------------
 	
 	if ('projects_project' == $args['model']) {
-		$cache->clear('projects-summary-' . $model['UID']);
-		$cache->clear('projects-summarynav-' . $model['UID']);
+		$cache->clear('projects-summary-' . $args['UID']);
+		$cache->clear('projects-summarynav-' . $args['UID']);
 	}
 
 	if ('projects_membership' == $args['model']) {
-		$cache->clear('projects-membersnav-' . $model['UID']);
-		$cache->clear('projects-samemembersnav-' . $model['UID']);		
+		$cache->clear('projects-membersnav-' . $args['UID']);
+		$cache->clear('projects-samemembersnav-' . $args['UID']);		
 	}
 
 }

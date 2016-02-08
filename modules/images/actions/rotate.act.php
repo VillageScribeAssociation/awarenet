@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'modules/images/models/image.mod.php');
+	require_once($kapenta->installPath . 'modules/images/models/transforms.set.php');
 	require_once($kapenta->installPath . 'modules/images/inc/utils.inc.php');
 
 //--------------------------------------------------------------------------------------------------
@@ -60,12 +61,19 @@
 
 	$model->hash = $kapenta->fileSha1($model->fileName);
 	$report = $model->save();
-	
+		
 	if ('' == $report) {
 		$kapenta->session->msg("Rotated image.", 'ok');
 	} else {
 		$kapenta->session->msg("Error while rotating image:<br/>" . $report, 'bad');
 	}
+
+	//----------------------------------------------------------------------------------------------
+	//  clear transforms
+    //----------------------------------------------------------------------------------------------
+    
+    $transforms = new Images_Transforms($model->UID, $model->fileName);
+    $transforms->deleteAll();
 
 	//----------------------------------------------------------------------------------------------
 	//	redirect back to images module

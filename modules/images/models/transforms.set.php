@@ -461,11 +461,28 @@ class Images_Transforms {
 	//returns: true on success, false on failure [bool]
 
 	function deleteAll() {
+	    /*
 		global $kapenta;
 		$check = true;
 		foreach($this->members as $label => $fileName) {
 			if (false == $kapenta->fs->delete($fileName)) { $check = false; }
 		}
+		*/
+		
+		global $kapenta;
+		$check = true;
+		
+		foreach($this->presets as $preset) {
+			$fileName = $this->fileName($preset['label']);
+			if (true == $kapenta->fs->exists($fileName)) {
+				if (false == $kapenta->fs->delete($fileName)) { 
+				    $check = false; 
+				} else {
+					$kapenta->session->msg("Reset transform: " . $preset['label'], 'ok');
+				}
+			}
+		}
+				
 		return $check;
 	}
 

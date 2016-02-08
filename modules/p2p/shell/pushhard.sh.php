@@ -1,6 +1,9 @@
-<?
+<?php
 
 	require_once('../../../shinit.php');
+
+	echo $kapenta->installPath . "\n";
+
 	require_once($kapenta->installPath . 'modules/p2p/models/peer.mod.php');
 	require_once($kapenta->installPath . 'modules/p2p/inc/worker.class.php');
 

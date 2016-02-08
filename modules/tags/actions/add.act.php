@@ -31,7 +31,6 @@
 	if ('' == $refModule) { $kapenta->page->do403('No refModule specified.'); }
 	if ('' == $refModel) { $kapenta->page->do403('No refModel specified.'); }
 	if ('' == $refUID) { $kapenta->page->do403('No refUID specified.'); }
-	if ('' == $tagName) { $kapenta->page->do403('Tag Name not specified.'); }
 
 	$tagName = $aliases->stringToAlias($tagName);
 

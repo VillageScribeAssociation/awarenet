@@ -44,7 +44,10 @@ function p2p__cb_p2p_resynchronize_received($args) {
 			 . 'data/p2p/received/'
 			 . $priority . '_' . $peerUID . '_' . $sec . '_' . $usec . '.evt';
 
-			if (false == in_array($table, $exclude)) { $kapenta->fs->put($fileName, $xml); }
+
+            
+            if (false == in_array($table, $exclude)) { $kapenta->fs->put($fileName, $xml); }
+			
 
 		} // end if not temp table
 

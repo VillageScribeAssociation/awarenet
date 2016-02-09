@@ -48,13 +48,13 @@ function moblog__cb_moblog_notify($args) {
 
 		$content = "" 
 			. "[[:users::namelink::userUID=" . $model->createdBy . ":]] "
-			. "has updated their blog post. (async)";
+			. "has updated their blog post.)";
 
 		if ('' != $recentUID) {
 			//--------------------------------------------------------------------------------------
 			//	post was saved by the same user recently, update the notification
 			//--------------------------------------------------------------------------------------
-			$content = "<br/>\n$content<br/>\n<small>" . $model->editedOn . " (async)</small>";
+			$content = "<br/>\n$content<br/>\n<small>" . $model->editedOn . "</small>";
 			$notifications->annotate($recentUID, $content);	
 			$kapenta->session->msg('annotating existing notification');
 
@@ -88,20 +88,6 @@ function moblog__cb_moblog_notify($args) {
 		);
 		$kapenta->raiseEvent('*', 'microblog_event', $mbargs);
 	}
-
-	//---------------------------------------------------------------------------------------------
-	//	pull page triggers (DEPRECATED)
-	//---------------------------------------------------------------------------------------------
-	/*
-	if ('moblog' == $args['module']) {
-		$kapenta->logLive('in moblog callback, setting triggers ');
-		// $kapenta->page->doTrigger('moblog', 'post-any');
-		// $kapenta->page->doTrigger('moblog', 'post-' . $args['UID']);
-		if (true == array_key_exists('createdBy', $args['data'])) {
-			// $kapenta->page->doTrigger('moblog', 'post-by-' . $args['data']['createdBy']);
-		}
-	}
-	*/
 
 	return true;
 }

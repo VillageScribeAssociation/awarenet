@@ -7,7 +7,7 @@
 //*	test pull updates from a peer
 //--------------------------------------------------------------------------------------------------
 
-	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
+//	if ('admin' != $kapenta->user->role) { $kapenta->page->do403(); }
 
 	if ('' == $kapenta->request->ref) { $kapenta->page->do404('peer not found'); }
 

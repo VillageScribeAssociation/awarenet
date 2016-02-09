@@ -13,7 +13,6 @@
 
 function p2p__cb_p2p_filemetarequest_received($args) {
 	global $kapenta;
-	global $kapenta;
 
 	//----------------------------------------------------------------------------------------------
 	//	check arguments and file

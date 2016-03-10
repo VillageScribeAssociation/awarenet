@@ -38,7 +38,9 @@ function schools_allgrades($args) {
 	}
 
 	$sql = "select grade, count(UID) as members from users_user "
-		 . "where school='" . $model->UID . "' and (role != 'banned') group by grade";
+		 . "where school='" . $model->UID . "' and (role != 'banned') "
+		 . "group by grade " 
+		 . "order by grade";
 
 	$result = $kapenta->db->query($sql);
 	while ($row = $kapenta->db->fetchAssoc($result)) {
@@ -46,10 +48,10 @@ function schools_allgrades($args) {
 		$link = '%%serverPath%%schools/grade/grade_' . base64_encode($row['grade'])
 			  . '/' . $model->alias;
 
-		$number = 0;
-		if (true == array_key_exists($row['grade'], $sort)) { $number = $sort[$row['grade']]; }
+		//$number = 0;
+		//if (true == array_key_exists($row['grade'], $sort)) { $number = $sort[$row['grade']]; }
 
-		$lines[$number] = "<a href='". $link ."'>". $row['grade'] ." (". $row['members'] ." people)</a>";
+		$lines[] = "<a href='". $link ."'>". $row['grade'] ." (". $row['members'] ." people)</a>";
 	}
 
 	ksort($lines);

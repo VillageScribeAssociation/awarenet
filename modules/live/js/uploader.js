@@ -727,7 +727,7 @@ function Live_UploadPart(oUpload, index, partSize) {
 		var blob = null;										//%	binary blob [object]
 		var oFile = this.oUpload.oFile;							//% shortcut [object]
 
-		if (oFile.slice) 		{ var blob = oFile.slice(this.start, this.size); }
+		if (oFile.slice) 		{ var blob = oFile.slice(this.start, this.start + this.size); }
 		if (oFile.mozSlice) 	{ var blob = oFile.mozSlice(this.start, this.start + this.size); }
 		if (oFile.webkitSlice)	{ var blob = oFile.webkitSlice(this.start, this.start + this.size); }
 
@@ -763,6 +763,8 @@ function Live_UploadPart(oUpload, index, partSize) {
 				 + 'part ' + that.index + ' data length: ' + byteArray.length + '<br/>' 
 				 + 'b64 length length: ' + data64.length + '<br/>'
 				 + 'start: ' + that.start + ' size: ' + that.size + '<br/>';
+				 
+				 console.log( 'msg: ', msg );
 
 				that.oUpload.oUploader.log('b64 encoded part ' + that.index);
 				that.sendPart64(data64);
@@ -774,7 +776,9 @@ function Live_UploadPart(oUpload, index, partSize) {
 	
 		//NOTE: slice takes *length*, mozSlice takes final offset
 
-		if (oFile.slice) 		{ var blob = oFile.slice(this.start, this.size); }
+        //console.log( 'this.start: ', this.start, ' this.size: ', this.size, 'this.index: ', this.index );
+
+		if (oFile.slice) 		{ var blob = oFile.slice(this.start, this.start + this.size); }
 		if (oFile.mozSlice) 	{ var blob = oFile.mozSlice(this.start, this.start + this.size); }
 		if (oFile.webkitSlice)	{ var blob = oFile.webkitSlice(this.start, this.start + this.size); }
 
@@ -792,7 +796,10 @@ function Live_UploadPart(oUpload, index, partSize) {
 		var that = this;
 
 		this.oUpload.oUploader.log('<b>sending part</b>: ' + this.index + '<br>');
-
+		
+		//alert( 'data64: ' + data64 );
+        ///console.log( 'data64: ', data64 );
+        
 		var params = ''
 			 + 'action=storePart'
 			 + '&filehash=' + this.oUpload.hash

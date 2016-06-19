@@ -26,14 +26,16 @@
 	$part64 = $_POST['part64'];
 	$part64 = str_replace(' ', '+', $part64);
 	
+	//echo "part64: " . $part64 . "\n";
+	
 	$part = base64_decode($part64);
 
 	$kapenta->fs->put('data/live/some64.txt', $part64);
 	$kapenta->fs->put('data/live/some.jpg', $part);
 	
-	if (mb_strlen($part, 'ASCII') != $length) {
+	if (mb_strlen($part, 'ASCII') != $length && strlen($part) != $length) {
 	 	header( "HTTP/1.1 500 Internal Server Error" );
-		echo "LENGTH MISMATCH: " . mb_strlen($part, 'ASCII') . '  != ' . $length . "<br/>\n";
+		echo "LENGTH MISMATCH: " . mb_strlen($part, 'ASCII') . ' or ' . strlen($part) . '  != ' . $length . "<br/>\n";
 		//echo "starts:" . substr($part, 0, 100) . "<br/>\n";
 		//echo "ends:" . substr($part, strlen($part) - 100) . "<br/>\n";
 		//$part = substr($part, 0, $length);

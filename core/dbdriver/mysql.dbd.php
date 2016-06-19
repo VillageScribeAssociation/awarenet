@@ -79,6 +79,9 @@ class KDBDriver_MySQL {
 		
 		if (false === function_exists('mysql_connect')) {
 		    echo "MySQL driver not installed, please add php5-mysql package.<br/>";
+		    echo "If you are using PHP7.0 please see:<br/>";
+		    echo "<a href='http://tecadmin.net/install-php-7-0-apache-2-4-mysql-5-6-on-ubuntu/'>http://tecadmin.net/install-php-7-0-apache-2-4-mysql-5-6-on-ubuntu/</a>";
+		    echo "<a href='http://tecadmin.net/install-php-7-0-apache-2-4-mysql-5-6-on-ubuntu/#'>http://tecadmin.net/install-php-7-0-apache-2-4-mysql-5-6-on-ubuntu/#</a>";
 		}
 	}
 

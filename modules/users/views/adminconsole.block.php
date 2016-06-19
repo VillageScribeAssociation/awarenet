@@ -6,6 +6,7 @@
   <li><a href='%%serverPath%%users/loginstats/'>Login Stats</a> - show users logged in during the past 1, 3 and 6 months.</li>
   <li><a href='%%serverPath%%users/settings/'>Settings</a> - user module settings.</li>
   <li><a href='%%serverPath%%users/bulksignup/'>Bulk Signup</a> - register a batch of users all at once.</li>
+  <li><a href='%%serverPath%%users/themepresets/'>Theme Presets</a> - Create and apply theme configurations to multiple users.</li>
 </ul>
 
 */ ?>

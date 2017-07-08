@@ -48,6 +48,10 @@ class KDBDriver_Dump {
 			$this->name = $registry->get('db.mysql.name');
 		}
 
+		if ('MySQLi' == $registry->get('db.driver')) {
+			$this->name = $registry->get('db.mysql.name');
+		}
+
 		if ('SQLite' == $registry->get('db.driver')) {
 			$this->name = $registry->get('db.sqlite.name');
 		}
@@ -508,7 +512,7 @@ class KDBDriver_Dump {
 	function queryToArray($sql) {
 		$result = $this->query($sql);
 		$recordSet = array();
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = mysqli_fetch_assoc($result)) {
 			$recordSet[$row['UID']] = $row;
 		}
 		return $recordSet;

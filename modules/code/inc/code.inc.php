@@ -83,7 +83,7 @@ function codeMkDir($parentUID, $projectUID, $title) {
 	$model->data['description'] = "Imported $title folder";
 	$model->data['content'] = '';
 	$model->data['author'] = 'cron-bot';
-	$model->data['createdOn'] = mysql_datetime();
+	$model->data['createdOn'] = mysqli_datetime();
 	$model->data['hash'] = sha1($title);
 	$model->save();
 	return $model->data['UID'];

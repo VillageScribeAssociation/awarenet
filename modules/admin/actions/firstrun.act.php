@@ -1,6 +1,7 @@
 <?php
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	configure awarenet from Windows Installer
@@ -167,7 +168,7 @@
 				$kapenta->registry->set('db.mysql.password', $newPass);
 				$kapenta->registry->set('db.mysql.host', 'localhost');
 				$kapenta->registry->set('db.mysql.name', $db->name);
-				$kapenta->registry->set('db.driver', 'MySQL');
+				$kapenta->registry->set('db.driver', 'MySQLi');
 
 				//$kapenta->registry->set('kapenta.db.user', $newUser);
 				//$kapenta->registry->set('kapenta.db.password', $newPass);

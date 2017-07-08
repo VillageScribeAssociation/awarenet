@@ -173,6 +173,17 @@
 	switch(strtolower($registry->get('db.driver'))) {
 
 		case '':		//	deliberate fallthrough
+		case 'mysqli':
+
+			include('./core/dbdriver/mysqli.dbd.php');
+			$db = new KDBDriver_MySQLi();
+			$db->query($sql);
+			echo "Clearing cache...\n";
+			flush();
+
+			break;		//..........................................................................
+
+
 		case 'mysql':
 
 			include('./core/dbdriver/mysql.dbd.php');

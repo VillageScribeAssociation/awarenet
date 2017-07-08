@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/chat/models/hash.mod.php');
 	require_once($kapenta->installPath . 'modules/chat/models/inbox.mod.php');
 	require_once($kapenta->installPath . 'modules/chat/models/membership.mod.php');

@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 
 //-------------------------------------------------------------------------------------------------
 //*	configure awareNet from installer

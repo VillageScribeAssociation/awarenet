@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/p2p/models/deleted.mod.php');
 	require_once($kapenta->installPath . 'modules/p2p/models/gift.mod.php');
 	require_once($kapenta->installPath . 'modules/p2p/models/peer.mod.php');

@@ -114,10 +114,10 @@
 		echo "mod_rewrite is enabled :-)<br/>\n";
 	}
 
-	if (false == function_exists('mysql_pconnect')) {
+	if (false == function_exists('mysqli_connect')) {
 		echo ''
 		 . "Extension php5-mysql is <b>not installed</b>, please install it before you continue."
-		 . "Please check that persistent conenctions are enabled in php.ini."
+		 . "Please check that persistent connections are enabled in php.ini."
 		 . "<br/>\n<small><pre>some@debian-derived/$ sudo apt-get install php5-mysql</pre></small>";
 		$allGood = false;
 

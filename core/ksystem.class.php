@@ -202,7 +202,7 @@ class KSystem {
 
 	function initDb() {
 		$dbDriver = $this->registry->get('db.driver');
-		if ('' === $dbDriver) { $dbDriver = 'SQLLite'; }
+		if ('' === $dbDriver) { $dbDriver = 'SQLite'; }
 		$this->db = $this->getDbDriver($dbDriver);
 	}
 
@@ -279,7 +279,7 @@ class KSystem {
 		//	guess any missing values
 		//-----------------------------------------------------------------------------------------
 		if ('' == $this->installPath) { 
-			$thisPath = dirname(__FILE__);
+			$thisPath = dirname(__FILE__) . '/';
 			$this->installPath = mb_substr($thisPath, 0, mb_strlen($thisPath) - 5);
 			$this->registry->set('kapenta.installpath', $this->installPath); 
 		}
@@ -415,10 +415,10 @@ class KSystem {
 	//----------------------------------------------------------------------------------------------
 	//returns: database driver [object]
 
-	function getDBDriver($dbType = 'mysql') {
+	function getDBDriver($dbType = 'MySQLi') {
 		global $registry;
 		
-		if ('' == $dbType) { $this->registry->set('db.driver', 'MySQL'); $dbType = 'MySQL'; }
+		if ('' == $dbType) { $this->registry->set('db.driver', 'MySQLi'); $dbType = 'MySQLi'; }
 		include_once($this->installPath . 'core/dbdriver/' . strtolower($dbType) . '.dbd.php');
 		$driverName = 'KDBDriver_' . $dbType;
 		return new $driverName();

@@ -53,7 +53,7 @@
 			$revision->data['description'] = $c->data['description'];
 			$revision->data['content'] = $c->data['content'];
 			$revision->data['editedBy'] = $kapenta->user->UID;
-			$revision->data['editedOn'] = mysql_datetime();
+			$revision->data['editedOn'] = mysqli_datetime();
 			$revision->data['reason'] = $_POST['reason'];
 			$revision->save();
 

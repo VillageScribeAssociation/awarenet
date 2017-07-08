@@ -254,7 +254,7 @@ function pageLoadWelcome() {
 	//	check for required extensions
 	//---------------------------------------------------------------------------------------------
 
-	if (function_exists('mysql_query') == false) {
+	if (function_exists('mysql_query') == false && function_exists('mysqli_query') == false) {
 		$report .= "<p><span class='ajaxerror'>MySQL not installed</span> Please install the PHP 
 					MySQL extension, awareNet can not work without it.</p>";
 	} else {

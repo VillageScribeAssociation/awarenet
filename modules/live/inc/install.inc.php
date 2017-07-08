@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/live/models/chat.mod.php');
 	require_once($kapenta->installPath . 'modules/live/models/mailbox.mod.php');
 	require_once($kapenta->installPath . 'modules/live/models/trigger.mod.php');

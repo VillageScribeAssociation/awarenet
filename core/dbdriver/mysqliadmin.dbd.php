@@ -18,7 +18,7 @@
 //+	 'nodiff' -> array of field names which are not versioned (eg, hitcount)
 
 
-class KDBAdminDriver_MySQL {
+class KDBAdminDriver_MySQLi {
 
 	//----------------------------------------------------------------------------------------------
 	//.	make a database (consider removing this, live sites should not need this functionality)
@@ -31,12 +31,12 @@ class KDBAdminDriver_MySQL {
 
 		if ('admin' == $kapenta->user->role) {
 		$query = 'CREATE DATABASE ' . $database;
-		$connect = @mysql_pconnect($kapenta->db->host, $kapenta->db->user, $kapenta->db->pass);
+		$connect = @mysqli_connect($kapenta->db->host, $kapenta->db->user, $kapenta->db->pass, $kapenta->db->name);
 
 		if (false == $connect) { return false; }		
 
 		//$connect = mysql_connect($kapenta->db->host, $kapenta->db->user, $kapenta->db->pass) or die("no connect");
-		$result = @mysql_query($query, $connect);
+		$result = @mysqli_query($connect, $query);
 		if (false == $result) { return false; }
 		return true;
 	  }

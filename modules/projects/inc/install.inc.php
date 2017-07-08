@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/projects/models/membership.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/project.mod.php');
 	require_once($kapenta->installPath . 'modules/projects/models/revision.mod.php');

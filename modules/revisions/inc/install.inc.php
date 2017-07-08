@@ -1,6 +1,7 @@
 <?
 
 	require_once($kapenta->installPath . 'core/dbdriver/mysqladmin.dbd.php');
+	require_once($kapenta->installPath . 'core/dbdriver/mysqliadmin.dbd.php');
 	require_once($kapenta->installPath . 'modules/revisions/models/deleted.mod.php');
 	require_once($kapenta->installPath . 'modules/revisions/models/revision.mod.php');
 

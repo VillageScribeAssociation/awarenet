@@ -213,6 +213,16 @@
 	switch(strtolower($kapenta->registry->get('db.driver'))) {
 
 		case '':		//	deliberate fallthrough
+		case 'mysqli':
+
+			//include('./core/dbdriver/mysql.dbd.php');
+			//$db = new KDBDriver_MySQL();
+			$kapenta->db->query($sql);
+			echo "<b>Clearing cache...</b>";
+			flush();
+
+			break;		//..........................................................................
+
 		case 'mysql':
 
 			//include('./core/dbdriver/mysql.dbd.php');

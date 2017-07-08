@@ -22,14 +22,14 @@ function admin_dbusage($args) {
 	if ('no' == $kapenta->registry->get('kapenta.db.measure')) { return $sizeStr; }
 	if (true == array_key_exists('refresh', $args)) { $refresh = $args['refresh']; }
 
-
+	$driverName = strtolower($kapenta->registry->get('db.driver'));
 	$block = $theme->loadBlock('modules/admin/views/dbusage.block.php');
 
 	//----------------------------------------------------------------------------------------------
 	//	get database size (MySQL)
 	//----------------------------------------------------------------------------------------------
 
-	if ('mysql' == strtolower($kapenta->registry->get('db.driver'))) {
+	if ('mysql' == $driverName) {
 
 		//------------------------------------------------------------------------------------------
 		//	this operation is expensive on MySQL, use cached value by default
@@ -63,7 +63,7 @@ function admin_dbusage($args) {
 	//	get database size (SQLite)
 	//----------------------------------------------------------------------------------------------
 
-	if ('sqlite' == strtolower($kapenta->registry->get('db.driver'))) {
+	if ('sqlite' == $driverName) {
 		$dbFile = $kapenta->registry->get('db.sqlite.name');
 		if (true == file_exists($dbFile . '.sq3')) {
 			$size = filesize($dbFile . '.sq3');
